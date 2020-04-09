@@ -54,6 +54,10 @@ public abstract class PublisherBuilder {
 
   abstract Optional<PublisherServiceStub> stub();
 
+  public static Builder newBuilder() {
+    return new AutoValue_PublisherBuilder.Builder();
+  }
+
   @AutoValue.Builder
   public abstract static class Builder {
     // Required parameters.

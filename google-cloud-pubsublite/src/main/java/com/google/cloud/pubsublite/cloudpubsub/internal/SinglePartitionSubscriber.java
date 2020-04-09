@@ -14,9 +14,9 @@
 
 package com.google.cloud.pubsublite.cloudpubsub.internal;
 
+import com.google.cloud.pubsub.v1.SubscriberInterface;
 import com.google.cloud.pubsublite.MessageTransformer;
 import com.google.cloud.pubsublite.SequencedMessage;
-import com.google.cloud.pubsublite.Subscriber;
 import com.google.cloud.pubsublite.cloudpubsub.FlowControlSettings;
 import com.google.cloud.pubsub.v1.AckReplyConsumer;
 import com.google.cloud.pubsub.v1.MessageReceiver;
@@ -28,7 +28,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.pubsub.v1.PubsubMessage;
 import io.grpc.StatusException;
 
-public class SinglePartitionSubscriber extends ProxyService implements Subscriber {
+public class SinglePartitionSubscriber extends ProxyService implements SubscriberInterface {
   private final MessageReceiver receiver;
   private final MessageTransformer<SequencedMessage, PubsubMessage> transformer;
   private final AckSetTracker ackSetTracker;

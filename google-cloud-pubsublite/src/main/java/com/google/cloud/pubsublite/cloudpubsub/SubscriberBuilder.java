@@ -14,12 +14,11 @@
 
 package com.google.cloud.pubsublite.cloudpubsub;
 
-
+import com.google.cloud.pubsub.v1.SubscriberInterface;
 import com.google.auto.value.AutoValue;
 import com.google.cloud.pubsublite.MessageTransformer;
 import com.google.cloud.pubsublite.Partition;
 import com.google.cloud.pubsublite.SequencedMessage;
-import com.google.cloud.pubsublite.Subscriber;
 import com.google.cloud.pubsublite.SubscriptionPath;
 import com.google.cloud.pubsublite.SubscriptionPaths;
 import com.google.cloud.pubsub.v1.MessageReceiver;
@@ -77,7 +76,7 @@ public abstract class SubscriberBuilder {
     abstract SubscriberBuilder autoBuild();
 
     @SuppressWarnings("CheckReturnValue")
-    public Subscriber build() throws StatusException {
+    public SubscriberInterface build() throws StatusException {
       SubscriberBuilder builder = autoBuild();
       SubscriptionPaths.check(builder.subscriptionPath());
 

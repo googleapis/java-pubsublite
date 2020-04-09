@@ -18,4 +18,4 @@ import com.google.api.core.ApiService;
 import com.google.cloud.pubsub.v1.PublisherInterface;
 
 // Pub/Sub Lite publishers are streaming based and can experience permanent errors.
-public interface PublisherApiService extends Publisher, ApiService {}
+public interface PublisherApiService extends PublisherInterface, ApiService {}

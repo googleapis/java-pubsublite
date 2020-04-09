@@ -16,7 +16,7 @@ package com.google.cloud.pubsublite.cloudpubsub.internal;
 
 import com.google.api.core.ApiService;
 import com.google.cloud.pubsublite.SequencedMessage;
-import com.google.cloud.pubsublite.cloudpubsub.backport.AckReplyConsumer;
+import com.google.cloud.pubsub.v1.AckReplyConsumer;
 import io.grpc.StatusException;
 
 interface AckSetTracker extends ApiService {

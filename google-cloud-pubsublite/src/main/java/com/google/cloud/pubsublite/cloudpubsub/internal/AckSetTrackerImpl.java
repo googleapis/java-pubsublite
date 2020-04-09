@@ -19,7 +19,7 @@ import static com.google.cloud.pubsublite.internal.Preconditions.checkArgument;
 import com.google.api.core.ApiFuture;
 import com.google.cloud.pubsublite.Offset;
 import com.google.cloud.pubsublite.SequencedMessage;
-import com.google.cloud.pubsublite.cloudpubsub.backport.AckReplyConsumer;
+import com.google.cloud.pubsub.v1.AckReplyConsumer;
 import com.google.cloud.pubsublite.internal.CloseableMonitor;
 import com.google.cloud.pubsublite.internal.ExtractStatus;
 import com.google.cloud.pubsublite.internal.ProxyService;

@@ -22,7 +22,7 @@ import com.google.cloud.pubsublite.SequencedMessage;
 import com.google.cloud.pubsublite.Subscriber;
 import com.google.cloud.pubsublite.SubscriptionPath;
 import com.google.cloud.pubsublite.SubscriptionPaths;
-import com.google.cloud.pubsublite.cloudpubsub.backport.MessageReceiver;
+import com.google.cloud.pubsub.v1.MessageReceiver;
 import com.google.cloud.pubsublite.cloudpubsub.internal.AckSetTrackerImpl;
 import com.google.cloud.pubsublite.cloudpubsub.internal.SinglePartitionSubscriber;
 import com.google.cloud.pubsublite.internal.wire.CommitterBuilder;

@@ -10,7 +10,7 @@
   <artifactId>google-cloud-pubsublite-parent</artifactId>
   <version>0.1.0-SNAPSHOT</version>
   <packaging>pom</packaging>
-  <name>Google Cloud Pub/Sub Lite</name>
+  <name>Google Cloud Pub/Sub Lite Parent</name>
   <url>https://github.com/googleapis/java-pubsublite</url>
   <description>Java idiomatic client for Google Cloud Pub/Sub Lite</description>
   <dependencyManagement>

@@ -1,0 +1,102 @@
+// Copyright 2019 Google LLC
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//      http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+package com.google.cloud.pubsublite.internal.wire;
+
+import static com.google.cloud.pubsublite.internal.StatusExceptionMatcher.assertFutureThrowsCode;
+import static com.google.common.truth.Truth.assertThat;
+import static com.google.common.truth.Truth8.assertThat;
+
+import com.google.api.core.ApiFuture;
+import com.google.cloud.pubsublite.Offset;
+import io.grpc.Status.Code;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
+
+@RunWith(JUnit4.class)
+public class CommitStateTest {
+  private final CommitState state = new CommitState();
+
+  @Test
+  public void multipleSentCompletedInOrder() {
+    ApiFuture<Void> future1 = state.addCommit(Offset.create(10));
+    ApiFuture<Void> future2 = state.addCommit(Offset.create(1));
+    ApiFuture<Void> future3 = state.addCommit(Offset.create(87));
+
+    assertThat(future1.isDone()).isFalse();
+    assertThat(future2.isDone()).isFalse();
+    assertThat(future3.isDone()).isFalse();
+
+    assertThat(state.complete(1).isOk()).isTrue();
+
+    assertThat(future1.isDone()).isTrue();
+    assertThat(future2.isDone()).isFalse();
+    assertThat(future3.isDone()).isFalse();
+
+    assertThat(state.complete(2).isOk()).isTrue();
+
+    assertThat(future2.isDone()).isTrue();
+    assertThat(future3.isDone()).isTrue();
+  }
+
+  @Test
+  public void completeMoreThanAddedError() {
+    ApiFuture<Void> future = state.addCommit(Offset.create(10));
+
+    assertThat(future.isDone()).isFalse();
+
+    assertThat(state.complete(2).getCode()).isEqualTo(Code.FAILED_PRECONDITION);
+
+    assertFutureThrowsCode(future, Code.FAILED_PRECONDITION);
+  }
+
+  @Test
+  public void reinitializeCompletesAllAfterSingleCompletion() {
+    ApiFuture<Void> future1 = state.addCommit(Offset.create(10));
+    ApiFuture<Void> future2 = state.addCommit(Offset.create(99));
+
+    assertThat(future1.isDone()).isFalse();
+    assertThat(future2.isDone()).isFalse();
+
+    assertThat(state.reinitializeAndReturnToSend()).hasValue(Offset.create(99));
+
+    assertThat(future1.isDone()).isFalse();
+    assertThat(future2.isDone()).isFalse();
+
+    assertThat(state.complete(1).isOk()).isTrue();
+
+    assertThat(future1.isDone()).isTrue();
+    assertThat(future2.isDone()).isTrue();
+  }
+
+  @Test
+  public void reinitializeFailsAllAfterExcessCompletion() {
+    ApiFuture<Void> future1 = state.addCommit(Offset.create(10));
+    ApiFuture<Void> future2 = state.addCommit(Offset.create(99));
+
+    assertThat(future1.isDone()).isFalse();
+    assertThat(future2.isDone()).isFalse();
+
+    assertThat(state.reinitializeAndReturnToSend()).hasValue(Offset.create(99));
+
+    assertThat(future1.isDone()).isFalse();
+    assertThat(future2.isDone()).isFalse();
+
+    assertThat(state.complete(2).getCode()).isEqualTo(Code.FAILED_PRECONDITION);
+
+    assertFutureThrowsCode(future1, Code.FAILED_PRECONDITION);
+    assertFutureThrowsCode(future2, Code.FAILED_PRECONDITION);
+  }
+}

@@ -3,10 +3,10 @@
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.google.api.grpc</groupId>
-  <artifactId>proto-google-cloud-pubsublite-v1</artifactId>
+  <artifactId>grpc-google-cloud-pubsublite-v1</artifactId>
   <version>0.1.0</version>
-  <name>proto-google-cloud-pubsublite-v1</name>
-  <description>PROTO library for proto-google-cloud-pubsublite-v1</description>
+  <name>grpc-google-cloud-pubsublite-v1</name>
+  <description>GRPC library for grpc-google-cloud-pubsublite-v1</description>
   <parent>
     <groupId>com.google.cloud</groupId>
     <artifactId>google-cloud-pubsublite-parent</artifactId>
@@ -15,14 +15,19 @@
   </parent>
   <dependencies>
     <dependency>
-      <groupId>com.google.protobuf</groupId>
-      <artifactId>protobuf-java-util</artifactId>
-      <version>3.11.4</version>
+      <groupId>com.google.api.grpc</groupId>
+      <artifactId>proto-google-cloud-pubsublite-v1</artifactId>
+      <version>0.1.0</version>
     </dependency>
     <dependency>
-      <groupId>com.google.api.grpc</groupId>
-      <artifactId>proto-google-common-protos</artifactId>
-      <version>1.17.0</version>
+      <groupId>io.grpc</groupId>
+      <artifactId>grpc-stub</artifactId>
+      <version>1.27.2</version>
+    </dependency>
+    <dependency>
+      <groupId>io.grpc</groupId>
+      <artifactId>grpc-protobuf</artifactId>
+      <version>1.27.2</version>
     </dependency>
   </dependencies>
   <properties>

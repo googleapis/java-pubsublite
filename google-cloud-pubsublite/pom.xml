@@ -33,7 +33,7 @@
     <dependency>
       <groupId>com.google.cloud</groupId>
       <artifactId>google-cloud-pubsub</artifactId>
-      <version>1.103.0</version>
+      <version>1.104.1</version>
     </dependency>
     <dependency>
       <groupId>com.google.api.grpc</groupId>
@@ -49,6 +49,38 @@
       <groupId>com.google.flogger</groupId>
       <artifactId>flogger</artifactId>
       <version>0.5.1</version>
+    </dependency>
+    <!--runtime dependencies-->
+    <dependency>
+      <groupId>com.google.flogger</groupId>
+      <artifactId>flogger-system-backend</artifactId>
+      <version>0.5.1</version>
+      <scope>runtime</scope>
+    </dependency>
+    <!--test dependencies-->
+    <dependency>
+      <groupId>com.google.truth</groupId>
+      <artifactId>truth</artifactId>
+      <version>1.0.1</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.google.truth.extensions</groupId>
+      <artifactId>truth-java8-extension</artifactId>
+      <version>1.0.1</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.mockito</groupId>
+      <artifactId>mockito-core</artifactId>
+      <version>3.2.0</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>io.grpc</groupId>
+      <artifactId>grpc-testing</artifactId>
+      <version>1.28.1</version>
+      <scope>test</scope>
     </dependency>
   </dependencies>
   <build>

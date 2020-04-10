@@ -33,7 +33,6 @@ import com.google.cloud.pubsublite.proto.PublishRequest;
 import com.google.cloud.pubsublite.proto.PublisherServiceGrpc;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Preconditions;
-import com.google.common.collect.ImmutableList;
 import com.google.common.util.concurrent.Monitor;
 import io.grpc.Status;
 import io.grpc.StatusException;
@@ -46,6 +45,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 import javax.annotation.concurrent.GuardedBy;
 
 public final class PublisherImpl extends ProxyService
@@ -83,11 +83,9 @@ public final class PublisherImpl extends ProxyService
       messages =
           toBatch.stream()
               .map(SerialBatcher.UnbatchedMessage::message)
-              .collect(ImmutableList.toImmutableList());
+              .collect(Collectors.toList());
       messageFutures =
-          toBatch.stream()
-              .map(SerialBatcher.UnbatchedMessage::future)
-              .collect(ImmutableList.toImmutableList());
+          toBatch.stream().map(SerialBatcher.UnbatchedMessage::future).collect(Collectors.toList());
     }
   }
 

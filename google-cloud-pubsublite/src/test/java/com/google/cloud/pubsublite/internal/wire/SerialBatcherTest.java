@@ -25,6 +25,8 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
 import com.google.protobuf.ByteString;
 import java.util.Collection;
+import java.util.List;
+import java.util.stream.Collectors;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -36,11 +38,8 @@ public class SerialBatcherTest {
   private static final PubSubMessage MESSAGE_2 =
       PubSubMessage.newBuilder().setData(ByteString.copyFromUtf8("Some other data")).build();
 
-  private static ImmutableList<PubSubMessage> extractMessages(
-      Collection<UnbatchedMessage> messages) {
-    return messages.stream()
-        .map(UnbatchedMessage::message)
-        .collect(ImmutableList.toImmutableList());
+  private static List<PubSubMessage> extractMessages(Collection<UnbatchedMessage> messages) {
+    return messages.stream().map(UnbatchedMessage::message).collect(Collectors.toList());
   }
 
   @Test

@@ -25,6 +25,7 @@ import com.google.cloud.pubsublite.proto.InitialSubscribeRequest;
 import com.google.cloud.pubsublite.proto.SubscriberServiceGrpc;
 import com.google.cloud.pubsublite.proto.SubscriberServiceGrpc.SubscriberServiceStub;
 import com.google.common.collect.ImmutableList;
+import io.grpc.Metadata;
 import io.grpc.Status;
 import io.grpc.StatusException;
 import io.grpc.stub.MetadataUtils;
@@ -90,8 +91,9 @@ public abstract class SubscriberBuilder {
               .asException();
         }
       }
-      subscriberServiceStub =
-          MetadataUtils.attachHeaders(subscriberServiceStub, builder.context().getMetadata());
+      Metadata metadata = builder.context().getMetadata();
+      metadata.merge(RoutingMetadata.of(builder.subscriptionPath(), builder.partition()));
+      subscriberServiceStub = MetadataUtils.attachHeaders(subscriberServiceStub, metadata);
 
       InitialSubscribeRequest initialSubscribeRequest =
           InitialSubscribeRequest.newBuilder()

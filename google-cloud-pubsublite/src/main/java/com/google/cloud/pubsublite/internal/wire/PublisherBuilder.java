@@ -30,6 +30,7 @@ import com.google.cloud.pubsublite.internal.ExtractStatus;
 import com.google.cloud.pubsublite.proto.InitialPublishRequest;
 import com.google.cloud.pubsublite.proto.PublisherServiceGrpc;
 import com.google.common.base.Preconditions;
+import io.grpc.Metadata;
 import io.grpc.StatusException;
 import io.grpc.stub.MetadataUtils;
 import java.io.IOException;
@@ -115,7 +116,9 @@ public abstract class PublisherBuilder {
       } catch (IOException e) {
         throw ExtractStatus.toCanonical(e);
       }
-      actualStub = MetadataUtils.attachHeaders(actualStub, autoBuilt.context().getMetadata());
+      Metadata metadata = autoBuilt.context().getMetadata();
+      metadata.merge(RoutingMetadata.of(autoBuilt.topic(), autoBuilt.partition()));
+      actualStub = MetadataUtils.attachHeaders(actualStub, metadata);
       return new PublisherImpl(
           actualStub,
           InitialPublishRequest.newBuilder()

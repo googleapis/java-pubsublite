@@ -20,7 +20,7 @@ import com.google.cloud.pubsublite.proto.Topic;
 import com.google.protobuf.FieldMask;
 import java.util.List;
 
-/** A client for performing Pub/Sub Lite admin operations.*/
+/** A client for performing Pub/Sub Lite admin operations. */
 public interface AdminClient {
   /** The Google Cloud region this client operates on. */
   CloudRegion region();

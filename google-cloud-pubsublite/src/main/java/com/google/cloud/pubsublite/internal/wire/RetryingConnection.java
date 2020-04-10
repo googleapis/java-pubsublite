@@ -21,10 +21,10 @@ import java.util.Optional;
 interface RetryingConnection<ConnectionT> extends ApiService {
   // Reinitialize the stream. Must be called in a downcall to prevent deadlock.
   void reinitialize();
-    
-    interface Modifier<ConnectionT> {
-        void modify(Optional<ConnectionT> connectionOr) throws StatusException;
-    }
+
+  interface Modifier<ConnectionT> {
+    void modify(Optional<ConnectionT> connectionOr) throws StatusException;
+  }
 
   // Run modification on the current connection or empty if not connected.
   void modifyConnection(Modifier<ConnectionT> modifier) throws StatusException;

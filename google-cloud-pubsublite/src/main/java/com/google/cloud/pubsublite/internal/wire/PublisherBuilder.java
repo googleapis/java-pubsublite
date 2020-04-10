@@ -14,7 +14,6 @@
 
 package com.google.cloud.pubsublite.internal.wire;
 
-
 import com.google.api.gax.batching.BatchingSettings;
 import com.google.api.gax.batching.FlowController.LimitExceededBehavior;
 import com.google.auto.value.AutoValue;

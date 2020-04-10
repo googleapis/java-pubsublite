@@ -41,15 +41,17 @@ public final class ExtractStatus {
   }
 
   public static void addFailureHandler(ApiFuture<?> future, Consumer<StatusException> consumer) {
-    future.addListener(() -> {
-      try {
-        future.get();
-      } catch (ExecutionException e) {
-        consumer.accept(toCanonical(e.getCause()));
-      } catch (InterruptedException e) {
-        consumer.accept(toCanonical(e));
-      }
-    }, MoreExecutors.directExecutor());
+    future.addListener(
+        () -> {
+          try {
+            future.get();
+          } catch (ExecutionException e) {
+            consumer.accept(toCanonical(e.getCause()));
+          } catch (InterruptedException e) {
+            consumer.accept(toCanonical(e));
+          }
+        },
+        MoreExecutors.directExecutor());
   }
 
   private ExtractStatus() {}

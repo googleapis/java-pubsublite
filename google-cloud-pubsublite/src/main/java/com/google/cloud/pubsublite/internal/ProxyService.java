@@ -41,13 +41,15 @@ public abstract class ProxyService extends AbstractApiService {
 
   // Add a new ApiServices to this. Requires that all of them are in state NEW and this is in state
   // NEW.
-  protected final <T extends ApiService> void addServices(Collection<T> services) throws StatusException {
+  protected final <T extends ApiService> void addServices(Collection<T> services)
+      throws StatusException {
     checkState(state() == State.NEW);
-    for (ApiService service: services) {
+    for (ApiService service : services) {
       checkArgument(service.state() == State.NEW, "All services must not be started.");
       this.services.add(service);
     }
   }
+
   protected final void addServices(ApiService... services) throws StatusException {
     addServices(ImmutableList.copyOf(services));
   }
@@ -74,27 +76,29 @@ public abstract class ProxyService extends AbstractApiService {
   // AbstractApiService implementation.
   @Override
   protected final void doStart() {
-    Listener listener = new Listener() {
-      private final AtomicInteger leftToStart = new AtomicInteger(services.size());
-      @Override
-      public void running() {
-        if (leftToStart.decrementAndGet() == 0) {
-          try {
-            start();
-          } catch (StatusException e) {
-            onPermanentError(e);
-            return;
-          }
-          notifyStarted();
-        }
-      }
+    Listener listener =
+        new Listener() {
+          private final AtomicInteger leftToStart = new AtomicInteger(services.size());
 
-      @Override
-      public void failed(State state, Throwable throwable) {
-        Optional<Status> statusOr = ExtractStatus.extract(throwable);
-        onPermanentError(statusOr.orElse(Status.INTERNAL.withCause(throwable)).asException());
-      }
-    };
+          @Override
+          public void running() {
+            if (leftToStart.decrementAndGet() == 0) {
+              try {
+                start();
+              } catch (StatusException e) {
+                onPermanentError(e);
+                return;
+              }
+              notifyStarted();
+            }
+          }
+
+          @Override
+          public void failed(State state, Throwable throwable) {
+            Optional<Status> statusOr = ExtractStatus.extract(throwable);
+            onPermanentError(statusOr.orElse(Status.INTERNAL.withCause(throwable)).asException());
+          }
+        };
     for (ApiService service : services) {
       service.addListener(listener, MoreExecutors.directExecutor());
       service.startAsync();
@@ -103,17 +107,19 @@ public abstract class ProxyService extends AbstractApiService {
 
   @Override
   protected final void doStop() {
-    Listener listener = new Listener() {
-      private final AtomicInteger leftToStart = new AtomicInteger(services.size());
-      @Override
-      public void terminated(State state) {
-        if (leftToStart.decrementAndGet() == 0) {
-          if (!stoppedOrFailed.getAndSet(true)) {
-            notifyStopped();
+    Listener listener =
+        new Listener() {
+          private final AtomicInteger leftToStart = new AtomicInteger(services.size());
+
+          @Override
+          public void terminated(State state) {
+            if (leftToStart.decrementAndGet() == 0) {
+              if (!stoppedOrFailed.getAndSet(true)) {
+                notifyStopped();
+              }
+            }
           }
-        }
-      }
-    };
+        };
     try {
       stop();
     } catch (StatusException e) {

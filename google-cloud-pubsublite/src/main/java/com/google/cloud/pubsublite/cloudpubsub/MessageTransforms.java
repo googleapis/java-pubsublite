@@ -36,8 +36,8 @@ import java.util.Collection;
 public class MessageTransforms {
   private MessageTransforms() {}
 
-  public static final String PUBSUB_LITE_EVENT_TIME_TIMESTAMP_PROTO
-      = "x-goog-pubsublite-event-time-timestamp-proto";
+  public static final String PUBSUB_LITE_EVENT_TIME_TIMESTAMP_PROTO =
+      "x-goog-pubsublite-event-time-timestamp-proto";
 
   // Encode a timestamp in a way that it will be interpreted as an event time if published on a
   // message with an attribute named PUBSUB_LITE_EVENT_TIME_TIMESTAMP_PROTO.

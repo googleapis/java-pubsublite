@@ -35,7 +35,8 @@ import javax.annotation.concurrent.GuardedBy;
  */
 class RetryingConnectionImpl<
         StreamRequestT, StreamResponseT, ClientResponseT, ConnectionT extends AutoCloseable>
-    extends AbstractApiService implements RetryingConnection<ConnectionT>, StreamObserver<ClientResponseT> {
+    extends AbstractApiService
+    implements RetryingConnection<ConnectionT>, StreamObserver<ClientResponseT> {
   private static final FluentLogger logger = FluentLogger.forEnclosingClass();
 
   private final StreamFactory<StreamRequestT, StreamResponseT> streamFactory;

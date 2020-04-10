@@ -14,7 +14,6 @@
 
 package com.google.cloud.pubsublite.internal.wire;
 
-
 import com.google.api.gax.batching.BatchingSettings;
 import com.google.auto.value.AutoValue;
 import com.google.cloud.pubsublite.Partition;
@@ -27,10 +26,12 @@ import java.util.Optional;
 public abstract class SinglePartitionPublisherBuilder {
   // Required parameters.
   abstract TopicPath topic();
+
   abstract Partition partition();
 
   // Optional parameters.
   abstract Optional<PublisherServiceGrpc.PublisherServiceStub> stub();
+
   abstract Optional<BatchingSettings> batchingSettings();
 
   // Rarely set parameters.
@@ -45,10 +46,12 @@ public abstract class SinglePartitionPublisherBuilder {
   public abstract static class Builder {
     // Required parameters.
     public abstract Builder setTopic(TopicPath topic);
+
     public abstract Builder setPartition(Partition partition);
 
     // Optional parameters.
     public abstract Builder setStub(Optional<PublisherServiceGrpc.PublisherServiceStub> stub);
+
     public abstract Builder setBatchingSettings(Optional<BatchingSettings> batchingSettings);
 
     // Rarely set parameters.

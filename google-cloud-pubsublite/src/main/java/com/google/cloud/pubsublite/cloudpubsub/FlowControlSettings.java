@@ -44,5 +44,6 @@ public abstract class FlowControlSettings {
   }
 
   public abstract long bytesOutstanding();
+
   public abstract long messagesOutstanding();
 }

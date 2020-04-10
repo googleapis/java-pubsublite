@@ -17,9 +17,9 @@ package com.google.cloud.pubsublite.cloudpubsub.internal;
 import static com.google.cloud.pubsublite.internal.Preconditions.checkArgument;
 
 import com.google.api.core.ApiFuture;
+import com.google.cloud.pubsub.v1.AckReplyConsumer;
 import com.google.cloud.pubsublite.Offset;
 import com.google.cloud.pubsublite.SequencedMessage;
-import com.google.cloud.pubsub.v1.AckReplyConsumer;
 import com.google.cloud.pubsublite.internal.CloseableMonitor;
 import com.google.cloud.pubsublite.internal.ExtractStatus;
 import com.google.cloud.pubsublite.internal.ProxyService;
@@ -74,8 +74,7 @@ public class AckSetTrackerImpl extends ProxyService implements AckSetTracker {
       @Override
       public void ack() {
         if (wasAcked.getAndSet(true)) {
-          Status s = Status.FAILED_PRECONDITION.withDescription(
-              "Duplicate acks are not allowed.");
+          Status s = Status.FAILED_PRECONDITION.withDescription("Duplicate acks are not allowed.");
           onPermanentError(s.asException());
           throw s.asRuntimeException();
         }
@@ -84,8 +83,10 @@ public class AckSetTrackerImpl extends ProxyService implements AckSetTracker {
 
       @Override
       public void nack() {
-        onPermanentError(Status.UNIMPLEMENTED.withDescription(
-            "You may not nack messages when using a PubSub Lite client.").asException());
+        onPermanentError(
+            Status.UNIMPLEMENTED
+                .withDescription("You may not nack messages when using a PubSub Lite client.")
+                .asException());
       }
     };
   }
@@ -94,14 +95,16 @@ public class AckSetTrackerImpl extends ProxyService implements AckSetTracker {
     try (CloseableMonitor.Hold h = monitor.enter()) {
       acks.add(offset);
       Optional<Offset> prefixAckedOffset = Optional.empty();
-      while (!receipts.isEmpty() && !acks.isEmpty() &&
-             receipts.peekFirst().value() == acks.peek().value()) {
+      while (!receipts.isEmpty()
+          && !acks.isEmpty()
+          && receipts.peekFirst().value() == acks.peek().value()) {
         prefixAckedOffset = Optional.of(acks.remove());
         receipts.removeFirst();
       }
       // Convert from last acked to first unacked.
       if (prefixAckedOffset.isPresent()) {
-        ApiFuture<?> future = committer.commitOffset(Offset.create(prefixAckedOffset.get().value() + 1));
+        ApiFuture<?> future =
+            committer.commitOffset(Offset.create(prefixAckedOffset.get().value() + 1));
         ExtractStatus.addFailureHandler(future, this::onPermanentError);
       }
     }

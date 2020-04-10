@@ -28,6 +28,7 @@ import java.util.Random;
 public class DefaultRoutingPolicy implements RoutingPolicy {
   private final int numPartitions;
   private final CloseableMonitor monitor = new CloseableMonitor();
+
   @GuardedBy("monitor.monitor")
   private int nextWithoutKeyPartition;
 
@@ -51,8 +52,8 @@ public class DefaultRoutingPolicy implements RoutingPolicy {
   @Override
   public Partition route(ByteString messageKey) throws StatusException {
     HashCode code = Hashing.sha256().hashBytes(messageKey.asReadOnlyByteBuffer());
-    checkArgument(code.bits() == 256);  // sanity check.
-    BigInteger bigEndianValue = new BigInteger(/*signum=*/1, code.asBytes());
+    checkArgument(code.bits() == 256); // sanity check.
+    BigInteger bigEndianValue = new BigInteger(/*signum=*/ 1, code.asBytes());
     return Partition.create(bigEndianValue.mod(BigInteger.valueOf(numPartitions)).longValueExact());
   }
 }

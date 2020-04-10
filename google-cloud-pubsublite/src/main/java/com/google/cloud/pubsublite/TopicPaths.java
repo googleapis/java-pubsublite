@@ -33,7 +33,7 @@ public abstract class TopicPaths {
   }
 
   @AutoValue.Builder
-  public static abstract class Builder {
+  public abstract static class Builder {
     public abstract Builder setProjectNumber(ProjectNumber number);
 
     public abstract Builder setZone(CloudZone zone);
@@ -87,6 +87,9 @@ public abstract class TopicPaths {
   }
 
   public static LocationPath getLocationPath(TopicPath path) throws StatusException {
-    return LocationPaths.newBuilder().setProjectNumber(getProjectNumber(path)).setZone(getZone(path)).build();
+    return LocationPaths.newBuilder()
+        .setProjectNumber(getProjectNumber(path))
+        .setZone(getZone(path))
+        .build();
   }
 }

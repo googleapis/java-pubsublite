@@ -35,7 +35,7 @@ import org.junit.runners.JUnit4;
 
 @RunWith(JUnit4.class)
 public class MessageTransformsTest {
-  private static final byte[] notUtf8Array = {(byte)0xFF, (byte)0xFF};
+  private static final byte[] notUtf8Array = {(byte) 0xFF, (byte) 0xFF};
   private static final MessageTransformer<SequencedMessage, PubsubMessage> subscribeTransformer =
       MessageTransforms.toCpsSubscribeTransformer();
   private static final MessageTransformer<PubsubMessage, Message> publishTransformer =
@@ -43,16 +43,38 @@ public class MessageTransformsTest {
 
   @Test
   public void subscribeTransformInvalidKey() {
-    StatusException e = assertThrows(StatusException.class, () -> subscribeTransformer.transform(SequencedMessage.create(Message.builder().setKey(ByteString.copyFrom(notUtf8Array)).build(),
-        Timestamps.fromNanos(0), Offset.create(10), 10)));
+    StatusException e =
+        assertThrows(
+            StatusException.class,
+            () ->
+                subscribeTransformer.transform(
+                    SequencedMessage.create(
+                        Message.builder().setKey(ByteString.copyFrom(notUtf8Array)).build(),
+                        Timestamps.fromNanos(0),
+                        Offset.create(10),
+                        10)));
     assertThat(e.getStatus().getCode()).isEqualTo(Code.INVALID_ARGUMENT);
   }
 
   @Test
   public void subscribeTransformContainsMagicAttribute() {
-    StatusException e = assertThrows(StatusException.class, () -> subscribeTransformer.transform(SequencedMessage.create(Message.builder().setAttributes(
-        ImmutableListMultimap.<String, ByteString>builder().put(MessageTransforms.PUBSUB_LITE_EVENT_TIME_TIMESTAMP_PROTO, ByteString.EMPTY).build()).build(),
-        Timestamps.fromNanos(0), Offset.create(10), 10)));
+    StatusException e =
+        assertThrows(
+            StatusException.class,
+            () ->
+                subscribeTransformer.transform(
+                    SequencedMessage.create(
+                        Message.builder()
+                            .setAttributes(
+                                ImmutableListMultimap.<String, ByteString>builder()
+                                    .put(
+                                        MessageTransforms.PUBSUB_LITE_EVENT_TIME_TIMESTAMP_PROTO,
+                                        ByteString.EMPTY)
+                                    .build())
+                            .build(),
+                        Timestamps.fromNanos(0),
+                        Offset.create(10),
+                        10)));
     assertThat(e.getStatus().getCode()).isEqualTo(Code.INVALID_ARGUMENT);
   }
 
@@ -99,28 +121,33 @@ public class MessageTransformsTest {
 
   @Test
   public void subscribeTransformCorrect() throws StatusException {
-    SequencedMessage message = SequencedMessage.create(
-        Message.builder()
-            .setAttributes(ImmutableListMultimap.<String, ByteString>builder()
-                .put("abc", ByteString.EMPTY)
-                .put("def", ByteString.copyFromUtf8("hij"))
-                .build())
-            .setData(ByteString.copyFrom(notUtf8Array))
-            .setEventTime(Timestamps.fromNanos(10))
-            .setKey(ByteString.copyFromUtf8("some_key"))
-            .build(),
-        Timestamps.fromSeconds(5),
-        Offset.create(7),
-        2);
-    PubsubMessage result = PubsubMessage.newBuilder()
-        .setData(message.message().data())
-        .setMessageId("7")  // The offset as a string
-        .setOrderingKey("some_key")  // The key field
-        .setPublishTime(message.publishTime())
-        .putAttributes("abc", "")
-        .putAttributes("def", "hij")
-        .putAttributes(MessageTransforms.PUBSUB_LITE_EVENT_TIME_TIMESTAMP_PROTO, MessageTransforms.encodeAttributeEventTime(message.message().eventTime().get()))
-        .build();
+    SequencedMessage message =
+        SequencedMessage.create(
+            Message.builder()
+                .setAttributes(
+                    ImmutableListMultimap.<String, ByteString>builder()
+                        .put("abc", ByteString.EMPTY)
+                        .put("def", ByteString.copyFromUtf8("hij"))
+                        .build())
+                .setData(ByteString.copyFrom(notUtf8Array))
+                .setEventTime(Timestamps.fromNanos(10))
+                .setKey(ByteString.copyFromUtf8("some_key"))
+                .build(),
+            Timestamps.fromSeconds(5),
+            Offset.create(7),
+            2);
+    PubsubMessage result =
+        PubsubMessage.newBuilder()
+            .setData(message.message().data())
+            .setMessageId("7") // The offset as a string
+            .setOrderingKey("some_key") // The key field
+            .setPublishTime(message.publishTime())
+            .putAttributes("abc", "")
+            .putAttributes("def", "hij")
+            .putAttributes(
+                MessageTransforms.PUBSUB_LITE_EVENT_TIME_TIMESTAMP_PROTO,
+                MessageTransforms.encodeAttributeEventTime(message.message().eventTime().get()))
+            .build();
     assertThat(subscribeTransformer.transform(message)).isEqualTo(result);
   }
 
@@ -131,7 +158,9 @@ public class MessageTransformsTest {
             message -> {
               throw Status.INTERNAL.asException();
             });
-    StatusException e = assertThrows(StatusException.class, () -> transformer.transform(PubsubMessage.getDefaultInstance()));
+    StatusException e =
+        assertThrows(
+            StatusException.class, () -> transformer.transform(PubsubMessage.getDefaultInstance()));
     assertThat(e.getStatus().getCode()).isEqualTo(Code.INTERNAL);
   }
 
@@ -152,29 +181,44 @@ public class MessageTransformsTest {
 
   @Test
   public void publishTransformValidBase64InvalidEventTime() {
-    StatusException e = assertThrows(StatusException.class, () -> publishTransformer.transform(
-        PubsubMessage.newBuilder().putAttributes(MessageTransforms.PUBSUB_LITE_EVENT_TIME_TIMESTAMP_PROTO, Base64.getEncoder().encodeToString(("Unlikely to be an encoded timestamp proto.".getBytes()))).build()));
+    StatusException e =
+        assertThrows(
+            StatusException.class,
+            () ->
+                publishTransformer.transform(
+                    PubsubMessage.newBuilder()
+                        .putAttributes(
+                            MessageTransforms.PUBSUB_LITE_EVENT_TIME_TIMESTAMP_PROTO,
+                            Base64.getEncoder()
+                                .encodeToString(
+                                    ("Unlikely to be an encoded timestamp proto.".getBytes())))
+                        .build()));
     assertThat(e.getStatus().getCode()).isEqualTo(Code.INVALID_ARGUMENT);
   }
 
   @Test
   public void publishTransformCorrect() throws StatusException {
-    PubsubMessage message = PubsubMessage.newBuilder()
-        .setData(ByteString.copyFrom(notUtf8Array))
-        .setOrderingKey("some_key")  // The key field
-        .putAttributes("abc", "")
-        .putAttributes("def", "hij")
-        .putAttributes(MessageTransforms.PUBSUB_LITE_EVENT_TIME_TIMESTAMP_PROTO, MessageTransforms.encodeAttributeEventTime(Timestamps.fromNanos(100)))
-        .build();
-    Message result = Message.builder()
-        .setData(ByteString.copyFrom(notUtf8Array))
-        .setKey(ByteString.copyFromUtf8("some_key"))
-        .setAttributes(ImmutableListMultimap.<String, ByteString>builder()
-            .put("abc", ByteString.EMPTY)
-            .put("def", ByteString.copyFromUtf8("hij"))
-            .build())
-        .setEventTime(Timestamps.fromNanos(100))
-        .build();
+    PubsubMessage message =
+        PubsubMessage.newBuilder()
+            .setData(ByteString.copyFrom(notUtf8Array))
+            .setOrderingKey("some_key") // The key field
+            .putAttributes("abc", "")
+            .putAttributes("def", "hij")
+            .putAttributes(
+                MessageTransforms.PUBSUB_LITE_EVENT_TIME_TIMESTAMP_PROTO,
+                MessageTransforms.encodeAttributeEventTime(Timestamps.fromNanos(100)))
+            .build();
+    Message result =
+        Message.builder()
+            .setData(ByteString.copyFrom(notUtf8Array))
+            .setKey(ByteString.copyFromUtf8("some_key"))
+            .setAttributes(
+                ImmutableListMultimap.<String, ByteString>builder()
+                    .put("abc", ByteString.EMPTY)
+                    .put("def", ByteString.copyFromUtf8("hij"))
+                    .build())
+            .setEventTime(Timestamps.fromNanos(100))
+            .build();
 
     assertThat(publishTransformer.transform(message)).isEqualTo(result);
   }

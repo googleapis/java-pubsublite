@@ -39,10 +39,12 @@ public abstract class AdminClientBuilder {
 
   // Required parameters.
   abstract CloudRegion region();
+
   abstract ScheduledExecutorService executor();
 
   // Optional parameters.
   abstract Optional<RetrySettings> retrySettings();
+
   abstract Optional<AdminServiceBlockingStub> stub();
 
   public static Builder builder() {
@@ -53,13 +55,16 @@ public abstract class AdminClientBuilder {
   public abstract static class Builder {
     // Required parameters.
     public abstract Builder setRegion(CloudRegion region);
+
     public abstract Builder setExecutor(ScheduledExecutorService executor);
 
     // Optional parameters.
     public abstract Builder setRetrySettings(RetrySettings retrySettings);
+
     public abstract Builder setStub(AdminServiceBlockingStub stub);
 
     abstract AdminClientBuilder autoBuild();
+
     public AdminClient build() throws StatusException {
       AdminClientBuilder builder = autoBuild();
       AdminServiceBlockingStub stub;

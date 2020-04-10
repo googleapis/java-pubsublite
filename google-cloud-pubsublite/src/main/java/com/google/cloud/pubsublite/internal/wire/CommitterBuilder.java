@@ -14,7 +14,6 @@
 
 package com.google.cloud.pubsublite.internal.wire;
 
-
 import com.google.auto.value.AutoValue;
 import com.google.cloud.pubsublite.Endpoints;
 import com.google.cloud.pubsublite.Partition;

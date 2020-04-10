@@ -27,7 +27,9 @@ import org.junit.runners.JUnit4;
 @RunWith(JUnit4.class)
 public final class CloseableMonitorTest {
   private final CloseableMonitor monitor = new CloseableMonitor();
-  @GuardedBy("monitor.monitor") boolean state = false;
+
+  @GuardedBy("monitor.monitor")
+  boolean state = false;
 
   @Test
   public void enter() {
@@ -48,7 +50,8 @@ public final class CloseableMonitorTest {
           }
         });
 
-    try (CloseableMonitor.Hold h = monitor.enterWhenUninterruptibly(
+    try (CloseableMonitor.Hold h =
+        monitor.enterWhenUninterruptibly(
             new Monitor.Guard(monitor.monitor) {
               @Override
               public boolean isSatisfied() {

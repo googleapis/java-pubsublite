@@ -14,12 +14,12 @@
 
 package com.google.cloud.pubsublite.cloudpubsub.internal;
 
+import com.google.cloud.pubsub.v1.AckReplyConsumer;
+import com.google.cloud.pubsub.v1.MessageReceiver;
 import com.google.cloud.pubsub.v1.SubscriberInterface;
 import com.google.cloud.pubsublite.MessageTransformer;
 import com.google.cloud.pubsublite.SequencedMessage;
 import com.google.cloud.pubsublite.cloudpubsub.FlowControlSettings;
-import com.google.cloud.pubsub.v1.AckReplyConsumer;
-import com.google.cloud.pubsub.v1.MessageReceiver;
 import com.google.cloud.pubsublite.internal.ExtractStatus;
 import com.google.cloud.pubsublite.internal.ProxyService;
 import com.google.cloud.pubsublite.internal.wire.SubscriberFactory;
@@ -36,9 +36,12 @@ public class SinglePartitionSubscriber extends ProxyService implements Subscribe
   private final com.google.cloud.pubsublite.internal.wire.Subscriber wireSubscriber;
 
   public SinglePartitionSubscriber(
-      MessageReceiver receiver, MessageTransformer<SequencedMessage, PubsubMessage> transformer,
-      AckSetTracker ackSetTracker, SubscriberFactory wireSubscriberFactory,
-      FlowControlSettings flowControlSettings) throws StatusException {
+      MessageReceiver receiver,
+      MessageTransformer<SequencedMessage, PubsubMessage> transformer,
+      AckSetTracker ackSetTracker,
+      SubscriberFactory wireSubscriberFactory,
+      FlowControlSettings flowControlSettings)
+      throws StatusException {
     this.receiver = receiver;
     this.transformer = transformer;
     this.ackSetTracker = ackSetTracker;
@@ -53,10 +56,11 @@ public class SinglePartitionSubscriber extends ProxyService implements Subscribe
 
   @Override
   protected void start() {
-    wireSubscriber.allowFlow(FlowControlRequest.newBuilder()
-        .setAllowedMessages(flowControlSettings.messagesOutstanding())
-        .setAllowedBytes(flowControlSettings.bytesOutstanding())
-        .build());
+    wireSubscriber.allowFlow(
+        FlowControlRequest.newBuilder()
+            .setAllowedMessages(flowControlSettings.messagesOutstanding())
+            .setAllowedBytes(flowControlSettings.bytesOutstanding())
+            .build());
   }
 
   @Override
@@ -68,22 +72,23 @@ public class SinglePartitionSubscriber extends ProxyService implements Subscribe
         PubsubMessage userMessage = transformer.transform(message);
         long bytes = message.byteSize();
         AckReplyConsumer trackerConsumer = ackSetTracker.track(message);
-        AckReplyConsumer clientConsumer = new AckReplyConsumer() {
-          @Override
-          public void ack() {
-            trackerConsumer.ack();
-            wireSubscriber.allowFlow(
-                FlowControlRequest.newBuilder()
-                    .setAllowedMessages(1)
-                    .setAllowedBytes(bytes)
-                    .build());
-          }
+        AckReplyConsumer clientConsumer =
+            new AckReplyConsumer() {
+              @Override
+              public void ack() {
+                trackerConsumer.ack();
+                wireSubscriber.allowFlow(
+                    FlowControlRequest.newBuilder()
+                        .setAllowedMessages(1)
+                        .setAllowedBytes(bytes)
+                        .build());
+              }
 
-          @Override
-          public void nack() {
-            trackerConsumer.nack();
-          }
-        };
+              @Override
+              public void nack() {
+                trackerConsumer.nack();
+              }
+            };
         receiver.receiveMessage(userMessage, clientConsumer);
       }
     } catch (Throwable t) {

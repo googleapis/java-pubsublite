@@ -153,9 +153,9 @@ public class BatchPublisherImplTest {
           .get()
           .onNext(
               PublishResponse.newBuilder()
-                  .setMessageResponse(MessagePublishResponse.newBuilder()
-                      .setStartCursor(Cursor.newBuilder()
-                          .setOffset(offset.value())))
+                  .setMessageResponse(
+                      MessagePublishResponse.newBuilder()
+                          .setStartCursor(Cursor.newBuilder().setOffset(offset.value())))
                   .build());
       verify(mockRequestStream).onNext(initialRequest());
       return null;

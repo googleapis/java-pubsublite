@@ -12,9 +12,9 @@ import java.nio.charset.StandardCharsets;
 final class RoutingMetadata {
   private RoutingMetadata() {}
 
-  final static String PARAMS_HEADER = "x-goog-request-params";
-  final static Metadata.Key<String> PARAMS_KEY = Metadata.Key
-      .of(PARAMS_HEADER, Metadata.ASCII_STRING_MARSHALLER);
+  static final String PARAMS_HEADER = "x-goog-request-params";
+  static final Metadata.Key<String> PARAMS_KEY =
+      Metadata.Key.of(PARAMS_HEADER, Metadata.ASCII_STRING_MARSHALLER);
 
   static Metadata of(TopicPath topic, Partition partition) {
     try {
@@ -31,10 +31,10 @@ final class RoutingMetadata {
   static Metadata of(SubscriptionPath subscription, Partition partition) {
     try {
       Metadata metadata = new Metadata();
-      String subscription_value = URLEncoder
-          .encode(subscription.value(), StandardCharsets.UTF_8.toString());
-      String params = String
-          .format("partition=%s&subscription=%s", partition.value(), subscription_value);
+      String subscription_value =
+          URLEncoder.encode(subscription.value(), StandardCharsets.UTF_8.toString());
+      String params =
+          String.format("partition=%s&subscription=%s", partition.value(), subscription_value);
       metadata.put(PARAMS_KEY, params);
       return metadata;
     } catch (UnsupportedEncodingException e) {

@@ -14,7 +14,6 @@
 
 package com.google.cloud.pubsublite.internal;
 
-
 import static com.google.common.truth.Truth.assertThat;
 import static com.google.common.truth.Truth8.assertThat;
 import static org.junit.Assert.assertThrows;
@@ -168,7 +167,8 @@ public class AdminClientImplTest {
           .setTopic(topicPath().value())
           .build();
   private static final Subscription SUBSCRIPTION_2 =
-      SUBSCRIPTION.toBuilder()
+      SUBSCRIPTION
+          .toBuilder()
           .setDeliveryConfig(
               DeliveryConfig.newBuilder().setSendMode(DeliveryConfig.SendMode.SEND_IMMEDIATELY))
           .build();

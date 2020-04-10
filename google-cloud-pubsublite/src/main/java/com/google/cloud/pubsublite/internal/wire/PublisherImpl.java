@@ -48,7 +48,8 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import javax.annotation.concurrent.GuardedBy;
 
-public final class PublisherImpl extends ProxyService implements Publisher<Offset>, RetryingConnectionObserver<Offset> {
+public final class PublisherImpl extends ProxyService
+    implements Publisher<Offset>, RetryingConnectionObserver<Offset> {
   @GuardedBy("monitor.monitor")
   private final RetryingConnection<BatchPublisher> connection;
 
@@ -99,7 +100,8 @@ public final class PublisherImpl extends ProxyService implements Publisher<Offse
       PublisherServiceGrpc.PublisherServiceStub stub,
       BatchPublisherFactory publisherFactory,
       InitialPublishRequest initialRequest,
-      BatchingSettings batchingSettings) throws StatusException {
+      BatchingSettings batchingSettings)
+      throws StatusException {
     Preconditions.checkNotNull(batchingSettings.getDelayThreshold());
     Preconditions.checkNotNull(batchingSettings.getRequestByteThreshold());
     Preconditions.checkNotNull(batchingSettings.getElementCountThreshold());
@@ -121,7 +123,8 @@ public final class PublisherImpl extends ProxyService implements Publisher<Offse
   public PublisherImpl(
       PublisherServiceGrpc.PublisherServiceStub stub,
       InitialPublishRequest initialRequest,
-      BatchingSettings batchingSettings) throws StatusException {
+      BatchingSettings batchingSettings)
+      throws StatusException {
     this(stub, new BatchPublisherImpl.Factory(), initialRequest, batchingSettings);
   }
 
@@ -169,11 +172,11 @@ public final class PublisherImpl extends ProxyService implements Publisher<Offse
   protected void stop() {
     alarmFuture.cancel(false /* mayInterruptIfRunning */);
     executorService.shutdown();
-    flush();  // Flush any outstanding messages that were batched.
+    flush(); // Flush any outstanding messages that were batched.
     try (CloseableMonitor.Hold h = monitor.enter()) {
       shutdown = true;
     }
-    flush();  // Flush again in case messages were added since shutdown was set.
+    flush(); // Flush again in case messages were added since shutdown was set.
   }
 
   @GuardedBy("monitor.monitor")

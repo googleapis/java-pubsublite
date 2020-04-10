@@ -57,8 +57,11 @@ public class RoutingPublisher extends ProxyService implements Publisher<PublishM
     try {
       Partition routedPartition =
           message.key().isEmpty() ? policy.routeWithoutKey() : policy.route(message.key());
-      checkState(partitionPublishers.containsKey(routedPartition), String.format(
-          "Routed to partition %s for which there is no publisher available.", routedPartition));
+      checkState(
+          partitionPublishers.containsKey(routedPartition),
+          String.format(
+              "Routed to partition %s for which there is no publisher available.",
+              routedPartition));
       return partitionPublishers.get(routedPartition).publish(message);
     } catch (StatusException e) {
       onPermanentError(e);

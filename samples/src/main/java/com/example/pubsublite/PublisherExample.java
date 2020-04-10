@@ -17,31 +17,30 @@ package com.example.pubsublite;
 
 import com.google.api.core.ApiFuture;
 import com.google.api.core.ApiFutures;
-import com.google.cloud.ServiceOptions;
-import com.google.cloud.pubsub.v1.Publisher;
+import com.google.cloud.pubsub.v1.PublisherInterface;
+import com.google.cloud.pubsublite.CloudZone;
+import com.google.cloud.pubsublite.ProjectNumber;
+import com.google.cloud.pubsublite.PublishMetadata;
+import com.google.cloud.pubsublite.TopicName;
+import com.google.cloud.pubsublite.TopicPaths;
+import com.google.cloud.pubsublite.cloudpubsub.PublisherApiService;
+import com.google.cloud.pubsublite.cloudpubsub.PublisherBuilder;
 import com.google.protobuf.ByteString;
-import com.google.pubsub.v1.ProjectTopicName;
 import com.google.pubsub.v1.PubsubMessage;
 import java.util.ArrayList;
 import java.util.List;
-import com.google.cloud.pubsublite.PublishMetadata;
-import com.google.cloud.pubsublite.cloudpubsub.PublisherBuilder;
-import com.google.cloud.pubsublite.cloudpubsub.PublisherApiService;
-import com.google.cloud.pubsublite.CloudZone;
-import com.google.cloud.pubsublite.TopicName;
-import com.google.cloud.pubsublite.TopicPaths;
 
 public class PublisherExample {
   private static final int MESSAGE_COUNT = 10;
 
   // Load the project number from a commandline flag.
-  private static final String PROJECT_NUMBER = 123;
+  private static final int PROJECT_NUMBER = 123;
   // Load the zone from a commandline flag.
   private static final String ZONE = "us-central9-z";
   // Load the topic name from a commandline flag.
   private static final String TOPIC_NAME = "my-topic";
 
-  public static List<String> runPublisher(Publisher publisher) throws Exception {
+  public static List<String> runPublisher(PublisherInterface publisher) throws Exception {
     List<ApiFuture<String>> futures = new ArrayList<>();
     for (int i = 0; i < MESSAGE_COUNT; i++) {
       String message = "message-" + i;
@@ -55,21 +54,24 @@ public class PublisherExample {
       futures.add(future);
     }
     return ApiFutures.allAsList(futures).get();
-    
   }
 
   // Publish messages to a topic.
   public static void run() throws Exception {
-    PublisherApiService publisherService = PublisherBuilder.builder().setTopicPath(TopicPaths.newBuilder()
-      .setProjectNumber(ProjectNumber.of(PROJECT_NUMBER))
-      .setZone(CloudZone.parse(ZONE))
-      .setTopicName(TopicName.of(SUBSCRIPTION_NAME))
-      .build()).build();
+    PublisherApiService publisherService =
+        PublisherBuilder.newBuilder()
+            .setTopicPath(
+                TopicPaths.newBuilder()
+                    .setProjectNumber(ProjectNumber.of(PROJECT_NUMBER))
+                    .setZone(CloudZone.parse(ZONE))
+                    .setTopicName(TopicName.of(TOPIC_NAME))
+                    .build())
+            .build();
     publisherService.startAsync().awaitRunning();
     ArrayList<String> ackIds = runPublisher(publisherService);
     publisherService.stopAsync().awaitTerminated();
     ArrayList<PublishMetadata> metadata = new ArrayList<>();
-    for (String id : messageIds) {
+    for (String id : ackIds) {
       metadata.add(PublishMetadata.decode(id));
     }
   }

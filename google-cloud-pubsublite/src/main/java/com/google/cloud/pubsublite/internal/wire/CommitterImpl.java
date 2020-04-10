@@ -101,7 +101,7 @@ public class CommitterImpl extends ProxyService
     try (CloseableMonitor.Hold h = monitor.enter()) {
       connection.reinitialize();
       Optional<Offset> offsetOr = state.reinitializeAndReturnToSend();
-      if (!offsetOr.isPresent()) return;  // There are no outstanding commit requests.
+      if (!offsetOr.isPresent()) return; // There are no outstanding commit requests.
       connection.modifyConnection(
           connectedCommitter -> {
             Preconditions.checkArgument(connectedCommitter.isPresent());

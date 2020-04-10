@@ -22,7 +22,8 @@ import java.util.List;
 // A MultiPartitionSubscriber wraps multiple subscribers into a single ApiService that can be
 // interacted with. If any single subscriber fails, all others are stopped.
 public class MultiPartitionSubscriber extends ProxyService implements SubscriberInterface {
-  public static SubscriberInterface of(List<SubscriberInterface> subscribers) throws StatusException {
+  public static SubscriberInterface of(List<SubscriberInterface> subscribers)
+      throws StatusException {
     return new MultiPartitionSubscriber(subscribers);
   }
 

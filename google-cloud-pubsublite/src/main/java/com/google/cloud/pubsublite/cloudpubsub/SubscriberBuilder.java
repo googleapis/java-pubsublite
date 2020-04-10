@@ -14,14 +14,14 @@
 
 package com.google.cloud.pubsublite.cloudpubsub;
 
-import com.google.cloud.pubsub.v1.SubscriberInterface;
 import com.google.auto.value.AutoValue;
+import com.google.cloud.pubsub.v1.MessageReceiver;
+import com.google.cloud.pubsub.v1.SubscriberInterface;
 import com.google.cloud.pubsublite.MessageTransformer;
 import com.google.cloud.pubsublite.Partition;
 import com.google.cloud.pubsublite.SequencedMessage;
 import com.google.cloud.pubsublite.SubscriptionPath;
 import com.google.cloud.pubsublite.SubscriptionPaths;
-import com.google.cloud.pubsub.v1.MessageReceiver;
 import com.google.cloud.pubsublite.cloudpubsub.internal.AckSetTrackerImpl;
 import com.google.cloud.pubsublite.cloudpubsub.internal.SinglePartitionSubscriber;
 import com.google.cloud.pubsublite.internal.wire.CommitterBuilder;
@@ -43,13 +43,18 @@ public abstract class SubscriberBuilder {
 
   // Required parameters.
   abstract MessageReceiver receiver();
+
   abstract SubscriptionPath subscriptionPath();
+
   abstract Partition partition();
+
   abstract FlowControlSettings flowControlSettings();
 
   // Optional parameters.
   abstract Optional<MessageTransformer<SequencedMessage, PubsubMessage>> transformer();
+
   abstract Optional<SubscriberServiceGrpc.SubscriberServiceStub> subscriberServiceStub();
+
   abstract Optional<CursorServiceGrpc.CursorServiceStub> cursorServiceStub();
 
   public static Builder newBuilder() {
@@ -60,8 +65,11 @@ public abstract class SubscriberBuilder {
   public abstract static class Builder {
     // Required parameters.
     public abstract Builder setReceiver(MessageReceiver receiver);
+
     public abstract Builder setSubscriptionPath(SubscriptionPath path);
+
     public abstract Builder setPartition(Partition partition);
+
     public abstract Builder setFlowControlSettings(FlowControlSettings settings);
 
     // Optional parameters.

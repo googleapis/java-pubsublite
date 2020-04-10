@@ -18,8 +18,9 @@ import com.google.common.collect.ImmutableSet;
 import io.grpc.Status.Code;
 
 public final class ErrorCodes {
-  public static final ImmutableSet<Code> RETRYABLE_CODES = ImmutableSet.of(
-      Code.DEADLINE_EXCEEDED, Code.ABORTED, Code.INTERNAL, Code.UNAVAILABLE, Code.UNKNOWN);
+  public static final ImmutableSet<Code> RETRYABLE_CODES =
+      ImmutableSet.of(
+          Code.DEADLINE_EXCEEDED, Code.ABORTED, Code.INTERNAL, Code.UNAVAILABLE, Code.UNKNOWN);
 
   public static boolean IsRetryable(Code code) {
     return RETRYABLE_CODES.contains(code);

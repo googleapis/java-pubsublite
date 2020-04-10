@@ -64,7 +64,8 @@ public class SubscriberImpl extends ProxyService
       SubscriberServiceStub stub,
       ConnectedSubscriberFactory factory,
       InitialSubscribeRequest initialRequest,
-      Consumer<ImmutableList<SequencedMessage>> messageConsumer) throws StatusException {
+      Consumer<ImmutableList<SequencedMessage>> messageConsumer)
+      throws StatusException {
     this.messageConsumer = messageConsumer;
     this.connection =
         new RetryingConnectionImpl<>(

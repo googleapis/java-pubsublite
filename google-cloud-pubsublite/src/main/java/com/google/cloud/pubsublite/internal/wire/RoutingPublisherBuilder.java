@@ -14,7 +14,6 @@
 
 package com.google.cloud.pubsublite.internal.wire;
 
-
 import com.google.auto.value.AutoValue;
 import com.google.cloud.pubsublite.Partition;
 import com.google.cloud.pubsublite.PartitionLookupUtils;
@@ -53,8 +52,8 @@ public abstract class RoutingPublisherBuilder {
       if (builder.numPartitions().isPresent()) {
         numPartitions = builder.numPartitions().get();
       } else {
-        numPartitions = PartitionLookupUtils.numPartitions(
-            builder.publisherBuilder().autoBuild().topic());
+        numPartitions =
+            PartitionLookupUtils.numPartitions(builder.publisherBuilder().autoBuild().topic());
       }
 
       ImmutableMap.Builder<Partition, Publisher<PublishMetadata>> publisherMapBuilder =

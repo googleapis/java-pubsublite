@@ -30,8 +30,8 @@ public class SinglePartitionPublisher extends ProxyService implements Publisher<
   private final Publisher<Offset> publisher;
   private final Partition partition;
 
-  SinglePartitionPublisher(
-      Publisher<Offset> publisher, Partition partition) throws StatusException {
+  SinglePartitionPublisher(Publisher<Offset> publisher, Partition partition)
+      throws StatusException {
     this.publisher = publisher;
     this.partition = partition;
     addServices(publisher);

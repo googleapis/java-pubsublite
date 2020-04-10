@@ -121,13 +121,13 @@ public class ConnectedSubscriberImplTest {
     stub = SubscriberServiceGrpc.newStub(channel);
 
     doAnswer(
-        (Answer<StreamObserver<SubscribeRequest>>)
-            args -> {
-              Preconditions.checkArgument(!leakedResponseStream.isPresent());
-              StreamObserver<SubscribeResponse> responseObserver = args.getArgument(0);
-              leakedResponseStream = Optional.of(responseObserver);
-              return mockRequestStream;
-            })
+            (Answer<StreamObserver<SubscribeRequest>>)
+                args -> {
+                  Preconditions.checkArgument(!leakedResponseStream.isPresent());
+                  StreamObserver<SubscribeResponse> responseObserver = args.getArgument(0);
+                  leakedResponseStream = Optional.of(responseObserver);
+                  return mockRequestStream;
+                })
         .when(serviceImpl)
         .subscribe(any());
     Preconditions.checkNotNull(serviceImpl);
@@ -168,9 +168,9 @@ public class ConnectedSubscriberImplTest {
   @Test
   public void construct_SendsInitialThenResponse() {
     doAnswer(
-        AnswerWith(
-            SubscribeResponse.newBuilder()
-                .setInitial(InitialSubscribeResponse.getDefaultInstance())))
+            AnswerWith(
+                SubscribeResponse.newBuilder()
+                    .setInitial(InitialSubscribeResponse.getDefaultInstance())))
         .when(mockRequestStream)
         .onNext(initialRequest());
     try (ConnectedSubscriberImpl subscriber =
@@ -187,8 +187,8 @@ public class ConnectedSubscriberImplTest {
   @Test
   public void construct_SendsMessageResponseError() {
     doAnswer(
-        AnswerWith(
-            SubscribeResponse.newBuilder().setMessages(MessageResponse.getDefaultInstance())))
+            AnswerWith(
+                SubscribeResponse.newBuilder().setMessages(MessageResponse.getDefaultInstance())))
         .when(mockRequestStream)
         .onNext(initialRequest());
     try (ConnectedSubscriberImpl subscriber =
@@ -217,11 +217,11 @@ public class ConnectedSubscriberImplTest {
   private ConnectedSubscriberImpl initialize() {
     Preconditions.checkNotNull(serviceImpl);
     doAnswer(
-        AnswerWith(
-            SubscribeResponse.newBuilder()
-                .setInitial(
-                    InitialSubscribeResponse.newBuilder()
-                        .setCursor(Cursor.newBuilder().setOffset(INITIAL_OFFSET.value())))))
+            AnswerWith(
+                SubscribeResponse.newBuilder()
+                    .setInitial(
+                        InitialSubscribeResponse.newBuilder()
+                            .setCursor(Cursor.newBuilder().setOffset(INITIAL_OFFSET.value())))))
         .when(mockRequestStream)
         .onNext(initialRequest());
     return FACTORY.New(stub::subscribe, mockOutputStream, initialRequest());
@@ -232,8 +232,7 @@ public class ConnectedSubscriberImplTest {
     ConnectedSubscriberImpl subscriber = initialize();
     subscriber.close();
     verify(mockRequestStream).onCompleted();
-    subscriber.seek(
-        SeekRequest.newBuilder().setNamedTarget(SeekRequest.NamedTarget.HEAD).build());
+    subscriber.seek(SeekRequest.newBuilder().setNamedTarget(SeekRequest.NamedTarget.HEAD).build());
     verify(mockOutputStream, never()).onNext(any());
   }
 
@@ -300,9 +299,7 @@ public class ConnectedSubscriberImplTest {
   public void seekToCommitRequest() {
     ConnectedSubscriber subscriber = initialize();
     SeekRequest request =
-        SeekRequest.newBuilder()
-            .setNamedTarget(SeekRequest.NamedTarget.COMMITTED_CURSOR)
-            .build();
+        SeekRequest.newBuilder().setNamedTarget(SeekRequest.NamedTarget.COMMITTED_CURSOR).build();
     subscriber.seek(request);
     verify(mockRequestStream).onNext(SubscribeRequest.newBuilder().setSeek(request).build());
   }
@@ -328,19 +325,17 @@ public class ConnectedSubscriberImplTest {
     ConnectedSubscriber subscriber = initialize();
     SubscribeRequest request = SubscribeRequest.newBuilder().setSeek(validSeekRequest()).build();
     doAnswer(
-        AnswerWith(
-            SubscribeResponse.newBuilder()
-                .setSeek(SeekResponse.newBuilder().setCursor(Cursor.newBuilder().setOffset(10)))
-                .build()))
+            AnswerWith(
+                SubscribeResponse.newBuilder()
+                    .setSeek(SeekResponse.newBuilder().setCursor(Cursor.newBuilder().setOffset(10)))
+                    .build()))
         .when(mockRequestStream)
         .onNext(request);
     subscriber.seek(validSeekRequest());
     verify(mockRequestStream).onNext(request);
     verify(mockOutputStream).onNext(Response.ofSeekOffset(Offset.create(10)));
     subscriber.seek(
-        SeekRequest.newBuilder()
-            .setNamedTarget(SeekRequest.NamedTarget.COMMITTED_CURSOR)
-            .build());
+        SeekRequest.newBuilder().setNamedTarget(SeekRequest.NamedTarget.COMMITTED_CURSOR).build());
     verify(mockRequestStream)
         .onNext(
             SubscribeRequest.newBuilder()

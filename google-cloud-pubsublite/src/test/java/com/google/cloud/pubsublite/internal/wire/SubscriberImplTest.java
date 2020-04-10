@@ -89,7 +89,8 @@ public class SubscriberImplTest {
       mock(ConnectedSubscriberFactory.class);
 
   @SuppressWarnings("unchecked")
-  private final Consumer<ImmutableList<SequencedMessage>> mockMessageConsumer = mock(Consumer.class);
+  private final Consumer<ImmutableList<SequencedMessage>> mockMessageConsumer =
+      mock(Consumer.class);
 
   private final Listener permanentErrorHandler = mock(Listener.class);
 
@@ -99,10 +100,10 @@ public class SubscriberImplTest {
   @Before
   public void setUp() throws StatusException {
     doAnswer(
-        args -> {
-          leakedResponseObserver = args.getArgument(1);
-          return mockConnectedSubscriber;
-        })
+            args -> {
+              leakedResponseObserver = args.getArgument(1);
+              return mockConnectedSubscriber;
+            })
         .when(mockSubscriberFactory)
         .New(any(), any(), eq(initialRequest()));
     ManagedChannel channel =
@@ -165,7 +166,8 @@ public class SubscriberImplTest {
     leakedResponseObserver.onNext(
         Response.ofMessages(
             ImmutableList.of(
-                SequencedMessage.create(Message.builder().build(), Timestamps.fromNanos(0), Offset.create(1), 10),
+                SequencedMessage.create(
+                    Message.builder().build(), Timestamps.fromNanos(0), Offset.create(1), 10),
                 SequencedMessage.create(
                     Message.builder().build(), Timestamps.fromNanos(0), Offset.create(0), 10))));
     assertThrows(IllegalStateException.class, subscriber::awaitTerminated);
@@ -178,7 +180,8 @@ public class SubscriberImplTest {
     subscriber.allowFlow(bigFlowControlRequest());
     ImmutableList<SequencedMessage> messages =
         ImmutableList.of(
-            SequencedMessage.create(Message.builder().build(), Timestamps.fromNanos(0), Offset.create(0), 0));
+            SequencedMessage.create(
+                Message.builder().build(), Timestamps.fromNanos(0), Offset.create(0), 0));
     leakedResponseObserver.onNext(Response.ofMessages(messages));
     leakedResponseObserver.onNext(Response.ofMessages(messages));
     assertThrows(IllegalStateException.class, subscriber::awaitTerminated);
@@ -191,8 +194,10 @@ public class SubscriberImplTest {
     subscriber.allowFlow(bigFlowControlRequest());
     ImmutableList<SequencedMessage> messages =
         ImmutableList.of(
-            SequencedMessage.create(Message.builder().build(), Timestamps.fromNanos(0), Offset.create(0), 10),
-            SequencedMessage.create(Message.builder().build(), Timestamps.fromNanos(0), Offset.create(1), 10));
+            SequencedMessage.create(
+                Message.builder().build(), Timestamps.fromNanos(0), Offset.create(0), 10),
+            SequencedMessage.create(
+                Message.builder().build(), Timestamps.fromNanos(0), Offset.create(1), 10));
     leakedResponseObserver.onNext(Response.ofMessages(messages));
 
     verify(mockMessageConsumer).accept(messages);
@@ -207,11 +212,14 @@ public class SubscriberImplTest {
     verify(mockConnectedSubscriber).allowFlow(request);
     ImmutableList<SequencedMessage> messages1 =
         ImmutableList.of(
-            SequencedMessage.create(Message.builder().build(), Timestamps.fromNanos(0), Offset.create(1), 98),
-            SequencedMessage.create(Message.builder().build(), Timestamps.fromNanos(0), Offset.create(2), 1));
+            SequencedMessage.create(
+                Message.builder().build(), Timestamps.fromNanos(0), Offset.create(1), 98),
+            SequencedMessage.create(
+                Message.builder().build(), Timestamps.fromNanos(0), Offset.create(2), 1));
     ImmutableList<SequencedMessage> messages2 =
         ImmutableList.of(
-            SequencedMessage.create(Message.builder().build(), Timestamps.fromNanos(0), Offset.create(3), 2));
+            SequencedMessage.create(
+                Message.builder().build(), Timestamps.fromNanos(0), Offset.create(3), 2));
     leakedResponseObserver.onNext(Response.ofMessages(messages1));
     verify(mockMessageConsumer).accept(messages1);
     verify(permanentErrorHandler, times(0)).failed(any(), any());

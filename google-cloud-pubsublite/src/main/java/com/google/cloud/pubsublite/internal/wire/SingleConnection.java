@@ -16,7 +16,7 @@ package com.google.cloud.pubsublite.internal.wire;
 
 import com.google.cloud.pubsublite.internal.CloseableMonitor;
 import com.google.common.base.Preconditions;
-import com.google.common.flogger.GoogleLogger;
+import com.google.common.flogger.FluentLogger;
 import com.google.common.util.concurrent.Monitor.Guard;
 import com.google.errorprone.annotations.concurrent.GuardedBy;
 import io.grpc.Status;
@@ -32,7 +32,7 @@ import io.grpc.stub.StreamObserver;
  */
 public abstract class SingleConnection<StreamRequestT, StreamResponseT, ClientResponseT>
     implements StreamObserver<StreamResponseT>, AutoCloseable {
-  private static final GoogleLogger log = GoogleLogger.forEnclosingClass();
+  private static final FluentLogger log = FluentLogger.forEnclosingClass();
 
   private final StreamObserver<StreamRequestT> requestStream;
   // onError and onCompleted may be called with connectionMonitor held. All messages will be sent

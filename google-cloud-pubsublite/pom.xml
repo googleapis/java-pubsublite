@@ -33,7 +33,7 @@
     <dependency>
       <groupId>com.google.cloud</groupId>
       <artifactId>google-cloud-pubsub</artifactId>
-      <version>1.104.1</version>
+      <version>1.103.0</version>
     </dependency>
     <dependency>
       <groupId>com.google.api.grpc</groupId>
@@ -45,5 +45,36 @@
       <artifactId>grpc-google-cloud-pubsublite-v1</artifactId>
       <version>0.1.0</version>
     </dependency>
+    <dependency>
+      <groupId>com.google.flogger</groupId>
+      <artifactId>flogger</artifactId>
+      <version>0.5.1</version>
+    </dependency>
   </dependencies>
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-enforcer-plugin</artifactId>
+        <version>3.0.0-M3</version>
+        <executions>
+          <execution>
+            <id>enforce</id>
+            <configuration>
+              <rules>
+                <requireUpperBoundDeps>
+                  <excludes>
+                    <exclude>org.checkerframework:checker-compat-qual</exclude>
+                  </excludes>
+                </requireUpperBoundDeps>
+              </rules>
+            </configuration>
+            <goals>
+              <goal>enforce</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
 </project>

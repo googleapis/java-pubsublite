@@ -18,7 +18,7 @@ import com.google.api.core.AbstractApiService;
 import com.google.cloud.pubsublite.ErrorCodes;
 import com.google.cloud.pubsublite.internal.CloseableMonitor;
 import com.google.cloud.pubsublite.internal.ExtractStatus;
-import com.google.common.flogger.GoogleLogger;
+import com.google.common.flogger.FluentLogger;
 import io.grpc.Status;
 import io.grpc.StatusException;
 import io.grpc.stub.StreamObserver;
@@ -36,7 +36,7 @@ import javax.annotation.concurrent.GuardedBy;
 class RetryingConnectionImpl<
         StreamRequestT, StreamResponseT, ClientResponseT, ConnectionT extends AutoCloseable>
     extends AbstractApiService implements RetryingConnection<ConnectionT>, StreamObserver<ClientResponseT> {
-  private static final GoogleLogger logger = GoogleLogger.forEnclosingClass();
+  private static final FluentLogger logger = FluentLogger.forEnclosingClass();
 
   private final StreamFactory<StreamRequestT, StreamResponseT> streamFactory;
   private final SingleConnectionFactory<

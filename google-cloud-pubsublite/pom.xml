@@ -47,7 +47,7 @@
     </dependency>
     <dependency>
       <groupId>com.google.flogger</groupId>
-      <artifactId>flogger</artifactId>
+      <artifactId>google-extensions</artifactId>
       <version>0.5.1</version>
     </dependency>
     <!--runtime dependencies-->

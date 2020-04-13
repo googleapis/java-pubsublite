@@ -25,7 +25,7 @@ import com.google.cloud.pubsublite.proto.SeekResponse;
 import com.google.cloud.pubsublite.proto.SubscribeRequest;
 import com.google.cloud.pubsublite.proto.SubscribeResponse;
 import com.google.common.base.Preconditions;
-import com.google.common.flogger.FluentLogger;
+import com.google.common.flogger.GoogleLogger;
 import com.google.errorprone.annotations.concurrent.GuardedBy;
 import io.grpc.Status;
 import io.grpc.stub.StreamObserver;
@@ -35,7 +35,7 @@ import java.util.stream.Collectors;
 class ConnectedSubscriberImpl
     extends SingleConnection<SubscribeRequest, SubscribeResponse, Response>
     implements ConnectedSubscriber {
-  private static final FluentLogger log = FluentLogger.forEnclosingClass();
+  private static final GoogleLogger log = GoogleLogger.forEnclosingClass();
 
   private final SubscribeRequest initialRequest;
   private final CloseableMonitor monitor = new CloseableMonitor();

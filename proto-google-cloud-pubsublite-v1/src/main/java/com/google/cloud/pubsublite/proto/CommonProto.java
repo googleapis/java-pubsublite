@@ -100,21 +100,22 @@ public final class CommonProto {
       "es\030\001 \001(\003\022)\n\006period\030\002 \001(\0132\031.google.protob" +
       "uf.Duration:\\\352AY\n\037pubsublite.googleapis." +
       "com/Topic\0226projects/{project}/locations/" +
-      "{location}/topics/{topic}\"\330\003\n\014Subscripti" +
+      "{location}/topics/{topic}\"\220\004\n\014Subscripti" +
       "on\022\014\n\004name\030\001 \001(\t\0223\n\005topic\030\002 \001(\tB$\372A!\n\037pu" +
       "bsublite.googleapis.com/Topic\022P\n\017deliver" +
       "y_config\030\003 \001(\01327.google.cloud.pubsublite" +
-      ".v1.Subscription.DeliveryConfig\032\277\001\n\016Deli" +
-      "veryConfig\022S\n\tsend_mode\030\002 \001(\0162@.google.c" +
-      "loud.pubsublite.v1.Subscription.Delivery" +
-      "Config.SendMode\"R\n\010SendMode\022\031\n\025SEND_MODE" +
-      "_UNSPECIFIED\020\000\022\024\n\020SEND_IMMEDIATELY\020\001\022\025\n\021" +
-      "SEND_AFTER_STORED\020\002J\004\010\001\020\002:q\352An\n&pubsubli" +
-      "te.googleapis.com/Subscription\022Dprojects" +
-      "/{project}/locations/{location}/subscrip" +
-      "tions/{subscription}B5\n!com.google.cloud" +
-      ".pubsublite.protoB\013CommonProtoP\001\370\001\001b\006pro" +
-      "to3"
+      ".v1.Subscription.DeliveryConfig\032\367\001\n\016Deli" +
+      "veryConfig\022i\n\024delivery_requirement\030\003 \001(\016" +
+      "2K.google.cloud.pubsublite.v1.Subscripti" +
+      "on.DeliveryConfig.DeliveryRequirement\"n\n" +
+      "\023DeliveryRequirement\022$\n DELIVERY_REQUIRE" +
+      "MENT_UNSPECIFIED\020\000\022\027\n\023DELIVER_IMMEDIATEL" +
+      "Y\020\001\022\030\n\024DELIVER_AFTER_STORED\020\002J\004\010\001\020\002J\004\010\002\020" +
+      "\003:q\352An\n&pubsublite.googleapis.com/Subscr" +
+      "iption\022Dprojects/{project}/locations/{lo" +
+      "cation}/subscriptions/{subscription}B5\n!" +
+      "com.google.cloud.pubsublite.protoB\013Commo" +
+      "nProtoP\001\370\001\001b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -182,7 +183,7 @@ public final class CommonProto {
     internal_static_google_cloud_pubsublite_v1_Subscription_DeliveryConfig_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_google_cloud_pubsublite_v1_Subscription_DeliveryConfig_descriptor,
-        new java.lang.String[] { "SendMode", });
+        new java.lang.String[] { "DeliveryRequirement", });
     com.google.protobuf.ExtensionRegistry registry =
         com.google.protobuf.ExtensionRegistry.newInstance();
     registry.add(com.google.api.ResourceProto.resource);

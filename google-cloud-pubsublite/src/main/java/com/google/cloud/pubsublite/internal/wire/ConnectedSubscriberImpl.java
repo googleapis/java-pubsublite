@@ -25,16 +25,17 @@ import com.google.cloud.pubsublite.proto.SeekResponse;
 import com.google.cloud.pubsublite.proto.SubscribeRequest;
 import com.google.cloud.pubsublite.proto.SubscribeResponse;
 import com.google.common.base.Preconditions;
-import com.google.common.collect.ImmutableList;
-import com.google.common.flogger.FluentLogger;
+import com.google.common.flogger.GoogleLogger;
 import com.google.errorprone.annotations.concurrent.GuardedBy;
 import io.grpc.Status;
 import io.grpc.stub.StreamObserver;
+import java.util.List;
+import java.util.stream.Collectors;
 
 class ConnectedSubscriberImpl
     extends SingleConnection<SubscribeRequest, SubscribeResponse, Response>
     implements ConnectedSubscriber {
-  private static final FluentLogger log = FluentLogger.forEnclosingClass();
+  private static final GoogleLogger log = GoogleLogger.forEnclosingClass();
 
   private final SubscribeRequest initialRequest;
   private final CloseableMonitor monitor = new CloseableMonitor();
@@ -127,7 +128,7 @@ class ConnectedSubscriberImpl
   }
 
   private Status onMessages(MessageResponse response) {
-    ImmutableList<SequencedMessage> messages;
+    List<SequencedMessage> messages;
     try (CloseableMonitor.Hold h = monitor.enter()) {
       if (seekInFlight) {
         log.atInfo().log(
@@ -144,7 +145,7 @@ class ConnectedSubscriberImpl
       messages =
           response.getMessagesList().stream()
               .map(SequencedMessage::fromProto)
-              .collect(ImmutableList.toImmutableList());
+              .collect(Collectors.toList());
       if (!Predicates.isOrdered(messages)) {
         return Status.FAILED_PRECONDITION.withDescription(
             String.format(

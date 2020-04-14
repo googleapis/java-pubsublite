@@ -33,7 +33,9 @@
     <dependency>
       <groupId>com.google.cloud</groupId>
       <artifactId>google-cloud-pubsub</artifactId>
-      <version>1.103.0</version>
+      <version>1.104.2.SNAPSHOT</version>
+      <scope>system</scope>
+      <systemPath> ${basedir}/java-pubsub/google-cloud-pubsub/target/google-cloud-pubsub-1.104.2-SNAPSHOT.jar</systemPath>
     </dependency>
     <dependency>
       <groupId>com.google.api.grpc</groupId>
@@ -47,8 +49,40 @@
     </dependency>
     <dependency>
       <groupId>com.google.flogger</groupId>
-      <artifactId>flogger</artifactId>
+      <artifactId>google-extensions</artifactId>
       <version>0.5.1</version>
+    </dependency>
+    <!--runtime dependencies-->
+    <dependency>
+      <groupId>com.google.flogger</groupId>
+      <artifactId>flogger-system-backend</artifactId>
+      <version>0.5.1</version>
+      <scope>runtime</scope>
+    </dependency>
+    <!--test dependencies-->
+    <dependency>
+      <groupId>com.google.truth</groupId>
+      <artifactId>truth</artifactId>
+      <version>1.0.1</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.google.truth.extensions</groupId>
+      <artifactId>truth-java8-extension</artifactId>
+      <version>1.0.1</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.mockito</groupId>
+      <artifactId>mockito-core</artifactId>
+      <version>3.2.0</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>io.grpc</groupId>
+      <artifactId>grpc-testing</artifactId>
+      <version>1.27.2</version>
+      <scope>test</scope>
     </dependency>
   </dependencies>
   <build>

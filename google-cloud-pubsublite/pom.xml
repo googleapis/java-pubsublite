@@ -33,9 +33,10 @@
     <dependency>
       <groupId>com.google.cloud</groupId>
       <artifactId>google-cloud-pubsub</artifactId>
+<!--      <version>1.103.0</version>-->
       <version>1.104.2.SNAPSHOT</version>
-      <scope>system</scope>
-      <systemPath> ${basedir}/java-pubsub/google-cloud-pubsub/target/google-cloud-pubsub-1.104.2-SNAPSHOT.jar</systemPath>
+<!--      <scope>System</scope>-->
+<!--      <systemPath> /Users/tianzi/Projects/java-pubsub/google-cloud-pubsub/target/google-cloud-pubsub-1.104.2-SNAPSHOT.jar</systemPath>-->
     </dependency>
     <dependency>
       <groupId>com.google.api.grpc</groupId>

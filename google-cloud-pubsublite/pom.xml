@@ -14,6 +14,7 @@
   <name>Google Cloud Pub/Sub Lite</name>
   <url>https://github.com/googleapis/java-pubsublite</url>
   <description>Java idiomatic client for Google Cloud Pub/Sub Lite</description>
+  <properties><enforcer.skip>true</enforcer.skip></properties><!--  TODO: remove it later -->
   <dependencies>
     <dependency>
       <groupId>com.google.protobuf</groupId>
@@ -33,10 +34,7 @@
     <dependency>
       <groupId>com.google.cloud</groupId>
       <artifactId>google-cloud-pubsub</artifactId>
-<!--      <version>1.103.0</version>-->
-      <version>1.104.2.SNAPSHOT</version>
-<!--      <scope>System</scope>-->
-<!--      <systemPath> /Users/tianzi/Projects/java-pubsub/google-cloud-pubsub/target/google-cloud-pubsub-1.104.2-SNAPSHOT.jar</systemPath>-->
+      <version>1.105.0</version>
     </dependency>
     <dependency>
       <groupId>com.google.api.grpc</groupId>

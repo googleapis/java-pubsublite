@@ -68,7 +68,7 @@ public class PublisherExample {
                     .build())
             .build();
     publisherService.startAsync().awaitRunning();
-    ArrayList<String> ackIds = runPublisher(publisherService);
+    List<String> ackIds = runPublisher(publisherService);
     publisherService.stopAsync().awaitTerminated();
     ArrayList<PublishMetadata> metadata = new ArrayList<>();
     for (String id : ackIds) {

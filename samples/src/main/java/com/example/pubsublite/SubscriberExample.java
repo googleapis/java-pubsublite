@@ -27,6 +27,7 @@ import com.google.cloud.pubsublite.SubscriptionPaths;
 import com.google.cloud.pubsublite.cloudpubsub.FlowControlSettings;
 import com.google.cloud.pubsublite.cloudpubsub.MultiPartitionSubscriber;
 import com.google.cloud.pubsublite.cloudpubsub.SubscriberBuilder;
+import com.google.common.collect.ImmutableList;
 import com.google.pubsub.v1.PubsubMessage;
 import java.util.ArrayList;
 import java.util.List;
@@ -39,7 +40,7 @@ public class SubscriberExample {
   // Load the subscription name from a commandline flag.
   private static final String SUBSCRIPTION_NAME = "my-sub";
   // Decide the list of partitions this subscriber is responsible for from a commandline flag.
-  private static final List<Integer> PARTITIONS = List.of(3, 7);
+  private static final List<Integer> PARTITIONS = ImmutableList.of(3, 7);
 
   static class MessageReceiverExample implements MessageReceiver {
     private final Partition partition;

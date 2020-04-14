@@ -40,8 +40,8 @@
         <artifactId>maven-compiler-plugin</artifactId>
         <version>3.8.1</version>
         <configuration>
-          <source>1.9</source>
-          <target>1.9</target>
+          <source>1.8</source>
+          <target>1.8</target>
           <encoding>UTF-8</encoding>
           <compilerArgument>-Xlint:unchecked</compilerArgument>
           <annotationProcessorPaths>
@@ -64,9 +64,9 @@
 
   <profiles>
     <profile>
-      <id>java9</id>
+      <id>java8</id>
       <activation>
-        <jdk>[9,)</jdk>
+        <jdk>[8,)</jdk>
       </activation>
       <dependencies>
         <dependency>

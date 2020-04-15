@@ -57,6 +57,8 @@ public abstract class SubscriberBuilder {
 
   abstract Optional<CursorServiceGrpc.CursorServiceStub> cursorServiceStub();
 
+  abstract Optional<NackHandler> nackHandler();
+
   public static Builder newBuilder() {
     return new AutoValue_SubscriberBuilder.Builder();
   }
@@ -81,6 +83,8 @@ public abstract class SubscriberBuilder {
 
     public abstract Builder setCursorServiceStub(CursorServiceGrpc.CursorServiceStub stub);
 
+    public abstract Builder setNackHandler(NackHandler nackHandler);
+
     abstract SubscriberBuilder autoBuild();
 
     @SuppressWarnings("CheckReturnValue")
@@ -104,6 +108,7 @@ public abstract class SubscriberBuilder {
           builder.receiver(),
           builder.transformer().orElse(MessageTransforms.toCpsSubscribeTransformer()),
           new AckSetTrackerImpl(wireCommitterBuilder.build()),
+          builder.nackHandler().orElse(new NackHandler() {}),
           messageConsumer -> wireSubscriberBuilder.setMessageConsumer(messageConsumer).build(),
           builder.flowControlSettings());
     }

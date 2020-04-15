@@ -15,12 +15,11 @@
 package com.google.cloud.pubsublite.cloudpubsub.internal;
 
 import com.google.api.core.ApiService;
-import com.google.cloud.pubsub.v1.AckReplyConsumer;
 import com.google.cloud.pubsublite.SequencedMessage;
 import io.grpc.StatusException;
 
 interface AckSetTracker extends ApiService {
-  // Track the given message. Returns the AckReplyConsumer if the message is a valid one to add to
-  // the ack set. Must be called with strictly increasing offset messages.
-  AckReplyConsumer track(SequencedMessage message) throws StatusException;
+  // Track the given message. Returns a Runnable to ack this message if the message is a valid one
+  // to add to the ack set. Must be called with strictly increasing offset messages.
+  Runnable track(SequencedMessage message) throws StatusException;
 }

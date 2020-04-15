@@ -168,7 +168,8 @@ public class AdminClientImplTest {
           .setTopic(topicPath().value())
           .build();
   private static final Subscription SUBSCRIPTION_2 =
-      SUBSCRIPTION.toBuilder()
+      SUBSCRIPTION
+          .toBuilder()
           .setDeliveryConfig(
               DeliveryConfig.newBuilder()
                   .setDeliveryRequirement(DeliveryConfig.DeliveryRequirement.DELIVER_IMMEDIATELY))

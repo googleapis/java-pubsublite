@@ -162,15 +162,16 @@ public class AdminClientImplTest {
   private static final Subscription SUBSCRIPTION =
       Subscription.newBuilder()
           .setDeliveryConfig(
-              DeliveryConfig.newBuilder().setSendMode(DeliveryConfig.SendMode.SEND_AFTER_STORED))
+              DeliveryConfig.newBuilder()
+                  .setDeliveryRequirement(DeliveryConfig.DeliveryRequirement.DELIVER_AFTER_STORED))
           .setName(subscriptionPath().value())
           .setTopic(topicPath().value())
           .build();
   private static final Subscription SUBSCRIPTION_2 =
-      SUBSCRIPTION
-          .toBuilder()
+      SUBSCRIPTION.toBuilder()
           .setDeliveryConfig(
-              DeliveryConfig.newBuilder().setSendMode(DeliveryConfig.SendMode.SEND_IMMEDIATELY))
+              DeliveryConfig.newBuilder()
+                  .setDeliveryRequirement(DeliveryConfig.DeliveryRequirement.DELIVER_IMMEDIATELY))
           .build();
 
   private final AdminServiceGrpc.AdminServiceImplBase serviceImpl =

@@ -74,7 +74,7 @@ public abstract class AdminClientBuilder {
         try {
           stub =
               Stubs.defaultStub(
-                  Endpoints.adminEndpoint(builder.region()), AdminServiceGrpc::newBlockingStub);
+                  Endpoints.regionalEndpoint(builder.region()), AdminServiceGrpc::newBlockingStub);
         } catch (IOException e) {
           throw Status.INTERNAL
               .withCause(e)

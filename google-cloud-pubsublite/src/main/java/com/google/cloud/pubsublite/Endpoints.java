@@ -15,15 +15,7 @@
 package com.google.cloud.pubsublite;
 
 public final class Endpoints {
-  public static String dataEndpoint(CloudRegion region) {
-    return region.value() + "-pubsublite.googleapis.com";
-  }
-
-  public static String adminEndpoint(CloudRegion region) {
-    return region.value() + "-pubsublite.googleapis.com";
-  }
-
-  public static String cursorEndpoint(CloudRegion region) {
+  public static String regionalEndpoint(CloudRegion region) {
     return region.value() + "-pubsublite.googleapis.com";
   }
 

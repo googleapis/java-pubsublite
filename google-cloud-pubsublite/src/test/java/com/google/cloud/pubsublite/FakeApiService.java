@@ -1,4 +1,4 @@
-// Copyright 2019 Google LLC
+// Copyright 2020 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -14,10 +14,28 @@
 
 package com.google.cloud.pubsublite;
 
-public final class Endpoints {
-  public static String regionalEndpoint(CloudRegion region) {
-    return region.value() + "-pubsublite.googleapis.com";
+import com.google.api.core.AbstractApiService;
+
+/**
+ * Fake Pub/Sub Lite service for testing. Used like:
+ *
+ * <p>
+ * static abstract class SubscriberFakeService extends FakeApiService implements Subscriber {}
+ * @Spy private SubscriberFakeService wireSubscriber;
+ * </p>
+ */
+public abstract class FakeApiService extends AbstractApiService {
+  public void fail(Throwable t) {
+    notifyFailed(t);
   }
 
-  private Endpoints() {}
+  @Override
+  protected void doStart() {
+    notifyStarted();
+  }
+
+  @Override
+  protected void doStop() {
+    notifyStopped();
+  }
 }

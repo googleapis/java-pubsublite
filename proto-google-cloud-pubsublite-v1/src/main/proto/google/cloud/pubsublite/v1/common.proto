@@ -127,9 +127,9 @@ message Subscription {
   message DeliveryConfig {
     // When this subscription should send messages to subscribers relative to
     // messages persistence in storage.
-    enum SendMode {
+    enum DeliveryRequirement {
       // Default value. This value is unused.
-      SEND_MODE_UNSPECIFIED = 0;
+      DELIVERY_REQUIREMENT_UNSPECIFIED = 0;
       // The server does not wait for a published message to be successfully
       // written to storage before delivering it to subscribers. As such, a
       // subscriber may receive a message for which the write to storage failed.
@@ -140,11 +140,11 @@ message Subscription {
       // receiving the message (e.g., those connected at the time the message is
       // published) and others not receiving it (e.g., those disconnected at
       // publish time). Note that offsets are never reused, so even if
-      // SEND_IMMEDIATELY is used, subscribers will not receive different
+      // DELIVER_IMMEDIATELY is used, subscribers will not receive different
       // messages when re-reading, they will just see gaps. EXAMPLE:
       //   (0) Topic 'topic1' is created with a single partition.
       //   (1) Two subscriptions 'sub1' and 'sub2' are created on topic1. sub1
-      //       has 'SEND_IMMEDIATELY', sub2 has 'SEND_AFTER_STORED'.
+      //       has 'DELIVER_IMMEDIATELY', sub2 has 'DELIVER_AFTER_STORED'.
       //   (2) A stream is opened for sub1 but not sub2.
       //   (3) A stream is opened for a publisher client using pub1.
       //   (4) pub1 successfully publishes m0 at offset 0 and m0 is delivered to
@@ -157,17 +157,17 @@ message Subscription {
       //   (some time elapses...)
       //   (7) A stream is opened for sub2 and it receives m0 and m2 but not m1.
       //   (8) sub1 seeks to offset 1 but only receives m2 and not m1.
-      SEND_IMMEDIATELY = 1;
+      DELIVER_IMMEDIATELY = 1;
       // The server will not deliver a published message to subscribers until
       // the message has been successfully written to storage. This will result
       // in higher end-to-end latency, but consistent delivery.
-      SEND_AFTER_STORED = 2;
+      DELIVER_AFTER_STORED = 2;
     }
 
-    // The SendMode for this subscription.
-    SendMode send_mode = 2;
+    // The DeliveryRequirement for this subscription.
+    DeliveryRequirement delivery_requirement = 3;
 
-    reserved 1;
+    reserved 1, 2;
   }
 
   // The name of the subscription.

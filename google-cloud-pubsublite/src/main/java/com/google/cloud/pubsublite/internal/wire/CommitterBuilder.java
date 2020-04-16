@@ -66,7 +66,7 @@ public abstract class CommitterBuilder {
         try {
           cursorStub =
               Stubs.defaultStub(
-                  Endpoints.dataEndpoint(
+                  Endpoints.regionalEndpoint(
                       SubscriptionPaths.getZone(builder.subscriptionPath()).region()),
                   CursorServiceGrpc::newStub);
         } catch (IOException e) {

@@ -81,7 +81,7 @@ public abstract class SubscriberBuilder {
         try {
           subscriberServiceStub =
               Stubs.defaultStub(
-                  Endpoints.dataEndpoint(
+                  Endpoints.regionalEndpoint(
                       SubscriptionPaths.getZone(builder.subscriptionPath()).region()),
                   SubscriberServiceGrpc::newStub);
         } catch (IOException e) {

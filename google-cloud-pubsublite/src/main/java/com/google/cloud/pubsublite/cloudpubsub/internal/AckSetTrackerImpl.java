@@ -17,7 +17,6 @@ package com.google.cloud.pubsublite.cloudpubsub.internal;
 import static com.google.cloud.pubsublite.internal.Preconditions.checkArgument;
 
 import com.google.api.core.ApiFuture;
-import com.google.cloud.pubsub.v1.AckReplyConsumer;
 import com.google.cloud.pubsublite.Offset;
 import com.google.cloud.pubsublite.SequencedMessage;
 import com.google.cloud.pubsublite.internal.CloseableMonitor;
@@ -62,31 +61,23 @@ public class AckSetTrackerImpl extends ProxyService implements AckSetTracker {
 
   // AckSetTracker implementation.
   @Override
-  public AckReplyConsumer track(SequencedMessage message) throws StatusException {
+  public Runnable track(SequencedMessage message) throws StatusException {
     final Offset messageOffset = message.offset();
     try (CloseableMonitor.Hold h = monitor.enter()) {
       checkArgument(receipts.isEmpty() || receipts.peekLast().value() < messageOffset.value());
       receipts.addLast(messageOffset);
     }
-    return new AckReplyConsumer() {
+    return new Runnable() {
       private final AtomicBoolean wasAcked = new AtomicBoolean(false);
 
       @Override
-      public void ack() {
+      public void run() {
         if (wasAcked.getAndSet(true)) {
           Status s = Status.FAILED_PRECONDITION.withDescription("Duplicate acks are not allowed.");
           onPermanentError(s.asException());
           throw s.asRuntimeException();
         }
         onAck(messageOffset);
-      }
-
-      @Override
-      public void nack() {
-        onPermanentError(
-            Status.UNIMPLEMENTED
-                .withDescription("You may not nack messages when using a PubSub Lite client.")
-                .asException());
       }
     };
   }

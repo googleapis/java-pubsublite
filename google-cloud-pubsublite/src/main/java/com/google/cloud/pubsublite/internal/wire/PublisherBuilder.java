@@ -110,7 +110,7 @@ public abstract class PublisherBuilder {
             autoBuilt.stub().isPresent()
                 ? autoBuilt.stub().get()
                 : Stubs.defaultStub(
-                    Endpoints.dataEndpoint(TopicPaths.getZone(autoBuilt.topic()).region()),
+                    Endpoints.regionalEndpoint(TopicPaths.getZone(autoBuilt.topic()).region()),
                     PublisherServiceGrpc::newStub);
       } catch (IOException e) {
         throw ExtractStatus.toCanonical(e);

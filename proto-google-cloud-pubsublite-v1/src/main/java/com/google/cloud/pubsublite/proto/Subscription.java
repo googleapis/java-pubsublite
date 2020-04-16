@@ -117,22 +117,22 @@ private static final long serialVersionUID = 0L;
 
     /**
      * <pre>
-     * The SendMode for this subscription.
+     * The DeliveryRequirement for this subscription.
      * </pre>
      *
-     * <code>.google.cloud.pubsublite.v1.Subscription.DeliveryConfig.SendMode send_mode = 2;</code>
-     * @return The enum numeric value on the wire for sendMode.
+     * <code>.google.cloud.pubsublite.v1.Subscription.DeliveryConfig.DeliveryRequirement delivery_requirement = 3;</code>
+     * @return The enum numeric value on the wire for deliveryRequirement.
      */
-    int getSendModeValue();
+    int getDeliveryRequirementValue();
     /**
      * <pre>
-     * The SendMode for this subscription.
+     * The DeliveryRequirement for this subscription.
      * </pre>
      *
-     * <code>.google.cloud.pubsublite.v1.Subscription.DeliveryConfig.SendMode send_mode = 2;</code>
-     * @return The sendMode.
+     * <code>.google.cloud.pubsublite.v1.Subscription.DeliveryConfig.DeliveryRequirement delivery_requirement = 3;</code>
+     * @return The deliveryRequirement.
      */
-    com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig.SendMode getSendMode();
+    com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig.DeliveryRequirement getDeliveryRequirement();
   }
   /**
    * <pre>
@@ -151,7 +151,7 @@ private static final long serialVersionUID = 0L;
       super(builder);
     }
     private DeliveryConfig() {
-      sendMode_ = 0;
+      deliveryRequirement_ = 0;
     }
 
     @java.lang.Override
@@ -184,10 +184,10 @@ private static final long serialVersionUID = 0L;
             case 0:
               done = true;
               break;
-            case 16: {
+            case 24: {
               int rawValue = input.readEnum();
 
-              sendMode_ = rawValue;
+              deliveryRequirement_ = rawValue;
               break;
             }
             default: {
@@ -228,18 +228,18 @@ private static final long serialVersionUID = 0L;
      * messages persistence in storage.
      * </pre>
      *
-     * Protobuf enum {@code google.cloud.pubsublite.v1.Subscription.DeliveryConfig.SendMode}
+     * Protobuf enum {@code google.cloud.pubsublite.v1.Subscription.DeliveryConfig.DeliveryRequirement}
      */
-    public enum SendMode
+    public enum DeliveryRequirement
         implements com.google.protobuf.ProtocolMessageEnum {
       /**
        * <pre>
        * Default value. This value is unused.
        * </pre>
        *
-       * <code>SEND_MODE_UNSPECIFIED = 0;</code>
+       * <code>DELIVERY_REQUIREMENT_UNSPECIFIED = 0;</code>
        */
-      SEND_MODE_UNSPECIFIED(0),
+      DELIVERY_REQUIREMENT_UNSPECIFIED(0),
       /**
        * <pre>
        * The server does not wait for a published message to be successfully
@@ -252,11 +252,11 @@ private static final long serialVersionUID = 0L;
        * receiving the message (e.g., those connected at the time the message is
        * published) and others not receiving it (e.g., those disconnected at
        * publish time). Note that offsets are never reused, so even if
-       * SEND_IMMEDIATELY is used, subscribers will not receive different
+       * DELIVER_IMMEDIATELY is used, subscribers will not receive different
        * messages when re-reading, they will just see gaps. EXAMPLE:
        *   (0) Topic 'topic1' is created with a single partition.
        *   (1) Two subscriptions 'sub1' and 'sub2' are created on topic1. sub1
-       *       has 'SEND_IMMEDIATELY', sub2 has 'SEND_AFTER_STORED'.
+       *       has 'DELIVER_IMMEDIATELY', sub2 has 'DELIVER_AFTER_STORED'.
        *   (2) A stream is opened for sub1 but not sub2.
        *   (3) A stream is opened for a publisher client using pub1.
        *   (4) pub1 successfully publishes m0 at offset 0 and m0 is delivered to
@@ -271,9 +271,9 @@ private static final long serialVersionUID = 0L;
        *   (8) sub1 seeks to offset 1 but only receives m2 and not m1.
        * </pre>
        *
-       * <code>SEND_IMMEDIATELY = 1;</code>
+       * <code>DELIVER_IMMEDIATELY = 1;</code>
        */
-      SEND_IMMEDIATELY(1),
+      DELIVER_IMMEDIATELY(1),
       /**
        * <pre>
        * The server will not deliver a published message to subscribers until
@@ -281,9 +281,9 @@ private static final long serialVersionUID = 0L;
        * in higher end-to-end latency, but consistent delivery.
        * </pre>
        *
-       * <code>SEND_AFTER_STORED = 2;</code>
+       * <code>DELIVER_AFTER_STORED = 2;</code>
        */
-      SEND_AFTER_STORED(2),
+      DELIVER_AFTER_STORED(2),
       UNRECOGNIZED(-1),
       ;
 
@@ -292,9 +292,9 @@ private static final long serialVersionUID = 0L;
        * Default value. This value is unused.
        * </pre>
        *
-       * <code>SEND_MODE_UNSPECIFIED = 0;</code>
+       * <code>DELIVERY_REQUIREMENT_UNSPECIFIED = 0;</code>
        */
-      public static final int SEND_MODE_UNSPECIFIED_VALUE = 0;
+      public static final int DELIVERY_REQUIREMENT_UNSPECIFIED_VALUE = 0;
       /**
        * <pre>
        * The server does not wait for a published message to be successfully
@@ -307,11 +307,11 @@ private static final long serialVersionUID = 0L;
        * receiving the message (e.g., those connected at the time the message is
        * published) and others not receiving it (e.g., those disconnected at
        * publish time). Note that offsets are never reused, so even if
-       * SEND_IMMEDIATELY is used, subscribers will not receive different
+       * DELIVER_IMMEDIATELY is used, subscribers will not receive different
        * messages when re-reading, they will just see gaps. EXAMPLE:
        *   (0) Topic 'topic1' is created with a single partition.
        *   (1) Two subscriptions 'sub1' and 'sub2' are created on topic1. sub1
-       *       has 'SEND_IMMEDIATELY', sub2 has 'SEND_AFTER_STORED'.
+       *       has 'DELIVER_IMMEDIATELY', sub2 has 'DELIVER_AFTER_STORED'.
        *   (2) A stream is opened for sub1 but not sub2.
        *   (3) A stream is opened for a publisher client using pub1.
        *   (4) pub1 successfully publishes m0 at offset 0 and m0 is delivered to
@@ -326,9 +326,9 @@ private static final long serialVersionUID = 0L;
        *   (8) sub1 seeks to offset 1 but only receives m2 and not m1.
        * </pre>
        *
-       * <code>SEND_IMMEDIATELY = 1;</code>
+       * <code>DELIVER_IMMEDIATELY = 1;</code>
        */
-      public static final int SEND_IMMEDIATELY_VALUE = 1;
+      public static final int DELIVER_IMMEDIATELY_VALUE = 1;
       /**
        * <pre>
        * The server will not deliver a published message to subscribers until
@@ -336,9 +336,9 @@ private static final long serialVersionUID = 0L;
        * in higher end-to-end latency, but consistent delivery.
        * </pre>
        *
-       * <code>SEND_AFTER_STORED = 2;</code>
+       * <code>DELIVER_AFTER_STORED = 2;</code>
        */
-      public static final int SEND_AFTER_STORED_VALUE = 2;
+      public static final int DELIVER_AFTER_STORED_VALUE = 2;
 
 
       public final int getNumber() {
@@ -355,7 +355,7 @@ private static final long serialVersionUID = 0L;
        * @deprecated Use {@link #forNumber(int)} instead.
        */
       @java.lang.Deprecated
-      public static SendMode valueOf(int value) {
+      public static DeliveryRequirement valueOf(int value) {
         return forNumber(value);
       }
 
@@ -363,24 +363,24 @@ private static final long serialVersionUID = 0L;
        * @param value The numeric wire value of the corresponding enum entry.
        * @return The enum associated with the given numeric wire value.
        */
-      public static SendMode forNumber(int value) {
+      public static DeliveryRequirement forNumber(int value) {
         switch (value) {
-          case 0: return SEND_MODE_UNSPECIFIED;
-          case 1: return SEND_IMMEDIATELY;
-          case 2: return SEND_AFTER_STORED;
+          case 0: return DELIVERY_REQUIREMENT_UNSPECIFIED;
+          case 1: return DELIVER_IMMEDIATELY;
+          case 2: return DELIVER_AFTER_STORED;
           default: return null;
         }
       }
 
-      public static com.google.protobuf.Internal.EnumLiteMap<SendMode>
+      public static com.google.protobuf.Internal.EnumLiteMap<DeliveryRequirement>
           internalGetValueMap() {
         return internalValueMap;
       }
       private static final com.google.protobuf.Internal.EnumLiteMap<
-          SendMode> internalValueMap =
-            new com.google.protobuf.Internal.EnumLiteMap<SendMode>() {
-              public SendMode findValueByNumber(int number) {
-                return SendMode.forNumber(number);
+          DeliveryRequirement> internalValueMap =
+            new com.google.protobuf.Internal.EnumLiteMap<DeliveryRequirement>() {
+              public DeliveryRequirement findValueByNumber(int number) {
+                return DeliveryRequirement.forNumber(number);
               }
             };
 
@@ -397,9 +397,9 @@ private static final long serialVersionUID = 0L;
         return com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig.getDescriptor().getEnumTypes().get(0);
       }
 
-      private static final SendMode[] VALUES = values();
+      private static final DeliveryRequirement[] VALUES = values();
 
-      public static SendMode valueOf(
+      public static DeliveryRequirement valueOf(
           com.google.protobuf.Descriptors.EnumValueDescriptor desc) {
         if (desc.getType() != getDescriptor()) {
           throw new java.lang.IllegalArgumentException(
@@ -413,38 +413,38 @@ private static final long serialVersionUID = 0L;
 
       private final int value;
 
-      private SendMode(int value) {
+      private DeliveryRequirement(int value) {
         this.value = value;
       }
 
-      // @@protoc_insertion_point(enum_scope:google.cloud.pubsublite.v1.Subscription.DeliveryConfig.SendMode)
+      // @@protoc_insertion_point(enum_scope:google.cloud.pubsublite.v1.Subscription.DeliveryConfig.DeliveryRequirement)
     }
 
-    public static final int SEND_MODE_FIELD_NUMBER = 2;
-    private int sendMode_;
+    public static final int DELIVERY_REQUIREMENT_FIELD_NUMBER = 3;
+    private int deliveryRequirement_;
     /**
      * <pre>
-     * The SendMode for this subscription.
+     * The DeliveryRequirement for this subscription.
      * </pre>
      *
-     * <code>.google.cloud.pubsublite.v1.Subscription.DeliveryConfig.SendMode send_mode = 2;</code>
-     * @return The enum numeric value on the wire for sendMode.
+     * <code>.google.cloud.pubsublite.v1.Subscription.DeliveryConfig.DeliveryRequirement delivery_requirement = 3;</code>
+     * @return The enum numeric value on the wire for deliveryRequirement.
      */
-    public int getSendModeValue() {
-      return sendMode_;
+    public int getDeliveryRequirementValue() {
+      return deliveryRequirement_;
     }
     /**
      * <pre>
-     * The SendMode for this subscription.
+     * The DeliveryRequirement for this subscription.
      * </pre>
      *
-     * <code>.google.cloud.pubsublite.v1.Subscription.DeliveryConfig.SendMode send_mode = 2;</code>
-     * @return The sendMode.
+     * <code>.google.cloud.pubsublite.v1.Subscription.DeliveryConfig.DeliveryRequirement delivery_requirement = 3;</code>
+     * @return The deliveryRequirement.
      */
-    public com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig.SendMode getSendMode() {
+    public com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig.DeliveryRequirement getDeliveryRequirement() {
       @SuppressWarnings("deprecation")
-      com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig.SendMode result = com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig.SendMode.valueOf(sendMode_);
-      return result == null ? com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig.SendMode.UNRECOGNIZED : result;
+      com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig.DeliveryRequirement result = com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig.DeliveryRequirement.valueOf(deliveryRequirement_);
+      return result == null ? com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig.DeliveryRequirement.UNRECOGNIZED : result;
     }
 
     private byte memoizedIsInitialized = -1;
@@ -461,8 +461,8 @@ private static final long serialVersionUID = 0L;
     @java.lang.Override
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
-      if (sendMode_ != com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig.SendMode.SEND_MODE_UNSPECIFIED.getNumber()) {
-        output.writeEnum(2, sendMode_);
+      if (deliveryRequirement_ != com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig.DeliveryRequirement.DELIVERY_REQUIREMENT_UNSPECIFIED.getNumber()) {
+        output.writeEnum(3, deliveryRequirement_);
       }
       unknownFields.writeTo(output);
     }
@@ -473,9 +473,9 @@ private static final long serialVersionUID = 0L;
       if (size != -1) return size;
 
       size = 0;
-      if (sendMode_ != com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig.SendMode.SEND_MODE_UNSPECIFIED.getNumber()) {
+      if (deliveryRequirement_ != com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig.DeliveryRequirement.DELIVERY_REQUIREMENT_UNSPECIFIED.getNumber()) {
         size += com.google.protobuf.CodedOutputStream
-          .computeEnumSize(2, sendMode_);
+          .computeEnumSize(3, deliveryRequirement_);
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -492,7 +492,7 @@ private static final long serialVersionUID = 0L;
       }
       com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig other = (com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig) obj;
 
-      if (sendMode_ != other.sendMode_) return false;
+      if (deliveryRequirement_ != other.deliveryRequirement_) return false;
       if (!unknownFields.equals(other.unknownFields)) return false;
       return true;
     }
@@ -504,8 +504,8 @@ private static final long serialVersionUID = 0L;
       }
       int hash = 41;
       hash = (19 * hash) + getDescriptor().hashCode();
-      hash = (37 * hash) + SEND_MODE_FIELD_NUMBER;
-      hash = (53 * hash) + sendMode_;
+      hash = (37 * hash) + DELIVERY_REQUIREMENT_FIELD_NUMBER;
+      hash = (53 * hash) + deliveryRequirement_;
       hash = (29 * hash) + unknownFields.hashCode();
       memoizedHashCode = hash;
       return hash;
@@ -643,7 +643,7 @@ private static final long serialVersionUID = 0L;
       @java.lang.Override
       public Builder clear() {
         super.clear();
-        sendMode_ = 0;
+        deliveryRequirement_ = 0;
 
         return this;
       }
@@ -671,7 +671,7 @@ private static final long serialVersionUID = 0L;
       @java.lang.Override
       public com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig buildPartial() {
         com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig result = new com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig(this);
-        result.sendMode_ = sendMode_;
+        result.deliveryRequirement_ = deliveryRequirement_;
         onBuilt();
         return result;
       }
@@ -720,8 +720,8 @@ private static final long serialVersionUID = 0L;
 
       public Builder mergeFrom(com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig other) {
         if (other == com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig.getDefaultInstance()) return this;
-        if (other.sendMode_ != 0) {
-          setSendModeValue(other.getSendModeValue());
+        if (other.deliveryRequirement_ != 0) {
+          setDeliveryRequirementValue(other.getDeliveryRequirementValue());
         }
         this.mergeUnknownFields(other.unknownFields);
         onChanged();
@@ -752,74 +752,74 @@ private static final long serialVersionUID = 0L;
         return this;
       }
 
-      private int sendMode_ = 0;
+      private int deliveryRequirement_ = 0;
       /**
        * <pre>
-       * The SendMode for this subscription.
+       * The DeliveryRequirement for this subscription.
        * </pre>
        *
-       * <code>.google.cloud.pubsublite.v1.Subscription.DeliveryConfig.SendMode send_mode = 2;</code>
-       * @return The enum numeric value on the wire for sendMode.
+       * <code>.google.cloud.pubsublite.v1.Subscription.DeliveryConfig.DeliveryRequirement delivery_requirement = 3;</code>
+       * @return The enum numeric value on the wire for deliveryRequirement.
        */
-      public int getSendModeValue() {
-        return sendMode_;
+      public int getDeliveryRequirementValue() {
+        return deliveryRequirement_;
       }
       /**
        * <pre>
-       * The SendMode for this subscription.
+       * The DeliveryRequirement for this subscription.
        * </pre>
        *
-       * <code>.google.cloud.pubsublite.v1.Subscription.DeliveryConfig.SendMode send_mode = 2;</code>
-       * @param value The enum numeric value on the wire for sendMode to set.
+       * <code>.google.cloud.pubsublite.v1.Subscription.DeliveryConfig.DeliveryRequirement delivery_requirement = 3;</code>
+       * @param value The enum numeric value on the wire for deliveryRequirement to set.
        * @return This builder for chaining.
        */
-      public Builder setSendModeValue(int value) {
-        sendMode_ = value;
+      public Builder setDeliveryRequirementValue(int value) {
+        deliveryRequirement_ = value;
         onChanged();
         return this;
       }
       /**
        * <pre>
-       * The SendMode for this subscription.
+       * The DeliveryRequirement for this subscription.
        * </pre>
        *
-       * <code>.google.cloud.pubsublite.v1.Subscription.DeliveryConfig.SendMode send_mode = 2;</code>
-       * @return The sendMode.
+       * <code>.google.cloud.pubsublite.v1.Subscription.DeliveryConfig.DeliveryRequirement delivery_requirement = 3;</code>
+       * @return The deliveryRequirement.
        */
-      public com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig.SendMode getSendMode() {
+      public com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig.DeliveryRequirement getDeliveryRequirement() {
         @SuppressWarnings("deprecation")
-        com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig.SendMode result = com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig.SendMode.valueOf(sendMode_);
-        return result == null ? com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig.SendMode.UNRECOGNIZED : result;
+        com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig.DeliveryRequirement result = com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig.DeliveryRequirement.valueOf(deliveryRequirement_);
+        return result == null ? com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig.DeliveryRequirement.UNRECOGNIZED : result;
       }
       /**
        * <pre>
-       * The SendMode for this subscription.
+       * The DeliveryRequirement for this subscription.
        * </pre>
        *
-       * <code>.google.cloud.pubsublite.v1.Subscription.DeliveryConfig.SendMode send_mode = 2;</code>
-       * @param value The sendMode to set.
+       * <code>.google.cloud.pubsublite.v1.Subscription.DeliveryConfig.DeliveryRequirement delivery_requirement = 3;</code>
+       * @param value The deliveryRequirement to set.
        * @return This builder for chaining.
        */
-      public Builder setSendMode(com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig.SendMode value) {
+      public Builder setDeliveryRequirement(com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig.DeliveryRequirement value) {
         if (value == null) {
           throw new NullPointerException();
         }
         
-        sendMode_ = value.getNumber();
+        deliveryRequirement_ = value.getNumber();
         onChanged();
         return this;
       }
       /**
        * <pre>
-       * The SendMode for this subscription.
+       * The DeliveryRequirement for this subscription.
        * </pre>
        *
-       * <code>.google.cloud.pubsublite.v1.Subscription.DeliveryConfig.SendMode send_mode = 2;</code>
+       * <code>.google.cloud.pubsublite.v1.Subscription.DeliveryConfig.DeliveryRequirement delivery_requirement = 3;</code>
        * @return This builder for chaining.
        */
-      public Builder clearSendMode() {
+      public Builder clearDeliveryRequirement() {
         
-        sendMode_ = 0;
+        deliveryRequirement_ = 0;
         onChanged();
         return this;
       }

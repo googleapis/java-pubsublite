@@ -107,6 +107,7 @@
             <configuration>
               <rules>
                 <requireUpperBoundDeps>
+                  <level>WARN</level>
                   <excludes>
                     <exclude>org.checkerframework:checker-compat-qual</exclude>
                   </excludes>

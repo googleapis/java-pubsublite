@@ -25,16 +25,15 @@ import java.util.function.Function;
 
 public class Stubs {
   private static final ImmutableList<String> DEFAULT_SERVICE_SCOPES =
-    ImmutableList.of("https://www.googleapis.com/auth/cloud-platform");
+      ImmutableList.of("https://www.googleapis.com/auth/cloud-platform");
 
   public static <StubT extends AbstractStub<StubT>> StubT defaultStub(
       String target, Function<Channel, StubT> stubFactory) throws IOException {
     return stubFactory
         .apply(ManagedChannelBuilder.forTarget(target).build())
-        .withCallCredentials(MoreCallCredentials.from(
-          GoogleCredentials
-            .getApplicationDefault()
-            .createScoped(DEFAULT_SERVICE_SCORES)));
+        .withCallCredentials(
+            MoreCallCredentials.from(
+                GoogleCredentials.getApplicationDefault().createScoped(DEFAULT_SERVICE_SCOPES)));
   }
 
   private Stubs() {}

@@ -27,7 +27,10 @@ public class Stubs {
       String target, Function<Channel, StubT> stubFactory) throws IOException {
     return stubFactory
         .apply(ManagedChannelBuilder.forTarget(target).build())
-        .withCallCredentials(MoreCallCredentials.from(GoogleCredentials.getApplicationDefault()));
+        .withCallCredentials(
+            MoreCallCredentials.from(
+                GoogleCredentials.getApplicationDefault()
+                    .createScoped("https://www.googleapis.com/auth/cloud-platform")));
   }
 
   private Stubs() {}

@@ -19,10 +19,10 @@ import com.google.api.core.AbstractApiService;
 /**
  * Fake Pub/Sub Lite service for testing. Used like:
  *
- * <p>
- * static abstract class SubscriberFakeService extends FakeApiService implements Subscriber {}
+ * <pre>
+ * static abstract class SubscriberFakeService extends FakeApiService implements Subscriber {};
  * @Spy private SubscriberFakeService wireSubscriber;
- * </p>
+ * </pre>
  */
 public abstract class FakeApiService extends AbstractApiService {
   public void fail(Throwable t) {

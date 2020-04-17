@@ -44,6 +44,8 @@ public abstract class RoutingPublisherBuilder {
     // Required parameters.
     public abstract Builder setTopic(TopicPath path);
 
+    // If a topic is specified in the underlying SinglePartitionPublisherBuilder, the value will be
+    // overwritten by the topic provided to the RouthingPublisherBuilder.
     public abstract Builder setPublisherBuilder(SinglePartitionPublisherBuilder.Builder builder);
 
     // Optional parameters.

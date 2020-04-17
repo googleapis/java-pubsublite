@@ -88,13 +88,14 @@ public abstract class PublisherBuilder {
 
       SinglePartitionPublisherBuilder.Builder singlePartitionPublisherBuilder =
           SinglePartitionPublisherBuilder.newBuilder()
-              .setTopic(builder.topicPath())
               .setBatchingSettings(Optional.of(batchingSettings))
               .setStub(builder.stub())
               .setContext(PubsubContext.of(FRAMEWORK));
 
-      RoutingPublisherBuilder.Builder wireBuilder = RoutingPublisherBuilder.newBuilder();
-      wireBuilder.setPublisherBuilder(singlePartitionPublisherBuilder);
+      RoutingPublisherBuilder.Builder wireBuilder =
+          RoutingPublisherBuilder.newBuilder()
+              .setTopic(builder.topicPath())
+              .setPublisherBuilder(singlePartitionPublisherBuilder);
 
       return new WrappingPublisher(wireBuilder.build(), messageTransformer);
     }

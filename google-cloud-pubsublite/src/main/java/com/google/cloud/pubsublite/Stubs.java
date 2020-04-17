@@ -15,7 +15,6 @@
 package com.google.cloud.pubsublite;
 
 import com.google.auth.oauth2.GoogleCredentials;
-import com.google.common.collect.ImmutableList;
 import io.grpc.Channel;
 import io.grpc.ManagedChannelBuilder;
 import io.grpc.auth.MoreCallCredentials;

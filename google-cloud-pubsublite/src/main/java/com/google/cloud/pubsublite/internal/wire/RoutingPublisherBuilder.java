@@ -19,6 +19,7 @@ import com.google.cloud.pubsublite.Partition;
 import com.google.cloud.pubsublite.PartitionLookupUtils;
 import com.google.cloud.pubsublite.PublishMetadata;
 import com.google.cloud.pubsublite.Publisher;
+import com.google.cloud.pubsublite.TopicPath;
 import com.google.cloud.pubsublite.internal.DefaultRoutingPolicy;
 import com.google.common.collect.ImmutableMap;
 import io.grpc.StatusException;
@@ -27,6 +28,8 @@ import java.util.Optional;
 @AutoValue
 public abstract class RoutingPublisherBuilder {
   // Required parameters.
+  abstract TopicPath topic();
+
   abstract SinglePartitionPublisherBuilder.Builder publisherBuilder();
 
   // Optional parameters.
@@ -39,6 +42,8 @@ public abstract class RoutingPublisherBuilder {
   @AutoValue.Builder
   public abstract static class Builder {
     // Required parameters.
+    public abstract Builder setTopic(TopicPath path);
+
     public abstract Builder setPublisherBuilder(SinglePartitionPublisherBuilder.Builder builder);
 
     // Optional parameters.
@@ -52,8 +57,7 @@ public abstract class RoutingPublisherBuilder {
       if (builder.numPartitions().isPresent()) {
         numPartitions = builder.numPartitions().get();
       } else {
-        numPartitions =
-            PartitionLookupUtils.numPartitions(builder.publisherBuilder().autoBuild().topic());
+        numPartitions = PartitionLookupUtils.numPartitions(builder.topic());
       }
 
       ImmutableMap.Builder<Partition, Publisher<PublishMetadata>> publisherMapBuilder =
@@ -61,7 +65,10 @@ public abstract class RoutingPublisherBuilder {
       for (int i = 0; i < numPartitions; i++) {
         publisherMapBuilder.put(
             Partition.create(i),
-            builder.publisherBuilder().setPartition(Partition.create(i)).build());
+            builder.publisherBuilder()
+                .setTopic(builder.topic())
+                .setPartition(Partition.create(i))
+                .build());
       }
 
       return new RoutingPublisher(

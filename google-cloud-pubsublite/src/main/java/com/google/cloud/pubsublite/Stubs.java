@@ -23,6 +23,7 @@ import io.grpc.stub.AbstractStub;
 import java.io.IOException;
 import java.util.function.Function;
 
+public class Stubs {
   public static <StubT extends AbstractStub<StubT>> StubT defaultStub(
       String target, Function<Channel, StubT> stubFactory) throws IOException {
     return stubFactory

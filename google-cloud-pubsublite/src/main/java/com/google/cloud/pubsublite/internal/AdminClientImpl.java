@@ -27,7 +27,7 @@ import com.google.api.gax.retrying.TimedAttemptSettings;
 import com.google.cloud.pubsublite.AdminClient;
 import com.google.cloud.pubsublite.CloudRegion;
 import com.google.cloud.pubsublite.ErrorCodes;
-import com.google.cloud.pubsublite.ProjectPath;
+import com.google.cloud.pubsublite.LocationPath;
 import com.google.cloud.pubsublite.SubscriptionPath;
 import com.google.cloud.pubsublite.SubscriptionPaths;
 import com.google.cloud.pubsublite.TopicPath;
@@ -156,7 +156,7 @@ public class AdminClientImpl implements AdminClient {
   }
 
   @Override
-  public ApiFuture<List<Topic>> listTopics(ProjectPath path) {
+  public ApiFuture<List<Topic>> listTopics(LocationPath path) {
     return runWithRetries(
         () -> {
           return stub.listTopics(ListTopicsRequest.newBuilder().setParent(path.value()).build())
@@ -228,7 +228,7 @@ public class AdminClientImpl implements AdminClient {
   }
 
   @Override
-  public ApiFuture<List<Subscription>> listSubscriptions(ProjectPath path) {
+  public ApiFuture<List<Subscription>> listSubscriptions(LocationPath path) {
     return runWithRetries(
         () -> {
           return stub.listSubscriptions(

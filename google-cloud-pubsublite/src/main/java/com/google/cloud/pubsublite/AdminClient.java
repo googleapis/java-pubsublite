@@ -59,7 +59,7 @@ public interface AdminClient {
    * @return A future that will have either an error {@link io.grpc.StatusException} or the list of
    *     topic paths on success.
    */
-  ApiFuture<List<Topic>> listTopics(ProjectPath path);
+  ApiFuture<List<Topic>> listTopics(LocationPath path);
 
   /**
    * Update the topic with path {@code topic.getPath()} if it exists.
@@ -116,7 +116,7 @@ public interface AdminClient {
    * @return A future that will have either an error {@link io.grpc.StatusException} or the list of
    *     subscription paths on success.
    */
-  ApiFuture<List<Subscription>> listSubscriptions(ProjectPath path);
+  ApiFuture<List<Subscription>> listSubscriptions(LocationPath path);
 
   /**
    * Update the subscription with path {@code subscription.getPath()} if it exists.

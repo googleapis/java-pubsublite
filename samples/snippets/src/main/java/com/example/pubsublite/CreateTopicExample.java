@@ -47,7 +47,7 @@ public class CreateTopicExample {
   }
 
   public static void createTopicExample(
-    String CLOUD_REGION, char ZONE, long PROJECT_NUMBER, String TOPIC_NAME, int PARTITIONS) {
+      String CLOUD_REGION, char ZONE, long PROJECT_NUMBER, String TOPIC_NAME, int PARTITIONS) {
 
     try {
       CloudRegion cloudRegion = CloudRegion.create(CLOUD_REGION);
@@ -56,34 +56,34 @@ public class CreateTopicExample {
       TopicName topicName = TopicName.of(TOPIC_NAME);
 
       TopicPath topicPath =
-        TopicPaths.newBuilder()
-          .setZone(zone)
-          .setProjectNumber(projectNum)
-          .setTopicName(topicName)
-          .build();
+          TopicPaths.newBuilder()
+              .setZone(zone)
+              .setProjectNumber(projectNum)
+              .setTopicName(topicName)
+              .build();
 
       Topic topic =
-        Topic.newBuilder()
-          .setPartitionConfig(
-            PartitionConfig.newBuilder()
-              .setScale(
-                1) // Set publishing throughput to 1*4 MiB per sec. This must be 1-4.
-              .setCount(PARTITIONS))
-          .setRetentionConfig(
-            RetentionConfig.newBuilder()
-              .setPeriod(Durations.fromDays(7))
-              .setPerPartitionBytes(100000000000L)) // 100 GiB. This must be 30 GiB-10 TiB.
-          .setName(topicPath.value())
-          .build();
+          Topic.newBuilder()
+              .setPartitionConfig(
+                  PartitionConfig.newBuilder()
+                      .setScale(
+                          1) // Set publishing throughput to 1*4 MiB per sec. This must be 1-4.
+                      .setCount(PARTITIONS))
+              .setRetentionConfig(
+                  RetentionConfig.newBuilder()
+                      .setPeriod(Durations.fromDays(7))
+                      .setPerPartitionBytes(100000000000L)) // 100 GiB. This must be 30 GiB-10 TiB.
+              .setName(topicPath.value())
+              .build();
 
       ScheduledExecutorService executor = Executors.newScheduledThreadPool(10);
 
       // Create admin client
       AdminClient adminClient =
-        AdminClientBuilder.builder().setRegion(cloudRegion).setExecutor(executor).build();
+          AdminClientBuilder.builder().setRegion(cloudRegion).setExecutor(executor).build();
 
       System.out.println(
-        adminClient.createTopic(topic).get().getAllFields() + " created successfully.");
+          adminClient.createTopic(topic).get().getAllFields() + " created successfully.");
 
       executor.shutdown();
       executor.awaitTermination(10, TimeUnit.SECONDS);

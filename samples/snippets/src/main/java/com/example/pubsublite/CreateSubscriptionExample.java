@@ -49,11 +49,11 @@ public class CreateSubscriptionExample {
   }
 
   public static void createSubscriptionExample(
-    String CLOUD_REGION,
-    char ZONE,
-    long PROJECT_NUMBER,
-    String TOPIC_NAME,
-    String SUBSCRIPTION_NAME) {
+      String CLOUD_REGION,
+      char ZONE,
+      long PROJECT_NUMBER,
+      String TOPIC_NAME,
+      String SUBSCRIPTION_NAME) {
 
     try {
       CloudRegion cloudRegion = CloudRegion.create(CLOUD_REGION);
@@ -63,37 +63,37 @@ public class CreateSubscriptionExample {
       SubscriptionName subscriptionName = SubscriptionName.of(SUBSCRIPTION_NAME);
 
       TopicPath topicPath =
-        TopicPaths.newBuilder()
-          .setZone(zone)
-          .setProjectNumber(projectNum)
-          .setTopicName(topicName)
-          .build();
+          TopicPaths.newBuilder()
+              .setZone(zone)
+              .setProjectNumber(projectNum)
+              .setTopicName(topicName)
+              .build();
 
       SubscriptionPath subscriptionPath =
-        SubscriptionPaths.newBuilder()
-          .setZone(zone)
-          .setProjectNumber(projectNum)
-          .setSubscriptionName(subscriptionName)
-          .build();
+          SubscriptionPaths.newBuilder()
+              .setZone(zone)
+              .setProjectNumber(projectNum)
+              .setSubscriptionName(subscriptionName)
+              .build();
 
       Subscription subscription =
-        Subscription.newBuilder()
-          .setDeliveryConfig(
-            DeliveryConfig.newBuilder()
-              .setDeliveryRequirement(DeliveryRequirement.DELIVER_IMMEDIATELY))
-          .setName(subscriptionPath.value())
-          .setTopic(topicPath.value())
-          .build();
+          Subscription.newBuilder()
+              .setDeliveryConfig(
+                  DeliveryConfig.newBuilder()
+                      .setDeliveryRequirement(DeliveryRequirement.DELIVER_IMMEDIATELY))
+              .setName(subscriptionPath.value())
+              .setTopic(topicPath.value())
+              .build();
 
       ScheduledExecutorService executor = Executors.newScheduledThreadPool(10);
 
       // Create admin client
       AdminClient adminClient =
-        AdminClientBuilder.builder().setRegion(cloudRegion).setExecutor(executor).build();
+          AdminClientBuilder.builder().setRegion(cloudRegion).setExecutor(executor).build();
 
       System.out.println(
-        adminClient.createSubscription(subscription).get().getAllFields()
-          + " created successfully.");
+          adminClient.createSubscription(subscription).get().getAllFields()
+              + " created successfully.");
 
       executor.shutdown();
       executor.awaitTermination(10, TimeUnit.SECONDS);

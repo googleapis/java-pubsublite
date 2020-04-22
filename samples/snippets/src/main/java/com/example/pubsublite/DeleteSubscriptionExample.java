@@ -42,7 +42,7 @@ public class DeleteSubscriptionExample {
   }
 
   public static void deleteSubscriptionExample(
-    String CLOUD_REGION, char ZONE, long PROJECT_NUMBER, String SUBSCRIPTION_NAME) {
+      String CLOUD_REGION, char ZONE, long PROJECT_NUMBER, String SUBSCRIPTION_NAME) {
 
     try {
       CloudRegion cloudRegion = CloudRegion.create(CLOUD_REGION);
@@ -51,17 +51,17 @@ public class DeleteSubscriptionExample {
       SubscriptionName subscriptionName = SubscriptionName.of(SUBSCRIPTION_NAME);
 
       SubscriptionPath subscriptionPath =
-        SubscriptionPaths.newBuilder()
-          .setZone(zone)
-          .setProjectNumber(projectNum)
-          .setSubscriptionName(subscriptionName)
-          .build();
+          SubscriptionPaths.newBuilder()
+              .setZone(zone)
+              .setProjectNumber(projectNum)
+              .setSubscriptionName(subscriptionName)
+              .build();
 
       ScheduledExecutorService executor = Executors.newScheduledThreadPool(10);
 
       // Create admin client
       AdminClient adminClient =
-        AdminClientBuilder.builder().setRegion(cloudRegion).setExecutor(executor).build();
+          AdminClientBuilder.builder().setRegion(cloudRegion).setExecutor(executor).build();
 
       adminClient.deleteSubscription(subscriptionPath).get();
 

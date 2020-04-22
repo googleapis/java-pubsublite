@@ -61,23 +61,23 @@ public class SubscriberExample {
     @Override
     public void receiveMessage(PubsubMessage message, AckReplyConsumer consumer) {
       System.out.println(
-        "Partition: "
-          + partition
-          + " Message Id: "
-          + message.getMessageId()
-          + " Data: "
-          + message.getData().toStringUtf8());
+          "Partition: "
+              + partition
+              + " Message Id: "
+              + message.getMessageId()
+              + " Data: "
+              + message.getData().toStringUtf8());
       // Ack only after all work for the message is complete.
       consumer.ack();
     }
   }
 
   public static void subscriberExample(
-    String CLOUD_REGION,
-    char ZONE,
-    long PROJECT_NUMBER,
-    String SUBSCRIPTION_NAME,
-    List<Integer> PARTITION_NOS) {
+      String CLOUD_REGION,
+      char ZONE,
+      long PROJECT_NUMBER,
+      String SUBSCRIPTION_NAME,
+      List<Integer> PARTITION_NOS) {
 
     try {
       CloudRegion cloudRegion = CloudRegion.create(CLOUD_REGION);
@@ -86,17 +86,17 @@ public class SubscriberExample {
       SubscriptionName subscriptionName = SubscriptionName.of(SUBSCRIPTION_NAME);
 
       SubscriptionPath subscriptionPath =
-        SubscriptionPaths.newBuilder()
-          .setZone(zone)
-          .setProjectNumber(projectNum)
-          .setSubscriptionName(subscriptionName)
-          .build();
+          SubscriptionPaths.newBuilder()
+              .setZone(zone)
+              .setProjectNumber(projectNum)
+              .setSubscriptionName(subscriptionName)
+              .build();
 
       FlowControlSettings flowControlSettings =
-        FlowControlSettings.builder()
-          .setBytesOutstanding(10_000_000) // 10 MiB per partition.
-          .setMessagesOutstanding(Long.MAX_VALUE)
-          .build();
+          FlowControlSettings.builder()
+              .setBytesOutstanding(10_000_000) // 10 MiB per partition.
+              .setMessagesOutstanding(Long.MAX_VALUE)
+              .build();
 
       SubscriberBuilder.Builder builder = SubscriberBuilder.newBuilder();
       builder.setSubscriptionPath(subscriptionPath);
@@ -106,10 +106,10 @@ public class SubscriberExample {
       for (Integer num : PARTITION_NOS) {
         Partition partition = Partition.create(num);
         subscribers.add(
-          builder
-            .setPartition(partition)
-            .setReceiver(new MessageReceiverExample(partition))
-            .build());
+            builder
+                .setPartition(partition)
+                .setReceiver(new MessageReceiverExample(partition))
+                .build());
       }
       SubscriberInterface wrapped = MultiPartitionSubscriber.of(subscribers);
 

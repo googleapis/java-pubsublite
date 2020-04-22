@@ -42,7 +42,7 @@ public class DeleteTopicExample {
   }
 
   public static void deleteTopicExample(
-    String CLOUD_REGION, char ZONE, long PROJECT_NUMBER, String TOPIC_NAME) {
+      String CLOUD_REGION, char ZONE, long PROJECT_NUMBER, String TOPIC_NAME) {
 
     try {
       CloudRegion cloudRegion = CloudRegion.create(CLOUD_REGION);
@@ -51,17 +51,17 @@ public class DeleteTopicExample {
       TopicName topicName = TopicName.of(TOPIC_NAME);
 
       TopicPath topicPath =
-        TopicPaths.newBuilder()
-          .setZone(zone)
-          .setProjectNumber(projectNum)
-          .setTopicName(topicName)
-          .build();
+          TopicPaths.newBuilder()
+              .setZone(zone)
+              .setProjectNumber(projectNum)
+              .setTopicName(topicName)
+              .build();
 
       ScheduledExecutorService executor = Executors.newScheduledThreadPool(10);
 
       // Create admin client
       AdminClient adminClient =
-        AdminClientBuilder.builder().setRegion(cloudRegion).setExecutor(executor).build();
+          AdminClientBuilder.builder().setRegion(cloudRegion).setExecutor(executor).build();
 
       adminClient.deleteTopic(topicPath).get();
 

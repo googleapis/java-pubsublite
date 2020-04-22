@@ -46,26 +46,26 @@ public class PublisherExample {
     int MESSAGE_COUNT = 100;
 
     PublisherExample.publisherExample(
-      CLOUD_REGION, ZONE, PROJECT_NUMBER, TOPIC_NAME, MESSAGE_COUNT);
+        CLOUD_REGION, ZONE, PROJECT_NUMBER, TOPIC_NAME, MESSAGE_COUNT);
   }
 
   // Publish messages to a topic.
   public static void publisherExample(
-    String CLOUD_REGION, char ZONE, long PROJECT_NUMBER, String TOPIC_NAME, int MESSAGE_COUNT) {
+      String CLOUD_REGION, char ZONE, long PROJECT_NUMBER, String TOPIC_NAME, int MESSAGE_COUNT) {
 
     try {
       CloudRegion cloudRegion = CloudRegion.create(CLOUD_REGION);
       CloudZone zone = CloudZone.create(cloudRegion, ZONE);
 
       TopicPath topicPath =
-        TopicPaths.newBuilder()
-          .setProjectNumber(ProjectNumber.of(PROJECT_NUMBER))
-          .setZone(zone)
-          .setTopicName(TopicName.of(TOPIC_NAME))
-          .build();
+          TopicPaths.newBuilder()
+              .setProjectNumber(ProjectNumber.of(PROJECT_NUMBER))
+              .setZone(zone)
+              .setTopicName(TopicName.of(TOPIC_NAME))
+              .build();
 
       PublisherApiService publisherService =
-        PublisherBuilder.newBuilder().setTopicPath(topicPath).build();
+          PublisherBuilder.newBuilder().setTopicPath(topicPath).build();
 
       publisherService.startAsync().awaitRunning();
 

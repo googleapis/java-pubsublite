@@ -33,7 +33,7 @@ public class PublisherExampleIT {
   private PrintStream out;
 
   private static final String GOOGLE_CLOUD_PROJECT_NUMBER =
-    System.getenv("GOOGLE_CLOUD_PROJECT_NUMBER");
+      System.getenv("GOOGLE_CLOUD_PROJECT_NUMBER");
 
   private static final String CLOUD_REGION = "us-central1";
   private static final char ZONE = 'b';
@@ -45,8 +45,8 @@ public class PublisherExampleIT {
 
   private static void requireEnvVar(String varName) {
     assertNotNull(
-      "Environment variable " + varName + " is required to perform these tests.",
-      System.getenv(varName));
+        "Environment variable " + varName + " is required to perform these tests.",
+        System.getenv(varName));
   }
 
   @BeforeClass
@@ -61,7 +61,7 @@ public class PublisherExampleIT {
     System.setOut(out);
 
     CreateTopicExample.createTopicExample(
-      CLOUD_REGION, ZONE, PROJECT_NUMBER, TOPIC_NAME, PARTITIONS);
+        CLOUD_REGION, ZONE, PROJECT_NUMBER, TOPIC_NAME, PARTITIONS);
   }
 
   @After
@@ -73,7 +73,7 @@ public class PublisherExampleIT {
   @Test
   public void testPublisherExample() {
     PublisherExample.publisherExample(
-      CLOUD_REGION, ZONE, PROJECT_NUMBER, TOPIC_NAME, MESSAGE_COUNT);
+        CLOUD_REGION, ZONE, PROJECT_NUMBER, TOPIC_NAME, MESSAGE_COUNT);
     assertThat(bout.toString()).contains("Published " + MESSAGE_COUNT);
   }
 }

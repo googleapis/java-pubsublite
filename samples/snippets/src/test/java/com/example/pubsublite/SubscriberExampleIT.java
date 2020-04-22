@@ -36,7 +36,7 @@ public class SubscriberExampleIT {
   private PrintStream out;
 
   private static final String GOOGLE_CLOUD_PROJECT_NUMBER =
-    System.getenv("GOOGLE_CLOUD_PROJECT_NUMBER");
+      System.getenv("GOOGLE_CLOUD_PROJECT_NUMBER");
 
   private static final String CLOUD_REGION = "us-central1";
   private static final char ZONE = 'b';
@@ -50,8 +50,8 @@ public class SubscriberExampleIT {
 
   private static void requireEnvVar(String varName) {
     assertNotNull(
-      "Environment variable " + varName + " is required to perform these tests.",
-      System.getenv(varName));
+        "Environment variable " + varName + " is required to perform these tests.",
+        System.getenv(varName));
   }
 
   @BeforeClass
@@ -67,17 +67,17 @@ public class SubscriberExampleIT {
 
     // Set up
     CreateTopicExample.createTopicExample(
-      CLOUD_REGION, ZONE, PROJECT_NUMBER, TOPIC_NAME, PARTITIONS);
+        CLOUD_REGION, ZONE, PROJECT_NUMBER, TOPIC_NAME, PARTITIONS);
     CreateSubscriptionExample.createSubscriptionExample(
-      CLOUD_REGION, ZONE, PROJECT_NUMBER, TOPIC_NAME, SUBSCRIPTION_NAME);
+        CLOUD_REGION, ZONE, PROJECT_NUMBER, TOPIC_NAME, SUBSCRIPTION_NAME);
     PublisherExample.publisherExample(
-      CLOUD_REGION, ZONE, PROJECT_NUMBER, TOPIC_NAME, MESSAGE_COUNT);
+        CLOUD_REGION, ZONE, PROJECT_NUMBER, TOPIC_NAME, MESSAGE_COUNT);
   }
 
   @After
   public void tearDown() {
     DeleteSubscriptionExample.deleteSubscriptionExample(
-      CLOUD_REGION, ZONE, PROJECT_NUMBER, SUBSCRIPTION_NAME);
+        CLOUD_REGION, ZONE, PROJECT_NUMBER, SUBSCRIPTION_NAME);
     DeleteTopicExample.deleteTopicExample(CLOUD_REGION, ZONE, PROJECT_NUMBER, TOPIC_NAME);
     System.setOut(null);
   }
@@ -85,7 +85,7 @@ public class SubscriberExampleIT {
   @Test
   public void testPublisherExample() {
     SubscriberExample.subscriberExample(
-      CLOUD_REGION, ZONE, PROJECT_NUMBER, SUBSCRIPTION_NAME, PARTITION_NOS);
+        CLOUD_REGION, ZONE, PROJECT_NUMBER, SUBSCRIPTION_NAME, PARTITION_NOS);
     assertThat(bout.toString()).contains("Listening");
     assertThat(bout.toString()).contains("Partition:");
   }

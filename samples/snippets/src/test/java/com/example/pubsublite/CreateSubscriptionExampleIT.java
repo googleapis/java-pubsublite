@@ -33,7 +33,7 @@ public class CreateSubscriptionExampleIT {
   private PrintStream out;
 
   private static final String GOOGLE_CLOUD_PROJECT_NUMBER =
-    System.getenv("GOOGLE_CLOUD_PROJECT_NUMBER");
+      System.getenv("GOOGLE_CLOUD_PROJECT_NUMBER");
   private static final String CLOUD_REGION = "us-central1";
   private static final char ZONE = 'b';
   private static final Long PROJECT_NUMBER = Long.parseLong(GOOGLE_CLOUD_PROJECT_NUMBER);
@@ -44,8 +44,8 @@ public class CreateSubscriptionExampleIT {
 
   private static void requireEnvVar(String varName) {
     assertNotNull(
-      "Environment variable " + varName + " is required to perform these tests.",
-      System.getenv(varName));
+        "Environment variable " + varName + " is required to perform these tests.",
+        System.getenv(varName));
   }
 
   @BeforeClass
@@ -60,23 +60,21 @@ public class CreateSubscriptionExampleIT {
     System.setOut(out);
 
     CreateTopicExample.createTopicExample(
-      CLOUD_REGION, ZONE, PROJECT_NUMBER, TOPIC_NAME, PARTITIONS);
+        CLOUD_REGION, ZONE, PROJECT_NUMBER, TOPIC_NAME, PARTITIONS);
   }
 
   @After
   public void tearDown() {
+    DeleteSubscriptionExample.deleteSubscriptionExample(
+        CLOUD_REGION, ZONE, PROJECT_NUMBER, SUBSCRIPTION_NAME);
+    DeleteTopicExample.deleteTopicExample(CLOUD_REGION, ZONE, PROJECT_NUMBER, TOPIC_NAME);
     System.setOut(null);
   }
 
   @Test
   public void testCreateSubscriptionExample() {
     CreateSubscriptionExample.createSubscriptionExample(
-      CLOUD_REGION, ZONE, PROJECT_NUMBER, TOPIC_NAME, SUBSCRIPTION_NAME);
+        CLOUD_REGION, ZONE, PROJECT_NUMBER, TOPIC_NAME, SUBSCRIPTION_NAME);
     assertThat(bout.toString()).contains("created successfully");
-
-    // Clean up
-    DeleteSubscriptionExample.deleteSubscriptionExample(
-      CLOUD_REGION, ZONE, PROJECT_NUMBER, SUBSCRIPTION_NAME);
-    DeleteTopicExample.deleteTopicExample(CLOUD_REGION, ZONE, PROJECT_NUMBER, TOPIC_NAME);
   }
 }

@@ -16,7 +16,8 @@
 
 package com.example.pubsublite;
 
-// [START pubsublite_delete_topic]
+// [START pubsub_pubsublite_delete_topic]
+
 import com.google.cloud.pubsublite.AdminClient;
 import com.google.cloud.pubsublite.AdminClientBuilder;
 import com.google.cloud.pubsublite.CloudRegion;
@@ -25,6 +26,7 @@ import com.google.cloud.pubsublite.ProjectNumber;
 import com.google.cloud.pubsublite.TopicName;
 import com.google.cloud.pubsublite.TopicPath;
 import com.google.cloud.pubsublite.TopicPaths;
+
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -73,4 +75,4 @@ public class DeleteTopicExample {
     }
   }
 }
-// [START pubsublite_delete_topic]
+// [START pubsub_pubsublite_delete_topic]

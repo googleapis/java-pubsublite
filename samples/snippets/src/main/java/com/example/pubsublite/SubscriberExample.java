@@ -16,7 +16,8 @@
 
 package com.example.pubsublite;
 
-// [END pubsublite_quickstart_subscriber]
+// [START pubsub_pubsublite_quickstart_subscriber]
+
 import com.google.cloud.pubsub.v1.AckReplyConsumer;
 import com.google.cloud.pubsub.v1.MessageReceiver;
 import com.google.cloud.pubsub.v1.SubscriberInterface;
@@ -46,10 +47,37 @@ public class SubscriberExample {
     String SUBSCRIPTION_NAME = "Your Subscription Name";
     long PROJECT_NUMBER = 123456789L;
     List<Integer> PARTITION_NOS = ImmutableList.of(0);
+
+    subscriberExample(CLOUD_REGION, ZONE, PROJECT_NUMBER, SUBSCRIPTION_NAME, PARTITION_NOS);
+  }
+
+  static class MessageReceiverExample implements MessageReceiver {
+    private final Partition partition;
+
+    MessageReceiverExample(Partition partition) {
+      this.partition = partition;
+    }
+
+    @Override
+    public void receiveMessage(PubsubMessage message, AckReplyConsumer consumer) {
+      System.out.println(
+        "Partition: "
+          + partition
+          + " Message Id: "
+          + message.getMessageId()
+          + " Data: "
+          + message.getData().toStringUtf8());
+      // Ack only after all work for the message is complete.
+      consumer.ack();
+    }
   }
 
   public static void subscriberExample(
-    String CLOUD_REGION, char ZONE, long PROJECT_NUMBER, String SUBSCRIPTION_NAME, List<Integer> PARTITION_NOS) {
+    String CLOUD_REGION,
+    char ZONE,
+    long PROJECT_NUMBER,
+    String SUBSCRIPTION_NAME,
+    List<Integer> PARTITION_NOS) {
 
     try {
       CloudRegion cloudRegion = CloudRegion.create(CLOUD_REGION);
@@ -66,34 +94,13 @@ public class SubscriberExample {
 
       FlowControlSettings flowControlSettings =
         FlowControlSettings.builder()
-          .setBytesOutstanding(10_000_000) // 10 MB per partition.
+          .setBytesOutstanding(10_000_000) // 10 MiB per partition.
           .setMessagesOutstanding(Long.MAX_VALUE)
           .build();
 
       SubscriberBuilder.Builder builder = SubscriberBuilder.newBuilder();
       builder.setSubscriptionPath(subscriptionPath);
       builder.setFlowControlSettings(flowControlSettings);
-
-      class MessageReceiverExample implements MessageReceiver {
-        private final Partition partition;
-
-        MessageReceiverExample(Partition partition) {
-          this.partition = partition;
-        }
-
-        @Override
-        public void receiveMessage(PubsubMessage message, AckReplyConsumer consumer) {
-          System.out.println(
-            "Partition: "
-              + partition
-              + " Message Id: "
-              + message.getMessageId()
-              + " Data: "
-              + message.getData().toStringUtf8());
-          // Ack only after all work for the message is complete.
-          consumer.ack();
-        }
-      }
 
       ArrayList<SubscriberInterface> subscribers = new ArrayList<>();
       for (Integer num : PARTITION_NOS) {
@@ -115,4 +122,4 @@ public class SubscriberExample {
     }
   }
 }
-// [END pubsublite_quickstart_subscriber]
+// [END pubsub_pubsublite_quickstart_subscriber]

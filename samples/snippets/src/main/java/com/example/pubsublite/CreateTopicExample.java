@@ -16,7 +16,8 @@
 
 package com.example.pubsublite;
 
-// [START pubsublite_create_topic]
+// [START pubsub_pubsublite_create_topic]
+
 import com.google.cloud.pubsublite.AdminClient;
 import com.google.cloud.pubsublite.AdminClientBuilder;
 import com.google.cloud.pubsublite.CloudRegion;
@@ -29,6 +30,7 @@ import com.google.cloud.pubsublite.proto.Topic;
 import com.google.cloud.pubsublite.proto.Topic.PartitionConfig;
 import com.google.cloud.pubsublite.proto.Topic.RetentionConfig;
 import com.google.protobuf.util.Durations;
+
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -64,7 +66,8 @@ public class CreateTopicExample {
         Topic.newBuilder()
           .setPartitionConfig(
             PartitionConfig.newBuilder()
-              .setScale(1) // Set publishing throughput to 1*4 MiB per sec. This must be 1-4.
+              .setScale(
+                1) // Set publishing throughput to 1*4 MiB per sec. This must be 1-4.
               .setCount(PARTITIONS))
           .setRetentionConfig(
             RetentionConfig.newBuilder()
@@ -90,4 +93,4 @@ public class CreateTopicExample {
     }
   }
 }
-// [END pubsublite_create_topic]
+// [END pubsub_pubsublite_create_topic]

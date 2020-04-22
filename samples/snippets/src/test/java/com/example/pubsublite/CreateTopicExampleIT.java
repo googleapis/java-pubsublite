@@ -22,6 +22,7 @@ import static junit.framework.TestCase.assertNotNull;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.util.UUID;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -33,6 +34,12 @@ public class CreateTopicExampleIT {
 
   private static final String GOOGLE_CLOUD_PROJECT_NUMBER =
     System.getenv("GOOGLE_CLOUD_PROJECT_NUMBER");
+  private static final String CLOUD_REGION = "us-central1";
+  private static final char ZONE = 'b';
+  private static final Long PROJECT_NUMBER = Long.parseLong(GOOGLE_CLOUD_PROJECT_NUMBER);
+  private static final String SUFFIX = UUID.randomUUID().toString();
+  private static final String TOPIC_NAME = "lite-topic-" + SUFFIX;
+  private static final int PARTITIONS = 1;
 
   private static void requireEnvVar(String varName) {
     assertNotNull(
@@ -54,23 +61,14 @@ public class CreateTopicExampleIT {
 
   @After
   public void tearDown() {
+    DeleteTopicExample.deleteTopicExample(CLOUD_REGION, ZONE, PROJECT_NUMBER, TOPIC_NAME);
     System.setOut(null);
   }
 
   @Test
   public void testCreateTopicExample() {
-
-    String CLOUD_REGION = "us-central1";
-    char ZONE = 'b';
-    long PROJECT_NUMBER = Long.parseLong(GOOGLE_CLOUD_PROJECT_NUMBER);
-    String TOPIC_NAME = "lite-topic-" + UUID.randomUUID();
-    int PARTITIONS = 1;
-
     CreateTopicExample.createTopicExample(
       CLOUD_REGION, ZONE, PROJECT_NUMBER, TOPIC_NAME, PARTITIONS);
     assertThat(bout.toString()).contains("created successfully");
-
-    // Clean up
-    DeleteTopicExample.deleteTopicExample(CLOUD_REGION, ZONE, PROJECT_NUMBER, TOPIC_NAME);
   }
 }

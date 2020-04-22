@@ -16,19 +16,20 @@
 
 package com.example.pubsublite;
 
+import static com.google.common.truth.Truth.assertThat;
+import static junit.framework.TestCase.assertNotNull;
+
 import com.google.common.collect.ImmutableList;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.util.List;
 import java.util.UUID;
 
-import static com.google.common.truth.Truth.assertThat;
-import static junit.framework.TestCase.assertNotNull;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
 
 public class SubscriberExampleIT {
   private ByteArrayOutputStream bout;
@@ -75,14 +76,16 @@ public class SubscriberExampleIT {
 
   @After
   public void tearDown() {
-    DeleteSubscriptionExample.deleteSubscriptionExample(CLOUD_REGION, ZONE, PROJECT_NUMBER, SUBSCRIPTION_NAME);
+    DeleteSubscriptionExample.deleteSubscriptionExample(
+      CLOUD_REGION, ZONE, PROJECT_NUMBER, SUBSCRIPTION_NAME);
     DeleteTopicExample.deleteTopicExample(CLOUD_REGION, ZONE, PROJECT_NUMBER, TOPIC_NAME);
     System.setOut(null);
   }
 
   @Test
   public void testPublisherExample() {
-    SubscriberExample.subscriberExample(CLOUD_REGION, ZONE, PROJECT_NUMBER, SUBSCRIPTION_NAME, PARTITION_NOS);
+    SubscriberExample.subscriberExample(
+      CLOUD_REGION, ZONE, PROJECT_NUMBER, SUBSCRIPTION_NAME, PARTITION_NOS);
     assertThat(bout.toString()).contains("Listening");
     assertThat(bout.toString()).contains("Partition:");
   }

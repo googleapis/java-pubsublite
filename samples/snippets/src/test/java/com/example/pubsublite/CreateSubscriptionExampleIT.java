@@ -22,6 +22,7 @@ import static junit.framework.TestCase.assertNotNull;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.util.UUID;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;

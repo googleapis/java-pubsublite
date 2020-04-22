@@ -16,7 +16,8 @@
 
 package com.example.pubsublite;
 
-// [START pubsublite_publisher]
+// [START pubsub_pubsublite_quickstart_publisher]
+
 import com.google.api.core.ApiFuture;
 import com.google.api.core.ApiFutures;
 import com.google.cloud.pubsublite.CloudRegion;
@@ -30,6 +31,7 @@ import com.google.cloud.pubsublite.cloudpubsub.PublisherApiService;
 import com.google.cloud.pubsublite.cloudpubsub.PublisherBuilder;
 import com.google.protobuf.ByteString;
 import com.google.pubsub.v1.PubsubMessage;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,6 +44,9 @@ public class PublisherExample {
     String TOPIC_NAME = "Your Topic Name";
     long PROJECT_NUMBER = 123456789L;
     int MESSAGE_COUNT = 100;
+
+    PublisherExample.publisherExample(
+      CLOUD_REGION, ZONE, PROJECT_NUMBER, TOPIC_NAME, MESSAGE_COUNT);
   }
 
   // Publish messages to a topic.
@@ -59,7 +64,8 @@ public class PublisherExample {
           .setTopicName(TopicName.of(TOPIC_NAME))
           .build();
 
-      PublisherApiService publisherService = PublisherBuilder.newBuilder().setTopicPath(topicPath).build();
+      PublisherApiService publisherService =
+        PublisherBuilder.newBuilder().setTopicPath(topicPath).build();
 
       publisherService.startAsync().awaitRunning();
 
@@ -68,7 +74,7 @@ public class PublisherExample {
       for (int i = 0; i < MESSAGE_COUNT; i++) {
         String message = "message-" + i;
 
-        // Convert message to bytes.
+        // Convert the message to bytes.
         ByteString data = ByteString.copyFromUtf8(message);
         PubsubMessage pubsubMessage = PubsubMessage.newBuilder().setData(data).build();
 
@@ -94,4 +100,4 @@ public class PublisherExample {
     }
   }
 }
-// [END pubsublite_quickstart_publisher]
+// [END pubsub_pubsublite_quickstart_publisher]

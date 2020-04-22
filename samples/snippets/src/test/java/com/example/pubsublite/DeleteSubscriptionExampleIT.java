@@ -22,6 +22,7 @@ import static junit.framework.TestCase.assertNotNull;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.util.UUID;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -72,7 +73,8 @@ public class DeleteSubscriptionExampleIT {
 
   @Test
   public void testCreateTopicExample() {
-    DeleteSubscriptionExample.deleteSubscriptionExample(CLOUD_REGION, ZONE, PROJECT_NUMBER, SUBSCRIPTION_NAME);
+    DeleteSubscriptionExample.deleteSubscriptionExample(
+      CLOUD_REGION, ZONE, PROJECT_NUMBER, SUBSCRIPTION_NAME);
     assertThat(bout.toString()).contains("deleted successfully");
 
     // Clean up

@@ -16,7 +16,8 @@
 
 package com.example.pubsublite;
 
-// [START pubsublite_create_subscription]
+// [START pubsub_pubsublite_create_subscription]
+
 import com.google.cloud.pubsublite.AdminClient;
 import com.google.cloud.pubsublite.AdminClientBuilder;
 import com.google.cloud.pubsublite.CloudRegion;
@@ -31,6 +32,7 @@ import com.google.cloud.pubsublite.TopicPaths;
 import com.google.cloud.pubsublite.proto.Subscription;
 import com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig;
 import com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig.DeliveryRequirement;
+
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -47,7 +49,11 @@ public class CreateSubscriptionExample {
   }
 
   public static void createSubscriptionExample(
-    String CLOUD_REGION, char ZONE, long PROJECT_NUMBER, String TOPIC_NAME, String SUBSCRIPTION_NAME) {
+    String CLOUD_REGION,
+    char ZONE,
+    long PROJECT_NUMBER,
+    String TOPIC_NAME,
+    String SUBSCRIPTION_NAME) {
 
     try {
       CloudRegion cloudRegion = CloudRegion.create(CLOUD_REGION);
@@ -83,13 +89,11 @@ public class CreateSubscriptionExample {
 
       // Create admin client
       AdminClient adminClient =
-        AdminClientBuilder.builder()
-          .setRegion(cloudRegion)
-          .setExecutor(executor)
-          .build();
+        AdminClientBuilder.builder().setRegion(cloudRegion).setExecutor(executor).build();
 
       System.out.println(
-        adminClient.createSubscription(subscription).get().getAllFields() + " created successfully.");
+        adminClient.createSubscription(subscription).get().getAllFields()
+          + " created successfully.");
 
       executor.shutdown();
       executor.awaitTermination(10, TimeUnit.SECONDS);
@@ -99,4 +103,4 @@ public class CreateSubscriptionExample {
     }
   }
 }
-// [END pubsublite_create_subscription]
+// [END pubsub_pubsublite_create_subscription]

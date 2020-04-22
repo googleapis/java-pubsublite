@@ -16,7 +16,8 @@
 
 package com.example.pubsublite;
 
-// [START pubsublite_delete_subscription]
+// [START pubsub_pubsublite_delete_subscription]
+
 import com.google.cloud.pubsublite.AdminClient;
 import com.google.cloud.pubsublite.AdminClientBuilder;
 import com.google.cloud.pubsublite.CloudRegion;
@@ -74,4 +75,4 @@ public class DeleteSubscriptionExample {
     }
   }
 }
-// [END pubsublite_delete_subscription]
+// [END pubsub_pubsublite_delete_subscription]

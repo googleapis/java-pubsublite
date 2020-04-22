@@ -22,6 +22,7 @@ import static junit.framework.TestCase.assertNotNull;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.util.UUID;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -59,7 +60,6 @@ public class DeleteTopicExampleIT {
     // Set up
     CreateTopicExample.createTopicExample(
       CLOUD_REGION, ZONE, PROJECT_NUMBER, TOPIC_NAME, PARTITIONS);
-
   }
 
   @After

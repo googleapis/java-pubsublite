@@ -22,6 +22,7 @@ import static junit.framework.TestCase.assertNotNull;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.util.UUID;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -39,7 +40,6 @@ public class PublisherExampleIT {
   private static final Long PROJECT_NUMBER = Long.parseLong(GOOGLE_CLOUD_PROJECT_NUMBER);
   private static final String SUFFIX = UUID.randomUUID().toString();
   private static final String TOPIC_NAME = "lite-topic-" + SUFFIX;
-
   private static final int MESSAGE_COUNT = 100;
   private static final int PARTITIONS = 1;
 
@@ -60,13 +60,14 @@ public class PublisherExampleIT {
     out = new PrintStream(bout);
     System.setOut(out);
 
-    CreateTopicExample.createTopicExample(CLOUD_REGION, ZONE, PROJECT_NUMBER, TOPIC_NAME, PARTITIONS);
+    CreateTopicExample.createTopicExample(
+      CLOUD_REGION, ZONE, PROJECT_NUMBER, TOPIC_NAME, PARTITIONS);
   }
 
   @After
   public void tearDown() {
-    System.setOut(null);
     DeleteTopicExample.deleteTopicExample(CLOUD_REGION, ZONE, PROJECT_NUMBER, TOPIC_NAME);
+    System.setOut(null);
   }
 
   @Test

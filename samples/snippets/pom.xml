@@ -60,6 +60,11 @@
   <dependencies>
     <dependency>
       <groupId>com.google.cloud</groupId>
+      <artifactId>google-cloud-pubsub</artifactId>
+      <version>1.105.0</version><!--    TODO: remove later    -->
+    </dependency>
+    <dependency>
+      <groupId>com.google.cloud</groupId>
       <artifactId>google-cloud-pubsublite</artifactId>
       <version>0.1.0</version><!--    TODO: remove later    -->
     </dependency>

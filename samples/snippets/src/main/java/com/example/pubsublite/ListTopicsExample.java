@@ -39,6 +39,8 @@ public class ListTopicsExample {
     String CLOUD_REGION = "Your Cloud Region";
     char ZONE = 'b';
     long PROJECT_NUMBER = 123456789L;
+
+    ListTopicsExample.listTopicsExample(CLOUD_REGION, ZONE, PROJECT_NUMBER);
   }
 
   public static void listTopicsExample(String CLOUD_REGION, char ZONE, long PROJECT_NUMBER) {

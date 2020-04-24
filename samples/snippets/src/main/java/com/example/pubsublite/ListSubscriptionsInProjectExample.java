@@ -39,6 +39,9 @@ public class ListSubscriptionsInProjectExample {
     String CLOUD_REGION = "Your Cloud Region";
     char ZONE = 'b';
     long PROJECT_NUMBER = 123456789L;
+
+    ListSubscriptionsInProjectExample.listSubscriptionsInProjectExample(
+        CLOUD_REGION, ZONE, PROJECT_NUMBER);
   }
 
   public static void listSubscriptionsInProjectExample(

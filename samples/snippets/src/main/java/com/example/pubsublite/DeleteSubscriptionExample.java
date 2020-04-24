@@ -39,6 +39,9 @@ public class DeleteSubscriptionExample {
     char ZONE = 'b';
     long PROJECT_NUMBER = 123456789L;
     String SUBSCRIPTION_NAME = "Your Subscription Name";
+
+    DeleteSubscriptionExample.deleteSubscriptionExample(
+      CLOUD_REGION, ZONE, PROJECT_NUMBER, SUBSCRIPTION_NAME);
   }
 
   public static void deleteSubscriptionExample(

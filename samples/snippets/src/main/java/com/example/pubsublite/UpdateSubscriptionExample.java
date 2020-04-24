@@ -46,6 +46,9 @@ public class UpdateSubscriptionExample {
     char ZONE = 'b';
     String SUBSCRIPTION_NAME = "Your Subscription Name"; // Please use an existing subscription
     long PROJECT_NUMBER = 123456789L;
+
+    UpdateSubscriptionExample.updateSubscriptionExample(
+        CLOUD_REGION, ZONE, PROJECT_NUMBER, SUBSCRIPTION_NAME);
   }
 
   public static void updateSubscriptionExample(

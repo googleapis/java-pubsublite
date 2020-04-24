@@ -41,6 +41,9 @@ public class ListSubscriptionsInTopicExample {
     char ZONE = 'b';
     long PROJECT_NUMBER = 123456789L;
     String TOPIC_NAME = "Your Lite Topic Name";
+
+    ListSubscriptionsInTopicExample.listSubscriptionsInTopicExample(
+        CLOUD_REGION, ZONE, PROJECT_NUMBER, TOPIC_NAME);
   }
 
   public static void listSubscriptionsInTopicExample(

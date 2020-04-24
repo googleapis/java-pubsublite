@@ -39,6 +39,8 @@ public class DeleteTopicExample {
     char ZONE = 'b';
     String TOPIC_NAME = "Your Topic Name";
     long PROJECT_NUMBER = 123456789L;
+
+    DeleteTopicExample.deleteTopicExample(CLOUD_REGION, ZONE, PROJECT_NUMBER, TOPIC_NAME);
   }
 
   public static void deleteTopicExample(

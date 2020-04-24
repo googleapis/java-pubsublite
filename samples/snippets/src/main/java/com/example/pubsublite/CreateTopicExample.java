@@ -44,6 +44,9 @@ public class CreateTopicExample {
     String TOPIC_NAME = "Your Topic Name";
     long PROJECT_NUMBER = 123456789L;
     Integer PARTITIONS = 1;
+
+    CreateTopicExample.createTopicExample(
+        CLOUD_REGION, ZONE, PROJECT_NUMBER, TOPIC_NAME, PARTITIONS);
   }
 
   public static void createTopicExample(
@@ -72,7 +75,8 @@ public class CreateTopicExample {
               .setRetentionConfig(
                   RetentionConfig.newBuilder()
                       .setPeriod(Durations.fromDays(1))
-                      .setPerPartitionBytes(100_000_000_000L)) // 100 GiB. This must be 30 GiB-10 TiB.
+                      .setPerPartitionBytes(
+                          100_000_000_000L)) // 100 GiB. This must be 30 GiB-10 TiB.
               .setName(topicPath.value())
               .build();
 

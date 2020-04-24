@@ -46,6 +46,8 @@ public class UpdateTopicExample {
     char ZONE = 'b';
     String TOPIC_NAME = "Your Topic Name"; // Please use an existing topic
     long PROJECT_NUMBER = 123456789L;
+
+    UpdateTopicExample.updateTopicExample(CLOUD_REGION, ZONE, PROJECT_NUMBER, TOPIC_NAME);
   }
 
   public static void updateTopicExample(

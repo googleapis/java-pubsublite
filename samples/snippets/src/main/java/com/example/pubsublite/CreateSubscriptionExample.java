@@ -46,6 +46,8 @@ public class CreateSubscriptionExample {
     long PROJECT_NUMBER = 123456789L;
     String TOPIC_NAME = "Your Topic Name";
     String SUBSCRIPTION_NAME = "Your Subscription Name";
+
+    createSubscriptionExample(CLOUD_REGION, ZONE, PROJECT_NUMBER, TOPIC_NAME, SUBSCRIPTION_NAME);
   }
 
   public static void createSubscriptionExample(

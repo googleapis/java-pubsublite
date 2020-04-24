@@ -68,6 +68,7 @@ public class DeleteSubscriptionExampleIT {
 
   @After
   public void tearDown() {
+    DeleteTopicExample.deleteTopicExample(CLOUD_REGION, ZONE, PROJECT_NUMBER, TOPIC_NAME);
     System.setOut(null);
   }
 
@@ -76,8 +77,5 @@ public class DeleteSubscriptionExampleIT {
     DeleteSubscriptionExample.deleteSubscriptionExample(
         CLOUD_REGION, ZONE, PROJECT_NUMBER, SUBSCRIPTION_NAME);
     assertThat(bout.toString()).contains("deleted successfully");
-
-    // Clean up
-    DeleteTopicExample.deleteTopicExample(CLOUD_REGION, ZONE, PROJECT_NUMBER, TOPIC_NAME);
   }
 }

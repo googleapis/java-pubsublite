@@ -16,46 +16,40 @@
 
 package com.example.pubsublite;
 
-// [START pubsublite_delete_subscription]
+// [START pubsublite_list_topics]
 
 import com.google.cloud.pubsublite.AdminClient;
 import com.google.cloud.pubsublite.AdminClientBuilder;
 import com.google.cloud.pubsublite.CloudRegion;
 import com.google.cloud.pubsublite.CloudZone;
+import com.google.cloud.pubsublite.LocationPath;
+import com.google.cloud.pubsublite.LocationPaths;
 import com.google.cloud.pubsublite.ProjectNumber;
-import com.google.cloud.pubsublite.SubscriptionName;
-import com.google.cloud.pubsublite.SubscriptionPath;
-import com.google.cloud.pubsublite.SubscriptionPaths;
+import com.google.cloud.pubsublite.proto.Topic;
 
+import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-public class DeleteSubscriptionExample {
+public class ListTopicsExample {
 
-  public static void runDeleteSubscriptionExample() {
+  public static void runListTopicsExample() {
     // TODO(developer): Replace these variables before running the sample.
     String CLOUD_REGION = "Your Cloud Region";
     char ZONE = 'b';
     long PROJECT_NUMBER = 123456789L;
-    String SUBSCRIPTION_NAME = "Your Subscription Name";
   }
 
-  public static void deleteSubscriptionExample(
-      String CLOUD_REGION, char ZONE, long PROJECT_NUMBER, String SUBSCRIPTION_NAME) {
+  public static void listTopicsExample(String CLOUD_REGION, char ZONE, long PROJECT_NUMBER) {
 
     try {
       CloudRegion cloudRegion = CloudRegion.create(CLOUD_REGION);
       CloudZone zone = CloudZone.create(cloudRegion, ZONE);
       ProjectNumber projectNum = ProjectNumber.of(PROJECT_NUMBER);
-      SubscriptionName subscriptionName = SubscriptionName.of(SUBSCRIPTION_NAME);
 
-      SubscriptionPath subscriptionPath =
-          SubscriptionPaths.newBuilder()
-              .setZone(zone)
-              .setProjectNumber(projectNum)
-              .setSubscriptionName(subscriptionName)
-              .build();
+      LocationPath locationPath =
+          LocationPaths.newBuilder().setProjectNumber(projectNum).setZone(zone).build();
 
       ScheduledExecutorService executor = Executors.newScheduledThreadPool(10);
 
@@ -63,16 +57,17 @@ public class DeleteSubscriptionExample {
       AdminClient adminClient =
           AdminClientBuilder.builder().setRegion(cloudRegion).setExecutor(executor).build();
 
-      adminClient.deleteSubscription(subscriptionPath).get();
-
-      System.out.println(subscriptionPath.value() + " deleted successfully.");
+      List<Topic> topics = adminClient.listTopics(locationPath).get();
+      for (Topic t : topics) {
+        System.out.println(t.getAllFields());
+      }
+      System.out.println(topics.size() + " topic(s) listed.");
 
       executor.shutdown();
       executor.awaitTermination(10, TimeUnit.SECONDS);
-
     } catch (Throwable t) {
       System.out.println("Error in test: " + t);
     }
   }
 }
-// [END pubsublite_delete_subscription]
+// [END pubsublite_list_topics]

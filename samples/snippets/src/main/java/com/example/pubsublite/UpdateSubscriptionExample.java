@@ -16,7 +16,7 @@
 
 package com.example.pubsublite;
 
-// [START pubsublite_delete_subscription]
+// [START pubsublite_update_subscription]
 
 import com.google.cloud.pubsublite.AdminClient;
 import com.google.cloud.pubsublite.AdminClientBuilder;
@@ -26,22 +26,29 @@ import com.google.cloud.pubsublite.ProjectNumber;
 import com.google.cloud.pubsublite.SubscriptionName;
 import com.google.cloud.pubsublite.SubscriptionPath;
 import com.google.cloud.pubsublite.SubscriptionPaths;
+import com.google.cloud.pubsublite.TopicName;
+import com.google.cloud.pubsublite.TopicPath;
+import com.google.cloud.pubsublite.TopicPaths;
+import com.google.cloud.pubsublite.proto.Subscription;
+import com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig;
+import com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig.DeliveryRequirement;
+import com.google.protobuf.FieldMask;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-public class DeleteSubscriptionExample {
+public class UpdateSubscriptionExample {
 
-  public static void runDeleteSubscriptionExample() {
+  public static void runUpdateSubscriptionExample() {
     // TODO(developer): Replace these variables before running the sample.
     String CLOUD_REGION = "Your Cloud Region";
     char ZONE = 'b';
+    String SUBSCRIPTION_NAME = "Your Subscription Name"; // Please use an existing subscription
     long PROJECT_NUMBER = 123456789L;
-    String SUBSCRIPTION_NAME = "Your Subscription Name";
   }
 
-  public static void deleteSubscriptionExample(
+  public static void updateSubscriptionExample(
       String CLOUD_REGION, char ZONE, long PROJECT_NUMBER, String SUBSCRIPTION_NAME) {
 
     try {
@@ -50,11 +57,22 @@ public class DeleteSubscriptionExample {
       ProjectNumber projectNum = ProjectNumber.of(PROJECT_NUMBER);
       SubscriptionName subscriptionName = SubscriptionName.of(SUBSCRIPTION_NAME);
 
+      FieldMask MASK =
+          FieldMask.newBuilder().addPaths("delivery_config.delivery_requirement").build();
+
       SubscriptionPath subscriptionPath =
           SubscriptionPaths.newBuilder()
               .setZone(zone)
               .setProjectNumber(projectNum)
               .setSubscriptionName(subscriptionName)
+              .build();
+
+      Subscription subscription =
+          Subscription.newBuilder()
+              .setDeliveryConfig(
+                  DeliveryConfig.newBuilder()
+                      .setDeliveryRequirement(DeliveryRequirement.DELIVER_AFTER_STORED))
+              .setName(subscriptionPath.value())
               .build();
 
       ScheduledExecutorService executor = Executors.newScheduledThreadPool(10);
@@ -63,9 +81,12 @@ public class DeleteSubscriptionExample {
       AdminClient adminClient =
           AdminClientBuilder.builder().setRegion(cloudRegion).setExecutor(executor).build();
 
-      adminClient.deleteSubscription(subscriptionPath).get();
+      Subscription subscriptionBeforeUpdate = adminClient.getSubscription(subscriptionPath).get();
+      System.out.println("Before update: " + subscriptionBeforeUpdate.getAllFields());
 
-      System.out.println(subscriptionPath.value() + " deleted successfully.");
+      Subscription subscriptionAfterUpdate =
+          adminClient.updateSubscription(subscription, MASK).get();
+      System.out.println("After update: " + subscriptionAfterUpdate.getAllFields());
 
       executor.shutdown();
       executor.awaitTermination(10, TimeUnit.SECONDS);
@@ -75,4 +96,4 @@ public class DeleteSubscriptionExample {
     }
   }
 }
-// [END pubsublite_delete_subscription]
+// [END pubsublite_update_subscription]

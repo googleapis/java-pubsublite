@@ -72,7 +72,7 @@ public class DeleteSubscriptionExampleIT {
   }
 
   @Test
-  public void testCreateTopicExample() {
+  public void testDeleteSubscriptionExample() {
     DeleteSubscriptionExample.deleteSubscriptionExample(
         CLOUD_REGION, ZONE, PROJECT_NUMBER, SUBSCRIPTION_NAME);
     assertThat(bout.toString()).contains("deleted successfully");

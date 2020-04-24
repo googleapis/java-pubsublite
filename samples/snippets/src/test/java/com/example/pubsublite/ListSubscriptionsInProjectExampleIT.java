@@ -19,19 +19,18 @@ package com.example.pubsublite;
 import static com.google.common.truth.Truth.assertThat;
 import static junit.framework.TestCase.assertNotNull;
 
-import com.google.common.collect.ImmutableList;
-
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.util.List;
 import java.util.UUID;
 
+import com.google.common.collect.ImmutableList;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-public class SubscriberExampleIT {
+public class ListSubscriptionsInProjectExampleIT {
   private ByteArrayOutputStream bout;
   private PrintStream out;
 
@@ -44,9 +43,7 @@ public class SubscriberExampleIT {
   private static final String SUFFIX = UUID.randomUUID().toString();
   private static final String TOPIC_NAME = "lite-topic-" + SUFFIX;
   private static final String SUBSCRIPTION_NAME = "lite-subscription-" + SUFFIX;
-  private static final int MESSAGE_COUNT = 10;
   private static final int PARTITIONS = 1;
-  private static final List<Integer> PARTITION_NOS = ImmutableList.of(0);
 
   private static void requireEnvVar(String varName) {
     assertNotNull(
@@ -70,8 +67,6 @@ public class SubscriberExampleIT {
         CLOUD_REGION, ZONE, PROJECT_NUMBER, TOPIC_NAME, PARTITIONS);
     CreateSubscriptionExample.createSubscriptionExample(
         CLOUD_REGION, ZONE, PROJECT_NUMBER, TOPIC_NAME, SUBSCRIPTION_NAME);
-    PublisherExample.publisherExample(
-        CLOUD_REGION, ZONE, PROJECT_NUMBER, TOPIC_NAME, MESSAGE_COUNT);
   }
 
   @After
@@ -83,10 +78,9 @@ public class SubscriberExampleIT {
   }
 
   @Test
-  public void testSubscriberExample() {
-    SubscriberExample.subscriberExample(
-        CLOUD_REGION, ZONE, PROJECT_NUMBER, SUBSCRIPTION_NAME, PARTITION_NOS);
-    assertThat(bout.toString()).contains("Listening");
-    assertThat(bout.toString()).contains("Partition:");
+  public void testListSubscriptionInProjectExample() {
+    ListSubscriptionsInProjectExample.listSubscriptionsInProjectExample(
+        CLOUD_REGION, ZONE, PROJECT_NUMBER);
+    assertThat(bout.toString()).contains("subscription(s) listed");
   }
 }

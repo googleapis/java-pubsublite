@@ -16,7 +16,7 @@
 
 package com.example.pubsublite;
 
-// [START pubsub_pubsublite_delete_topic]
+// [START pubsublite_delete_topic]
 
 import com.google.cloud.pubsublite.AdminClient;
 import com.google.cloud.pubsublite.AdminClientBuilder;
@@ -75,4 +75,4 @@ public class DeleteTopicExample {
     }
   }
 }
-// [START pubsub_pubsublite_delete_topic]
+// [START pubsublite_delete_topic]

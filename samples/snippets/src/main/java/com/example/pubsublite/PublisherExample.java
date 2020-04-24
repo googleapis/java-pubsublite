@@ -16,7 +16,7 @@
 
 package com.example.pubsublite;
 
-// [START pubsub_pubsublite_quickstart_publisher]
+// [START pubsublite_quickstart_publisher]
 
 import com.google.api.core.ApiFuture;
 import com.google.api.core.ApiFutures;
@@ -100,4 +100,4 @@ public class PublisherExample {
     }
   }
 }
-// [END pubsub_pubsublite_quickstart_publisher]
+// [END pubsublite_quickstart_publisher]

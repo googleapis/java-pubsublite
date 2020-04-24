@@ -16,7 +16,7 @@
 
 package com.example.pubsublite;
 
-// [START pubsub_pubsublite_quickstart_subscriber]
+// [START pubsublite_quickstart_subscriber]
 
 import com.google.cloud.pubsub.v1.AckReplyConsumer;
 import com.google.cloud.pubsub.v1.MessageReceiver;
@@ -122,4 +122,4 @@ public class SubscriberExample {
     }
   }
 }
-// [END pubsub_pubsublite_quickstart_subscriber]
+// [END pubsublite_quickstart_subscriber]

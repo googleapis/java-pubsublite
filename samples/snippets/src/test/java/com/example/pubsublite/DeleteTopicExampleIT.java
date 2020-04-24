@@ -68,7 +68,7 @@ public class DeleteTopicExampleIT {
   }
 
   @Test
-  public void testCreateTopicExample() {
+  public void testDeleteTopicExample() {
     DeleteTopicExample.deleteTopicExample(CLOUD_REGION, ZONE, PROJECT_NUMBER, TOPIC_NAME);
     assertThat(bout.toString()).contains("deleted successfully");
   }

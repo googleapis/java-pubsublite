@@ -16,7 +16,7 @@
 
 package com.example.pubsublite;
 
-// [START pubsub_pubsublite_create_topic]
+// [START pubsublite_create_topic]
 
 import com.google.cloud.pubsublite.AdminClient;
 import com.google.cloud.pubsublite.AdminClientBuilder;
@@ -71,8 +71,8 @@ public class CreateTopicExample {
                       .setCount(PARTITIONS))
               .setRetentionConfig(
                   RetentionConfig.newBuilder()
-                      .setPeriod(Durations.fromDays(7))
-                      .setPerPartitionBytes(100000000000L)) // 100 GiB. This must be 30 GiB-10 TiB.
+                      .setPeriod(Durations.fromDays(1))
+                      .setPerPartitionBytes(100_000_000_000L)) // 100 GiB. This must be 30 GiB-10 TiB.
               .setName(topicPath.value())
               .build();
 
@@ -93,4 +93,4 @@ public class CreateTopicExample {
     }
   }
 }
-// [END pubsub_pubsublite_create_topic]
+// [END pubsublite_create_topic]

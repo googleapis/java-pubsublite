@@ -14,6 +14,8 @@
 
 package com.google.cloud.pubsublite.internal.wire;
 
+import static java.util.concurrent.TimeUnit.SECONDS;
+
 import com.google.api.core.AbstractApiService;
 import com.google.cloud.pubsublite.ErrorCodes;
 import com.google.cloud.pubsublite.internal.CloseableMonitor;
@@ -153,7 +155,7 @@ class RetryingConnectionImpl<
               .asRuntimeException());
       return;
     }
-    logger.atInfo().withCause(t).log("Stream disconnected, attempting retry");
+    logger.atInfo().atMostEvery(30, SECONDS).log("Stream disconnected, attempting retry");
     observer.triggerReinitialize();
   }
 

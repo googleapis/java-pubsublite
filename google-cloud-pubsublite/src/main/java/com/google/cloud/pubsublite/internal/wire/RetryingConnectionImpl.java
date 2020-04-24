@@ -153,7 +153,7 @@ class RetryingConnectionImpl<
               .asRuntimeException());
       return;
     }
-    logger.atInfo().withCause(t).log("Stream disconnected, attempting retry");
+    logger.atFine().withCause(t).log("Stream disconnected, attempting retry");
     observer.triggerReinitialize();
   }
 

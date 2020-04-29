@@ -1,0 +1,14 @@
+{
+  "name": "pubsublite",
+  "name_pretty": "Cloud Pub/Sub Lite",
+  "product_documentation": "n/a",
+  "api_description": "n/a",
+  "client_documentation": "https://googleapis.dev/java/google-cloud-pubsublite/latest/index.html",
+  "release_level": "beta",
+  "transport": "grpc",
+  "requires_billing": true,
+  "language": "java",
+  "repo": "googleapis/java-pubsublite",
+  "repo_short": "java-pubsublite",
+  "distribution_name": "com.google.cloud:google-cloud-pubsublite"
+}

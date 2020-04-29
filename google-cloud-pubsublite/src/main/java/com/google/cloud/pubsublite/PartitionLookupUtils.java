@@ -29,12 +29,16 @@ public final class PartitionLookupUtils {
 
   public static int numPartitions(TopicPath topic) throws StatusException {
     ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
-    AdminClient client =
-        AdminClientBuilder.builder()
-            .setRegion(TopicPaths.getZone(topic).region())
-            .setExecutor(executor)
-            .build();
-    return numPartitions(topic, client);
+    try {
+      AdminClient client =
+          AdminClientBuilder.builder()
+              .setRegion(TopicPaths.getZone(topic).region())
+              .setExecutor(executor)
+              .build();
+      return numPartitions(topic, client);
+    } finally {
+      executor.shutdownNow();
+    }
   }
 
   public static int numPartitions(TopicPath topic, AdminClient client) throws StatusException {

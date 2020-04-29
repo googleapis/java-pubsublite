@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <!--
   ~ Copyright 2020 Google LLC
   ~
@@ -14,13 +14,10 @@
   ~ See the License for the specific language governing permissions and
   ~ limitations under the License.
   -->
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.google.cloud</groupId>
   <artifactId>pubsublite-snippets</artifactId>
-  <version>0.1.0</version><!--    TODO: remove later    -->
   <packaging>jar</packaging>
   <name>Google Cloud Pub/Sub Lite Snippets</name>
   <url>https://github.com/googleapis/java-pubsublite</url>
@@ -39,25 +36,13 @@
     <maven.compiler.target>1.8</maven.compiler.target>
     <maven.compiler.source>1.8</maven.compiler.source>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <checkstyle.skip>true</checkstyle.skip>
   </properties>
 
-  <!-- [START pubsublite_install_with_bom] -->
-  <!-- [START pubsublite_java_dependencies] -->
-  <!--  Using libraries-bom to manage versions.
-  See https://github.com/GoogleCloudPlatform/cloud-opensource-java/wiki/The-Google-Cloud-Platform-Libraries-BOM -->
-  <dependencyManagement>
-    <dependencies>
-      <dependency>
-        <groupId>com.google.cloud</groupId>
-        <artifactId>libraries-bom</artifactId>
-        <version>4.4.1</version>
-        <type>pom</type>
-        <scope>import</scope>
-      </dependency>
-    </dependencies>
-  </dependencyManagement>
 
   <dependencies>
+    <!-- {x-version-update-start:google-cloud-pubsublite:released} -->
+    <!-- [START pubsublite_install_without_bom] -->
     <dependency>
       <groupId>com.google.cloud</groupId>
       <artifactId>google-cloud-pubsub</artifactId>
@@ -66,12 +51,11 @@
     <dependency>
       <groupId>com.google.cloud</groupId>
       <artifactId>google-cloud-pubsublite</artifactId>
-      <version>0.1.0</version><!--    TODO: remove later    -->
+      <version>0.0.1-SNAPSHOT</version><!--    TODO: remove later    -->
     </dependency>
-    <!-- [END pubsublite_java_dependencies] -->
-    <!-- [END pubsublite_install_with_bom] -->
+    <!-- [END pubsublite_install_without_bom] -->
+    <!-- {x-version-update-end} -->
 
-    <!-- Test dependencies -->
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>

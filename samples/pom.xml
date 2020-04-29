@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <!--
   ~ Copyright 2020 Google LLC
   ~
@@ -14,19 +14,19 @@
   ~ See the License for the specific language governing permissions and
   ~ limitations under the License.
   -->
-
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.google.cloud</groupId>
   <artifactId>google-cloud-pubsublite-samples</artifactId>
-  <version>0.1.0-SNAPSHOT</version><!-- This artifact should not be released -->
+  <version>0.0.1-SNAPSHOT</version><!-- This artifact should not be released -->
   <packaging>pom</packaging>
-
   <name>Google Cloud Pub/Sub Lite Samples Parent</name>
   <url>https://github.com/googleapis/java-pubsublite</url>
-  <description>Java idiomatic client for Google Cloud Platform services.</description>
+  <description>
+    Java idiomatic client for Google Cloud Platform services.
+  </description>
 
   <!--
     The parent pom defines common style checks and testing strategies for our samples.
@@ -42,31 +42,15 @@
     <maven.compiler.target>1.8</maven.compiler.target>
     <maven.compiler.source>1.8</maven.compiler.source>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <checkstyle.skip>true</checkstyle.skip><!--    TODO: remove later    -->
-    <enforcer.skip>true</enforcer.skip><!--    TODO: remove later    -->
   </properties>
 
   <modules>
-    <module>install-without-bom</module>
     <module>snapshot</module>
     <module>snippets</module>
   </modules>
 
   <build>
     <plugins>
-      <!--    TODO: remove later after configure it in renovate.json & .kokoro/build.sh    -->
-      <plugin>
-        <groupId>com.coveo</groupId>
-        <artifactId>fmt-maven-plugin</artifactId>
-        <version>2.9</version>
-        <executions>
-          <execution>
-            <goals>
-              <goal>format</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-deploy-plugin</artifactId>
@@ -85,4 +69,4 @@
       </plugin>
     </plugins>
   </build>
-</project>
+</project> 

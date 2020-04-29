@@ -4,20 +4,19 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.google.api.grpc</groupId>
   <artifactId>proto-google-cloud-pubsublite-v1</artifactId>
-  <version>0.1.0</version>
+  <version>0.0.1-SNAPSHOT</version><!-- {x-version-update:google-cloud-pubsublite:current} -->
   <name>proto-google-cloud-pubsublite-v1</name>
   <description>PROTO library for proto-google-cloud-pubsublite-v1</description>
   <parent>
     <groupId>com.google.cloud</groupId>
     <artifactId>google-cloud-pubsublite-parent</artifactId>
-    <version>0.1.0</version>
+    <version>0.0.1-SNAPSHOT</version><!-- {x-version-update:google-cloud-pubsublite:current} -->
     <relativePath>../pom.xml</relativePath>
   </parent>
   <dependencies>
     <dependency>
       <groupId>com.google.protobuf</groupId>
-      <artifactId>protobuf-java-util</artifactId>
-      <version>3.11.4</version>
+      <artifactId>protobuf-java</artifactId>
     </dependency>
     <dependency>
       <groupId>com.google.api.grpc</groupId>
@@ -27,4 +26,13 @@
   <properties>
     <checkstyle.skip>true</checkstyle.skip>
   </properties>
+
+  <build>
+    <plugins>
+      <plugin>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>flatten-maven-plugin</artifactId>
+        </plugin>
+    </plugins>
+  </build>
 </project>

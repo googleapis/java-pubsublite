@@ -32,7 +32,7 @@ import java.util.Optional;
 import org.threeten.bp.Duration;
 
 @AutoValue
-public abstract class PublisherBuilder {
+public abstract class Publisher {
   public static final BatchingSettings DEFAULT_BATCHING_SETTINGS =
       BatchingSettings.newBuilder()
           .setIsEnabled(true)
@@ -73,11 +73,11 @@ public abstract class PublisherBuilder {
 
     public abstract Builder setStub(PublisherServiceStub stub);
 
-    abstract PublisherBuilder autoBuild();
+    abstract Publisher autoBuild();
 
     @SuppressWarnings("CheckReturnValue")
     public PublisherApiService build() throws StatusException {
-      PublisherBuilder builder = autoBuild();
+      Publisher builder = autoBuild();
       BatchingSettings batchingSettings =
           builder.batchingSettings().orElse(DEFAULT_BATCHING_SETTINGS);
       KeyExtractor keyExtractor = builder.keyExtractor().orElse(KeyExtractor.DEFAULT);

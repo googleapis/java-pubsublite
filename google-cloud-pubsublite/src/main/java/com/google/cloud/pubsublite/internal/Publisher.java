@@ -12,10 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package com.google.cloud.pubsublite;
+package com.google.cloud.pubsublite.internal;
 
 import com.google.api.core.ApiFuture;
 import com.google.api.core.ApiService;
+import com.google.cloud.pubsublite.Message;
 import java.io.Flushable;
 
 /** A generic PubSub Lite publisher. Errors are handled out of band. Thread safe. */

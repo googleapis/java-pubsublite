@@ -18,9 +18,9 @@ import com.google.auto.value.AutoValue;
 import com.google.cloud.pubsublite.Partition;
 import com.google.cloud.pubsublite.PartitionLookupUtils;
 import com.google.cloud.pubsublite.PublishMetadata;
-import com.google.cloud.pubsublite.Publisher;
 import com.google.cloud.pubsublite.TopicPath;
 import com.google.cloud.pubsublite.internal.DefaultRoutingPolicy;
+import com.google.cloud.pubsublite.internal.Publisher;
 import com.google.common.collect.ImmutableMap;
 import io.grpc.StatusException;
 import java.util.Optional;
@@ -67,7 +67,8 @@ public abstract class RoutingPublisherBuilder {
       for (int i = 0; i < numPartitions; i++) {
         publisherMapBuilder.put(
             Partition.create(i),
-            builder.publisherBuilder()
+            builder
+                .publisherBuilder()
                 .setTopic(builder.topic())
                 .setPartition(Partition.create(i))
                 .build());

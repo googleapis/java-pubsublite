@@ -38,7 +38,7 @@ import java.util.Optional;
 // To subscriber to multiple partitions with the same arguments, call build() multiple times after
 // setting the partition to each value in turn.
 @AutoValue
-public abstract class SubscriberBuilder {
+public abstract class Subscriber {
   private static final Framework FRAMEWORK = Framework.of("CLOUD_PUBSUB_SHIM");
 
   // Required parameters.
@@ -85,11 +85,11 @@ public abstract class SubscriberBuilder {
 
     public abstract Builder setNackHandler(NackHandler nackHandler);
 
-    abstract SubscriberBuilder autoBuild();
+    abstract Subscriber autoBuild();
 
     @SuppressWarnings("CheckReturnValue")
     public SubscriberInterface build() throws StatusException {
-      SubscriberBuilder builder = autoBuild();
+      Subscriber builder = autoBuild();
       SubscriptionPaths.check(builder.subscriptionPath());
 
       com.google.cloud.pubsublite.internal.wire.SubscriberBuilder.Builder wireSubscriberBuilder =

@@ -47,18 +47,16 @@
       <artifactId>google-extensions</artifactId>
       <version>0.5.1</version>
     </dependency>
-    <!--runtime dependencies-->
+    <!--test dependencies-->
     <dependency>
       <groupId>com.google.flogger</groupId>
       <artifactId>flogger-system-backend</artifactId>
       <version>0.5.1</version>
-      <scope>runtime</scope>
+      <scope>test</scope>
     </dependency>
-    <!--test dependencies-->
     <dependency>
       <groupId>com.google.truth</groupId>
       <artifactId>truth</artifactId>
-      <version>1.0.1</version>
       <scope>test</scope>
     </dependency>
     <dependency>

@@ -14,19 +14,19 @@
   ~ See the License for the specific language governing permissions and
   ~ limitations under the License.
   -->
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns="http://maven.apache.org/POM/4.0.0"
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.google.cloud</groupId>
-  <artifactId>pubsublite-snippets</artifactId>
+  <artifactId>pubsublite-install-without-bom</artifactId>
   <packaging>jar</packaging>
-  <name>Google Cloud Pub/Sub Lite Snippets</name>
+  <name>Google Cloud Pub/Sub Lite Install Without BOM Samples</name>
   <url>https://github.com/googleapis/java-pubsublite</url>
 
   <!--
     The parent pom defines common style checks and testing strategies for our samples.
-    Removing or replacing it should not affect the execution of the samples in anyway.
+    Removing or replacing it should not affect the execution of the samples in any way.
   -->
   <parent>
     <groupId>com.google.cloud.samples</groupId>
@@ -40,35 +40,20 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
 
-  <!-- [START pubsublite_install_with_bom] -->
-  <!-- [START pubsublite_java_dependencies] -->
   <!-- {x-version-update-start:google-cloud-pubsublite:released} -->
-  <!--  Using libraries-bom to manage versions.
-  See https://github.com/GoogleCloudPlatform/cloud-opensource-java/wiki/The-Google-Cloud-Platform-Libraries-BOM -->
-  <dependencyManagement>
-    <dependencies>
-      <dependency>
-        <groupId>com.google.cloud</groupId>
-        <artifactId>libraries-bom</artifactId>
-        <version>5.3.0</version>
-        <type>pom</type>
-        <scope>import</scope>
-      </dependency>
-    </dependencies>
-  </dependencyManagement>
-
   <dependencies>
-    <dependency>
-      <groupId>com.google.cloud</groupId>
-      <artifactId>google-cloud-pubsub</artifactId>
-    </dependency>
+    <!-- [START pubsublite_install_without_bom] -->
     <dependency>
       <groupId>com.google.cloud</groupId>
       <artifactId>google-cloud-pubsublite</artifactId>
-      <version>0.0.1-SNAPSHOT</version><!--    TODO: remove after release    -->
+      <version>0.0.1-SNAPSHOT</version>
     </dependency>
-    <!-- [END pubsublite_java_dependencies] -->
-    <!-- [END pubsublite_install_with_bom] -->
+    <dependency>
+      <groupId>com.google.cloud</groupId>
+      <artifactId>google-cloud-pubsub</artifactId>
+      <version>1.105.0</version>
+    </dependency>
+    <!-- [END pubsublite_install_without_bom] -->
 
     <dependency>
       <groupId>com.google.flogger</groupId>
@@ -92,23 +77,36 @@
   </dependencies>
   <!-- {x-version-update-end} -->
 
+  <!-- compile and run all snippet tests -->
   <build>
     <plugins>
       <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-deploy-plugin</artifactId>
-        <version>2.8.2</version>
-        <configuration>
-          <skip>true</skip>
-        </configuration>
-      </plugin>
-      <plugin>
-        <groupId>org.sonatype.plugins</groupId>
-        <artifactId>nexus-staging-maven-plugin</artifactId>
-        <version>1.6.8</version>
-        <configuration>
-          <skipNexusStagingDeployMojo>true</skipNexusStagingDeployMojo>
-        </configuration>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>build-helper-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>add-snippets-source</id>
+            <goals>
+              <goal>add-source</goal>
+            </goals>
+            <configuration>
+              <sources>
+                <source>../snippets/src/main/java</source>
+              </sources>
+            </configuration>
+          </execution>
+          <execution>
+            <id>add-snippets-tests</id>
+            <goals>
+              <goal>add-test-source</goal>
+            </goals>
+            <configuration>
+              <sources>
+                <source>../snippets/src/test/java</source>
+              </sources>
+            </configuration>
+          </execution>
+        </executions>
       </plugin>
     </plugins>
   </build>

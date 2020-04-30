@@ -14,7 +14,9 @@
   ~ See the License for the specific language governing permissions and
   ~ limitations under the License.
   -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns="http://maven.apache.org/POM/4.0.0"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.google.cloud</groupId>
   <artifactId>pubsublite-snapshot</artifactId>
@@ -38,14 +40,25 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
 
+  <!-- {x-version-update-start:google-cloud-pubsublite:current} -->
   <dependencies>
-    <!-- {x-version-update-start:google-cloud-pubsublite:current} -->
     <dependency>
       <groupId>com.google.cloud</groupId>
       <artifactId>google-cloud-pubsublite</artifactId>
       <version>0.0.1-SNAPSHOT</version>
     </dependency>
-    <!-- {x-version-update-end} -->
+    <dependency>
+      <groupId>com.google.cloud</groupId>
+      <artifactId>google-cloud-pubsub</artifactId>
+      <version>1.105.0</version>
+    </dependency>
+
+    <dependency>
+      <groupId>com.google.flogger</groupId>
+      <artifactId>flogger-system-backend</artifactId>
+      <version>0.5.1</version>
+      <scope>runtime</scope>
+    </dependency>
 
     <dependency>
       <groupId>junit</groupId>
@@ -60,6 +73,7 @@
       <scope>test</scope>
     </dependency>
   </dependencies>
+  <!-- {x-version-update-end} -->
 
   <!-- compile and run all snippet tests -->
   <build>
@@ -67,7 +81,6 @@
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>build-helper-maven-plugin</artifactId>
-        <version>3.1.0</version>
         <executions>
           <execution>
             <id>add-snippets-source</id>

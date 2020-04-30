@@ -28,7 +28,7 @@ import com.google.cloud.pubsublite.TopicName;
 import com.google.cloud.pubsublite.TopicPath;
 import com.google.cloud.pubsublite.TopicPaths;
 import com.google.cloud.pubsublite.cloudpubsub.PublisherApiService;
-import com.google.cloud.pubsublite.cloudpubsub.PublisherBuilder;
+import com.google.cloud.pubsublite.cloudpubsub.Publisher;
 import com.google.protobuf.ByteString;
 import com.google.pubsub.v1.PubsubMessage;
 
@@ -65,7 +65,7 @@ public class PublisherExample {
               .build();
 
       PublisherApiService publisherService =
-          PublisherBuilder.newBuilder().setTopicPath(topicPath).build();
+          Publisher.newBuilder().setTopicPath(topicPath).build();
 
       publisherService.startAsync().awaitRunning();
 

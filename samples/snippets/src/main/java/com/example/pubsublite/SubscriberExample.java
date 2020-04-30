@@ -30,7 +30,7 @@ import com.google.cloud.pubsublite.SubscriptionPath;
 import com.google.cloud.pubsublite.SubscriptionPaths;
 import com.google.cloud.pubsublite.cloudpubsub.FlowControlSettings;
 import com.google.cloud.pubsublite.cloudpubsub.MultiPartitionSubscriber;
-import com.google.cloud.pubsublite.cloudpubsub.SubscriberBuilder;
+import com.google.cloud.pubsublite.cloudpubsub.Subscriber;
 import com.google.common.collect.ImmutableList;
 import com.google.pubsub.v1.PubsubMessage;
 
@@ -98,7 +98,7 @@ public class SubscriberExample {
               .setMessagesOutstanding(Long.MAX_VALUE)
               .build();
 
-      SubscriberBuilder.Builder builder = SubscriberBuilder.newBuilder();
+      Subscriber.Builder builder = Subscriber.newBuilder();
       builder.setSubscriptionPath(subscriptionPath);
       builder.setFlowControlSettings(flowControlSettings);
 

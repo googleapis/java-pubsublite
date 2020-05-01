@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-package com.example.pubsublite;
+package pubsublite;
 
-// [START pubsublite_delete_subscription]
+// [START pubsublite_create_subscription]
 
 import com.google.cloud.pubsublite.AdminClient;
 import com.google.cloud.pubsublite.AdminClientBuilder;
@@ -26,32 +26,52 @@ import com.google.cloud.pubsublite.ProjectNumber;
 import com.google.cloud.pubsublite.SubscriptionName;
 import com.google.cloud.pubsublite.SubscriptionPath;
 import com.google.cloud.pubsublite.SubscriptionPaths;
-
+import com.google.cloud.pubsublite.TopicName;
+import com.google.cloud.pubsublite.TopicPath;
+import com.google.cloud.pubsublite.TopicPaths;
+import com.google.cloud.pubsublite.proto.Subscription;
+import com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig;
+import com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig.DeliveryRequirement;
+import io.grpc.StatusRuntimeException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-public class DeleteSubscriptionExample {
+public class CreateSubscriptionExample {
 
-  public static void runDeleteSubscriptionExample() {
+  public static void runCreateSubscriptionExample() throws Exception {
     // TODO(developer): Replace these variables before running the sample.
     String CLOUD_REGION = "Your Cloud Region";
     char ZONE = 'b';
     long PROJECT_NUMBER = 123456789L;
+    String TOPIC_NAME = "Your Topic Name";
     String SUBSCRIPTION_NAME = "Your Subscription Name";
 
-    DeleteSubscriptionExample.deleteSubscriptionExample(
-      CLOUD_REGION, ZONE, PROJECT_NUMBER, SUBSCRIPTION_NAME);
+    createSubscriptionExample(CLOUD_REGION, ZONE, PROJECT_NUMBER, TOPIC_NAME, SUBSCRIPTION_NAME);
   }
 
-  public static void deleteSubscriptionExample(
-      String CLOUD_REGION, char ZONE, long PROJECT_NUMBER, String SUBSCRIPTION_NAME) {
+  public static void createSubscriptionExample(
+      String CLOUD_REGION,
+      char ZONE,
+      long PROJECT_NUMBER,
+      String TOPIC_NAME,
+      String SUBSCRIPTION_NAME) throws Exception {
+
+    ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
 
     try {
       CloudRegion cloudRegion = CloudRegion.create(CLOUD_REGION);
       CloudZone zone = CloudZone.create(cloudRegion, ZONE);
       ProjectNumber projectNum = ProjectNumber.of(PROJECT_NUMBER);
+      TopicName topicName = TopicName.of(TOPIC_NAME);
       SubscriptionName subscriptionName = SubscriptionName.of(SUBSCRIPTION_NAME);
+
+      TopicPath topicPath =
+          TopicPaths.newBuilder()
+              .setZone(zone)
+              .setProjectNumber(projectNum)
+              .setTopicName(topicName)
+              .build();
 
       SubscriptionPath subscriptionPath =
           SubscriptionPaths.newBuilder()
@@ -60,22 +80,29 @@ public class DeleteSubscriptionExample {
               .setSubscriptionName(subscriptionName)
               .build();
 
-      ScheduledExecutorService executor = Executors.newScheduledThreadPool(10);
+      Subscription subscription =
+          Subscription.newBuilder()
+              .setDeliveryConfig(
+                  DeliveryConfig.newBuilder()
+                      .setDeliveryRequirement(DeliveryRequirement.DELIVER_IMMEDIATELY))
+              .setName(subscriptionPath.value())
+              .setTopic(topicPath.value())
+              .build();
 
       // Create admin client
       AdminClient adminClient =
           AdminClientBuilder.builder().setRegion(cloudRegion).setExecutor(executor).build();
 
-      adminClient.deleteSubscription(subscriptionPath).get();
+      System.out.println(
+          adminClient.createSubscription(subscription).get().getAllFields()
+              + " created successfully.");
 
-      System.out.println(subscriptionPath.value() + " deleted successfully.");
-
+    } catch (StatusRuntimeException e) {
+      System.out.println("Failed to create a subscription: \n" + e.toString());
+    } finally {
       executor.shutdown();
-      executor.awaitTermination(10, TimeUnit.SECONDS);
-
-    } catch (Throwable t) {
-      System.out.println("Error in test: " + t);
+      executor.awaitTermination(30, TimeUnit.SECONDS);
     }
   }
 }
-// [END pubsublite_delete_subscription]
+// [END pubsublite_create_subscription]

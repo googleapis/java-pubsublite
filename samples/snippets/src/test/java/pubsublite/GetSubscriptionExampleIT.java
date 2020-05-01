@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.example.pubsublite;
+package pubsublite;
 
 import static com.google.common.truth.Truth.assertThat;
 import static junit.framework.TestCase.assertNotNull;
@@ -22,13 +22,12 @@ import static junit.framework.TestCase.assertNotNull;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.util.UUID;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-public class DeleteSubscriptionExampleIT {
+public class GetSubscriptionExampleIT {
   private ByteArrayOutputStream bout;
   private PrintStream out;
 
@@ -54,7 +53,7 @@ public class DeleteSubscriptionExampleIT {
   }
 
   @Before
-  public void setUp() {
+  public void setUp() throws Exception {
     bout = new ByteArrayOutputStream();
     out = new PrintStream(bout);
     System.setOut(out);
@@ -67,15 +66,18 @@ public class DeleteSubscriptionExampleIT {
   }
 
   @After
-  public void tearDown() {
+  public void tearDown() throws Exception {
+    DeleteSubscriptionExample.deleteSubscriptionExample(
+        CLOUD_REGION, ZONE, PROJECT_NUMBER, SUBSCRIPTION_NAME);
     DeleteTopicExample.deleteTopicExample(CLOUD_REGION, ZONE, PROJECT_NUMBER, TOPIC_NAME);
     System.setOut(null);
   }
 
   @Test
-  public void testDeleteSubscriptionExample() {
-    DeleteSubscriptionExample.deleteSubscriptionExample(
+  public void testGetSubscriptionExample() throws Exception {
+    GetSubscriptionExample.getSubscriptionExample(
         CLOUD_REGION, ZONE, PROJECT_NUMBER, SUBSCRIPTION_NAME);
-    assertThat(bout.toString()).contains("deleted successfully");
+    assertThat(bout.toString()).contains("Subscription: ");
+    assertThat(bout.toString()).contains(SUBSCRIPTION_NAME);
   }
 }

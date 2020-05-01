@@ -14,64 +14,69 @@
  * limitations under the License.
  */
 
-package com.example.pubsublite;
+package pubsublite;
 
-// [START pubsublite_list_subscriptions_in_project]
+// [START pubsublite_delete_subscription]
 
 import com.google.cloud.pubsublite.AdminClient;
 import com.google.cloud.pubsublite.AdminClientBuilder;
 import com.google.cloud.pubsublite.CloudRegion;
 import com.google.cloud.pubsublite.CloudZone;
-import com.google.cloud.pubsublite.LocationPath;
-import com.google.cloud.pubsublite.LocationPaths;
 import com.google.cloud.pubsublite.ProjectNumber;
-import com.google.cloud.pubsublite.proto.Subscription;
-
-import java.util.List;
+import com.google.cloud.pubsublite.SubscriptionName;
+import com.google.cloud.pubsublite.SubscriptionPath;
+import com.google.cloud.pubsublite.SubscriptionPaths;
+import io.grpc.StatusRuntimeException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-public class ListSubscriptionsInProjectExample {
+public class DeleteSubscriptionExample {
 
-  public static void runListSubscriptionsInProjectExample() {
+  public static void runDeleteSubscriptionExample() throws Exception {
     // TODO(developer): Replace these variables before running the sample.
     String CLOUD_REGION = "Your Cloud Region";
     char ZONE = 'b';
     long PROJECT_NUMBER = 123456789L;
+    String SUBSCRIPTION_NAME = "Your Subscription Name";
 
-    ListSubscriptionsInProjectExample.listSubscriptionsInProjectExample(
-        CLOUD_REGION, ZONE, PROJECT_NUMBER);
+    DeleteSubscriptionExample.deleteSubscriptionExample(
+        CLOUD_REGION, ZONE, PROJECT_NUMBER, SUBSCRIPTION_NAME);
   }
 
-  public static void listSubscriptionsInProjectExample(
-      String CLOUD_REGION, char ZONE, long PROJECT_NUMBER) {
+  public static void deleteSubscriptionExample(
+      String CLOUD_REGION, char ZONE, long PROJECT_NUMBER, String SUBSCRIPTION_NAME)
+      throws Exception {
+
+    ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
 
     try {
       CloudRegion cloudRegion = CloudRegion.create(CLOUD_REGION);
       CloudZone zone = CloudZone.create(cloudRegion, ZONE);
       ProjectNumber projectNum = ProjectNumber.of(PROJECT_NUMBER);
+      SubscriptionName subscriptionName = SubscriptionName.of(SUBSCRIPTION_NAME);
 
-      LocationPath locationPath =
-          LocationPaths.newBuilder().setProjectNumber(projectNum).setZone(zone).build();
-
-      ScheduledExecutorService executor = Executors.newScheduledThreadPool(10);
+      SubscriptionPath subscriptionPath =
+          SubscriptionPaths.newBuilder()
+              .setZone(zone)
+              .setProjectNumber(projectNum)
+              .setSubscriptionName(subscriptionName)
+              .build();
 
       // Create admin client
       AdminClient adminClient =
           AdminClientBuilder.builder().setRegion(cloudRegion).setExecutor(executor).build();
 
-      List<Subscription> subscriptions = adminClient.listSubscriptions(locationPath).get();
-      for (Subscription subscription : subscriptions) {
-        System.out.println(subscription.getAllFields());
-      }
-      System.out.println(subscriptions.size() + " subscription(s) listed.");
+      adminClient.deleteSubscription(subscriptionPath).get();
 
+      System.out.println(subscriptionPath.value() + " deleted successfully.");
+
+    } catch (StatusRuntimeException e) {
+      System.out.println("Failed to delete the subscription: " + e.toString());
+    } finally {
       executor.shutdown();
-      executor.awaitTermination(10, TimeUnit.SECONDS);
-    } catch (Throwable t) {
-      System.out.println("Error in test: " + t);
+      executor.awaitTermination(30, TimeUnit.SECONDS);
     }
   }
 }
-// [END pubsublite_list_subscriptions_in_project]
+// [END pubsublite_delete_subscription]

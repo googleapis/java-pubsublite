@@ -14,67 +14,73 @@
  * limitations under the License.
  */
 
-package com.example.pubsublite;
+package pubsublite;
 
-// [START pubsublite_get_subscription]
+// [START pubsublite_list_subscriptions_in_topic]
 
 import com.google.cloud.pubsublite.AdminClient;
 import com.google.cloud.pubsublite.AdminClientBuilder;
 import com.google.cloud.pubsublite.CloudRegion;
 import com.google.cloud.pubsublite.CloudZone;
 import com.google.cloud.pubsublite.ProjectNumber;
-import com.google.cloud.pubsublite.SubscriptionName;
 import com.google.cloud.pubsublite.SubscriptionPath;
-import com.google.cloud.pubsublite.SubscriptionPaths;
-import com.google.cloud.pubsublite.proto.Subscription;
-
+import com.google.cloud.pubsublite.TopicName;
+import com.google.cloud.pubsublite.TopicPath;
+import com.google.cloud.pubsublite.TopicPaths;
+import io.grpc.StatusRuntimeException;
+import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-public class GetSubscriptionExample {
+public class ListSubscriptionsInTopicExample {
 
-  public static void runGetSubscriptionExample() {
+  public static void runListSubscriptionsInTopicExample() throws Exception {
     // TODO(developer): Replace these variables before running the sample.
     String CLOUD_REGION = "Your Cloud Region";
     char ZONE = 'b';
     long PROJECT_NUMBER = 123456789L;
-    String SUBSCRIPTION_NAME = "Your Lite Subscription Name";
+    String TOPIC_NAME = "Your Lite Topic Name";
 
-    GetSubscriptionExample.getSubscriptionExample(
-        CLOUD_REGION, ZONE, PROJECT_NUMBER, SUBSCRIPTION_NAME);
+    ListSubscriptionsInTopicExample.listSubscriptionsInTopicExample(
+        CLOUD_REGION, ZONE, PROJECT_NUMBER, TOPIC_NAME);
   }
 
-  public static void getSubscriptionExample(
-      String CLOUD_REGION, char ZONE, long PROJECT_NUMBER, String SUBSCRIPTION_NAME) {
+  public static void listSubscriptionsInTopicExample(
+      String CLOUD_REGION, char ZONE, long PROJECT_NUMBER, String TOPIC_NAME) throws Exception {
+
+    ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
 
     try {
       CloudRegion cloudRegion = CloudRegion.create(CLOUD_REGION);
       CloudZone zone = CloudZone.create(cloudRegion, ZONE);
       ProjectNumber projectNum = ProjectNumber.of(PROJECT_NUMBER);
-      SubscriptionName subscriptionName = SubscriptionName.of(SUBSCRIPTION_NAME);
+      TopicName topicName = TopicName.of(TOPIC_NAME);
 
-      SubscriptionPath subscriptionPath =
-          SubscriptionPaths.newBuilder()
-              .setZone(zone)
+      TopicPath topicPath =
+          TopicPaths.newBuilder()
               .setProjectNumber(projectNum)
-              .setSubscriptionName(subscriptionName)
+              .setZone(zone)
+              .setTopicName(topicName)
               .build();
-      ScheduledExecutorService executor = Executors.newScheduledThreadPool(10);
 
       // Create admin client
       AdminClient adminClient =
           AdminClientBuilder.builder().setRegion(cloudRegion).setExecutor(executor).build();
 
-      Subscription subscription = adminClient.getSubscription(subscriptionPath).get();
+      List<SubscriptionPath> subscriptionPaths =
+          adminClient.listTopicSubscriptions(topicPath).get();
+      for (SubscriptionPath subscription : subscriptionPaths) {
+        System.out.println(subscription.value());
+      }
+      System.out.println(subscriptionPaths.size() + " subscription(s) listed.");
 
-      System.out.println("Subscription: " + subscription.getAllFields());
-
+    } catch (StatusRuntimeException e) {
+      System.out.println("Failed to list subscriptions in the topic: " + e.toString());
+    } finally {
       executor.shutdown();
-      executor.awaitTermination(10, TimeUnit.SECONDS);
-    } catch (Throwable t) {
-      System.out.println("Error in test: " + t);
+      executor.awaitTermination(30, TimeUnit.SECONDS);
     }
   }
 }
-// [END pubsublite_get_subscription]
+// [END pubsublite_list_subscriptions_in_topic]

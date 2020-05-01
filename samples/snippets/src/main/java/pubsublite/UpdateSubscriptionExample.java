@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-package com.example.pubsublite;
+package pubsublite;
 
-// [START pubsublite_create_subscription]
+// [START pubsublite_update_subscription]
 
 import com.google.cloud.pubsublite.AdminClient;
 import com.google.cloud.pubsublite.AdminClientBuilder;
@@ -26,50 +26,42 @@ import com.google.cloud.pubsublite.ProjectNumber;
 import com.google.cloud.pubsublite.SubscriptionName;
 import com.google.cloud.pubsublite.SubscriptionPath;
 import com.google.cloud.pubsublite.SubscriptionPaths;
-import com.google.cloud.pubsublite.TopicName;
-import com.google.cloud.pubsublite.TopicPath;
-import com.google.cloud.pubsublite.TopicPaths;
 import com.google.cloud.pubsublite.proto.Subscription;
 import com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig;
 import com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig.DeliveryRequirement;
-
+import com.google.protobuf.FieldMask;
+import io.grpc.StatusRuntimeException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-public class CreateSubscriptionExample {
+public class UpdateSubscriptionExample {
 
-  public static void runCreateSubscriptionExample() {
+  public static void runUpdateSubscriptionExample() throws Exception {
     // TODO(developer): Replace these variables before running the sample.
     String CLOUD_REGION = "Your Cloud Region";
     char ZONE = 'b';
+    String SUBSCRIPTION_NAME = "Your Subscription Name"; // Please use an existing subscription
     long PROJECT_NUMBER = 123456789L;
-    String TOPIC_NAME = "Your Topic Name";
-    String SUBSCRIPTION_NAME = "Your Subscription Name";
 
-    createSubscriptionExample(CLOUD_REGION, ZONE, PROJECT_NUMBER, TOPIC_NAME, SUBSCRIPTION_NAME);
+    UpdateSubscriptionExample.updateSubscriptionExample(
+        CLOUD_REGION, ZONE, PROJECT_NUMBER, SUBSCRIPTION_NAME);
   }
 
-  public static void createSubscriptionExample(
-      String CLOUD_REGION,
-      char ZONE,
-      long PROJECT_NUMBER,
-      String TOPIC_NAME,
-      String SUBSCRIPTION_NAME) {
+  public static void updateSubscriptionExample(
+      String CLOUD_REGION, char ZONE, long PROJECT_NUMBER, String SUBSCRIPTION_NAME)
+      throws Exception {
+
+    ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
 
     try {
       CloudRegion cloudRegion = CloudRegion.create(CLOUD_REGION);
       CloudZone zone = CloudZone.create(cloudRegion, ZONE);
       ProjectNumber projectNum = ProjectNumber.of(PROJECT_NUMBER);
-      TopicName topicName = TopicName.of(TOPIC_NAME);
       SubscriptionName subscriptionName = SubscriptionName.of(SUBSCRIPTION_NAME);
 
-      TopicPath topicPath =
-          TopicPaths.newBuilder()
-              .setZone(zone)
-              .setProjectNumber(projectNum)
-              .setTopicName(topicName)
-              .build();
+      FieldMask MASK =
+          FieldMask.newBuilder().addPaths("delivery_config.delivery_requirement").build();
 
       SubscriptionPath subscriptionPath =
           SubscriptionPaths.newBuilder()
@@ -82,27 +74,27 @@ public class CreateSubscriptionExample {
           Subscription.newBuilder()
               .setDeliveryConfig(
                   DeliveryConfig.newBuilder()
-                      .setDeliveryRequirement(DeliveryRequirement.DELIVER_IMMEDIATELY))
+                      .setDeliveryRequirement(DeliveryRequirement.DELIVER_AFTER_STORED))
               .setName(subscriptionPath.value())
-              .setTopic(topicPath.value())
               .build();
-
-      ScheduledExecutorService executor = Executors.newScheduledThreadPool(10);
 
       // Create admin client
       AdminClient adminClient =
           AdminClientBuilder.builder().setRegion(cloudRegion).setExecutor(executor).build();
 
-      System.out.println(
-          adminClient.createSubscription(subscription).get().getAllFields()
-              + " created successfully.");
+      Subscription subscriptionBeforeUpdate = adminClient.getSubscription(subscriptionPath).get();
+      System.out.println("Before update: " + subscriptionBeforeUpdate.getAllFields());
 
+      Subscription subscriptionAfterUpdate =
+          adminClient.updateSubscription(subscription, MASK).get();
+      System.out.println("After update: " + subscriptionAfterUpdate.getAllFields());
+
+    } catch (StatusRuntimeException e) {
+      System.out.println("Failed to update subscription: " + e.toString());
+    } finally {
       executor.shutdown();
-      executor.awaitTermination(10, TimeUnit.SECONDS);
-
-    } catch (Throwable t) {
-      System.out.println("Error in test: " + t);
+      executor.awaitTermination(30, TimeUnit.SECONDS);
     }
   }
 }
-// [END pubsublite_create_subscription]
+// [END pubsublite_update_subscription]

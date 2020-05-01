@@ -14,69 +14,65 @@
  * limitations under the License.
  */
 
-package com.example.pubsublite;
+package pubsublite;
 
-// [START pubsublite_get_topic]
+// [START pubsublite_list_subscriptions_in_project]
 
 import com.google.cloud.pubsublite.AdminClient;
 import com.google.cloud.pubsublite.AdminClientBuilder;
 import com.google.cloud.pubsublite.CloudRegion;
 import com.google.cloud.pubsublite.CloudZone;
+import com.google.cloud.pubsublite.LocationPath;
+import com.google.cloud.pubsublite.LocationPaths;
 import com.google.cloud.pubsublite.ProjectNumber;
-import com.google.cloud.pubsublite.TopicName;
-import com.google.cloud.pubsublite.TopicPath;
-import com.google.cloud.pubsublite.TopicPaths;
-import com.google.cloud.pubsublite.proto.Topic;
-
+import com.google.cloud.pubsublite.proto.Subscription;
+import io.grpc.StatusRuntimeException;
+import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-public class GetTopicExample {
+public class ListSubscriptionsInProjectExample {
 
-  public static void runGetTopicExample() {
+  public static void runListSubscriptionsInProjectExample() throws Exception {
     // TODO(developer): Replace these variables before running the sample.
     String CLOUD_REGION = "Your Cloud Region";
     char ZONE = 'b';
     long PROJECT_NUMBER = 123456789L;
-    String TOPIC_NAME = "Your Lite Topic Name";
 
-    GetTopicExample.getTopicExample(CLOUD_REGION, ZONE, PROJECT_NUMBER, TOPIC_NAME);
+    ListSubscriptionsInProjectExample.listSubscriptionsInProjectExample(
+        CLOUD_REGION, ZONE, PROJECT_NUMBER);
   }
 
-  public static void getTopicExample(
-      String CLOUD_REGION, char ZONE, long PROJECT_NUMBER, String TOPIC_NAME) {
+  public static void listSubscriptionsInProjectExample(
+      String CLOUD_REGION, char ZONE, long PROJECT_NUMBER) throws Exception {
+
+    ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
 
     try {
       CloudRegion cloudRegion = CloudRegion.create(CLOUD_REGION);
       CloudZone zone = CloudZone.create(cloudRegion, ZONE);
       ProjectNumber projectNum = ProjectNumber.of(PROJECT_NUMBER);
-      TopicName topicName = TopicName.of(TOPIC_NAME);
 
-      TopicPath topicPath =
-          TopicPaths.newBuilder()
-              .setZone(zone)
-              .setProjectNumber(projectNum)
-              .setTopicName(topicName)
-              .build();
-
-      ScheduledExecutorService executor = Executors.newScheduledThreadPool(10);
+      LocationPath locationPath =
+          LocationPaths.newBuilder().setProjectNumber(projectNum).setZone(zone).build();
 
       // Create admin client
       AdminClient adminClient =
           AdminClientBuilder.builder().setRegion(cloudRegion).setExecutor(executor).build();
 
-      Topic topic = adminClient.getTopic(topicPath).get();
-      long numPartitions = adminClient.getTopicPartitionCount(topicPath).get();
+      List<Subscription> subscriptions = adminClient.listSubscriptions(locationPath).get();
+      for (Subscription subscription : subscriptions) {
+        System.out.println(subscription.getAllFields());
+      }
+      System.out.println(subscriptions.size() + " subscription(s) listed.");
 
-      System.out.println(
-          "Topic: " + topic.getAllFields() + " has " + numPartitions + " partition(s).");
-
+    } catch (StatusRuntimeException e) {
+      System.out.println("Failed to list subscriptions in the project: " + e.toString());
+    } finally {
       executor.shutdown();
-      executor.awaitTermination(10, TimeUnit.SECONDS);
-    } catch (Throwable t) {
-      System.out.println("Error in test: " + t);
+      executor.awaitTermination(30, TimeUnit.SECONDS);
     }
   }
 }
-// [END pubsublite_get_topic]
+// [END pubsublite_list_subscriptions_in_project]

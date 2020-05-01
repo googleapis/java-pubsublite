@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.example.pubsublite;
+package pubsublite;
 
 import static com.google.common.truth.Truth.assertThat;
 import static junit.framework.TestCase.assertNotNull;
@@ -22,13 +22,12 @@ import static junit.framework.TestCase.assertNotNull;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.util.UUID;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-public class ListSubscriptionsInTopicExampleIT {
+public class PublisherExampleIT {
   private ByteArrayOutputStream bout;
   private PrintStream out;
 
@@ -40,7 +39,7 @@ public class ListSubscriptionsInTopicExampleIT {
   private static final Long PROJECT_NUMBER = Long.parseLong(GOOGLE_CLOUD_PROJECT_NUMBER);
   private static final String SUFFIX = UUID.randomUUID().toString();
   private static final String TOPIC_NAME = "lite-topic-" + SUFFIX;
-  private static final String SUBSCRIPTION_NAME = "lite-subscription-" + SUFFIX;
+  private static final int MESSAGE_COUNT = 100;
   private static final int PARTITIONS = 1;
 
   private static void requireEnvVar(String varName) {
@@ -55,30 +54,25 @@ public class ListSubscriptionsInTopicExampleIT {
   }
 
   @Before
-  public void setUp() {
+  public void setUp() throws Exception {
     bout = new ByteArrayOutputStream();
     out = new PrintStream(bout);
     System.setOut(out);
 
-    // Set up
     CreateTopicExample.createTopicExample(
         CLOUD_REGION, ZONE, PROJECT_NUMBER, TOPIC_NAME, PARTITIONS);
-    CreateSubscriptionExample.createSubscriptionExample(
-        CLOUD_REGION, ZONE, PROJECT_NUMBER, TOPIC_NAME, SUBSCRIPTION_NAME);
   }
 
   @After
-  public void tearDown() {
-    DeleteSubscriptionExample.deleteSubscriptionExample(
-        CLOUD_REGION, ZONE, PROJECT_NUMBER, SUBSCRIPTION_NAME);
+  public void tearDown() throws Exception {
     DeleteTopicExample.deleteTopicExample(CLOUD_REGION, ZONE, PROJECT_NUMBER, TOPIC_NAME);
     System.setOut(null);
   }
 
   @Test
-  public void testListSubscriptionsInTopicExample() {
-    ListSubscriptionsInTopicExample.listSubscriptionsInTopicExample(
-        CLOUD_REGION, ZONE, PROJECT_NUMBER, TOPIC_NAME);
-    assertThat(bout.toString()).contains("subscription(s) listed");
+  public void testPublisherExample() throws Exception {
+    PublisherExample.publisherExample(
+        CLOUD_REGION, ZONE, PROJECT_NUMBER, TOPIC_NAME, MESSAGE_COUNT);
+    assertThat(bout.toString()).contains("Published " + MESSAGE_COUNT);
   }
 }

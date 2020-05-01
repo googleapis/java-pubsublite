@@ -14,11 +14,10 @@
  * limitations under the License.
  */
 
-package com.example.pubsublite;
+package pubsublite;
 
-// [START pubsublite_update_topic]
+// [START pubsublite_create_topic]
 
-import com.google.api.client.http.MultipartContent;
 import com.google.cloud.pubsublite.AdminClient;
 import com.google.cloud.pubsublite.AdminClientBuilder;
 import com.google.cloud.pubsublite.CloudRegion;
@@ -31,39 +30,37 @@ import com.google.cloud.pubsublite.proto.Topic;
 import com.google.cloud.pubsublite.proto.Topic.PartitionConfig;
 import com.google.cloud.pubsublite.proto.Topic.RetentionConfig;
 import com.google.protobuf.util.Durations;
-import com.google.protobuf.FieldMask;
-
-import java.util.Arrays;
+import io.grpc.StatusRuntimeException;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-public class UpdateTopicExample {
+public class CreateTopicExample {
 
-  public static void runUpdateTopicExample() {
+  public static void runCreateTopicExample() throws Exception {
     // TODO(developer): Replace these variables before running the sample.
     String CLOUD_REGION = "Your Cloud Region";
     char ZONE = 'b';
-    String TOPIC_NAME = "Your Topic Name"; // Please use an existing topic
+    String TOPIC_NAME = "Your Topic Name";
     long PROJECT_NUMBER = 123456789L;
+    Integer PARTITIONS = 1;
 
-    UpdateTopicExample.updateTopicExample(CLOUD_REGION, ZONE, PROJECT_NUMBER, TOPIC_NAME);
+    CreateTopicExample.createTopicExample(
+        CLOUD_REGION, ZONE, PROJECT_NUMBER, TOPIC_NAME, PARTITIONS);
   }
 
-  public static void updateTopicExample(
-      String CLOUD_REGION, char ZONE, long PROJECT_NUMBER, String TOPIC_NAME) {
+  public static void createTopicExample(
+      String CLOUD_REGION, char ZONE, long PROJECT_NUMBER, String TOPIC_NAME, int PARTITIONS)
+      throws Exception {
+
+    ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
 
     try {
       CloudRegion cloudRegion = CloudRegion.create(CLOUD_REGION);
       CloudZone zone = CloudZone.create(cloudRegion, ZONE);
       ProjectNumber projectNum = ProjectNumber.of(PROJECT_NUMBER);
       TopicName topicName = TopicName.of(TOPIC_NAME);
-      Iterable<String> iterablePaths =
-          Arrays.asList(
-              "partition_config.scale",
-              "retention_config.per_partition_bytes",
-              "retention_config.period");
-      FieldMask MASK = FieldMask.newBuilder().addAllPaths(iterablePaths).build();
 
       TopicPath topicPath =
           TopicPaths.newBuilder()
@@ -76,35 +73,29 @@ public class UpdateTopicExample {
           Topic.newBuilder()
               .setPartitionConfig(
                   PartitionConfig.newBuilder()
-                      .setScale(
-                          4) // Set publishing throughput to 4*4 MiB per sec. This must be 1-4.
-                      .build())
+                      // Set publishing throughput to 1*4 MiB per sec. This must be 1-4.
+                      .setScale(1)
+                      .setCount(PARTITIONS))
               .setRetentionConfig(
                   RetentionConfig.newBuilder()
-                      .setPerPartitionBytes(
-                          200_000_000_000L) // 200 GiB. This must be 30 GiB-10 TiB.
-                      .setPeriod(Durations.fromDays(7)))
+                      .setPeriod(Durations.fromDays(1))
+                      // Set storage per partition to 100 GiB. This must be 30 GiB-10 TiB.
+                      .setPerPartitionBytes(100_000_000_000L))
               .setName(topicPath.value())
               .build();
-
-      ScheduledExecutorService executor = Executors.newScheduledThreadPool(10);
 
       // Create admin client
       AdminClient adminClient =
           AdminClientBuilder.builder().setRegion(cloudRegion).setExecutor(executor).build();
 
-      Topic topicBeforeUpdate = adminClient.getTopic(topicPath).get();
-      System.out.println("Before update: " + topicBeforeUpdate.getAllFields());
-
-      Topic topicAfterUpdate = adminClient.updateTopic(topic, MASK).get();
-      System.out.println("After update: " + topicAfterUpdate.getAllFields());
-
+      System.out.println(
+          adminClient.createTopic(topic).get().getAllFields() + " created successfully.");
+    } catch (StatusRuntimeException e) {
+      System.out.println("Failed to create a topic: \n" + e.toString());
+    } finally {
       executor.shutdown();
-      executor.awaitTermination(10, TimeUnit.SECONDS);
-
-    } catch (Throwable t) {
-      System.out.println("Error in test: " + t);
+      executor.awaitTermination(30, TimeUnit.SECONDS);
     }
   }
 }
-// [END pubsublite_update_topic]
+// [END pubsublite_create_topic]

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.example.pubsublite;
+package pubsublite;
 
 // [START pubsublite_quickstart_subscriber]
 
@@ -33,14 +33,14 @@ import com.google.cloud.pubsublite.cloudpubsub.MultiPartitionSubscriber;
 import com.google.cloud.pubsublite.cloudpubsub.Subscriber;
 import com.google.common.collect.ImmutableList;
 import com.google.pubsub.v1.PubsubMessage;
-
+import io.grpc.StatusRuntimeException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 public class SubscriberExample {
 
-  public static void runSubscriberExample() {
+  public static void runSubscriberExample() throws Exception {
     // TODO(developer): Replace these variables before running the sample.
     String CLOUD_REGION = "Your Cloud Region";
     char ZONE = 'b';
@@ -52,6 +52,7 @@ public class SubscriberExample {
   }
 
   static class MessageReceiverExample implements MessageReceiver {
+
     private final Partition partition;
 
     MessageReceiverExample(Partition partition) {
@@ -77,7 +78,7 @@ public class SubscriberExample {
       char ZONE,
       long PROJECT_NUMBER,
       String SUBSCRIPTION_NAME,
-      List<Integer> PARTITION_NOS) {
+      List<Integer> PARTITION_NOS) throws Exception {
 
     try {
       CloudRegion cloudRegion = CloudRegion.create(CLOUD_REGION);
@@ -94,7 +95,8 @@ public class SubscriberExample {
 
       FlowControlSettings flowControlSettings =
           FlowControlSettings.builder()
-              .setBytesOutstanding(10_000_000) // 10 MiB per partition.
+              // Set outstanding bytes to 10 MiB per partition.
+              .setBytesOutstanding(10 * 1024 * 1024)
               .setMessagesOutstanding(Long.MAX_VALUE)
               .build();
 
@@ -107,18 +109,21 @@ public class SubscriberExample {
         Partition partition = Partition.create(num);
         subscribers.add(
             builder
+                // Each subscriber can only subscribe to one partition.
                 .setPartition(partition)
                 .setReceiver(new MessageReceiverExample(partition))
                 .build());
       }
-      SubscriberInterface wrapped = MultiPartitionSubscriber.of(subscribers);
+      SubscriberInterface multiPartitionSubscriber = MultiPartitionSubscriber.of(subscribers);
 
-      wrapped.startAsync().awaitRunning();
+      multiPartitionSubscriber.startAsync().awaitRunning();
       System.out.println("Listening to messages on " + subscriptionPath.value() + " ...");
-      wrapped.awaitTerminated(10, TimeUnit.SECONDS);
 
-    } catch (Throwable t) {
-      System.out.println("Error in test: " + t);
+      multiPartitionSubscriber.awaitTerminated(30, TimeUnit.SECONDS);
+      multiPartitionSubscriber.stopAsync();
+
+    } catch (StatusRuntimeException e) {
+      System.out.println("Failed to subscribe to messages: " + e.toString());
     }
   }
 }

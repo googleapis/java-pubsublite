@@ -14,62 +14,68 @@
  * limitations under the License.
  */
 
-package com.example.pubsublite;
+package pubsublite;
 
-// [START pubsublite_list_topics]
+// [START pubsublite_delete_topic]
 
 import com.google.cloud.pubsublite.AdminClient;
 import com.google.cloud.pubsublite.AdminClientBuilder;
 import com.google.cloud.pubsublite.CloudRegion;
 import com.google.cloud.pubsublite.CloudZone;
-import com.google.cloud.pubsublite.LocationPath;
-import com.google.cloud.pubsublite.LocationPaths;
 import com.google.cloud.pubsublite.ProjectNumber;
-import com.google.cloud.pubsublite.proto.Topic;
-
-import java.util.List;
+import com.google.cloud.pubsublite.TopicName;
+import com.google.cloud.pubsublite.TopicPath;
+import com.google.cloud.pubsublite.TopicPaths;
+import io.grpc.StatusRuntimeException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-public class ListTopicsExample {
+public class DeleteTopicExample {
 
-  public static void runListTopicsExample() {
+  public static void runDeleteTopicExample() throws Exception {
     // TODO(developer): Replace these variables before running the sample.
     String CLOUD_REGION = "Your Cloud Region";
     char ZONE = 'b';
+    String TOPIC_NAME = "Your Topic Name";
     long PROJECT_NUMBER = 123456789L;
 
-    ListTopicsExample.listTopicsExample(CLOUD_REGION, ZONE, PROJECT_NUMBER);
+    DeleteTopicExample
+        .deleteTopicExample(CLOUD_REGION, ZONE, PROJECT_NUMBER, TOPIC_NAME);
   }
 
-  public static void listTopicsExample(String CLOUD_REGION, char ZONE, long PROJECT_NUMBER) {
+  public static void deleteTopicExample(
+      String CLOUD_REGION, char ZONE, long PROJECT_NUMBER, String TOPIC_NAME) throws Exception {
+
+    ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
 
     try {
       CloudRegion cloudRegion = CloudRegion.create(CLOUD_REGION);
       CloudZone zone = CloudZone.create(cloudRegion, ZONE);
       ProjectNumber projectNum = ProjectNumber.of(PROJECT_NUMBER);
+      TopicName topicName = TopicName.of(TOPIC_NAME);
 
-      LocationPath locationPath =
-          LocationPaths.newBuilder().setProjectNumber(projectNum).setZone(zone).build();
-
-      ScheduledExecutorService executor = Executors.newScheduledThreadPool(10);
+      TopicPath topicPath =
+          TopicPaths.newBuilder()
+              .setZone(zone)
+              .setProjectNumber(projectNum)
+              .setTopicName(topicName)
+              .build();
 
       // Create admin client
       AdminClient adminClient =
           AdminClientBuilder.builder().setRegion(cloudRegion).setExecutor(executor).build();
 
-      List<Topic> topics = adminClient.listTopics(locationPath).get();
-      for (Topic t : topics) {
-        System.out.println(t.getAllFields());
-      }
-      System.out.println(topics.size() + " topic(s) listed.");
+      adminClient.deleteTopic(topicPath).get();
 
+      System.out.println(topicPath.value() + " deleted successfully.");
+
+    } catch (StatusRuntimeException e) {
+      System.out.println("Failed to delete topic: " + e.toString());
+    } finally {
       executor.shutdown();
-      executor.awaitTermination(10, TimeUnit.SECONDS);
-    } catch (Throwable t) {
-      System.out.println("Error in test: " + t);
+      executor.awaitTermination(30, TimeUnit.SECONDS);
     }
   }
 }
-// [END pubsublite_list_topics]
+// [START pubsublite_delete_topic]

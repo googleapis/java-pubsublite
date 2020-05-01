@@ -14,35 +14,29 @@
  * limitations under the License.
  */
 
-package com.example.pubsublite;
+package pubsublite;
 
 import static com.google.common.truth.Truth.assertThat;
 import static junit.framework.TestCase.assertNotNull;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
-import java.util.List;
 import java.util.UUID;
-
-import com.google.common.collect.ImmutableList;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-public class ListSubscriptionsInProjectExampleIT {
+public class DeleteTopicExampleIT {
   private ByteArrayOutputStream bout;
   private PrintStream out;
 
   private static final String GOOGLE_CLOUD_PROJECT_NUMBER =
       System.getenv("GOOGLE_CLOUD_PROJECT_NUMBER");
-
   private static final String CLOUD_REGION = "us-central1";
   private static final char ZONE = 'b';
   private static final Long PROJECT_NUMBER = Long.parseLong(GOOGLE_CLOUD_PROJECT_NUMBER);
-  private static final String SUFFIX = UUID.randomUUID().toString();
-  private static final String TOPIC_NAME = "lite-topic-" + SUFFIX;
-  private static final String SUBSCRIPTION_NAME = "lite-subscription-" + SUFFIX;
+  private static final String TOPIC_NAME = "lite-topic-" + UUID.randomUUID();
   private static final int PARTITIONS = 1;
 
   private static void requireEnvVar(String varName) {
@@ -57,7 +51,7 @@ public class ListSubscriptionsInProjectExampleIT {
   }
 
   @Before
-  public void setUp() {
+  public void setUp() throws Exception {
     bout = new ByteArrayOutputStream();
     out = new PrintStream(bout);
     System.setOut(out);
@@ -65,22 +59,16 @@ public class ListSubscriptionsInProjectExampleIT {
     // Set up
     CreateTopicExample.createTopicExample(
         CLOUD_REGION, ZONE, PROJECT_NUMBER, TOPIC_NAME, PARTITIONS);
-    CreateSubscriptionExample.createSubscriptionExample(
-        CLOUD_REGION, ZONE, PROJECT_NUMBER, TOPIC_NAME, SUBSCRIPTION_NAME);
   }
 
   @After
   public void tearDown() {
-    DeleteSubscriptionExample.deleteSubscriptionExample(
-        CLOUD_REGION, ZONE, PROJECT_NUMBER, SUBSCRIPTION_NAME);
-    DeleteTopicExample.deleteTopicExample(CLOUD_REGION, ZONE, PROJECT_NUMBER, TOPIC_NAME);
     System.setOut(null);
   }
 
   @Test
-  public void testListSubscriptionInProjectExample() {
-    ListSubscriptionsInProjectExample.listSubscriptionsInProjectExample(
-        CLOUD_REGION, ZONE, PROJECT_NUMBER);
-    assertThat(bout.toString()).contains("subscription(s) listed");
+  public void testDeleteTopicExample() throws Exception {
+    DeleteTopicExample.deleteTopicExample(CLOUD_REGION, ZONE, PROJECT_NUMBER, TOPIC_NAME);
+    assertThat(bout.toString()).contains("deleted successfully");
   }
 }

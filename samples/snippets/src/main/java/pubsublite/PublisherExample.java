@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.example.pubsublite;
+package pubsublite;
 
 // [START pubsublite_quickstart_publisher]
 
@@ -27,17 +27,18 @@ import com.google.cloud.pubsublite.PublishMetadata;
 import com.google.cloud.pubsublite.TopicName;
 import com.google.cloud.pubsublite.TopicPath;
 import com.google.cloud.pubsublite.TopicPaths;
-import com.google.cloud.pubsublite.cloudpubsub.PublisherApiService;
 import com.google.cloud.pubsublite.cloudpubsub.Publisher;
+import com.google.cloud.pubsublite.cloudpubsub.PublisherApiService;
 import com.google.protobuf.ByteString;
 import com.google.pubsub.v1.PubsubMessage;
-
+import io.grpc.StatusRuntimeException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public class PublisherExample {
 
-  public static void runPublisherExample() {
+  public static void runPublisherExample() throws Exception {
     // TODO(developer): Replace these variables before running the sample.
     String CLOUD_REGION = "Your Cloud Region";
     char ZONE = 'b';
@@ -51,7 +52,8 @@ public class PublisherExample {
 
   // Publish messages to a topic.
   public static void publisherExample(
-      String CLOUD_REGION, char ZONE, long PROJECT_NUMBER, String TOPIC_NAME, int MESSAGE_COUNT) {
+      String CLOUD_REGION, char ZONE, long PROJECT_NUMBER, String TOPIC_NAME, int MESSAGE_COUNT)
+      throws Exception {
 
     try {
       CloudRegion cloudRegion = CloudRegion.create(CLOUD_REGION);
@@ -74,7 +76,7 @@ public class PublisherExample {
       for (int i = 0; i < MESSAGE_COUNT; i++) {
         String message = "message-" + i;
 
-        // Convert the message to bytes.
+        // Convert the message to a byte string.
         ByteString data = ByteString.copyFromUtf8(message);
         PubsubMessage pubsubMessage = PubsubMessage.newBuilder().setData(data).build();
 
@@ -83,7 +85,7 @@ public class PublisherExample {
         futures.add(future);
       }
 
-      publisherService.stopAsync().awaitTerminated();
+      publisherService.stopAsync().awaitTerminated(30, TimeUnit.SECONDS);
 
       ArrayList<PublishMetadata> metadata = new ArrayList<>();
       List<String> ackIds = ApiFutures.allAsList(futures).get();
@@ -95,8 +97,8 @@ public class PublisherExample {
       System.out.println(metadata);
       System.out.println("Published " + metadata.size() + "  messages to " + topicPath.value());
 
-    } catch (Throwable t) {
-      System.out.println("Error in test: " + t);
+    } catch (StatusRuntimeException e) {
+      System.out.println("Failed to publish messages: " + e.toString());
     }
   }
 }

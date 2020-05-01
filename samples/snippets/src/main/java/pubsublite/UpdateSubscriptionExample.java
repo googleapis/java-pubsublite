@@ -73,6 +73,11 @@ public class UpdateSubscriptionExample {
       Subscription subscription =
           Subscription.newBuilder()
               .setDeliveryConfig(
+                  // The server does not wait for a published message to be successfully
+                  // written to storage before delivering it to subscribers. As such, a
+                  // subscriber may receive a message for which the write to storage failed.
+                  // If the subscriber re-reads the offset of that message later on, there
+                  // may be a gap at that offset.
                   DeliveryConfig.newBuilder()
                       .setDeliveryRequirement(DeliveryRequirement.DELIVER_IMMEDIATELY))
               .setName(subscriptionPath.value())

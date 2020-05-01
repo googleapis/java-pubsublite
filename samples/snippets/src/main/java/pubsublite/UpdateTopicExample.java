@@ -78,13 +78,18 @@ public class UpdateTopicExample {
           Topic.newBuilder()
               .setPartitionConfig(
                   PartitionConfig.newBuilder()
-                      .setScale(
-                          4) // Set publishing throughput to 4*4 MiB per sec. This must be 1-4.
+                      // Set publishing throughput to 4 times the standard partition
+                      // throughput of 4 MiB per sec. This must be in the range [1,4]. A
+                      // topic with `scale` of 2 and count of 10 is charged for 20 partitions.
+                      .setScale(4)
                       .build())
               .setRetentionConfig(
                   RetentionConfig.newBuilder()
-                      .setPerPartitionBytes(
-                          200_000_000_000L) // 200 GiB. This must be 30 GiB-10 TiB.
+                      // Set storage per partition to 200 GiB. This must be 30 GiB-10 TiB.
+                      // If the number of bytes stored in any of the topic's partitions grows
+                      // beyond this value, older messages will be dropped to make room for
+                      // newer ones, regardless of the value of `period`.
+                      .setPerPartitionBytes(200 * 1024 * 1024 * 1024L)
                       .setPeriod(Durations.fromDays(7)))
               .setName(topicPath.value())
               .build();

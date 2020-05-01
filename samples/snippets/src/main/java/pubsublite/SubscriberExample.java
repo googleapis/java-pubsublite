@@ -119,11 +119,10 @@ public class SubscriberExample {
       multiPartitionSubscriber.startAsync().awaitRunning();
       System.out.println("Listening to messages on " + subscriptionPath.value() + " ...");
 
-      multiPartitionSubscriber.awaitTerminated(30, TimeUnit.SECONDS);
+      multiPartitionSubscriber.awaitTerminated();
       multiPartitionSubscriber.stopAsync();
-
-    } catch (StatusRuntimeException e) {
-      System.out.println("Failed to subscribe to messages: " + e.toString());
+    } catch (Throwable t) {
+      System.out.println("Error in subscribing to messages: " + t);
     }
   }
 }

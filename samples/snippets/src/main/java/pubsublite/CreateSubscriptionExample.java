@@ -84,7 +84,7 @@ public class CreateSubscriptionExample {
           Subscription.newBuilder()
               .setDeliveryConfig(
                   DeliveryConfig.newBuilder()
-                      .setDeliveryRequirement(DeliveryRequirement.DELIVER_IMMEDIATELY))
+                      .setDeliveryRequirement(DeliveryRequirement.DELIVER_AFTER_STORED))
               .setName(subscriptionPath.value())
               .setTopic(topicPath.value())
               .build();

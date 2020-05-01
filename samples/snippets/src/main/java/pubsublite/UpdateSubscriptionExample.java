@@ -74,7 +74,7 @@ public class UpdateSubscriptionExample {
           Subscription.newBuilder()
               .setDeliveryConfig(
                   DeliveryConfig.newBuilder()
-                      .setDeliveryRequirement(DeliveryRequirement.DELIVER_AFTER_STORED))
+                      .setDeliveryRequirement(DeliveryRequirement.DELIVER_IMMEDIATELY))
               .setName(subscriptionPath.value())
               .build();
 

@@ -80,7 +80,7 @@ public class CreateTopicExample {
                   RetentionConfig.newBuilder()
                       .setPeriod(Durations.fromDays(1))
                       // Set storage per partition to 100 GiB. This must be 30 GiB-10 TiB.
-                      .setPerPartitionBytes(100_000_000_000L))
+                      .setPerPartitionBytes(100 * 1024 * 1024 * 1024L))
               .setName(topicPath.value())
               .build();
 

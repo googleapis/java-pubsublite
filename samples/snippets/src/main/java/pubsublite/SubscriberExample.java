@@ -96,7 +96,7 @@ public class SubscriberExample {
       FlowControlSettings flowControlSettings =
           FlowControlSettings.builder()
               // Set outstanding bytes to 10 MiB per partition.
-              .setBytesOutstanding(10 * 1024 * 1024)
+              .setBytesOutstanding(10 * 1024 * 1024L)
               .setMessagesOutstanding(Long.MAX_VALUE)
               .build();
 

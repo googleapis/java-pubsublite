@@ -105,6 +105,8 @@ public class SubscriberExample {
       builder.setFlowControlSettings(flowControlSettings);
 
       ArrayList<SubscriberInterface> subscribers = new ArrayList<>();
+      // A topic of N partitions requires N subscribers to consume all of its
+      // messages, and the partition numbers run from 0 to N-1.
       for (Integer num : PARTITION_NOS) {
         Partition partition = Partition.create(num);
         subscribers.add(

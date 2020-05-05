@@ -72,7 +72,7 @@ public class UpdateTopicExampleIT {
   public void testUpdateTopicExample() throws Exception {
     UpdateTopicExample.updateTopicExample(CLOUD_REGION, ZONE, PROJECT_NUMBER, TOPIC_NAME);
     assertThat(bout.toString()).contains("seconds: 604800");
-    assertThat(bout.toString()).contains("per_partition_bytes: 200000000000");
+    assertThat(bout.toString()).contains("per_partition_bytes: 214748364800");
     assertThat(bout.toString()).contains("scale: 4");
   }
 }

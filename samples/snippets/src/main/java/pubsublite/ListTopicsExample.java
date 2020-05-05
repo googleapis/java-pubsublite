@@ -55,7 +55,6 @@ public class ListTopicsExample {
       LocationPath locationPath =
           LocationPaths.newBuilder().setProjectNumber(projectNum).setZone(zone).build();
 
-
       // Create admin client
       AdminClient adminClient =
           AdminClientBuilder.builder().setRegion(cloudRegion).setExecutor(executor).build();

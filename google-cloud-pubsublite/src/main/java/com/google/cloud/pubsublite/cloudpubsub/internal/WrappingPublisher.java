@@ -21,21 +21,20 @@ import com.google.api.core.ApiFutures;
 import com.google.cloud.pubsublite.Message;
 import com.google.cloud.pubsublite.MessageTransformer;
 import com.google.cloud.pubsublite.PublishMetadata;
-import com.google.cloud.pubsublite.cloudpubsub.PublisherApiService;
+import com.google.cloud.pubsublite.cloudpubsub.Publisher;
 import com.google.cloud.pubsublite.internal.ProxyService;
-import com.google.cloud.pubsublite.internal.Publisher;
 import com.google.common.util.concurrent.MoreExecutors;
 import com.google.pubsub.v1.PubsubMessage;
 import io.grpc.StatusException;
 
 // A WrappingPublisher wraps the wire protocol client with a Cloud Pub/Sub api compliant
 // publisher. It encodes a PublishMetadata object in the response string.
-public class WrappingPublisher extends ProxyService implements PublisherApiService {
-  private final Publisher<PublishMetadata> wirePublisher;
+public class WrappingPublisher extends ProxyService implements Publisher {
+  private final com.google.cloud.pubsublite.internal.Publisher wirePublisher;
   private final MessageTransformer<PubsubMessage, Message> transformer;
 
   public WrappingPublisher(
-      Publisher<PublishMetadata> wirePublisher,
+      com.google.cloud.pubsublite.internal.Publisher wirePublisher,
       MessageTransformer<PubsubMessage, Message> transformer)
       throws StatusException {
     this.wirePublisher = wirePublisher;

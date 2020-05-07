@@ -63,7 +63,7 @@ public abstract class SubscriberSettings {
   abstract Optional<NackHandler> nackHandler();
 
   public static Builder newBuilder() {
-    return new AutoValue_Subscriber.Builder();
+    return new AutoValue_SubscriberSettings.Builder();
   }
 
   @AutoValue.Builder

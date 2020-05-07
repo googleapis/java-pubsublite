@@ -25,7 +25,9 @@ import com.google.cloud.pubsublite.SequencedMessage;
 import com.google.cloud.pubsublite.SubscriptionPath;
 import com.google.cloud.pubsublite.SubscriptionPaths;
 import com.google.cloud.pubsublite.cloudpubsub.internal.AckSetTrackerImpl;
+import com.google.cloud.pubsublite.cloudpubsub.internal.MultiPartitionSubscriber;
 import com.google.cloud.pubsublite.cloudpubsub.internal.SinglePartitionSubscriber;
+import com.google.cloud.pubsublite.internal.Preconditions;
 import com.google.cloud.pubsublite.internal.wire.CommitterBuilder;
 import com.google.cloud.pubsublite.internal.wire.PubsubContext;
 import com.google.cloud.pubsublite.internal.wire.PubsubContext.Framework;
@@ -33,6 +35,8 @@ import com.google.cloud.pubsublite.proto.CursorServiceGrpc;
 import com.google.cloud.pubsublite.proto.SubscriberServiceGrpc;
 import com.google.pubsub.v1.PubsubMessage;
 import io.grpc.StatusException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 // A SubscriberBuilder enables building a subscriber for a single partition.
@@ -48,9 +52,9 @@ public abstract class Subscriber {
 
   abstract SubscriptionPath subscriptionPath();
 
-  abstract Partition partition();
+  abstract List<Partition> partitions();
 
-  abstract FlowControlSettings flowControlSettings();
+  abstract FlowControlSettings perPartitionFlowControlSettings();
 
   // Optional parameters.
   abstract Optional<MessageTransformer<SequencedMessage, PubsubMessage>> transformer();
@@ -72,9 +76,9 @@ public abstract class Subscriber {
 
     public abstract Builder setSubscriptionPath(SubscriptionPath path);
 
-    public abstract Builder setPartition(Partition partition);
+    public abstract Builder setPartitions(List<Partition> partition);
 
-    public abstract Builder setFlowControlSettings(FlowControlSettings settings);
+    public abstract Builder setPerPartitionFlowControlSettings(FlowControlSettings settings);
 
     // Optional parameters.
     public abstract Builder setTransformer(
@@ -92,27 +96,35 @@ public abstract class Subscriber {
     @SuppressWarnings("CheckReturnValue")
     public SubscriberInterface build() throws StatusException {
       Subscriber builder = autoBuild();
+      Preconditions.checkArgument(
+          !builder.partitions().isEmpty(), "Must provide at least one partition.");
       SubscriptionPaths.check(builder.subscriptionPath());
 
       com.google.cloud.pubsublite.internal.wire.SubscriberBuilder.Builder wireSubscriberBuilder =
           com.google.cloud.pubsublite.internal.wire.SubscriberBuilder.newBuilder();
       wireSubscriberBuilder.setSubscriptionPath(builder.subscriptionPath());
-      wireSubscriberBuilder.setPartition(builder.partition());
       builder.subscriberServiceStub().ifPresent(wireSubscriberBuilder::setSubscriberServiceStub);
       wireSubscriberBuilder.setContext(PubsubContext.of(FRAMEWORK));
 
       CommitterBuilder.Builder wireCommitterBuilder = CommitterBuilder.newBuilder();
       wireCommitterBuilder.setSubscriptionPath(builder.subscriptionPath());
-      wireCommitterBuilder.setPartition(builder.partition());
       builder.cursorServiceStub().ifPresent(wireCommitterBuilder::setCursorStub);
 
-      return new SinglePartitionSubscriber(
-          builder.receiver(),
-          builder.transformer().orElse(MessageTransforms.toCpsSubscribeTransformer()),
-          new AckSetTrackerImpl(wireCommitterBuilder.build()),
-          builder.nackHandler().orElse(new NackHandler() {}),
-          messageConsumer -> wireSubscriberBuilder.setMessageConsumer(messageConsumer).build(),
-          builder.flowControlSettings());
+      List<SubscriberInterface> perPartitionSubscribers = new ArrayList<>();
+      for (Partition partition : builder.partitions()) {
+        wireSubscriberBuilder.setPartition(partition);
+        wireCommitterBuilder.setPartition(partition);
+        perPartitionSubscribers.add(
+            new SinglePartitionSubscriber(
+                builder.receiver(),
+                builder.transformer().orElse(MessageTransforms.toCpsSubscribeTransformer()),
+                new AckSetTrackerImpl(wireCommitterBuilder.build()),
+                builder.nackHandler().orElse(new NackHandler() {}),
+                messageConsumer ->
+                    wireSubscriberBuilder.setMessageConsumer(messageConsumer).build(),
+                builder.perPartitionFlowControlSettings()));
+      }
+      return MultiPartitionSubscriber.of(perPartitionSubscribers);
     }
   }
 }

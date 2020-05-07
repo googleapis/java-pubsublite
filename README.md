@@ -275,7 +275,7 @@ try {
       .setSubscriptionPath(subscriptionPath)
       .setFlowControlSettings(flowControlSettings)
       .setReceiver(receiver)
-      .setPartition(0)
+      .setPartitions(List.of(Partition.of(0)))
       .build();
   subscriber.addListener(
     new Subscriber.Listener() {

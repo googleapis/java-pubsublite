@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.google.cloud.pubsublite.cloudpubsub;
+package com.google.cloud.pubsublite.cloudpubsub.internal;
 
 import com.google.cloud.pubsub.v1.SubscriberInterface;
 import com.google.cloud.pubsublite.internal.ProxyService;

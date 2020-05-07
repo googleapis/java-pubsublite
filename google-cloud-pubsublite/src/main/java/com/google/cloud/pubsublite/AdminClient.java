@@ -20,10 +20,15 @@ import com.google.api.core.ApiFuture;
 import com.google.cloud.pubsublite.proto.Subscription;
 import com.google.cloud.pubsublite.proto.Topic;
 import com.google.protobuf.FieldMask;
+import io.grpc.StatusException;
 import java.util.List;
 
 /** A client for performing Pub/Sub Lite admin operations. */
 public interface AdminClient {
+  static AdminClient create(AdminClientSettings settings) throws StatusException {
+    return settings.instantiate();
+  }
+
   /** The Google Cloud region this client operates on. */
   CloudRegion region();
 

@@ -26,7 +26,7 @@ import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.mock;
 
 import com.google.api.core.ApiFuture;
-import com.google.cloud.pubsublite.AdminClientBuilder;
+import com.google.cloud.pubsublite.AdminClientSettings;
 import com.google.cloud.pubsublite.CloudRegion;
 import com.google.cloud.pubsublite.CloudZone;
 import com.google.cloud.pubsublite.ErrorCodes;
@@ -200,7 +200,7 @@ public class AdminClientImplTest {
         new AdminClientImpl(
             REGION,
             stub,
-            AdminClientBuilder.DEFAULT_RETRY_SETTINGS,
+            AdminClientSettings.DEFAULT_RETRY_SETTINGS,
             Executors.newSingleThreadScheduledExecutor());
   }
 

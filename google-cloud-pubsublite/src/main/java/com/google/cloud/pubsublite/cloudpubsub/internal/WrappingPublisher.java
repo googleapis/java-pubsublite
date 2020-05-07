@@ -30,11 +30,11 @@ import io.grpc.StatusException;
 // A WrappingPublisher wraps the wire protocol client with a Cloud Pub/Sub api compliant
 // publisher. It encodes a PublishMetadata object in the response string.
 public class WrappingPublisher extends ProxyService implements Publisher {
-  private final com.google.cloud.pubsublite.internal.Publisher wirePublisher;
+  private final com.google.cloud.pubsublite.internal.Publisher<PublishMetadata> wirePublisher;
   private final MessageTransformer<PubsubMessage, Message> transformer;
 
   public WrappingPublisher(
-      com.google.cloud.pubsublite.internal.Publisher wirePublisher,
+      com.google.cloud.pubsublite.internal.Publisher<PublishMetadata> wirePublisher,
       MessageTransformer<PubsubMessage, Message> transformer)
       throws StatusException {
     this.wirePublisher = wirePublisher;

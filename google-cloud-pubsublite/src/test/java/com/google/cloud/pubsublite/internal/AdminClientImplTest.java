@@ -105,15 +105,11 @@ public class AdminClientImplTest {
   }
 
   private static TopicPath topicPath() {
-    try {
-      return TopicPaths.newBuilder()
-          .setZone(ZONE)
-          .setProjectNumber(projectNumber())
-          .setTopicName(topicName())
-          .build();
-    } catch (StatusException e) {
-      throw e.getStatus().asRuntimeException();
-    }
+    return TopicPaths.newBuilder()
+        .setZone(ZONE)
+        .setProjectNumber(projectNumber())
+        .setTopicName(topicName())
+        .build();
   }
 
   private static LocationPath topicParent() {
@@ -142,15 +138,11 @@ public class AdminClientImplTest {
   }
 
   private static SubscriptionPath subscriptionPath() {
-    try {
-      return SubscriptionPaths.newBuilder()
-          .setZone(ZONE)
-          .setProjectNumber(projectNumber())
-          .setSubscriptionName(subscriptionName())
-          .build();
-    } catch (StatusException e) {
-      throw e.getStatus().asRuntimeException();
-    }
+    return SubscriptionPaths.newBuilder()
+        .setZone(ZONE)
+        .setProjectNumber(projectNumber())
+        .setSubscriptionName(subscriptionName())
+        .build();
   }
 
   private static LocationPath subscriptionParent() {

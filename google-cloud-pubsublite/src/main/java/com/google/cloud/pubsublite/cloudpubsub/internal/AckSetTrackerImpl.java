@@ -97,7 +97,7 @@ public class AckSetTrackerImpl extends ProxyService implements AckSetTracker {
       // Convert from last acked to first unacked.
       if (prefixAckedOffset.isPresent()) {
         ApiFuture<?> future =
-            committer.commitOffset(Offset.create(prefixAckedOffset.get().value() + 1));
+            committer.commitOffset(Offset.of(prefixAckedOffset.get().value() + 1));
         ExtractStatus.addFailureHandler(future, this::onPermanentError);
       }
     }

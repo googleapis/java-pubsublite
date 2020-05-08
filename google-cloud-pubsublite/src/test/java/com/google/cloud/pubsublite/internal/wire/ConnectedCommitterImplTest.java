@@ -70,7 +70,7 @@ public class ConnectedCommitterImplTest {
                   .setSubscription(
                       SubscriptionPaths.newBuilder()
                           .setProjectNumber(ProjectNumber.of(12345))
-                          .setZone(CloudZone.create(CloudRegion.create("us-east1"), 'a'))
+                          .setZone(CloudZone.of(CloudRegion.of("us-east1"), 'a'))
                           .setSubscriptionName(SubscriptionName.of("some_subscription"))
                           .build()
                           .value())
@@ -217,7 +217,7 @@ public class ConnectedCommitterImplTest {
     ConnectedCommitter committer = initialize();
     committer.close();
     verify(mockRequestStream).onCompleted();
-    committer.commit(Offset.create(10));
+    committer.commit(Offset.of(10));
     verify(mockOutputStream, never()).onNext(any());
   }
 
@@ -238,7 +238,7 @@ public class ConnectedCommitterImplTest {
     ConnectedCommitter committer = initialize();
     StreamingCommitCursorRequest.Builder builder = StreamingCommitCursorRequest.newBuilder();
     builder.getCommitBuilder().setCursor(Cursor.newBuilder().setOffset(154));
-    committer.commit(Offset.create(154));
+    committer.commit(Offset.of(154));
     verify(mockRequestStream).onNext(builder.build());
   }
 

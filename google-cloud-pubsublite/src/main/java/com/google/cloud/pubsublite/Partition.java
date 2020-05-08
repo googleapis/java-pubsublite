@@ -24,7 +24,7 @@ import io.grpc.StatusException;
 /** A partition of a topic. */
 @AutoValue
 public abstract class Partition {
-  public static Partition create(long partition) throws StatusException {
+  public static Partition of(long partition) throws StatusException {
     checkArgument(partition >= 0, "Partitions are zero indexed.");
     return new AutoValue_Partition(partition);
   }

@@ -50,10 +50,10 @@ public class MessageTransformsTest {
             StatusException.class,
             () ->
                 subscribeTransformer.transform(
-                    SequencedMessage.create(
+                    SequencedMessage.of(
                         Message.builder().setKey(ByteString.copyFrom(notUtf8Array)).build(),
                         Timestamps.fromNanos(0),
-                        Offset.create(10),
+                        Offset.of(10),
                         10)));
     assertThat(e.getStatus().getCode()).isEqualTo(Code.INVALID_ARGUMENT);
   }
@@ -65,7 +65,7 @@ public class MessageTransformsTest {
             StatusException.class,
             () ->
                 subscribeTransformer.transform(
-                    SequencedMessage.create(
+                    SequencedMessage.of(
                         Message.builder()
                             .setAttributes(
                                 ImmutableListMultimap.<String, ByteString>builder()
@@ -75,7 +75,7 @@ public class MessageTransformsTest {
                                     .build())
                             .build(),
                         Timestamps.fromNanos(0),
-                        Offset.create(10),
+                        Offset.of(10),
                         10)));
     assertThat(e.getStatus().getCode()).isEqualTo(Code.INVALID_ARGUMENT);
   }
@@ -87,7 +87,7 @@ public class MessageTransformsTest {
             StatusException.class,
             () ->
                 subscribeTransformer.transform(
-                    SequencedMessage.create(
+                    SequencedMessage.of(
                         Message.builder()
                             .setAttributes(
                                 ImmutableListMultimap.<String, ByteString>builder()
@@ -96,7 +96,7 @@ public class MessageTransformsTest {
                                     .build())
                             .build(),
                         Timestamps.fromNanos(0),
-                        Offset.create(10),
+                        Offset.of(10),
                         10)));
     assertThat(e.getStatus().getCode()).isEqualTo(Code.INVALID_ARGUMENT);
   }
@@ -108,7 +108,7 @@ public class MessageTransformsTest {
             StatusException.class,
             () ->
                 subscribeTransformer.transform(
-                    SequencedMessage.create(
+                    SequencedMessage.of(
                         Message.builder()
                             .setAttributes(
                                 ImmutableListMultimap.<String, ByteString>builder()
@@ -116,7 +116,7 @@ public class MessageTransformsTest {
                                     .build())
                             .build(),
                         Timestamps.fromNanos(0),
-                        Offset.create(10),
+                        Offset.of(10),
                         10)));
     assertThat(e.getStatus().getCode()).isEqualTo(Code.INVALID_ARGUMENT);
   }
@@ -124,7 +124,7 @@ public class MessageTransformsTest {
   @Test
   public void subscribeTransformCorrect() throws StatusException {
     SequencedMessage message =
-        SequencedMessage.create(
+        SequencedMessage.of(
             Message.builder()
                 .setAttributes(
                     ImmutableListMultimap.<String, ByteString>builder()
@@ -136,7 +136,7 @@ public class MessageTransformsTest {
                 .setKey(ByteString.copyFromUtf8("some_key"))
                 .build(),
             Timestamps.fromSeconds(5),
-            Offset.create(7),
+            Offset.of(7),
             2);
     PubsubMessage result =
         PubsubMessage.newBuilder()

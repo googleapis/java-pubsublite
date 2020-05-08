@@ -55,7 +55,7 @@ import org.mockito.stubbing.Answer;
 public class BufferingPullSubscriberTest {
   private final SubscriberFactory underlyingFactory = mock(SubscriberFactory.class);
   private final Subscriber underlying = mock(Subscriber.class);
-  private final Offset initialOffset = Offset.create(5);
+  private final Offset initialOffset = Offset.of(5);
   private final FlowControlSettings flowControlSettings =
       ((Supplier<FlowControlSettings>)
               () -> {
@@ -134,9 +134,9 @@ public class BufferingPullSubscriberTest {
   @Test
   public void pullEmptiesForNext() throws StatusException {
     SequencedMessage message1 =
-        SequencedMessage.create(Message.builder().build(), Timestamps.EPOCH, Offset.create(10), 10);
+        SequencedMessage.of(Message.builder().build(), Timestamps.EPOCH, Offset.of(10), 10);
     SequencedMessage message2 =
-        SequencedMessage.create(Message.builder().build(), Timestamps.EPOCH, Offset.create(11), 10);
+        SequencedMessage.of(Message.builder().build(), Timestamps.EPOCH, Offset.of(11), 10);
     messageConsumer.accept(ImmutableList.of(message1, message2));
     assertThat(subscriber.pull()).containsExactly(message1, message2);
     assertThat(subscriber.pull()).isEmpty();
@@ -145,11 +145,11 @@ public class BufferingPullSubscriberTest {
   @Test
   public void multipleBatchesAggregatedReturnsTokens() throws StatusException {
     SequencedMessage message1 =
-        SequencedMessage.create(Message.builder().build(), Timestamps.EPOCH, Offset.create(10), 10);
+        SequencedMessage.of(Message.builder().build(), Timestamps.EPOCH, Offset.of(10), 10);
     SequencedMessage message2 =
-        SequencedMessage.create(Message.builder().build(), Timestamps.EPOCH, Offset.create(11), 20);
+        SequencedMessage.of(Message.builder().build(), Timestamps.EPOCH, Offset.of(11), 20);
     SequencedMessage message3 =
-        SequencedMessage.create(Message.builder().build(), Timestamps.EPOCH, Offset.create(12), 30);
+        SequencedMessage.of(Message.builder().build(), Timestamps.EPOCH, Offset.of(12), 30);
     messageConsumer.accept(ImmutableList.of(message1, message2));
     messageConsumer.accept(ImmutableList.of(message3));
     assertThat(subscriber.pull()).containsExactly(message1, message2, message3);

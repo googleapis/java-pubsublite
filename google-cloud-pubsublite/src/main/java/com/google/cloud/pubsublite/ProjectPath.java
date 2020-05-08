@@ -16,17 +16,16 @@
 
 package com.google.cloud.pubsublite;
 
-import static com.google.cloud.pubsublite.internal.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkArgument;
 
 import com.google.auto.value.AutoValue;
-import io.grpc.StatusException;
 import java.io.Serializable;
 
 @AutoValue
 public abstract class ProjectPath implements Serializable {
   public abstract String value();
 
-  public static ProjectPath of(String value) throws StatusException {
+  public static ProjectPath of(String value) {
     checkArgument(!value.isEmpty());
     return new AutoValue_ProjectPath(value);
   }

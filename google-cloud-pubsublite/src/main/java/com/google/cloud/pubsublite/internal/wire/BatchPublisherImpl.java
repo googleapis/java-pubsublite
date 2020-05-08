@@ -82,7 +82,7 @@ class BatchPublisherImpl extends SingleConnection<PublishRequest, PublishRespons
   }
 
   private Status onMessageResponse(MessagePublishResponse response) {
-    Offset offset = Offset.create(response.getStartCursor().getOffset());
+    Offset offset = Offset.of(response.getStartCursor().getOffset());
     try (CloseableMonitor.Hold h = monitor.enter()) {
       if (lastOffset.isPresent() && offset.value() <= lastOffset.get().value()) {
         return Status.FAILED_PRECONDITION.withDescription(

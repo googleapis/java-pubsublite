@@ -77,10 +77,10 @@ public class SinglePartitionSubscriberTest {
   @Mock private Listener permanentErrorHandler;
   private SinglePartitionSubscriber subscriber;
 
-  private static final Offset OFFSET = Offset.create(1);
+  private static final Offset OFFSET = Offset.of(1);
   private static final long BYTE_SIZE = 1392;
   private static final SequencedMessage MESSAGE =
-      SequencedMessage.create(
+      SequencedMessage.of(
           Message.builder().setData(ByteString.copyFromUtf8("abc")).build(),
           Timestamps.EPOCH,
           OFFSET,

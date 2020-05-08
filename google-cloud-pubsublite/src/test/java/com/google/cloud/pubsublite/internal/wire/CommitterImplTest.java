@@ -71,7 +71,7 @@ public class CommitterImplTest {
                   .setSubscription(
                       SubscriptionPaths.newBuilder()
                           .setProjectNumber(ProjectNumber.of(12345))
-                          .setZone(CloudZone.create(CloudRegion.create("us-east1"), 'a'))
+                          .setZone(CloudZone.of(CloudRegion.of("us-east1"), 'a'))
                           .setSubscriptionName(SubscriptionName.of("some_subscription"))
                           .build()
                           .value())
@@ -122,7 +122,7 @@ public class CommitterImplTest {
 
   @Test
   public void stopWaitsForCommit() throws Exception {
-    Offset commitOffset = Offset.create(101);
+    Offset commitOffset = Offset.of(101);
     ApiFuture<Void> future = committer.commitOffset(commitOffset);
     verify(mockConnectedCommitter).commit(commitOffset);
 
@@ -143,12 +143,12 @@ public class CommitterImplTest {
     leakedResponseObserver.onNext(ResponseWithCount(1));
     closeFuture.get();
 
-    assertFutureThrowsCode(committer.commitOffset(Offset.create(1)), Code.FAILED_PRECONDITION);
+    assertFutureThrowsCode(committer.commitOffset(Offset.of(1)), Code.FAILED_PRECONDITION);
   }
 
   @Test
   public void responseMoreThanSentError() {
-    ApiFuture<Void> future = committer.commitOffset(Offset.create(10));
+    ApiFuture<Void> future = committer.commitOffset(Offset.of(10));
     leakedResponseObserver.onNext(ResponseWithCount(2));
     verify(permanentErrorHandler)
         .failed(any(), argThat(new StatusExceptionMatcher(Code.FAILED_PRECONDITION)));
@@ -157,9 +157,9 @@ public class CommitterImplTest {
 
   @Test
   public void multipleSentCompletedInOrder() {
-    ApiFuture<Void> future1 = committer.commitOffset(Offset.create(10));
-    ApiFuture<Void> future2 = committer.commitOffset(Offset.create(1));
-    ApiFuture<Void> future3 = committer.commitOffset(Offset.create(87));
+    ApiFuture<Void> future1 = committer.commitOffset(Offset.of(10));
+    ApiFuture<Void> future2 = committer.commitOffset(Offset.of(1));
+    ApiFuture<Void> future3 = committer.commitOffset(Offset.of(87));
 
     assertThat(future1.isDone()).isFalse();
     assertThat(future2.isDone()).isFalse();

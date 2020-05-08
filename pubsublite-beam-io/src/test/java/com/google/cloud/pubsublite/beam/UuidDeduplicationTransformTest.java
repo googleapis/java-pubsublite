@@ -42,12 +42,12 @@ public class UuidDeduplicationTransformTest {
 
   private static SequencedMessage newMessage() {
     Uuid uuid = Uuid.random();
-    return SequencedMessage.create(
+    return SequencedMessage.of(
         Message.builder()
             .setAttributes(ImmutableListMultimap.of(Uuid.DEFAULT_ATTRIBUTE, uuid.value()))
             .build(),
         Timestamps.EPOCH,
-        Offset.create(10),
+        Offset.of(10),
         10000);
   }
 

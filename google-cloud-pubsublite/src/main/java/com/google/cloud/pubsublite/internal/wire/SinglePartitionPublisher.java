@@ -54,7 +54,7 @@ public class SinglePartitionPublisher extends ProxyService implements Publisher<
   public ApiFuture<PublishMetadata> publish(Message message) {
     return ApiFutures.transform(
         publisher.publish(message),
-        offset -> PublishMetadata.create(partition, offset),
+        offset -> PublishMetadata.of(partition, offset),
         MoreExecutors.directExecutor());
   }
 

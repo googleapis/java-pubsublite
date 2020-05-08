@@ -261,9 +261,9 @@ public final class PublisherImpl extends ProxyService
         return Status.FAILED_PRECONDITION.withDescription("Received empty batch on stream.");
       }
       InFlightBatch batch = batchesInFlight.remove();
-      lastSentOffset = Optional.of(Offset.create(value.value() + batch.messages.size() - 1));
+      lastSentOffset = Optional.of(Offset.of(value.value() + batch.messages.size() - 1));
       for (int i = 0; i < batch.messageFutures.size(); i++) {
-        Offset offset = Offset.create(value.value() + i);
+        Offset offset = Offset.of(value.value() + i);
         batch.messageFutures.get(i).set(offset);
       }
       return Status.OK;

@@ -136,7 +136,7 @@ public class PublisherImplTest {
     doAnswer(
             (Answer<Void>)
                 args -> {
-                  leakedOffsetStream.onNext(Offset.create(10));
+                  leakedOffsetStream.onNext(Offset.of(10));
                   return null;
                 })
         .when(mockBatchPublisher)
@@ -145,7 +145,7 @@ public class PublisherImplTest {
     publisher.flush();
     verify(mockBatchPublisher)
         .publish((Collection<PubSubMessage>) argThat(hasItems(message.toProto())));
-    assertThat(future.get()).isEqualTo(Offset.create(10));
+    assertThat(future.get()).isEqualTo(Offset.of(10));
     verifyNoMoreInteractions(mockBatchPublisher);
   }
 
@@ -158,7 +158,7 @@ public class PublisherImplTest {
     doAnswer(
             (Answer<Void>)
                 args -> {
-                  leakedOffsetStream.onNext(Offset.create(10));
+                  leakedOffsetStream.onNext(Offset.of(10));
                   return null;
                 })
         .when(mockBatchPublisher)
@@ -167,7 +167,7 @@ public class PublisherImplTest {
     publisher.stopAsync().awaitTerminated();
     verify(mockBatchPublisher)
         .publish((Collection<PubSubMessage>) argThat(hasItems(message.toProto())));
-    assertThat(future.get()).isEqualTo(Offset.create(10));
+    assertThat(future.get()).isEqualTo(Offset.of(10));
     verify(mockBatchPublisher).close();
     verifyNoMoreInteractions(mockBatchPublisher);
   }
@@ -210,16 +210,16 @@ public class PublisherImplTest {
     assertThat(future2.isDone()).isFalse();
     assertThat(future3.isDone()).isFalse();
 
-    leakedOffsetStream.onNext(Offset.create(10));
+    leakedOffsetStream.onNext(Offset.of(10));
     assertThat(future1.isDone()).isTrue();
-    assertThat(future1.get()).isEqualTo(Offset.create(10));
+    assertThat(future1.get()).isEqualTo(Offset.of(10));
     assertThat(future2.isDone()).isTrue();
-    assertThat(future2.get()).isEqualTo(Offset.create(11));
+    assertThat(future2.get()).isEqualTo(Offset.of(11));
     assertThat(future3.isDone()).isFalse();
 
-    leakedOffsetStream.onNext(Offset.create(12));
+    leakedOffsetStream.onNext(Offset.of(12));
     assertThat(future3.isDone()).isTrue();
-    assertThat(future3.get()).isEqualTo(Offset.create(12));
+    assertThat(future3.get()).isEqualTo(Offset.of(12));
 
     verifyNoMoreInteractions(mockBatchPublisher);
   }
@@ -258,14 +258,14 @@ public class PublisherImplTest {
     assertThat(future1.isDone()).isFalse();
     assertThat(future2.isDone()).isFalse();
 
-    leakedOffsetStream.onNext(Offset.create(10));
+    leakedOffsetStream.onNext(Offset.of(10));
     assertThat(future1.isDone()).isTrue();
-    assertThat(future1.get()).isEqualTo(Offset.create(10));
+    assertThat(future1.get()).isEqualTo(Offset.of(10));
     assertThat(future2.isDone()).isFalse();
 
-    leakedOffsetStream.onNext(Offset.create(50));
+    leakedOffsetStream.onNext(Offset.of(50));
     assertThat(future2.isDone()).isTrue();
-    assertThat(future2.get()).isEqualTo(Offset.create(50));
+    assertThat(future2.get()).isEqualTo(Offset.of(50));
 
     verifyNoMoreInteractions(mockBatchPublisher, mockBatchPublisher2);
   }
@@ -291,14 +291,14 @@ public class PublisherImplTest {
     assertThat(future2.isDone()).isFalse();
     assertThat(future3.isDone()).isFalse();
 
-    leakedOffsetStream.onNext(Offset.create(10));
+    leakedOffsetStream.onNext(Offset.of(10));
     assertThat(future1.isDone()).isTrue();
-    assertThat(future1.get()).isEqualTo(Offset.create(10));
+    assertThat(future1.get()).isEqualTo(Offset.of(10));
     assertThat(future2.isDone()).isTrue();
-    assertThat(future2.get()).isEqualTo(Offset.create(11));
+    assertThat(future2.get()).isEqualTo(Offset.of(11));
     assertThat(future3.isDone()).isFalse();
 
-    leakedOffsetStream.onNext(Offset.create(11));
+    leakedOffsetStream.onNext(Offset.of(11));
     assertThrows(IllegalStateException.class, publisher::awaitTerminated);
     assertThat(future3.isDone()).isTrue();
     assertThrows(Exception.class, future3::get);

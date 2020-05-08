@@ -39,7 +39,7 @@ class SerialBatcher {
 
     public abstract SettableApiFuture<Offset> future();
 
-    public static UnbatchedMessage create(PubSubMessage message, SettableApiFuture<Offset> future) {
+    public static UnbatchedMessage of(PubSubMessage message, SettableApiFuture<Offset> future) {
       return new AutoValue_SerialBatcher_UnbatchedMessage(message, future);
     }
   }
@@ -53,7 +53,7 @@ class SerialBatcher {
   ApiFuture<Offset> add(PubSubMessage message) {
     byteCount += message.getSerializedSize();
     SettableApiFuture<Offset> future = SettableApiFuture.create();
-    messages.add(UnbatchedMessage.create(message, future));
+    messages.add(UnbatchedMessage.of(message, future));
     return future;
   }
 

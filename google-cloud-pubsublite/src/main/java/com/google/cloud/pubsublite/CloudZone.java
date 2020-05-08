@@ -25,7 +25,7 @@ import java.io.Serializable;
 public abstract class CloudZone implements Serializable {
   private static final long serialVersionUID = 867184651465L;
   /** A google cloud zone. */
-  public static CloudZone create(CloudRegion region, char zoneId) {
+  public static CloudZone of(CloudRegion region, char zoneId) {
     return new AutoValue_CloudZone(region, zoneId);
   }
 
@@ -39,8 +39,8 @@ public abstract class CloudZone implements Serializable {
     if (splits[2].length() != 1) {
       throw Status.INVALID_ARGUMENT.withDescription("Invalid zone name: " + zone).asException();
     }
-    CloudRegion region = CloudRegion.create(splits[0] + "-" + splits[1]);
-    return create(region, splits[2].charAt(0));
+    CloudRegion region = CloudRegion.of(splits[0] + "-" + splits[1]);
+    return of(region, splits[2].charAt(0));
   }
 
   public abstract CloudRegion region();

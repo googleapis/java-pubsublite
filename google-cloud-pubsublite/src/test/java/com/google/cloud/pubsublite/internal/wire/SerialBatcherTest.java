@@ -53,8 +53,8 @@ public class SerialBatcherTest {
     ImmutableList<UnbatchedMessage> messages = ImmutableList.copyOf(batcher.flush());
     assertThat(messages).hasSize(1);
     assertThat(future.isDone()).isFalse();
-    messages.get(0).future().set(Offset.create(43));
-    assertThat(future.get()).isEqualTo(Offset.create(43));
+    messages.get(0).future().set(Offset.of(43));
+    assertThat(future.get()).isEqualTo(Offset.of(43));
   }
 
   @Test

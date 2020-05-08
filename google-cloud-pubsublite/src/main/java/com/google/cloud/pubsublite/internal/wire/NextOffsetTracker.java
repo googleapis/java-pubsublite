@@ -47,7 +47,7 @@ public class NextOffsetTracker {
         String.format(
             "Received message with offset %s older than known cursor location %s.",
             firstMessageOffset, nextOffset));
-    nextOffset = Optional.of(Offset.create(Iterables.getLast(messages).offset().value() + 1));
+    nextOffset = Optional.of(Offset.of(Iterables.getLast(messages).offset().value() + 1));
   }
 
   // Gives the SeekRequest that should be sent on restart, or empty if none should be sent because

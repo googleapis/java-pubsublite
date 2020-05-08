@@ -44,7 +44,7 @@ public abstract class SubscriptionPaths {
 
     abstract SubscriptionPaths autoBuild();
 
-    public SubscriptionPath build() throws StatusException {
+    public SubscriptionPath build() {
       SubscriptionPaths built = autoBuild();
       return SubscriptionPath.of(
           String.format(

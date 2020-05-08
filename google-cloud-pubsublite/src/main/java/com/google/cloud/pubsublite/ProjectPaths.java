@@ -36,7 +36,7 @@ public abstract class ProjectPaths {
 
     abstract ProjectPaths autoBuild();
 
-    public ProjectPath build() throws StatusException {
+    public ProjectPath build() {
       ProjectPaths built = autoBuild();
       return ProjectPath.of(String.format("projects/%s", built.projectNumber().value()));
     }

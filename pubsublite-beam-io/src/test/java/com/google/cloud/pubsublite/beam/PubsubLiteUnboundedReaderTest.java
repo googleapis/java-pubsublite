@@ -66,7 +66,7 @@ public class PubsubLiteUnboundedReaderTest {
   private final PubsubLiteUnboundedReader reader;
 
   private static SequencedMessage exampleMessage(Offset offset, Timestamp publishTime) {
-    return SequencedMessage.create(Message.builder().build(), publishTime, offset, 100);
+    return SequencedMessage.of(Message.builder().build(), publishTime, offset, 100);
   }
 
   private static Timestamp randomMilliAllignedTimestamp() {
@@ -86,7 +86,7 @@ public class PubsubLiteUnboundedReaderTest {
     state8.committer = committer8;
     reader =
         new PubsubLiteUnboundedReader(
-            source, ImmutableMap.of(Partition.create(5), state5, Partition.create(8), state8));
+            source, ImmutableMap.of(Partition.of(5), state5, Partition.of(8), state8));
   }
 
   @Test
@@ -108,7 +108,7 @@ public class PubsubLiteUnboundedReaderTest {
   @Test
   public void startReturnsTrueIfMessagesExist() throws Exception {
     Timestamp ts = randomMilliAllignedTimestamp();
-    SequencedMessage message = exampleMessage(Offset.create(10), ts);
+    SequencedMessage message = exampleMessage(Offset.of(10), ts);
     when(subscriber5.pull()).thenReturn(ImmutableList.of(message));
     when(subscriber8.pull()).thenReturn(ImmutableList.of());
     assertThat(reader.start()).isTrue();
@@ -124,8 +124,8 @@ public class PubsubLiteUnboundedReaderTest {
   public void advanceSetsWatermarkAfterAllSubscribersPopulated() throws Exception {
     Timestamp ts1 = randomMilliAllignedTimestamp();
     Timestamp ts2 = randomMilliAllignedTimestamp();
-    SequencedMessage message1 = exampleMessage(Offset.create(10), ts1);
-    SequencedMessage message2 = exampleMessage(Offset.create(888), ts2);
+    SequencedMessage message1 = exampleMessage(Offset.of(10), ts1);
+    SequencedMessage message2 = exampleMessage(Offset.of(888), ts2);
     when(subscriber5.pull()).thenReturn(ImmutableList.of(message1));
     when(subscriber8.pull()).thenReturn(ImmutableList.of(message2));
     assertThat(reader.start()).isTrue();
@@ -154,9 +154,9 @@ public class PubsubLiteUnboundedReaderTest {
 
   @Test
   public void multipleMessagesInPullReadsAllBeforeNextPull() throws Exception {
-    SequencedMessage message1 = exampleMessage(Offset.create(10), randomMilliAllignedTimestamp());
-    SequencedMessage message2 = exampleMessage(Offset.create(888), randomMilliAllignedTimestamp());
-    SequencedMessage message3 = exampleMessage(Offset.create(999), randomMilliAllignedTimestamp());
+    SequencedMessage message1 = exampleMessage(Offset.of(10), randomMilliAllignedTimestamp());
+    SequencedMessage message2 = exampleMessage(Offset.of(888), randomMilliAllignedTimestamp());
+    SequencedMessage message3 = exampleMessage(Offset.of(999), randomMilliAllignedTimestamp());
     when(subscriber5.pull())
         .thenReturn(ImmutableList.of(message1, message2, message3))
         .thenReturn(ImmutableList.of());
@@ -172,9 +172,9 @@ public class PubsubLiteUnboundedReaderTest {
 
   @Test
   public void messagesOnSubsequentPullsProcessed() throws Exception {
-    SequencedMessage message1 = exampleMessage(Offset.create(10), randomMilliAllignedTimestamp());
-    SequencedMessage message2 = exampleMessage(Offset.create(888), randomMilliAllignedTimestamp());
-    SequencedMessage message3 = exampleMessage(Offset.create(999), randomMilliAllignedTimestamp());
+    SequencedMessage message1 = exampleMessage(Offset.of(10), randomMilliAllignedTimestamp());
+    SequencedMessage message2 = exampleMessage(Offset.of(888), randomMilliAllignedTimestamp());
+    SequencedMessage message3 = exampleMessage(Offset.of(999), randomMilliAllignedTimestamp());
     when(subscriber5.pull())
         .thenReturn(ImmutableList.of(message1))
         .thenReturn(ImmutableList.of(message2))
@@ -195,7 +195,7 @@ public class PubsubLiteUnboundedReaderTest {
   @Test
   public void checkpointMarkFinalizeCommits() throws Exception {
     Timestamp ts = randomMilliAllignedTimestamp();
-    SequencedMessage message = exampleMessage(Offset.create(10), ts);
+    SequencedMessage message = exampleMessage(Offset.of(10), ts);
     when(subscriber5.pull()).thenReturn(ImmutableList.of(message));
     when(subscriber8.pull()).thenReturn(ImmutableList.of());
     assertThat(reader.start()).isTrue();
@@ -205,9 +205,9 @@ public class PubsubLiteUnboundedReaderTest {
 
     CheckpointMark mark = reader.getCheckpointMark();
 
-    when(committer5.commitOffset(Offset.create(10))).thenReturn(ApiFutures.immediateFuture(null));
+    when(committer5.commitOffset(Offset.of(10))).thenReturn(ApiFutures.immediateFuture(null));
     mark.finalizeCheckpoint();
-    verify(committer5).commitOffset(Offset.create(10));
+    verify(committer5).commitOffset(Offset.of(10));
     verifyNoMoreInteractions(committer5, committer8);
   }
 }

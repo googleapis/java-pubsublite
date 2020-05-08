@@ -25,7 +25,6 @@ import io.grpc.Status;
 import io.grpc.StatusException;
 import java.io.IOException;
 import java.util.Optional;
-import java.util.concurrent.ScheduledExecutorService;
 import org.threeten.bp.Duration;
 
 @AutoValue
@@ -42,8 +41,6 @@ public abstract class AdminClientSettings {
   // Required parameters.
   abstract CloudRegion region();
 
-  abstract ScheduledExecutorService executor();
-
   // Optional parameters.
   abstract Optional<RetrySettings> retrySettings();
 
@@ -57,8 +54,6 @@ public abstract class AdminClientSettings {
   public abstract static class Builder {
     // Required parameters.
     public abstract Builder setRegion(CloudRegion region);
-
-    public abstract Builder setExecutor(ScheduledExecutorService executor);
 
     // Optional parameters.
     public abstract Builder setRetrySettings(RetrySettings retrySettings);
@@ -84,7 +79,6 @@ public abstract class AdminClientSettings {
             .asException();
       }
     }
-    return new AdminClientImpl(
-        region(), stub, retrySettings().orElse(DEFAULT_RETRY_SETTINGS), executor());
+    return new AdminClientImpl(region(), stub, retrySettings().orElse(DEFAULT_RETRY_SETTINGS));
   }
 }

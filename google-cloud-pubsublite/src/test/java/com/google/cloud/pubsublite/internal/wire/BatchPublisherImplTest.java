@@ -79,7 +79,7 @@ public class BatchPublisherImplTest {
                       TopicPaths.newBuilder()
                           .setProjectNumber(ProjectNumber.of(1864654))
                           .setTopicName(TopicName.of("some_topic"))
-                          .setZone(CloudZone.create(CloudRegion.create("us-east1"), 'a'))
+                          .setZone(CloudZone.of(CloudRegion.of("us-east1"), 'a'))
                           .build()
                           .value())
                   .setPartition(1024)
@@ -208,7 +208,7 @@ public class BatchPublisherImplTest {
   @Test
   public void construct_SendsMessagePublishResponseError() {
     Preconditions.checkNotNull(serviceImpl);
-    doAnswer(new OffsetAnswer(Offset.create(10))).when(mockRequestStream).onNext(initialRequest());
+    doAnswer(new OffsetAnswer(Offset.of(10))).when(mockRequestStream).onNext(initialRequest());
     try (BatchPublisherImpl publisher =
         FACTORY.New(stub::publish, mockOutputStream, initialRequest())) {
       verify(mockOutputStream)
@@ -266,10 +266,10 @@ public class BatchPublisherImplTest {
   @Test
   public void offsetResponseInOrder_Ok() {
     BatchPublisher publisher = initialize();
-    doAnswer(new OffsetAnswer(Offset.create(10)))
+    doAnswer(new OffsetAnswer(Offset.of(10)))
         .when(mockRequestStream)
         .onNext(messagePublishRequest(PubSubMessage.getDefaultInstance()));
-    doAnswer(new OffsetAnswer(Offset.create(20)))
+    doAnswer(new OffsetAnswer(Offset.of(20)))
         .when(mockRequestStream)
         .onNext(
             messagePublishRequest(
@@ -289,8 +289,8 @@ public class BatchPublisherImplTest {
             messagePublishRequest(
                 PubSubMessage.newBuilder().setData(ByteString.copyFromUtf8("abc")).build()));
     InOrder outputs = inOrder(mockOutputStream);
-    outputs.verify(mockOutputStream).onNext(Offset.create(10));
-    outputs.verify(mockOutputStream).onNext(Offset.create(20));
+    outputs.verify(mockOutputStream).onNext(Offset.of(10));
+    outputs.verify(mockOutputStream).onNext(Offset.of(20));
     verifyNoMoreInteractions(mockRequestStream);
     verifyNoMoreInteractions(mockOutputStream);
   }
@@ -298,10 +298,10 @@ public class BatchPublisherImplTest {
   @Test
   public void offsetResponseOutOfOrder_Exception() {
     BatchPublisher publisher = initialize();
-    doAnswer(new OffsetAnswer(Offset.create(10)))
+    doAnswer(new OffsetAnswer(Offset.of(10)))
         .when(mockRequestStream)
         .onNext(messagePublishRequest(PubSubMessage.getDefaultInstance()));
-    doAnswer(new OffsetAnswer(Offset.create(5)))
+    doAnswer(new OffsetAnswer(Offset.of(5)))
         .when(mockRequestStream)
         .onNext(
             messagePublishRequest(
@@ -322,7 +322,7 @@ public class BatchPublisherImplTest {
                 PubSubMessage.newBuilder().setData(ByteString.copyFromUtf8("abc")).build()));
     requests.verify(mockRequestStream).onError(argThat(new StatusExceptionMatcher()));
     InOrder outputs = inOrder(mockOutputStream);
-    outputs.verify(mockOutputStream).onNext(Offset.create(10));
+    outputs.verify(mockOutputStream).onNext(Offset.of(10));
     outputs
         .verify(mockOutputStream)
         .onError(argThat(new StatusExceptionMatcher(Code.FAILED_PRECONDITION)));

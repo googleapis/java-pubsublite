@@ -23,7 +23,7 @@ import java.io.Serializable;
 public abstract class CloudRegion implements Serializable {
   private static final long serialVersionUID = 6814654654L;
 
-  public static CloudRegion create(String value) {
+  public static CloudRegion of(String value) {
     return new AutoValue_CloudRegion(value);
   }
 

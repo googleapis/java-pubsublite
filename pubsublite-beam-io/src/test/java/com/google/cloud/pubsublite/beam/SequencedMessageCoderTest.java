@@ -36,7 +36,7 @@ public class SequencedMessageCoderTest {
   @Test
   public void roundTripMessages() throws IOException {
     SequencedMessage message1 =
-        SequencedMessage.create(
+        SequencedMessage.of(
             Message.builder()
                 .setKey(ByteString.copyFromUtf8("abc"))
                 .setData(ByteString.copyFromUtf8("def"))
@@ -47,10 +47,10 @@ public class SequencedMessageCoderTest {
                         .build())
                 .build(),
             Timestamps.EPOCH,
-            Offset.create(10),
+            Offset.of(10),
             1000);
     SequencedMessage message2 =
-        SequencedMessage.create(message1.message(), Timestamps.EPOCH, Offset.create(88), 9854656);
+        SequencedMessage.of(message1.message(), Timestamps.EPOCH, Offset.of(88), 9854656);
     SequencedMessageCoder coder = new SequencedMessageCoder();
     ByteArrayOutputStream output = new ByteArrayOutputStream();
     coder.encode(message1, output);

@@ -44,7 +44,7 @@ public abstract class TopicPaths {
 
     abstract TopicPaths autoBuild();
 
-    public TopicPath build() throws StatusException {
+    public TopicPath build() {
       TopicPaths built = autoBuild();
       return TopicPath.of(
           String.format(

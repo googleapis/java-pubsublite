@@ -148,7 +148,7 @@ public abstract class SubscriberOptions implements Serializable {
       SubscriberOptions.Builder builder = built.toBuilder();
       ImmutableSet.Builder<Partition> partitions = ImmutableSet.builder();
       for (int i = 0; i < partition_count; i++) {
-        partitions.add(Partition.create(i));
+        partitions.add(Partition.of(i));
       }
       return builder.setPartitions(partitions.build()).autoBuild();
     }

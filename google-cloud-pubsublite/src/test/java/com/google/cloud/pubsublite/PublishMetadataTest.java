@@ -28,7 +28,7 @@ import org.junit.runners.JUnit4;
 public final class PublishMetadataTest {
   @Test
   public void roundTripThroughString() throws Exception {
-    PublishMetadata metadata = PublishMetadata.create(Partition.create(10), Offset.create(20));
+    PublishMetadata metadata = PublishMetadata.of(Partition.of(10), Offset.of(20));
     PublishMetadata metadata2 = PublishMetadata.decode(metadata.encode());
     assertThat(metadata2).isEqualTo(metadata);
   }

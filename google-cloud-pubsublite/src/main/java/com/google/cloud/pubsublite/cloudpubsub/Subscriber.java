@@ -16,103 +16,11 @@
 
 package com.google.cloud.pubsublite.cloudpubsub;
 
-import com.google.auto.value.AutoValue;
-import com.google.cloud.pubsub.v1.MessageReceiver;
 import com.google.cloud.pubsub.v1.SubscriberInterface;
-import com.google.cloud.pubsublite.MessageTransformer;
-import com.google.cloud.pubsublite.Partition;
-import com.google.cloud.pubsublite.SequencedMessage;
-import com.google.cloud.pubsublite.SubscriptionPath;
-import com.google.cloud.pubsublite.SubscriptionPaths;
-import com.google.cloud.pubsublite.cloudpubsub.internal.AckSetTrackerImpl;
-import com.google.cloud.pubsublite.cloudpubsub.internal.SinglePartitionSubscriber;
-import com.google.cloud.pubsublite.internal.wire.CommitterBuilder;
-import com.google.cloud.pubsublite.internal.wire.PubsubContext;
-import com.google.cloud.pubsublite.internal.wire.PubsubContext.Framework;
-import com.google.cloud.pubsublite.proto.CursorServiceGrpc;
-import com.google.cloud.pubsublite.proto.SubscriberServiceGrpc;
-import com.google.pubsub.v1.PubsubMessage;
 import io.grpc.StatusException;
-import java.util.Optional;
 
-// A SubscriberBuilder enables building a subscriber for a single partition.
-//
-// To subscriber to multiple partitions with the same arguments, call build() multiple times after
-// setting the partition to each value in turn.
-@AutoValue
-public abstract class Subscriber {
-  private static final Framework FRAMEWORK = Framework.of("CLOUD_PUBSUB_SHIM");
-
-  // Required parameters.
-  abstract MessageReceiver receiver();
-
-  abstract SubscriptionPath subscriptionPath();
-
-  abstract Partition partition();
-
-  abstract FlowControlSettings flowControlSettings();
-
-  // Optional parameters.
-  abstract Optional<MessageTransformer<SequencedMessage, PubsubMessage>> transformer();
-
-  abstract Optional<SubscriberServiceGrpc.SubscriberServiceStub> subscriberServiceStub();
-
-  abstract Optional<CursorServiceGrpc.CursorServiceStub> cursorServiceStub();
-
-  abstract Optional<NackHandler> nackHandler();
-
-  public static Builder newBuilder() {
-    return new AutoValue_Subscriber.Builder();
-  }
-
-  @AutoValue.Builder
-  public abstract static class Builder {
-    // Required parameters.
-    public abstract Builder setReceiver(MessageReceiver receiver);
-
-    public abstract Builder setSubscriptionPath(SubscriptionPath path);
-
-    public abstract Builder setPartition(Partition partition);
-
-    public abstract Builder setFlowControlSettings(FlowControlSettings settings);
-
-    // Optional parameters.
-    public abstract Builder setTransformer(
-        MessageTransformer<SequencedMessage, PubsubMessage> transformer);
-
-    public abstract Builder setSubscriberServiceStub(
-        SubscriberServiceGrpc.SubscriberServiceStub stub);
-
-    public abstract Builder setCursorServiceStub(CursorServiceGrpc.CursorServiceStub stub);
-
-    public abstract Builder setNackHandler(NackHandler nackHandler);
-
-    abstract Subscriber autoBuild();
-
-    @SuppressWarnings("CheckReturnValue")
-    public SubscriberInterface build() throws StatusException {
-      Subscriber builder = autoBuild();
-      SubscriptionPaths.check(builder.subscriptionPath());
-
-      com.google.cloud.pubsublite.internal.wire.SubscriberBuilder.Builder wireSubscriberBuilder =
-          com.google.cloud.pubsublite.internal.wire.SubscriberBuilder.newBuilder();
-      wireSubscriberBuilder.setSubscriptionPath(builder.subscriptionPath());
-      wireSubscriberBuilder.setPartition(builder.partition());
-      builder.subscriberServiceStub().ifPresent(wireSubscriberBuilder::setSubscriberServiceStub);
-      wireSubscriberBuilder.setContext(PubsubContext.of(FRAMEWORK));
-
-      CommitterBuilder.Builder wireCommitterBuilder = CommitterBuilder.newBuilder();
-      wireCommitterBuilder.setSubscriptionPath(builder.subscriptionPath());
-      wireCommitterBuilder.setPartition(builder.partition());
-      builder.cursorServiceStub().ifPresent(wireCommitterBuilder::setCursorStub);
-
-      return new SinglePartitionSubscriber(
-          builder.receiver(),
-          builder.transformer().orElse(MessageTransforms.toCpsSubscribeTransformer()),
-          new AckSetTrackerImpl(wireCommitterBuilder.build()),
-          builder.nackHandler().orElse(new NackHandler() {}),
-          messageConsumer -> wireSubscriberBuilder.setMessageConsumer(messageConsumer).build(),
-          builder.flowControlSettings());
-    }
+public interface Subscriber extends SubscriberInterface {
+  static Subscriber create(SubscriberSettings settings) throws StatusException {
+    return settings.instantiate();
   }
 }

@@ -29,7 +29,7 @@ public abstract class PublishMetadata {
 
   public abstract Offset offset();
 
-  public static PublishMetadata create(Partition partition, Offset offset) {
+  public static PublishMetadata of(Partition partition, Offset offset) {
     return new AutoValue_PublishMetadata(partition, offset);
   }
 
@@ -37,9 +37,9 @@ public abstract class PublishMetadata {
     String[] split = encoded.split(":");
     Preconditions.checkArgument(split.length == 2, "Invalid encoded PublishMetadata.");
     try {
-      Partition partition = Partition.create(Long.parseLong(split[0]));
-      Offset offset = Offset.create(Long.parseLong(split[1]));
-      return create(partition, offset);
+      Partition partition = Partition.of(Long.parseLong(split[0]));
+      Offset offset = Offset.of(Long.parseLong(split[1]));
+      return of(partition, offset);
     } catch (NumberFormatException e) {
       throw Status.INVALID_ARGUMENT
           .withCause(e)

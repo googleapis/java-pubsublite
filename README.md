@@ -84,10 +84,10 @@ import com.google.cloud.pubsublite.*;
 Then, to create the topic, use the following code:
 
 ```java
-CloudRegion region = CloudRegion.create("us-central1");
+CloudRegion region = CloudRegion.of("us-central1");
 TopicPath topicPath =
     TopicPaths.newBuilder()
-      .setZone(CloudZone.create(region, 'b'))
+      .setZone(CloudZone.of(region, 'b'))
       .setProjectNumber(ProjectNumber.of(123))
       .setTopicName(TopicName.of("my-new-topic"))
       .build();
@@ -187,8 +187,8 @@ Then, to create the subscription, use the following code:
 
 ```java
 // CloudZone must be equivalent to the topic.
-CloudRegion cloudRegion = CloudRegion.create("us-central1");
-CloudZone zone = CloudZone.create(cloudRegion, 'b');
+CloudRegion cloudRegion = CloudRegion.of("us-central1");
+CloudZone zone = CloudZone.of(cloudRegion, 'b');
 // ProjectNumber must the equivalent to the topic.
 ProjectNumber projectNum = ProjectNumber.of(123);
 TopicName topicName = TopicName.of("my-new-topic");
@@ -245,7 +245,7 @@ SubscriptionPaths.newBuilder()
   .setSubscriptionName(subscriptionName)
   .build();
 // Connect to partition 0.
-Partition PARTITION = Partition.create(0);
+Partition PARTITION = Partition.of(0);
 
 FlowControlSettings flowControlSettings =
     FlowControlSettings.builder()
@@ -271,12 +271,12 @@ MessageReceiver receiver =
 
 SubscriberInterface subscriber = null;
 try {
-  subscriber = SubscriberBuilder.newBuilder()
-      .setSubscriptionPath(subscriptionPath)
-      .setFlowControlSettings(flowControlSettings)
-      .setReceiver(receiver)
-      .setPartition(0)
-      .build();
+  subscriber = Subscriber.create(SubscriberSetttings.newBuilder()
+         .setSubscriptionPath(subscriptionPath)
+         .setFlowControlSettings(flowControlSettings)
+         .setReceiver(receiver)
+         .setPartitions(List.of(Partition.of(0)))
+         .build());
   subscriber.addListener(
     new Subscriber.Listener() {
       @Override

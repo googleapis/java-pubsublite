@@ -21,11 +21,11 @@ import com.google.api.core.ApiFutureCallback;
 import com.google.api.core.ApiFutures;
 import com.google.cloud.pubsub.v1.AckReplyConsumer;
 import com.google.cloud.pubsub.v1.MessageReceiver;
-import com.google.cloud.pubsub.v1.SubscriberInterface;
 import com.google.cloud.pubsublite.MessageTransformer;
 import com.google.cloud.pubsublite.SequencedMessage;
 import com.google.cloud.pubsublite.cloudpubsub.FlowControlSettings;
 import com.google.cloud.pubsublite.cloudpubsub.NackHandler;
+import com.google.cloud.pubsublite.cloudpubsub.Subscriber;
 import com.google.cloud.pubsublite.internal.ExtractStatus;
 import com.google.cloud.pubsublite.internal.ProxyService;
 import com.google.cloud.pubsublite.internal.wire.SubscriberFactory;
@@ -36,7 +36,7 @@ import com.google.common.util.concurrent.MoreExecutors;
 import com.google.pubsub.v1.PubsubMessage;
 import io.grpc.StatusException;
 
-public class SinglePartitionSubscriber extends ProxyService implements SubscriberInterface {
+public class SinglePartitionSubscriber extends ProxyService implements Subscriber {
   private final MessageReceiver receiver;
   private final MessageTransformer<SequencedMessage, PubsubMessage> transformer;
   private final AckSetTracker ackSetTracker;

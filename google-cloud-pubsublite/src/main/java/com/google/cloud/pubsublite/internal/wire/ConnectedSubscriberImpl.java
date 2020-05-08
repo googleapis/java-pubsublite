@@ -170,7 +170,7 @@ class ConnectedSubscriberImpl
       }
       seekInFlight = false;
     }
-    sendToClient(Response.ofSeekOffset(Offset.create(response.getCursor().getOffset())));
+    sendToClient(Response.ofSeekOffset(Offset.of(response.getCursor().getOffset())));
     return Status.OK;
   }
 }

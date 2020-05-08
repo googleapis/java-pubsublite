@@ -26,7 +26,7 @@ import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.mock;
 
 import com.google.api.core.ApiFuture;
-import com.google.cloud.pubsublite.AdminClientBuilder;
+import com.google.cloud.pubsublite.AdminClientSettings;
 import com.google.cloud.pubsublite.CloudRegion;
 import com.google.cloud.pubsublite.CloudZone;
 import com.google.cloud.pubsublite.ErrorCodes;
@@ -84,8 +84,8 @@ import org.mockito.stubbing.Answer;
 public class AdminClientImplTest {
   @Rule public final GrpcCleanupRule grpcCleanup = new GrpcCleanupRule();
 
-  private static final CloudRegion REGION = CloudRegion.create("us-east1");
-  private static final CloudZone ZONE = CloudZone.create(REGION, 'x');
+  private static final CloudRegion REGION = CloudRegion.of("us-east1");
+  private static final CloudZone ZONE = CloudZone.of(REGION, 'x');
   private static final FieldMask MASK = FieldMask.newBuilder().addPaths("config").build();
 
   private static ProjectNumber projectNumber() {
@@ -200,7 +200,7 @@ public class AdminClientImplTest {
         new AdminClientImpl(
             REGION,
             stub,
-            AdminClientBuilder.DEFAULT_RETRY_SETTINGS,
+            AdminClientSettings.DEFAULT_RETRY_SETTINGS,
             Executors.newSingleThreadScheduledExecutor());
   }
 

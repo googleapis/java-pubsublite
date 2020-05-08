@@ -75,7 +75,7 @@ public class SubscriberImplTest {
                   .setSubscription(
                       SubscriptionPaths.newBuilder()
                           .setProjectNumber(ProjectNumber.of(12345))
-                          .setZone(CloudZone.create(CloudRegion.create("us-east1"), 'a'))
+                          .setZone(CloudZone.of(CloudRegion.of("us-east1"), 'a'))
                           .setSubscriptionName(SubscriptionName.of("some_subscription"))
                           .build()
                           .value())
@@ -168,10 +168,10 @@ public class SubscriberImplTest {
     leakedResponseObserver.onNext(
         Response.ofMessages(
             ImmutableList.of(
-                SequencedMessage.create(
-                    Message.builder().build(), Timestamps.fromNanos(0), Offset.create(1), 10),
-                SequencedMessage.create(
-                    Message.builder().build(), Timestamps.fromNanos(0), Offset.create(0), 10))));
+                SequencedMessage.of(
+                    Message.builder().build(), Timestamps.fromNanos(0), Offset.of(1), 10),
+                SequencedMessage.of(
+                    Message.builder().build(), Timestamps.fromNanos(0), Offset.of(0), 10))));
     assertThrows(IllegalStateException.class, subscriber::awaitTerminated);
     verify(permanentErrorHandler)
         .failed(any(), argThat(new StatusExceptionMatcher(Code.INVALID_ARGUMENT)));
@@ -182,8 +182,8 @@ public class SubscriberImplTest {
     subscriber.allowFlow(bigFlowControlRequest());
     ImmutableList<SequencedMessage> messages =
         ImmutableList.of(
-            SequencedMessage.create(
-                Message.builder().build(), Timestamps.fromNanos(0), Offset.create(0), 0));
+            SequencedMessage.of(
+                Message.builder().build(), Timestamps.fromNanos(0), Offset.of(0), 0));
     leakedResponseObserver.onNext(Response.ofMessages(messages));
     leakedResponseObserver.onNext(Response.ofMessages(messages));
     assertThrows(IllegalStateException.class, subscriber::awaitTerminated);
@@ -196,10 +196,10 @@ public class SubscriberImplTest {
     subscriber.allowFlow(bigFlowControlRequest());
     ImmutableList<SequencedMessage> messages =
         ImmutableList.of(
-            SequencedMessage.create(
-                Message.builder().build(), Timestamps.fromNanos(0), Offset.create(0), 10),
-            SequencedMessage.create(
-                Message.builder().build(), Timestamps.fromNanos(0), Offset.create(1), 10));
+            SequencedMessage.of(
+                Message.builder().build(), Timestamps.fromNanos(0), Offset.of(0), 10),
+            SequencedMessage.of(
+                Message.builder().build(), Timestamps.fromNanos(0), Offset.of(1), 10));
     leakedResponseObserver.onNext(Response.ofMessages(messages));
 
     verify(mockMessageConsumer).accept(messages);
@@ -214,14 +214,14 @@ public class SubscriberImplTest {
     verify(mockConnectedSubscriber).allowFlow(request);
     ImmutableList<SequencedMessage> messages1 =
         ImmutableList.of(
-            SequencedMessage.create(
-                Message.builder().build(), Timestamps.fromNanos(0), Offset.create(1), 98),
-            SequencedMessage.create(
-                Message.builder().build(), Timestamps.fromNanos(0), Offset.create(2), 1));
+            SequencedMessage.of(
+                Message.builder().build(), Timestamps.fromNanos(0), Offset.of(1), 98),
+            SequencedMessage.of(
+                Message.builder().build(), Timestamps.fromNanos(0), Offset.of(2), 1));
     ImmutableList<SequencedMessage> messages2 =
         ImmutableList.of(
-            SequencedMessage.create(
-                Message.builder().build(), Timestamps.fromNanos(0), Offset.create(3), 2));
+            SequencedMessage.of(
+                Message.builder().build(), Timestamps.fromNanos(0), Offset.of(3), 2));
     leakedResponseObserver.onNext(Response.ofMessages(messages1));
     verify(mockMessageConsumer).accept(messages1);
     verify(permanentErrorHandler, times(0)).failed(any(), any());

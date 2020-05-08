@@ -43,7 +43,7 @@ public class DefaultRoutingPolicy implements RoutingPolicy {
   @Override
   public Partition routeWithoutKey() throws StatusException {
     try (CloseableMonitor.Hold h = monitor.enter()) {
-      Partition toReturn = Partition.create(nextWithoutKeyPartition);
+      Partition toReturn = Partition.of(nextWithoutKeyPartition);
       int next = nextWithoutKeyPartition + 1;
       next = next % numPartitions;
       nextWithoutKeyPartition = next;
@@ -56,6 +56,6 @@ public class DefaultRoutingPolicy implements RoutingPolicy {
     HashCode code = Hashing.sha256().hashBytes(messageKey.asReadOnlyByteBuffer());
     checkArgument(code.bits() == 256); // sanity check.
     BigInteger bigEndianValue = new BigInteger(/*signum=*/ 1, code.asBytes());
-    return Partition.create(bigEndianValue.mod(BigInteger.valueOf(numPartitions)).longValueExact());
+    return Partition.of(bigEndianValue.mod(BigInteger.valueOf(numPartitions)).longValueExact());
   }
 }

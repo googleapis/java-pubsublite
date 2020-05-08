@@ -48,8 +48,7 @@ public class OffsetCheckpointMarkTest {
   @Test
   public void finalizeFinalizesWithOffsets() throws Exception {
     Map<Partition, Offset> map =
-        ImmutableMap.of(
-            Partition.create(10), Offset.create(15), Partition.create(85), Offset.create(0));
+        ImmutableMap.of(Partition.of(10), Offset.of(15), Partition.of(85), Offset.of(0));
     OffsetFinalizer finalizer = mock(OffsetFinalizer.class);
     OffsetCheckpointMark mark = new OffsetCheckpointMark(finalizer, map);
     mark.finalizeCheckpoint();
@@ -64,8 +63,7 @@ public class OffsetCheckpointMarkTest {
     OffsetCheckpointMark mark =
         new OffsetCheckpointMark(
             finalizer,
-            ImmutableMap.of(
-                Partition.create(10), Offset.create(15), Partition.create(85), Offset.create(0)));
+            ImmutableMap.of(Partition.of(10), Offset.of(15), Partition.of(85), Offset.of(0)));
 
     ByteArrayOutputStream output = new ByteArrayOutputStream();
     coder.encode(mark, output);

@@ -18,6 +18,8 @@ package com.google.cloud.pubsublite.internal;
 
 import com.google.api.core.ApiFuture;
 import com.google.api.core.NanoClock;
+import com.google.api.gax.core.BackgroundResourceAggregation;
+import com.google.api.gax.core.ExecutorAsBackgroundResource;
 import com.google.api.gax.retrying.ExponentialRetryAlgorithm;
 import com.google.api.gax.retrying.ResultRetryAlgorithm;
 import com.google.api.gax.retrying.RetryAlgorithm;
@@ -55,9 +57,10 @@ import io.grpc.Status;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.Callable;
+import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 
-public class AdminClientImpl implements AdminClient {
+public class AdminClientImpl extends BackgroundResourceAggregation implements AdminClient {
   private final CloudRegion region;
   private final AdminServiceGrpc.AdminServiceBlockingStub stub;
   private final RetryingExecutor<Void> voidRetryingExecutor;
@@ -71,8 +74,21 @@ public class AdminClientImpl implements AdminClient {
   public AdminClientImpl(
       CloudRegion region,
       AdminServiceGrpc.AdminServiceBlockingStub stub,
+      RetrySettings retrySettings) {
+    this(
+        region,
+        stub,
+        retrySettings,
+        // TODO: Consider allowing tuning in the future.
+        Executors.newScheduledThreadPool(6));
+  }
+
+  private AdminClientImpl(
+      CloudRegion region,
+      AdminServiceGrpc.AdminServiceBlockingStub stub,
       RetrySettings retrySettings,
       ScheduledExecutorService executor) {
+    super(ImmutableList.of(new ExecutorAsBackgroundResource(executor)));
     this.region = region;
     this.stub = stub;
     this.voidRetryingExecutor = retryingExecutor(retrySettings, executor);

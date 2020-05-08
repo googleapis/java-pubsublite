@@ -23,24 +23,19 @@ import com.google.cloud.pubsublite.internal.ExtractStatus;
 import com.google.cloud.pubsublite.proto.Subscription;
 import io.grpc.StatusException;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
 
 public final class PartitionLookupUtils {
   private PartitionLookupUtils() {}
 
   public static int numPartitions(TopicPath topic) throws StatusException {
-    ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
-    try {
-      AdminClient client =
-          AdminClient.create(
-              AdminClientSettings.newBuilder()
-                  .setRegion(TopicPaths.getZone(topic).region())
-                  .setExecutor(executor)
-                  .build());
+    try (AdminClient client =
+        AdminClient.create(
+            AdminClientSettings.newBuilder()
+                .setRegion(TopicPaths.getZone(topic).region())
+                .build())) {;
       return numPartitions(topic, client);
-    } finally {
-      executor.shutdownNow();
+    } catch (Exception e) {
+      throw ExtractStatus.toCanonical(e);
     }
   }
 
@@ -65,14 +60,15 @@ public final class PartitionLookupUtils {
   }
 
   public static int numPartitions(SubscriptionPath subscription) throws StatusException {
-    ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
-    AdminClient client =
+    try (AdminClient client =
         AdminClient.create(
             AdminClientSettings.newBuilder()
                 .setRegion(SubscriptionPaths.getZone(subscription).region())
-                .setExecutor(executor)
-                .build());
-    return numPartitions(subscription, client);
+                .build())) {
+      return numPartitions(subscription, client);
+    } catch (Exception e) {
+      throw ExtractStatus.toCanonical(e);
+    }
   }
 
   public static int numPartitions(SubscriptionPath subscription, AdminClient client)
@@ -82,8 +78,6 @@ public final class PartitionLookupUtils {
       return numPartitions(TopicPath.of(subscriptionFuture.get().getTopic()), client);
     } catch (ExecutionException e) {
       throw ExtractStatus.toCanonical(e.getCause());
-    } catch (InterruptedException t) {
-      throw ExtractStatus.toCanonical(t);
     } catch (Throwable t) {
       throw ExtractStatus.toCanonical(t);
     }

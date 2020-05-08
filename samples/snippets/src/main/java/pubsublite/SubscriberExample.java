@@ -41,25 +41,26 @@ public class SubscriberExample {
   public static void runSubscriberExample() throws Exception {
     // TODO(developer): Replace these variables before running the sample.
     String CLOUD_REGION = "Your Cloud Region";
-    char ZONE = 'b';
+    char ZONE_ID = 'b';
     String SUBSCRIPTION_NAME = "Your Subscription Name";
     long PROJECT_NUMBER = 123456789L;
-    // List of partitions to subscribe to. Each subscriber subscribes to only one partition.
+    // List of partitions to subscribe to. It can be all the partitions in a topic or
+    // a subset of them. A topic of N partitions has partition numbers [0~N-1].
     List<Integer> PARTITION_NOS = ImmutableList.of(0);
 
-    subscriberExample(CLOUD_REGION, ZONE, PROJECT_NUMBER, SUBSCRIPTION_NAME, PARTITION_NOS);
+    subscriberExample(CLOUD_REGION, ZONE_ID, PROJECT_NUMBER, SUBSCRIPTION_NAME, PARTITION_NOS);
   }
 
   public static void subscriberExample(
       String CLOUD_REGION,
-      char ZONE,
+      char ZONE_ID,
       long PROJECT_NUMBER,
       String SUBSCRIPTION_NAME,
       List<Integer> PARTITION_NOS) throws Exception {
 
     try {
       CloudRegion cloudRegion = CloudRegion.of(CLOUD_REGION);
-      CloudZone zone = CloudZone.of(cloudRegion, ZONE);
+      CloudZone zone = CloudZone.of(cloudRegion, ZONE_ID);
       ProjectNumber projectNum = ProjectNumber.of(PROJECT_NUMBER);
       SubscriptionName subscriptionName = SubscriptionName.of(SUBSCRIPTION_NAME);
 

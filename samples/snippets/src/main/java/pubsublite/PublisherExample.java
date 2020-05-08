@@ -29,6 +29,7 @@ import com.google.cloud.pubsublite.TopicPath;
 import com.google.cloud.pubsublite.TopicPaths;
 import com.google.cloud.pubsublite.cloudpubsub.Publisher;
 import com.google.cloud.pubsublite.cloudpubsub.PublisherSettings;
+import com.google.cloud.pubsublite.proto.Topic;
 import com.google.protobuf.ByteString;
 import com.google.pubsub.v1.PubsubMessage;
 import io.grpc.StatusRuntimeException;
@@ -41,29 +42,31 @@ public class PublisherExample {
   public static void runPublisherExample() throws Exception {
     // TODO(developer): Replace these variables before running the sample.
     String CLOUD_REGION = "Your Cloud Region";
-    char ZONE = 'b';
+    char ZONE_ID = 'b';
     String TOPIC_NAME = "Your Topic Name";
     long PROJECT_NUMBER = 123456789L;
     int MESSAGE_COUNT = 100;
 
     PublisherExample.publisherExample(
-        CLOUD_REGION, ZONE, PROJECT_NUMBER, TOPIC_NAME, MESSAGE_COUNT);
+        CLOUD_REGION, ZONE_ID, PROJECT_NUMBER, TOPIC_NAME, MESSAGE_COUNT);
   }
 
   // Publish messages to a topic.
   public static void publisherExample(
-      String CLOUD_REGION, char ZONE, long PROJECT_NUMBER, String TOPIC_NAME, int MESSAGE_COUNT)
+      String CLOUD_REGION, char ZONE_ID, long PROJECT_NUMBER, String TOPIC_NAME, int MESSAGE_COUNT)
       throws Exception {
 
     try {
       CloudRegion cloudRegion = CloudRegion.of(CLOUD_REGION);
-      CloudZone zone = CloudZone.of(cloudRegion, ZONE);
+      CloudZone zone = CloudZone.of(cloudRegion, ZONE_ID);
+      ProjectNumber projectNum = ProjectNumber.of(PROJECT_NUMBER);
+      TopicName topicName = TopicName.of(TOPIC_NAME);
 
       TopicPath topicPath =
           TopicPaths.newBuilder()
-              .setProjectNumber(ProjectNumber.of(PROJECT_NUMBER))
+              .setProjectNumber(projectNum)
               .setZone(zone)
-              .setTopicName(TopicName.of(TOPIC_NAME))
+              .setTopicName(topicName)
               .build();
 
       PublisherSettings publisherSettings =

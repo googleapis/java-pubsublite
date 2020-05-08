@@ -19,7 +19,7 @@ package pubsublite;
 // [START pubsublite_get_subscription]
 
 import com.google.cloud.pubsublite.AdminClient;
-import com.google.cloud.pubsublite.AdminClientBuilder;
+import com.google.cloud.pubsublite.AdminClientSettings;
 import com.google.cloud.pubsublite.CloudRegion;
 import com.google.cloud.pubsublite.CloudZone;
 import com.google.cloud.pubsublite.ProjectNumber;
@@ -51,8 +51,8 @@ public class GetSubscriptionExample {
     ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
 
     try {
-      CloudRegion cloudRegion = CloudRegion.create(CLOUD_REGION);
-      CloudZone zone = CloudZone.create(cloudRegion, ZONE);
+      CloudRegion cloudRegion = CloudRegion.of(CLOUD_REGION);
+      CloudZone zone = CloudZone.of(cloudRegion, ZONE);
       ProjectNumber projectNum = ProjectNumber.of(PROJECT_NUMBER);
       SubscriptionName subscriptionName = SubscriptionName.of(SUBSCRIPTION_NAME);
 
@@ -63,9 +63,11 @@ public class GetSubscriptionExample {
               .setSubscriptionName(subscriptionName)
               .build();
 
+      AdminClientSettings adminClientSettings =
+          AdminClientSettings.newBuilder().setRegion(cloudRegion).setExecutor(executor).build();
+
       // Create admin client
-      AdminClient adminClient =
-          AdminClientBuilder.builder().setRegion(cloudRegion).setExecutor(executor).build();
+      AdminClient adminClient = AdminClient.create(adminClientSettings);
 
       Subscription subscription = adminClient.getSubscription(subscriptionPath).get();
 

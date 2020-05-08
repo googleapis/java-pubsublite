@@ -19,7 +19,7 @@ package pubsublite;
 // [START pubsublite_list_topics]
 
 import com.google.cloud.pubsublite.AdminClient;
-import com.google.cloud.pubsublite.AdminClientBuilder;
+import com.google.cloud.pubsublite.AdminClientSettings;
 import com.google.cloud.pubsublite.CloudRegion;
 import com.google.cloud.pubsublite.CloudZone;
 import com.google.cloud.pubsublite.LocationPath;
@@ -48,16 +48,18 @@ public class ListTopicsExample {
     ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
 
     try {
-      CloudRegion cloudRegion = CloudRegion.create(CLOUD_REGION);
-      CloudZone zone = CloudZone.create(cloudRegion, ZONE);
+      CloudRegion cloudRegion = CloudRegion.of(CLOUD_REGION);
+      CloudZone zone = CloudZone.of(cloudRegion, ZONE);
       ProjectNumber projectNum = ProjectNumber.of(PROJECT_NUMBER);
 
       LocationPath locationPath =
           LocationPaths.newBuilder().setProjectNumber(projectNum).setZone(zone).build();
 
+      AdminClientSettings adminClientSettings =
+          AdminClientSettings.newBuilder().setRegion(cloudRegion).setExecutor(executor).build();
+
       // Create admin client
-      AdminClient adminClient =
-          AdminClientBuilder.builder().setRegion(cloudRegion).setExecutor(executor).build();
+      AdminClient adminClient = AdminClient.create(adminClientSettings);
 
       List<Topic> topics = adminClient.listTopics(locationPath).get();
       for (Topic t : topics) {

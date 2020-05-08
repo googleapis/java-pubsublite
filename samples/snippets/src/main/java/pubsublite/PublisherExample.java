@@ -28,7 +28,7 @@ import com.google.cloud.pubsublite.TopicName;
 import com.google.cloud.pubsublite.TopicPath;
 import com.google.cloud.pubsublite.TopicPaths;
 import com.google.cloud.pubsublite.cloudpubsub.Publisher;
-import com.google.cloud.pubsublite.cloudpubsub.PublisherApiService;
+import com.google.cloud.pubsublite.cloudpubsub.PublisherSettings;
 import com.google.protobuf.ByteString;
 import com.google.pubsub.v1.PubsubMessage;
 import io.grpc.StatusRuntimeException;
@@ -56,8 +56,8 @@ public class PublisherExample {
       throws Exception {
 
     try {
-      CloudRegion cloudRegion = CloudRegion.create(CLOUD_REGION);
-      CloudZone zone = CloudZone.create(cloudRegion, ZONE);
+      CloudRegion cloudRegion = CloudRegion.of(CLOUD_REGION);
+      CloudZone zone = CloudZone.of(cloudRegion, ZONE);
 
       TopicPath topicPath =
           TopicPaths.newBuilder()
@@ -66,10 +66,12 @@ public class PublisherExample {
               .setTopicName(TopicName.of(TOPIC_NAME))
               .build();
 
-      PublisherApiService publisherService =
-          Publisher.newBuilder().setTopicPath(topicPath).build();
+      PublisherSettings publisherSettings =
+          PublisherSettings.newBuilder().setTopicPath(topicPath).build();
 
-      publisherService.startAsync().awaitRunning();
+      Publisher publisher = Publisher.create(publisherSettings);
+
+      publisher.startAsync().awaitRunning();
 
       List<ApiFuture<String>> futures = new ArrayList<>();
 
@@ -86,11 +88,11 @@ public class PublisherExample {
             .build();
 
         // Schedule a message to be published. Messages are automatically batched.
-        ApiFuture<String> future = publisherService.publish(pubsubMessage);
+        ApiFuture<String> future = publisher.publish(pubsubMessage);
         futures.add(future);
       }
 
-      publisherService.stopAsync().awaitTerminated(30, TimeUnit.SECONDS);
+      publisher.stopAsync().awaitTerminated(30, TimeUnit.SECONDS);
 
       ArrayList<PublishMetadata> metadata = new ArrayList<>();
       List<String> ackIds = ApiFutures.allAsList(futures).get();

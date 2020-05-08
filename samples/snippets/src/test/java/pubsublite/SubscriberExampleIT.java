@@ -85,6 +85,7 @@ public class SubscriberExampleIT {
     SubscriberExample.subscriberExample(
         CLOUD_REGION, ZONE, PROJECT_NUMBER, SUBSCRIPTION_NAME, PARTITION_NOS);
     assertThat(bout.toString()).contains("Listening");
-    assertThat(bout.toString()).contains("Partition:");
+    assertThat(bout.toString()).contains("Id : 9");
+    assertThat(bout.toString()).contains("Data : message-9");
   }
 }

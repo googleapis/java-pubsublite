@@ -105,11 +105,12 @@ Topic topic =
       .setName(topicPath.value())
       .build();
 
-AdminClient client = AdminClientBuilder.builder()
-    .setRegion(region)
-    .setExecutor(executor)
-    .build();
-client.createTopic(topic).get();
+try (AdminClient client =
+         AdminClientBuilder.builder()
+           .setRegion(region)
+           .build()) {
+  client.createTopic(topic).get();
+}
 ```
 
 #### Publishing messages
@@ -217,11 +218,12 @@ Subscription.newBuilder()
   .setTopic(topicPath.value())
   .build();
 
-AdminClient client = AdminClientBuilder.builder()
-    .setRegion(region)
-    .setExecutor(executor)
-    .build();
-client.createSubscription(subscription).get();
+try (AdminClient client =
+         AdminClientBuilder.builder()
+           .setRegion(region)
+           .build()) {
+  client.createSubscription(subscription).get();
+}
 ```
 
 #### Receiving messages

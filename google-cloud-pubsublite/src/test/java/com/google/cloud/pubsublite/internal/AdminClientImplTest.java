@@ -71,8 +71,9 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -188,12 +189,13 @@ public class AdminClientImplTest {
     ManagedChannel channel =
         grpcCleanup.register(InProcessChannelBuilder.forName(serverName).directExecutor().build());
     AdminServiceGrpc.AdminServiceBlockingStub stub = AdminServiceGrpc.newBlockingStub(channel);
-    client =
-        new AdminClientImpl(
-            REGION,
-            stub,
-            AdminClientSettings.DEFAULT_RETRY_SETTINGS,
-            Executors.newSingleThreadScheduledExecutor());
+    client = new AdminClientImpl(REGION, stub, AdminClientSettings.DEFAULT_RETRY_SETTINGS);
+  }
+
+  @After
+  public void tearDown() throws Exception {
+    client.shutdownNow();
+    Preconditions.checkArgument(client.awaitTermination(10, TimeUnit.SECONDS));
   }
 
   @Test

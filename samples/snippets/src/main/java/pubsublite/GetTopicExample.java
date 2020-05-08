@@ -28,9 +28,6 @@ import com.google.cloud.pubsublite.TopicPath;
 import com.google.cloud.pubsublite.TopicPaths;
 import com.google.cloud.pubsublite.proto.Topic;
 import io.grpc.StatusRuntimeException;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 public class GetTopicExample {
 
@@ -47,8 +44,6 @@ public class GetTopicExample {
   public static void getTopicExample(
       String CLOUD_REGION, char ZONE, long PROJECT_NUMBER, String TOPIC_NAME) throws Exception {
 
-    ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
-
     try {
       CloudRegion cloudRegion = CloudRegion.of(CLOUD_REGION);
       CloudZone zone = CloudZone.of(cloudRegion, ZONE);
@@ -63,22 +58,19 @@ public class GetTopicExample {
               .build();
 
       AdminClientSettings adminClientSettings =
-          AdminClientSettings.newBuilder().setRegion(cloudRegion).setExecutor(executor).build();
+          AdminClientSettings.newBuilder().setRegion(cloudRegion).build();
 
-      // Create admin client
-      AdminClient adminClient = AdminClient.create(adminClientSettings);
+      try (AdminClient adminClient = AdminClient.create(adminClientSettings)) {
 
-      Topic topic = adminClient.getTopic(topicPath).get();
-      long numPartitions = adminClient.getTopicPartitionCount(topicPath).get();
+        Topic topic = adminClient.getTopic(topicPath).get();
+        long numPartitions = adminClient.getTopicPartitionCount(topicPath).get();
 
-      System.out.println(
-          "Topic: " + topic.getAllFields() + " has " + numPartitions + " partition(s).");
+        System.out.println(
+            "Topic: " + topic.getAllFields() + " has " + numPartitions + " partition(s).");
+      }
 
     } catch (StatusRuntimeException e) {
-      System.out.println("Failed to get topic: " + e.toString());
-    } finally {
-      executor.shutdown();
-      executor.awaitTermination(30, TimeUnit.SECONDS);
+      System.out.println("Failed to get topic: " + e);
     }
   }
 }

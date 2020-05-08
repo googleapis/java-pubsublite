@@ -28,50 +28,42 @@ import com.google.cloud.pubsublite.ProjectNumber;
 import com.google.cloud.pubsublite.proto.Topic;
 import io.grpc.StatusRuntimeException;
 import java.util.List;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 public class ListTopicsExample {
 
   public static void runListTopicsExample() throws Exception {
     // TODO(developer): Replace these variables before running the sample.
     String CLOUD_REGION = "Your Cloud Region";
-    char ZONE = 'b';
+    char ZONE_ID = 'b';
     long PROJECT_NUMBER = 123456789L;
 
-    ListTopicsExample.listTopicsExample(CLOUD_REGION, ZONE, PROJECT_NUMBER);
+    ListTopicsExample.listTopicsExample(CLOUD_REGION, ZONE_ID, PROJECT_NUMBER);
   }
 
-  public static void listTopicsExample(String CLOUD_REGION, char ZONE, long PROJECT_NUMBER) throws Exception {
-
-    ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
+  public static void listTopicsExample(String CLOUD_REGION, char ZONE_ID, long PROJECT_NUMBER)
+      throws Exception {
 
     try {
       CloudRegion cloudRegion = CloudRegion.of(CLOUD_REGION);
-      CloudZone zone = CloudZone.of(cloudRegion, ZONE);
+      CloudZone zone = CloudZone.of(cloudRegion, ZONE_ID);
       ProjectNumber projectNum = ProjectNumber.of(PROJECT_NUMBER);
 
       LocationPath locationPath =
           LocationPaths.newBuilder().setProjectNumber(projectNum).setZone(zone).build();
 
       AdminClientSettings adminClientSettings =
-          AdminClientSettings.newBuilder().setRegion(cloudRegion).setExecutor(executor).build();
+          AdminClientSettings.newBuilder().setRegion(cloudRegion).build();
 
-      // Create admin client
-      AdminClient adminClient = AdminClient.create(adminClientSettings);
-
-      List<Topic> topics = adminClient.listTopics(locationPath).get();
-      for (Topic t : topics) {
-        System.out.println(t.getAllFields());
+      try (AdminClient adminClient = AdminClient.create(adminClientSettings)) {
+        List<Topic> topics = adminClient.listTopics(locationPath).get();
+        for (Topic t : topics) {
+          System.out.println(t.getAllFields());
+        }
+        System.out.println(topics.size() + " topic(s) listed.");
       }
-      System.out.println(topics.size() + " topic(s) listed.");
 
     } catch (StatusRuntimeException e) {
       System.out.println("Failed to list topics: " + e.toString());
-    } finally {
-      executor.shutdown();
-      executor.awaitTermination(30, TimeUnit.SECONDS);
     }
   }
 }

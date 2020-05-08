@@ -56,7 +56,8 @@ public class SubscriberExample {
       char ZONE_ID,
       long PROJECT_NUMBER,
       String SUBSCRIPTION_NAME,
-      List<Integer> PARTITION_NOS) throws Exception {
+      List<Integer> PARTITION_NOS)
+      throws Exception {
 
     try {
       CloudRegion cloudRegion = CloudRegion.of(CLOUD_REGION);

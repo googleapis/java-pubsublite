@@ -33,9 +33,6 @@ import com.google.cloud.pubsublite.proto.Subscription;
 import com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig;
 import com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig.DeliveryRequirement;
 import io.grpc.StatusRuntimeException;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 public class CreateSubscriptionExample {
 
@@ -55,9 +52,8 @@ public class CreateSubscriptionExample {
       char ZONE,
       long PROJECT_NUMBER,
       String TOPIC_NAME,
-      String SUBSCRIPTION_NAME) throws Exception {
-
-    ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
+      String SUBSCRIPTION_NAME)
+      throws Exception {
 
     try {
       CloudRegion cloudRegion = CloudRegion.of(CLOUD_REGION);
@@ -92,20 +88,17 @@ public class CreateSubscriptionExample {
               .build();
 
       AdminClientSettings adminClientSettings =
-          AdminClientSettings.newBuilder().setRegion(cloudRegion).setExecutor(executor).build();
+          AdminClientSettings.newBuilder().setRegion(cloudRegion).build();
 
-      // Create admin client
-      AdminClient adminClient = AdminClient.create(adminClientSettings);
+      try (AdminClient adminClient = AdminClient.create(adminClientSettings)) {
 
-      System.out.println(
-          adminClient.createSubscription(subscription).get().getAllFields()
-              + " created successfully.");
+        Subscription response = adminClient.createSubscription(subscription).get();
+
+        System.out.println(response.getAllFields() + "created successfully.");
+      }
 
     } catch (StatusRuntimeException e) {
       System.out.println("Failed to create a subscription: \n" + e.toString());
-    } finally {
-      executor.shutdown();
-      executor.awaitTermination(30, TimeUnit.SECONDS);
     }
   }
 }

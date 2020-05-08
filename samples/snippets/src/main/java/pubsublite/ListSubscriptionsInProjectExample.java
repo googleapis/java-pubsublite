@@ -28,9 +28,6 @@ import com.google.cloud.pubsublite.ProjectNumber;
 import com.google.cloud.pubsublite.proto.Subscription;
 import io.grpc.StatusRuntimeException;
 import java.util.List;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 public class ListSubscriptionsInProjectExample {
 
@@ -47,8 +44,6 @@ public class ListSubscriptionsInProjectExample {
   public static void listSubscriptionsInProjectExample(
       String CLOUD_REGION, char ZONE, long PROJECT_NUMBER) throws Exception {
 
-    ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
-
     try {
       CloudRegion cloudRegion = CloudRegion.of(CLOUD_REGION);
       CloudZone zone = CloudZone.of(cloudRegion, ZONE);
@@ -58,22 +53,18 @@ public class ListSubscriptionsInProjectExample {
           LocationPaths.newBuilder().setProjectNumber(projectNum).setZone(zone).build();
 
       AdminClientSettings adminClientSettings =
-          AdminClientSettings.newBuilder().setRegion(cloudRegion).setExecutor(executor).build();
+          AdminClientSettings.newBuilder().setRegion(cloudRegion).build();
 
-      // Create admin client
-      AdminClient adminClient = AdminClient.create(adminClientSettings);
-
-      List<Subscription> subscriptions = adminClient.listSubscriptions(locationPath).get();
-      for (Subscription subscription : subscriptions) {
-        System.out.println(subscription.getAllFields());
+      try (AdminClient adminClient = AdminClient.create(adminClientSettings)) {
+        List<Subscription> subscriptions = adminClient.listSubscriptions(locationPath).get();
+        for (Subscription subscription : subscriptions) {
+          System.out.println(subscription.getAllFields());
+        }
+        System.out.println(subscriptions.size() + " subscription(s) listed.");
       }
-      System.out.println(subscriptions.size() + " subscription(s) listed.");
 
     } catch (StatusRuntimeException e) {
-      System.out.println("Failed to list subscriptions in the project: " + e.toString());
-    } finally {
-      executor.shutdown();
-      executor.awaitTermination(30, TimeUnit.SECONDS);
+      System.out.println("Failed to list subscriptions in the project: " + e);
     }
   }
 }

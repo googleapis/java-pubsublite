@@ -30,6 +30,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 public class SubscriberExampleIT {
+
   private ByteArrayOutputStream bout;
   private PrintStream out;
 

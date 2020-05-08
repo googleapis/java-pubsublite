@@ -31,7 +31,6 @@ import io.grpc.StatusRuntimeException;
 import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 public class ListSubscriptionsInTopicExample {
 
@@ -65,23 +64,20 @@ public class ListSubscriptionsInTopicExample {
               .build();
 
       AdminClientSettings adminClientSettings =
-          AdminClientSettings.newBuilder().setRegion(cloudRegion).setExecutor(executor).build();
+          AdminClientSettings.newBuilder().setRegion(cloudRegion).build();
 
-      // Create admin client
-      AdminClient adminClient = AdminClient.create(adminClientSettings);
+      try (AdminClient adminClient = AdminClient.create(adminClientSettings)) {
 
-      List<SubscriptionPath> subscriptionPaths =
-          adminClient.listTopicSubscriptions(topicPath).get();
-      for (SubscriptionPath subscription : subscriptionPaths) {
-        System.out.println(subscription.value());
+        List<SubscriptionPath> subscriptionPaths =
+            adminClient.listTopicSubscriptions(topicPath).get();
+        for (SubscriptionPath subscription : subscriptionPaths) {
+          System.out.println(subscription.value());
+        }
+        System.out.println(subscriptionPaths.size() + " subscription(s) listed.");
       }
-      System.out.println(subscriptionPaths.size() + " subscription(s) listed.");
 
     } catch (StatusRuntimeException e) {
-      System.out.println("Failed to list subscriptions in the topic: " + e.toString());
-    } finally {
-      executor.shutdown();
-      executor.awaitTermination(30, TimeUnit.SECONDS);
+      System.out.println("Failed to list subscriptions in the topic: " + e);
     }
   }
 }

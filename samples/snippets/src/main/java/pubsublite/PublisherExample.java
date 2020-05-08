@@ -29,7 +29,6 @@ import com.google.cloud.pubsublite.TopicPath;
 import com.google.cloud.pubsublite.TopicPaths;
 import com.google.cloud.pubsublite.cloudpubsub.Publisher;
 import com.google.cloud.pubsublite.cloudpubsub.PublisherSettings;
-import com.google.cloud.pubsublite.proto.Topic;
 import com.google.protobuf.ByteString;
 import com.google.pubsub.v1.PubsubMessage;
 import io.grpc.StatusRuntimeException;
@@ -83,12 +82,14 @@ public class PublisherExample {
 
         // Convert the message to a byte string.
         ByteString data = ByteString.copyFromUtf8(message);
-        PubsubMessage pubsubMessage = PubsubMessage.newBuilder().setData(data)
-            // Messages of the same ordering key will always get published to the
-            // same partition. When OrderingKey is unset, messages can get published
-            // to different partitions if more than one partition exist for the topic.
-            // .setOrderingKey("testing")
-            .build();
+        PubsubMessage pubsubMessage =
+            PubsubMessage.newBuilder()
+                .setData(data)
+                // Messages of the same ordering key will always get published to the
+                // same partition. When OrderingKey is unset, messages can get published
+                // to different partitions if more than one partition exist for the topic.
+                // .setOrderingKey("testing")
+                .build();
 
         // Schedule a message to be published. Messages are automatically batched.
         ApiFuture<String> future = publisher.publish(pubsubMessage);

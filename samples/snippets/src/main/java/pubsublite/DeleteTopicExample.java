@@ -27,9 +27,6 @@ import com.google.cloud.pubsublite.TopicName;
 import com.google.cloud.pubsublite.TopicPath;
 import com.google.cloud.pubsublite.TopicPaths;
 import io.grpc.StatusRuntimeException;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 public class DeleteTopicExample {
 
@@ -40,14 +37,11 @@ public class DeleteTopicExample {
     String TOPIC_NAME = "Your Topic Name";
     long PROJECT_NUMBER = 123456789L;
 
-    DeleteTopicExample
-        .deleteTopicExample(CLOUD_REGION, ZONE, PROJECT_NUMBER, TOPIC_NAME);
+    DeleteTopicExample.deleteTopicExample(CLOUD_REGION, ZONE, PROJECT_NUMBER, TOPIC_NAME);
   }
 
   public static void deleteTopicExample(
       String CLOUD_REGION, char ZONE, long PROJECT_NUMBER, String TOPIC_NAME) throws Exception {
-
-    ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
 
     try {
       CloudRegion cloudRegion = CloudRegion.of(CLOUD_REGION);
@@ -63,20 +57,16 @@ public class DeleteTopicExample {
               .build();
 
       AdminClientSettings adminClientSettings =
-          AdminClientSettings.newBuilder().setRegion(cloudRegion).setExecutor(executor).build();
+          AdminClientSettings.newBuilder().setRegion(cloudRegion).build();
 
-      // Create admin client
-      AdminClient adminClient = AdminClient.create(adminClientSettings);
+      try (AdminClient adminClient = AdminClient.create(adminClientSettings)) {
+        adminClient.deleteTopic(topicPath).get();
 
-      adminClient.deleteTopic(topicPath).get();
-
-      System.out.println(topicPath.value() + " deleted successfully.");
+        System.out.println(topicPath.value() + " deleted successfully.");
+      }
 
     } catch (StatusRuntimeException e) {
       System.out.println("Failed to delete topic: " + e.toString());
-    } finally {
-      executor.shutdown();
-      executor.awaitTermination(30, TimeUnit.SECONDS);
     }
   }
 }

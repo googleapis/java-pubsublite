@@ -31,9 +31,6 @@ import com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig;
 import com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig.DeliveryRequirement;
 import com.google.protobuf.FieldMask;
 import io.grpc.StatusRuntimeException;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 public class UpdateSubscriptionExample {
 
@@ -51,8 +48,6 @@ public class UpdateSubscriptionExample {
   public static void updateSubscriptionExample(
       String CLOUD_REGION, char ZONE, long PROJECT_NUMBER, String SUBSCRIPTION_NAME)
       throws Exception {
-
-    ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
 
     try {
       CloudRegion cloudRegion = CloudRegion.of(CLOUD_REGION);
@@ -84,23 +79,20 @@ public class UpdateSubscriptionExample {
               .build();
 
       AdminClientSettings adminClientSettings =
-          AdminClientSettings.newBuilder().setRegion(cloudRegion).setExecutor(executor).build();
+          AdminClientSettings.newBuilder().setRegion(cloudRegion).build();
 
-      // Create admin client
-      AdminClient adminClient = AdminClient.create(adminClientSettings);
+      try (AdminClient adminClient = AdminClient.create(adminClientSettings)) {
 
-      Subscription subscriptionBeforeUpdate = adminClient.getSubscription(subscriptionPath).get();
-      System.out.println("Before update: " + subscriptionBeforeUpdate.getAllFields());
+        Subscription subscriptionBeforeUpdate = adminClient.getSubscription(subscriptionPath).get();
+        System.out.println("Before update: " + subscriptionBeforeUpdate.getAllFields());
 
-      Subscription subscriptionAfterUpdate =
-          adminClient.updateSubscription(subscription, MASK).get();
-      System.out.println("After update: " + subscriptionAfterUpdate.getAllFields());
+        Subscription subscriptionAfterUpdate =
+            adminClient.updateSubscription(subscription, MASK).get();
+        System.out.println("After update: " + subscriptionAfterUpdate.getAllFields());
+      }
 
     } catch (StatusRuntimeException e) {
       System.out.println("Failed to update subscription: " + e.toString());
-    } finally {
-      executor.shutdown();
-      executor.awaitTermination(30, TimeUnit.SECONDS);
     }
   }
 }

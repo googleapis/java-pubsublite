@@ -20,7 +20,6 @@ package pubsublite;
 
 import com.google.cloud.pubsublite.AdminClient;
 import com.google.cloud.pubsublite.AdminClientSettings;
-import com.google.cloud.pubsublite.AdminClientSettings;
 import com.google.cloud.pubsublite.CloudRegion;
 import com.google.cloud.pubsublite.CloudZone;
 import com.google.cloud.pubsublite.ProjectNumber;
@@ -28,9 +27,6 @@ import com.google.cloud.pubsublite.SubscriptionName;
 import com.google.cloud.pubsublite.SubscriptionPath;
 import com.google.cloud.pubsublite.SubscriptionPaths;
 import io.grpc.StatusRuntimeException;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 public class DeleteSubscriptionExample {
 
@@ -49,8 +45,6 @@ public class DeleteSubscriptionExample {
       String CLOUD_REGION, char ZONE, long PROJECT_NUMBER, String SUBSCRIPTION_NAME)
       throws Exception {
 
-    ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
-
     try {
       CloudRegion cloudRegion = CloudRegion.of(CLOUD_REGION);
       CloudZone zone = CloudZone.of(cloudRegion, ZONE);
@@ -65,20 +59,16 @@ public class DeleteSubscriptionExample {
               .build();
 
       AdminClientSettings adminClientSettings =
-          AdminClientSettings.newBuilder().setRegion(cloudRegion).setExecutor(executor).build();
+          AdminClientSettings.newBuilder().setRegion(cloudRegion).build();
 
-      // Create admin client
-      AdminClient adminClient = AdminClient.create(adminClientSettings);
+      try (AdminClient adminClient = AdminClient.create(adminClientSettings)) {
 
-      adminClient.deleteSubscription(subscriptionPath).get();
+        adminClient.deleteSubscription(subscriptionPath).get();
 
-      System.out.println(subscriptionPath.value() + " deleted successfully.");
-
+        System.out.println(subscriptionPath.value() + " deleted successfully.");
+      }
     } catch (StatusRuntimeException e) {
       System.out.println("Failed to delete the subscription: " + e.toString());
-    } finally {
-      executor.shutdown();
-      executor.awaitTermination(30, TimeUnit.SECONDS);
     }
   }
 }

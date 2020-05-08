@@ -31,10 +31,6 @@ import com.google.cloud.pubsublite.proto.Topic.PartitionConfig;
 import com.google.cloud.pubsublite.proto.Topic.RetentionConfig;
 import com.google.protobuf.util.Durations;
 import io.grpc.StatusRuntimeException;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 public class CreateTopicExample {
 
@@ -53,8 +49,6 @@ public class CreateTopicExample {
   public static void createTopicExample(
       String CLOUD_REGION, char ZONE, long PROJECT_NUMBER, String TOPIC_NAME, int PARTITIONS)
       throws Exception {
-
-    ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
 
     try {
       CloudRegion cloudRegion = CloudRegion.of(CLOUD_REGION);
@@ -90,18 +84,17 @@ public class CreateTopicExample {
               .build();
 
       AdminClientSettings adminClientSettings =
-          AdminClientSettings.newBuilder().setRegion(cloudRegion).setExecutor(executor).build();
+          AdminClientSettings.newBuilder().setRegion(cloudRegion).build();
 
-      // Create admin client
-      AdminClient adminClient = AdminClient.create(adminClientSettings);
+      try (AdminClient adminClient = AdminClient.create(adminClientSettings)) {
 
-      System.out.println(
-          adminClient.createTopic(topic).get().getAllFields() + " created successfully.");
+        Topic response = adminClient.createTopic(topic).get();
+
+        System.out.println(response.getAllFields() + "created successfully.");
+      }
+
     } catch (StatusRuntimeException e) {
       System.out.println("Failed to create a topic: \n" + e.toString());
-    } finally {
-      executor.shutdown();
-      executor.awaitTermination(30, TimeUnit.SECONDS);
     }
   }
 }

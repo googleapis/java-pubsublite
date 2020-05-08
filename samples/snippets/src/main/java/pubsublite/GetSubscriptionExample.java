@@ -28,9 +28,6 @@ import com.google.cloud.pubsublite.SubscriptionPath;
 import com.google.cloud.pubsublite.SubscriptionPaths;
 import com.google.cloud.pubsublite.proto.Subscription;
 import io.grpc.StatusRuntimeException;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 public class GetSubscriptionExample {
 
@@ -46,9 +43,8 @@ public class GetSubscriptionExample {
   }
 
   public static void getSubscriptionExample(
-      String CLOUD_REGION, char ZONE, long PROJECT_NUMBER, String SUBSCRIPTION_NAME) throws Exception {
-
-    ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
+      String CLOUD_REGION, char ZONE, long PROJECT_NUMBER, String SUBSCRIPTION_NAME)
+      throws Exception {
 
     try {
       CloudRegion cloudRegion = CloudRegion.of(CLOUD_REGION);
@@ -64,20 +60,17 @@ public class GetSubscriptionExample {
               .build();
 
       AdminClientSettings adminClientSettings =
-          AdminClientSettings.newBuilder().setRegion(cloudRegion).setExecutor(executor).build();
+          AdminClientSettings.newBuilder().setRegion(cloudRegion).build();
 
-      // Create admin client
-      AdminClient adminClient = AdminClient.create(adminClientSettings);
+      try (AdminClient adminClient = AdminClient.create(adminClientSettings)) {
 
-      Subscription subscription = adminClient.getSubscription(subscriptionPath).get();
+        Subscription subscription = adminClient.getSubscription(subscriptionPath).get();
 
-      System.out.println("Subscription: " + subscription.getAllFields());
+        System.out.println("Subscription: " + subscription.getAllFields());
+      }
 
     } catch (StatusRuntimeException e) {
-      System.out.println("Failed to get subscription: " + e.toString());
-    } finally {
-      executor.shutdown();
-      executor.awaitTermination(30, TimeUnit.SECONDS);
+      System.out.println("Failed to get subscription: " + e);
     }
   }
 }

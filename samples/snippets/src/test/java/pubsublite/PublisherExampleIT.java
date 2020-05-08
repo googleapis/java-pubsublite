@@ -28,6 +28,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 public class PublisherExampleIT {
+
   private ByteArrayOutputStream bout;
   private PrintStream out;
 

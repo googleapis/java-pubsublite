@@ -33,9 +33,6 @@ import com.google.protobuf.FieldMask;
 import com.google.protobuf.util.Durations;
 import io.grpc.StatusRuntimeException;
 import java.util.Arrays;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 public class UpdateTopicExample {
 
@@ -46,14 +43,11 @@ public class UpdateTopicExample {
     String TOPIC_NAME = "Your Topic Name"; // Please use an existing topic
     long PROJECT_NUMBER = 123456789L;
 
-    UpdateTopicExample
-        .updateTopicExample(CLOUD_REGION, ZONE, PROJECT_NUMBER, TOPIC_NAME);
+    UpdateTopicExample.updateTopicExample(CLOUD_REGION, ZONE, PROJECT_NUMBER, TOPIC_NAME);
   }
 
   public static void updateTopicExample(
       String CLOUD_REGION, char ZONE, long PROJECT_NUMBER, String TOPIC_NAME) throws Exception {
-
-    ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
 
     try {
       CloudRegion cloudRegion = CloudRegion.of(CLOUD_REGION);
@@ -95,22 +89,18 @@ public class UpdateTopicExample {
               .build();
 
       AdminClientSettings adminClientSettings =
-          AdminClientSettings.newBuilder().setRegion(cloudRegion).setExecutor(executor).build();
+          AdminClientSettings.newBuilder().setRegion(cloudRegion).build();
 
-      // Create admin client
-      AdminClient adminClient = AdminClient.create(adminClientSettings);
+      try (AdminClient adminClient = AdminClient.create(adminClientSettings)) {
+        Topic topicBeforeUpdate = adminClient.getTopic(topicPath).get();
+        System.out.println("Before update: " + topicBeforeUpdate.getAllFields());
 
-      Topic topicBeforeUpdate = adminClient.getTopic(topicPath).get();
-      System.out.println("Before update: " + topicBeforeUpdate.getAllFields());
-
-      Topic topicAfterUpdate = adminClient.updateTopic(topic, MASK).get();
-      System.out.println("After update: " + topicAfterUpdate.getAllFields());
+        Topic topicAfterUpdate = adminClient.updateTopic(topic, MASK).get();
+        System.out.println("After update: " + topicAfterUpdate.getAllFields());
+      }
 
     } catch (StatusRuntimeException e) {
       System.out.println("Failed to update topic: " + e.toString());
-    } finally {
-      executor.shutdown();
-      executor.awaitTermination(30, TimeUnit.SECONDS);
     }
   }
 }

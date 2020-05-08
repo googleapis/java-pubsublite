@@ -29,7 +29,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import org.threeten.bp.Duration;
 
 @AutoValue
-public abstract class AdminClientBuilder {
+public abstract class AdminClientSettings {
   public static final RetrySettings DEFAULT_RETRY_SETTINGS =
       RetrySettings.newBuilder()
           .setInitialRetryDelay(Duration.ofMillis(100))
@@ -49,8 +49,8 @@ public abstract class AdminClientBuilder {
 
   abstract Optional<AdminServiceBlockingStub> stub();
 
-  public static Builder builder() {
-    return new AutoValue_AdminClientBuilder.Builder();
+  public static Builder newBuilder() {
+    return new AutoValue_AdminClientSettings.Builder();
   }
 
   @AutoValue.Builder
@@ -65,30 +65,26 @@ public abstract class AdminClientBuilder {
 
     public abstract Builder setStub(AdminServiceBlockingStub stub);
 
-    abstract AdminClientBuilder autoBuild();
+    public abstract AdminClientSettings build();
+  }
 
-    public AdminClient build() throws StatusException {
-      AdminClientBuilder builder = autoBuild();
-      AdminServiceBlockingStub stub;
-      if (builder.stub().isPresent()) {
-        stub = builder.stub().get();
-      } else {
-        try {
-          stub =
-              Stubs.defaultStub(
-                  Endpoints.regionalEndpoint(builder.region()), AdminServiceGrpc::newBlockingStub);
-        } catch (IOException e) {
-          throw Status.INTERNAL
-              .withCause(e)
-              .withDescription("Creating admin stub failed.")
-              .asException();
-        }
+  AdminClient instantiate() throws StatusException {
+    AdminServiceBlockingStub stub;
+    if (stub().isPresent()) {
+      stub = stub().get();
+    } else {
+      try {
+        stub =
+            Stubs.defaultStub(
+                Endpoints.regionalEndpoint(region()), AdminServiceGrpc::newBlockingStub);
+      } catch (IOException e) {
+        throw Status.INTERNAL
+            .withCause(e)
+            .withDescription("Creating admin stub failed.")
+            .asException();
       }
-      return new AdminClientImpl(
-          builder.region(),
-          stub,
-          builder.retrySettings().orElse(DEFAULT_RETRY_SETTINGS),
-          builder.executor());
     }
+    return new AdminClientImpl(
+        region(), stub, retrySettings().orElse(DEFAULT_RETRY_SETTINGS), executor());
   }
 }

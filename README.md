@@ -271,12 +271,12 @@ MessageReceiver receiver =
 
 SubscriberInterface subscriber = null;
 try {
-  subscriber = SubscriberBuilder.newBuilder()
-      .setSubscriptionPath(subscriptionPath)
-      .setFlowControlSettings(flowControlSettings)
-      .setReceiver(receiver)
-      .setPartitions(List.of(Partition.of(0)))
-      .build();
+  subscriber = Subscriber.create(SubscriberSetttings.newBuilder()
+         .setSubscriptionPath(subscriptionPath)
+         .setFlowControlSettings(flowControlSettings)
+         .setReceiver(receiver)
+         .setPartitions(List.of(Partition.of(0)))
+         .build());
   subscriber.addListener(
     new Subscriber.Listener() {
       @Override

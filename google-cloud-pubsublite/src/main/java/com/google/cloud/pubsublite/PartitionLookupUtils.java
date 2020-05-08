@@ -33,10 +33,11 @@ public final class PartitionLookupUtils {
     ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
     try {
       AdminClient client =
-          AdminClientBuilder.builder()
-              .setRegion(TopicPaths.getZone(topic).region())
-              .setExecutor(executor)
-              .build();
+          AdminClient.create(
+              AdminClientSettings.newBuilder()
+                  .setRegion(TopicPaths.getZone(topic).region())
+                  .setExecutor(executor)
+                  .build());
       return numPartitions(topic, client);
     } finally {
       executor.shutdownNow();
@@ -66,10 +67,11 @@ public final class PartitionLookupUtils {
   public static int numPartitions(SubscriptionPath subscription) throws StatusException {
     ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
     AdminClient client =
-        AdminClientBuilder.builder()
-            .setRegion(SubscriptionPaths.getZone(subscription).region())
-            .setExecutor(executor)
-            .build();
+        AdminClient.create(
+            AdminClientSettings.newBuilder()
+                .setRegion(SubscriptionPaths.getZone(subscription).region())
+                .setExecutor(executor)
+                .build());
     return numPartitions(subscription, client);
   }
 

@@ -33,9 +33,9 @@ public class CommitStateTest {
 
   @Test
   public void multipleSentCompletedInOrder() {
-    ApiFuture<Void> future1 = state.addCommit(Offset.create(10));
-    ApiFuture<Void> future2 = state.addCommit(Offset.create(1));
-    ApiFuture<Void> future3 = state.addCommit(Offset.create(87));
+    ApiFuture<Void> future1 = state.addCommit(Offset.of(10));
+    ApiFuture<Void> future2 = state.addCommit(Offset.of(1));
+    ApiFuture<Void> future3 = state.addCommit(Offset.of(87));
 
     assertThat(future1.isDone()).isFalse();
     assertThat(future2.isDone()).isFalse();
@@ -55,7 +55,7 @@ public class CommitStateTest {
 
   @Test
   public void completeMoreThanAddedError() {
-    ApiFuture<Void> future = state.addCommit(Offset.create(10));
+    ApiFuture<Void> future = state.addCommit(Offset.of(10));
 
     assertThat(future.isDone()).isFalse();
 
@@ -66,13 +66,13 @@ public class CommitStateTest {
 
   @Test
   public void reinitializeCompletesAllAfterSingleCompletion() {
-    ApiFuture<Void> future1 = state.addCommit(Offset.create(10));
-    ApiFuture<Void> future2 = state.addCommit(Offset.create(99));
+    ApiFuture<Void> future1 = state.addCommit(Offset.of(10));
+    ApiFuture<Void> future2 = state.addCommit(Offset.of(99));
 
     assertThat(future1.isDone()).isFalse();
     assertThat(future2.isDone()).isFalse();
 
-    assertThat(state.reinitializeAndReturnToSend()).hasValue(Offset.create(99));
+    assertThat(state.reinitializeAndReturnToSend()).hasValue(Offset.of(99));
 
     assertThat(future1.isDone()).isFalse();
     assertThat(future2.isDone()).isFalse();
@@ -85,13 +85,13 @@ public class CommitStateTest {
 
   @Test
   public void reinitializeFailsAllAfterExcessCompletion() {
-    ApiFuture<Void> future1 = state.addCommit(Offset.create(10));
-    ApiFuture<Void> future2 = state.addCommit(Offset.create(99));
+    ApiFuture<Void> future1 = state.addCommit(Offset.of(10));
+    ApiFuture<Void> future2 = state.addCommit(Offset.of(99));
 
     assertThat(future1.isDone()).isFalse();
     assertThat(future2.isDone()).isFalse();
 
-    assertThat(state.reinitializeAndReturnToSend()).hasValue(Offset.create(99));
+    assertThat(state.reinitializeAndReturnToSend()).hasValue(Offset.of(99));
 
     assertThat(future1.isDone()).isFalse();
     assertThat(future2.isDone()).isFalse();

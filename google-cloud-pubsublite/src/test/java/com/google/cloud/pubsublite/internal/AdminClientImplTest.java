@@ -84,8 +84,8 @@ import org.mockito.stubbing.Answer;
 public class AdminClientImplTest {
   @Rule public final GrpcCleanupRule grpcCleanup = new GrpcCleanupRule();
 
-  private static final CloudRegion REGION = CloudRegion.create("us-east1");
-  private static final CloudZone ZONE = CloudZone.create(REGION, 'x');
+  private static final CloudRegion REGION = CloudRegion.of("us-east1");
+  private static final CloudZone ZONE = CloudZone.of(REGION, 'x');
   private static final FieldMask MASK = FieldMask.newBuilder().addPaths("config").build();
 
   private static ProjectNumber projectNumber() {

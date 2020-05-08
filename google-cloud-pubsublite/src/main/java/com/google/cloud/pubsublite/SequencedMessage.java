@@ -24,7 +24,7 @@ import com.google.protobuf.Timestamp;
 /** A message with its sequencing information in the partition. */
 @AutoValue
 public abstract class SequencedMessage {
-  public static SequencedMessage create(
+  public static SequencedMessage of(
       Message message, Timestamp publishTime, Offset offset, long byteSize) {
     return new AutoValue_SequencedMessage(message, publishTime, offset, byteSize);
   }
@@ -32,10 +32,10 @@ public abstract class SequencedMessage {
   public static SequencedMessage fromProto(
       com.google.cloud.pubsublite.proto.SequencedMessage proto) {
     Preconditions.checkArgument(proto.getSizeBytes() >= 0);
-    return create(
+    return of(
         Message.fromProto(proto.getMessage()),
         proto.getPublishTime(),
-        Offset.create(proto.getCursor().getOffset()),
+        Offset.of(proto.getCursor().getOffset()),
         proto.getSizeBytes());
   }
 

@@ -76,7 +76,7 @@ public class ConnectedSubscriberImplTest {
                   .setSubscription(
                       SubscriptionPaths.newBuilder()
                           .setProjectNumber(ProjectNumber.of(12345))
-                          .setZone(CloudZone.create(CloudRegion.create("us-east1"), 'a'))
+                          .setZone(CloudZone.of(CloudRegion.of("us-east1"), 'a'))
                           .setSubscriptionName(SubscriptionName.of("some_subscription"))
                           .build()
                           .value())
@@ -90,7 +90,7 @@ public class ConnectedSubscriberImplTest {
   private static final ConnectedSubscriberImpl.Factory FACTORY =
       new ConnectedSubscriberImpl.Factory();
 
-  private static final Offset INITIAL_OFFSET = Offset.create(9000);
+  private static final Offset INITIAL_OFFSET = Offset.of(9000);
 
   private SubscriberServiceGrpc.SubscriberServiceStub stub;
 
@@ -272,8 +272,8 @@ public class ConnectedSubscriberImplTest {
     // subscriber is never used in this test, but it is marked to not discard.
     ConnectedSubscriber subscriber = initialize();
     SubscribeResponse.Builder builder = SubscribeResponse.newBuilder();
-    builder.getMessagesBuilder().addMessages(messageWithOffset(Offset.create(10)));
-    builder.getMessagesBuilder().addMessages(messageWithOffset(Offset.create(10)));
+    builder.getMessagesBuilder().addMessages(messageWithOffset(Offset.of(10)));
+    builder.getMessagesBuilder().addMessages(messageWithOffset(Offset.of(10)));
     leakedResponseStream.get().onNext(builder.build());
     verify(mockOutputStream).onError(argThat(new StatusExceptionMatcher(Code.FAILED_PRECONDITION)));
     leakedResponseStream = Optional.empty();
@@ -335,7 +335,7 @@ public class ConnectedSubscriberImplTest {
         .onNext(request);
     subscriber.seek(validSeekRequest());
     verify(mockRequestStream).onNext(request);
-    verify(mockOutputStream).onNext(Response.ofSeekOffset(Offset.create(10)));
+    verify(mockOutputStream).onNext(Response.ofSeekOffset(Offset.of(10)));
     subscriber.seek(
         SeekRequest.newBuilder().setNamedTarget(SeekRequest.NamedTarget.COMMITTED_CURSOR).build());
     verify(mockRequestStream)

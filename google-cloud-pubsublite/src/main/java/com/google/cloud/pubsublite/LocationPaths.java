@@ -40,7 +40,7 @@ public abstract class LocationPaths {
 
     abstract LocationPaths autoBuild();
 
-    public LocationPath build() throws StatusException {
+    public LocationPath build() {
       LocationPaths built = autoBuild();
       return LocationPath.of(
           String.format("projects/%s/locations/%s", built.projectNumber().value(), built.zone()));

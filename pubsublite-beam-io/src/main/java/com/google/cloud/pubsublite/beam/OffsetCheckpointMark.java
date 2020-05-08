@@ -42,7 +42,7 @@ class OffsetCheckpointMark implements CheckpointMark {
     ImmutableMap.Builder<Partition, Offset> builder = ImmutableMap.builder();
     try {
       for (Map.Entry<Long, Long> entry : encodedMap.entrySet()) {
-        builder.put(Partition.create(entry.getKey()), Offset.create(entry.getValue()));
+        builder.put(Partition.of(entry.getKey()), Offset.of(entry.getValue()));
       }
     } catch (StatusException e) {
       throw e.getStatus().asRuntimeException();

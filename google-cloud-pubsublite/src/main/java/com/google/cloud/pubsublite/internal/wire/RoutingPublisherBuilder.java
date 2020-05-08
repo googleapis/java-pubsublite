@@ -68,11 +68,11 @@ public abstract class RoutingPublisherBuilder {
           ImmutableMap.builder();
       for (int i = 0; i < numPartitions; i++) {
         publisherMapBuilder.put(
-            Partition.create(i),
+            Partition.of(i),
             builder
                 .publisherBuilder()
                 .setTopic(builder.topic())
-                .setPartition(Partition.create(i))
+                .setPartition(Partition.of(i))
                 .build());
       }
 

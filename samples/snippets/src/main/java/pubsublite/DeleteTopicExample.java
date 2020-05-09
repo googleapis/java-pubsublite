@@ -33,19 +33,19 @@ public class DeleteTopicExample {
   public static void runDeleteTopicExample() throws Exception {
     // TODO(developer): Replace these variables before running the sample.
     String CLOUD_REGION = "Your Cloud Region";
-    char ZONE = 'b';
+    char ZONE_ID = 'b';
     String TOPIC_NAME = "Your Topic Name";
     long PROJECT_NUMBER = 123456789L;
 
-    DeleteTopicExample.deleteTopicExample(CLOUD_REGION, ZONE, PROJECT_NUMBER, TOPIC_NAME);
+    DeleteTopicExample.deleteTopicExample(CLOUD_REGION, ZONE_ID, PROJECT_NUMBER, TOPIC_NAME);
   }
 
   public static void deleteTopicExample(
-      String CLOUD_REGION, char ZONE, long PROJECT_NUMBER, String TOPIC_NAME) throws Exception {
+      String CLOUD_REGION, char ZONE_ID, long PROJECT_NUMBER, String TOPIC_NAME) throws Exception {
 
     try {
       CloudRegion cloudRegion = CloudRegion.of(CLOUD_REGION);
-      CloudZone zone = CloudZone.of(cloudRegion, ZONE);
+      CloudZone zone = CloudZone.of(cloudRegion, ZONE_ID);
       ProjectNumber projectNum = ProjectNumber.of(PROJECT_NUMBER);
       TopicName topicName = TopicName.of(TOPIC_NAME);
 

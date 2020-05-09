@@ -37,22 +37,22 @@ public class ListSubscriptionsInTopicExample {
   public static void runListSubscriptionsInTopicExample() throws Exception {
     // TODO(developer): Replace these variables before running the sample.
     String CLOUD_REGION = "Your Cloud Region";
-    char ZONE = 'b';
+    char ZONE_ID = 'b';
     long PROJECT_NUMBER = 123456789L;
     String TOPIC_NAME = "Your Lite Topic Name";
 
     ListSubscriptionsInTopicExample.listSubscriptionsInTopicExample(
-        CLOUD_REGION, ZONE, PROJECT_NUMBER, TOPIC_NAME);
+        CLOUD_REGION, ZONE_ID, PROJECT_NUMBER, TOPIC_NAME);
   }
 
   public static void listSubscriptionsInTopicExample(
-      String CLOUD_REGION, char ZONE, long PROJECT_NUMBER, String TOPIC_NAME) throws Exception {
+      String CLOUD_REGION, char ZONE_ID, long PROJECT_NUMBER, String TOPIC_NAME) throws Exception {
 
     ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
 
     try {
       CloudRegion cloudRegion = CloudRegion.of(CLOUD_REGION);
-      CloudZone zone = CloudZone.of(cloudRegion, ZONE);
+      CloudZone zone = CloudZone.of(cloudRegion, ZONE_ID);
       ProjectNumber projectNum = ProjectNumber.of(PROJECT_NUMBER);
       TopicName topicName = TopicName.of(TOPIC_NAME);
 

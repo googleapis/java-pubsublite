@@ -37,22 +37,22 @@ public class CreateTopicExample {
   public static void runCreateTopicExample() throws Exception {
     // TODO(developer): Replace these variables before running the sample.
     String CLOUD_REGION = "Your Cloud Region";
-    char ZONE = 'b';
+    char ZONE_ID = 'b';
     String TOPIC_NAME = "Your Topic Name";
     long PROJECT_NUMBER = 123456789L;
     Integer PARTITIONS = 1;
 
     CreateTopicExample.createTopicExample(
-        CLOUD_REGION, ZONE, PROJECT_NUMBER, TOPIC_NAME, PARTITIONS);
+        CLOUD_REGION, ZONE_ID, PROJECT_NUMBER, TOPIC_NAME, PARTITIONS);
   }
 
   public static void createTopicExample(
-      String CLOUD_REGION, char ZONE, long PROJECT_NUMBER, String TOPIC_NAME, int PARTITIONS)
+      String CLOUD_REGION, char ZONE_ID, long PROJECT_NUMBER, String TOPIC_NAME, int PARTITIONS)
       throws Exception {
 
     try {
       CloudRegion cloudRegion = CloudRegion.of(CLOUD_REGION);
-      CloudZone zone = CloudZone.of(cloudRegion, ZONE);
+      CloudZone zone = CloudZone.of(cloudRegion, ZONE_ID);
       ProjectNumber projectNum = ProjectNumber.of(PROJECT_NUMBER);
       TopicName topicName = TopicName.of(TOPIC_NAME);
 

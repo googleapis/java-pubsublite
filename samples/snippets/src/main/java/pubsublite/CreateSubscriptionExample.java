@@ -39,17 +39,17 @@ public class CreateSubscriptionExample {
   public static void runCreateSubscriptionExample() throws Exception {
     // TODO(developer): Replace these variables before running the sample.
     String CLOUD_REGION = "Your Cloud Region";
-    char ZONE = 'b';
+    char ZONE_ID = 'b';
     long PROJECT_NUMBER = 123456789L;
     String TOPIC_NAME = "Your Topic Name";
     String SUBSCRIPTION_NAME = "Your Subscription Name";
 
-    createSubscriptionExample(CLOUD_REGION, ZONE, PROJECT_NUMBER, TOPIC_NAME, SUBSCRIPTION_NAME);
+    createSubscriptionExample(CLOUD_REGION, ZONE_ID, PROJECT_NUMBER, TOPIC_NAME, SUBSCRIPTION_NAME);
   }
 
   public static void createSubscriptionExample(
       String CLOUD_REGION,
-      char ZONE,
+      char ZONE_ID,
       long PROJECT_NUMBER,
       String TOPIC_NAME,
       String SUBSCRIPTION_NAME)
@@ -57,7 +57,7 @@ public class CreateSubscriptionExample {
 
     try {
       CloudRegion cloudRegion = CloudRegion.of(CLOUD_REGION);
-      CloudZone zone = CloudZone.of(cloudRegion, ZONE);
+      CloudZone zone = CloudZone.of(cloudRegion, ZONE_ID);
       ProjectNumber projectNum = ProjectNumber.of(PROJECT_NUMBER);
       TopicName topicName = TopicName.of(TOPIC_NAME);
       SubscriptionName subscriptionName = SubscriptionName.of(SUBSCRIPTION_NAME);

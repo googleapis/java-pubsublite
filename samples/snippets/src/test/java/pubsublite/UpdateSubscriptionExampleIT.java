@@ -34,7 +34,7 @@ public class UpdateSubscriptionExampleIT {
   private static final String GOOGLE_CLOUD_PROJECT_NUMBER =
       System.getenv("GOOGLE_CLOUD_PROJECT_NUMBER");
   private static final String CLOUD_REGION = "us-central1";
-  private static final char ZONE = 'b';
+  private static final char ZONE_ID = 'b';
   private static final Long PROJECT_NUMBER = Long.parseLong(GOOGLE_CLOUD_PROJECT_NUMBER);
   private static final String SUFFIX = UUID.randomUUID().toString();
   private static final String TOPIC_NAME = "lite-topic-" + SUFFIX;
@@ -60,23 +60,23 @@ public class UpdateSubscriptionExampleIT {
 
     // Set up
     CreateTopicExample.createTopicExample(
-        CLOUD_REGION, ZONE, PROJECT_NUMBER, TOPIC_NAME, PARTITIONS);
+        CLOUD_REGION, ZONE_ID, PROJECT_NUMBER, TOPIC_NAME, PARTITIONS);
     CreateSubscriptionExample.createSubscriptionExample(
-        CLOUD_REGION, ZONE, PROJECT_NUMBER, TOPIC_NAME, SUBSCRIPTION_NAME);
+        CLOUD_REGION, ZONE_ID, PROJECT_NUMBER, TOPIC_NAME, SUBSCRIPTION_NAME);
   }
 
   @After
   public void tearDown() throws Exception {
     DeleteSubscriptionExample.deleteSubscriptionExample(
-        CLOUD_REGION, ZONE, PROJECT_NUMBER, SUBSCRIPTION_NAME);
-    DeleteTopicExample.deleteTopicExample(CLOUD_REGION, ZONE, PROJECT_NUMBER, TOPIC_NAME);
+        CLOUD_REGION, ZONE_ID, PROJECT_NUMBER, SUBSCRIPTION_NAME);
+    DeleteTopicExample.deleteTopicExample(CLOUD_REGION, ZONE_ID, PROJECT_NUMBER, TOPIC_NAME);
     System.setOut(null);
   }
 
   @Test
   public void testUpdateTopicExample() throws Exception {
     UpdateSubscriptionExample.updateSubscriptionExample(
-        CLOUD_REGION, ZONE, PROJECT_NUMBER, SUBSCRIPTION_NAME);
+        CLOUD_REGION, ZONE_ID, PROJECT_NUMBER, SUBSCRIPTION_NAME);
     assertThat(bout.toString()).contains("delivery_requirement: DELIVER_IMMEDIATELY");
   }
 }

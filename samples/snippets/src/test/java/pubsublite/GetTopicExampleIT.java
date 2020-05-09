@@ -34,7 +34,7 @@ public class GetTopicExampleIT {
   private static final String GOOGLE_CLOUD_PROJECT_NUMBER =
       System.getenv("GOOGLE_CLOUD_PROJECT_NUMBER");
   private static final String CLOUD_REGION = "us-central1";
-  private static final char ZONE = 'b';
+  private static final char ZONE_ID = 'b';
   private static final Long PROJECT_NUMBER = Long.parseLong(GOOGLE_CLOUD_PROJECT_NUMBER);
   private static final String SUFFIX = UUID.randomUUID().toString();
   private static final String TOPIC_NAME = "lite-topic-" + SUFFIX;
@@ -58,18 +58,18 @@ public class GetTopicExampleIT {
     System.setOut(out);
 
     CreateTopicExample.createTopicExample(
-        CLOUD_REGION, ZONE, PROJECT_NUMBER, TOPIC_NAME, PARTITIONS);
+        CLOUD_REGION, ZONE_ID, PROJECT_NUMBER, TOPIC_NAME, PARTITIONS);
   }
 
   @After
   public void tearDown() throws Exception {
-    DeleteTopicExample.deleteTopicExample(CLOUD_REGION, ZONE, PROJECT_NUMBER, TOPIC_NAME);
+    DeleteTopicExample.deleteTopicExample(CLOUD_REGION, ZONE_ID, PROJECT_NUMBER, TOPIC_NAME);
     System.setOut(null);
   }
 
   @Test
   public void testGetTopicExample() throws Exception {
-    GetTopicExample.getTopicExample(CLOUD_REGION, ZONE, PROJECT_NUMBER, TOPIC_NAME);
+    GetTopicExample.getTopicExample(CLOUD_REGION, ZONE_ID, PROJECT_NUMBER, TOPIC_NAME);
     assertThat(bout.toString()).contains(TOPIC_NAME);
     assertThat(bout.toString()).contains("1 partition(s).");
   }

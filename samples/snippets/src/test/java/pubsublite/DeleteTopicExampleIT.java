@@ -34,7 +34,7 @@ public class DeleteTopicExampleIT {
   private static final String GOOGLE_CLOUD_PROJECT_NUMBER =
       System.getenv("GOOGLE_CLOUD_PROJECT_NUMBER");
   private static final String CLOUD_REGION = "us-central1";
-  private static final char ZONE = 'b';
+  private static final char ZONE_ID = 'b';
   private static final Long PROJECT_NUMBER = Long.parseLong(GOOGLE_CLOUD_PROJECT_NUMBER);
   private static final String TOPIC_NAME = "lite-topic-" + UUID.randomUUID();
   private static final int PARTITIONS = 1;
@@ -58,7 +58,7 @@ public class DeleteTopicExampleIT {
 
     // Set up
     CreateTopicExample.createTopicExample(
-        CLOUD_REGION, ZONE, PROJECT_NUMBER, TOPIC_NAME, PARTITIONS);
+        CLOUD_REGION, ZONE_ID, PROJECT_NUMBER, TOPIC_NAME, PARTITIONS);
   }
 
   @After
@@ -68,7 +68,7 @@ public class DeleteTopicExampleIT {
 
   @Test
   public void testDeleteTopicExample() throws Exception {
-    DeleteTopicExample.deleteTopicExample(CLOUD_REGION, ZONE, PROJECT_NUMBER, TOPIC_NAME);
+    DeleteTopicExample.deleteTopicExample(CLOUD_REGION, ZONE_ID, PROJECT_NUMBER, TOPIC_NAME);
     assertThat(bout.toString()).contains("deleted successfully");
   }
 }

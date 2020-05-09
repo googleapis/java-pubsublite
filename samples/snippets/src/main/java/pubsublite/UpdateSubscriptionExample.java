@@ -37,21 +37,21 @@ public class UpdateSubscriptionExample {
   public static void runUpdateSubscriptionExample() throws Exception {
     // TODO(developer): Replace these variables before running the sample.
     String CLOUD_REGION = "Your Cloud Region";
-    char ZONE = 'b';
+    char ZONE_ID = 'b';
     String SUBSCRIPTION_NAME = "Your Subscription Name"; // Please use an existing subscription
     long PROJECT_NUMBER = 123456789L;
 
     UpdateSubscriptionExample.updateSubscriptionExample(
-        CLOUD_REGION, ZONE, PROJECT_NUMBER, SUBSCRIPTION_NAME);
+        CLOUD_REGION, ZONE_ID, PROJECT_NUMBER, SUBSCRIPTION_NAME);
   }
 
   public static void updateSubscriptionExample(
-      String CLOUD_REGION, char ZONE, long PROJECT_NUMBER, String SUBSCRIPTION_NAME)
+      String CLOUD_REGION, char ZONE_ID, long PROJECT_NUMBER, String SUBSCRIPTION_NAME)
       throws Exception {
 
     try {
       CloudRegion cloudRegion = CloudRegion.of(CLOUD_REGION);
-      CloudZone zone = CloudZone.of(cloudRegion, ZONE);
+      CloudZone zone = CloudZone.of(cloudRegion, ZONE_ID);
       ProjectNumber projectNum = ProjectNumber.of(PROJECT_NUMBER);
       SubscriptionName subscriptionName = SubscriptionName.of(SUBSCRIPTION_NAME);
 

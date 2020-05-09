@@ -34,19 +34,19 @@ public class ListSubscriptionsInProjectExample {
   public static void runListSubscriptionsInProjectExample() throws Exception {
     // TODO(developer): Replace these variables before running the sample.
     String CLOUD_REGION = "Your Cloud Region";
-    char ZONE = 'b';
+    char ZONE_ID = 'b';
     long PROJECT_NUMBER = 123456789L;
 
     ListSubscriptionsInProjectExample.listSubscriptionsInProjectExample(
-        CLOUD_REGION, ZONE, PROJECT_NUMBER);
+        CLOUD_REGION, ZONE_ID, PROJECT_NUMBER);
   }
 
   public static void listSubscriptionsInProjectExample(
-      String CLOUD_REGION, char ZONE, long PROJECT_NUMBER) throws Exception {
+      String CLOUD_REGION, char ZONE_ID, long PROJECT_NUMBER) throws Exception {
 
     try {
       CloudRegion cloudRegion = CloudRegion.of(CLOUD_REGION);
-      CloudZone zone = CloudZone.of(cloudRegion, ZONE);
+      CloudZone zone = CloudZone.of(cloudRegion, ZONE_ID);
       ProjectNumber projectNum = ProjectNumber.of(PROJECT_NUMBER);
 
       LocationPath locationPath =

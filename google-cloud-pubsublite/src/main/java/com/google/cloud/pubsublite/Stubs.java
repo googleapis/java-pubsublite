@@ -18,6 +18,7 @@ package com.google.cloud.pubsublite;
 
 import com.google.auth.oauth2.GoogleCredentials;
 import io.grpc.Channel;
+import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 import io.grpc.auth.MoreCallCredentials;
 import io.grpc.stub.AbstractStub;
@@ -27,8 +28,10 @@ import java.util.function.Function;
 public class Stubs {
   public static <StubT extends AbstractStub<StubT>> StubT defaultStub(
       String target, Function<Channel, StubT> stubFactory) throws IOException {
+    ManagedChannel channel = ManagedChannelBuilder.forTarget(target).build();
+    Runtime.getRuntime().addShutdownHook(new Thread(channel::shutdownNow));
     return stubFactory
-        .apply(ManagedChannelBuilder.forTarget(target).build())
+        .apply(channel)
         .withCallCredentials(
             MoreCallCredentials.from(
                 GoogleCredentials.getApplicationDefault()

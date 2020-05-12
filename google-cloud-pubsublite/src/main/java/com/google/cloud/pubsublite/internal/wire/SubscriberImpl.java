@@ -166,7 +166,11 @@ public class SubscriberImpl extends ProxyService
             checkArgument(connectedSubscriber.isPresent());
             nextOffsetTracker
                 .requestForRestart()
-                .ifPresent(request -> connectedSubscriber.get().seek(request));
+                .ifPresent(
+                    request -> {
+                      inFlightSeek = Optional.of(SettableApiFuture.create());
+                      connectedSubscriber.get().seek(request);
+                    });
             tokenCounter
                 .requestForRestart()
                 .ifPresent(request -> connectedSubscriber.get().allowFlow(request));

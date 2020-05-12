@@ -31,7 +31,6 @@ import java.util.Optional;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
-import java.util.concurrent.atomic.AtomicLong;
 import javax.annotation.concurrent.GuardedBy;
 import org.threeten.bp.Duration;
 
@@ -59,11 +58,12 @@ class RetryingConnectionImpl<
   private final StreamRequestT initialRequest;
   private final RetryingConnectionObserver<ClientResponseT> observer;
   private final ScheduledExecutorService systemExecutor;
-  private final AtomicLong nextRetryBackoffDuration =
-      new AtomicLong(INITIAL_RECONNECT_BACKOFF_TIME.toMillis());
 
   // connectionMonitor will not be held in any upcalls.
   private final CloseableMonitor connectionMonitor = new CloseableMonitor();
+
+  @GuardedBy("connectionMonitor.monitor")
+  private long nextRetryBackoffDuration = INITIAL_RECONNECT_BACKOFF_TIME.toMillis();
 
   @GuardedBy("connectionMonitor.monitor")
   private ConnectionT currentConnection;
@@ -135,9 +135,9 @@ class RetryingConnectionImpl<
   // StreamObserver implementation
   @Override
   public final void onNext(ClientResponseT value) {
-    nextRetryBackoffDuration.set(INITIAL_RECONNECT_BACKOFF_TIME.toMillis());
     Status status;
     try (CloseableMonitor.Hold h = connectionMonitor.enter()) {
+      nextRetryBackoffDuration = INITIAL_RECONNECT_BACKOFF_TIME.toMillis();
       if (completed) return;
     }
     status = observer.onClientResponse(value);
@@ -159,8 +159,11 @@ class RetryingConnectionImpl<
       return;
     }
     Optional<Throwable> throwable = Optional.empty();
+    long backoffTime = 0;
     try (CloseableMonitor.Hold h = connectionMonitor.enter()) {
       currentConnection.close();
+      backoffTime = nextRetryBackoffDuration;
+      nextRetryBackoffDuration = Math.min(backoffTime * 2, MAX_RECONNECT_BACKOFF_TIME.toMillis());
     } catch (Exception e) {
       throwable = Optional.of(e);
     }
@@ -172,8 +175,6 @@ class RetryingConnectionImpl<
               .asRuntimeException());
       return;
     }
-    long backoffTime = nextRetryBackoffDuration.getAndUpdate(
-        (currentTime) -> Math.min(currentTime * 2, MAX_RECONNECT_BACKOFF_TIME.toMillis()));
     logger.atInfo().withCause(t).atMostEvery(30, SECONDS).log(
         "Stream disconnected attempting retry, after %s milliseconds", backoffTime);
     ScheduledFuture<?> retry =

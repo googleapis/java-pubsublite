@@ -28,10 +28,8 @@ import java.util.function.Function;
 public class Stubs {
   public static <StubT extends AbstractStub<StubT>> StubT defaultStub(
       String target, Function<Channel, StubT> stubFactory) throws IOException {
-    ManagedChannel channel = ManagedChannelBuilder.forTarget(target).build();
-    Runtime.getRuntime().addShutdownHook(new Thread(channel::shutdownNow));
     return stubFactory
-        .apply(channel)
+        .apply(ManagedChannelBuilder.forTarget(target).build())
         .withCallCredentials(
             MoreCallCredentials.from(
                 GoogleCredentials.getApplicationDefault()

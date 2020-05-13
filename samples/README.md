@@ -1,21 +1,23 @@
-How to run samples and tests?
+# Getting Started with Pub/Sub Lite Samples
 
-1. Set environment variables:
-    ```sh
-    export GOOGLE_APPLICATION_CREDENTIALS=path/to/json/key
-    export GOOGLE_CLOUD_PROJECT_NUMBER=123456789
-    ```
-1. To run a specific test:
-   ```sh
-   cd java-pubsublite/
-   mvn clean install
-   cd samples/
-   mvn clean install -DskipTests=true && mvn -Dtest=UpdateTopicExampleIT test
-   ```
-   To run a specific snippet, update the developer's TODO section in the snippet, update the method name to `public static void main(String[] args)`, then:
-   ```sh
-   cd java-pubsublite/
-   mvn clean install
-   cd samples/snippets/
-   mvn clean verify -DskipTests=true && mvn exec:java -Dexec.mainClass=CreateTopicExample
-   ```
+## Running samples and tests using Cloud Shell
+
+[Google Cloud Shell](https://cloud.google.com/shell) has application default credentials from its compute instance which will allow you to run an integration test without having to obtain `GOOGLE_APPLICATION_CREDENTIANS`.
+
+However, tests require an additional environment variable `GOOGLE_CLOUD_PROJECT_NUMBER` to run. For instance, 
+ 
+In [`UpdateTopicExampleIT.java`](snippets/src/test/java/pubsublite/UpdateTopicExampleIT.java):
+
+```java
+private static final String GOOGLE_CLOUD_PROJECT_NUMBER =
+       System.getenv("GOOGLE_CLOUD_PROJECT_NUMBER");
+```
+Here, the program needs you to provide your [Google Cloud Project Number](https://cloud.google.com/resource-manager/docs/creating-managing-projects) in an environment variable.
+
+Make sure to set environment variables before running tests and to complete the developer TODOs in the samples before running samples, or else you will get an error asking you to set them.
+
+To run a sample's integration test in Cloud Shell:
+
+`cd samples/snippets` - all samples are located in `java-pubsublite/samples/snippets` directory.
+
+`mvn -Dtest=UpdateTopicExampleIT test` - this runs the integration test for `UpdateTopicExample.java`.

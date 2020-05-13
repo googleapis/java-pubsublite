@@ -31,7 +31,7 @@ import com.google.cloud.pubsublite.cloudpubsub.Publisher;
 import com.google.cloud.pubsublite.cloudpubsub.PublisherSettings;
 import com.google.protobuf.ByteString;
 import com.google.pubsub.v1.PubsubMessage;
-import io.grpc.StatusRuntimeException;
+import io.grpc.StatusException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -43,7 +43,7 @@ public class PublisherExample {
     String CLOUD_REGION = "Your Cloud Region";
     char ZONE_ID = 'b';
     String TOPIC_NAME = "Your Topic Name";
-    long PROJECT_NUMBER = 123456789L;
+    long PROJECT_NUMBER = Long.parseLong("123456789");
     int MESSAGE_COUNT = 100;
 
     PublisherExample.publisherExample(
@@ -108,8 +108,10 @@ public class PublisherExample {
       System.out.println(metadata);
       System.out.println("Published " + metadata.size() + "  messages to " + topicPath.value());
 
-    } catch (StatusRuntimeException e) {
-      System.out.println("Failed to publish messages: " + e.toString());
+    } catch (StatusException statusException) {
+      System.out.println("Failed to publish messages: " + statusException);
+      System.out.println(statusException.getStatus().getCode());
+      System.out.println(statusException.getStatus());
     }
   }
 }

@@ -43,7 +43,7 @@ public class SubscriberExample {
     String CLOUD_REGION = "Your Cloud Region";
     char ZONE_ID = 'b';
     String SUBSCRIPTION_NAME = "Your Subscription Name";
-    long PROJECT_NUMBER = 123456789L;
+    long PROJECT_NUMBER = Long.parseLong("123456789");
     // List of partitions to subscribe to. It can be all the partitions in a topic or
     // a subset of them. A topic of N partitions has partition numbers [0~N-1].
     List<Integer> PARTITION_NOS = ImmutableList.of(0);

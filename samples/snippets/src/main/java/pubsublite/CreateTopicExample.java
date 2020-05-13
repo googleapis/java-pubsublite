@@ -30,7 +30,7 @@ import com.google.cloud.pubsublite.proto.Topic;
 import com.google.cloud.pubsublite.proto.Topic.PartitionConfig;
 import com.google.cloud.pubsublite.proto.Topic.RetentionConfig;
 import com.google.protobuf.util.Durations;
-import io.grpc.StatusRuntimeException;
+import io.grpc.StatusException;
 
 public class CreateTopicExample {
 
@@ -39,7 +39,7 @@ public class CreateTopicExample {
     String CLOUD_REGION = "Your Cloud Region";
     char ZONE_ID = 'b';
     String TOPIC_NAME = "Your Topic Name";
-    long PROJECT_NUMBER = 123456789L;
+    long PROJECT_NUMBER = Long.parseLong("123456789");
     Integer PARTITIONS = 1;
 
     CreateTopicExample.createTopicExample(
@@ -74,6 +74,7 @@ public class CreateTopicExample {
                       .setCount(PARTITIONS))
               .setRetentionConfig(
                   RetentionConfig.newBuilder()
+                      // How long messages are retained.
                       .setPeriod(Durations.fromDays(1))
                       // Set storage per partition to 100 GiB. This must be 30 GiB-10 TiB.
                       // If the number of bytes stored in any of the topic's partitions grows
@@ -93,8 +94,10 @@ public class CreateTopicExample {
         System.out.println(response.getAllFields() + "created successfully.");
       }
 
-    } catch (StatusRuntimeException e) {
-      System.out.println("Failed to create a topic: \n" + e.toString());
+    } catch (StatusException statusException) {
+      System.out.println("Failed to create a topic: " + statusException);
+      System.out.println(statusException.getStatus().getCode());
+      System.out.println(statusException.getStatus());
     }
   }
 }

@@ -27,7 +27,7 @@ import com.google.cloud.pubsublite.SubscriptionPath;
 import com.google.cloud.pubsublite.TopicName;
 import com.google.cloud.pubsublite.TopicPath;
 import com.google.cloud.pubsublite.TopicPaths;
-import io.grpc.StatusRuntimeException;
+import io.grpc.StatusException;
 import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -38,7 +38,7 @@ public class ListSubscriptionsInTopicExample {
     // TODO(developer): Replace these variables before running the sample.
     String CLOUD_REGION = "Your Cloud Region";
     char ZONE_ID = 'b';
-    long PROJECT_NUMBER = 123456789L;
+    long PROJECT_NUMBER = Long.parseLong("123456789");
     String TOPIC_NAME = "Your Lite Topic Name";
 
     ListSubscriptionsInTopicExample.listSubscriptionsInTopicExample(
@@ -76,8 +76,10 @@ public class ListSubscriptionsInTopicExample {
         System.out.println(subscriptionPaths.size() + " subscription(s) listed.");
       }
 
-    } catch (StatusRuntimeException e) {
-      System.out.println("Failed to list subscriptions in the topic: " + e);
+    } catch (StatusException statusException) {
+      System.out.println("Failed to list subscriptions in the topic: " + statusException);
+      System.out.println(statusException.getStatus().getCode());
+      System.out.println(statusException.getStatus());
     }
   }
 }

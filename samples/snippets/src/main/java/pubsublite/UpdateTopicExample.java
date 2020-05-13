@@ -31,7 +31,7 @@ import com.google.cloud.pubsublite.proto.Topic.PartitionConfig;
 import com.google.cloud.pubsublite.proto.Topic.RetentionConfig;
 import com.google.protobuf.FieldMask;
 import com.google.protobuf.util.Durations;
-import io.grpc.StatusRuntimeException;
+import io.grpc.StatusException;
 import java.util.Arrays;
 
 public class UpdateTopicExample {
@@ -41,7 +41,7 @@ public class UpdateTopicExample {
     String CLOUD_REGION = "Your Cloud Region";
     char ZONE_ID = 'b';
     String TOPIC_NAME = "Your Topic Name"; // Please use an existing topic
-    long PROJECT_NUMBER = 123456789L;
+    long PROJECT_NUMBER = Long.parseLong("123456789");
 
     UpdateTopicExample.updateTopicExample(CLOUD_REGION, ZONE_ID, PROJECT_NUMBER, TOPIC_NAME);
   }
@@ -83,6 +83,8 @@ public class UpdateTopicExample {
                       // If the number of bytes stored in any of the topic's partitions grows
                       // beyond this value, older messages will be dropped to make room for
                       // newer ones, regardless of the value of `period`.
+                      // Be careful when decreasing storage per partition as it may cause
+                      // lost messages.
                       .setPerPartitionBytes(200 * 1024 * 1024 * 1024L)
                       .setPeriod(Durations.fromDays(7)))
               .setName(topicPath.value())
@@ -99,8 +101,10 @@ public class UpdateTopicExample {
         System.out.println("After update: " + topicAfterUpdate.getAllFields());
       }
 
-    } catch (StatusRuntimeException e) {
-      System.out.println("Failed to update topic: " + e.toString());
+    } catch (StatusException statusException) {
+      System.out.println("Failed to update topic: " + statusException);
+      System.out.println(statusException.getStatus().getCode());
+      System.out.println(statusException.getStatus());
     }
   }
 }

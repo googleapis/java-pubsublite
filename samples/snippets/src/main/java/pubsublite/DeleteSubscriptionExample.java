@@ -26,7 +26,7 @@ import com.google.cloud.pubsublite.ProjectNumber;
 import com.google.cloud.pubsublite.SubscriptionName;
 import com.google.cloud.pubsublite.SubscriptionPath;
 import com.google.cloud.pubsublite.SubscriptionPaths;
-import io.grpc.StatusRuntimeException;
+import io.grpc.StatusException;
 
 public class DeleteSubscriptionExample {
 
@@ -34,7 +34,7 @@ public class DeleteSubscriptionExample {
     // TODO(developer): Replace these variables before running the sample.
     String CLOUD_REGION = "Your Cloud Region";
     char ZONE_ID = 'b';
-    long PROJECT_NUMBER = 123456789L;
+    long PROJECT_NUMBER = Long.parseLong("123456789");
     String SUBSCRIPTION_NAME = "Your Subscription Name";
 
     DeleteSubscriptionExample.deleteSubscriptionExample(
@@ -67,8 +67,10 @@ public class DeleteSubscriptionExample {
 
         System.out.println(subscriptionPath.value() + " deleted successfully.");
       }
-    } catch (StatusRuntimeException e) {
-      System.out.println("Failed to delete the subscription: " + e.toString());
+    } catch (StatusException statusException) {
+      System.out.println("Failed to delete the subscription: " + statusException);
+      System.out.println(statusException.getStatus().getCode());
+      System.out.println(statusException.getStatus());
     }
   }
 }

@@ -26,7 +26,7 @@ import com.google.cloud.pubsublite.LocationPath;
 import com.google.cloud.pubsublite.LocationPaths;
 import com.google.cloud.pubsublite.ProjectNumber;
 import com.google.cloud.pubsublite.proto.Topic;
-import io.grpc.StatusRuntimeException;
+import io.grpc.StatusException;
 import java.util.List;
 
 public class ListTopicsExample {
@@ -35,7 +35,7 @@ public class ListTopicsExample {
     // TODO(developer): Replace these variables before running the sample.
     String CLOUD_REGION = "Your Cloud Region";
     char ZONE_ID = 'b';
-    long PROJECT_NUMBER = 123456789L;
+    long PROJECT_NUMBER = Long.parseLong("123456789");
 
     ListTopicsExample.listTopicsExample(CLOUD_REGION, ZONE_ID, PROJECT_NUMBER);
   }
@@ -62,8 +62,10 @@ public class ListTopicsExample {
         System.out.println(topics.size() + " topic(s) listed.");
       }
 
-    } catch (StatusRuntimeException e) {
-      System.out.println("Failed to list topics: " + e.toString());
+    } catch (StatusException statusException) {
+      System.out.println("Failed to list topics: " + statusException);
+      System.out.println(statusException.getStatus().getCode());
+      System.out.println(statusException.getStatus());
     }
   }
 }

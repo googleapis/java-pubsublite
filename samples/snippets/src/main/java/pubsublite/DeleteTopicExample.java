@@ -26,7 +26,7 @@ import com.google.cloud.pubsublite.ProjectNumber;
 import com.google.cloud.pubsublite.TopicName;
 import com.google.cloud.pubsublite.TopicPath;
 import com.google.cloud.pubsublite.TopicPaths;
-import io.grpc.StatusRuntimeException;
+import io.grpc.StatusException;
 
 public class DeleteTopicExample {
 
@@ -35,7 +35,7 @@ public class DeleteTopicExample {
     String CLOUD_REGION = "Your Cloud Region";
     char ZONE_ID = 'b';
     String TOPIC_NAME = "Your Topic Name";
-    long PROJECT_NUMBER = 123456789L;
+    long PROJECT_NUMBER = Long.parseLong("123456789");
 
     DeleteTopicExample.deleteTopicExample(CLOUD_REGION, ZONE_ID, PROJECT_NUMBER, TOPIC_NAME);
   }
@@ -65,9 +65,10 @@ public class DeleteTopicExample {
         System.out.println(topicPath.value() + " deleted successfully.");
       }
 
-    } catch (StatusRuntimeException e) {
-      System.out.println("Failed to delete topic: " + e.toString());
+    } catch (StatusException statusException) {
+      System.out.println("Failed to delete the topic: " + statusException);
+      System.out.println(statusException.getStatus().getCode());
+      System.out.println(statusException.getStatus());
     }
   }
-}
-// [START pubsublite_delete_topic]
+} // [START pubsublite_delete_topic]

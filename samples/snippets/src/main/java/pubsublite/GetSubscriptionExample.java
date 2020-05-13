@@ -27,7 +27,7 @@ import com.google.cloud.pubsublite.SubscriptionName;
 import com.google.cloud.pubsublite.SubscriptionPath;
 import com.google.cloud.pubsublite.SubscriptionPaths;
 import com.google.cloud.pubsublite.proto.Subscription;
-import io.grpc.StatusRuntimeException;
+import io.grpc.StatusException;
 
 public class GetSubscriptionExample {
 
@@ -35,7 +35,7 @@ public class GetSubscriptionExample {
     // TODO(developer): Replace these variables before running the sample.
     String CLOUD_REGION = "Your Cloud Region";
     char ZONE_ID = 'b';
-    long PROJECT_NUMBER = 123456789L;
+    long PROJECT_NUMBER = Long.parseLong("123456789");
     String SUBSCRIPTION_NAME = "Your Lite Subscription Name";
 
     GetSubscriptionExample.getSubscriptionExample(
@@ -69,8 +69,10 @@ public class GetSubscriptionExample {
         System.out.println("Subscription: " + subscription.getAllFields());
       }
 
-    } catch (StatusRuntimeException e) {
-      System.out.println("Failed to get subscription: " + e);
+    } catch (StatusException statusException) {
+      System.out.println("Failed to get the subscription: " + statusException);
+      System.out.println(statusException.getStatus().getCode());
+      System.out.println(statusException.getStatus());
     }
   }
 }

@@ -26,7 +26,7 @@ import com.google.cloud.pubsublite.LocationPath;
 import com.google.cloud.pubsublite.LocationPaths;
 import com.google.cloud.pubsublite.ProjectNumber;
 import com.google.cloud.pubsublite.proto.Subscription;
-import io.grpc.StatusRuntimeException;
+import io.grpc.StatusException;
 import java.util.List;
 
 public class ListSubscriptionsInProjectExample {
@@ -35,7 +35,7 @@ public class ListSubscriptionsInProjectExample {
     // TODO(developer): Replace these variables before running the sample.
     String CLOUD_REGION = "Your Cloud Region";
     char ZONE_ID = 'b';
-    long PROJECT_NUMBER = 123456789L;
+    long PROJECT_NUMBER = Long.parseLong("123456789");
 
     ListSubscriptionsInProjectExample.listSubscriptionsInProjectExample(
         CLOUD_REGION, ZONE_ID, PROJECT_NUMBER);
@@ -63,8 +63,10 @@ public class ListSubscriptionsInProjectExample {
         System.out.println(subscriptions.size() + " subscription(s) listed.");
       }
 
-    } catch (StatusRuntimeException e) {
-      System.out.println("Failed to list subscriptions in the project: " + e);
+    } catch (StatusException statusException) {
+      System.out.println("Failed to list subscriptions in the project: " + statusException);
+      System.out.println(statusException.getStatus().getCode());
+      System.out.println(statusException.getStatus());
     }
   }
 }

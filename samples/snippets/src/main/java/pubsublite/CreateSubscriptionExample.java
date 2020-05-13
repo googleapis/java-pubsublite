@@ -32,7 +32,7 @@ import com.google.cloud.pubsublite.TopicPaths;
 import com.google.cloud.pubsublite.proto.Subscription;
 import com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig;
 import com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig.DeliveryRequirement;
-import io.grpc.StatusRuntimeException;
+import io.grpc.StatusException;
 
 public class CreateSubscriptionExample {
 
@@ -40,7 +40,7 @@ public class CreateSubscriptionExample {
     // TODO(developer): Replace these variables before running the sample.
     String CLOUD_REGION = "Your Cloud Region";
     char ZONE_ID = 'b';
-    long PROJECT_NUMBER = 123456789L;
+    long PROJECT_NUMBER = Long.parseLong("123456789");
     String TOPIC_NAME = "Your Topic Name";
     String SUBSCRIPTION_NAME = "Your Subscription Name";
 
@@ -100,8 +100,10 @@ public class CreateSubscriptionExample {
         System.out.println(response.getAllFields() + "created successfully.");
       }
 
-    } catch (StatusRuntimeException e) {
-      System.out.println("Failed to create a subscription: \n" + e.toString());
+    } catch (StatusException statusException) {
+      System.out.println("Failed to create a subscription: " + statusException);
+      System.out.println(statusException.getStatus().getCode());
+      System.out.println(statusException.getStatus());
     }
   }
 }

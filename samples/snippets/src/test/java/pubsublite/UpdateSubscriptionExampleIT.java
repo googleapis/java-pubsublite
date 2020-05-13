@@ -77,6 +77,6 @@ public class UpdateSubscriptionExampleIT {
   public void testUpdateTopicExample() throws Exception {
     UpdateSubscriptionExample.updateSubscriptionExample(
         CLOUD_REGION, ZONE_ID, PROJECT_NUMBER, SUBSCRIPTION_NAME);
-    assertThat(bout.toString()).contains("delivery_requirement: DELIVER_IMMEDIATELY");
+    assertThat(bout.toString()).contains("delivery_requirement: DELIVER_AFTER_STORED");
   }
 }

@@ -79,10 +79,13 @@ public class CreateSubscriptionExample {
       Subscription subscription =
           Subscription.newBuilder()
               .setDeliveryConfig(
-                  // DELIVER_AFTER_STORED ensures that the server won't deliver a published message
-                  // to subscribers until the message has been successfully written to storage.
+                  // The server does not wait for a published message to be successfully
+                  // written to storage before delivering it to subscribers. As such, a
+                  // subscriber may receive a message for which the write to storage failed.
+                  // If the subscriber re-reads the offset of that message later on, there
+                  // may be a gap at that offset.
                   DeliveryConfig.newBuilder()
-                      .setDeliveryRequirement(DeliveryRequirement.DELIVER_AFTER_STORED))
+                      .setDeliveryRequirement(DeliveryRequirement.DELIVER_IMMEDIATELY))
               .setName(subscriptionPath.value())
               .setTopic(topicPath.value())
               .build();

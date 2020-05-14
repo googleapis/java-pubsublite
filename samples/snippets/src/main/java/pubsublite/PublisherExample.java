@@ -34,7 +34,6 @@ import com.google.pubsub.v1.PubsubMessage;
 import io.grpc.StatusException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 public class PublisherExample {
 
@@ -72,6 +71,13 @@ public class PublisherExample {
           PublisherSettings.newBuilder().setTopicPath(topicPath).build();
 
       Publisher publisher = Publisher.create(publisherSettings);
+
+      // You may choose to handle publish errors by adding a listener.
+      // publisher.addListener(new Publisher.Listener() {
+      //   public void failed(Publisher.State from, Throwable failure){
+      //     // Handle error.
+      //   }
+      // }, MoreExecutors.directExecutor());
 
       publisher.startAsync().awaitRunning();
 

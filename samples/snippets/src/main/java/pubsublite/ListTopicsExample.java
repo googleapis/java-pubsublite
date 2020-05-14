@@ -31,7 +31,7 @@ import java.util.List;
 
 public class ListTopicsExample {
 
-  public static void runListTopicsExample() throws Exception {
+  public static void main(String... args) throws Exception {
     // TODO(developer): Replace these variables before running the sample.
     String CLOUD_REGION = "Your Cloud Region";
     char ZONE_ID = 'b';
@@ -66,6 +66,7 @@ public class ListTopicsExample {
       System.out.println("Failed to list topics: " + statusException);
       System.out.println(statusException.getStatus().getCode());
       System.out.println(statusException.getStatus());
+      throw statusException;
     }
   }
 }

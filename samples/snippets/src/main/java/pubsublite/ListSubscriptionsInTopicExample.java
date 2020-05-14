@@ -34,7 +34,7 @@ import java.util.concurrent.ScheduledExecutorService;
 
 public class ListSubscriptionsInTopicExample {
 
-  public static void runListSubscriptionsInTopicExample() throws Exception {
+  public static void main(String... args) throws Exception {
     // TODO(developer): Replace these variables before running the sample.
     String CLOUD_REGION = "Your Cloud Region";
     char ZONE_ID = 'b';
@@ -80,6 +80,7 @@ public class ListSubscriptionsInTopicExample {
       System.out.println("Failed to list subscriptions in the topic: " + statusException);
       System.out.println(statusException.getStatus().getCode());
       System.out.println(statusException.getStatus());
+      throw statusException;
     }
   }
 }

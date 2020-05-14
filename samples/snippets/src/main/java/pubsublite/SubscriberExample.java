@@ -38,7 +38,7 @@ import java.util.concurrent.TimeUnit;
 
 public class SubscriberExample {
 
-  public static void runSubscriberExample() throws Exception {
+  public static void main(String... args) throws Exception {
     // TODO(developer): Replace these variables before running the sample.
     String CLOUD_REGION = "Your Cloud Region";
     char ZONE_ID = 'b';

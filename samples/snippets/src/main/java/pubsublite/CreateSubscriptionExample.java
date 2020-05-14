@@ -36,7 +36,7 @@ import io.grpc.StatusException;
 
 public class CreateSubscriptionExample {
 
-  public static void runCreateSubscriptionExample() throws Exception {
+  public static void main(String... args) throws Exception {
     // TODO(developer): Replace these variables before running the sample.
     String CLOUD_REGION = "Your Cloud Region";
     char ZONE_ID = 'b';
@@ -104,6 +104,7 @@ public class CreateSubscriptionExample {
       System.out.println("Failed to create a subscription: " + statusException);
       System.out.println(statusException.getStatus().getCode());
       System.out.println(statusException.getStatus());
+      throw statusException;
     }
   }
 }

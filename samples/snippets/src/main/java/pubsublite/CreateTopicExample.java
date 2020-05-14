@@ -34,13 +34,18 @@ import io.grpc.StatusException;
 
 public class CreateTopicExample {
 
-  public static void runCreateTopicExample() throws Exception {
+  public static void main(String... args) throws Exception {
     // TODO(developer): Replace these variables before running the sample.
     String CLOUD_REGION = "Your Cloud Region";
     char ZONE_ID = 'b';
     String TOPIC_NAME = "Your Topic Name";
     long PROJECT_NUMBER = Long.parseLong("123456789");
     Integer PARTITIONS = 1;
+
+    CLOUD_REGION = "us-central1";
+    TOPIC_NAME = "tz-lite-topic-1";
+    // SUBSCRIPTION_NAME = "tz-lite-subscription-1";
+    PROJECT_NUMBER = 502009289245L;
 
     CreateTopicExample.createTopicExample(
         CLOUD_REGION, ZONE_ID, PROJECT_NUMBER, TOPIC_NAME, PARTITIONS);
@@ -98,6 +103,7 @@ public class CreateTopicExample {
       System.out.println("Failed to create a topic: " + statusException);
       System.out.println(statusException.getStatus().getCode());
       System.out.println(statusException.getStatus());
+      throw statusException;
     }
   }
 }

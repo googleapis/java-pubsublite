@@ -38,7 +38,7 @@ import java.util.concurrent.TimeUnit;
 
 public class PublisherExample {
 
-  public static void runPublisherExample() throws Exception {
+  public static void main(String... args) throws Exception {
     // TODO(developer): Replace these variables before running the sample.
     String CLOUD_REGION = "Your Cloud Region";
     char ZONE_ID = 'b';
@@ -112,6 +112,7 @@ public class PublisherExample {
       System.out.println("Failed to publish messages: " + statusException);
       System.out.println(statusException.getStatus().getCode());
       System.out.println(statusException.getStatus());
+      throw statusException;
     }
   }
 }

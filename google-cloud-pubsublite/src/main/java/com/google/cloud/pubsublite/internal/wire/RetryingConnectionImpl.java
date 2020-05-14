@@ -175,7 +175,7 @@ class RetryingConnectionImpl<
               .asRuntimeException());
       return;
     }
-    logger.atInfo().withCause(t).atMostEvery(30, SECONDS).log(
+    logger.atFine().withCause(t).log(
         "Stream disconnected attempting retry, after %s milliseconds", backoffTime);
     ScheduledFuture<?> retry =
         systemExecutor.schedule(observer::triggerReinitialize, backoffTime, MILLISECONDS);

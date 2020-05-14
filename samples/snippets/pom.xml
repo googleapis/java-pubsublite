@@ -67,15 +67,15 @@
       <artifactId>google-cloud-pubsublite</artifactId>
       <version>0.0.1-SNAPSHOT</version><!--    TODO: remove after release    -->
     </dependency>
-    <!-- [END pubsublite_java_dependencies] -->
-    <!-- [END pubsublite_install_with_bom] -->
-
+    <!-- A logging dependency used by the underlying library  -->
     <dependency>
       <groupId>com.google.flogger</groupId>
       <artifactId>flogger-system-backend</artifactId>
       <version>0.5.1</version>
       <scope>runtime</scope>
     </dependency>
+    <!-- [END pubsublite_java_dependencies] -->
+    <!-- [END pubsublite_install_with_bom] -->
 
     <dependency>
       <groupId>junit</groupId>
@@ -108,6 +108,14 @@
         <version>1.6.8</version>
         <configuration>
           <skipNexusStagingDeployMojo>true</skipNexusStagingDeployMojo>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>exec-maven-plugin</artifactId>
+        <version>1.6.0</version>
+        <configuration>
+          <cleanupDaemonThreads>false</cleanupDaemonThreads>
         </configuration>
       </plugin>
     </plugins>

@@ -55,6 +55,7 @@
     </dependency>
     <!-- [END pubsublite_install_without_bom] -->
 
+    <!-- A logging dependency used by the underlying library  -->
     <dependency>
       <groupId>com.google.flogger</groupId>
       <artifactId>flogger-system-backend</artifactId>

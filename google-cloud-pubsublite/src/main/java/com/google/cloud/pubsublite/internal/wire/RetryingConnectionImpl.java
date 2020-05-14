@@ -137,8 +137,8 @@ class RetryingConnectionImpl<
   public final void onNext(ClientResponseT value) {
     Status status;
     try (CloseableMonitor.Hold h = connectionMonitor.enter()) {
-      nextRetryBackoffDuration = INITIAL_RECONNECT_BACKOFF_TIME.toMillis();
       if (completed) return;
+      nextRetryBackoffDuration = INITIAL_RECONNECT_BACKOFF_TIME.toMillis();
     }
     status = observer.onClientResponse(value);
     if (!status.isOk()) {

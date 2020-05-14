@@ -22,8 +22,8 @@ To run a sample's integration test in Cloud Shell:
 
 1. `mvn -Dtest=UpdateTopicExampleIT test` - this runs the integration test for `UpdateTopicExample.java`.
 
-To run a sample, update the developer's TODO section in the snippet, update the method name from `public static void runBlahBlahExample()` to `public static void main(String... args)`, then:
+To run a sample, update the developer's TODO section in the snippet, then:
 
 1. `cd samples/snippets` - all samples are located in `java-pubsublite/samples/snippets` directory.
 
-1. `mvn compile exec:java -Dexec.mainClass=pubsublite.ListTopicsExample -Dexec.cleanupDaemonThreads=false` - this should list the topics in your project.
+1. `mvn compile exec:java -Dexec.mainClass=pubsublite.ListTopicsExample` - this should list the topics in your project.

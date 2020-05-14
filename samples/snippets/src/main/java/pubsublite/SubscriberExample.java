@@ -108,6 +108,8 @@ public class SubscriberExample {
 
       System.out.println("Listening to messages on " + subscriptionPath.value() + " ...");
 
+      // If the service fails within 30s, awaitTerminated will throw an exception.
+      // When unspecified, the subscriber is expected to run indefinitely.
       subscriber.awaitTerminated(30, TimeUnit.SECONDS);
       subscriber.stopAsync();
 

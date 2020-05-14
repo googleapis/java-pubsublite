@@ -59,6 +59,8 @@ public class UpdateTopicExample {
               "partition_config.scale",
               "retention_config.per_partition_bytes",
               "retention_config.period");
+
+      // TODO: add a link to documentation.
       FieldMask MASK = FieldMask.newBuilder().addAllPaths(iterablePaths).build();
 
       TopicPath topicPath =
@@ -102,7 +104,6 @@ public class UpdateTopicExample {
       }
 
     } catch (StatusException statusException) {
-      //
       System.out.println("Failed to update topic: " + statusException);
       System.out.println(statusException.getStatus().getCode());
       System.out.println(statusException.getStatus());

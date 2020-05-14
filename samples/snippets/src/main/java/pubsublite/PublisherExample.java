@@ -96,7 +96,9 @@ public class PublisherExample {
         futures.add(future);
       }
 
-      publisher.stopAsync().awaitTerminated(30, TimeUnit.SECONDS);
+      // Wait for the publisher to complete its execution. An error will be thrown if
+      // the service fails.
+      publisher.stopAsync().awaitTerminated();
 
       ArrayList<PublishMetadata> metadata = new ArrayList<>();
       List<String> ackIds = ApiFutures.allAsList(futures).get();

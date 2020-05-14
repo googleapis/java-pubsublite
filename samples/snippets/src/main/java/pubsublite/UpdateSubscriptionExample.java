@@ -55,6 +55,7 @@ public class UpdateSubscriptionExample {
       ProjectNumber projectNum = ProjectNumber.of(PROJECT_NUMBER);
       SubscriptionName subscriptionName = SubscriptionName.of(SUBSCRIPTION_NAME);
 
+      // TODO: add a link to documentation.
       FieldMask MASK =
           FieldMask.newBuilder().addPaths("delivery_config.delivery_requirement").build();
 

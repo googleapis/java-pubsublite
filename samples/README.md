@@ -2,7 +2,7 @@
 
 ## Running samples and tests using Cloud Shell
 
-[Google Cloud Shell](https://cloud.google.com/shell) has application default credentials from its compute instance which will allow you to run an integration test without having to obtain `GOOGLE_APPLICATION_CREDENTIANS`.
+[Google Cloud Shell](https://cloud.google.com/shell) has application default credentials from its compute instance which will allow you to run an integration test without having to obtain `GOOGLE_APPLICATION_CREDENTIALS`.
 
 However, tests require an additional environment variable `GOOGLE_CLOUD_PROJECT_NUMBER` to run. For instance, 
  

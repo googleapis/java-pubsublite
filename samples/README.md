@@ -2,7 +2,7 @@
 
 ## Running samples and tests using Cloud Shell
 
-[Google Cloud Shell](https://cloud.google.com/shell) has application default credentials from its compute instance which will allow you to run an integration test without having to obtain `GOOGLE_APPLICATION_CREDENTIANS`.
+[Google Cloud Shell](https://cloud.google.com/shell) has application default credentials from its compute instance which will allow you to run an integration test without having to obtain `GOOGLE_APPLICATION_CREDENTIALS`.
 
 However, tests require an additional environment variable `GOOGLE_CLOUD_PROJECT_NUMBER` to run. For instance, 
  
@@ -13,8 +13,6 @@ private static final String GOOGLE_CLOUD_PROJECT_NUMBER =
        System.getenv("GOOGLE_CLOUD_PROJECT_NUMBER");
 ```
 Here, the program needs you to provide your [Google Cloud Project Number](https://cloud.google.com/resource-manager/docs/creating-managing-projects) in an environment variable.
-
-Make sure to set environment variables before running tests and to complete the developer TODOs in the samples before running samples, or else you will get an error asking you to set them.
 
 To run a sample's integration test in Cloud Shell:
 

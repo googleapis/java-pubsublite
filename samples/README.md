@@ -20,7 +20,7 @@ To run a sample's integration test in Cloud Shell:
 
 1. `cd samples/snippets` - all samples are located in `java-pubsublite/samples/snippets` directory.
 
-1. `mvn -Dtest=UpdateTopicExampleIT test` - this runs the integration test for `UpdateTopicExample.java`.
+1. `mvn -Dtest=QuickStartIT test` - this runs the integration test for `UpdateTopicExample.java`.
 
 To run a sample, update the developer's TODO section in the snippet, then:
 

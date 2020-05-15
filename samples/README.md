@@ -6,7 +6,7 @@
 
 However, tests require an additional environment variable `GOOGLE_CLOUD_PROJECT_NUMBER` to run. For instance, 
  
-In [`UpdateTopicExampleIT.java`](snippets/src/test/java/pubsublite/UpdateTopicExampleIT.java):
+In [`QuickStartIT.java`](snippets/src/test/java/pubsublite/QuickStartIT.java):
 
 ```java
 private static final String GOOGLE_CLOUD_PROJECT_NUMBER =
@@ -16,12 +16,12 @@ Here, the program needs you to provide your [Google Cloud Project Number](https:
 
 To run a sample's integration test in Cloud Shell:
 
-1. `cd samples/snippets` - all samples are located in `java-pubsublite/samples/snippets` directory.
+1. `cd samples/` - all samples are located in `java-pubsublite/samples/snippets` directory.
 
 1. `mvn clean -Dtest=QuickStartIT test` - this runs the integration test for `UpdateTopicExample.java`.
 
 To run a sample, update the developer's TODO section in the snippet, then:
 
-1. `cd samples/snippets` - all samples are located in `java-pubsublite/samples/snippets` directory.
+1. `cd samples/snippets/` - all samples are located in `java-pubsublite/samples/snippets` directory.
 
 1. `mvn compile exec:java -Dexec.mainClass=pubsublite.ListTopicsExample` - this should list the topics in your project.

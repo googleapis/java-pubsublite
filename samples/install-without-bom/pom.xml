@@ -19,14 +19,14 @@
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.google.cloud</groupId>
-  <artifactId>pubsublite-snapshot</artifactId>
+  <artifactId>pubsublite-install-without-bom</artifactId>
   <packaging>jar</packaging>
-  <name>Google Cloud Pub/Sub Lite Snapshot Samples</name>
+  <name>Google Cloud Pub/Sub Lite Install Without BOM Samples</name>
   <url>https://github.com/googleapis/java-pubsublite</url>
 
   <!--
     The parent pom defines common style checks and testing strategies for our samples.
-    Removing or replacing it should not affect the execution of the samples in anyway.
+    Removing or replacing it should not affect the execution of the samples in any way.
   -->
   <parent>
     <groupId>com.google.cloud.samples</groupId>
@@ -40,8 +40,9 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
 
-  <!-- {x-version-update-start:google-cloud-pubsublite:current} -->
+  <!-- {x-version-update-start:google-cloud-pubsublite:released} -->
   <dependencies>
+    <!-- [START pubsublite_install_without_bom] -->
     <dependency>
       <groupId>com.google.cloud</groupId>
       <artifactId>google-cloud-pubsublite</artifactId>
@@ -52,6 +53,7 @@
       <artifactId>google-cloud-pubsub</artifactId>
       <version>1.105.0</version>
     </dependency>
+    <!-- [END pubsublite_install_without_bom] -->
 
     <!-- A logging dependency used by the underlying library  -->
     <dependency>

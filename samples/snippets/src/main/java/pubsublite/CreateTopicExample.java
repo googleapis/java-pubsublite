@@ -42,11 +42,6 @@ public class CreateTopicExample {
     long PROJECT_NUMBER = Long.parseLong("123456789");
     Integer PARTITIONS = 1;
 
-    CLOUD_REGION = "us-central1";
-    TOPIC_NAME = "tz-lite-topic-1";
-    // SUBSCRIPTION_NAME = "tz-lite-subscription-1";
-    PROJECT_NUMBER = 502009289245L;
-
     CreateTopicExample.createTopicExample(
         CLOUD_REGION, ZONE_ID, PROJECT_NUMBER, TOPIC_NAME, PARTITIONS);
   }

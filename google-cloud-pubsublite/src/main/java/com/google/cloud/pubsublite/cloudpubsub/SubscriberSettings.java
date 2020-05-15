@@ -30,8 +30,10 @@ import com.google.cloud.pubsublite.internal.Preconditions;
 import com.google.cloud.pubsublite.internal.wire.CommitterBuilder;
 import com.google.cloud.pubsublite.internal.wire.PubsubContext;
 import com.google.cloud.pubsublite.internal.wire.PubsubContext.Framework;
+import com.google.cloud.pubsublite.internal.wire.SubscriberBuilder;
 import com.google.cloud.pubsublite.proto.CursorServiceGrpc;
 import com.google.cloud.pubsublite.proto.SubscriberServiceGrpc;
+import com.google.common.collect.ImmutableList;
 import com.google.pubsub.v1.PubsubMessage;
 import io.grpc.StatusException;
 import java.util.ArrayList;
@@ -49,7 +51,7 @@ public abstract class SubscriberSettings {
 
   abstract SubscriptionPath subscriptionPath();
 
-  abstract List<Partition> partitions();
+  abstract ImmutableList<Partition> partitions();
 
   abstract FlowControlSettings perPartitionFlowControlSettings();
 
@@ -102,8 +104,7 @@ public abstract class SubscriberSettings {
 
   @SuppressWarnings("CheckReturnValue")
   Subscriber instantiate() throws StatusException {
-    com.google.cloud.pubsublite.internal.wire.SubscriberBuilder.Builder wireSubscriberBuilder =
-        com.google.cloud.pubsublite.internal.wire.SubscriberBuilder.newBuilder();
+    SubscriberBuilder.Builder wireSubscriberBuilder = SubscriberBuilder.newBuilder();
     wireSubscriberBuilder.setSubscriptionPath(subscriptionPath());
     subscriberServiceStub().ifPresent(wireSubscriberBuilder::setSubscriberServiceStub);
     wireSubscriberBuilder.setContext(PubsubContext.of(FRAMEWORK));

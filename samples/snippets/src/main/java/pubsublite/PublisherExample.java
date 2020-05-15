@@ -72,13 +72,14 @@ public class PublisherExample {
 
       Publisher publisher = Publisher.create(publisherSettings);
 
-      // You may choose to handle publish errors by adding a listener.
+      // You may choose to handle fatal publisher failures by adding a listener.
       // publisher.addListener(new Publisher.Listener() {
       //   public void failed(Publisher.State from, Throwable failure){
-      //     // Handle error.
+      //     // Handle error. Perhaps restart the publisher.
       //   }
       // }, MoreExecutors.directExecutor());
 
+      // Start the publisher. Upon successful starting, its state will become RUNNING.
       publisher.startAsync().awaitRunning();
 
       List<ApiFuture<String>> futures = new ArrayList<>();
@@ -102,8 +103,10 @@ public class PublisherExample {
         futures.add(future);
       }
 
-      // Wait for the publisher to complete its execution. An error will be thrown if
-      // the service fails.
+      // Shut down the publisher. Successful shutdown changes the state of the
+      // publisher to TERMINATED. If the publisher does not shut down successfully,
+      // awaitTerminated will throw an IllegalStateException because the state of
+      // the publisher will be FAILED instead of TERMINATED.
       publisher.stopAsync().awaitTerminated();
 
       ArrayList<PublishMetadata> metadata = new ArrayList<>();

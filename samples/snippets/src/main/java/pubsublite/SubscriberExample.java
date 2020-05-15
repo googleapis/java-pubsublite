@@ -35,6 +35,7 @@ import com.google.pubsub.v1.PubsubMessage;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 public class SubscriberExample {
 
@@ -104,14 +105,23 @@ public class SubscriberExample {
 
       Subscriber subscriber = Subscriber.create(subscriberSettings);
 
+      // Start the subscriber. Upon successful starting, its state will become RUNNING.
       subscriber.startAsync().awaitRunning();
 
       System.out.println("Listening to messages on " + subscriptionPath.value() + " ...");
 
-      // If the service fails within 30s, awaitTerminated will throw an exception.
-      // When unspecified, the subscriber is expected to run indefinitely.
-      subscriber.awaitTerminated(30, TimeUnit.SECONDS);
-      subscriber.stopAsync();
+      try {
+        System.out.println(subscriber.state());
+        // Wait 30 seconds for the subscriber to reach TERMINATED state. If it encounters
+        // unrecoverable errors before then, its state will change to FAILED and
+        // an IllegalStateException will be thrown.
+        subscriber.awaitTerminated(30, TimeUnit.SECONDS);
+      } catch (TimeoutException t) {
+        // Shut down the subscriber. This will change the state of the
+        // subscriber to TERMINATED.
+        subscriber.stopAsync();
+        System.out.println(subscriber.state());
+      }
 
     } catch (Throwable t) {
       System.out.println("Error in subscribing to messages: " + t);

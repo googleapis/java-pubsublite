@@ -107,6 +107,8 @@ public class ConnectedSubscriberImplTest {
 
   private Optional<StreamObserver<SubscribeResponse>> leakedResponseStream = Optional.empty();
 
+  private ConnectedSubscriberImpl subscriber;
+
   public ConnectedSubscriberImplTest() {}
 
   @Before
@@ -216,7 +218,7 @@ public class ConnectedSubscriberImplTest {
     leakedResponseStream = Optional.empty();
   }
 
-  private ConnectedSubscriberImpl initialize() {
+  private void initialize() {
     Preconditions.checkNotNull(serviceImpl);
     doAnswer(
             AnswerWith(
@@ -226,12 +228,12 @@ public class ConnectedSubscriberImplTest {
                             .setCursor(Cursor.newBuilder().setOffset(INITIAL_OFFSET.value())))))
         .when(mockRequestStream)
         .onNext(initialRequest());
-    return FACTORY.New(stub::subscribe, mockOutputStream, initialRequest());
+    subscriber = FACTORY.New(stub::subscribe, mockOutputStream, initialRequest());
   }
 
   @Test
   public void responseAfterClose_Dropped() {
-    ConnectedSubscriberImpl subscriber = initialize();
+    initialize();
     subscriber.close();
     verify(mockRequestStream).onCompleted();
     subscriber.seek(SeekRequest.newBuilder().setNamedTarget(SeekRequest.NamedTarget.HEAD).build());
@@ -240,8 +242,7 @@ public class ConnectedSubscriberImplTest {
 
   @Test
   public void duplicateInitial_Abort() {
-    // subscriber is never used in this test, but it is marked to not discard.
-    ConnectedSubscriber subscriber = initialize();
+    initialize();
     SubscribeResponse.Builder builder = SubscribeResponse.newBuilder();
     builder.getInitial();
     leakedResponseStream.get().onNext(builder.build());
@@ -251,8 +252,7 @@ public class ConnectedSubscriberImplTest {
 
   @Test
   public void emptyMessagesResponse_Abort() {
-    // subscriber is never used in this test, but it is marked to not discard.
-    ConnectedSubscriber subscriber = initialize();
+    initialize();
     SubscribeResponse.Builder builder = SubscribeResponse.newBuilder();
     builder.getMessages();
     leakedResponseStream.get().onNext(builder.build());
@@ -269,8 +269,7 @@ public class ConnectedSubscriberImplTest {
 
   @Test
   public void outOfOrderMessagesResponse_Abort() {
-    // subscriber is never used in this test, but it is marked to not discard.
-    ConnectedSubscriber subscriber = initialize();
+    initialize();
     SubscribeResponse.Builder builder = SubscribeResponse.newBuilder();
     builder.getMessagesBuilder().addMessages(messageWithOffset(Offset.of(10)));
     builder.getMessagesBuilder().addMessages(messageWithOffset(Offset.of(10)));
@@ -281,7 +280,7 @@ public class ConnectedSubscriberImplTest {
 
   @Test
   public void seekToOffsetRequest() {
-    ConnectedSubscriber subscriber = initialize();
+    initialize();
     SeekRequest request =
         SeekRequest.newBuilder().setCursor(Cursor.newBuilder().setOffset(10)).build();
     subscriber.seek(request);
@@ -290,7 +289,7 @@ public class ConnectedSubscriberImplTest {
 
   @Test
   public void seekToHeadRequest() {
-    ConnectedSubscriber subscriber = initialize();
+    initialize();
     SeekRequest request =
         SeekRequest.newBuilder().setNamedTarget(SeekRequest.NamedTarget.HEAD).build();
     subscriber.seek(request);
@@ -299,7 +298,7 @@ public class ConnectedSubscriberImplTest {
 
   @Test
   public void seekToCommitRequest() {
-    ConnectedSubscriber subscriber = initialize();
+    initialize();
     SeekRequest request =
         SeekRequest.newBuilder().setNamedTarget(SeekRequest.NamedTarget.COMMITTED_CURSOR).build();
     subscriber.seek(request);
@@ -312,7 +311,7 @@ public class ConnectedSubscriberImplTest {
 
   @Test
   public void seekRequestWhileSeekInFlight() {
-    ConnectedSubscriber subscriber = initialize();
+    initialize();
     subscriber.seek(validSeekRequest());
     verify(mockRequestStream)
         .onNext(SubscribeRequest.newBuilder().setSeek(validSeekRequest()).build());
@@ -324,7 +323,7 @@ public class ConnectedSubscriberImplTest {
 
   @Test
   public void seekRequestResponseRequest() {
-    ConnectedSubscriber subscriber = initialize();
+    initialize();
     SubscribeRequest request = SubscribeRequest.newBuilder().setSeek(validSeekRequest()).build();
     doAnswer(
             AnswerWith(
@@ -350,8 +349,7 @@ public class ConnectedSubscriberImplTest {
 
   @Test
   public void seekResponseWithoutRequest_Aborts() {
-    // subscriber is never used in this test, but it is marked to not discard.
-    ConnectedSubscriber subscriber = initialize();
+    initialize();
     leakedResponseStream
         .get()
         .onNext(

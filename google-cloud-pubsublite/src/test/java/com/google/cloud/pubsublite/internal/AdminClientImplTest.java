@@ -18,6 +18,7 @@ package com.google.cloud.pubsublite.internal;
 
 import static com.google.common.truth.Truth.assertThat;
 import static com.google.common.truth.Truth8.assertThat;
+import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.junit.Assert.assertThrows;
 import static org.mockito.AdditionalAnswers.delegatesTo;
 import static org.mockito.ArgumentMatchers.any;
@@ -71,7 +72,6 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import org.junit.After;
 import org.junit.Before;
@@ -195,7 +195,7 @@ public class AdminClientImplTest {
   @After
   public void tearDown() throws Exception {
     client.shutdownNow();
-    Preconditions.checkArgument(client.awaitTermination(10, TimeUnit.SECONDS));
+    Preconditions.checkArgument(client.awaitTermination(10, SECONDS));
   }
 
   @Test

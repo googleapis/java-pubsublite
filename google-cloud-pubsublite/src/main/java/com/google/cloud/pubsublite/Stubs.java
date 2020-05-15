@@ -17,6 +17,7 @@
 package com.google.cloud.pubsublite;
 
 import com.google.auth.oauth2.GoogleCredentials;
+import com.google.common.collect.ImmutableList;
 import io.grpc.Channel;
 import io.grpc.ManagedChannelBuilder;
 import io.grpc.auth.MoreCallCredentials;
@@ -32,7 +33,8 @@ public class Stubs {
         .withCallCredentials(
             MoreCallCredentials.from(
                 GoogleCredentials.getApplicationDefault()
-                    .createScoped("https://www.googleapis.com/auth/cloud-platform")));
+                    .createScoped(
+                        ImmutableList.of("https://www.googleapis.com/auth/cloud-platform"))));
   }
 
   private Stubs() {}

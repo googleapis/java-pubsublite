@@ -102,6 +102,8 @@ public class ConnectedCommitterImplTest {
   private Optional<StreamObserver<StreamingCommitCursorResponse>> leakedResponseStream =
       Optional.empty();
 
+  private ConnectedCommitter committer;
+
   public ConnectedCommitterImplTest() {}
 
   @Before
@@ -198,7 +200,7 @@ public class ConnectedCommitterImplTest {
     leakedResponseStream = Optional.empty();
   }
 
-  private ConnectedCommitter initialize() {
+  private void initialize() {
     Preconditions.checkNotNull(serviceImpl);
     doAnswer(
             AnswerWith(
@@ -206,15 +208,13 @@ public class ConnectedCommitterImplTest {
                     .setInitial(InitialCommitCursorResponse.getDefaultInstance())))
         .when(mockRequestStream)
         .onNext(initialRequest());
-    ConnectedCommitter committer =
-        FACTORY.New(stub::streamingCommitCursor, mockOutputStream, initialRequest());
+    committer = FACTORY.New(stub::streamingCommitCursor, mockOutputStream, initialRequest());
     verify(mockRequestStream).onNext(initialRequest());
-    return committer;
   }
 
   @Test
   public void responseAfterClose_Dropped() throws Exception {
-    ConnectedCommitter committer = initialize();
+    initialize();
     committer.close();
     verify(mockRequestStream).onCompleted();
     committer.commit(Offset.of(10));
@@ -223,8 +223,7 @@ public class ConnectedCommitterImplTest {
 
   @Test
   public void duplicateInitial_Abort() {
-    // committer is never used in this test, but it is marked to not discard.
-    ConnectedCommitter committer = initialize();
+    initialize();
     StreamingCommitCursorResponse.Builder builder = StreamingCommitCursorResponse.newBuilder();
     builder.getInitialBuilder();
     leakedResponseStream.get().onNext(builder.build());
@@ -234,8 +233,7 @@ public class ConnectedCommitterImplTest {
 
   @Test
   public void commitRequestProxied() {
-    // committer is never used in this test, but it is marked to not discard.
-    ConnectedCommitter committer = initialize();
+    initialize();
     StreamingCommitCursorRequest.Builder builder = StreamingCommitCursorRequest.newBuilder();
     builder.getCommitBuilder().setCursor(Cursor.newBuilder().setOffset(154));
     committer.commit(Offset.of(154));
@@ -244,8 +242,7 @@ public class ConnectedCommitterImplTest {
 
   @Test
   public void commitResponseProxied() {
-    // committer is never used in this test, but it is marked to not discard.
-    ConnectedCommitter committer = initialize();
+    initialize();
     leakedResponseStream
         .get()
         .onNext(

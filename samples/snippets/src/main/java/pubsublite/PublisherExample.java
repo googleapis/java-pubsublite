@@ -31,7 +31,6 @@ import com.google.cloud.pubsublite.cloudpubsub.Publisher;
 import com.google.cloud.pubsublite.cloudpubsub.PublisherSettings;
 import com.google.protobuf.ByteString;
 import com.google.pubsub.v1.PubsubMessage;
-import io.grpc.StatusException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -54,77 +53,69 @@ public class PublisherExample {
       String CLOUD_REGION, char ZONE_ID, long PROJECT_NUMBER, String TOPIC_NAME, int MESSAGE_COUNT)
       throws Exception {
 
-    try {
-      CloudRegion cloudRegion = CloudRegion.of(CLOUD_REGION);
-      CloudZone zone = CloudZone.of(cloudRegion, ZONE_ID);
-      ProjectNumber projectNum = ProjectNumber.of(PROJECT_NUMBER);
-      TopicName topicName = TopicName.of(TOPIC_NAME);
+    CloudRegion cloudRegion = CloudRegion.of(CLOUD_REGION);
+    CloudZone zone = CloudZone.of(cloudRegion, ZONE_ID);
+    ProjectNumber projectNum = ProjectNumber.of(PROJECT_NUMBER);
+    TopicName topicName = TopicName.of(TOPIC_NAME);
 
-      TopicPath topicPath =
-          TopicPaths.newBuilder()
-              .setProjectNumber(projectNum)
-              .setZone(zone)
-              .setTopicName(topicName)
+    TopicPath topicPath =
+        TopicPaths.newBuilder()
+            .setProjectNumber(projectNum)
+            .setZone(zone)
+            .setTopicName(topicName)
+            .build();
+
+    PublisherSettings publisherSettings =
+        PublisherSettings.newBuilder().setTopicPath(topicPath).build();
+
+    Publisher publisher = Publisher.create(publisherSettings);
+
+    // You may choose to handle fatal publisher failures by adding a listener.
+    // publisher.addListener(new Publisher.Listener() {
+    //   public void failed(Publisher.State from, Throwable failure){
+    //     // Handle error. Perhaps restart the publisher.
+    //   }
+    // }, MoreExecutors.directExecutor());
+
+    // Start the publisher. Upon successful starting, its state will become RUNNING.
+    publisher.startAsync().awaitRunning();
+
+    List<ApiFuture<String>> futures = new ArrayList<>();
+
+    for (int i = 0; i < MESSAGE_COUNT; i++) {
+      String message = "message-" + i;
+
+      // Convert the message to a byte string.
+      ByteString data = ByteString.copyFromUtf8(message);
+      PubsubMessage pubsubMessage =
+          PubsubMessage.newBuilder()
+              .setData(data)
+              // Messages of the same ordering key will always get published to the
+              // same partition. When OrderingKey is unset, messages can get published
+              // to different partitions if more than one partition exist for the topic.
+              // .setOrderingKey("testing")
               .build();
 
-      PublisherSettings publisherSettings =
-          PublisherSettings.newBuilder().setTopicPath(topicPath).build();
-
-      Publisher publisher = Publisher.create(publisherSettings);
-
-      // You may choose to handle fatal publisher failures by adding a listener.
-      // publisher.addListener(new Publisher.Listener() {
-      //   public void failed(Publisher.State from, Throwable failure){
-      //     // Handle error. Perhaps restart the publisher.
-      //   }
-      // }, MoreExecutors.directExecutor());
-
-      // Start the publisher. Upon successful starting, its state will become RUNNING.
-      publisher.startAsync().awaitRunning();
-
-      List<ApiFuture<String>> futures = new ArrayList<>();
-
-      for (int i = 0; i < MESSAGE_COUNT; i++) {
-        String message = "message-" + i;
-
-        // Convert the message to a byte string.
-        ByteString data = ByteString.copyFromUtf8(message);
-        PubsubMessage pubsubMessage =
-            PubsubMessage.newBuilder()
-                .setData(data)
-                // Messages of the same ordering key will always get published to the
-                // same partition. When OrderingKey is unset, messages can get published
-                // to different partitions if more than one partition exist for the topic.
-                // .setOrderingKey("testing")
-                .build();
-
-        // Schedule a message to be published. Messages are automatically batched.
-        ApiFuture<String> future = publisher.publish(pubsubMessage);
-        futures.add(future);
-      }
-
-      // Shut down the publisher. Successful shutdown changes the state of the
-      // publisher to TERMINATED. If the publisher does not shut down successfully,
-      // awaitTerminated will throw an IllegalStateException because the state of
-      // the publisher will be FAILED instead of TERMINATED.
-      publisher.stopAsync().awaitTerminated();
-
-      ArrayList<PublishMetadata> metadata = new ArrayList<>();
-      List<String> ackIds = ApiFutures.allAsList(futures).get();
-
-      for (String id : ackIds) {
-        // Decoded metadata contains partition and offset.
-        metadata.add(PublishMetadata.decode(id));
-      }
-      System.out.println(metadata);
-      System.out.println("Published " + metadata.size() + "  messages to " + topicPath.value());
-
-    } catch (StatusException statusException) {
-      System.out.println("Failed to publish messages: " + statusException);
-      System.out.println(statusException.getStatus().getCode());
-      System.out.println(statusException.getStatus());
-      throw statusException;
+      // Schedule a message to be published. Messages are automatically batched.
+      ApiFuture<String> future = publisher.publish(pubsubMessage);
+      futures.add(future);
     }
+
+    // Shut down the publisher. Successful shutdown changes the state of the
+    // publisher to TERMINATED. If the publisher does not shut down successfully,
+    // awaitTerminated will throw an IllegalStateException because the state of
+    // the publisher will be FAILED instead of TERMINATED.
+    publisher.stopAsync().awaitTerminated();
+
+    ArrayList<PublishMetadata> metadata = new ArrayList<>();
+    List<String> ackIds = ApiFutures.allAsList(futures).get();
+
+    for (String id : ackIds) {
+      // Decoded metadata contains partition and offset.
+      metadata.add(PublishMetadata.decode(id));
+    }
+    System.out.println(metadata);
+    System.out.println("Published " + metadata.size() + "  messages to " + topicPath.value());
   }
 }
 // [END pubsublite_quickstart_publisher]

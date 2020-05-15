@@ -60,71 +60,66 @@ public class SubscriberExample {
       List<Integer> PARTITION_NOS)
       throws Exception {
 
+    CloudRegion cloudRegion = CloudRegion.of(CLOUD_REGION);
+    CloudZone zone = CloudZone.of(cloudRegion, ZONE_ID);
+    ProjectNumber projectNum = ProjectNumber.of(PROJECT_NUMBER);
+    SubscriptionName subscriptionName = SubscriptionName.of(SUBSCRIPTION_NAME);
+
+    SubscriptionPath subscriptionPath =
+        SubscriptionPaths.newBuilder()
+            .setZone(zone)
+            .setProjectNumber(projectNum)
+            .setSubscriptionName(subscriptionName)
+            .build();
+
+    FlowControlSettings flowControlSettings =
+        FlowControlSettings.builder()
+            // Set outstanding bytes to 10 MiB per partition.
+            .setBytesOutstanding(10 * 1024 * 1024L)
+            .setMessagesOutstanding(Long.MAX_VALUE)
+            .build();
+
+    List<Partition> partitions = new ArrayList<>();
+    for (Integer num : PARTITION_NOS) {
+      partitions.add(Partition.of(num));
+    }
+
+    MessageReceiver receiver =
+        new MessageReceiver() {
+          @Override
+          public void receiveMessage(PubsubMessage message, AckReplyConsumer consumer) {
+            System.out.println("Id : " + message.getMessageId());
+            System.out.println("Data : " + message.getData().toStringUtf8());
+            consumer.ack();
+          }
+        };
+
+    SubscriberSettings subscriberSettings =
+        SubscriberSettings.newBuilder()
+            .setSubscriptionPath(subscriptionPath)
+            .setPerPartitionFlowControlSettings(flowControlSettings)
+            .setPartitions(partitions)
+            .setReceiver(receiver)
+            .build();
+
+    Subscriber subscriber = Subscriber.create(subscriberSettings);
+
+    // Start the subscriber. Upon successful starting, its state will become RUNNING.
+    subscriber.startAsync().awaitRunning();
+
+    System.out.println("Listening to messages on " + subscriptionPath.value() + " ...");
+
     try {
-      CloudRegion cloudRegion = CloudRegion.of(CLOUD_REGION);
-      CloudZone zone = CloudZone.of(cloudRegion, ZONE_ID);
-      ProjectNumber projectNum = ProjectNumber.of(PROJECT_NUMBER);
-      SubscriptionName subscriptionName = SubscriptionName.of(SUBSCRIPTION_NAME);
-
-      SubscriptionPath subscriptionPath =
-          SubscriptionPaths.newBuilder()
-              .setZone(zone)
-              .setProjectNumber(projectNum)
-              .setSubscriptionName(subscriptionName)
-              .build();
-
-      FlowControlSettings flowControlSettings =
-          FlowControlSettings.builder()
-              // Set outstanding bytes to 10 MiB per partition.
-              .setBytesOutstanding(10 * 1024 * 1024L)
-              .setMessagesOutstanding(Long.MAX_VALUE)
-              .build();
-
-      List<Partition> partitions = new ArrayList<>();
-      for (Integer num : PARTITION_NOS) {
-        partitions.add(Partition.of(num));
-      }
-
-      MessageReceiver receiver =
-          new MessageReceiver() {
-            @Override
-            public void receiveMessage(PubsubMessage message, AckReplyConsumer consumer) {
-              System.out.println("Id : " + message.getMessageId());
-              System.out.println("Data : " + message.getData().toStringUtf8());
-              consumer.ack();
-            }
-          };
-
-      SubscriberSettings subscriberSettings =
-          SubscriberSettings.newBuilder()
-              .setSubscriptionPath(subscriptionPath)
-              .setPerPartitionFlowControlSettings(flowControlSettings)
-              .setPartitions(partitions)
-              .setReceiver(receiver)
-              .build();
-
-      Subscriber subscriber = Subscriber.create(subscriberSettings);
-
-      // Start the subscriber. Upon successful starting, its state will become RUNNING.
-      subscriber.startAsync().awaitRunning();
-
-      System.out.println("Listening to messages on " + subscriptionPath.value() + " ...");
-
-      try {
-        System.out.println(subscriber.state());
-        // Wait 30 seconds for the subscriber to reach TERMINATED state. If it encounters
-        // unrecoverable errors before then, its state will change to FAILED and
-        // an IllegalStateException will be thrown.
-        subscriber.awaitTerminated(30, TimeUnit.SECONDS);
-      } catch (TimeoutException t) {
-        // Shut down the subscriber. This will change the state of the
-        // subscriber to TERMINATED.
-        subscriber.stopAsync();
-        System.out.println(subscriber.state());
-      }
-
-    } catch (Throwable t) {
-      System.out.println("Error in subscribing to messages: " + t);
+      System.out.println(subscriber.state());
+      // Wait 30 seconds for the subscriber to reach TERMINATED state. If it encounters
+      // unrecoverable errors before then, its state will change to FAILED and
+      // an IllegalStateException will be thrown.
+      subscriber.awaitTerminated(30, TimeUnit.SECONDS);
+    } catch (TimeoutException t) {
+      // Shut down the subscriber. This will change the state of the
+      // subscriber to TERMINATED.
+      subscriber.stopAsync();
+      System.out.println(subscriber.state());
     }
   }
 }

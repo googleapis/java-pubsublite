@@ -247,6 +247,10 @@ public class PublisherImplTest {
         .when(mockPublisherFactory)
         .New(any(), any(), eq(INITIAL_PUBLISH_REQUEST));
     leakedOffsetStream.onError(Status.UNKNOWN.asRuntimeException());
+
+    // wait for retry to complete
+    Thread.sleep(500);
+
     verify(mockBatchPublisher).close();
     verifyNoMoreInteractions(mockBatchPublisher);
     verify(mockPublisherFactory, times(2)).New(any(), any(), eq(INITIAL_PUBLISH_REQUEST));

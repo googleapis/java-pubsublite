@@ -50,7 +50,7 @@
       <dependency>
         <groupId>com.google.cloud</groupId>
         <artifactId>libraries-bom</artifactId>
-        <version>0.1.0</version>
+        <version>5.3.0</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
@@ -65,13 +65,13 @@
     <dependency>
       <groupId>com.google.cloud</groupId>
       <artifactId>google-cloud-pubsublite</artifactId>
-      <version>0.1.0</version><!--    TODO: remove after release    -->
+      <version>0.0.1-SNAPSHOT</version><!--    TODO: remove after release    -->
     </dependency>
     <!-- A logging dependency used by the underlying library  -->
     <dependency>
       <groupId>com.google.flogger</groupId>
       <artifactId>flogger-system-backend</artifactId>
-      <version>0.1.0</version>
+      <version>0.5.1</version>
       <scope>runtime</scope>
     </dependency>
     <!-- [END pubsublite_java_dependencies] -->
@@ -86,7 +86,7 @@
     <dependency>
       <groupId>com.google.truth</groupId>
       <artifactId>truth</artifactId>
-      <version>0.1.0</version>
+      <version>1.0.1</version>
       <scope>test</scope>
     </dependency>
   </dependencies>

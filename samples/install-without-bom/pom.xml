@@ -46,12 +46,12 @@
     <dependency>
       <groupId>com.google.cloud</groupId>
       <artifactId>google-cloud-pubsublite</artifactId>
-      <version>0.0.1-SNAPSHOT</version>
+      <version>0.1.0</version>
     </dependency>
     <dependency>
       <groupId>com.google.cloud</groupId>
       <artifactId>google-cloud-pubsub</artifactId>
-      <version>1.105.0</version>
+      <version>0.1.0</version>
     </dependency>
     <!-- [END pubsublite_install_without_bom] -->
 
@@ -59,7 +59,7 @@
     <dependency>
       <groupId>com.google.flogger</groupId>
       <artifactId>flogger-system-backend</artifactId>
-      <version>0.5.1</version>
+      <version>0.1.0</version>
       <scope>runtime</scope>
     </dependency>
 
@@ -72,7 +72,7 @@
     <dependency>
       <groupId>com.google.truth</groupId>
       <artifactId>truth</artifactId>
-      <version>1.0.1</version>
+      <version>0.1.0</version>
       <scope>test</scope>
     </dependency>
   </dependencies>

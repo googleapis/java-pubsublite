@@ -3,13 +3,13 @@
   <parent>
     <groupId>com.google.cloud</groupId>
     <artifactId>google-cloud-pubsublite-parent</artifactId>
-    <version>0.0.1-SNAPSHOT</version><!-- {x-version-update:google-cloud-pubsublite:current} -->
+    <version>0.1.0</version><!-- {x-version-update:google-cloud-pubsublite:current} -->
     <relativePath>../pom.xml</relativePath>
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.google.cloud</groupId>
   <artifactId>google-cloud-pubsublite</artifactId>
-  <version>0.0.1-SNAPSHOT</version><!-- {x-version-update:google-cloud-pubsublite:current} -->
+  <version>0.1.0</version><!-- {x-version-update:google-cloud-pubsublite:current} -->
   <packaging>jar</packaging>
   <name>Google Cloud Pub/Sub Lite</name>
   <url>https://github.com/googleapis/java-pubsublite</url>
@@ -35,12 +35,12 @@
     <dependency>
       <groupId>com.google.api.grpc</groupId>
       <artifactId>proto-google-cloud-pubsublite-v1</artifactId>
-      <version>0.0.1-SNAPSHOT</version><!-- {x-version-update:google-cloud-pubsublite:current} -->
+      <version>0.1.0</version><!-- {x-version-update:google-cloud-pubsublite:current} -->
     </dependency>
     <dependency>
       <groupId>com.google.api.grpc</groupId>
       <artifactId>grpc-google-cloud-pubsublite-v1</artifactId>
-      <version>0.0.1-SNAPSHOT</version><!-- {x-version-update:google-cloud-pubsublite:current} -->
+      <version>0.1.0</version><!-- {x-version-update:google-cloud-pubsublite:current} -->
     </dependency>
     <dependency>
       <groupId>com.google.flogger</groupId>

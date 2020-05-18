@@ -40,7 +40,6 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
 
-  <!-- {x-version-update-start:google-cloud-pubsublite:released} -->
   <dependencies>
     <!-- [START pubsublite_install_without_bom] -->
     <dependency>
@@ -76,7 +75,6 @@
       <scope>test</scope>
     </dependency>
   </dependencies>
-  <!-- {x-version-update-end} -->
 
   <!-- compile and run all snippet tests -->
   <build>

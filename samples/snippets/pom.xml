@@ -42,7 +42,6 @@
 
   <!-- [START pubsublite_install_with_bom] -->
   <!-- [START pubsublite_java_dependencies] -->
-  <!-- {x-version-update-start:google-cloud-pubsublite:released} -->
   <!--  Using libraries-bom to manage versions.
   See https://github.com/GoogleCloudPlatform/cloud-opensource-java/wiki/The-Google-Cloud-Platform-Libraries-BOM -->
   <dependencyManagement>
@@ -90,7 +89,6 @@
       <scope>test</scope>
     </dependency>
   </dependencies>
-  <!-- {x-version-update-end} -->
 
   <build>
     <plugins>

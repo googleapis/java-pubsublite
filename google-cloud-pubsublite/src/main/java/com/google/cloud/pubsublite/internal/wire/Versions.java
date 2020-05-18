@@ -16,10 +16,42 @@
 
 package com.google.cloud.pubsublite.internal.wire;
 
-/** The version number of this library. Should be updated whenever the version is updated. */
+import com.google.api.gax.core.GaxProperties;
+
+/** The version number of this library.*/
 final class Versions {
   private Versions() {}
 
-  static final int MAJOR_VERSION = 0;
-  static final int MINOR_VERSION = 0;
+  private static String[] GetVersionSplits() {
+    try {
+      String versionString = GaxProperties.getLibraryVersion(Versions.class);
+      return versionString.split(".");
+    } catch (Exception e) {
+      return new String[0];
+    }
+  }
+
+  private static int GetMajorVersion() {
+    String[] splits = GetVersionSplits();
+    if (splits.length != 3) return 0;
+    try {
+      return Integer.parseInt(splits[0]);
+    } catch (NumberFormatException e) {
+      return 0;
+    }
+  }
+
+  private static int GetMinorVersion() {
+    String[] splits = GetVersionSplits();
+    if (splits.length != 3) return 0;
+    try {
+      return Integer.parseInt(splits[1]);
+    } catch (NumberFormatException e) {
+      return 0;
+    }
+  }
+
+  // TODO: Do this using generation automation as opposed to maven packaging.
+  static final int MAJOR_VERSION = GetMajorVersion();
+  static final int MINOR_VERSION = GetMinorVersion();
 }

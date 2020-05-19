@@ -2,6 +2,11 @@
 
 Java idiomatic client for Google Pub/Sub Lite.
 
+# Disclaimer
+
+This is the client library for an upcoming cloud product to be released shortly. It may not function
+due to restricted visibility for a short period of time, but should function by 5/29.
+
 ## Quickstart
 
 If you are using Maven, add this to your pom.xml file

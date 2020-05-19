@@ -25,7 +25,7 @@ final class Versions {
   private static String[] GetVersionSplits() {
     try {
       String versionString = GaxProperties.getLibraryVersion(Versions.class);
-      return versionString.split(".");
+      return versionString.split("\\.");
     } catch (Exception e) {
       return new String[0];
     }

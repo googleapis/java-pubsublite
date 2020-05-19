@@ -45,8 +45,8 @@ soon.
     ...
     
     PCollection<Message> messages = ...;
-    messages.apply("Write messages", PubsubLiteIO.write(
-        PublisherOptions.newBuilder()
+    messages.apply("Read messages", PubsubLiteIO.read(
+        SubscriberOptions.newBuilder()
             .setSubscriptionPath(SubscriptionPaths.newBuilder()
                 .setZone(CloudZone.parse(ZONE))
                 .setProject(ProjectNumber.of(PROJECT_NUM))

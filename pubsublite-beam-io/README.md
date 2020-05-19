@@ -44,8 +44,8 @@ soon.
     
     ...
     
-    PCollection<Message> messages = ...;
-    messages.apply("Read messages", PubsubLiteIO.read(
+    Pipeline pipeline = ...;
+    PCollection<Message> messages = pipeline.apply("Read messages", PubsubLiteIO.read(
         SubscriberOptions.newBuilder()
             .setSubscriptionPath(SubscriptionPaths.newBuilder()
                 .setZone(CloudZone.parse(ZONE))

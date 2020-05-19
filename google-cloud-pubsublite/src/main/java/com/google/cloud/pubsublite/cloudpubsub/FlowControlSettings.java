@@ -20,11 +20,14 @@ import static com.google.cloud.pubsublite.internal.Preconditions.checkState;
 
 import com.google.auto.value.AutoValue;
 import io.grpc.StatusException;
+import java.io.Serializable;
 
 // Describes limits on bytes and messages outstanding for a single partition Pub/Sub Lite
 // subscriber. These are hard limits enforced by the server.
 @AutoValue
-public abstract class FlowControlSettings {
+public abstract class FlowControlSettings implements Serializable {
+  private static final long serialVersionUID = 982475982347L;
+
   public static Builder builder() {
     return new AutoValue_FlowControlSettings.Builder();
   }

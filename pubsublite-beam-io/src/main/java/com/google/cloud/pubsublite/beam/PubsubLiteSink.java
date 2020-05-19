@@ -34,6 +34,8 @@ import io.grpc.StatusException;
 import java.io.IOException;
 import java.util.ArrayDeque;
 import java.util.Deque;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 import org.apache.beam.sdk.transforms.DoFn;
 
 class PubsubLiteSink extends DoFn<Message, Void> {
@@ -49,6 +51,8 @@ class PubsubLiteSink extends DoFn<Message, Void> {
 
   @GuardedBy("monitor.monitor")
   private transient Deque<StatusException> errorsSinceLastFinish;
+
+  private static final Executor executor = Executors.newCachedThreadPool();
 
   PubsubLiteSink(PublisherOptions options) {
     this.options = options;
@@ -111,8 +115,7 @@ class PubsubLiteSink extends DoFn<Message, Void> {
               errorsSinceLastFinish.push(ExtractStatus.toCanonical(t));
             }
           }
-        },
-        MoreExecutors.directExecutor());
+        }, executor);
   }
 
   // Intentionally don't flush on bundle finish to allow multi-sink client reuse.

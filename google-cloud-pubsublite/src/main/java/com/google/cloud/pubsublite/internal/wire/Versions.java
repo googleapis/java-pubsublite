@@ -18,7 +18,7 @@ package com.google.cloud.pubsublite.internal.wire;
 
 import com.google.api.gax.core.GaxProperties;
 
-/** The version number of this library.*/
+/** The version number of this library. */
 final class Versions {
   private Versions() {}
 

@@ -17,7 +17,6 @@
 package com.google.cloud.pubsublite.internal.wire;
 
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
-import static java.util.concurrent.TimeUnit.SECONDS;
 
 import com.google.api.core.AbstractApiService;
 import com.google.cloud.pubsublite.ErrorCodes;

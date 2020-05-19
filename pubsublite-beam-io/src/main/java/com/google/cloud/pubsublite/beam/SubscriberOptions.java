@@ -29,11 +29,11 @@ import com.google.cloud.pubsublite.internal.wire.SubscriberBuilder;
 import com.google.cloud.pubsublite.internal.wire.SubscriberFactory;
 import com.google.cloud.pubsublite.proto.CursorServiceGrpc.CursorServiceStub;
 import com.google.cloud.pubsublite.proto.SubscriberServiceGrpc.SubscriberServiceStub;
+import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import io.grpc.StatusException;
 import java.io.Serializable;
-import java.util.Optional;
 
 @AutoValue
 public abstract class SubscriberOptions implements Serializable {
@@ -82,7 +82,7 @@ public abstract class SubscriberOptions implements Serializable {
       factories.put(
           partition,
           subscriberFactory()
-              .orElse(
+              .or(
                   consumer -> {
                     SubscriberBuilder.Builder builder = SubscriberBuilder.newBuilder();
                     builder.setMessageConsumer(consumer);

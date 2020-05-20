@@ -3,11 +3,14 @@
 
 package com.google.cloud.pubsublite.proto;
 
-public interface TopicOrBuilder extends
+public interface TopicOrBuilder
+    extends
     // @@protoc_insertion_point(interface_extends:google.cloud.pubsublite.v1.Topic)
     com.google.protobuf.MessageOrBuilder {
 
   /**
+   *
+   *
    * <pre>
    * The name of the topic.
    * Structured like:
@@ -15,10 +18,13 @@ public interface TopicOrBuilder extends
    * </pre>
    *
    * <code>string name = 1;</code>
+   *
    * @return The name.
    */
   java.lang.String getName();
   /**
+   *
+   *
    * <pre>
    * The name of the topic.
    * Structured like:
@@ -26,30 +32,38 @@ public interface TopicOrBuilder extends
    * </pre>
    *
    * <code>string name = 1;</code>
+   *
    * @return The bytes for name.
    */
-  com.google.protobuf.ByteString
-      getNameBytes();
+  com.google.protobuf.ByteString getNameBytes();
 
   /**
+   *
+   *
    * <pre>
    * The settings for this topic's partitions.
    * </pre>
    *
    * <code>.google.cloud.pubsublite.v1.Topic.PartitionConfig partition_config = 2;</code>
+   *
    * @return Whether the partitionConfig field is set.
    */
   boolean hasPartitionConfig();
   /**
+   *
+   *
    * <pre>
    * The settings for this topic's partitions.
    * </pre>
    *
    * <code>.google.cloud.pubsublite.v1.Topic.PartitionConfig partition_config = 2;</code>
+   *
    * @return The partitionConfig.
    */
   com.google.cloud.pubsublite.proto.Topic.PartitionConfig getPartitionConfig();
   /**
+   *
+   *
    * <pre>
    * The settings for this topic's partitions.
    * </pre>
@@ -59,24 +73,32 @@ public interface TopicOrBuilder extends
   com.google.cloud.pubsublite.proto.Topic.PartitionConfigOrBuilder getPartitionConfigOrBuilder();
 
   /**
+   *
+   *
    * <pre>
    * The settings for this topic's message retention.
    * </pre>
    *
    * <code>.google.cloud.pubsublite.v1.Topic.RetentionConfig retention_config = 3;</code>
+   *
    * @return Whether the retentionConfig field is set.
    */
   boolean hasRetentionConfig();
   /**
+   *
+   *
    * <pre>
    * The settings for this topic's message retention.
    * </pre>
    *
    * <code>.google.cloud.pubsublite.v1.Topic.RetentionConfig retention_config = 3;</code>
+   *
    * @return The retentionConfig.
    */
   com.google.cloud.pubsublite.proto.Topic.RetentionConfig getRetentionConfig();
   /**
+   *
+   *
    * <pre>
    * The settings for this topic's message retention.
    * </pre>

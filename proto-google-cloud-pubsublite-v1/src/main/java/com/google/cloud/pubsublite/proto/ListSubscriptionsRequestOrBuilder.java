@@ -3,33 +3,45 @@
 
 package com.google.cloud.pubsublite.proto;
 
-public interface ListSubscriptionsRequestOrBuilder extends
+public interface ListSubscriptionsRequestOrBuilder
+    extends
     // @@protoc_insertion_point(interface_extends:google.cloud.pubsublite.v1.ListSubscriptionsRequest)
     com.google.protobuf.MessageOrBuilder {
 
   /**
+   *
+   *
    * <pre>
    * The parent whose subscriptions are to be listed.
    * Structured like `projects/{project_number}/locations/{location}`.
    * </pre>
    *
-   * <code>string parent = 1 [(.google.api.field_behavior) = REQUIRED, (.google.api.resource_reference) = { ... }</code>
+   * <code>
+   * string parent = 1 [(.google.api.field_behavior) = REQUIRED, (.google.api.resource_reference) = { ... }
+   * </code>
+   *
    * @return The parent.
    */
   java.lang.String getParent();
   /**
+   *
+   *
    * <pre>
    * The parent whose subscriptions are to be listed.
    * Structured like `projects/{project_number}/locations/{location}`.
    * </pre>
    *
-   * <code>string parent = 1 [(.google.api.field_behavior) = REQUIRED, (.google.api.resource_reference) = { ... }</code>
+   * <code>
+   * string parent = 1 [(.google.api.field_behavior) = REQUIRED, (.google.api.resource_reference) = { ... }
+   * </code>
+   *
    * @return The bytes for parent.
    */
-  com.google.protobuf.ByteString
-      getParentBytes();
+  com.google.protobuf.ByteString getParentBytes();
 
   /**
+   *
+   *
    * <pre>
    * The maximum number of subscriptions to return. The service may return fewer
    * than this value.
@@ -37,11 +49,14 @@ public interface ListSubscriptionsRequestOrBuilder extends
    * </pre>
    *
    * <code>int32 page_size = 2;</code>
+   *
    * @return The pageSize.
    */
   int getPageSize();
 
   /**
+   *
+   *
    * <pre>
    * A page token, received from a previous `ListSubscriptions` call.
    * Provide this to retrieve the subsequent page.
@@ -50,10 +65,13 @@ public interface ListSubscriptionsRequestOrBuilder extends
    * </pre>
    *
    * <code>string page_token = 3;</code>
+   *
    * @return The pageToken.
    */
   java.lang.String getPageToken();
   /**
+   *
+   *
    * <pre>
    * A page token, received from a previous `ListSubscriptions` call.
    * Provide this to retrieve the subsequent page.
@@ -62,8 +80,8 @@ public interface ListSubscriptionsRequestOrBuilder extends
    * </pre>
    *
    * <code>string page_token = 3;</code>
+   *
    * @return The bytes for pageToken.
    */
-  com.google.protobuf.ByteString
-      getPageTokenBytes();
+  com.google.protobuf.ByteString getPageTokenBytes();
 }

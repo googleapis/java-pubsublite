@@ -3,29 +3,38 @@
 
 package com.google.cloud.pubsublite.proto;
 
-public interface PublishResponseOrBuilder extends
+public interface PublishResponseOrBuilder
+    extends
     // @@protoc_insertion_point(interface_extends:google.cloud.pubsublite.v1.PublishResponse)
     com.google.protobuf.MessageOrBuilder {
 
   /**
+   *
+   *
    * <pre>
    * Initial response on the stream.
    * </pre>
    *
    * <code>.google.cloud.pubsublite.v1.InitialPublishResponse initial_response = 1;</code>
+   *
    * @return Whether the initialResponse field is set.
    */
   boolean hasInitialResponse();
   /**
+   *
+   *
    * <pre>
    * Initial response on the stream.
    * </pre>
    *
    * <code>.google.cloud.pubsublite.v1.InitialPublishResponse initial_response = 1;</code>
+   *
    * @return The initialResponse.
    */
   com.google.cloud.pubsublite.proto.InitialPublishResponse getInitialResponse();
   /**
+   *
+   *
    * <pre>
    * Initial response on the stream.
    * </pre>
@@ -35,24 +44,32 @@ public interface PublishResponseOrBuilder extends
   com.google.cloud.pubsublite.proto.InitialPublishResponseOrBuilder getInitialResponseOrBuilder();
 
   /**
+   *
+   *
    * <pre>
    * Response to publishing messages.
    * </pre>
    *
    * <code>.google.cloud.pubsublite.v1.MessagePublishResponse message_response = 2;</code>
+   *
    * @return Whether the messageResponse field is set.
    */
   boolean hasMessageResponse();
   /**
+   *
+   *
    * <pre>
    * Response to publishing messages.
    * </pre>
    *
    * <code>.google.cloud.pubsublite.v1.MessagePublishResponse message_response = 2;</code>
+   *
    * @return The messageResponse.
    */
   com.google.cloud.pubsublite.proto.MessagePublishResponse getMessageResponse();
   /**
+   *
+   *
    * <pre>
    * Response to publishing messages.
    * </pre>

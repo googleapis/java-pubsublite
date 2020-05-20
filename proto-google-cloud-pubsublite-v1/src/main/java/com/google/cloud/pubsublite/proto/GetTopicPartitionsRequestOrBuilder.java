@@ -3,27 +3,37 @@
 
 package com.google.cloud.pubsublite.proto;
 
-public interface GetTopicPartitionsRequestOrBuilder extends
+public interface GetTopicPartitionsRequestOrBuilder
+    extends
     // @@protoc_insertion_point(interface_extends:google.cloud.pubsublite.v1.GetTopicPartitionsRequest)
     com.google.protobuf.MessageOrBuilder {
 
   /**
+   *
+   *
    * <pre>
    * The topic whose partition information to return.
    * </pre>
    *
-   * <code>string name = 1 [(.google.api.field_behavior) = REQUIRED, (.google.api.resource_reference) = { ... }</code>
+   * <code>
+   * string name = 1 [(.google.api.field_behavior) = REQUIRED, (.google.api.resource_reference) = { ... }
+   * </code>
+   *
    * @return The name.
    */
   java.lang.String getName();
   /**
+   *
+   *
    * <pre>
    * The topic whose partition information to return.
    * </pre>
    *
-   * <code>string name = 1 [(.google.api.field_behavior) = REQUIRED, (.google.api.resource_reference) = { ... }</code>
+   * <code>
+   * string name = 1 [(.google.api.field_behavior) = REQUIRED, (.google.api.resource_reference) = { ... }
+   * </code>
+   *
    * @return The bytes for name.
    */
-  com.google.protobuf.ByteString
-      getNameBytes();
+  com.google.protobuf.ByteString getNameBytes();
 }

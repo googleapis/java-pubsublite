@@ -3,11 +3,14 @@
 
 package com.google.cloud.pubsublite.proto;
 
-public interface ListSubscriptionsResponseOrBuilder extends
+public interface ListSubscriptionsResponseOrBuilder
+    extends
     // @@protoc_insertion_point(interface_extends:google.cloud.pubsublite.v1.ListSubscriptionsResponse)
     com.google.protobuf.MessageOrBuilder {
 
   /**
+   *
+   *
    * <pre>
    * The list of subscriptions in the requested parent. The order of the
    * subscriptions is unspecified.
@@ -15,9 +18,10 @@ public interface ListSubscriptionsResponseOrBuilder extends
    *
    * <code>repeated .google.cloud.pubsublite.v1.Subscription subscriptions = 1;</code>
    */
-  java.util.List<com.google.cloud.pubsublite.proto.Subscription> 
-      getSubscriptionsList();
+  java.util.List<com.google.cloud.pubsublite.proto.Subscription> getSubscriptionsList();
   /**
+   *
+   *
    * <pre>
    * The list of subscriptions in the requested parent. The order of the
    * subscriptions is unspecified.
@@ -27,6 +31,8 @@ public interface ListSubscriptionsResponseOrBuilder extends
    */
   com.google.cloud.pubsublite.proto.Subscription getSubscriptions(int index);
   /**
+   *
+   *
    * <pre>
    * The list of subscriptions in the requested parent. The order of the
    * subscriptions is unspecified.
@@ -36,6 +42,8 @@ public interface ListSubscriptionsResponseOrBuilder extends
    */
   int getSubscriptionsCount();
   /**
+   *
+   *
    * <pre>
    * The list of subscriptions in the requested parent. The order of the
    * subscriptions is unspecified.
@@ -43,9 +51,11 @@ public interface ListSubscriptionsResponseOrBuilder extends
    *
    * <code>repeated .google.cloud.pubsublite.v1.Subscription subscriptions = 1;</code>
    */
-  java.util.List<? extends com.google.cloud.pubsublite.proto.SubscriptionOrBuilder> 
+  java.util.List<? extends com.google.cloud.pubsublite.proto.SubscriptionOrBuilder>
       getSubscriptionsOrBuilderList();
   /**
+   *
+   *
    * <pre>
    * The list of subscriptions in the requested parent. The order of the
    * subscriptions is unspecified.
@@ -53,28 +63,32 @@ public interface ListSubscriptionsResponseOrBuilder extends
    *
    * <code>repeated .google.cloud.pubsublite.v1.Subscription subscriptions = 1;</code>
    */
-  com.google.cloud.pubsublite.proto.SubscriptionOrBuilder getSubscriptionsOrBuilder(
-      int index);
+  com.google.cloud.pubsublite.proto.SubscriptionOrBuilder getSubscriptionsOrBuilder(int index);
 
   /**
+   *
+   *
    * <pre>
    * A token that can be sent as `page_token` to retrieve the next page of
    * results. If this field is omitted, there are no more results.
    * </pre>
    *
    * <code>string next_page_token = 2;</code>
+   *
    * @return The nextPageToken.
    */
   java.lang.String getNextPageToken();
   /**
+   *
+   *
    * <pre>
    * A token that can be sent as `page_token` to retrieve the next page of
    * results. If this field is omitted, there are no more results.
    * </pre>
    *
    * <code>string next_page_token = 2;</code>
+   *
    * @return The bytes for nextPageToken.
    */
-  com.google.protobuf.ByteString
-      getNextPageTokenBytes();
+  com.google.protobuf.ByteString getNextPageTokenBytes();
 }

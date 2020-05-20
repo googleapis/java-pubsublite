@@ -4,6 +4,8 @@
 package com.google.cloud.pubsublite.proto;
 
 /**
+ *
+ *
  * <pre>
  * Request to update the stream's delivery cursor based on the given target.
  * Resets the server available tokens to 0. SeekRequests may not be sent while
@@ -13,30 +15,29 @@ package com.google.cloud.pubsublite.proto;
  *
  * Protobuf type {@code google.cloud.pubsublite.v1.SeekRequest}
  */
-public  final class SeekRequest extends
-    com.google.protobuf.GeneratedMessageV3 implements
+public final class SeekRequest extends com.google.protobuf.GeneratedMessageV3
+    implements
     // @@protoc_insertion_point(message_implements:google.cloud.pubsublite.v1.SeekRequest)
     SeekRequestOrBuilder {
-private static final long serialVersionUID = 0L;
+  private static final long serialVersionUID = 0L;
   // Use SeekRequest.newBuilder() to construct.
   private SeekRequest(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
     super(builder);
   }
-  private SeekRequest() {
-  }
+
+  private SeekRequest() {}
 
   @java.lang.Override
   @SuppressWarnings({"unused"})
-  protected java.lang.Object newInstance(
-      UnusedPrivateParameter unused) {
+  protected java.lang.Object newInstance(UnusedPrivateParameter unused) {
     return new SeekRequest();
   }
 
   @java.lang.Override
-  public final com.google.protobuf.UnknownFieldSet
-  getUnknownFields() {
+  public final com.google.protobuf.UnknownFieldSet getUnknownFields() {
     return this.unknownFields;
   }
+
   private SeekRequest(
       com.google.protobuf.CodedInputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -55,68 +56,76 @@ private static final long serialVersionUID = 0L;
           case 0:
             done = true;
             break;
-          case 8: {
-            int rawValue = input.readEnum();
-            targetCase_ = 1;
-            target_ = rawValue;
-            break;
-          }
-          case 18: {
-            com.google.cloud.pubsublite.proto.Cursor.Builder subBuilder = null;
-            if (targetCase_ == 2) {
-              subBuilder = ((com.google.cloud.pubsublite.proto.Cursor) target_).toBuilder();
+          case 8:
+            {
+              int rawValue = input.readEnum();
+              targetCase_ = 1;
+              target_ = rawValue;
+              break;
             }
-            target_ =
-                input.readMessage(com.google.cloud.pubsublite.proto.Cursor.parser(), extensionRegistry);
-            if (subBuilder != null) {
-              subBuilder.mergeFrom((com.google.cloud.pubsublite.proto.Cursor) target_);
-              target_ = subBuilder.buildPartial();
+          case 18:
+            {
+              com.google.cloud.pubsublite.proto.Cursor.Builder subBuilder = null;
+              if (targetCase_ == 2) {
+                subBuilder = ((com.google.cloud.pubsublite.proto.Cursor) target_).toBuilder();
+              }
+              target_ =
+                  input.readMessage(
+                      com.google.cloud.pubsublite.proto.Cursor.parser(), extensionRegistry);
+              if (subBuilder != null) {
+                subBuilder.mergeFrom((com.google.cloud.pubsublite.proto.Cursor) target_);
+                target_ = subBuilder.buildPartial();
+              }
+              targetCase_ = 2;
+              break;
             }
-            targetCase_ = 2;
-            break;
-          }
-          default: {
-            if (!parseUnknownField(
-                input, unknownFields, extensionRegistry, tag)) {
-              done = true;
+          default:
+            {
+              if (!parseUnknownField(input, unknownFields, extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
             }
-            break;
-          }
         }
       }
     } catch (com.google.protobuf.InvalidProtocolBufferException e) {
       throw e.setUnfinishedMessage(this);
     } catch (java.io.IOException e) {
-      throw new com.google.protobuf.InvalidProtocolBufferException(
-          e).setUnfinishedMessage(this);
+      throw new com.google.protobuf.InvalidProtocolBufferException(e).setUnfinishedMessage(this);
     } finally {
       this.unknownFields = unknownFields.build();
       makeExtensionsImmutable();
     }
   }
-  public static final com.google.protobuf.Descriptors.Descriptor
-      getDescriptor() {
-    return com.google.cloud.pubsublite.proto.SubscriberProto.internal_static_google_cloud_pubsublite_v1_SeekRequest_descriptor;
+
+  public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
+    return com.google.cloud.pubsublite.proto.SubscriberProto
+        .internal_static_google_cloud_pubsublite_v1_SeekRequest_descriptor;
   }
 
   @java.lang.Override
   protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internalGetFieldAccessorTable() {
-    return com.google.cloud.pubsublite.proto.SubscriberProto.internal_static_google_cloud_pubsublite_v1_SeekRequest_fieldAccessorTable
+    return com.google.cloud.pubsublite.proto.SubscriberProto
+        .internal_static_google_cloud_pubsublite_v1_SeekRequest_fieldAccessorTable
         .ensureFieldAccessorsInitialized(
-            com.google.cloud.pubsublite.proto.SeekRequest.class, com.google.cloud.pubsublite.proto.SeekRequest.Builder.class);
+            com.google.cloud.pubsublite.proto.SeekRequest.class,
+            com.google.cloud.pubsublite.proto.SeekRequest.Builder.class);
   }
 
   /**
+   *
+   *
    * <pre>
    * A special target in the partition that takes no other parameters.
    * </pre>
    *
    * Protobuf enum {@code google.cloud.pubsublite.v1.SeekRequest.NamedTarget}
    */
-  public enum NamedTarget
-      implements com.google.protobuf.ProtocolMessageEnum {
+  public enum NamedTarget implements com.google.protobuf.ProtocolMessageEnum {
     /**
+     *
+     *
      * <pre>
      * Default value. This value is unused.
      * </pre>
@@ -125,6 +134,8 @@ private static final long serialVersionUID = 0L;
      */
     NAMED_TARGET_UNSPECIFIED(0),
     /**
+     *
+     *
      * <pre>
      * A target corresponding to the most recently published message in the
      * partition.
@@ -134,6 +145,8 @@ private static final long serialVersionUID = 0L;
      */
     HEAD(1),
     /**
+     *
+     *
      * <pre>
      * A target corresponding to the committed cursor for the given subscription
      * and topic partition.
@@ -146,6 +159,8 @@ private static final long serialVersionUID = 0L;
     ;
 
     /**
+     *
+     *
      * <pre>
      * Default value. This value is unused.
      * </pre>
@@ -154,6 +169,8 @@ private static final long serialVersionUID = 0L;
      */
     public static final int NAMED_TARGET_UNSPECIFIED_VALUE = 0;
     /**
+     *
+     *
      * <pre>
      * A target corresponding to the most recently published message in the
      * partition.
@@ -163,6 +180,8 @@ private static final long serialVersionUID = 0L;
      */
     public static final int HEAD_VALUE = 1;
     /**
+     *
+     *
      * <pre>
      * A target corresponding to the committed cursor for the given subscription
      * and topic partition.
@@ -171,7 +190,6 @@ private static final long serialVersionUID = 0L;
      * <code>COMMITTED_CURSOR = 2;</code>
      */
     public static final int COMMITTED_CURSOR_VALUE = 2;
-
 
     public final int getNumber() {
       if (this == UNRECOGNIZED) {
@@ -197,45 +215,45 @@ private static final long serialVersionUID = 0L;
      */
     public static NamedTarget forNumber(int value) {
       switch (value) {
-        case 0: return NAMED_TARGET_UNSPECIFIED;
-        case 1: return HEAD;
-        case 2: return COMMITTED_CURSOR;
-        default: return null;
+        case 0:
+          return NAMED_TARGET_UNSPECIFIED;
+        case 1:
+          return HEAD;
+        case 2:
+          return COMMITTED_CURSOR;
+        default:
+          return null;
       }
     }
 
-    public static com.google.protobuf.Internal.EnumLiteMap<NamedTarget>
-        internalGetValueMap() {
+    public static com.google.protobuf.Internal.EnumLiteMap<NamedTarget> internalGetValueMap() {
       return internalValueMap;
     }
-    private static final com.google.protobuf.Internal.EnumLiteMap<
-        NamedTarget> internalValueMap =
-          new com.google.protobuf.Internal.EnumLiteMap<NamedTarget>() {
-            public NamedTarget findValueByNumber(int number) {
-              return NamedTarget.forNumber(number);
-            }
-          };
 
-    public final com.google.protobuf.Descriptors.EnumValueDescriptor
-        getValueDescriptor() {
+    private static final com.google.protobuf.Internal.EnumLiteMap<NamedTarget> internalValueMap =
+        new com.google.protobuf.Internal.EnumLiteMap<NamedTarget>() {
+          public NamedTarget findValueByNumber(int number) {
+            return NamedTarget.forNumber(number);
+          }
+        };
+
+    public final com.google.protobuf.Descriptors.EnumValueDescriptor getValueDescriptor() {
       return getDescriptor().getValues().get(ordinal());
     }
-    public final com.google.protobuf.Descriptors.EnumDescriptor
-        getDescriptorForType() {
+
+    public final com.google.protobuf.Descriptors.EnumDescriptor getDescriptorForType() {
       return getDescriptor();
     }
-    public static final com.google.protobuf.Descriptors.EnumDescriptor
-        getDescriptor() {
+
+    public static final com.google.protobuf.Descriptors.EnumDescriptor getDescriptor() {
       return com.google.cloud.pubsublite.proto.SeekRequest.getDescriptor().getEnumTypes().get(0);
     }
 
     private static final NamedTarget[] VALUES = values();
 
-    public static NamedTarget valueOf(
-        com.google.protobuf.Descriptors.EnumValueDescriptor desc) {
+    public static NamedTarget valueOf(com.google.protobuf.Descriptors.EnumValueDescriptor desc) {
       if (desc.getType() != getDescriptor()) {
-        throw new java.lang.IllegalArgumentException(
-          "EnumValueDescriptor is not for this type.");
+        throw new java.lang.IllegalArgumentException("EnumValueDescriptor is not for this type.");
       }
       if (desc.getIndex() == -1) {
         return UNRECOGNIZED;
@@ -254,13 +272,16 @@ private static final long serialVersionUID = 0L;
 
   private int targetCase_ = 0;
   private java.lang.Object target_;
+
   public enum TargetCase
-      implements com.google.protobuf.Internal.EnumLite,
+      implements
+          com.google.protobuf.Internal.EnumLite,
           com.google.protobuf.AbstractMessage.InternalOneOfEnum {
     NAMED_TARGET(1),
     CURSOR(2),
     TARGET_NOT_SET(0);
     private final int value;
+
     private TargetCase(int value) {
       this.value = value;
     }
@@ -276,30 +297,36 @@ private static final long serialVersionUID = 0L;
 
     public static TargetCase forNumber(int value) {
       switch (value) {
-        case 1: return NAMED_TARGET;
-        case 2: return CURSOR;
-        case 0: return TARGET_NOT_SET;
-        default: return null;
+        case 1:
+          return NAMED_TARGET;
+        case 2:
+          return CURSOR;
+        case 0:
+          return TARGET_NOT_SET;
+        default:
+          return null;
       }
     }
+
     public int getNumber() {
       return this.value;
     }
   };
 
-  public TargetCase
-  getTargetCase() {
-    return TargetCase.forNumber(
-        targetCase_);
+  public TargetCase getTargetCase() {
+    return TargetCase.forNumber(targetCase_);
   }
 
   public static final int NAMED_TARGET_FIELD_NUMBER = 1;
   /**
+   *
+   *
    * <pre>
    * A named target.
    * </pre>
    *
    * <code>.google.cloud.pubsublite.v1.SeekRequest.NamedTarget named_target = 1;</code>
+   *
    * @return The enum numeric value on the wire for namedTarget.
    */
   public int getNamedTargetValue() {
@@ -309,52 +336,66 @@ private static final long serialVersionUID = 0L;
     return 0;
   }
   /**
+   *
+   *
    * <pre>
    * A named target.
    * </pre>
    *
    * <code>.google.cloud.pubsublite.v1.SeekRequest.NamedTarget named_target = 1;</code>
+   *
    * @return The namedTarget.
    */
   public com.google.cloud.pubsublite.proto.SeekRequest.NamedTarget getNamedTarget() {
     if (targetCase_ == 1) {
       @SuppressWarnings("deprecation")
-      com.google.cloud.pubsublite.proto.SeekRequest.NamedTarget result = com.google.cloud.pubsublite.proto.SeekRequest.NamedTarget.valueOf(
-          (java.lang.Integer) target_);
-      return result == null ? com.google.cloud.pubsublite.proto.SeekRequest.NamedTarget.UNRECOGNIZED : result;
+      com.google.cloud.pubsublite.proto.SeekRequest.NamedTarget result =
+          com.google.cloud.pubsublite.proto.SeekRequest.NamedTarget.valueOf(
+              (java.lang.Integer) target_);
+      return result == null
+          ? com.google.cloud.pubsublite.proto.SeekRequest.NamedTarget.UNRECOGNIZED
+          : result;
     }
     return com.google.cloud.pubsublite.proto.SeekRequest.NamedTarget.NAMED_TARGET_UNSPECIFIED;
   }
 
   public static final int CURSOR_FIELD_NUMBER = 2;
   /**
+   *
+   *
    * <pre>
    * A target corresponding to the cursor, pointing to anywhere in the
    * topic partition.
    * </pre>
    *
    * <code>.google.cloud.pubsublite.v1.Cursor cursor = 2;</code>
+   *
    * @return Whether the cursor field is set.
    */
   public boolean hasCursor() {
     return targetCase_ == 2;
   }
   /**
+   *
+   *
    * <pre>
    * A target corresponding to the cursor, pointing to anywhere in the
    * topic partition.
    * </pre>
    *
    * <code>.google.cloud.pubsublite.v1.Cursor cursor = 2;</code>
+   *
    * @return The cursor.
    */
   public com.google.cloud.pubsublite.proto.Cursor getCursor() {
     if (targetCase_ == 2) {
-       return (com.google.cloud.pubsublite.proto.Cursor) target_;
+      return (com.google.cloud.pubsublite.proto.Cursor) target_;
     }
     return com.google.cloud.pubsublite.proto.Cursor.getDefaultInstance();
   }
   /**
+   *
+   *
    * <pre>
    * A target corresponding to the cursor, pointing to anywhere in the
    * topic partition.
@@ -364,12 +405,13 @@ private static final long serialVersionUID = 0L;
    */
   public com.google.cloud.pubsublite.proto.CursorOrBuilder getCursorOrBuilder() {
     if (targetCase_ == 2) {
-       return (com.google.cloud.pubsublite.proto.Cursor) target_;
+      return (com.google.cloud.pubsublite.proto.Cursor) target_;
     }
     return com.google.cloud.pubsublite.proto.Cursor.getDefaultInstance();
   }
 
   private byte memoizedIsInitialized = -1;
+
   @java.lang.Override
   public final boolean isInitialized() {
     byte isInitialized = memoizedIsInitialized;
@@ -381,8 +423,7 @@ private static final long serialVersionUID = 0L;
   }
 
   @java.lang.Override
-  public void writeTo(com.google.protobuf.CodedOutputStream output)
-                      throws java.io.IOException {
+  public void writeTo(com.google.protobuf.CodedOutputStream output) throws java.io.IOException {
     if (targetCase_ == 1) {
       output.writeEnum(1, ((java.lang.Integer) target_));
     }
@@ -399,12 +440,13 @@ private static final long serialVersionUID = 0L;
 
     size = 0;
     if (targetCase_ == 1) {
-      size += com.google.protobuf.CodedOutputStream
-        .computeEnumSize(1, ((java.lang.Integer) target_));
+      size +=
+          com.google.protobuf.CodedOutputStream.computeEnumSize(1, ((java.lang.Integer) target_));
     }
     if (targetCase_ == 2) {
-      size += com.google.protobuf.CodedOutputStream
-        .computeMessageSize(2, (com.google.cloud.pubsublite.proto.Cursor) target_);
+      size +=
+          com.google.protobuf.CodedOutputStream.computeMessageSize(
+              2, (com.google.cloud.pubsublite.proto.Cursor) target_);
     }
     size += unknownFields.getSerializedSize();
     memoizedSize = size;
@@ -414,22 +456,21 @@ private static final long serialVersionUID = 0L;
   @java.lang.Override
   public boolean equals(final java.lang.Object obj) {
     if (obj == this) {
-     return true;
+      return true;
     }
     if (!(obj instanceof com.google.cloud.pubsublite.proto.SeekRequest)) {
       return super.equals(obj);
     }
-    com.google.cloud.pubsublite.proto.SeekRequest other = (com.google.cloud.pubsublite.proto.SeekRequest) obj;
+    com.google.cloud.pubsublite.proto.SeekRequest other =
+        (com.google.cloud.pubsublite.proto.SeekRequest) obj;
 
     if (!getTargetCase().equals(other.getTargetCase())) return false;
     switch (targetCase_) {
       case 1:
-        if (getNamedTargetValue()
-            != other.getNamedTargetValue()) return false;
+        if (getNamedTargetValue() != other.getNamedTargetValue()) return false;
         break;
       case 2:
-        if (!getCursor()
-            .equals(other.getCursor())) return false;
+        if (!getCursor().equals(other.getCursor())) return false;
         break;
       case 0:
       default:
@@ -462,97 +503,104 @@ private static final long serialVersionUID = 0L;
     return hash;
   }
 
-  public static com.google.cloud.pubsublite.proto.SeekRequest parseFrom(
-      java.nio.ByteBuffer data)
+  public static com.google.cloud.pubsublite.proto.SeekRequest parseFrom(java.nio.ByteBuffer data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
+
   public static com.google.cloud.pubsublite.proto.SeekRequest parseFrom(
-      java.nio.ByteBuffer data,
-      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+      java.nio.ByteBuffer data, com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
+
   public static com.google.cloud.pubsublite.proto.SeekRequest parseFrom(
       com.google.protobuf.ByteString data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
+
   public static com.google.cloud.pubsublite.proto.SeekRequest parseFrom(
       com.google.protobuf.ByteString data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
+
   public static com.google.cloud.pubsublite.proto.SeekRequest parseFrom(byte[] data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
+
   public static com.google.cloud.pubsublite.proto.SeekRequest parseFrom(
-      byte[] data,
-      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+      byte[] data, com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
+
   public static com.google.cloud.pubsublite.proto.SeekRequest parseFrom(java.io.InputStream input)
       throws java.io.IOException {
-    return com.google.protobuf.GeneratedMessageV3
-        .parseWithIOException(PARSER, input);
+    return com.google.protobuf.GeneratedMessageV3.parseWithIOException(PARSER, input);
   }
+
   public static com.google.cloud.pubsublite.proto.SeekRequest parseFrom(
-      java.io.InputStream input,
-      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+      java.io.InputStream input, com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
-    return com.google.protobuf.GeneratedMessageV3
-        .parseWithIOException(PARSER, input, extensionRegistry);
+    return com.google.protobuf.GeneratedMessageV3.parseWithIOException(
+        PARSER, input, extensionRegistry);
   }
-  public static com.google.cloud.pubsublite.proto.SeekRequest parseDelimitedFrom(java.io.InputStream input)
-      throws java.io.IOException {
-    return com.google.protobuf.GeneratedMessageV3
-        .parseDelimitedWithIOException(PARSER, input);
-  }
+
   public static com.google.cloud.pubsublite.proto.SeekRequest parseDelimitedFrom(
-      java.io.InputStream input,
-      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-      throws java.io.IOException {
-    return com.google.protobuf.GeneratedMessageV3
-        .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+      java.io.InputStream input) throws java.io.IOException {
+    return com.google.protobuf.GeneratedMessageV3.parseDelimitedWithIOException(PARSER, input);
   }
+
+  public static com.google.cloud.pubsublite.proto.SeekRequest parseDelimitedFrom(
+      java.io.InputStream input, com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+      throws java.io.IOException {
+    return com.google.protobuf.GeneratedMessageV3.parseDelimitedWithIOException(
+        PARSER, input, extensionRegistry);
+  }
+
   public static com.google.cloud.pubsublite.proto.SeekRequest parseFrom(
-      com.google.protobuf.CodedInputStream input)
-      throws java.io.IOException {
-    return com.google.protobuf.GeneratedMessageV3
-        .parseWithIOException(PARSER, input);
+      com.google.protobuf.CodedInputStream input) throws java.io.IOException {
+    return com.google.protobuf.GeneratedMessageV3.parseWithIOException(PARSER, input);
   }
+
   public static com.google.cloud.pubsublite.proto.SeekRequest parseFrom(
       com.google.protobuf.CodedInputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
-    return com.google.protobuf.GeneratedMessageV3
-        .parseWithIOException(PARSER, input, extensionRegistry);
+    return com.google.protobuf.GeneratedMessageV3.parseWithIOException(
+        PARSER, input, extensionRegistry);
   }
 
   @java.lang.Override
-  public Builder newBuilderForType() { return newBuilder(); }
+  public Builder newBuilderForType() {
+    return newBuilder();
+  }
+
   public static Builder newBuilder() {
     return DEFAULT_INSTANCE.toBuilder();
   }
+
   public static Builder newBuilder(com.google.cloud.pubsublite.proto.SeekRequest prototype) {
     return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
   }
+
   @java.lang.Override
   public Builder toBuilder() {
-    return this == DEFAULT_INSTANCE
-        ? new Builder() : new Builder().mergeFrom(this);
+    return this == DEFAULT_INSTANCE ? new Builder() : new Builder().mergeFrom(this);
   }
 
   @java.lang.Override
-  protected Builder newBuilderForType(
-      com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+  protected Builder newBuilderForType(com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
     Builder builder = new Builder(parent);
     return builder;
   }
   /**
+   *
+   *
    * <pre>
    * Request to update the stream's delivery cursor based on the given target.
    * Resets the server available tokens to 0. SeekRequests may not be sent while
@@ -562,21 +610,23 @@ private static final long serialVersionUID = 0L;
    *
    * Protobuf type {@code google.cloud.pubsublite.v1.SeekRequest}
    */
-  public static final class Builder extends
-      com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+  public static final class Builder extends com.google.protobuf.GeneratedMessageV3.Builder<Builder>
+      implements
       // @@protoc_insertion_point(builder_implements:google.cloud.pubsublite.v1.SeekRequest)
       com.google.cloud.pubsublite.proto.SeekRequestOrBuilder {
-    public static final com.google.protobuf.Descriptors.Descriptor
-        getDescriptor() {
-      return com.google.cloud.pubsublite.proto.SubscriberProto.internal_static_google_cloud_pubsublite_v1_SeekRequest_descriptor;
+    public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
+      return com.google.cloud.pubsublite.proto.SubscriberProto
+          .internal_static_google_cloud_pubsublite_v1_SeekRequest_descriptor;
     }
 
     @java.lang.Override
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return com.google.cloud.pubsublite.proto.SubscriberProto.internal_static_google_cloud_pubsublite_v1_SeekRequest_fieldAccessorTable
+      return com.google.cloud.pubsublite.proto.SubscriberProto
+          .internal_static_google_cloud_pubsublite_v1_SeekRequest_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              com.google.cloud.pubsublite.proto.SeekRequest.class, com.google.cloud.pubsublite.proto.SeekRequest.Builder.class);
+              com.google.cloud.pubsublite.proto.SeekRequest.class,
+              com.google.cloud.pubsublite.proto.SeekRequest.Builder.class);
     }
 
     // Construct using com.google.cloud.pubsublite.proto.SeekRequest.newBuilder()
@@ -584,16 +634,15 @@ private static final long serialVersionUID = 0L;
       maybeForceBuilderInitialization();
     }
 
-    private Builder(
-        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+    private Builder(com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
       super(parent);
       maybeForceBuilderInitialization();
     }
+
     private void maybeForceBuilderInitialization() {
-      if (com.google.protobuf.GeneratedMessageV3
-              .alwaysUseFieldBuilders) {
-      }
+      if (com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders) {}
     }
+
     @java.lang.Override
     public Builder clear() {
       super.clear();
@@ -603,9 +652,9 @@ private static final long serialVersionUID = 0L;
     }
 
     @java.lang.Override
-    public com.google.protobuf.Descriptors.Descriptor
-        getDescriptorForType() {
-      return com.google.cloud.pubsublite.proto.SubscriberProto.internal_static_google_cloud_pubsublite_v1_SeekRequest_descriptor;
+    public com.google.protobuf.Descriptors.Descriptor getDescriptorForType() {
+      return com.google.cloud.pubsublite.proto.SubscriberProto
+          .internal_static_google_cloud_pubsublite_v1_SeekRequest_descriptor;
     }
 
     @java.lang.Override
@@ -624,7 +673,8 @@ private static final long serialVersionUID = 0L;
 
     @java.lang.Override
     public com.google.cloud.pubsublite.proto.SeekRequest buildPartial() {
-      com.google.cloud.pubsublite.proto.SeekRequest result = new com.google.cloud.pubsublite.proto.SeekRequest(this);
+      com.google.cloud.pubsublite.proto.SeekRequest result =
+          new com.google.cloud.pubsublite.proto.SeekRequest(this);
       if (targetCase_ == 1) {
         result.target_ = target_;
       }
@@ -644,38 +694,39 @@ private static final long serialVersionUID = 0L;
     public Builder clone() {
       return super.clone();
     }
+
     @java.lang.Override
     public Builder setField(
-        com.google.protobuf.Descriptors.FieldDescriptor field,
-        java.lang.Object value) {
+        com.google.protobuf.Descriptors.FieldDescriptor field, java.lang.Object value) {
       return super.setField(field, value);
     }
+
     @java.lang.Override
-    public Builder clearField(
-        com.google.protobuf.Descriptors.FieldDescriptor field) {
+    public Builder clearField(com.google.protobuf.Descriptors.FieldDescriptor field) {
       return super.clearField(field);
     }
+
     @java.lang.Override
-    public Builder clearOneof(
-        com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+    public Builder clearOneof(com.google.protobuf.Descriptors.OneofDescriptor oneof) {
       return super.clearOneof(oneof);
     }
+
     @java.lang.Override
     public Builder setRepeatedField(
-        com.google.protobuf.Descriptors.FieldDescriptor field,
-        int index, java.lang.Object value) {
+        com.google.protobuf.Descriptors.FieldDescriptor field, int index, java.lang.Object value) {
       return super.setRepeatedField(field, index, value);
     }
+
     @java.lang.Override
     public Builder addRepeatedField(
-        com.google.protobuf.Descriptors.FieldDescriptor field,
-        java.lang.Object value) {
+        com.google.protobuf.Descriptors.FieldDescriptor field, java.lang.Object value) {
       return super.addRepeatedField(field, value);
     }
+
     @java.lang.Override
     public Builder mergeFrom(com.google.protobuf.Message other) {
       if (other instanceof com.google.cloud.pubsublite.proto.SeekRequest) {
-        return mergeFrom((com.google.cloud.pubsublite.proto.SeekRequest)other);
+        return mergeFrom((com.google.cloud.pubsublite.proto.SeekRequest) other);
       } else {
         super.mergeFrom(other);
         return this;
@@ -685,17 +736,20 @@ private static final long serialVersionUID = 0L;
     public Builder mergeFrom(com.google.cloud.pubsublite.proto.SeekRequest other) {
       if (other == com.google.cloud.pubsublite.proto.SeekRequest.getDefaultInstance()) return this;
       switch (other.getTargetCase()) {
-        case NAMED_TARGET: {
-          setNamedTargetValue(other.getNamedTargetValue());
-          break;
-        }
-        case CURSOR: {
-          mergeCursor(other.getCursor());
-          break;
-        }
-        case TARGET_NOT_SET: {
-          break;
-        }
+        case NAMED_TARGET:
+          {
+            setNamedTargetValue(other.getNamedTargetValue());
+            break;
+          }
+        case CURSOR:
+          {
+            mergeCursor(other.getCursor());
+            break;
+          }
+        case TARGET_NOT_SET:
+          {
+            break;
+          }
       }
       this.mergeUnknownFields(other.unknownFields);
       onChanged();
@@ -725,12 +779,12 @@ private static final long serialVersionUID = 0L;
       }
       return this;
     }
+
     private int targetCase_ = 0;
     private java.lang.Object target_;
-    public TargetCase
-        getTargetCase() {
-      return TargetCase.forNumber(
-          targetCase_);
+
+    public TargetCase getTargetCase() {
+      return TargetCase.forNumber(targetCase_);
     }
 
     public Builder clearTarget() {
@@ -740,13 +794,15 @@ private static final long serialVersionUID = 0L;
       return this;
     }
 
-
     /**
+     *
+     *
      * <pre>
      * A named target.
      * </pre>
      *
      * <code>.google.cloud.pubsublite.v1.SeekRequest.NamedTarget named_target = 1;</code>
+     *
      * @return The enum numeric value on the wire for namedTarget.
      */
     public int getNamedTargetValue() {
@@ -756,11 +812,14 @@ private static final long serialVersionUID = 0L;
       return 0;
     }
     /**
+     *
+     *
      * <pre>
      * A named target.
      * </pre>
      *
      * <code>.google.cloud.pubsublite.v1.SeekRequest.NamedTarget named_target = 1;</code>
+     *
      * @param value The enum numeric value on the wire for namedTarget to set.
      * @return This builder for chaining.
      */
@@ -771,28 +830,37 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
+     *
+     *
      * <pre>
      * A named target.
      * </pre>
      *
      * <code>.google.cloud.pubsublite.v1.SeekRequest.NamedTarget named_target = 1;</code>
+     *
      * @return The namedTarget.
      */
     public com.google.cloud.pubsublite.proto.SeekRequest.NamedTarget getNamedTarget() {
       if (targetCase_ == 1) {
         @SuppressWarnings("deprecation")
-        com.google.cloud.pubsublite.proto.SeekRequest.NamedTarget result = com.google.cloud.pubsublite.proto.SeekRequest.NamedTarget.valueOf(
-            (java.lang.Integer) target_);
-        return result == null ? com.google.cloud.pubsublite.proto.SeekRequest.NamedTarget.UNRECOGNIZED : result;
+        com.google.cloud.pubsublite.proto.SeekRequest.NamedTarget result =
+            com.google.cloud.pubsublite.proto.SeekRequest.NamedTarget.valueOf(
+                (java.lang.Integer) target_);
+        return result == null
+            ? com.google.cloud.pubsublite.proto.SeekRequest.NamedTarget.UNRECOGNIZED
+            : result;
       }
       return com.google.cloud.pubsublite.proto.SeekRequest.NamedTarget.NAMED_TARGET_UNSPECIFIED;
     }
     /**
+     *
+     *
      * <pre>
      * A named target.
      * </pre>
      *
      * <code>.google.cloud.pubsublite.v1.SeekRequest.NamedTarget named_target = 1;</code>
+     *
      * @param value The namedTarget to set.
      * @return This builder for chaining.
      */
@@ -806,11 +874,14 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
+     *
+     *
      * <pre>
      * A named target.
      * </pre>
      *
      * <code>.google.cloud.pubsublite.v1.SeekRequest.NamedTarget named_target = 1;</code>
+     *
      * @return This builder for chaining.
      */
     public Builder clearNamedTarget() {
@@ -823,26 +894,35 @@ private static final long serialVersionUID = 0L;
     }
 
     private com.google.protobuf.SingleFieldBuilderV3<
-        com.google.cloud.pubsublite.proto.Cursor, com.google.cloud.pubsublite.proto.Cursor.Builder, com.google.cloud.pubsublite.proto.CursorOrBuilder> cursorBuilder_;
+            com.google.cloud.pubsublite.proto.Cursor,
+            com.google.cloud.pubsublite.proto.Cursor.Builder,
+            com.google.cloud.pubsublite.proto.CursorOrBuilder>
+        cursorBuilder_;
     /**
+     *
+     *
      * <pre>
      * A target corresponding to the cursor, pointing to anywhere in the
      * topic partition.
      * </pre>
      *
      * <code>.google.cloud.pubsublite.v1.Cursor cursor = 2;</code>
+     *
      * @return Whether the cursor field is set.
      */
     public boolean hasCursor() {
       return targetCase_ == 2;
     }
     /**
+     *
+     *
      * <pre>
      * A target corresponding to the cursor, pointing to anywhere in the
      * topic partition.
      * </pre>
      *
      * <code>.google.cloud.pubsublite.v1.Cursor cursor = 2;</code>
+     *
      * @return The cursor.
      */
     public com.google.cloud.pubsublite.proto.Cursor getCursor() {
@@ -859,6 +939,8 @@ private static final long serialVersionUID = 0L;
       }
     }
     /**
+     *
+     *
      * <pre>
      * A target corresponding to the cursor, pointing to anywhere in the
      * topic partition.
@@ -880,6 +962,8 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
+     *
+     *
      * <pre>
      * A target corresponding to the cursor, pointing to anywhere in the
      * topic partition.
@@ -887,8 +971,7 @@ private static final long serialVersionUID = 0L;
      *
      * <code>.google.cloud.pubsublite.v1.Cursor cursor = 2;</code>
      */
-    public Builder setCursor(
-        com.google.cloud.pubsublite.proto.Cursor.Builder builderForValue) {
+    public Builder setCursor(com.google.cloud.pubsublite.proto.Cursor.Builder builderForValue) {
       if (cursorBuilder_ == null) {
         target_ = builderForValue.build();
         onChanged();
@@ -899,6 +982,8 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
+     *
+     *
      * <pre>
      * A target corresponding to the cursor, pointing to anywhere in the
      * topic partition.
@@ -908,10 +993,13 @@ private static final long serialVersionUID = 0L;
      */
     public Builder mergeCursor(com.google.cloud.pubsublite.proto.Cursor value) {
       if (cursorBuilder_ == null) {
-        if (targetCase_ == 2 &&
-            target_ != com.google.cloud.pubsublite.proto.Cursor.getDefaultInstance()) {
-          target_ = com.google.cloud.pubsublite.proto.Cursor.newBuilder((com.google.cloud.pubsublite.proto.Cursor) target_)
-              .mergeFrom(value).buildPartial();
+        if (targetCase_ == 2
+            && target_ != com.google.cloud.pubsublite.proto.Cursor.getDefaultInstance()) {
+          target_ =
+              com.google.cloud.pubsublite.proto.Cursor.newBuilder(
+                      (com.google.cloud.pubsublite.proto.Cursor) target_)
+                  .mergeFrom(value)
+                  .buildPartial();
         } else {
           target_ = value;
         }
@@ -926,6 +1014,8 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
+     *
+     *
      * <pre>
      * A target corresponding to the cursor, pointing to anywhere in the
      * topic partition.
@@ -950,6 +1040,8 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
+     *
+     *
      * <pre>
      * A target corresponding to the cursor, pointing to anywhere in the
      * topic partition.
@@ -961,6 +1053,8 @@ private static final long serialVersionUID = 0L;
       return getCursorFieldBuilder().getBuilder();
     }
     /**
+     *
+     *
      * <pre>
      * A target corresponding to the cursor, pointing to anywhere in the
      * topic partition.
@@ -979,6 +1073,8 @@ private static final long serialVersionUID = 0L;
       }
     }
     /**
+     *
+     *
      * <pre>
      * A target corresponding to the cursor, pointing to anywhere in the
      * topic partition.
@@ -987,26 +1083,32 @@ private static final long serialVersionUID = 0L;
      * <code>.google.cloud.pubsublite.v1.Cursor cursor = 2;</code>
      */
     private com.google.protobuf.SingleFieldBuilderV3<
-        com.google.cloud.pubsublite.proto.Cursor, com.google.cloud.pubsublite.proto.Cursor.Builder, com.google.cloud.pubsublite.proto.CursorOrBuilder> 
+            com.google.cloud.pubsublite.proto.Cursor,
+            com.google.cloud.pubsublite.proto.Cursor.Builder,
+            com.google.cloud.pubsublite.proto.CursorOrBuilder>
         getCursorFieldBuilder() {
       if (cursorBuilder_ == null) {
         if (!(targetCase_ == 2)) {
           target_ = com.google.cloud.pubsublite.proto.Cursor.getDefaultInstance();
         }
-        cursorBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
-            com.google.cloud.pubsublite.proto.Cursor, com.google.cloud.pubsublite.proto.Cursor.Builder, com.google.cloud.pubsublite.proto.CursorOrBuilder>(
+        cursorBuilder_ =
+            new com.google.protobuf.SingleFieldBuilderV3<
+                com.google.cloud.pubsublite.proto.Cursor,
+                com.google.cloud.pubsublite.proto.Cursor.Builder,
+                com.google.cloud.pubsublite.proto.CursorOrBuilder>(
                 (com.google.cloud.pubsublite.proto.Cursor) target_,
                 getParentForChildren(),
                 isClean());
         target_ = null;
       }
       targetCase_ = 2;
-      onChanged();;
+      onChanged();
+      ;
       return cursorBuilder_;
     }
+
     @java.lang.Override
-    public final Builder setUnknownFields(
-        final com.google.protobuf.UnknownFieldSet unknownFields) {
+    public final Builder setUnknownFields(final com.google.protobuf.UnknownFieldSet unknownFields) {
       return super.setUnknownFields(unknownFields);
     }
 
@@ -1016,12 +1118,12 @@ private static final long serialVersionUID = 0L;
       return super.mergeUnknownFields(unknownFields);
     }
 
-
     // @@protoc_insertion_point(builder_scope:google.cloud.pubsublite.v1.SeekRequest)
   }
 
   // @@protoc_insertion_point(class_scope:google.cloud.pubsublite.v1.SeekRequest)
   private static final com.google.cloud.pubsublite.proto.SeekRequest DEFAULT_INSTANCE;
+
   static {
     DEFAULT_INSTANCE = new com.google.cloud.pubsublite.proto.SeekRequest();
   }
@@ -1030,16 +1132,16 @@ private static final long serialVersionUID = 0L;
     return DEFAULT_INSTANCE;
   }
 
-  private static final com.google.protobuf.Parser<SeekRequest>
-      PARSER = new com.google.protobuf.AbstractParser<SeekRequest>() {
-    @java.lang.Override
-    public SeekRequest parsePartialFrom(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return new SeekRequest(input, extensionRegistry);
-    }
-  };
+  private static final com.google.protobuf.Parser<SeekRequest> PARSER =
+      new com.google.protobuf.AbstractParser<SeekRequest>() {
+        @java.lang.Override
+        public SeekRequest parsePartialFrom(
+            com.google.protobuf.CodedInputStream input,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws com.google.protobuf.InvalidProtocolBufferException {
+          return new SeekRequest(input, extensionRegistry);
+        }
+      };
 
   public static com.google.protobuf.Parser<SeekRequest> parser() {
     return PARSER;
@@ -1054,6 +1156,4 @@ private static final long serialVersionUID = 0L;
   public com.google.cloud.pubsublite.proto.SeekRequest getDefaultInstanceForType() {
     return DEFAULT_INSTANCE;
   }
-
 }
-

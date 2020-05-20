@@ -4,36 +4,37 @@
 package com.google.cloud.pubsublite.proto;
 
 /**
+ *
+ *
  * <pre>
  * Response to an InitialCommitCursorRequest.
  * </pre>
  *
  * Protobuf type {@code google.cloud.pubsublite.v1.InitialCommitCursorResponse}
  */
-public  final class InitialCommitCursorResponse extends
-    com.google.protobuf.GeneratedMessageV3 implements
+public final class InitialCommitCursorResponse extends com.google.protobuf.GeneratedMessageV3
+    implements
     // @@protoc_insertion_point(message_implements:google.cloud.pubsublite.v1.InitialCommitCursorResponse)
     InitialCommitCursorResponseOrBuilder {
-private static final long serialVersionUID = 0L;
+  private static final long serialVersionUID = 0L;
   // Use InitialCommitCursorResponse.newBuilder() to construct.
   private InitialCommitCursorResponse(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
     super(builder);
   }
-  private InitialCommitCursorResponse() {
-  }
+
+  private InitialCommitCursorResponse() {}
 
   @java.lang.Override
   @SuppressWarnings({"unused"})
-  protected java.lang.Object newInstance(
-      UnusedPrivateParameter unused) {
+  protected java.lang.Object newInstance(UnusedPrivateParameter unused) {
     return new InitialCommitCursorResponse();
   }
 
   @java.lang.Override
-  public final com.google.protobuf.UnknownFieldSet
-  getUnknownFields() {
+  public final com.google.protobuf.UnknownFieldSet getUnknownFields() {
     return this.unknownFields;
   }
+
   private InitialCommitCursorResponse(
       com.google.protobuf.CodedInputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -52,39 +53,42 @@ private static final long serialVersionUID = 0L;
           case 0:
             done = true;
             break;
-          default: {
-            if (!parseUnknownField(
-                input, unknownFields, extensionRegistry, tag)) {
-              done = true;
+          default:
+            {
+              if (!parseUnknownField(input, unknownFields, extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
             }
-            break;
-          }
         }
       }
     } catch (com.google.protobuf.InvalidProtocolBufferException e) {
       throw e.setUnfinishedMessage(this);
     } catch (java.io.IOException e) {
-      throw new com.google.protobuf.InvalidProtocolBufferException(
-          e).setUnfinishedMessage(this);
+      throw new com.google.protobuf.InvalidProtocolBufferException(e).setUnfinishedMessage(this);
     } finally {
       this.unknownFields = unknownFields.build();
       makeExtensionsImmutable();
     }
   }
-  public static final com.google.protobuf.Descriptors.Descriptor
-      getDescriptor() {
-    return com.google.cloud.pubsublite.proto.CursorProto.internal_static_google_cloud_pubsublite_v1_InitialCommitCursorResponse_descriptor;
+
+  public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
+    return com.google.cloud.pubsublite.proto.CursorProto
+        .internal_static_google_cloud_pubsublite_v1_InitialCommitCursorResponse_descriptor;
   }
 
   @java.lang.Override
   protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internalGetFieldAccessorTable() {
-    return com.google.cloud.pubsublite.proto.CursorProto.internal_static_google_cloud_pubsublite_v1_InitialCommitCursorResponse_fieldAccessorTable
+    return com.google.cloud.pubsublite.proto.CursorProto
+        .internal_static_google_cloud_pubsublite_v1_InitialCommitCursorResponse_fieldAccessorTable
         .ensureFieldAccessorsInitialized(
-            com.google.cloud.pubsublite.proto.InitialCommitCursorResponse.class, com.google.cloud.pubsublite.proto.InitialCommitCursorResponse.Builder.class);
+            com.google.cloud.pubsublite.proto.InitialCommitCursorResponse.class,
+            com.google.cloud.pubsublite.proto.InitialCommitCursorResponse.Builder.class);
   }
 
   private byte memoizedIsInitialized = -1;
+
   @java.lang.Override
   public final boolean isInitialized() {
     byte isInitialized = memoizedIsInitialized;
@@ -96,8 +100,7 @@ private static final long serialVersionUID = 0L;
   }
 
   @java.lang.Override
-  public void writeTo(com.google.protobuf.CodedOutputStream output)
-                      throws java.io.IOException {
+  public void writeTo(com.google.protobuf.CodedOutputStream output) throws java.io.IOException {
     unknownFields.writeTo(output);
   }
 
@@ -115,12 +118,13 @@ private static final long serialVersionUID = 0L;
   @java.lang.Override
   public boolean equals(final java.lang.Object obj) {
     if (obj == this) {
-     return true;
+      return true;
     }
     if (!(obj instanceof com.google.cloud.pubsublite.proto.InitialCommitCursorResponse)) {
       return super.equals(obj);
     }
-    com.google.cloud.pubsublite.proto.InitialCommitCursorResponse other = (com.google.cloud.pubsublite.proto.InitialCommitCursorResponse) obj;
+    com.google.cloud.pubsublite.proto.InitialCommitCursorResponse other =
+        (com.google.cloud.pubsublite.proto.InitialCommitCursorResponse) obj;
 
     if (!unknownFields.equals(other.unknownFields)) return false;
     return true;
@@ -139,117 +143,127 @@ private static final long serialVersionUID = 0L;
   }
 
   public static com.google.cloud.pubsublite.proto.InitialCommitCursorResponse parseFrom(
-      java.nio.ByteBuffer data)
-      throws com.google.protobuf.InvalidProtocolBufferException {
+      java.nio.ByteBuffer data) throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
+
   public static com.google.cloud.pubsublite.proto.InitialCommitCursorResponse parseFrom(
-      java.nio.ByteBuffer data,
-      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+      java.nio.ByteBuffer data, com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
+
   public static com.google.cloud.pubsublite.proto.InitialCommitCursorResponse parseFrom(
       com.google.protobuf.ByteString data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
+
   public static com.google.cloud.pubsublite.proto.InitialCommitCursorResponse parseFrom(
       com.google.protobuf.ByteString data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
+
   public static com.google.cloud.pubsublite.proto.InitialCommitCursorResponse parseFrom(byte[] data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
+
   public static com.google.cloud.pubsublite.proto.InitialCommitCursorResponse parseFrom(
-      byte[] data,
-      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+      byte[] data, com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static com.google.cloud.pubsublite.proto.InitialCommitCursorResponse parseFrom(java.io.InputStream input)
-      throws java.io.IOException {
-    return com.google.protobuf.GeneratedMessageV3
-        .parseWithIOException(PARSER, input);
-  }
+
   public static com.google.cloud.pubsublite.proto.InitialCommitCursorResponse parseFrom(
-      java.io.InputStream input,
-      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-      throws java.io.IOException {
-    return com.google.protobuf.GeneratedMessageV3
-        .parseWithIOException(PARSER, input, extensionRegistry);
+      java.io.InputStream input) throws java.io.IOException {
+    return com.google.protobuf.GeneratedMessageV3.parseWithIOException(PARSER, input);
   }
-  public static com.google.cloud.pubsublite.proto.InitialCommitCursorResponse parseDelimitedFrom(java.io.InputStream input)
+
+  public static com.google.cloud.pubsublite.proto.InitialCommitCursorResponse parseFrom(
+      java.io.InputStream input, com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
-    return com.google.protobuf.GeneratedMessageV3
-        .parseDelimitedWithIOException(PARSER, input);
+    return com.google.protobuf.GeneratedMessageV3.parseWithIOException(
+        PARSER, input, extensionRegistry);
   }
+
   public static com.google.cloud.pubsublite.proto.InitialCommitCursorResponse parseDelimitedFrom(
-      java.io.InputStream input,
-      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-      throws java.io.IOException {
-    return com.google.protobuf.GeneratedMessageV3
-        .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+      java.io.InputStream input) throws java.io.IOException {
+    return com.google.protobuf.GeneratedMessageV3.parseDelimitedWithIOException(PARSER, input);
   }
+
+  public static com.google.cloud.pubsublite.proto.InitialCommitCursorResponse parseDelimitedFrom(
+      java.io.InputStream input, com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+      throws java.io.IOException {
+    return com.google.protobuf.GeneratedMessageV3.parseDelimitedWithIOException(
+        PARSER, input, extensionRegistry);
+  }
+
   public static com.google.cloud.pubsublite.proto.InitialCommitCursorResponse parseFrom(
-      com.google.protobuf.CodedInputStream input)
-      throws java.io.IOException {
-    return com.google.protobuf.GeneratedMessageV3
-        .parseWithIOException(PARSER, input);
+      com.google.protobuf.CodedInputStream input) throws java.io.IOException {
+    return com.google.protobuf.GeneratedMessageV3.parseWithIOException(PARSER, input);
   }
+
   public static com.google.cloud.pubsublite.proto.InitialCommitCursorResponse parseFrom(
       com.google.protobuf.CodedInputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
-    return com.google.protobuf.GeneratedMessageV3
-        .parseWithIOException(PARSER, input, extensionRegistry);
+    return com.google.protobuf.GeneratedMessageV3.parseWithIOException(
+        PARSER, input, extensionRegistry);
   }
 
   @java.lang.Override
-  public Builder newBuilderForType() { return newBuilder(); }
+  public Builder newBuilderForType() {
+    return newBuilder();
+  }
+
   public static Builder newBuilder() {
     return DEFAULT_INSTANCE.toBuilder();
   }
-  public static Builder newBuilder(com.google.cloud.pubsublite.proto.InitialCommitCursorResponse prototype) {
+
+  public static Builder newBuilder(
+      com.google.cloud.pubsublite.proto.InitialCommitCursorResponse prototype) {
     return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
-  }
-  @java.lang.Override
-  public Builder toBuilder() {
-    return this == DEFAULT_INSTANCE
-        ? new Builder() : new Builder().mergeFrom(this);
   }
 
   @java.lang.Override
-  protected Builder newBuilderForType(
-      com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+  public Builder toBuilder() {
+    return this == DEFAULT_INSTANCE ? new Builder() : new Builder().mergeFrom(this);
+  }
+
+  @java.lang.Override
+  protected Builder newBuilderForType(com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
     Builder builder = new Builder(parent);
     return builder;
   }
   /**
+   *
+   *
    * <pre>
    * Response to an InitialCommitCursorRequest.
    * </pre>
    *
    * Protobuf type {@code google.cloud.pubsublite.v1.InitialCommitCursorResponse}
    */
-  public static final class Builder extends
-      com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+  public static final class Builder extends com.google.protobuf.GeneratedMessageV3.Builder<Builder>
+      implements
       // @@protoc_insertion_point(builder_implements:google.cloud.pubsublite.v1.InitialCommitCursorResponse)
       com.google.cloud.pubsublite.proto.InitialCommitCursorResponseOrBuilder {
-    public static final com.google.protobuf.Descriptors.Descriptor
-        getDescriptor() {
-      return com.google.cloud.pubsublite.proto.CursorProto.internal_static_google_cloud_pubsublite_v1_InitialCommitCursorResponse_descriptor;
+    public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
+      return com.google.cloud.pubsublite.proto.CursorProto
+          .internal_static_google_cloud_pubsublite_v1_InitialCommitCursorResponse_descriptor;
     }
 
     @java.lang.Override
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return com.google.cloud.pubsublite.proto.CursorProto.internal_static_google_cloud_pubsublite_v1_InitialCommitCursorResponse_fieldAccessorTable
+      return com.google.cloud.pubsublite.proto.CursorProto
+          .internal_static_google_cloud_pubsublite_v1_InitialCommitCursorResponse_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              com.google.cloud.pubsublite.proto.InitialCommitCursorResponse.class, com.google.cloud.pubsublite.proto.InitialCommitCursorResponse.Builder.class);
+              com.google.cloud.pubsublite.proto.InitialCommitCursorResponse.class,
+              com.google.cloud.pubsublite.proto.InitialCommitCursorResponse.Builder.class);
     }
 
     // Construct using com.google.cloud.pubsublite.proto.InitialCommitCursorResponse.newBuilder()
@@ -257,16 +271,15 @@ private static final long serialVersionUID = 0L;
       maybeForceBuilderInitialization();
     }
 
-    private Builder(
-        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+    private Builder(com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
       super(parent);
       maybeForceBuilderInitialization();
     }
+
     private void maybeForceBuilderInitialization() {
-      if (com.google.protobuf.GeneratedMessageV3
-              .alwaysUseFieldBuilders) {
-      }
+      if (com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders) {}
     }
+
     @java.lang.Override
     public Builder clear() {
       super.clear();
@@ -274,13 +287,14 @@ private static final long serialVersionUID = 0L;
     }
 
     @java.lang.Override
-    public com.google.protobuf.Descriptors.Descriptor
-        getDescriptorForType() {
-      return com.google.cloud.pubsublite.proto.CursorProto.internal_static_google_cloud_pubsublite_v1_InitialCommitCursorResponse_descriptor;
+    public com.google.protobuf.Descriptors.Descriptor getDescriptorForType() {
+      return com.google.cloud.pubsublite.proto.CursorProto
+          .internal_static_google_cloud_pubsublite_v1_InitialCommitCursorResponse_descriptor;
     }
 
     @java.lang.Override
-    public com.google.cloud.pubsublite.proto.InitialCommitCursorResponse getDefaultInstanceForType() {
+    public com.google.cloud.pubsublite.proto.InitialCommitCursorResponse
+        getDefaultInstanceForType() {
       return com.google.cloud.pubsublite.proto.InitialCommitCursorResponse.getDefaultInstance();
     }
 
@@ -295,7 +309,8 @@ private static final long serialVersionUID = 0L;
 
     @java.lang.Override
     public com.google.cloud.pubsublite.proto.InitialCommitCursorResponse buildPartial() {
-      com.google.cloud.pubsublite.proto.InitialCommitCursorResponse result = new com.google.cloud.pubsublite.proto.InitialCommitCursorResponse(this);
+      com.google.cloud.pubsublite.proto.InitialCommitCursorResponse result =
+          new com.google.cloud.pubsublite.proto.InitialCommitCursorResponse(this);
       onBuilt();
       return result;
     }
@@ -304,38 +319,39 @@ private static final long serialVersionUID = 0L;
     public Builder clone() {
       return super.clone();
     }
+
     @java.lang.Override
     public Builder setField(
-        com.google.protobuf.Descriptors.FieldDescriptor field,
-        java.lang.Object value) {
+        com.google.protobuf.Descriptors.FieldDescriptor field, java.lang.Object value) {
       return super.setField(field, value);
     }
+
     @java.lang.Override
-    public Builder clearField(
-        com.google.protobuf.Descriptors.FieldDescriptor field) {
+    public Builder clearField(com.google.protobuf.Descriptors.FieldDescriptor field) {
       return super.clearField(field);
     }
+
     @java.lang.Override
-    public Builder clearOneof(
-        com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+    public Builder clearOneof(com.google.protobuf.Descriptors.OneofDescriptor oneof) {
       return super.clearOneof(oneof);
     }
+
     @java.lang.Override
     public Builder setRepeatedField(
-        com.google.protobuf.Descriptors.FieldDescriptor field,
-        int index, java.lang.Object value) {
+        com.google.protobuf.Descriptors.FieldDescriptor field, int index, java.lang.Object value) {
       return super.setRepeatedField(field, index, value);
     }
+
     @java.lang.Override
     public Builder addRepeatedField(
-        com.google.protobuf.Descriptors.FieldDescriptor field,
-        java.lang.Object value) {
+        com.google.protobuf.Descriptors.FieldDescriptor field, java.lang.Object value) {
       return super.addRepeatedField(field, value);
     }
+
     @java.lang.Override
     public Builder mergeFrom(com.google.protobuf.Message other) {
       if (other instanceof com.google.cloud.pubsublite.proto.InitialCommitCursorResponse) {
-        return mergeFrom((com.google.cloud.pubsublite.proto.InitialCommitCursorResponse)other);
+        return mergeFrom((com.google.cloud.pubsublite.proto.InitialCommitCursorResponse) other);
       } else {
         super.mergeFrom(other);
         return this;
@@ -343,7 +359,9 @@ private static final long serialVersionUID = 0L;
     }
 
     public Builder mergeFrom(com.google.cloud.pubsublite.proto.InitialCommitCursorResponse other) {
-      if (other == com.google.cloud.pubsublite.proto.InitialCommitCursorResponse.getDefaultInstance()) return this;
+      if (other
+          == com.google.cloud.pubsublite.proto.InitialCommitCursorResponse.getDefaultInstance())
+        return this;
       this.mergeUnknownFields(other.unknownFields);
       onChanged();
       return this;
@@ -363,7 +381,9 @@ private static final long serialVersionUID = 0L;
       try {
         parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        parsedMessage = (com.google.cloud.pubsublite.proto.InitialCommitCursorResponse) e.getUnfinishedMessage();
+        parsedMessage =
+            (com.google.cloud.pubsublite.proto.InitialCommitCursorResponse)
+                e.getUnfinishedMessage();
         throw e.unwrapIOException();
       } finally {
         if (parsedMessage != null) {
@@ -372,9 +392,9 @@ private static final long serialVersionUID = 0L;
       }
       return this;
     }
+
     @java.lang.Override
-    public final Builder setUnknownFields(
-        final com.google.protobuf.UnknownFieldSet unknownFields) {
+    public final Builder setUnknownFields(final com.google.protobuf.UnknownFieldSet unknownFields) {
       return super.setUnknownFields(unknownFields);
     }
 
@@ -384,12 +404,13 @@ private static final long serialVersionUID = 0L;
       return super.mergeUnknownFields(unknownFields);
     }
 
-
     // @@protoc_insertion_point(builder_scope:google.cloud.pubsublite.v1.InitialCommitCursorResponse)
   }
 
   // @@protoc_insertion_point(class_scope:google.cloud.pubsublite.v1.InitialCommitCursorResponse)
-  private static final com.google.cloud.pubsublite.proto.InitialCommitCursorResponse DEFAULT_INSTANCE;
+  private static final com.google.cloud.pubsublite.proto.InitialCommitCursorResponse
+      DEFAULT_INSTANCE;
+
   static {
     DEFAULT_INSTANCE = new com.google.cloud.pubsublite.proto.InitialCommitCursorResponse();
   }
@@ -398,16 +419,16 @@ private static final long serialVersionUID = 0L;
     return DEFAULT_INSTANCE;
   }
 
-  private static final com.google.protobuf.Parser<InitialCommitCursorResponse>
-      PARSER = new com.google.protobuf.AbstractParser<InitialCommitCursorResponse>() {
-    @java.lang.Override
-    public InitialCommitCursorResponse parsePartialFrom(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return new InitialCommitCursorResponse(input, extensionRegistry);
-    }
-  };
+  private static final com.google.protobuf.Parser<InitialCommitCursorResponse> PARSER =
+      new com.google.protobuf.AbstractParser<InitialCommitCursorResponse>() {
+        @java.lang.Override
+        public InitialCommitCursorResponse parsePartialFrom(
+            com.google.protobuf.CodedInputStream input,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws com.google.protobuf.InvalidProtocolBufferException {
+          return new InitialCommitCursorResponse(input, extensionRegistry);
+        }
+      };
 
   public static com.google.protobuf.Parser<InitialCommitCursorResponse> parser() {
     return PARSER;
@@ -422,6 +443,4 @@ private static final long serialVersionUID = 0L;
   public com.google.cloud.pubsublite.proto.InitialCommitCursorResponse getDefaultInstanceForType() {
     return DEFAULT_INSTANCE;
   }
-
 }
-

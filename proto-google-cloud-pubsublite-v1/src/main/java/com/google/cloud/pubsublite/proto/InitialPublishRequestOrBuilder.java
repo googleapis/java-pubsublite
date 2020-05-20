@@ -3,31 +3,39 @@
 
 package com.google.cloud.pubsublite.proto;
 
-public interface InitialPublishRequestOrBuilder extends
+public interface InitialPublishRequestOrBuilder
+    extends
     // @@protoc_insertion_point(interface_extends:google.cloud.pubsublite.v1.InitialPublishRequest)
     com.google.protobuf.MessageOrBuilder {
 
   /**
+   *
+   *
    * <pre>
    * The topic to which messages will be written.
    * </pre>
    *
    * <code>string topic = 1;</code>
+   *
    * @return The topic.
    */
   java.lang.String getTopic();
   /**
+   *
+   *
    * <pre>
    * The topic to which messages will be written.
    * </pre>
    *
    * <code>string topic = 1;</code>
+   *
    * @return The bytes for topic.
    */
-  com.google.protobuf.ByteString
-      getTopicBytes();
+  com.google.protobuf.ByteString getTopicBytes();
 
   /**
+   *
+   *
    * <pre>
    * The partition within the topic to which messages will be written.
    * Partitions are zero indexed, so `partition` must be in the range [0,
@@ -35,6 +43,7 @@ public interface InitialPublishRequestOrBuilder extends
    * </pre>
    *
    * <code>int64 partition = 2;</code>
+   *
    * @return The partition.
    */
   long getPartition();

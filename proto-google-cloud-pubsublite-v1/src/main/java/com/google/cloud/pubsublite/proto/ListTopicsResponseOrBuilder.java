@@ -3,11 +3,14 @@
 
 package com.google.cloud.pubsublite.proto;
 
-public interface ListTopicsResponseOrBuilder extends
+public interface ListTopicsResponseOrBuilder
+    extends
     // @@protoc_insertion_point(interface_extends:google.cloud.pubsublite.v1.ListTopicsResponse)
     com.google.protobuf.MessageOrBuilder {
 
   /**
+   *
+   *
    * <pre>
    * The list of topic in the requested parent. The order of the topics is
    * unspecified.
@@ -15,9 +18,10 @@ public interface ListTopicsResponseOrBuilder extends
    *
    * <code>repeated .google.cloud.pubsublite.v1.Topic topics = 1;</code>
    */
-  java.util.List<com.google.cloud.pubsublite.proto.Topic> 
-      getTopicsList();
+  java.util.List<com.google.cloud.pubsublite.proto.Topic> getTopicsList();
   /**
+   *
+   *
    * <pre>
    * The list of topic in the requested parent. The order of the topics is
    * unspecified.
@@ -27,6 +31,8 @@ public interface ListTopicsResponseOrBuilder extends
    */
   com.google.cloud.pubsublite.proto.Topic getTopics(int index);
   /**
+   *
+   *
    * <pre>
    * The list of topic in the requested parent. The order of the topics is
    * unspecified.
@@ -36,6 +42,8 @@ public interface ListTopicsResponseOrBuilder extends
    */
   int getTopicsCount();
   /**
+   *
+   *
    * <pre>
    * The list of topic in the requested parent. The order of the topics is
    * unspecified.
@@ -43,9 +51,11 @@ public interface ListTopicsResponseOrBuilder extends
    *
    * <code>repeated .google.cloud.pubsublite.v1.Topic topics = 1;</code>
    */
-  java.util.List<? extends com.google.cloud.pubsublite.proto.TopicOrBuilder> 
+  java.util.List<? extends com.google.cloud.pubsublite.proto.TopicOrBuilder>
       getTopicsOrBuilderList();
   /**
+   *
+   *
    * <pre>
    * The list of topic in the requested parent. The order of the topics is
    * unspecified.
@@ -53,28 +63,32 @@ public interface ListTopicsResponseOrBuilder extends
    *
    * <code>repeated .google.cloud.pubsublite.v1.Topic topics = 1;</code>
    */
-  com.google.cloud.pubsublite.proto.TopicOrBuilder getTopicsOrBuilder(
-      int index);
+  com.google.cloud.pubsublite.proto.TopicOrBuilder getTopicsOrBuilder(int index);
 
   /**
+   *
+   *
    * <pre>
    * A token that can be sent as `page_token` to retrieve the next page of
    * results. If this field is omitted, there are no more results.
    * </pre>
    *
    * <code>string next_page_token = 2;</code>
+   *
    * @return The nextPageToken.
    */
   java.lang.String getNextPageToken();
   /**
+   *
+   *
    * <pre>
    * A token that can be sent as `page_token` to retrieve the next page of
    * results. If this field is omitted, there are no more results.
    * </pre>
    *
    * <code>string next_page_token = 2;</code>
+   *
    * @return The bytes for nextPageToken.
    */
-  com.google.protobuf.ByteString
-      getNextPageTokenBytes();
+  com.google.protobuf.ByteString getNextPageTokenBytes();
 }

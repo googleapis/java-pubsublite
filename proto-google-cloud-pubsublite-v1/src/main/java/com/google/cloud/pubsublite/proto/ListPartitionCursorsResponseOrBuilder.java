@@ -3,20 +3,24 @@
 
 package com.google.cloud.pubsublite.proto;
 
-public interface ListPartitionCursorsResponseOrBuilder extends
+public interface ListPartitionCursorsResponseOrBuilder
+    extends
     // @@protoc_insertion_point(interface_extends:google.cloud.pubsublite.v1.ListPartitionCursorsResponse)
     com.google.protobuf.MessageOrBuilder {
 
   /**
+   *
+   *
    * <pre>
    * The partition cursors from this request.
    * </pre>
    *
    * <code>repeated .google.cloud.pubsublite.v1.PartitionCursor partition_cursors = 1;</code>
    */
-  java.util.List<com.google.cloud.pubsublite.proto.PartitionCursor> 
-      getPartitionCursorsList();
+  java.util.List<com.google.cloud.pubsublite.proto.PartitionCursor> getPartitionCursorsList();
   /**
+   *
+   *
    * <pre>
    * The partition cursors from this request.
    * </pre>
@@ -25,6 +29,8 @@ public interface ListPartitionCursorsResponseOrBuilder extends
    */
   com.google.cloud.pubsublite.proto.PartitionCursor getPartitionCursors(int index);
   /**
+   *
+   *
    * <pre>
    * The partition cursors from this request.
    * </pre>
@@ -33,15 +39,19 @@ public interface ListPartitionCursorsResponseOrBuilder extends
    */
   int getPartitionCursorsCount();
   /**
+   *
+   *
    * <pre>
    * The partition cursors from this request.
    * </pre>
    *
    * <code>repeated .google.cloud.pubsublite.v1.PartitionCursor partition_cursors = 1;</code>
    */
-  java.util.List<? extends com.google.cloud.pubsublite.proto.PartitionCursorOrBuilder> 
+  java.util.List<? extends com.google.cloud.pubsublite.proto.PartitionCursorOrBuilder>
       getPartitionCursorsOrBuilderList();
   /**
+   *
+   *
    * <pre>
    * The partition cursors from this request.
    * </pre>
@@ -52,24 +62,29 @@ public interface ListPartitionCursorsResponseOrBuilder extends
       int index);
 
   /**
+   *
+   *
    * <pre>
    * A token, which can be sent as `page_token` to retrieve the next page.
    * If this field is omitted, there are no subsequent pages.
    * </pre>
    *
    * <code>string next_page_token = 2;</code>
+   *
    * @return The nextPageToken.
    */
   java.lang.String getNextPageToken();
   /**
+   *
+   *
    * <pre>
    * A token, which can be sent as `page_token` to retrieve the next page.
    * If this field is omitted, there are no subsequent pages.
    * </pre>
    *
    * <code>string next_page_token = 2;</code>
+   *
    * @return The bytes for nextPageToken.
    */
-  com.google.protobuf.ByteString
-      getNextPageTokenBytes();
+  com.google.protobuf.ByteString getNextPageTokenBytes();
 }

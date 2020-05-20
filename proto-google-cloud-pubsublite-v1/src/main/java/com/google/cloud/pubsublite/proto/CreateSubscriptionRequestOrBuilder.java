@@ -3,60 +3,86 @@
 
 package com.google.cloud.pubsublite.proto;
 
-public interface CreateSubscriptionRequestOrBuilder extends
+public interface CreateSubscriptionRequestOrBuilder
+    extends
     // @@protoc_insertion_point(interface_extends:google.cloud.pubsublite.v1.CreateSubscriptionRequest)
     com.google.protobuf.MessageOrBuilder {
 
   /**
+   *
+   *
    * <pre>
    * The parent location in which to create the subscription.
    * Structured like `projects/{project_number}/locations/{location}`.
    * </pre>
    *
-   * <code>string parent = 1 [(.google.api.field_behavior) = REQUIRED, (.google.api.resource_reference) = { ... }</code>
+   * <code>
+   * string parent = 1 [(.google.api.field_behavior) = REQUIRED, (.google.api.resource_reference) = { ... }
+   * </code>
+   *
    * @return The parent.
    */
   java.lang.String getParent();
   /**
+   *
+   *
    * <pre>
    * The parent location in which to create the subscription.
    * Structured like `projects/{project_number}/locations/{location}`.
    * </pre>
    *
-   * <code>string parent = 1 [(.google.api.field_behavior) = REQUIRED, (.google.api.resource_reference) = { ... }</code>
+   * <code>
+   * string parent = 1 [(.google.api.field_behavior) = REQUIRED, (.google.api.resource_reference) = { ... }
+   * </code>
+   *
    * @return The bytes for parent.
    */
-  com.google.protobuf.ByteString
-      getParentBytes();
+  com.google.protobuf.ByteString getParentBytes();
 
   /**
+   *
+   *
    * <pre>
    * Configuration of the subscription to create. Its `name` field is ignored.
    * </pre>
    *
-   * <code>.google.cloud.pubsublite.v1.Subscription subscription = 2 [(.google.api.field_behavior) = REQUIRED];</code>
+   * <code>
+   * .google.cloud.pubsublite.v1.Subscription subscription = 2 [(.google.api.field_behavior) = REQUIRED];
+   * </code>
+   *
    * @return Whether the subscription field is set.
    */
   boolean hasSubscription();
   /**
+   *
+   *
    * <pre>
    * Configuration of the subscription to create. Its `name` field is ignored.
    * </pre>
    *
-   * <code>.google.cloud.pubsublite.v1.Subscription subscription = 2 [(.google.api.field_behavior) = REQUIRED];</code>
+   * <code>
+   * .google.cloud.pubsublite.v1.Subscription subscription = 2 [(.google.api.field_behavior) = REQUIRED];
+   * </code>
+   *
    * @return The subscription.
    */
   com.google.cloud.pubsublite.proto.Subscription getSubscription();
   /**
+   *
+   *
    * <pre>
    * Configuration of the subscription to create. Its `name` field is ignored.
    * </pre>
    *
-   * <code>.google.cloud.pubsublite.v1.Subscription subscription = 2 [(.google.api.field_behavior) = REQUIRED];</code>
+   * <code>
+   * .google.cloud.pubsublite.v1.Subscription subscription = 2 [(.google.api.field_behavior) = REQUIRED];
+   * </code>
    */
   com.google.cloud.pubsublite.proto.SubscriptionOrBuilder getSubscriptionOrBuilder();
 
   /**
+   *
+   *
    * <pre>
    * The ID to use for the subscription, which will become the final component
    * of the subscription's name.
@@ -64,10 +90,13 @@ public interface CreateSubscriptionRequestOrBuilder extends
    * </pre>
    *
    * <code>string subscription_id = 3 [(.google.api.field_behavior) = REQUIRED];</code>
+   *
    * @return The subscriptionId.
    */
   java.lang.String getSubscriptionId();
   /**
+   *
+   *
    * <pre>
    * The ID to use for the subscription, which will become the final component
    * of the subscription's name.
@@ -75,8 +104,8 @@ public interface CreateSubscriptionRequestOrBuilder extends
    * </pre>
    *
    * <code>string subscription_id = 3 [(.google.api.field_behavior) = REQUIRED];</code>
+   *
    * @return The bytes for subscriptionId.
    */
-  com.google.protobuf.ByteString
-      getSubscriptionIdBytes();
+  com.google.protobuf.ByteString getSubscriptionIdBytes();
 }

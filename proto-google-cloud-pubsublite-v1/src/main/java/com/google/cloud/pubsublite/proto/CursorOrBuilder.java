@@ -3,17 +3,21 @@
 
 package com.google.cloud.pubsublite.proto;
 
-public interface CursorOrBuilder extends
+public interface CursorOrBuilder
+    extends
     // @@protoc_insertion_point(interface_extends:google.cloud.pubsublite.v1.Cursor)
     com.google.protobuf.MessageOrBuilder {
 
   /**
+   *
+   *
    * <pre>
    * The offset of a message within a topic partition. Must be greater than or
    * equal 0.
    * </pre>
    *
    * <code>int64 offset = 1;</code>
+   *
    * @return The offset.
    */
   long getOffset();

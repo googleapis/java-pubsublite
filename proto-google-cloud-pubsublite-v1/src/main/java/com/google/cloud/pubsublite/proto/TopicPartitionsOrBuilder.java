@@ -3,16 +3,20 @@
 
 package com.google.cloud.pubsublite.proto;
 
-public interface TopicPartitionsOrBuilder extends
+public interface TopicPartitionsOrBuilder
+    extends
     // @@protoc_insertion_point(interface_extends:google.cloud.pubsublite.v1.TopicPartitions)
     com.google.protobuf.MessageOrBuilder {
 
   /**
+   *
+   *
    * <pre>
    * The number of partitions in the topic.
    * </pre>
    *
    * <code>int64 partition_count = 1;</code>
+   *
    * @return The partitionCount.
    */
   long getPartitionCount();

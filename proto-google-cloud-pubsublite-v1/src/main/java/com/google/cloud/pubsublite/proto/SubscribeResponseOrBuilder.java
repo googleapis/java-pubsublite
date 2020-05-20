@@ -3,29 +3,38 @@
 
 package com.google.cloud.pubsublite.proto;
 
-public interface SubscribeResponseOrBuilder extends
+public interface SubscribeResponseOrBuilder
+    extends
     // @@protoc_insertion_point(interface_extends:google.cloud.pubsublite.v1.SubscribeResponse)
     com.google.protobuf.MessageOrBuilder {
 
   /**
+   *
+   *
    * <pre>
    * Initial response on the stream.
    * </pre>
    *
    * <code>.google.cloud.pubsublite.v1.InitialSubscribeResponse initial = 1;</code>
+   *
    * @return Whether the initial field is set.
    */
   boolean hasInitial();
   /**
+   *
+   *
    * <pre>
    * Initial response on the stream.
    * </pre>
    *
    * <code>.google.cloud.pubsublite.v1.InitialSubscribeResponse initial = 1;</code>
+   *
    * @return The initial.
    */
   com.google.cloud.pubsublite.proto.InitialSubscribeResponse getInitial();
   /**
+   *
+   *
    * <pre>
    * Initial response on the stream.
    * </pre>
@@ -35,24 +44,32 @@ public interface SubscribeResponseOrBuilder extends
   com.google.cloud.pubsublite.proto.InitialSubscribeResponseOrBuilder getInitialOrBuilder();
 
   /**
+   *
+   *
    * <pre>
    * Response to a Seek operation.
    * </pre>
    *
    * <code>.google.cloud.pubsublite.v1.SeekResponse seek = 2;</code>
+   *
    * @return Whether the seek field is set.
    */
   boolean hasSeek();
   /**
+   *
+   *
    * <pre>
    * Response to a Seek operation.
    * </pre>
    *
    * <code>.google.cloud.pubsublite.v1.SeekResponse seek = 2;</code>
+   *
    * @return The seek.
    */
   com.google.cloud.pubsublite.proto.SeekResponse getSeek();
   /**
+   *
+   *
    * <pre>
    * Response to a Seek operation.
    * </pre>
@@ -62,24 +79,32 @@ public interface SubscribeResponseOrBuilder extends
   com.google.cloud.pubsublite.proto.SeekResponseOrBuilder getSeekOrBuilder();
 
   /**
+   *
+   *
    * <pre>
    * Response containing messages from the topic partition.
    * </pre>
    *
    * <code>.google.cloud.pubsublite.v1.MessageResponse messages = 3;</code>
+   *
    * @return Whether the messages field is set.
    */
   boolean hasMessages();
   /**
+   *
+   *
    * <pre>
    * Response containing messages from the topic partition.
    * </pre>
    *
    * <code>.google.cloud.pubsublite.v1.MessageResponse messages = 3;</code>
+   *
    * @return The messages.
    */
   com.google.cloud.pubsublite.proto.MessageResponse getMessages();
   /**
+   *
+   *
    * <pre>
    * Response containing messages from the topic partition.
    * </pre>

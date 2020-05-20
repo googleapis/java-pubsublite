@@ -5,120 +5,123 @@ package com.google.cloud.pubsublite.proto;
 
 public final class PublisherProto {
   private PublisherProto() {}
-  public static void registerAllExtensions(
-      com.google.protobuf.ExtensionRegistryLite registry) {
+
+  public static void registerAllExtensions(com.google.protobuf.ExtensionRegistryLite registry) {}
+
+  public static void registerAllExtensions(com.google.protobuf.ExtensionRegistry registry) {
+    registerAllExtensions((com.google.protobuf.ExtensionRegistryLite) registry);
   }
 
-  public static void registerAllExtensions(
-      com.google.protobuf.ExtensionRegistry registry) {
-    registerAllExtensions(
-        (com.google.protobuf.ExtensionRegistryLite) registry);
-  }
   static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_google_cloud_pubsublite_v1_InitialPublishRequest_descriptor;
-  static final 
-    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_google_cloud_pubsublite_v1_InitialPublishRequest_descriptor;
+  static final com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_google_cloud_pubsublite_v1_InitialPublishRequest_fieldAccessorTable;
   static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_google_cloud_pubsublite_v1_InitialPublishResponse_descriptor;
-  static final 
-    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_google_cloud_pubsublite_v1_InitialPublishResponse_descriptor;
+  static final com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_google_cloud_pubsublite_v1_InitialPublishResponse_fieldAccessorTable;
   static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_google_cloud_pubsublite_v1_MessagePublishRequest_descriptor;
-  static final 
-    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_google_cloud_pubsublite_v1_MessagePublishRequest_descriptor;
+  static final com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_google_cloud_pubsublite_v1_MessagePublishRequest_fieldAccessorTable;
   static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_google_cloud_pubsublite_v1_MessagePublishResponse_descriptor;
-  static final 
-    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_google_cloud_pubsublite_v1_MessagePublishResponse_descriptor;
+  static final com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_google_cloud_pubsublite_v1_MessagePublishResponse_fieldAccessorTable;
   static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_google_cloud_pubsublite_v1_PublishRequest_descriptor;
-  static final 
-    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_google_cloud_pubsublite_v1_PublishRequest_descriptor;
+  static final com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_google_cloud_pubsublite_v1_PublishRequest_fieldAccessorTable;
   static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_google_cloud_pubsublite_v1_PublishResponse_descriptor;
-  static final 
-    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_google_cloud_pubsublite_v1_PublishResponse_descriptor;
+  static final com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_google_cloud_pubsublite_v1_PublishResponse_fieldAccessorTable;
 
-  public static com.google.protobuf.Descriptors.FileDescriptor
-      getDescriptor() {
+  public static com.google.protobuf.Descriptors.FileDescriptor getDescriptor() {
     return descriptor;
   }
-  private static  com.google.protobuf.Descriptors.FileDescriptor
-      descriptor;
+
+  private static com.google.protobuf.Descriptors.FileDescriptor descriptor;
+
   static {
     java.lang.String[] descriptorData = {
-      "\n*google/cloud/pubsublite/v1/publisher.p" +
-      "roto\022\032google.cloud.pubsublite.v1\032\'google" +
-      "/cloud/pubsublite/v1/common.proto\"9\n\025Ini" +
-      "tialPublishRequest\022\r\n\005topic\030\001 \001(\t\022\021\n\tpar" +
-      "tition\030\002 \001(\003\"\030\n\026InitialPublishResponse\"T" +
-      "\n\025MessagePublishRequest\022;\n\010messages\030\001 \003(" +
-      "\0132).google.cloud.pubsublite.v1.PubSubMes" +
-      "sage\"R\n\026MessagePublishResponse\0228\n\014start_" +
-      "cursor\030\001 \001(\0132\".google.cloud.pubsublite.v" +
-      "1.Cursor\"\304\001\n\016PublishRequest\022L\n\017initial_r" +
-      "equest\030\001 \001(\01321.google.cloud.pubsublite.v" +
-      "1.InitialPublishRequestH\000\022T\n\027message_pub" +
-      "lish_request\030\002 \001(\01321.google.cloud.pubsub" +
-      "lite.v1.MessagePublishRequestH\000B\016\n\014reque" +
-      "st_type\"\302\001\n\017PublishResponse\022N\n\020initial_r" +
-      "esponse\030\001 \001(\01322.google.cloud.pubsublite." +
-      "v1.InitialPublishResponseH\000\022N\n\020message_r" +
-      "esponse\030\002 \001(\01322.google.cloud.pubsublite." +
-      "v1.MessagePublishResponseH\000B\017\n\rresponse_" +
-      "type2|\n\020PublisherService\022h\n\007Publish\022*.go" +
-      "ogle.cloud.pubsublite.v1.PublishRequest\032" +
-      "+.google.cloud.pubsublite.v1.PublishResp" +
-      "onse\"\000(\0010\001B8\n!com.google.cloud.pubsublit" +
-      "e.protoB\016PublisherProtoP\001\370\001\001b\006proto3"
+      "\n*google/cloud/pubsublite/v1/publisher.p"
+          + "roto\022\032google.cloud.pubsublite.v1\032\'google"
+          + "/cloud/pubsublite/v1/common.proto\"9\n\025Ini"
+          + "tialPublishRequest\022\r\n\005topic\030\001 \001(\t\022\021\n\tpar"
+          + "tition\030\002 \001(\003\"\030\n\026InitialPublishResponse\"T"
+          + "\n\025MessagePublishRequest\022;\n\010messages\030\001 \003("
+          + "\0132).google.cloud.pubsublite.v1.PubSubMes"
+          + "sage\"R\n\026MessagePublishResponse\0228\n\014start_"
+          + "cursor\030\001 \001(\0132\".google.cloud.pubsublite.v"
+          + "1.Cursor\"\304\001\n\016PublishRequest\022L\n\017initial_r"
+          + "equest\030\001 \001(\01321.google.cloud.pubsublite.v"
+          + "1.InitialPublishRequestH\000\022T\n\027message_pub"
+          + "lish_request\030\002 \001(\01321.google.cloud.pubsub"
+          + "lite.v1.MessagePublishRequestH\000B\016\n\014reque"
+          + "st_type\"\302\001\n\017PublishResponse\022N\n\020initial_r"
+          + "esponse\030\001 \001(\01322.google.cloud.pubsublite."
+          + "v1.InitialPublishResponseH\000\022N\n\020message_r"
+          + "esponse\030\002 \001(\01322.google.cloud.pubsublite."
+          + "v1.MessagePublishResponseH\000B\017\n\rresponse_"
+          + "type2|\n\020PublisherService\022h\n\007Publish\022*.go"
+          + "ogle.cloud.pubsublite.v1.PublishRequest\032"
+          + "+.google.cloud.pubsublite.v1.PublishResp"
+          + "onse\"\000(\0010\001B8\n!com.google.cloud.pubsublit"
+          + "e.protoB\016PublisherProtoP\001\370\001\001b\006proto3"
     };
-    descriptor = com.google.protobuf.Descriptors.FileDescriptor
-      .internalBuildGeneratedFileFrom(descriptorData,
-        new com.google.protobuf.Descriptors.FileDescriptor[] {
-          com.google.cloud.pubsublite.proto.CommonProto.getDescriptor(),
-        });
+    descriptor =
+        com.google.protobuf.Descriptors.FileDescriptor.internalBuildGeneratedFileFrom(
+            descriptorData,
+            new com.google.protobuf.Descriptors.FileDescriptor[] {
+              com.google.cloud.pubsublite.proto.CommonProto.getDescriptor(),
+            });
     internal_static_google_cloud_pubsublite_v1_InitialPublishRequest_descriptor =
-      getDescriptor().getMessageTypes().get(0);
-    internal_static_google_cloud_pubsublite_v1_InitialPublishRequest_fieldAccessorTable = new
-      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_google_cloud_pubsublite_v1_InitialPublishRequest_descriptor,
-        new java.lang.String[] { "Topic", "Partition", });
+        getDescriptor().getMessageTypes().get(0);
+    internal_static_google_cloud_pubsublite_v1_InitialPublishRequest_fieldAccessorTable =
+        new com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+            internal_static_google_cloud_pubsublite_v1_InitialPublishRequest_descriptor,
+            new java.lang.String[] {
+              "Topic", "Partition",
+            });
     internal_static_google_cloud_pubsublite_v1_InitialPublishResponse_descriptor =
-      getDescriptor().getMessageTypes().get(1);
-    internal_static_google_cloud_pubsublite_v1_InitialPublishResponse_fieldAccessorTable = new
-      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_google_cloud_pubsublite_v1_InitialPublishResponse_descriptor,
-        new java.lang.String[] { });
+        getDescriptor().getMessageTypes().get(1);
+    internal_static_google_cloud_pubsublite_v1_InitialPublishResponse_fieldAccessorTable =
+        new com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+            internal_static_google_cloud_pubsublite_v1_InitialPublishResponse_descriptor,
+            new java.lang.String[] {});
     internal_static_google_cloud_pubsublite_v1_MessagePublishRequest_descriptor =
-      getDescriptor().getMessageTypes().get(2);
-    internal_static_google_cloud_pubsublite_v1_MessagePublishRequest_fieldAccessorTable = new
-      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_google_cloud_pubsublite_v1_MessagePublishRequest_descriptor,
-        new java.lang.String[] { "Messages", });
+        getDescriptor().getMessageTypes().get(2);
+    internal_static_google_cloud_pubsublite_v1_MessagePublishRequest_fieldAccessorTable =
+        new com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+            internal_static_google_cloud_pubsublite_v1_MessagePublishRequest_descriptor,
+            new java.lang.String[] {
+              "Messages",
+            });
     internal_static_google_cloud_pubsublite_v1_MessagePublishResponse_descriptor =
-      getDescriptor().getMessageTypes().get(3);
-    internal_static_google_cloud_pubsublite_v1_MessagePublishResponse_fieldAccessorTable = new
-      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_google_cloud_pubsublite_v1_MessagePublishResponse_descriptor,
-        new java.lang.String[] { "StartCursor", });
+        getDescriptor().getMessageTypes().get(3);
+    internal_static_google_cloud_pubsublite_v1_MessagePublishResponse_fieldAccessorTable =
+        new com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+            internal_static_google_cloud_pubsublite_v1_MessagePublishResponse_descriptor,
+            new java.lang.String[] {
+              "StartCursor",
+            });
     internal_static_google_cloud_pubsublite_v1_PublishRequest_descriptor =
-      getDescriptor().getMessageTypes().get(4);
-    internal_static_google_cloud_pubsublite_v1_PublishRequest_fieldAccessorTable = new
-      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_google_cloud_pubsublite_v1_PublishRequest_descriptor,
-        new java.lang.String[] { "InitialRequest", "MessagePublishRequest", "RequestType", });
+        getDescriptor().getMessageTypes().get(4);
+    internal_static_google_cloud_pubsublite_v1_PublishRequest_fieldAccessorTable =
+        new com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+            internal_static_google_cloud_pubsublite_v1_PublishRequest_descriptor,
+            new java.lang.String[] {
+              "InitialRequest", "MessagePublishRequest", "RequestType",
+            });
     internal_static_google_cloud_pubsublite_v1_PublishResponse_descriptor =
-      getDescriptor().getMessageTypes().get(5);
-    internal_static_google_cloud_pubsublite_v1_PublishResponse_fieldAccessorTable = new
-      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_google_cloud_pubsublite_v1_PublishResponse_descriptor,
-        new java.lang.String[] { "InitialResponse", "MessageResponse", "ResponseType", });
+        getDescriptor().getMessageTypes().get(5);
+    internal_static_google_cloud_pubsublite_v1_PublishResponse_fieldAccessorTable =
+        new com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+            internal_static_google_cloud_pubsublite_v1_PublishResponse_descriptor,
+            new java.lang.String[] {
+              "InitialResponse", "MessageResponse", "ResponseType",
+            });
     com.google.cloud.pubsublite.proto.CommonProto.getDescriptor();
   }
 

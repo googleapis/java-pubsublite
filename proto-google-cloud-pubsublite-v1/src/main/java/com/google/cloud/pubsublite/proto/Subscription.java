@@ -4,21 +4,24 @@
 package com.google.cloud.pubsublite.proto;
 
 /**
+ *
+ *
  * <pre>
  * Metadata about a subscription resource.
  * </pre>
  *
  * Protobuf type {@code google.cloud.pubsublite.v1.Subscription}
  */
-public  final class Subscription extends
-    com.google.protobuf.GeneratedMessageV3 implements
+public final class Subscription extends com.google.protobuf.GeneratedMessageV3
+    implements
     // @@protoc_insertion_point(message_implements:google.cloud.pubsublite.v1.Subscription)
     SubscriptionOrBuilder {
-private static final long serialVersionUID = 0L;
+  private static final long serialVersionUID = 0L;
   // Use Subscription.newBuilder() to construct.
   private Subscription(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
     super(builder);
   }
+
   private Subscription() {
     name_ = "";
     topic_ = "";
@@ -26,16 +29,15 @@ private static final long serialVersionUID = 0L;
 
   @java.lang.Override
   @SuppressWarnings({"unused"})
-  protected java.lang.Object newInstance(
-      UnusedPrivateParameter unused) {
+  protected java.lang.Object newInstance(UnusedPrivateParameter unused) {
     return new Subscription();
   }
 
   @java.lang.Override
-  public final com.google.protobuf.UnknownFieldSet
-  getUnknownFields() {
+  public final com.google.protobuf.UnknownFieldSet getUnknownFields() {
     return this.unknownFields;
   }
+
   private Subscription(
       com.google.protobuf.CodedInputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -54,118 +56,141 @@ private static final long serialVersionUID = 0L;
           case 0:
             done = true;
             break;
-          case 10: {
-            java.lang.String s = input.readStringRequireUtf8();
+          case 10:
+            {
+              java.lang.String s = input.readStringRequireUtf8();
 
-            name_ = s;
-            break;
-          }
-          case 18: {
-            java.lang.String s = input.readStringRequireUtf8();
+              name_ = s;
+              break;
+            }
+          case 18:
+            {
+              java.lang.String s = input.readStringRequireUtf8();
 
-            topic_ = s;
-            break;
-          }
-          case 26: {
-            com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig.Builder subBuilder = null;
-            if (deliveryConfig_ != null) {
-              subBuilder = deliveryConfig_.toBuilder();
+              topic_ = s;
+              break;
             }
-            deliveryConfig_ = input.readMessage(com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig.parser(), extensionRegistry);
-            if (subBuilder != null) {
-              subBuilder.mergeFrom(deliveryConfig_);
-              deliveryConfig_ = subBuilder.buildPartial();
-            }
+          case 26:
+            {
+              com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig.Builder subBuilder =
+                  null;
+              if (deliveryConfig_ != null) {
+                subBuilder = deliveryConfig_.toBuilder();
+              }
+              deliveryConfig_ =
+                  input.readMessage(
+                      com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig.parser(),
+                      extensionRegistry);
+              if (subBuilder != null) {
+                subBuilder.mergeFrom(deliveryConfig_);
+                deliveryConfig_ = subBuilder.buildPartial();
+              }
 
-            break;
-          }
-          default: {
-            if (!parseUnknownField(
-                input, unknownFields, extensionRegistry, tag)) {
-              done = true;
+              break;
             }
-            break;
-          }
+          default:
+            {
+              if (!parseUnknownField(input, unknownFields, extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
         }
       }
     } catch (com.google.protobuf.InvalidProtocolBufferException e) {
       throw e.setUnfinishedMessage(this);
     } catch (java.io.IOException e) {
-      throw new com.google.protobuf.InvalidProtocolBufferException(
-          e).setUnfinishedMessage(this);
+      throw new com.google.protobuf.InvalidProtocolBufferException(e).setUnfinishedMessage(this);
     } finally {
       this.unknownFields = unknownFields.build();
       makeExtensionsImmutable();
     }
   }
-  public static final com.google.protobuf.Descriptors.Descriptor
-      getDescriptor() {
-    return com.google.cloud.pubsublite.proto.CommonProto.internal_static_google_cloud_pubsublite_v1_Subscription_descriptor;
+
+  public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
+    return com.google.cloud.pubsublite.proto.CommonProto
+        .internal_static_google_cloud_pubsublite_v1_Subscription_descriptor;
   }
 
   @java.lang.Override
   protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internalGetFieldAccessorTable() {
-    return com.google.cloud.pubsublite.proto.CommonProto.internal_static_google_cloud_pubsublite_v1_Subscription_fieldAccessorTable
+    return com.google.cloud.pubsublite.proto.CommonProto
+        .internal_static_google_cloud_pubsublite_v1_Subscription_fieldAccessorTable
         .ensureFieldAccessorsInitialized(
-            com.google.cloud.pubsublite.proto.Subscription.class, com.google.cloud.pubsublite.proto.Subscription.Builder.class);
+            com.google.cloud.pubsublite.proto.Subscription.class,
+            com.google.cloud.pubsublite.proto.Subscription.Builder.class);
   }
 
-  public interface DeliveryConfigOrBuilder extends
+  public interface DeliveryConfigOrBuilder
+      extends
       // @@protoc_insertion_point(interface_extends:google.cloud.pubsublite.v1.Subscription.DeliveryConfig)
       com.google.protobuf.MessageOrBuilder {
 
     /**
+     *
+     *
      * <pre>
      * The DeliveryRequirement for this subscription.
      * </pre>
      *
-     * <code>.google.cloud.pubsublite.v1.Subscription.DeliveryConfig.DeliveryRequirement delivery_requirement = 3;</code>
+     * <code>
+     * .google.cloud.pubsublite.v1.Subscription.DeliveryConfig.DeliveryRequirement delivery_requirement = 3;
+     * </code>
+     *
      * @return The enum numeric value on the wire for deliveryRequirement.
      */
     int getDeliveryRequirementValue();
     /**
+     *
+     *
      * <pre>
      * The DeliveryRequirement for this subscription.
      * </pre>
      *
-     * <code>.google.cloud.pubsublite.v1.Subscription.DeliveryConfig.DeliveryRequirement delivery_requirement = 3;</code>
+     * <code>
+     * .google.cloud.pubsublite.v1.Subscription.DeliveryConfig.DeliveryRequirement delivery_requirement = 3;
+     * </code>
+     *
      * @return The deliveryRequirement.
      */
-    com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig.DeliveryRequirement getDeliveryRequirement();
+    com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig.DeliveryRequirement
+        getDeliveryRequirement();
   }
   /**
+   *
+   *
    * <pre>
    * The settings for a subscription's message delivery.
    * </pre>
    *
    * Protobuf type {@code google.cloud.pubsublite.v1.Subscription.DeliveryConfig}
    */
-  public  static final class DeliveryConfig extends
-      com.google.protobuf.GeneratedMessageV3 implements
+  public static final class DeliveryConfig extends com.google.protobuf.GeneratedMessageV3
+      implements
       // @@protoc_insertion_point(message_implements:google.cloud.pubsublite.v1.Subscription.DeliveryConfig)
       DeliveryConfigOrBuilder {
-  private static final long serialVersionUID = 0L;
+    private static final long serialVersionUID = 0L;
     // Use DeliveryConfig.newBuilder() to construct.
     private DeliveryConfig(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
       super(builder);
     }
+
     private DeliveryConfig() {
       deliveryRequirement_ = 0;
     }
 
     @java.lang.Override
     @SuppressWarnings({"unused"})
-    protected java.lang.Object newInstance(
-        UnusedPrivateParameter unused) {
+    protected java.lang.Object newInstance(UnusedPrivateParameter unused) {
       return new DeliveryConfig();
     }
 
     @java.lang.Override
-    public final com.google.protobuf.UnknownFieldSet
-    getUnknownFields() {
+    public final com.google.protobuf.UnknownFieldSet getUnknownFields() {
       return this.unknownFields;
     }
+
     private DeliveryConfig(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -184,55 +209,62 @@ private static final long serialVersionUID = 0L;
             case 0:
               done = true;
               break;
-            case 24: {
-              int rawValue = input.readEnum();
+            case 24:
+              {
+                int rawValue = input.readEnum();
 
-              deliveryRequirement_ = rawValue;
-              break;
-            }
-            default: {
-              if (!parseUnknownField(
-                  input, unknownFields, extensionRegistry, tag)) {
-                done = true;
+                deliveryRequirement_ = rawValue;
+                break;
               }
-              break;
-            }
+            default:
+              {
+                if (!parseUnknownField(input, unknownFields, extensionRegistry, tag)) {
+                  done = true;
+                }
+                break;
+              }
           }
         }
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
         throw e.setUnfinishedMessage(this);
       } catch (java.io.IOException e) {
-        throw new com.google.protobuf.InvalidProtocolBufferException(
-            e).setUnfinishedMessage(this);
+        throw new com.google.protobuf.InvalidProtocolBufferException(e).setUnfinishedMessage(this);
       } finally {
         this.unknownFields = unknownFields.build();
         makeExtensionsImmutable();
       }
     }
-    public static final com.google.protobuf.Descriptors.Descriptor
-        getDescriptor() {
-      return com.google.cloud.pubsublite.proto.CommonProto.internal_static_google_cloud_pubsublite_v1_Subscription_DeliveryConfig_descriptor;
+
+    public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
+      return com.google.cloud.pubsublite.proto.CommonProto
+          .internal_static_google_cloud_pubsublite_v1_Subscription_DeliveryConfig_descriptor;
     }
 
     @java.lang.Override
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return com.google.cloud.pubsublite.proto.CommonProto.internal_static_google_cloud_pubsublite_v1_Subscription_DeliveryConfig_fieldAccessorTable
+      return com.google.cloud.pubsublite.proto.CommonProto
+          .internal_static_google_cloud_pubsublite_v1_Subscription_DeliveryConfig_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig.class, com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig.Builder.class);
+              com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig.class,
+              com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig.Builder.class);
     }
 
     /**
+     *
+     *
      * <pre>
      * When this subscription should send messages to subscribers relative to
      * messages persistence in storage.
      * </pre>
      *
-     * Protobuf enum {@code google.cloud.pubsublite.v1.Subscription.DeliveryConfig.DeliveryRequirement}
+     * Protobuf enum {@code
+     * google.cloud.pubsublite.v1.Subscription.DeliveryConfig.DeliveryRequirement}
      */
-    public enum DeliveryRequirement
-        implements com.google.protobuf.ProtocolMessageEnum {
+    public enum DeliveryRequirement implements com.google.protobuf.ProtocolMessageEnum {
       /**
+       *
+       *
        * <pre>
        * Default value. This value is unused.
        * </pre>
@@ -241,6 +273,8 @@ private static final long serialVersionUID = 0L;
        */
       DELIVERY_REQUIREMENT_UNSPECIFIED(0),
       /**
+       *
+       *
        * <pre>
        * The server does not wait for a published message to be successfully
        * written to storage before delivering it to subscribers. As such, a
@@ -275,6 +309,8 @@ private static final long serialVersionUID = 0L;
        */
       DELIVER_IMMEDIATELY(1),
       /**
+       *
+       *
        * <pre>
        * The server will not deliver a published message to subscribers until
        * the message has been successfully written to storage. This will result
@@ -288,6 +324,8 @@ private static final long serialVersionUID = 0L;
       ;
 
       /**
+       *
+       *
        * <pre>
        * Default value. This value is unused.
        * </pre>
@@ -296,6 +334,8 @@ private static final long serialVersionUID = 0L;
        */
       public static final int DELIVERY_REQUIREMENT_UNSPECIFIED_VALUE = 0;
       /**
+       *
+       *
        * <pre>
        * The server does not wait for a published message to be successfully
        * written to storage before delivering it to subscribers. As such, a
@@ -330,6 +370,8 @@ private static final long serialVersionUID = 0L;
        */
       public static final int DELIVER_IMMEDIATELY_VALUE = 1;
       /**
+       *
+       *
        * <pre>
        * The server will not deliver a published message to subscribers until
        * the message has been successfully written to storage. This will result
@@ -339,7 +381,6 @@ private static final long serialVersionUID = 0L;
        * <code>DELIVER_AFTER_STORED = 2;</code>
        */
       public static final int DELIVER_AFTER_STORED_VALUE = 2;
-
 
       public final int getNumber() {
         if (this == UNRECOGNIZED) {
@@ -365,10 +406,14 @@ private static final long serialVersionUID = 0L;
        */
       public static DeliveryRequirement forNumber(int value) {
         switch (value) {
-          case 0: return DELIVERY_REQUIREMENT_UNSPECIFIED;
-          case 1: return DELIVER_IMMEDIATELY;
-          case 2: return DELIVER_AFTER_STORED;
-          default: return null;
+          case 0:
+            return DELIVERY_REQUIREMENT_UNSPECIFIED;
+          case 1:
+            return DELIVER_IMMEDIATELY;
+          case 2:
+            return DELIVER_AFTER_STORED;
+          default:
+            return null;
         }
       }
 
@@ -376,25 +421,27 @@ private static final long serialVersionUID = 0L;
           internalGetValueMap() {
         return internalValueMap;
       }
-      private static final com.google.protobuf.Internal.EnumLiteMap<
-          DeliveryRequirement> internalValueMap =
-            new com.google.protobuf.Internal.EnumLiteMap<DeliveryRequirement>() {
-              public DeliveryRequirement findValueByNumber(int number) {
-                return DeliveryRequirement.forNumber(number);
-              }
-            };
 
-      public final com.google.protobuf.Descriptors.EnumValueDescriptor
-          getValueDescriptor() {
+      private static final com.google.protobuf.Internal.EnumLiteMap<DeliveryRequirement>
+          internalValueMap =
+              new com.google.protobuf.Internal.EnumLiteMap<DeliveryRequirement>() {
+                public DeliveryRequirement findValueByNumber(int number) {
+                  return DeliveryRequirement.forNumber(number);
+                }
+              };
+
+      public final com.google.protobuf.Descriptors.EnumValueDescriptor getValueDescriptor() {
         return getDescriptor().getValues().get(ordinal());
       }
-      public final com.google.protobuf.Descriptors.EnumDescriptor
-          getDescriptorForType() {
+
+      public final com.google.protobuf.Descriptors.EnumDescriptor getDescriptorForType() {
         return getDescriptor();
       }
-      public static final com.google.protobuf.Descriptors.EnumDescriptor
-          getDescriptor() {
-        return com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig.getDescriptor().getEnumTypes().get(0);
+
+      public static final com.google.protobuf.Descriptors.EnumDescriptor getDescriptor() {
+        return com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig.getDescriptor()
+            .getEnumTypes()
+            .get(0);
       }
 
       private static final DeliveryRequirement[] VALUES = values();
@@ -402,8 +449,7 @@ private static final long serialVersionUID = 0L;
       public static DeliveryRequirement valueOf(
           com.google.protobuf.Descriptors.EnumValueDescriptor desc) {
         if (desc.getType() != getDescriptor()) {
-          throw new java.lang.IllegalArgumentException(
-            "EnumValueDescriptor is not for this type.");
+          throw new java.lang.IllegalArgumentException("EnumValueDescriptor is not for this type.");
         }
         if (desc.getIndex() == -1) {
           return UNRECOGNIZED;
@@ -423,31 +469,48 @@ private static final long serialVersionUID = 0L;
     public static final int DELIVERY_REQUIREMENT_FIELD_NUMBER = 3;
     private int deliveryRequirement_;
     /**
+     *
+     *
      * <pre>
      * The DeliveryRequirement for this subscription.
      * </pre>
      *
-     * <code>.google.cloud.pubsublite.v1.Subscription.DeliveryConfig.DeliveryRequirement delivery_requirement = 3;</code>
+     * <code>
+     * .google.cloud.pubsublite.v1.Subscription.DeliveryConfig.DeliveryRequirement delivery_requirement = 3;
+     * </code>
+     *
      * @return The enum numeric value on the wire for deliveryRequirement.
      */
     public int getDeliveryRequirementValue() {
       return deliveryRequirement_;
     }
     /**
+     *
+     *
      * <pre>
      * The DeliveryRequirement for this subscription.
      * </pre>
      *
-     * <code>.google.cloud.pubsublite.v1.Subscription.DeliveryConfig.DeliveryRequirement delivery_requirement = 3;</code>
+     * <code>
+     * .google.cloud.pubsublite.v1.Subscription.DeliveryConfig.DeliveryRequirement delivery_requirement = 3;
+     * </code>
+     *
      * @return The deliveryRequirement.
      */
-    public com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig.DeliveryRequirement getDeliveryRequirement() {
+    public com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig.DeliveryRequirement
+        getDeliveryRequirement() {
       @SuppressWarnings("deprecation")
-      com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig.DeliveryRequirement result = com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig.DeliveryRequirement.valueOf(deliveryRequirement_);
-      return result == null ? com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig.DeliveryRequirement.UNRECOGNIZED : result;
+      com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig.DeliveryRequirement result =
+          com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig.DeliveryRequirement.valueOf(
+              deliveryRequirement_);
+      return result == null
+          ? com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig.DeliveryRequirement
+              .UNRECOGNIZED
+          : result;
     }
 
     private byte memoizedIsInitialized = -1;
+
     @java.lang.Override
     public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
@@ -459,9 +522,11 @@ private static final long serialVersionUID = 0L;
     }
 
     @java.lang.Override
-    public void writeTo(com.google.protobuf.CodedOutputStream output)
-                        throws java.io.IOException {
-      if (deliveryRequirement_ != com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig.DeliveryRequirement.DELIVERY_REQUIREMENT_UNSPECIFIED.getNumber()) {
+    public void writeTo(com.google.protobuf.CodedOutputStream output) throws java.io.IOException {
+      if (deliveryRequirement_
+          != com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig.DeliveryRequirement
+              .DELIVERY_REQUIREMENT_UNSPECIFIED
+              .getNumber()) {
         output.writeEnum(3, deliveryRequirement_);
       }
       unknownFields.writeTo(output);
@@ -473,9 +538,11 @@ private static final long serialVersionUID = 0L;
       if (size != -1) return size;
 
       size = 0;
-      if (deliveryRequirement_ != com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig.DeliveryRequirement.DELIVERY_REQUIREMENT_UNSPECIFIED.getNumber()) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeEnumSize(3, deliveryRequirement_);
+      if (deliveryRequirement_
+          != com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig.DeliveryRequirement
+              .DELIVERY_REQUIREMENT_UNSPECIFIED
+              .getNumber()) {
+        size += com.google.protobuf.CodedOutputStream.computeEnumSize(3, deliveryRequirement_);
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -485,12 +552,13 @@ private static final long serialVersionUID = 0L;
     @java.lang.Override
     public boolean equals(final java.lang.Object obj) {
       if (obj == this) {
-       return true;
+        return true;
       }
       if (!(obj instanceof com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig)) {
         return super.equals(obj);
       }
-      com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig other = (com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig) obj;
+      com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig other =
+          (com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig) obj;
 
       if (deliveryRequirement_ != other.deliveryRequirement_) return false;
       if (!unknownFields.equals(other.unknownFields)) return false;
@@ -512,87 +580,94 @@ private static final long serialVersionUID = 0L;
     }
 
     public static com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig parseFrom(
-        java.nio.ByteBuffer data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
+        java.nio.ByteBuffer data) throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
+
     public static com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig parseFrom(
-        java.nio.ByteBuffer data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        java.nio.ByteBuffer data, com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
+
     public static com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
+
     public static com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig parseFrom(byte[] data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
+
+    public static com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig parseFrom(
+        byte[] data) throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
+
     public static com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig parseFrom(
-        byte[] data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        byte[] data, com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig parseFrom(java.io.InputStream input)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input);
-    }
+
     public static com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig parseFrom(
-        java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input, extensionRegistry);
+        java.io.InputStream input) throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3.parseWithIOException(PARSER, input);
     }
-    public static com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig parseDelimitedFrom(java.io.InputStream input)
+
+    public static com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig parseFrom(
+        java.io.InputStream input, com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseDelimitedWithIOException(PARSER, input);
+      return com.google.protobuf.GeneratedMessageV3.parseWithIOException(
+          PARSER, input, extensionRegistry);
     }
+
     public static com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig parseDelimitedFrom(
-        java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+        java.io.InputStream input) throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3.parseDelimitedWithIOException(PARSER, input);
     }
+
+    public static com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig parseDelimitedFrom(
+        java.io.InputStream input, com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3.parseDelimitedWithIOException(
+          PARSER, input, extensionRegistry);
+    }
+
     public static com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig parseFrom(
-        com.google.protobuf.CodedInputStream input)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input);
+        com.google.protobuf.CodedInputStream input) throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3.parseWithIOException(PARSER, input);
     }
+
     public static com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input, extensionRegistry);
+      return com.google.protobuf.GeneratedMessageV3.parseWithIOException(
+          PARSER, input, extensionRegistry);
     }
 
     @java.lang.Override
-    public Builder newBuilderForType() { return newBuilder(); }
+    public Builder newBuilderForType() {
+      return newBuilder();
+    }
+
     public static Builder newBuilder() {
       return DEFAULT_INSTANCE.toBuilder();
     }
-    public static Builder newBuilder(com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig prototype) {
+
+    public static Builder newBuilder(
+        com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig prototype) {
       return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
     }
+
     @java.lang.Override
     public Builder toBuilder() {
-      return this == DEFAULT_INSTANCE
-          ? new Builder() : new Builder().mergeFrom(this);
+      return this == DEFAULT_INSTANCE ? new Builder() : new Builder().mergeFrom(this);
     }
 
     @java.lang.Override
@@ -602,27 +677,32 @@ private static final long serialVersionUID = 0L;
       return builder;
     }
     /**
+     *
+     *
      * <pre>
      * The settings for a subscription's message delivery.
      * </pre>
      *
      * Protobuf type {@code google.cloud.pubsublite.v1.Subscription.DeliveryConfig}
      */
-    public static final class Builder extends
-        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+    public static final class Builder
+        extends com.google.protobuf.GeneratedMessageV3.Builder<Builder>
+        implements
         // @@protoc_insertion_point(builder_implements:google.cloud.pubsublite.v1.Subscription.DeliveryConfig)
         com.google.cloud.pubsublite.proto.Subscription.DeliveryConfigOrBuilder {
-      public static final com.google.protobuf.Descriptors.Descriptor
-          getDescriptor() {
-        return com.google.cloud.pubsublite.proto.CommonProto.internal_static_google_cloud_pubsublite_v1_Subscription_DeliveryConfig_descriptor;
+      public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
+        return com.google.cloud.pubsublite.proto.CommonProto
+            .internal_static_google_cloud_pubsublite_v1_Subscription_DeliveryConfig_descriptor;
       }
 
       @java.lang.Override
       protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return com.google.cloud.pubsublite.proto.CommonProto.internal_static_google_cloud_pubsublite_v1_Subscription_DeliveryConfig_fieldAccessorTable
+        return com.google.cloud.pubsublite.proto.CommonProto
+            .internal_static_google_cloud_pubsublite_v1_Subscription_DeliveryConfig_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
-                com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig.class, com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig.Builder.class);
+                com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig.class,
+                com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig.Builder.class);
       }
 
       // Construct using com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig.newBuilder()
@@ -630,16 +710,15 @@ private static final long serialVersionUID = 0L;
         maybeForceBuilderInitialization();
       }
 
-      private Builder(
-          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+      private Builder(com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
         super(parent);
         maybeForceBuilderInitialization();
       }
+
       private void maybeForceBuilderInitialization() {
-        if (com.google.protobuf.GeneratedMessageV3
-                .alwaysUseFieldBuilders) {
-        }
+        if (com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders) {}
       }
+
       @java.lang.Override
       public Builder clear() {
         super.clear();
@@ -649,13 +728,14 @@ private static final long serialVersionUID = 0L;
       }
 
       @java.lang.Override
-      public com.google.protobuf.Descriptors.Descriptor
-          getDescriptorForType() {
-        return com.google.cloud.pubsublite.proto.CommonProto.internal_static_google_cloud_pubsublite_v1_Subscription_DeliveryConfig_descriptor;
+      public com.google.protobuf.Descriptors.Descriptor getDescriptorForType() {
+        return com.google.cloud.pubsublite.proto.CommonProto
+            .internal_static_google_cloud_pubsublite_v1_Subscription_DeliveryConfig_descriptor;
       }
 
       @java.lang.Override
-      public com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig getDefaultInstanceForType() {
+      public com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig
+          getDefaultInstanceForType() {
         return com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig.getDefaultInstance();
       }
 
@@ -670,7 +750,8 @@ private static final long serialVersionUID = 0L;
 
       @java.lang.Override
       public com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig buildPartial() {
-        com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig result = new com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig(this);
+        com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig result =
+            new com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig(this);
         result.deliveryRequirement_ = deliveryRequirement_;
         onBuilt();
         return result;
@@ -680,46 +761,52 @@ private static final long serialVersionUID = 0L;
       public Builder clone() {
         return super.clone();
       }
+
       @java.lang.Override
       public Builder setField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          java.lang.Object value) {
+          com.google.protobuf.Descriptors.FieldDescriptor field, java.lang.Object value) {
         return super.setField(field, value);
       }
+
       @java.lang.Override
-      public Builder clearField(
-          com.google.protobuf.Descriptors.FieldDescriptor field) {
+      public Builder clearField(com.google.protobuf.Descriptors.FieldDescriptor field) {
         return super.clearField(field);
       }
+
       @java.lang.Override
-      public Builder clearOneof(
-          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+      public Builder clearOneof(com.google.protobuf.Descriptors.OneofDescriptor oneof) {
         return super.clearOneof(oneof);
       }
+
       @java.lang.Override
       public Builder setRepeatedField(
           com.google.protobuf.Descriptors.FieldDescriptor field,
-          int index, java.lang.Object value) {
+          int index,
+          java.lang.Object value) {
         return super.setRepeatedField(field, index, value);
       }
+
       @java.lang.Override
       public Builder addRepeatedField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          java.lang.Object value) {
+          com.google.protobuf.Descriptors.FieldDescriptor field, java.lang.Object value) {
         return super.addRepeatedField(field, value);
       }
+
       @java.lang.Override
       public Builder mergeFrom(com.google.protobuf.Message other) {
         if (other instanceof com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig) {
-          return mergeFrom((com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig)other);
+          return mergeFrom((com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig) other);
         } else {
           super.mergeFrom(other);
           return this;
         }
       }
 
-      public Builder mergeFrom(com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig other) {
-        if (other == com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig.getDefaultInstance()) return this;
+      public Builder mergeFrom(
+          com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig other) {
+        if (other
+            == com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig.getDefaultInstance())
+          return this;
         if (other.deliveryRequirement_ != 0) {
           setDeliveryRequirementValue(other.getDeliveryRequirementValue());
         }
@@ -742,7 +829,9 @@ private static final long serialVersionUID = 0L;
         try {
           parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig) e.getUnfinishedMessage();
+          parsedMessage =
+              (com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig)
+                  e.getUnfinishedMessage();
           throw e.unwrapIOException();
         } finally {
           if (parsedMessage != null) {
@@ -754,22 +843,32 @@ private static final long serialVersionUID = 0L;
 
       private int deliveryRequirement_ = 0;
       /**
+       *
+       *
        * <pre>
        * The DeliveryRequirement for this subscription.
        * </pre>
        *
-       * <code>.google.cloud.pubsublite.v1.Subscription.DeliveryConfig.DeliveryRequirement delivery_requirement = 3;</code>
+       * <code>
+       * .google.cloud.pubsublite.v1.Subscription.DeliveryConfig.DeliveryRequirement delivery_requirement = 3;
+       * </code>
+       *
        * @return The enum numeric value on the wire for deliveryRequirement.
        */
       public int getDeliveryRequirementValue() {
         return deliveryRequirement_;
       }
       /**
+       *
+       *
        * <pre>
        * The DeliveryRequirement for this subscription.
        * </pre>
        *
-       * <code>.google.cloud.pubsublite.v1.Subscription.DeliveryConfig.DeliveryRequirement delivery_requirement = 3;</code>
+       * <code>
+       * .google.cloud.pubsublite.v1.Subscription.DeliveryConfig.DeliveryRequirement delivery_requirement = 3;
+       * </code>
+       *
        * @param value The enum numeric value on the wire for deliveryRequirement to set.
        * @return This builder for chaining.
        */
@@ -779,50 +878,73 @@ private static final long serialVersionUID = 0L;
         return this;
       }
       /**
+       *
+       *
        * <pre>
        * The DeliveryRequirement for this subscription.
        * </pre>
        *
-       * <code>.google.cloud.pubsublite.v1.Subscription.DeliveryConfig.DeliveryRequirement delivery_requirement = 3;</code>
+       * <code>
+       * .google.cloud.pubsublite.v1.Subscription.DeliveryConfig.DeliveryRequirement delivery_requirement = 3;
+       * </code>
+       *
        * @return The deliveryRequirement.
        */
-      public com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig.DeliveryRequirement getDeliveryRequirement() {
+      public com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig.DeliveryRequirement
+          getDeliveryRequirement() {
         @SuppressWarnings("deprecation")
-        com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig.DeliveryRequirement result = com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig.DeliveryRequirement.valueOf(deliveryRequirement_);
-        return result == null ? com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig.DeliveryRequirement.UNRECOGNIZED : result;
+        com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig.DeliveryRequirement result =
+            com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig.DeliveryRequirement
+                .valueOf(deliveryRequirement_);
+        return result == null
+            ? com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig.DeliveryRequirement
+                .UNRECOGNIZED
+            : result;
       }
       /**
+       *
+       *
        * <pre>
        * The DeliveryRequirement for this subscription.
        * </pre>
        *
-       * <code>.google.cloud.pubsublite.v1.Subscription.DeliveryConfig.DeliveryRequirement delivery_requirement = 3;</code>
+       * <code>
+       * .google.cloud.pubsublite.v1.Subscription.DeliveryConfig.DeliveryRequirement delivery_requirement = 3;
+       * </code>
+       *
        * @param value The deliveryRequirement to set.
        * @return This builder for chaining.
        */
-      public Builder setDeliveryRequirement(com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig.DeliveryRequirement value) {
+      public Builder setDeliveryRequirement(
+          com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig.DeliveryRequirement value) {
         if (value == null) {
           throw new NullPointerException();
         }
-        
+
         deliveryRequirement_ = value.getNumber();
         onChanged();
         return this;
       }
       /**
+       *
+       *
        * <pre>
        * The DeliveryRequirement for this subscription.
        * </pre>
        *
-       * <code>.google.cloud.pubsublite.v1.Subscription.DeliveryConfig.DeliveryRequirement delivery_requirement = 3;</code>
+       * <code>
+       * .google.cloud.pubsublite.v1.Subscription.DeliveryConfig.DeliveryRequirement delivery_requirement = 3;
+       * </code>
+       *
        * @return This builder for chaining.
        */
       public Builder clearDeliveryRequirement() {
-        
+
         deliveryRequirement_ = 0;
         onChanged();
         return this;
       }
+
       @java.lang.Override
       public final Builder setUnknownFields(
           final com.google.protobuf.UnknownFieldSet unknownFields) {
@@ -835,30 +957,32 @@ private static final long serialVersionUID = 0L;
         return super.mergeUnknownFields(unknownFields);
       }
 
-
       // @@protoc_insertion_point(builder_scope:google.cloud.pubsublite.v1.Subscription.DeliveryConfig)
     }
 
     // @@protoc_insertion_point(class_scope:google.cloud.pubsublite.v1.Subscription.DeliveryConfig)
-    private static final com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig DEFAULT_INSTANCE;
+    private static final com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig
+        DEFAULT_INSTANCE;
+
     static {
       DEFAULT_INSTANCE = new com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig();
     }
 
-    public static com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig getDefaultInstance() {
+    public static com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig
+        getDefaultInstance() {
       return DEFAULT_INSTANCE;
     }
 
-    private static final com.google.protobuf.Parser<DeliveryConfig>
-        PARSER = new com.google.protobuf.AbstractParser<DeliveryConfig>() {
-      @java.lang.Override
-      public DeliveryConfig parsePartialFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws com.google.protobuf.InvalidProtocolBufferException {
-        return new DeliveryConfig(input, extensionRegistry);
-      }
-    };
+    private static final com.google.protobuf.Parser<DeliveryConfig> PARSER =
+        new com.google.protobuf.AbstractParser<DeliveryConfig>() {
+          @java.lang.Override
+          public DeliveryConfig parsePartialFrom(
+              com.google.protobuf.CodedInputStream input,
+              com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+              throws com.google.protobuf.InvalidProtocolBufferException {
+            return new DeliveryConfig(input, extensionRegistry);
+          }
+        };
 
     public static com.google.protobuf.Parser<DeliveryConfig> parser() {
       return PARSER;
@@ -870,15 +994,17 @@ private static final long serialVersionUID = 0L;
     }
 
     @java.lang.Override
-    public com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig getDefaultInstanceForType() {
+    public com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig
+        getDefaultInstanceForType() {
       return DEFAULT_INSTANCE;
     }
-
   }
 
   public static final int NAME_FIELD_NUMBER = 1;
   private volatile java.lang.Object name_;
   /**
+   *
+   *
    * <pre>
    * The name of the subscription.
    * Structured like:
@@ -886,6 +1012,7 @@ private static final long serialVersionUID = 0L;
    * </pre>
    *
    * <code>string name = 1;</code>
+   *
    * @return The name.
    */
   public java.lang.String getName() {
@@ -893,14 +1020,15 @@ private static final long serialVersionUID = 0L;
     if (ref instanceof java.lang.String) {
       return (java.lang.String) ref;
     } else {
-      com.google.protobuf.ByteString bs = 
-          (com.google.protobuf.ByteString) ref;
+      com.google.protobuf.ByteString bs = (com.google.protobuf.ByteString) ref;
       java.lang.String s = bs.toStringUtf8();
       name_ = s;
       return s;
     }
   }
   /**
+   *
+   *
    * <pre>
    * The name of the subscription.
    * Structured like:
@@ -908,15 +1036,14 @@ private static final long serialVersionUID = 0L;
    * </pre>
    *
    * <code>string name = 1;</code>
+   *
    * @return The bytes for name.
    */
-  public com.google.protobuf.ByteString
-      getNameBytes() {
+  public com.google.protobuf.ByteString getNameBytes() {
     java.lang.Object ref = name_;
     if (ref instanceof java.lang.String) {
-      com.google.protobuf.ByteString b = 
-          com.google.protobuf.ByteString.copyFromUtf8(
-              (java.lang.String) ref);
+      com.google.protobuf.ByteString b =
+          com.google.protobuf.ByteString.copyFromUtf8((java.lang.String) ref);
       name_ = b;
       return b;
     } else {
@@ -927,6 +1054,8 @@ private static final long serialVersionUID = 0L;
   public static final int TOPIC_FIELD_NUMBER = 2;
   private volatile java.lang.Object topic_;
   /**
+   *
+   *
    * <pre>
    * The name of the topic this subscription is attached to.
    * Structured like:
@@ -934,6 +1063,7 @@ private static final long serialVersionUID = 0L;
    * </pre>
    *
    * <code>string topic = 2 [(.google.api.resource_reference) = { ... }</code>
+   *
    * @return The topic.
    */
   public java.lang.String getTopic() {
@@ -941,14 +1071,15 @@ private static final long serialVersionUID = 0L;
     if (ref instanceof java.lang.String) {
       return (java.lang.String) ref;
     } else {
-      com.google.protobuf.ByteString bs = 
-          (com.google.protobuf.ByteString) ref;
+      com.google.protobuf.ByteString bs = (com.google.protobuf.ByteString) ref;
       java.lang.String s = bs.toStringUtf8();
       topic_ = s;
       return s;
     }
   }
   /**
+   *
+   *
    * <pre>
    * The name of the topic this subscription is attached to.
    * Structured like:
@@ -956,15 +1087,14 @@ private static final long serialVersionUID = 0L;
    * </pre>
    *
    * <code>string topic = 2 [(.google.api.resource_reference) = { ... }</code>
+   *
    * @return The bytes for topic.
    */
-  public com.google.protobuf.ByteString
-      getTopicBytes() {
+  public com.google.protobuf.ByteString getTopicBytes() {
     java.lang.Object ref = topic_;
     if (ref instanceof java.lang.String) {
-      com.google.protobuf.ByteString b = 
-          com.google.protobuf.ByteString.copyFromUtf8(
-              (java.lang.String) ref);
+      com.google.protobuf.ByteString b =
+          com.google.protobuf.ByteString.copyFromUtf8((java.lang.String) ref);
       topic_ = b;
       return b;
     } else {
@@ -975,39 +1105,51 @@ private static final long serialVersionUID = 0L;
   public static final int DELIVERY_CONFIG_FIELD_NUMBER = 3;
   private com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig deliveryConfig_;
   /**
+   *
+   *
    * <pre>
    * The settings for this subscription's message delivery.
    * </pre>
    *
    * <code>.google.cloud.pubsublite.v1.Subscription.DeliveryConfig delivery_config = 3;</code>
+   *
    * @return Whether the deliveryConfig field is set.
    */
   public boolean hasDeliveryConfig() {
     return deliveryConfig_ != null;
   }
   /**
+   *
+   *
    * <pre>
    * The settings for this subscription's message delivery.
    * </pre>
    *
    * <code>.google.cloud.pubsublite.v1.Subscription.DeliveryConfig delivery_config = 3;</code>
+   *
    * @return The deliveryConfig.
    */
   public com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig getDeliveryConfig() {
-    return deliveryConfig_ == null ? com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig.getDefaultInstance() : deliveryConfig_;
+    return deliveryConfig_ == null
+        ? com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig.getDefaultInstance()
+        : deliveryConfig_;
   }
   /**
+   *
+   *
    * <pre>
    * The settings for this subscription's message delivery.
    * </pre>
    *
    * <code>.google.cloud.pubsublite.v1.Subscription.DeliveryConfig delivery_config = 3;</code>
    */
-  public com.google.cloud.pubsublite.proto.Subscription.DeliveryConfigOrBuilder getDeliveryConfigOrBuilder() {
+  public com.google.cloud.pubsublite.proto.Subscription.DeliveryConfigOrBuilder
+      getDeliveryConfigOrBuilder() {
     return getDeliveryConfig();
   }
 
   private byte memoizedIsInitialized = -1;
+
   @java.lang.Override
   public final boolean isInitialized() {
     byte isInitialized = memoizedIsInitialized;
@@ -1019,8 +1161,7 @@ private static final long serialVersionUID = 0L;
   }
 
   @java.lang.Override
-  public void writeTo(com.google.protobuf.CodedOutputStream output)
-                      throws java.io.IOException {
+  public void writeTo(com.google.protobuf.CodedOutputStream output) throws java.io.IOException {
     if (!getNameBytes().isEmpty()) {
       com.google.protobuf.GeneratedMessageV3.writeString(output, 1, name_);
     }
@@ -1046,8 +1187,7 @@ private static final long serialVersionUID = 0L;
       size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, topic_);
     }
     if (deliveryConfig_ != null) {
-      size += com.google.protobuf.CodedOutputStream
-        .computeMessageSize(3, getDeliveryConfig());
+      size += com.google.protobuf.CodedOutputStream.computeMessageSize(3, getDeliveryConfig());
     }
     size += unknownFields.getSerializedSize();
     memoizedSize = size;
@@ -1057,21 +1197,19 @@ private static final long serialVersionUID = 0L;
   @java.lang.Override
   public boolean equals(final java.lang.Object obj) {
     if (obj == this) {
-     return true;
+      return true;
     }
     if (!(obj instanceof com.google.cloud.pubsublite.proto.Subscription)) {
       return super.equals(obj);
     }
-    com.google.cloud.pubsublite.proto.Subscription other = (com.google.cloud.pubsublite.proto.Subscription) obj;
+    com.google.cloud.pubsublite.proto.Subscription other =
+        (com.google.cloud.pubsublite.proto.Subscription) obj;
 
-    if (!getName()
-        .equals(other.getName())) return false;
-    if (!getTopic()
-        .equals(other.getTopic())) return false;
+    if (!getName().equals(other.getName())) return false;
+    if (!getTopic().equals(other.getTopic())) return false;
     if (hasDeliveryConfig() != other.hasDeliveryConfig()) return false;
     if (hasDeliveryConfig()) {
-      if (!getDeliveryConfig()
-          .equals(other.getDeliveryConfig())) return false;
+      if (!getDeliveryConfig().equals(other.getDeliveryConfig())) return false;
     }
     if (!unknownFields.equals(other.unknownFields)) return false;
     return true;
@@ -1097,118 +1235,127 @@ private static final long serialVersionUID = 0L;
     return hash;
   }
 
-  public static com.google.cloud.pubsublite.proto.Subscription parseFrom(
-      java.nio.ByteBuffer data)
+  public static com.google.cloud.pubsublite.proto.Subscription parseFrom(java.nio.ByteBuffer data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
+
   public static com.google.cloud.pubsublite.proto.Subscription parseFrom(
-      java.nio.ByteBuffer data,
-      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+      java.nio.ByteBuffer data, com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
+
   public static com.google.cloud.pubsublite.proto.Subscription parseFrom(
       com.google.protobuf.ByteString data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
+
   public static com.google.cloud.pubsublite.proto.Subscription parseFrom(
       com.google.protobuf.ByteString data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
+
   public static com.google.cloud.pubsublite.proto.Subscription parseFrom(byte[] data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
+
   public static com.google.cloud.pubsublite.proto.Subscription parseFrom(
-      byte[] data,
-      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+      byte[] data, com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
+
   public static com.google.cloud.pubsublite.proto.Subscription parseFrom(java.io.InputStream input)
       throws java.io.IOException {
-    return com.google.protobuf.GeneratedMessageV3
-        .parseWithIOException(PARSER, input);
+    return com.google.protobuf.GeneratedMessageV3.parseWithIOException(PARSER, input);
   }
+
   public static com.google.cloud.pubsublite.proto.Subscription parseFrom(
-      java.io.InputStream input,
-      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+      java.io.InputStream input, com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
-    return com.google.protobuf.GeneratedMessageV3
-        .parseWithIOException(PARSER, input, extensionRegistry);
+    return com.google.protobuf.GeneratedMessageV3.parseWithIOException(
+        PARSER, input, extensionRegistry);
   }
-  public static com.google.cloud.pubsublite.proto.Subscription parseDelimitedFrom(java.io.InputStream input)
-      throws java.io.IOException {
-    return com.google.protobuf.GeneratedMessageV3
-        .parseDelimitedWithIOException(PARSER, input);
-  }
+
   public static com.google.cloud.pubsublite.proto.Subscription parseDelimitedFrom(
-      java.io.InputStream input,
-      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-      throws java.io.IOException {
-    return com.google.protobuf.GeneratedMessageV3
-        .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+      java.io.InputStream input) throws java.io.IOException {
+    return com.google.protobuf.GeneratedMessageV3.parseDelimitedWithIOException(PARSER, input);
   }
+
+  public static com.google.cloud.pubsublite.proto.Subscription parseDelimitedFrom(
+      java.io.InputStream input, com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+      throws java.io.IOException {
+    return com.google.protobuf.GeneratedMessageV3.parseDelimitedWithIOException(
+        PARSER, input, extensionRegistry);
+  }
+
   public static com.google.cloud.pubsublite.proto.Subscription parseFrom(
-      com.google.protobuf.CodedInputStream input)
-      throws java.io.IOException {
-    return com.google.protobuf.GeneratedMessageV3
-        .parseWithIOException(PARSER, input);
+      com.google.protobuf.CodedInputStream input) throws java.io.IOException {
+    return com.google.protobuf.GeneratedMessageV3.parseWithIOException(PARSER, input);
   }
+
   public static com.google.cloud.pubsublite.proto.Subscription parseFrom(
       com.google.protobuf.CodedInputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
-    return com.google.protobuf.GeneratedMessageV3
-        .parseWithIOException(PARSER, input, extensionRegistry);
+    return com.google.protobuf.GeneratedMessageV3.parseWithIOException(
+        PARSER, input, extensionRegistry);
   }
 
   @java.lang.Override
-  public Builder newBuilderForType() { return newBuilder(); }
+  public Builder newBuilderForType() {
+    return newBuilder();
+  }
+
   public static Builder newBuilder() {
     return DEFAULT_INSTANCE.toBuilder();
   }
+
   public static Builder newBuilder(com.google.cloud.pubsublite.proto.Subscription prototype) {
     return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
   }
+
   @java.lang.Override
   public Builder toBuilder() {
-    return this == DEFAULT_INSTANCE
-        ? new Builder() : new Builder().mergeFrom(this);
+    return this == DEFAULT_INSTANCE ? new Builder() : new Builder().mergeFrom(this);
   }
 
   @java.lang.Override
-  protected Builder newBuilderForType(
-      com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+  protected Builder newBuilderForType(com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
     Builder builder = new Builder(parent);
     return builder;
   }
   /**
+   *
+   *
    * <pre>
    * Metadata about a subscription resource.
    * </pre>
    *
    * Protobuf type {@code google.cloud.pubsublite.v1.Subscription}
    */
-  public static final class Builder extends
-      com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+  public static final class Builder extends com.google.protobuf.GeneratedMessageV3.Builder<Builder>
+      implements
       // @@protoc_insertion_point(builder_implements:google.cloud.pubsublite.v1.Subscription)
       com.google.cloud.pubsublite.proto.SubscriptionOrBuilder {
-    public static final com.google.protobuf.Descriptors.Descriptor
-        getDescriptor() {
-      return com.google.cloud.pubsublite.proto.CommonProto.internal_static_google_cloud_pubsublite_v1_Subscription_descriptor;
+    public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
+      return com.google.cloud.pubsublite.proto.CommonProto
+          .internal_static_google_cloud_pubsublite_v1_Subscription_descriptor;
     }
 
     @java.lang.Override
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return com.google.cloud.pubsublite.proto.CommonProto.internal_static_google_cloud_pubsublite_v1_Subscription_fieldAccessorTable
+      return com.google.cloud.pubsublite.proto.CommonProto
+          .internal_static_google_cloud_pubsublite_v1_Subscription_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              com.google.cloud.pubsublite.proto.Subscription.class, com.google.cloud.pubsublite.proto.Subscription.Builder.class);
+              com.google.cloud.pubsublite.proto.Subscription.class,
+              com.google.cloud.pubsublite.proto.Subscription.Builder.class);
     }
 
     // Construct using com.google.cloud.pubsublite.proto.Subscription.newBuilder()
@@ -1216,16 +1363,15 @@ private static final long serialVersionUID = 0L;
       maybeForceBuilderInitialization();
     }
 
-    private Builder(
-        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+    private Builder(com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
       super(parent);
       maybeForceBuilderInitialization();
     }
+
     private void maybeForceBuilderInitialization() {
-      if (com.google.protobuf.GeneratedMessageV3
-              .alwaysUseFieldBuilders) {
-      }
+      if (com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders) {}
     }
+
     @java.lang.Override
     public Builder clear() {
       super.clear();
@@ -1243,9 +1389,9 @@ private static final long serialVersionUID = 0L;
     }
 
     @java.lang.Override
-    public com.google.protobuf.Descriptors.Descriptor
-        getDescriptorForType() {
-      return com.google.cloud.pubsublite.proto.CommonProto.internal_static_google_cloud_pubsublite_v1_Subscription_descriptor;
+    public com.google.protobuf.Descriptors.Descriptor getDescriptorForType() {
+      return com.google.cloud.pubsublite.proto.CommonProto
+          .internal_static_google_cloud_pubsublite_v1_Subscription_descriptor;
     }
 
     @java.lang.Override
@@ -1264,7 +1410,8 @@ private static final long serialVersionUID = 0L;
 
     @java.lang.Override
     public com.google.cloud.pubsublite.proto.Subscription buildPartial() {
-      com.google.cloud.pubsublite.proto.Subscription result = new com.google.cloud.pubsublite.proto.Subscription(this);
+      com.google.cloud.pubsublite.proto.Subscription result =
+          new com.google.cloud.pubsublite.proto.Subscription(this);
       result.name_ = name_;
       result.topic_ = topic_;
       if (deliveryConfigBuilder_ == null) {
@@ -1280,38 +1427,39 @@ private static final long serialVersionUID = 0L;
     public Builder clone() {
       return super.clone();
     }
+
     @java.lang.Override
     public Builder setField(
-        com.google.protobuf.Descriptors.FieldDescriptor field,
-        java.lang.Object value) {
+        com.google.protobuf.Descriptors.FieldDescriptor field, java.lang.Object value) {
       return super.setField(field, value);
     }
+
     @java.lang.Override
-    public Builder clearField(
-        com.google.protobuf.Descriptors.FieldDescriptor field) {
+    public Builder clearField(com.google.protobuf.Descriptors.FieldDescriptor field) {
       return super.clearField(field);
     }
+
     @java.lang.Override
-    public Builder clearOneof(
-        com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+    public Builder clearOneof(com.google.protobuf.Descriptors.OneofDescriptor oneof) {
       return super.clearOneof(oneof);
     }
+
     @java.lang.Override
     public Builder setRepeatedField(
-        com.google.protobuf.Descriptors.FieldDescriptor field,
-        int index, java.lang.Object value) {
+        com.google.protobuf.Descriptors.FieldDescriptor field, int index, java.lang.Object value) {
       return super.setRepeatedField(field, index, value);
     }
+
     @java.lang.Override
     public Builder addRepeatedField(
-        com.google.protobuf.Descriptors.FieldDescriptor field,
-        java.lang.Object value) {
+        com.google.protobuf.Descriptors.FieldDescriptor field, java.lang.Object value) {
       return super.addRepeatedField(field, value);
     }
+
     @java.lang.Override
     public Builder mergeFrom(com.google.protobuf.Message other) {
       if (other instanceof com.google.cloud.pubsublite.proto.Subscription) {
-        return mergeFrom((com.google.cloud.pubsublite.proto.Subscription)other);
+        return mergeFrom((com.google.cloud.pubsublite.proto.Subscription) other);
       } else {
         super.mergeFrom(other);
         return this;
@@ -1362,6 +1510,8 @@ private static final long serialVersionUID = 0L;
 
     private java.lang.Object name_ = "";
     /**
+     *
+     *
      * <pre>
      * The name of the subscription.
      * Structured like:
@@ -1369,13 +1519,13 @@ private static final long serialVersionUID = 0L;
      * </pre>
      *
      * <code>string name = 1;</code>
+     *
      * @return The name.
      */
     public java.lang.String getName() {
       java.lang.Object ref = name_;
       if (!(ref instanceof java.lang.String)) {
-        com.google.protobuf.ByteString bs =
-            (com.google.protobuf.ByteString) ref;
+        com.google.protobuf.ByteString bs = (com.google.protobuf.ByteString) ref;
         java.lang.String s = bs.toStringUtf8();
         name_ = s;
         return s;
@@ -1384,6 +1534,8 @@ private static final long serialVersionUID = 0L;
       }
     }
     /**
+     *
+     *
      * <pre>
      * The name of the subscription.
      * Structured like:
@@ -1391,15 +1543,14 @@ private static final long serialVersionUID = 0L;
      * </pre>
      *
      * <code>string name = 1;</code>
+     *
      * @return The bytes for name.
      */
-    public com.google.protobuf.ByteString
-        getNameBytes() {
+    public com.google.protobuf.ByteString getNameBytes() {
       java.lang.Object ref = name_;
       if (ref instanceof String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
+        com.google.protobuf.ByteString b =
+            com.google.protobuf.ByteString.copyFromUtf8((java.lang.String) ref);
         name_ = b;
         return b;
       } else {
@@ -1407,6 +1558,8 @@ private static final long serialVersionUID = 0L;
       }
     }
     /**
+     *
+     *
      * <pre>
      * The name of the subscription.
      * Structured like:
@@ -1414,20 +1567,22 @@ private static final long serialVersionUID = 0L;
      * </pre>
      *
      * <code>string name = 1;</code>
+     *
      * @param value The name to set.
      * @return This builder for chaining.
      */
-    public Builder setName(
-        java.lang.String value) {
+    public Builder setName(java.lang.String value) {
       if (value == null) {
-    throw new NullPointerException();
-  }
-  
+        throw new NullPointerException();
+      }
+
       name_ = value;
       onChanged();
       return this;
     }
     /**
+     *
+     *
      * <pre>
      * The name of the subscription.
      * Structured like:
@@ -1435,15 +1590,18 @@ private static final long serialVersionUID = 0L;
      * </pre>
      *
      * <code>string name = 1;</code>
+     *
      * @return This builder for chaining.
      */
     public Builder clearName() {
-      
+
       name_ = getDefaultInstance().getName();
       onChanged();
       return this;
     }
     /**
+     *
+     *
      * <pre>
      * The name of the subscription.
      * Structured like:
@@ -1451,16 +1609,16 @@ private static final long serialVersionUID = 0L;
      * </pre>
      *
      * <code>string name = 1;</code>
+     *
      * @param value The bytes for name to set.
      * @return This builder for chaining.
      */
-    public Builder setNameBytes(
-        com.google.protobuf.ByteString value) {
+    public Builder setNameBytes(com.google.protobuf.ByteString value) {
       if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-      
+        throw new NullPointerException();
+      }
+      checkByteStringIsUtf8(value);
+
       name_ = value;
       onChanged();
       return this;
@@ -1468,6 +1626,8 @@ private static final long serialVersionUID = 0L;
 
     private java.lang.Object topic_ = "";
     /**
+     *
+     *
      * <pre>
      * The name of the topic this subscription is attached to.
      * Structured like:
@@ -1475,13 +1635,13 @@ private static final long serialVersionUID = 0L;
      * </pre>
      *
      * <code>string topic = 2 [(.google.api.resource_reference) = { ... }</code>
+     *
      * @return The topic.
      */
     public java.lang.String getTopic() {
       java.lang.Object ref = topic_;
       if (!(ref instanceof java.lang.String)) {
-        com.google.protobuf.ByteString bs =
-            (com.google.protobuf.ByteString) ref;
+        com.google.protobuf.ByteString bs = (com.google.protobuf.ByteString) ref;
         java.lang.String s = bs.toStringUtf8();
         topic_ = s;
         return s;
@@ -1490,6 +1650,8 @@ private static final long serialVersionUID = 0L;
       }
     }
     /**
+     *
+     *
      * <pre>
      * The name of the topic this subscription is attached to.
      * Structured like:
@@ -1497,15 +1659,14 @@ private static final long serialVersionUID = 0L;
      * </pre>
      *
      * <code>string topic = 2 [(.google.api.resource_reference) = { ... }</code>
+     *
      * @return The bytes for topic.
      */
-    public com.google.protobuf.ByteString
-        getTopicBytes() {
+    public com.google.protobuf.ByteString getTopicBytes() {
       java.lang.Object ref = topic_;
       if (ref instanceof String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
+        com.google.protobuf.ByteString b =
+            com.google.protobuf.ByteString.copyFromUtf8((java.lang.String) ref);
         topic_ = b;
         return b;
       } else {
@@ -1513,6 +1674,8 @@ private static final long serialVersionUID = 0L;
       }
     }
     /**
+     *
+     *
      * <pre>
      * The name of the topic this subscription is attached to.
      * Structured like:
@@ -1520,20 +1683,22 @@ private static final long serialVersionUID = 0L;
      * </pre>
      *
      * <code>string topic = 2 [(.google.api.resource_reference) = { ... }</code>
+     *
      * @param value The topic to set.
      * @return This builder for chaining.
      */
-    public Builder setTopic(
-        java.lang.String value) {
+    public Builder setTopic(java.lang.String value) {
       if (value == null) {
-    throw new NullPointerException();
-  }
-  
+        throw new NullPointerException();
+      }
+
       topic_ = value;
       onChanged();
       return this;
     }
     /**
+     *
+     *
      * <pre>
      * The name of the topic this subscription is attached to.
      * Structured like:
@@ -1541,15 +1706,18 @@ private static final long serialVersionUID = 0L;
      * </pre>
      *
      * <code>string topic = 2 [(.google.api.resource_reference) = { ... }</code>
+     *
      * @return This builder for chaining.
      */
     public Builder clearTopic() {
-      
+
       topic_ = getDefaultInstance().getTopic();
       onChanged();
       return this;
     }
     /**
+     *
+     *
      * <pre>
      * The name of the topic this subscription is attached to.
      * Structured like:
@@ -1557,16 +1725,16 @@ private static final long serialVersionUID = 0L;
      * </pre>
      *
      * <code>string topic = 2 [(.google.api.resource_reference) = { ... }</code>
+     *
      * @param value The bytes for topic to set.
      * @return This builder for chaining.
      */
-    public Builder setTopicBytes(
-        com.google.protobuf.ByteString value) {
+    public Builder setTopicBytes(com.google.protobuf.ByteString value) {
       if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-      
+        throw new NullPointerException();
+      }
+      checkByteStringIsUtf8(value);
+
       topic_ = value;
       onChanged();
       return this;
@@ -1574,41 +1742,55 @@ private static final long serialVersionUID = 0L;
 
     private com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig deliveryConfig_;
     private com.google.protobuf.SingleFieldBuilderV3<
-        com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig, com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig.Builder, com.google.cloud.pubsublite.proto.Subscription.DeliveryConfigOrBuilder> deliveryConfigBuilder_;
+            com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig,
+            com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig.Builder,
+            com.google.cloud.pubsublite.proto.Subscription.DeliveryConfigOrBuilder>
+        deliveryConfigBuilder_;
     /**
+     *
+     *
      * <pre>
      * The settings for this subscription's message delivery.
      * </pre>
      *
      * <code>.google.cloud.pubsublite.v1.Subscription.DeliveryConfig delivery_config = 3;</code>
+     *
      * @return Whether the deliveryConfig field is set.
      */
     public boolean hasDeliveryConfig() {
       return deliveryConfigBuilder_ != null || deliveryConfig_ != null;
     }
     /**
+     *
+     *
      * <pre>
      * The settings for this subscription's message delivery.
      * </pre>
      *
      * <code>.google.cloud.pubsublite.v1.Subscription.DeliveryConfig delivery_config = 3;</code>
+     *
      * @return The deliveryConfig.
      */
     public com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig getDeliveryConfig() {
       if (deliveryConfigBuilder_ == null) {
-        return deliveryConfig_ == null ? com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig.getDefaultInstance() : deliveryConfig_;
+        return deliveryConfig_ == null
+            ? com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig.getDefaultInstance()
+            : deliveryConfig_;
       } else {
         return deliveryConfigBuilder_.getMessage();
       }
     }
     /**
+     *
+     *
      * <pre>
      * The settings for this subscription's message delivery.
      * </pre>
      *
      * <code>.google.cloud.pubsublite.v1.Subscription.DeliveryConfig delivery_config = 3;</code>
      */
-    public Builder setDeliveryConfig(com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig value) {
+    public Builder setDeliveryConfig(
+        com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig value) {
       if (deliveryConfigBuilder_ == null) {
         if (value == null) {
           throw new NullPointerException();
@@ -1622,6 +1804,8 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
+     *
+     *
      * <pre>
      * The settings for this subscription's message delivery.
      * </pre>
@@ -1640,17 +1824,23 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
+     *
+     *
      * <pre>
      * The settings for this subscription's message delivery.
      * </pre>
      *
      * <code>.google.cloud.pubsublite.v1.Subscription.DeliveryConfig delivery_config = 3;</code>
      */
-    public Builder mergeDeliveryConfig(com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig value) {
+    public Builder mergeDeliveryConfig(
+        com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig value) {
       if (deliveryConfigBuilder_ == null) {
         if (deliveryConfig_ != null) {
           deliveryConfig_ =
-            com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig.newBuilder(deliveryConfig_).mergeFrom(value).buildPartial();
+              com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig.newBuilder(
+                      deliveryConfig_)
+                  .mergeFrom(value)
+                  .buildPartial();
         } else {
           deliveryConfig_ = value;
         }
@@ -1662,6 +1852,8 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
+     *
+     *
      * <pre>
      * The settings for this subscription's message delivery.
      * </pre>
@@ -1680,33 +1872,42 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
+     *
+     *
      * <pre>
      * The settings for this subscription's message delivery.
      * </pre>
      *
      * <code>.google.cloud.pubsublite.v1.Subscription.DeliveryConfig delivery_config = 3;</code>
      */
-    public com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig.Builder getDeliveryConfigBuilder() {
-      
+    public com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig.Builder
+        getDeliveryConfigBuilder() {
+
       onChanged();
       return getDeliveryConfigFieldBuilder().getBuilder();
     }
     /**
+     *
+     *
      * <pre>
      * The settings for this subscription's message delivery.
      * </pre>
      *
      * <code>.google.cloud.pubsublite.v1.Subscription.DeliveryConfig delivery_config = 3;</code>
      */
-    public com.google.cloud.pubsublite.proto.Subscription.DeliveryConfigOrBuilder getDeliveryConfigOrBuilder() {
+    public com.google.cloud.pubsublite.proto.Subscription.DeliveryConfigOrBuilder
+        getDeliveryConfigOrBuilder() {
       if (deliveryConfigBuilder_ != null) {
         return deliveryConfigBuilder_.getMessageOrBuilder();
       } else {
-        return deliveryConfig_ == null ?
-            com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig.getDefaultInstance() : deliveryConfig_;
+        return deliveryConfig_ == null
+            ? com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig.getDefaultInstance()
+            : deliveryConfig_;
       }
     }
     /**
+     *
+     *
      * <pre>
      * The settings for this subscription's message delivery.
      * </pre>
@@ -1714,21 +1915,24 @@ private static final long serialVersionUID = 0L;
      * <code>.google.cloud.pubsublite.v1.Subscription.DeliveryConfig delivery_config = 3;</code>
      */
     private com.google.protobuf.SingleFieldBuilderV3<
-        com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig, com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig.Builder, com.google.cloud.pubsublite.proto.Subscription.DeliveryConfigOrBuilder> 
+            com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig,
+            com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig.Builder,
+            com.google.cloud.pubsublite.proto.Subscription.DeliveryConfigOrBuilder>
         getDeliveryConfigFieldBuilder() {
       if (deliveryConfigBuilder_ == null) {
-        deliveryConfigBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
-            com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig, com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig.Builder, com.google.cloud.pubsublite.proto.Subscription.DeliveryConfigOrBuilder>(
-                getDeliveryConfig(),
-                getParentForChildren(),
-                isClean());
+        deliveryConfigBuilder_ =
+            new com.google.protobuf.SingleFieldBuilderV3<
+                com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig,
+                com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig.Builder,
+                com.google.cloud.pubsublite.proto.Subscription.DeliveryConfigOrBuilder>(
+                getDeliveryConfig(), getParentForChildren(), isClean());
         deliveryConfig_ = null;
       }
       return deliveryConfigBuilder_;
     }
+
     @java.lang.Override
-    public final Builder setUnknownFields(
-        final com.google.protobuf.UnknownFieldSet unknownFields) {
+    public final Builder setUnknownFields(final com.google.protobuf.UnknownFieldSet unknownFields) {
       return super.setUnknownFields(unknownFields);
     }
 
@@ -1738,12 +1942,12 @@ private static final long serialVersionUID = 0L;
       return super.mergeUnknownFields(unknownFields);
     }
 
-
     // @@protoc_insertion_point(builder_scope:google.cloud.pubsublite.v1.Subscription)
   }
 
   // @@protoc_insertion_point(class_scope:google.cloud.pubsublite.v1.Subscription)
   private static final com.google.cloud.pubsublite.proto.Subscription DEFAULT_INSTANCE;
+
   static {
     DEFAULT_INSTANCE = new com.google.cloud.pubsublite.proto.Subscription();
   }
@@ -1752,16 +1956,16 @@ private static final long serialVersionUID = 0L;
     return DEFAULT_INSTANCE;
   }
 
-  private static final com.google.protobuf.Parser<Subscription>
-      PARSER = new com.google.protobuf.AbstractParser<Subscription>() {
-    @java.lang.Override
-    public Subscription parsePartialFrom(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return new Subscription(input, extensionRegistry);
-    }
-  };
+  private static final com.google.protobuf.Parser<Subscription> PARSER =
+      new com.google.protobuf.AbstractParser<Subscription>() {
+        @java.lang.Override
+        public Subscription parsePartialFrom(
+            com.google.protobuf.CodedInputStream input,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws com.google.protobuf.InvalidProtocolBufferException {
+          return new Subscription(input, extensionRegistry);
+        }
+      };
 
   public static com.google.protobuf.Parser<Subscription> parser() {
     return PARSER;
@@ -1776,6 +1980,4 @@ private static final long serialVersionUID = 0L;
   public com.google.cloud.pubsublite.proto.Subscription getDefaultInstanceForType() {
     return DEFAULT_INSTANCE;
   }
-
 }
-

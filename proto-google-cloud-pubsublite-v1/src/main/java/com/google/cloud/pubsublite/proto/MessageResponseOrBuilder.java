@@ -3,20 +3,24 @@
 
 package com.google.cloud.pubsublite.proto;
 
-public interface MessageResponseOrBuilder extends
+public interface MessageResponseOrBuilder
+    extends
     // @@protoc_insertion_point(interface_extends:google.cloud.pubsublite.v1.MessageResponse)
     com.google.protobuf.MessageOrBuilder {
 
   /**
+   *
+   *
    * <pre>
    * Messages from the topic partition.
    * </pre>
    *
    * <code>repeated .google.cloud.pubsublite.v1.SequencedMessage messages = 1;</code>
    */
-  java.util.List<com.google.cloud.pubsublite.proto.SequencedMessage> 
-      getMessagesList();
+  java.util.List<com.google.cloud.pubsublite.proto.SequencedMessage> getMessagesList();
   /**
+   *
+   *
    * <pre>
    * Messages from the topic partition.
    * </pre>
@@ -25,6 +29,8 @@ public interface MessageResponseOrBuilder extends
    */
   com.google.cloud.pubsublite.proto.SequencedMessage getMessages(int index);
   /**
+   *
+   *
    * <pre>
    * Messages from the topic partition.
    * </pre>
@@ -33,21 +39,24 @@ public interface MessageResponseOrBuilder extends
    */
   int getMessagesCount();
   /**
+   *
+   *
    * <pre>
    * Messages from the topic partition.
    * </pre>
    *
    * <code>repeated .google.cloud.pubsublite.v1.SequencedMessage messages = 1;</code>
    */
-  java.util.List<? extends com.google.cloud.pubsublite.proto.SequencedMessageOrBuilder> 
+  java.util.List<? extends com.google.cloud.pubsublite.proto.SequencedMessageOrBuilder>
       getMessagesOrBuilderList();
   /**
+   *
+   *
    * <pre>
    * Messages from the topic partition.
    * </pre>
    *
    * <code>repeated .google.cloud.pubsublite.v1.SequencedMessage messages = 1;</code>
    */
-  com.google.cloud.pubsublite.proto.SequencedMessageOrBuilder getMessagesOrBuilder(
-      int index);
+  com.google.cloud.pubsublite.proto.SequencedMessageOrBuilder getMessagesOrBuilder(int index);
 }

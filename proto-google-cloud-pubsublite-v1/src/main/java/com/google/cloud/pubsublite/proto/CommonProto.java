@@ -5,191 +5,200 @@ package com.google.cloud.pubsublite.proto;
 
 public final class CommonProto {
   private CommonProto() {}
-  public static void registerAllExtensions(
-      com.google.protobuf.ExtensionRegistryLite registry) {
+
+  public static void registerAllExtensions(com.google.protobuf.ExtensionRegistryLite registry) {}
+
+  public static void registerAllExtensions(com.google.protobuf.ExtensionRegistry registry) {
+    registerAllExtensions((com.google.protobuf.ExtensionRegistryLite) registry);
   }
 
-  public static void registerAllExtensions(
-      com.google.protobuf.ExtensionRegistry registry) {
-    registerAllExtensions(
-        (com.google.protobuf.ExtensionRegistryLite) registry);
-  }
   static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_google_cloud_pubsublite_v1_AttributeValues_descriptor;
-  static final 
-    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_google_cloud_pubsublite_v1_AttributeValues_descriptor;
+  static final com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_google_cloud_pubsublite_v1_AttributeValues_fieldAccessorTable;
   static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_google_cloud_pubsublite_v1_PubSubMessage_descriptor;
-  static final 
-    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_google_cloud_pubsublite_v1_PubSubMessage_descriptor;
+  static final com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_google_cloud_pubsublite_v1_PubSubMessage_fieldAccessorTable;
   static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_google_cloud_pubsublite_v1_PubSubMessage_AttributesEntry_descriptor;
-  static final 
-    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_google_cloud_pubsublite_v1_PubSubMessage_AttributesEntry_descriptor;
+  static final com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_google_cloud_pubsublite_v1_PubSubMessage_AttributesEntry_fieldAccessorTable;
   static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_google_cloud_pubsublite_v1_Cursor_descriptor;
-  static final 
-    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_google_cloud_pubsublite_v1_Cursor_descriptor;
+  static final com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_google_cloud_pubsublite_v1_Cursor_fieldAccessorTable;
   static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_google_cloud_pubsublite_v1_SequencedMessage_descriptor;
-  static final 
-    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_google_cloud_pubsublite_v1_SequencedMessage_descriptor;
+  static final com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_google_cloud_pubsublite_v1_SequencedMessage_fieldAccessorTable;
   static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_google_cloud_pubsublite_v1_Topic_descriptor;
-  static final 
-    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_google_cloud_pubsublite_v1_Topic_descriptor;
+  static final com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_google_cloud_pubsublite_v1_Topic_fieldAccessorTable;
   static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_google_cloud_pubsublite_v1_Topic_PartitionConfig_descriptor;
-  static final 
-    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_google_cloud_pubsublite_v1_Topic_PartitionConfig_descriptor;
+  static final com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_google_cloud_pubsublite_v1_Topic_PartitionConfig_fieldAccessorTable;
   static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_google_cloud_pubsublite_v1_Topic_RetentionConfig_descriptor;
-  static final 
-    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_google_cloud_pubsublite_v1_Topic_RetentionConfig_descriptor;
+  static final com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_google_cloud_pubsublite_v1_Topic_RetentionConfig_fieldAccessorTable;
   static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_google_cloud_pubsublite_v1_Subscription_descriptor;
-  static final 
-    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_google_cloud_pubsublite_v1_Subscription_descriptor;
+  static final com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_google_cloud_pubsublite_v1_Subscription_fieldAccessorTable;
   static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_google_cloud_pubsublite_v1_Subscription_DeliveryConfig_descriptor;
-  static final 
-    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_google_cloud_pubsublite_v1_Subscription_DeliveryConfig_descriptor;
+  static final com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_google_cloud_pubsublite_v1_Subscription_DeliveryConfig_fieldAccessorTable;
 
-  public static com.google.protobuf.Descriptors.FileDescriptor
-      getDescriptor() {
+  public static com.google.protobuf.Descriptors.FileDescriptor getDescriptor() {
     return descriptor;
   }
-  private static  com.google.protobuf.Descriptors.FileDescriptor
-      descriptor;
+
+  private static com.google.protobuf.Descriptors.FileDescriptor descriptor;
+
   static {
     java.lang.String[] descriptorData = {
-      "\n\'google/cloud/pubsublite/v1/common.prot" +
-      "o\022\032google.cloud.pubsublite.v1\032\031google/ap" +
-      "i/resource.proto\032\036google/protobuf/durati" +
-      "on.proto\032\037google/protobuf/timestamp.prot" +
-      "o\"!\n\017AttributeValues\022\016\n\006values\030\001 \003(\014\"\211\002\n" +
-      "\rPubSubMessage\022\013\n\003key\030\001 \001(\014\022\014\n\004data\030\002 \001(" +
-      "\014\022M\n\nattributes\030\003 \003(\01329.google.cloud.pub" +
-      "sublite.v1.PubSubMessage.AttributesEntry" +
-      "\022.\n\nevent_time\030\004 \001(\0132\032.google.protobuf.T" +
-      "imestamp\032^\n\017AttributesEntry\022\013\n\003key\030\001 \001(\t" +
-      "\022:\n\005value\030\002 \001(\0132+.google.cloud.pubsublit" +
-      "e.v1.AttributeValues:\0028\001\"\030\n\006Cursor\022\016\n\006of" +
-      "fset\030\001 \001(\003\"\310\001\n\020SequencedMessage\0222\n\006curso" +
-      "r\030\001 \001(\0132\".google.cloud.pubsublite.v1.Cur" +
-      "sor\0220\n\014publish_time\030\002 \001(\0132\032.google.proto" +
-      "buf.Timestamp\022:\n\007message\030\003 \001(\0132).google." +
-      "cloud.pubsublite.v1.PubSubMessage\022\022\n\nsiz" +
-      "e_bytes\030\004 \001(\003\"\231\003\n\005Topic\022\014\n\004name\030\001 \001(\t\022K\n" +
-      "\020partition_config\030\002 \001(\01321.google.cloud.p" +
-      "ubsublite.v1.Topic.PartitionConfig\022K\n\020re" +
-      "tention_config\030\003 \001(\01321.google.cloud.pubs" +
-      "ublite.v1.Topic.RetentionConfig\032/\n\017Parti" +
-      "tionConfig\022\r\n\005count\030\001 \001(\003\022\r\n\005scale\030\002 \001(\005" +
-      "\032Y\n\017RetentionConfig\022\033\n\023per_partition_byt" +
-      "es\030\001 \001(\003\022)\n\006period\030\002 \001(\0132\031.google.protob" +
-      "uf.Duration:\\\352AY\n\037pubsublite.googleapis." +
-      "com/Topic\0226projects/{project}/locations/" +
-      "{location}/topics/{topic}\"\220\004\n\014Subscripti" +
-      "on\022\014\n\004name\030\001 \001(\t\0223\n\005topic\030\002 \001(\tB$\372A!\n\037pu" +
-      "bsublite.googleapis.com/Topic\022P\n\017deliver" +
-      "y_config\030\003 \001(\01327.google.cloud.pubsublite" +
-      ".v1.Subscription.DeliveryConfig\032\367\001\n\016Deli" +
-      "veryConfig\022i\n\024delivery_requirement\030\003 \001(\016" +
-      "2K.google.cloud.pubsublite.v1.Subscripti" +
-      "on.DeliveryConfig.DeliveryRequirement\"n\n" +
-      "\023DeliveryRequirement\022$\n DELIVERY_REQUIRE" +
-      "MENT_UNSPECIFIED\020\000\022\027\n\023DELIVER_IMMEDIATEL" +
-      "Y\020\001\022\030\n\024DELIVER_AFTER_STORED\020\002J\004\010\001\020\002J\004\010\002\020" +
-      "\003:q\352An\n&pubsublite.googleapis.com/Subscr" +
-      "iption\022Dprojects/{project}/locations/{lo" +
-      "cation}/subscriptions/{subscription}B5\n!" +
-      "com.google.cloud.pubsublite.protoB\013Commo" +
-      "nProtoP\001\370\001\001b\006proto3"
+      "\n\'google/cloud/pubsublite/v1/common.prot"
+          + "o\022\032google.cloud.pubsublite.v1\032\031google/ap"
+          + "i/resource.proto\032\036google/protobuf/durati"
+          + "on.proto\032\037google/protobuf/timestamp.prot"
+          + "o\"!\n\017AttributeValues\022\016\n\006values\030\001 \003(\014\"\211\002\n"
+          + "\rPubSubMessage\022\013\n\003key\030\001 \001(\014\022\014\n\004data\030\002 \001("
+          + "\014\022M\n\nattributes\030\003 \003(\01329.google.cloud.pub"
+          + "sublite.v1.PubSubMessage.AttributesEntry"
+          + "\022.\n\nevent_time\030\004 \001(\0132\032.google.protobuf.T"
+          + "imestamp\032^\n\017AttributesEntry\022\013\n\003key\030\001 \001(\t"
+          + "\022:\n\005value\030\002 \001(\0132+.google.cloud.pubsublit"
+          + "e.v1.AttributeValues:\0028\001\"\030\n\006Cursor\022\016\n\006of"
+          + "fset\030\001 \001(\003\"\310\001\n\020SequencedMessage\0222\n\006curso"
+          + "r\030\001 \001(\0132\".google.cloud.pubsublite.v1.Cur"
+          + "sor\0220\n\014publish_time\030\002 \001(\0132\032.google.proto"
+          + "buf.Timestamp\022:\n\007message\030\003 \001(\0132).google."
+          + "cloud.pubsublite.v1.PubSubMessage\022\022\n\nsiz"
+          + "e_bytes\030\004 \001(\003\"\231\003\n\005Topic\022\014\n\004name\030\001 \001(\t\022K\n"
+          + "\020partition_config\030\002 \001(\01321.google.cloud.p"
+          + "ubsublite.v1.Topic.PartitionConfig\022K\n\020re"
+          + "tention_config\030\003 \001(\01321.google.cloud.pubs"
+          + "ublite.v1.Topic.RetentionConfig\032/\n\017Parti"
+          + "tionConfig\022\r\n\005count\030\001 \001(\003\022\r\n\005scale\030\002 \001(\005"
+          + "\032Y\n\017RetentionConfig\022\033\n\023per_partition_byt"
+          + "es\030\001 \001(\003\022)\n\006period\030\002 \001(\0132\031.google.protob"
+          + "uf.Duration:\\\352AY\n\037pubsublite.googleapis."
+          + "com/Topic\0226projects/{project}/locations/"
+          + "{location}/topics/{topic}\"\220\004\n\014Subscripti"
+          + "on\022\014\n\004name\030\001 \001(\t\0223\n\005topic\030\002 \001(\tB$\372A!\n\037pu"
+          + "bsublite.googleapis.com/Topic\022P\n\017deliver"
+          + "y_config\030\003 \001(\01327.google.cloud.pubsublite"
+          + ".v1.Subscription.DeliveryConfig\032\367\001\n\016Deli"
+          + "veryConfig\022i\n\024delivery_requirement\030\003 \001(\016"
+          + "2K.google.cloud.pubsublite.v1.Subscripti"
+          + "on.DeliveryConfig.DeliveryRequirement\"n\n"
+          + "\023DeliveryRequirement\022$\n DELIVERY_REQUIRE"
+          + "MENT_UNSPECIFIED\020\000\022\027\n\023DELIVER_IMMEDIATEL"
+          + "Y\020\001\022\030\n\024DELIVER_AFTER_STORED\020\002J\004\010\001\020\002J\004\010\002\020"
+          + "\003:q\352An\n&pubsublite.googleapis.com/Subscr"
+          + "iption\022Dprojects/{project}/locations/{lo"
+          + "cation}/subscriptions/{subscription}B5\n!"
+          + "com.google.cloud.pubsublite.protoB\013Commo"
+          + "nProtoP\001\370\001\001b\006proto3"
     };
-    descriptor = com.google.protobuf.Descriptors.FileDescriptor
-      .internalBuildGeneratedFileFrom(descriptorData,
-        new com.google.protobuf.Descriptors.FileDescriptor[] {
-          com.google.api.ResourceProto.getDescriptor(),
-          com.google.protobuf.DurationProto.getDescriptor(),
-          com.google.protobuf.TimestampProto.getDescriptor(),
-        });
+    descriptor =
+        com.google.protobuf.Descriptors.FileDescriptor.internalBuildGeneratedFileFrom(
+            descriptorData,
+            new com.google.protobuf.Descriptors.FileDescriptor[] {
+              com.google.api.ResourceProto.getDescriptor(),
+              com.google.protobuf.DurationProto.getDescriptor(),
+              com.google.protobuf.TimestampProto.getDescriptor(),
+            });
     internal_static_google_cloud_pubsublite_v1_AttributeValues_descriptor =
-      getDescriptor().getMessageTypes().get(0);
-    internal_static_google_cloud_pubsublite_v1_AttributeValues_fieldAccessorTable = new
-      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_google_cloud_pubsublite_v1_AttributeValues_descriptor,
-        new java.lang.String[] { "Values", });
+        getDescriptor().getMessageTypes().get(0);
+    internal_static_google_cloud_pubsublite_v1_AttributeValues_fieldAccessorTable =
+        new com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+            internal_static_google_cloud_pubsublite_v1_AttributeValues_descriptor,
+            new java.lang.String[] {
+              "Values",
+            });
     internal_static_google_cloud_pubsublite_v1_PubSubMessage_descriptor =
-      getDescriptor().getMessageTypes().get(1);
-    internal_static_google_cloud_pubsublite_v1_PubSubMessage_fieldAccessorTable = new
-      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_google_cloud_pubsublite_v1_PubSubMessage_descriptor,
-        new java.lang.String[] { "Key", "Data", "Attributes", "EventTime", });
+        getDescriptor().getMessageTypes().get(1);
+    internal_static_google_cloud_pubsublite_v1_PubSubMessage_fieldAccessorTable =
+        new com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+            internal_static_google_cloud_pubsublite_v1_PubSubMessage_descriptor,
+            new java.lang.String[] {
+              "Key", "Data", "Attributes", "EventTime",
+            });
     internal_static_google_cloud_pubsublite_v1_PubSubMessage_AttributesEntry_descriptor =
-      internal_static_google_cloud_pubsublite_v1_PubSubMessage_descriptor.getNestedTypes().get(0);
-    internal_static_google_cloud_pubsublite_v1_PubSubMessage_AttributesEntry_fieldAccessorTable = new
-      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_google_cloud_pubsublite_v1_PubSubMessage_AttributesEntry_descriptor,
-        new java.lang.String[] { "Key", "Value", });
+        internal_static_google_cloud_pubsublite_v1_PubSubMessage_descriptor.getNestedTypes().get(0);
+    internal_static_google_cloud_pubsublite_v1_PubSubMessage_AttributesEntry_fieldAccessorTable =
+        new com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+            internal_static_google_cloud_pubsublite_v1_PubSubMessage_AttributesEntry_descriptor,
+            new java.lang.String[] {
+              "Key", "Value",
+            });
     internal_static_google_cloud_pubsublite_v1_Cursor_descriptor =
-      getDescriptor().getMessageTypes().get(2);
-    internal_static_google_cloud_pubsublite_v1_Cursor_fieldAccessorTable = new
-      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_google_cloud_pubsublite_v1_Cursor_descriptor,
-        new java.lang.String[] { "Offset", });
+        getDescriptor().getMessageTypes().get(2);
+    internal_static_google_cloud_pubsublite_v1_Cursor_fieldAccessorTable =
+        new com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+            internal_static_google_cloud_pubsublite_v1_Cursor_descriptor,
+            new java.lang.String[] {
+              "Offset",
+            });
     internal_static_google_cloud_pubsublite_v1_SequencedMessage_descriptor =
-      getDescriptor().getMessageTypes().get(3);
-    internal_static_google_cloud_pubsublite_v1_SequencedMessage_fieldAccessorTable = new
-      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_google_cloud_pubsublite_v1_SequencedMessage_descriptor,
-        new java.lang.String[] { "Cursor", "PublishTime", "Message", "SizeBytes", });
+        getDescriptor().getMessageTypes().get(3);
+    internal_static_google_cloud_pubsublite_v1_SequencedMessage_fieldAccessorTable =
+        new com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+            internal_static_google_cloud_pubsublite_v1_SequencedMessage_descriptor,
+            new java.lang.String[] {
+              "Cursor", "PublishTime", "Message", "SizeBytes",
+            });
     internal_static_google_cloud_pubsublite_v1_Topic_descriptor =
-      getDescriptor().getMessageTypes().get(4);
-    internal_static_google_cloud_pubsublite_v1_Topic_fieldAccessorTable = new
-      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_google_cloud_pubsublite_v1_Topic_descriptor,
-        new java.lang.String[] { "Name", "PartitionConfig", "RetentionConfig", });
+        getDescriptor().getMessageTypes().get(4);
+    internal_static_google_cloud_pubsublite_v1_Topic_fieldAccessorTable =
+        new com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+            internal_static_google_cloud_pubsublite_v1_Topic_descriptor,
+            new java.lang.String[] {
+              "Name", "PartitionConfig", "RetentionConfig",
+            });
     internal_static_google_cloud_pubsublite_v1_Topic_PartitionConfig_descriptor =
-      internal_static_google_cloud_pubsublite_v1_Topic_descriptor.getNestedTypes().get(0);
-    internal_static_google_cloud_pubsublite_v1_Topic_PartitionConfig_fieldAccessorTable = new
-      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_google_cloud_pubsublite_v1_Topic_PartitionConfig_descriptor,
-        new java.lang.String[] { "Count", "Scale", });
+        internal_static_google_cloud_pubsublite_v1_Topic_descriptor.getNestedTypes().get(0);
+    internal_static_google_cloud_pubsublite_v1_Topic_PartitionConfig_fieldAccessorTable =
+        new com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+            internal_static_google_cloud_pubsublite_v1_Topic_PartitionConfig_descriptor,
+            new java.lang.String[] {
+              "Count", "Scale",
+            });
     internal_static_google_cloud_pubsublite_v1_Topic_RetentionConfig_descriptor =
-      internal_static_google_cloud_pubsublite_v1_Topic_descriptor.getNestedTypes().get(1);
-    internal_static_google_cloud_pubsublite_v1_Topic_RetentionConfig_fieldAccessorTable = new
-      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_google_cloud_pubsublite_v1_Topic_RetentionConfig_descriptor,
-        new java.lang.String[] { "PerPartitionBytes", "Period", });
+        internal_static_google_cloud_pubsublite_v1_Topic_descriptor.getNestedTypes().get(1);
+    internal_static_google_cloud_pubsublite_v1_Topic_RetentionConfig_fieldAccessorTable =
+        new com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+            internal_static_google_cloud_pubsublite_v1_Topic_RetentionConfig_descriptor,
+            new java.lang.String[] {
+              "PerPartitionBytes", "Period",
+            });
     internal_static_google_cloud_pubsublite_v1_Subscription_descriptor =
-      getDescriptor().getMessageTypes().get(5);
-    internal_static_google_cloud_pubsublite_v1_Subscription_fieldAccessorTable = new
-      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_google_cloud_pubsublite_v1_Subscription_descriptor,
-        new java.lang.String[] { "Name", "Topic", "DeliveryConfig", });
+        getDescriptor().getMessageTypes().get(5);
+    internal_static_google_cloud_pubsublite_v1_Subscription_fieldAccessorTable =
+        new com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+            internal_static_google_cloud_pubsublite_v1_Subscription_descriptor,
+            new java.lang.String[] {
+              "Name", "Topic", "DeliveryConfig",
+            });
     internal_static_google_cloud_pubsublite_v1_Subscription_DeliveryConfig_descriptor =
-      internal_static_google_cloud_pubsublite_v1_Subscription_descriptor.getNestedTypes().get(0);
-    internal_static_google_cloud_pubsublite_v1_Subscription_DeliveryConfig_fieldAccessorTable = new
-      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_google_cloud_pubsublite_v1_Subscription_DeliveryConfig_descriptor,
-        new java.lang.String[] { "DeliveryRequirement", });
+        internal_static_google_cloud_pubsublite_v1_Subscription_descriptor.getNestedTypes().get(0);
+    internal_static_google_cloud_pubsublite_v1_Subscription_DeliveryConfig_fieldAccessorTable =
+        new com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+            internal_static_google_cloud_pubsublite_v1_Subscription_DeliveryConfig_descriptor,
+            new java.lang.String[] {
+              "DeliveryRequirement",
+            });
     com.google.protobuf.ExtensionRegistry registry =
         com.google.protobuf.ExtensionRegistry.newInstance();
     registry.add(com.google.api.ResourceProto.resource);
     registry.add(com.google.api.ResourceProto.resourceReference);
-    com.google.protobuf.Descriptors.FileDescriptor
-        .internalUpdateFileDescriptor(descriptor, registry);
+    com.google.protobuf.Descriptors.FileDescriptor.internalUpdateFileDescriptor(
+        descriptor, registry);
     com.google.api.ResourceProto.getDescriptor();
     com.google.protobuf.DurationProto.getDescriptor();
     com.google.protobuf.TimestampProto.getDescriptor();

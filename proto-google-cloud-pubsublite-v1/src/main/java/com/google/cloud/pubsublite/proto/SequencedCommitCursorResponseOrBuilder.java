@@ -3,11 +3,14 @@
 
 package com.google.cloud.pubsublite.proto;
 
-public interface SequencedCommitCursorResponseOrBuilder extends
+public interface SequencedCommitCursorResponseOrBuilder
+    extends
     // @@protoc_insertion_point(interface_extends:google.cloud.pubsublite.v1.SequencedCommitCursorResponse)
     com.google.protobuf.MessageOrBuilder {
 
   /**
+   *
+   *
    * <pre>
    * The number of outstanding SequencedCommitCursorRequests acknowledged by
    * this response. Note that SequencedCommitCursorRequests are acknowledged in
@@ -15,6 +18,7 @@ public interface SequencedCommitCursorResponseOrBuilder extends
    * </pre>
    *
    * <code>int64 acknowledged_commits = 1;</code>
+   *
    * @return The acknowledgedCommits.
    */
   long getAcknowledgedCommits();

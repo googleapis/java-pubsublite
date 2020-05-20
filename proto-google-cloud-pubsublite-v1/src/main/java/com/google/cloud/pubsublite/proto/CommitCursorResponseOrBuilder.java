@@ -3,7 +3,7 @@
 
 package com.google.cloud.pubsublite.proto;
 
-public interface CommitCursorResponseOrBuilder extends
+public interface CommitCursorResponseOrBuilder
+    extends
     // @@protoc_insertion_point(interface_extends:google.cloud.pubsublite.v1.CommitCursorResponse)
-    com.google.protobuf.MessageOrBuilder {
-}
+    com.google.protobuf.MessageOrBuilder {}

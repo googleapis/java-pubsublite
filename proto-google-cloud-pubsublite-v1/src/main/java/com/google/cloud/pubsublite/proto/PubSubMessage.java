@@ -4,21 +4,24 @@
 package com.google.cloud.pubsublite.proto;
 
 /**
+ *
+ *
  * <pre>
  * A message that is published by publishers and delivered to subscribers.
  * </pre>
  *
  * Protobuf type {@code google.cloud.pubsublite.v1.PubSubMessage}
  */
-public  final class PubSubMessage extends
-    com.google.protobuf.GeneratedMessageV3 implements
+public final class PubSubMessage extends com.google.protobuf.GeneratedMessageV3
+    implements
     // @@protoc_insertion_point(message_implements:google.cloud.pubsublite.v1.PubSubMessage)
     PubSubMessageOrBuilder {
-private static final long serialVersionUID = 0L;
+  private static final long serialVersionUID = 0L;
   // Use PubSubMessage.newBuilder() to construct.
   private PubSubMessage(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
     super(builder);
   }
+
   private PubSubMessage() {
     key_ = com.google.protobuf.ByteString.EMPTY;
     data_ = com.google.protobuf.ByteString.EMPTY;
@@ -26,16 +29,15 @@ private static final long serialVersionUID = 0L;
 
   @java.lang.Override
   @SuppressWarnings({"unused"})
-  protected java.lang.Object newInstance(
-      UnusedPrivateParameter unused) {
+  protected java.lang.Object newInstance(UnusedPrivateParameter unused) {
     return new PubSubMessage();
   }
 
   @java.lang.Override
-  public final com.google.protobuf.UnknownFieldSet
-  getUnknownFields() {
+  public final com.google.protobuf.UnknownFieldSet getUnknownFields() {
     return this.unknownFields;
   }
+
   private PubSubMessage(
       com.google.protobuf.CodedInputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -55,89 +57,98 @@ private static final long serialVersionUID = 0L;
           case 0:
             done = true;
             break;
-          case 10: {
+          case 10:
+            {
+              key_ = input.readBytes();
+              break;
+            }
+          case 18:
+            {
+              data_ = input.readBytes();
+              break;
+            }
+          case 26:
+            {
+              if (!((mutable_bitField0_ & 0x00000001) != 0)) {
+                attributes_ =
+                    com.google.protobuf.MapField.newMapField(
+                        AttributesDefaultEntryHolder.defaultEntry);
+                mutable_bitField0_ |= 0x00000001;
+              }
+              com.google.protobuf.MapEntry<
+                      java.lang.String, com.google.cloud.pubsublite.proto.AttributeValues>
+                  attributes__ =
+                      input.readMessage(
+                          AttributesDefaultEntryHolder.defaultEntry.getParserForType(),
+                          extensionRegistry);
+              attributes_.getMutableMap().put(attributes__.getKey(), attributes__.getValue());
+              break;
+            }
+          case 34:
+            {
+              com.google.protobuf.Timestamp.Builder subBuilder = null;
+              if (eventTime_ != null) {
+                subBuilder = eventTime_.toBuilder();
+              }
+              eventTime_ =
+                  input.readMessage(com.google.protobuf.Timestamp.parser(), extensionRegistry);
+              if (subBuilder != null) {
+                subBuilder.mergeFrom(eventTime_);
+                eventTime_ = subBuilder.buildPartial();
+              }
 
-            key_ = input.readBytes();
-            break;
-          }
-          case 18: {
-
-            data_ = input.readBytes();
-            break;
-          }
-          case 26: {
-            if (!((mutable_bitField0_ & 0x00000001) != 0)) {
-              attributes_ = com.google.protobuf.MapField.newMapField(
-                  AttributesDefaultEntryHolder.defaultEntry);
-              mutable_bitField0_ |= 0x00000001;
+              break;
             }
-            com.google.protobuf.MapEntry<java.lang.String, com.google.cloud.pubsublite.proto.AttributeValues>
-            attributes__ = input.readMessage(
-                AttributesDefaultEntryHolder.defaultEntry.getParserForType(), extensionRegistry);
-            attributes_.getMutableMap().put(
-                attributes__.getKey(), attributes__.getValue());
-            break;
-          }
-          case 34: {
-            com.google.protobuf.Timestamp.Builder subBuilder = null;
-            if (eventTime_ != null) {
-              subBuilder = eventTime_.toBuilder();
+          default:
+            {
+              if (!parseUnknownField(input, unknownFields, extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
             }
-            eventTime_ = input.readMessage(com.google.protobuf.Timestamp.parser(), extensionRegistry);
-            if (subBuilder != null) {
-              subBuilder.mergeFrom(eventTime_);
-              eventTime_ = subBuilder.buildPartial();
-            }
-
-            break;
-          }
-          default: {
-            if (!parseUnknownField(
-                input, unknownFields, extensionRegistry, tag)) {
-              done = true;
-            }
-            break;
-          }
         }
       }
     } catch (com.google.protobuf.InvalidProtocolBufferException e) {
       throw e.setUnfinishedMessage(this);
     } catch (java.io.IOException e) {
-      throw new com.google.protobuf.InvalidProtocolBufferException(
-          e).setUnfinishedMessage(this);
+      throw new com.google.protobuf.InvalidProtocolBufferException(e).setUnfinishedMessage(this);
     } finally {
       this.unknownFields = unknownFields.build();
       makeExtensionsImmutable();
     }
   }
-  public static final com.google.protobuf.Descriptors.Descriptor
-      getDescriptor() {
-    return com.google.cloud.pubsublite.proto.CommonProto.internal_static_google_cloud_pubsublite_v1_PubSubMessage_descriptor;
+
+  public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
+    return com.google.cloud.pubsublite.proto.CommonProto
+        .internal_static_google_cloud_pubsublite_v1_PubSubMessage_descriptor;
   }
 
   @SuppressWarnings({"rawtypes"})
   @java.lang.Override
-  protected com.google.protobuf.MapField internalGetMapField(
-      int number) {
+  protected com.google.protobuf.MapField internalGetMapField(int number) {
     switch (number) {
       case 3:
         return internalGetAttributes();
       default:
-        throw new RuntimeException(
-            "Invalid map field number: " + number);
+        throw new RuntimeException("Invalid map field number: " + number);
     }
   }
+
   @java.lang.Override
   protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internalGetFieldAccessorTable() {
-    return com.google.cloud.pubsublite.proto.CommonProto.internal_static_google_cloud_pubsublite_v1_PubSubMessage_fieldAccessorTable
+    return com.google.cloud.pubsublite.proto.CommonProto
+        .internal_static_google_cloud_pubsublite_v1_PubSubMessage_fieldAccessorTable
         .ensureFieldAccessorsInitialized(
-            com.google.cloud.pubsublite.proto.PubSubMessage.class, com.google.cloud.pubsublite.proto.PubSubMessage.Builder.class);
+            com.google.cloud.pubsublite.proto.PubSubMessage.class,
+            com.google.cloud.pubsublite.proto.PubSubMessage.Builder.class);
   }
 
   public static final int KEY_FIELD_NUMBER = 1;
   private com.google.protobuf.ByteString key_;
   /**
+   *
+   *
    * <pre>
    * The key used for routing messages to partitions or for compaction (e.g.,
    * keep the last N messages per key). If the key is empty, the message is
@@ -145,6 +156,7 @@ private static final long serialVersionUID = 0L;
    * </pre>
    *
    * <code>bytes key = 1;</code>
+   *
    * @return The key.
    */
   public com.google.protobuf.ByteString getKey() {
@@ -154,11 +166,14 @@ private static final long serialVersionUID = 0L;
   public static final int DATA_FIELD_NUMBER = 2;
   private com.google.protobuf.ByteString data_;
   /**
+   *
+   *
    * <pre>
    * The payload of the message.
    * </pre>
    *
    * <code>bytes data = 2;</code>
+   *
    * @return The data.
    */
   public com.google.protobuf.ByteString getData() {
@@ -166,24 +181,31 @@ private static final long serialVersionUID = 0L;
   }
 
   public static final int ATTRIBUTES_FIELD_NUMBER = 3;
+
   private static final class AttributesDefaultEntryHolder {
     static final com.google.protobuf.MapEntry<
-        java.lang.String, com.google.cloud.pubsublite.proto.AttributeValues> defaultEntry =
+            java.lang.String, com.google.cloud.pubsublite.proto.AttributeValues>
+        defaultEntry =
             com.google.protobuf.MapEntry
-            .<java.lang.String, com.google.cloud.pubsublite.proto.AttributeValues>newDefaultInstance(
-                com.google.cloud.pubsublite.proto.CommonProto.internal_static_google_cloud_pubsublite_v1_PubSubMessage_AttributesEntry_descriptor, 
-                com.google.protobuf.WireFormat.FieldType.STRING,
-                "",
-                com.google.protobuf.WireFormat.FieldType.MESSAGE,
-                com.google.cloud.pubsublite.proto.AttributeValues.getDefaultInstance());
+                .<java.lang.String, com.google.cloud.pubsublite.proto.AttributeValues>
+                    newDefaultInstance(
+                        com.google.cloud.pubsublite.proto.CommonProto
+                            .internal_static_google_cloud_pubsublite_v1_PubSubMessage_AttributesEntry_descriptor,
+                        com.google.protobuf.WireFormat.FieldType.STRING,
+                        "",
+                        com.google.protobuf.WireFormat.FieldType.MESSAGE,
+                        com.google.cloud.pubsublite.proto.AttributeValues.getDefaultInstance());
   }
+
   private com.google.protobuf.MapField<
-      java.lang.String, com.google.cloud.pubsublite.proto.AttributeValues> attributes_;
-  private com.google.protobuf.MapField<java.lang.String, com.google.cloud.pubsublite.proto.AttributeValues>
-  internalGetAttributes() {
+          java.lang.String, com.google.cloud.pubsublite.proto.AttributeValues>
+      attributes_;
+
+  private com.google.protobuf.MapField<
+          java.lang.String, com.google.cloud.pubsublite.proto.AttributeValues>
+      internalGetAttributes() {
     if (attributes_ == null) {
-      return com.google.protobuf.MapField.emptyMapField(
-          AttributesDefaultEntryHolder.defaultEntry);
+      return com.google.protobuf.MapField.emptyMapField(AttributesDefaultEntryHolder.defaultEntry);
     }
     return attributes_;
   }
@@ -192,63 +214,71 @@ private static final long serialVersionUID = 0L;
     return internalGetAttributes().getMap().size();
   }
   /**
+   *
+   *
    * <pre>
    * Optional attributes that can be used for message metadata/headers.
    * </pre>
    *
    * <code>map&lt;string, .google.cloud.pubsublite.v1.AttributeValues&gt; attributes = 3;</code>
    */
-
-  public boolean containsAttributes(
-      java.lang.String key) {
-    if (key == null) { throw new java.lang.NullPointerException(); }
+  public boolean containsAttributes(java.lang.String key) {
+    if (key == null) {
+      throw new java.lang.NullPointerException();
+    }
     return internalGetAttributes().getMap().containsKey(key);
   }
-  /**
-   * Use {@link #getAttributesMap()} instead.
-   */
+  /** Use {@link #getAttributesMap()} instead. */
   @java.lang.Deprecated
-  public java.util.Map<java.lang.String, com.google.cloud.pubsublite.proto.AttributeValues> getAttributes() {
+  public java.util.Map<java.lang.String, com.google.cloud.pubsublite.proto.AttributeValues>
+      getAttributes() {
     return getAttributesMap();
   }
   /**
+   *
+   *
    * <pre>
    * Optional attributes that can be used for message metadata/headers.
    * </pre>
    *
    * <code>map&lt;string, .google.cloud.pubsublite.v1.AttributeValues&gt; attributes = 3;</code>
    */
-
-  public java.util.Map<java.lang.String, com.google.cloud.pubsublite.proto.AttributeValues> getAttributesMap() {
+  public java.util.Map<java.lang.String, com.google.cloud.pubsublite.proto.AttributeValues>
+      getAttributesMap() {
     return internalGetAttributes().getMap();
   }
   /**
+   *
+   *
    * <pre>
    * Optional attributes that can be used for message metadata/headers.
    * </pre>
    *
    * <code>map&lt;string, .google.cloud.pubsublite.v1.AttributeValues&gt; attributes = 3;</code>
    */
-
   public com.google.cloud.pubsublite.proto.AttributeValues getAttributesOrDefault(
-      java.lang.String key,
-      com.google.cloud.pubsublite.proto.AttributeValues defaultValue) {
-    if (key == null) { throw new java.lang.NullPointerException(); }
+      java.lang.String key, com.google.cloud.pubsublite.proto.AttributeValues defaultValue) {
+    if (key == null) {
+      throw new java.lang.NullPointerException();
+    }
     java.util.Map<java.lang.String, com.google.cloud.pubsublite.proto.AttributeValues> map =
         internalGetAttributes().getMap();
     return map.containsKey(key) ? map.get(key) : defaultValue;
   }
   /**
+   *
+   *
    * <pre>
    * Optional attributes that can be used for message metadata/headers.
    * </pre>
    *
    * <code>map&lt;string, .google.cloud.pubsublite.v1.AttributeValues&gt; attributes = 3;</code>
    */
-
   public com.google.cloud.pubsublite.proto.AttributeValues getAttributesOrThrow(
       java.lang.String key) {
-    if (key == null) { throw new java.lang.NullPointerException(); }
+    if (key == null) {
+      throw new java.lang.NullPointerException();
+    }
     java.util.Map<java.lang.String, com.google.cloud.pubsublite.proto.AttributeValues> map =
         internalGetAttributes().getMap();
     if (!map.containsKey(key)) {
@@ -260,28 +290,36 @@ private static final long serialVersionUID = 0L;
   public static final int EVENT_TIME_FIELD_NUMBER = 4;
   private com.google.protobuf.Timestamp eventTime_;
   /**
+   *
+   *
    * <pre>
    * An optional, user-specified event time.
    * </pre>
    *
    * <code>.google.protobuf.Timestamp event_time = 4;</code>
+   *
    * @return Whether the eventTime field is set.
    */
   public boolean hasEventTime() {
     return eventTime_ != null;
   }
   /**
+   *
+   *
    * <pre>
    * An optional, user-specified event time.
    * </pre>
    *
    * <code>.google.protobuf.Timestamp event_time = 4;</code>
+   *
    * @return The eventTime.
    */
   public com.google.protobuf.Timestamp getEventTime() {
     return eventTime_ == null ? com.google.protobuf.Timestamp.getDefaultInstance() : eventTime_;
   }
   /**
+   *
+   *
    * <pre>
    * An optional, user-specified event time.
    * </pre>
@@ -293,6 +331,7 @@ private static final long serialVersionUID = 0L;
   }
 
   private byte memoizedIsInitialized = -1;
+
   @java.lang.Override
   public final boolean isInitialized() {
     byte isInitialized = memoizedIsInitialized;
@@ -304,20 +343,15 @@ private static final long serialVersionUID = 0L;
   }
 
   @java.lang.Override
-  public void writeTo(com.google.protobuf.CodedOutputStream output)
-                      throws java.io.IOException {
+  public void writeTo(com.google.protobuf.CodedOutputStream output) throws java.io.IOException {
     if (!key_.isEmpty()) {
       output.writeBytes(1, key_);
     }
     if (!data_.isEmpty()) {
       output.writeBytes(2, data_);
     }
-    com.google.protobuf.GeneratedMessageV3
-      .serializeStringMapTo(
-        output,
-        internalGetAttributes(),
-        AttributesDefaultEntryHolder.defaultEntry,
-        3);
+    com.google.protobuf.GeneratedMessageV3.serializeStringMapTo(
+        output, internalGetAttributes(), AttributesDefaultEntryHolder.defaultEntry, 3);
     if (eventTime_ != null) {
       output.writeMessage(4, getEventTime());
     }
@@ -331,26 +365,25 @@ private static final long serialVersionUID = 0L;
 
     size = 0;
     if (!key_.isEmpty()) {
-      size += com.google.protobuf.CodedOutputStream
-        .computeBytesSize(1, key_);
+      size += com.google.protobuf.CodedOutputStream.computeBytesSize(1, key_);
     }
     if (!data_.isEmpty()) {
-      size += com.google.protobuf.CodedOutputStream
-        .computeBytesSize(2, data_);
+      size += com.google.protobuf.CodedOutputStream.computeBytesSize(2, data_);
     }
-    for (java.util.Map.Entry<java.lang.String, com.google.cloud.pubsublite.proto.AttributeValues> entry
-         : internalGetAttributes().getMap().entrySet()) {
-      com.google.protobuf.MapEntry<java.lang.String, com.google.cloud.pubsublite.proto.AttributeValues>
-      attributes__ = AttributesDefaultEntryHolder.defaultEntry.newBuilderForType()
-          .setKey(entry.getKey())
-          .setValue(entry.getValue())
-          .build();
-      size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(3, attributes__);
+    for (java.util.Map.Entry<java.lang.String, com.google.cloud.pubsublite.proto.AttributeValues>
+        entry : internalGetAttributes().getMap().entrySet()) {
+      com.google.protobuf.MapEntry<
+              java.lang.String, com.google.cloud.pubsublite.proto.AttributeValues>
+          attributes__ =
+              AttributesDefaultEntryHolder.defaultEntry
+                  .newBuilderForType()
+                  .setKey(entry.getKey())
+                  .setValue(entry.getValue())
+                  .build();
+      size += com.google.protobuf.CodedOutputStream.computeMessageSize(3, attributes__);
     }
     if (eventTime_ != null) {
-      size += com.google.protobuf.CodedOutputStream
-        .computeMessageSize(4, getEventTime());
+      size += com.google.protobuf.CodedOutputStream.computeMessageSize(4, getEventTime());
     }
     size += unknownFields.getSerializedSize();
     memoizedSize = size;
@@ -360,23 +393,20 @@ private static final long serialVersionUID = 0L;
   @java.lang.Override
   public boolean equals(final java.lang.Object obj) {
     if (obj == this) {
-     return true;
+      return true;
     }
     if (!(obj instanceof com.google.cloud.pubsublite.proto.PubSubMessage)) {
       return super.equals(obj);
     }
-    com.google.cloud.pubsublite.proto.PubSubMessage other = (com.google.cloud.pubsublite.proto.PubSubMessage) obj;
+    com.google.cloud.pubsublite.proto.PubSubMessage other =
+        (com.google.cloud.pubsublite.proto.PubSubMessage) obj;
 
-    if (!getKey()
-        .equals(other.getKey())) return false;
-    if (!getData()
-        .equals(other.getData())) return false;
-    if (!internalGetAttributes().equals(
-        other.internalGetAttributes())) return false;
+    if (!getKey().equals(other.getKey())) return false;
+    if (!getData().equals(other.getData())) return false;
+    if (!internalGetAttributes().equals(other.internalGetAttributes())) return false;
     if (hasEventTime() != other.hasEventTime()) return false;
     if (hasEventTime()) {
-      if (!getEventTime()
-          .equals(other.getEventTime())) return false;
+      if (!getEventTime().equals(other.getEventTime())) return false;
     }
     if (!unknownFields.equals(other.unknownFields)) return false;
     return true;
@@ -406,140 +436,147 @@ private static final long serialVersionUID = 0L;
     return hash;
   }
 
-  public static com.google.cloud.pubsublite.proto.PubSubMessage parseFrom(
-      java.nio.ByteBuffer data)
+  public static com.google.cloud.pubsublite.proto.PubSubMessage parseFrom(java.nio.ByteBuffer data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
+
   public static com.google.cloud.pubsublite.proto.PubSubMessage parseFrom(
-      java.nio.ByteBuffer data,
-      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+      java.nio.ByteBuffer data, com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
+
   public static com.google.cloud.pubsublite.proto.PubSubMessage parseFrom(
       com.google.protobuf.ByteString data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
+
   public static com.google.cloud.pubsublite.proto.PubSubMessage parseFrom(
       com.google.protobuf.ByteString data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
+
   public static com.google.cloud.pubsublite.proto.PubSubMessage parseFrom(byte[] data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
+
   public static com.google.cloud.pubsublite.proto.PubSubMessage parseFrom(
-      byte[] data,
-      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+      byte[] data, com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
+
   public static com.google.cloud.pubsublite.proto.PubSubMessage parseFrom(java.io.InputStream input)
       throws java.io.IOException {
-    return com.google.protobuf.GeneratedMessageV3
-        .parseWithIOException(PARSER, input);
+    return com.google.protobuf.GeneratedMessageV3.parseWithIOException(PARSER, input);
   }
+
   public static com.google.cloud.pubsublite.proto.PubSubMessage parseFrom(
-      java.io.InputStream input,
-      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+      java.io.InputStream input, com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
-    return com.google.protobuf.GeneratedMessageV3
-        .parseWithIOException(PARSER, input, extensionRegistry);
+    return com.google.protobuf.GeneratedMessageV3.parseWithIOException(
+        PARSER, input, extensionRegistry);
   }
-  public static com.google.cloud.pubsublite.proto.PubSubMessage parseDelimitedFrom(java.io.InputStream input)
-      throws java.io.IOException {
-    return com.google.protobuf.GeneratedMessageV3
-        .parseDelimitedWithIOException(PARSER, input);
-  }
+
   public static com.google.cloud.pubsublite.proto.PubSubMessage parseDelimitedFrom(
-      java.io.InputStream input,
-      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-      throws java.io.IOException {
-    return com.google.protobuf.GeneratedMessageV3
-        .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+      java.io.InputStream input) throws java.io.IOException {
+    return com.google.protobuf.GeneratedMessageV3.parseDelimitedWithIOException(PARSER, input);
   }
+
+  public static com.google.cloud.pubsublite.proto.PubSubMessage parseDelimitedFrom(
+      java.io.InputStream input, com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+      throws java.io.IOException {
+    return com.google.protobuf.GeneratedMessageV3.parseDelimitedWithIOException(
+        PARSER, input, extensionRegistry);
+  }
+
   public static com.google.cloud.pubsublite.proto.PubSubMessage parseFrom(
-      com.google.protobuf.CodedInputStream input)
-      throws java.io.IOException {
-    return com.google.protobuf.GeneratedMessageV3
-        .parseWithIOException(PARSER, input);
+      com.google.protobuf.CodedInputStream input) throws java.io.IOException {
+    return com.google.protobuf.GeneratedMessageV3.parseWithIOException(PARSER, input);
   }
+
   public static com.google.cloud.pubsublite.proto.PubSubMessage parseFrom(
       com.google.protobuf.CodedInputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
-    return com.google.protobuf.GeneratedMessageV3
-        .parseWithIOException(PARSER, input, extensionRegistry);
+    return com.google.protobuf.GeneratedMessageV3.parseWithIOException(
+        PARSER, input, extensionRegistry);
   }
 
   @java.lang.Override
-  public Builder newBuilderForType() { return newBuilder(); }
+  public Builder newBuilderForType() {
+    return newBuilder();
+  }
+
   public static Builder newBuilder() {
     return DEFAULT_INSTANCE.toBuilder();
   }
+
   public static Builder newBuilder(com.google.cloud.pubsublite.proto.PubSubMessage prototype) {
     return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
   }
+
   @java.lang.Override
   public Builder toBuilder() {
-    return this == DEFAULT_INSTANCE
-        ? new Builder() : new Builder().mergeFrom(this);
+    return this == DEFAULT_INSTANCE ? new Builder() : new Builder().mergeFrom(this);
   }
 
   @java.lang.Override
-  protected Builder newBuilderForType(
-      com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+  protected Builder newBuilderForType(com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
     Builder builder = new Builder(parent);
     return builder;
   }
   /**
+   *
+   *
    * <pre>
    * A message that is published by publishers and delivered to subscribers.
    * </pre>
    *
    * Protobuf type {@code google.cloud.pubsublite.v1.PubSubMessage}
    */
-  public static final class Builder extends
-      com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+  public static final class Builder extends com.google.protobuf.GeneratedMessageV3.Builder<Builder>
+      implements
       // @@protoc_insertion_point(builder_implements:google.cloud.pubsublite.v1.PubSubMessage)
       com.google.cloud.pubsublite.proto.PubSubMessageOrBuilder {
-    public static final com.google.protobuf.Descriptors.Descriptor
-        getDescriptor() {
-      return com.google.cloud.pubsublite.proto.CommonProto.internal_static_google_cloud_pubsublite_v1_PubSubMessage_descriptor;
+    public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
+      return com.google.cloud.pubsublite.proto.CommonProto
+          .internal_static_google_cloud_pubsublite_v1_PubSubMessage_descriptor;
     }
 
     @SuppressWarnings({"rawtypes"})
-    protected com.google.protobuf.MapField internalGetMapField(
-        int number) {
+    protected com.google.protobuf.MapField internalGetMapField(int number) {
       switch (number) {
         case 3:
           return internalGetAttributes();
         default:
-          throw new RuntimeException(
-              "Invalid map field number: " + number);
+          throw new RuntimeException("Invalid map field number: " + number);
       }
     }
+
     @SuppressWarnings({"rawtypes"})
-    protected com.google.protobuf.MapField internalGetMutableMapField(
-        int number) {
+    protected com.google.protobuf.MapField internalGetMutableMapField(int number) {
       switch (number) {
         case 3:
           return internalGetMutableAttributes();
         default:
-          throw new RuntimeException(
-              "Invalid map field number: " + number);
+          throw new RuntimeException("Invalid map field number: " + number);
       }
     }
+
     @java.lang.Override
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return com.google.cloud.pubsublite.proto.CommonProto.internal_static_google_cloud_pubsublite_v1_PubSubMessage_fieldAccessorTable
+      return com.google.cloud.pubsublite.proto.CommonProto
+          .internal_static_google_cloud_pubsublite_v1_PubSubMessage_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              com.google.cloud.pubsublite.proto.PubSubMessage.class, com.google.cloud.pubsublite.proto.PubSubMessage.Builder.class);
+              com.google.cloud.pubsublite.proto.PubSubMessage.class,
+              com.google.cloud.pubsublite.proto.PubSubMessage.Builder.class);
     }
 
     // Construct using com.google.cloud.pubsublite.proto.PubSubMessage.newBuilder()
@@ -547,16 +584,15 @@ private static final long serialVersionUID = 0L;
       maybeForceBuilderInitialization();
     }
 
-    private Builder(
-        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+    private Builder(com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
       super(parent);
       maybeForceBuilderInitialization();
     }
+
     private void maybeForceBuilderInitialization() {
-      if (com.google.protobuf.GeneratedMessageV3
-              .alwaysUseFieldBuilders) {
-      }
+      if (com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders) {}
     }
+
     @java.lang.Override
     public Builder clear() {
       super.clear();
@@ -575,9 +611,9 @@ private static final long serialVersionUID = 0L;
     }
 
     @java.lang.Override
-    public com.google.protobuf.Descriptors.Descriptor
-        getDescriptorForType() {
-      return com.google.cloud.pubsublite.proto.CommonProto.internal_static_google_cloud_pubsublite_v1_PubSubMessage_descriptor;
+    public com.google.protobuf.Descriptors.Descriptor getDescriptorForType() {
+      return com.google.cloud.pubsublite.proto.CommonProto
+          .internal_static_google_cloud_pubsublite_v1_PubSubMessage_descriptor;
     }
 
     @java.lang.Override
@@ -596,7 +632,8 @@ private static final long serialVersionUID = 0L;
 
     @java.lang.Override
     public com.google.cloud.pubsublite.proto.PubSubMessage buildPartial() {
-      com.google.cloud.pubsublite.proto.PubSubMessage result = new com.google.cloud.pubsublite.proto.PubSubMessage(this);
+      com.google.cloud.pubsublite.proto.PubSubMessage result =
+          new com.google.cloud.pubsublite.proto.PubSubMessage(this);
       int from_bitField0_ = bitField0_;
       result.key_ = key_;
       result.data_ = data_;
@@ -615,38 +652,39 @@ private static final long serialVersionUID = 0L;
     public Builder clone() {
       return super.clone();
     }
+
     @java.lang.Override
     public Builder setField(
-        com.google.protobuf.Descriptors.FieldDescriptor field,
-        java.lang.Object value) {
+        com.google.protobuf.Descriptors.FieldDescriptor field, java.lang.Object value) {
       return super.setField(field, value);
     }
+
     @java.lang.Override
-    public Builder clearField(
-        com.google.protobuf.Descriptors.FieldDescriptor field) {
+    public Builder clearField(com.google.protobuf.Descriptors.FieldDescriptor field) {
       return super.clearField(field);
     }
+
     @java.lang.Override
-    public Builder clearOneof(
-        com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+    public Builder clearOneof(com.google.protobuf.Descriptors.OneofDescriptor oneof) {
       return super.clearOneof(oneof);
     }
+
     @java.lang.Override
     public Builder setRepeatedField(
-        com.google.protobuf.Descriptors.FieldDescriptor field,
-        int index, java.lang.Object value) {
+        com.google.protobuf.Descriptors.FieldDescriptor field, int index, java.lang.Object value) {
       return super.setRepeatedField(field, index, value);
     }
+
     @java.lang.Override
     public Builder addRepeatedField(
-        com.google.protobuf.Descriptors.FieldDescriptor field,
-        java.lang.Object value) {
+        com.google.protobuf.Descriptors.FieldDescriptor field, java.lang.Object value) {
       return super.addRepeatedField(field, value);
     }
+
     @java.lang.Override
     public Builder mergeFrom(com.google.protobuf.Message other) {
       if (other instanceof com.google.cloud.pubsublite.proto.PubSubMessage) {
-        return mergeFrom((com.google.cloud.pubsublite.proto.PubSubMessage)other);
+        return mergeFrom((com.google.cloud.pubsublite.proto.PubSubMessage) other);
       } else {
         super.mergeFrom(other);
         return this;
@@ -654,15 +692,15 @@ private static final long serialVersionUID = 0L;
     }
 
     public Builder mergeFrom(com.google.cloud.pubsublite.proto.PubSubMessage other) {
-      if (other == com.google.cloud.pubsublite.proto.PubSubMessage.getDefaultInstance()) return this;
+      if (other == com.google.cloud.pubsublite.proto.PubSubMessage.getDefaultInstance())
+        return this;
       if (other.getKey() != com.google.protobuf.ByteString.EMPTY) {
         setKey(other.getKey());
       }
       if (other.getData() != com.google.protobuf.ByteString.EMPTY) {
         setData(other.getData());
       }
-      internalGetMutableAttributes().mergeFrom(
-          other.internalGetAttributes());
+      internalGetMutableAttributes().mergeFrom(other.internalGetAttributes());
       if (other.hasEventTime()) {
         mergeEventTime(other.getEventTime());
       }
@@ -694,10 +732,13 @@ private static final long serialVersionUID = 0L;
       }
       return this;
     }
+
     private int bitField0_;
 
     private com.google.protobuf.ByteString key_ = com.google.protobuf.ByteString.EMPTY;
     /**
+     *
+     *
      * <pre>
      * The key used for routing messages to partitions or for compaction (e.g.,
      * keep the last N messages per key). If the key is empty, the message is
@@ -705,12 +746,15 @@ private static final long serialVersionUID = 0L;
      * </pre>
      *
      * <code>bytes key = 1;</code>
+     *
      * @return The key.
      */
     public com.google.protobuf.ByteString getKey() {
       return key_;
     }
     /**
+     *
+     *
      * <pre>
      * The key used for routing messages to partitions or for compaction (e.g.,
      * keep the last N messages per key). If the key is empty, the message is
@@ -718,19 +762,22 @@ private static final long serialVersionUID = 0L;
      * </pre>
      *
      * <code>bytes key = 1;</code>
+     *
      * @param value The key to set.
      * @return This builder for chaining.
      */
     public Builder setKey(com.google.protobuf.ByteString value) {
       if (value == null) {
-    throw new NullPointerException();
-  }
-  
+        throw new NullPointerException();
+      }
+
       key_ = value;
       onChanged();
       return this;
     }
     /**
+     *
+     *
      * <pre>
      * The key used for routing messages to partitions or for compaction (e.g.,
      * keep the last N messages per key). If the key is empty, the message is
@@ -738,10 +785,11 @@ private static final long serialVersionUID = 0L;
      * </pre>
      *
      * <code>bytes key = 1;</code>
+     *
      * @return This builder for chaining.
      */
     public Builder clearKey() {
-      
+
       key_ = getDefaultInstance().getKey();
       onChanged();
       return this;
@@ -749,65 +797,80 @@ private static final long serialVersionUID = 0L;
 
     private com.google.protobuf.ByteString data_ = com.google.protobuf.ByteString.EMPTY;
     /**
+     *
+     *
      * <pre>
      * The payload of the message.
      * </pre>
      *
      * <code>bytes data = 2;</code>
+     *
      * @return The data.
      */
     public com.google.protobuf.ByteString getData() {
       return data_;
     }
     /**
+     *
+     *
      * <pre>
      * The payload of the message.
      * </pre>
      *
      * <code>bytes data = 2;</code>
+     *
      * @param value The data to set.
      * @return This builder for chaining.
      */
     public Builder setData(com.google.protobuf.ByteString value) {
       if (value == null) {
-    throw new NullPointerException();
-  }
-  
+        throw new NullPointerException();
+      }
+
       data_ = value;
       onChanged();
       return this;
     }
     /**
+     *
+     *
      * <pre>
      * The payload of the message.
      * </pre>
      *
      * <code>bytes data = 2;</code>
+     *
      * @return This builder for chaining.
      */
     public Builder clearData() {
-      
+
       data_ = getDefaultInstance().getData();
       onChanged();
       return this;
     }
 
     private com.google.protobuf.MapField<
-        java.lang.String, com.google.cloud.pubsublite.proto.AttributeValues> attributes_;
-    private com.google.protobuf.MapField<java.lang.String, com.google.cloud.pubsublite.proto.AttributeValues>
-    internalGetAttributes() {
+            java.lang.String, com.google.cloud.pubsublite.proto.AttributeValues>
+        attributes_;
+
+    private com.google.protobuf.MapField<
+            java.lang.String, com.google.cloud.pubsublite.proto.AttributeValues>
+        internalGetAttributes() {
       if (attributes_ == null) {
         return com.google.protobuf.MapField.emptyMapField(
             AttributesDefaultEntryHolder.defaultEntry);
       }
       return attributes_;
     }
-    private com.google.protobuf.MapField<java.lang.String, com.google.cloud.pubsublite.proto.AttributeValues>
-    internalGetMutableAttributes() {
-      onChanged();;
+
+    private com.google.protobuf.MapField<
+            java.lang.String, com.google.cloud.pubsublite.proto.AttributeValues>
+        internalGetMutableAttributes() {
+      onChanged();
+      ;
       if (attributes_ == null) {
-        attributes_ = com.google.protobuf.MapField.newMapField(
-            AttributesDefaultEntryHolder.defaultEntry);
+        attributes_ =
+            com.google.protobuf.MapField.newMapField(AttributesDefaultEntryHolder.defaultEntry);
       }
       if (!attributes_.isMutable()) {
         attributes_ = attributes_.copy();
@@ -819,63 +882,71 @@ private static final long serialVersionUID = 0L;
       return internalGetAttributes().getMap().size();
     }
     /**
+     *
+     *
      * <pre>
      * Optional attributes that can be used for message metadata/headers.
      * </pre>
      *
      * <code>map&lt;string, .google.cloud.pubsublite.v1.AttributeValues&gt; attributes = 3;</code>
      */
-
-    public boolean containsAttributes(
-        java.lang.String key) {
-      if (key == null) { throw new java.lang.NullPointerException(); }
+    public boolean containsAttributes(java.lang.String key) {
+      if (key == null) {
+        throw new java.lang.NullPointerException();
+      }
       return internalGetAttributes().getMap().containsKey(key);
     }
-    /**
-     * Use {@link #getAttributesMap()} instead.
-     */
+    /** Use {@link #getAttributesMap()} instead. */
     @java.lang.Deprecated
-    public java.util.Map<java.lang.String, com.google.cloud.pubsublite.proto.AttributeValues> getAttributes() {
+    public java.util.Map<java.lang.String, com.google.cloud.pubsublite.proto.AttributeValues>
+        getAttributes() {
       return getAttributesMap();
     }
     /**
+     *
+     *
      * <pre>
      * Optional attributes that can be used for message metadata/headers.
      * </pre>
      *
      * <code>map&lt;string, .google.cloud.pubsublite.v1.AttributeValues&gt; attributes = 3;</code>
      */
-
-    public java.util.Map<java.lang.String, com.google.cloud.pubsublite.proto.AttributeValues> getAttributesMap() {
+    public java.util.Map<java.lang.String, com.google.cloud.pubsublite.proto.AttributeValues>
+        getAttributesMap() {
       return internalGetAttributes().getMap();
     }
     /**
+     *
+     *
      * <pre>
      * Optional attributes that can be used for message metadata/headers.
      * </pre>
      *
      * <code>map&lt;string, .google.cloud.pubsublite.v1.AttributeValues&gt; attributes = 3;</code>
      */
-
     public com.google.cloud.pubsublite.proto.AttributeValues getAttributesOrDefault(
-        java.lang.String key,
-        com.google.cloud.pubsublite.proto.AttributeValues defaultValue) {
-      if (key == null) { throw new java.lang.NullPointerException(); }
+        java.lang.String key, com.google.cloud.pubsublite.proto.AttributeValues defaultValue) {
+      if (key == null) {
+        throw new java.lang.NullPointerException();
+      }
       java.util.Map<java.lang.String, com.google.cloud.pubsublite.proto.AttributeValues> map =
           internalGetAttributes().getMap();
       return map.containsKey(key) ? map.get(key) : defaultValue;
     }
     /**
+     *
+     *
      * <pre>
      * Optional attributes that can be used for message metadata/headers.
      * </pre>
      *
      * <code>map&lt;string, .google.cloud.pubsublite.v1.AttributeValues&gt; attributes = 3;</code>
      */
-
     public com.google.cloud.pubsublite.proto.AttributeValues getAttributesOrThrow(
         java.lang.String key) {
-      if (key == null) { throw new java.lang.NullPointerException(); }
+      if (key == null) {
+        throw new java.lang.NullPointerException();
+      }
       java.util.Map<java.lang.String, com.google.cloud.pubsublite.proto.AttributeValues> map =
           internalGetAttributes().getMap();
       if (!map.containsKey(key)) {
@@ -885,34 +956,34 @@ private static final long serialVersionUID = 0L;
     }
 
     public Builder clearAttributes() {
-      internalGetMutableAttributes().getMutableMap()
-          .clear();
+      internalGetMutableAttributes().getMutableMap().clear();
       return this;
     }
     /**
+     *
+     *
      * <pre>
      * Optional attributes that can be used for message metadata/headers.
      * </pre>
      *
      * <code>map&lt;string, .google.cloud.pubsublite.v1.AttributeValues&gt; attributes = 3;</code>
      */
-
-    public Builder removeAttributes(
-        java.lang.String key) {
-      if (key == null) { throw new java.lang.NullPointerException(); }
-      internalGetMutableAttributes().getMutableMap()
-          .remove(key);
+    public Builder removeAttributes(java.lang.String key) {
+      if (key == null) {
+        throw new java.lang.NullPointerException();
+      }
+      internalGetMutableAttributes().getMutableMap().remove(key);
       return this;
     }
-    /**
-     * Use alternate mutation accessors instead.
-     */
+    /** Use alternate mutation accessors instead. */
     @java.lang.Deprecated
     public java.util.Map<java.lang.String, com.google.cloud.pubsublite.proto.AttributeValues>
-    getMutableAttributes() {
+        getMutableAttributes() {
       return internalGetMutableAttributes().getMutableMap();
     }
     /**
+     *
+     *
      * <pre>
      * Optional attributes that can be used for message metadata/headers.
      * </pre>
@@ -920,49 +991,60 @@ private static final long serialVersionUID = 0L;
      * <code>map&lt;string, .google.cloud.pubsublite.v1.AttributeValues&gt; attributes = 3;</code>
      */
     public Builder putAttributes(
-        java.lang.String key,
-        com.google.cloud.pubsublite.proto.AttributeValues value) {
-      if (key == null) { throw new java.lang.NullPointerException(); }
-      if (value == null) { throw new java.lang.NullPointerException(); }
-      internalGetMutableAttributes().getMutableMap()
-          .put(key, value);
+        java.lang.String key, com.google.cloud.pubsublite.proto.AttributeValues value) {
+      if (key == null) {
+        throw new java.lang.NullPointerException();
+      }
+      if (value == null) {
+        throw new java.lang.NullPointerException();
+      }
+      internalGetMutableAttributes().getMutableMap().put(key, value);
       return this;
     }
     /**
+     *
+     *
      * <pre>
      * Optional attributes that can be used for message metadata/headers.
      * </pre>
      *
      * <code>map&lt;string, .google.cloud.pubsublite.v1.AttributeValues&gt; attributes = 3;</code>
      */
-
     public Builder putAllAttributes(
         java.util.Map<java.lang.String, com.google.cloud.pubsublite.proto.AttributeValues> values) {
-      internalGetMutableAttributes().getMutableMap()
-          .putAll(values);
+      internalGetMutableAttributes().getMutableMap().putAll(values);
       return this;
     }
 
     private com.google.protobuf.Timestamp eventTime_;
     private com.google.protobuf.SingleFieldBuilderV3<
-        com.google.protobuf.Timestamp, com.google.protobuf.Timestamp.Builder, com.google.protobuf.TimestampOrBuilder> eventTimeBuilder_;
+            com.google.protobuf.Timestamp,
+            com.google.protobuf.Timestamp.Builder,
+            com.google.protobuf.TimestampOrBuilder>
+        eventTimeBuilder_;
     /**
+     *
+     *
      * <pre>
      * An optional, user-specified event time.
      * </pre>
      *
      * <code>.google.protobuf.Timestamp event_time = 4;</code>
+     *
      * @return Whether the eventTime field is set.
      */
     public boolean hasEventTime() {
       return eventTimeBuilder_ != null || eventTime_ != null;
     }
     /**
+     *
+     *
      * <pre>
      * An optional, user-specified event time.
      * </pre>
      *
      * <code>.google.protobuf.Timestamp event_time = 4;</code>
+     *
      * @return The eventTime.
      */
     public com.google.protobuf.Timestamp getEventTime() {
@@ -973,6 +1055,8 @@ private static final long serialVersionUID = 0L;
       }
     }
     /**
+     *
+     *
      * <pre>
      * An optional, user-specified event time.
      * </pre>
@@ -993,14 +1077,15 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
+     *
+     *
      * <pre>
      * An optional, user-specified event time.
      * </pre>
      *
      * <code>.google.protobuf.Timestamp event_time = 4;</code>
      */
-    public Builder setEventTime(
-        com.google.protobuf.Timestamp.Builder builderForValue) {
+    public Builder setEventTime(com.google.protobuf.Timestamp.Builder builderForValue) {
       if (eventTimeBuilder_ == null) {
         eventTime_ = builderForValue.build();
         onChanged();
@@ -1011,6 +1096,8 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
+     *
+     *
      * <pre>
      * An optional, user-specified event time.
      * </pre>
@@ -1021,7 +1108,7 @@ private static final long serialVersionUID = 0L;
       if (eventTimeBuilder_ == null) {
         if (eventTime_ != null) {
           eventTime_ =
-            com.google.protobuf.Timestamp.newBuilder(eventTime_).mergeFrom(value).buildPartial();
+              com.google.protobuf.Timestamp.newBuilder(eventTime_).mergeFrom(value).buildPartial();
         } else {
           eventTime_ = value;
         }
@@ -1033,6 +1120,8 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
+     *
+     *
      * <pre>
      * An optional, user-specified event time.
      * </pre>
@@ -1051,6 +1140,8 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
+     *
+     *
      * <pre>
      * An optional, user-specified event time.
      * </pre>
@@ -1058,11 +1149,13 @@ private static final long serialVersionUID = 0L;
      * <code>.google.protobuf.Timestamp event_time = 4;</code>
      */
     public com.google.protobuf.Timestamp.Builder getEventTimeBuilder() {
-      
+
       onChanged();
       return getEventTimeFieldBuilder().getBuilder();
     }
     /**
+     *
+     *
      * <pre>
      * An optional, user-specified event time.
      * </pre>
@@ -1073,11 +1166,12 @@ private static final long serialVersionUID = 0L;
       if (eventTimeBuilder_ != null) {
         return eventTimeBuilder_.getMessageOrBuilder();
       } else {
-        return eventTime_ == null ?
-            com.google.protobuf.Timestamp.getDefaultInstance() : eventTime_;
+        return eventTime_ == null ? com.google.protobuf.Timestamp.getDefaultInstance() : eventTime_;
       }
     }
     /**
+     *
+     *
      * <pre>
      * An optional, user-specified event time.
      * </pre>
@@ -1085,21 +1179,24 @@ private static final long serialVersionUID = 0L;
      * <code>.google.protobuf.Timestamp event_time = 4;</code>
      */
     private com.google.protobuf.SingleFieldBuilderV3<
-        com.google.protobuf.Timestamp, com.google.protobuf.Timestamp.Builder, com.google.protobuf.TimestampOrBuilder> 
+            com.google.protobuf.Timestamp,
+            com.google.protobuf.Timestamp.Builder,
+            com.google.protobuf.TimestampOrBuilder>
         getEventTimeFieldBuilder() {
       if (eventTimeBuilder_ == null) {
-        eventTimeBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
-            com.google.protobuf.Timestamp, com.google.protobuf.Timestamp.Builder, com.google.protobuf.TimestampOrBuilder>(
-                getEventTime(),
-                getParentForChildren(),
-                isClean());
+        eventTimeBuilder_ =
+            new com.google.protobuf.SingleFieldBuilderV3<
+                com.google.protobuf.Timestamp,
+                com.google.protobuf.Timestamp.Builder,
+                com.google.protobuf.TimestampOrBuilder>(
+                getEventTime(), getParentForChildren(), isClean());
         eventTime_ = null;
       }
       return eventTimeBuilder_;
     }
+
     @java.lang.Override
-    public final Builder setUnknownFields(
-        final com.google.protobuf.UnknownFieldSet unknownFields) {
+    public final Builder setUnknownFields(final com.google.protobuf.UnknownFieldSet unknownFields) {
       return super.setUnknownFields(unknownFields);
     }
 
@@ -1109,12 +1206,12 @@ private static final long serialVersionUID = 0L;
       return super.mergeUnknownFields(unknownFields);
     }
 
-
     // @@protoc_insertion_point(builder_scope:google.cloud.pubsublite.v1.PubSubMessage)
   }
 
   // @@protoc_insertion_point(class_scope:google.cloud.pubsublite.v1.PubSubMessage)
   private static final com.google.cloud.pubsublite.proto.PubSubMessage DEFAULT_INSTANCE;
+
   static {
     DEFAULT_INSTANCE = new com.google.cloud.pubsublite.proto.PubSubMessage();
   }
@@ -1123,16 +1220,16 @@ private static final long serialVersionUID = 0L;
     return DEFAULT_INSTANCE;
   }
 
-  private static final com.google.protobuf.Parser<PubSubMessage>
-      PARSER = new com.google.protobuf.AbstractParser<PubSubMessage>() {
-    @java.lang.Override
-    public PubSubMessage parsePartialFrom(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return new PubSubMessage(input, extensionRegistry);
-    }
-  };
+  private static final com.google.protobuf.Parser<PubSubMessage> PARSER =
+      new com.google.protobuf.AbstractParser<PubSubMessage>() {
+        @java.lang.Override
+        public PubSubMessage parsePartialFrom(
+            com.google.protobuf.CodedInputStream input,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws com.google.protobuf.InvalidProtocolBufferException {
+          return new PubSubMessage(input, extensionRegistry);
+        }
+      };
 
   public static com.google.protobuf.Parser<PubSubMessage> parser() {
     return PARSER;
@@ -1147,6 +1244,4 @@ private static final long serialVersionUID = 0L;
   public com.google.cloud.pubsublite.proto.PubSubMessage getDefaultInstanceForType() {
     return DEFAULT_INSTANCE;
   }
-
 }
-

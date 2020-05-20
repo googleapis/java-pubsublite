@@ -4,36 +4,37 @@
 package com.google.cloud.pubsublite.proto;
 
 /**
+ *
+ *
  * <pre>
  * Response to a PublishRequest.
  * </pre>
  *
  * Protobuf type {@code google.cloud.pubsublite.v1.PublishResponse}
  */
-public  final class PublishResponse extends
-    com.google.protobuf.GeneratedMessageV3 implements
+public final class PublishResponse extends com.google.protobuf.GeneratedMessageV3
+    implements
     // @@protoc_insertion_point(message_implements:google.cloud.pubsublite.v1.PublishResponse)
     PublishResponseOrBuilder {
-private static final long serialVersionUID = 0L;
+  private static final long serialVersionUID = 0L;
   // Use PublishResponse.newBuilder() to construct.
   private PublishResponse(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
     super(builder);
   }
-  private PublishResponse() {
-  }
+
+  private PublishResponse() {}
 
   @java.lang.Override
   @SuppressWarnings({"unused"})
-  protected java.lang.Object newInstance(
-      UnusedPrivateParameter unused) {
+  protected java.lang.Object newInstance(UnusedPrivateParameter unused) {
     return new PublishResponse();
   }
 
   @java.lang.Override
-  public final com.google.protobuf.UnknownFieldSet
-  getUnknownFields() {
+  public final com.google.protobuf.UnknownFieldSet getUnknownFields() {
     return this.unknownFields;
   }
+
   private PublishResponse(
       com.google.protobuf.CodedInputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -52,75 +53,92 @@ private static final long serialVersionUID = 0L;
           case 0:
             done = true;
             break;
-          case 10: {
-            com.google.cloud.pubsublite.proto.InitialPublishResponse.Builder subBuilder = null;
-            if (responseTypeCase_ == 1) {
-              subBuilder = ((com.google.cloud.pubsublite.proto.InitialPublishResponse) responseType_).toBuilder();
+          case 10:
+            {
+              com.google.cloud.pubsublite.proto.InitialPublishResponse.Builder subBuilder = null;
+              if (responseTypeCase_ == 1) {
+                subBuilder =
+                    ((com.google.cloud.pubsublite.proto.InitialPublishResponse) responseType_)
+                        .toBuilder();
+              }
+              responseType_ =
+                  input.readMessage(
+                      com.google.cloud.pubsublite.proto.InitialPublishResponse.parser(),
+                      extensionRegistry);
+              if (subBuilder != null) {
+                subBuilder.mergeFrom(
+                    (com.google.cloud.pubsublite.proto.InitialPublishResponse) responseType_);
+                responseType_ = subBuilder.buildPartial();
+              }
+              responseTypeCase_ = 1;
+              break;
             }
-            responseType_ =
-                input.readMessage(com.google.cloud.pubsublite.proto.InitialPublishResponse.parser(), extensionRegistry);
-            if (subBuilder != null) {
-              subBuilder.mergeFrom((com.google.cloud.pubsublite.proto.InitialPublishResponse) responseType_);
-              responseType_ = subBuilder.buildPartial();
+          case 18:
+            {
+              com.google.cloud.pubsublite.proto.MessagePublishResponse.Builder subBuilder = null;
+              if (responseTypeCase_ == 2) {
+                subBuilder =
+                    ((com.google.cloud.pubsublite.proto.MessagePublishResponse) responseType_)
+                        .toBuilder();
+              }
+              responseType_ =
+                  input.readMessage(
+                      com.google.cloud.pubsublite.proto.MessagePublishResponse.parser(),
+                      extensionRegistry);
+              if (subBuilder != null) {
+                subBuilder.mergeFrom(
+                    (com.google.cloud.pubsublite.proto.MessagePublishResponse) responseType_);
+                responseType_ = subBuilder.buildPartial();
+              }
+              responseTypeCase_ = 2;
+              break;
             }
-            responseTypeCase_ = 1;
-            break;
-          }
-          case 18: {
-            com.google.cloud.pubsublite.proto.MessagePublishResponse.Builder subBuilder = null;
-            if (responseTypeCase_ == 2) {
-              subBuilder = ((com.google.cloud.pubsublite.proto.MessagePublishResponse) responseType_).toBuilder();
+          default:
+            {
+              if (!parseUnknownField(input, unknownFields, extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
             }
-            responseType_ =
-                input.readMessage(com.google.cloud.pubsublite.proto.MessagePublishResponse.parser(), extensionRegistry);
-            if (subBuilder != null) {
-              subBuilder.mergeFrom((com.google.cloud.pubsublite.proto.MessagePublishResponse) responseType_);
-              responseType_ = subBuilder.buildPartial();
-            }
-            responseTypeCase_ = 2;
-            break;
-          }
-          default: {
-            if (!parseUnknownField(
-                input, unknownFields, extensionRegistry, tag)) {
-              done = true;
-            }
-            break;
-          }
         }
       }
     } catch (com.google.protobuf.InvalidProtocolBufferException e) {
       throw e.setUnfinishedMessage(this);
     } catch (java.io.IOException e) {
-      throw new com.google.protobuf.InvalidProtocolBufferException(
-          e).setUnfinishedMessage(this);
+      throw new com.google.protobuf.InvalidProtocolBufferException(e).setUnfinishedMessage(this);
     } finally {
       this.unknownFields = unknownFields.build();
       makeExtensionsImmutable();
     }
   }
-  public static final com.google.protobuf.Descriptors.Descriptor
-      getDescriptor() {
-    return com.google.cloud.pubsublite.proto.PublisherProto.internal_static_google_cloud_pubsublite_v1_PublishResponse_descriptor;
+
+  public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
+    return com.google.cloud.pubsublite.proto.PublisherProto
+        .internal_static_google_cloud_pubsublite_v1_PublishResponse_descriptor;
   }
 
   @java.lang.Override
   protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internalGetFieldAccessorTable() {
-    return com.google.cloud.pubsublite.proto.PublisherProto.internal_static_google_cloud_pubsublite_v1_PublishResponse_fieldAccessorTable
+    return com.google.cloud.pubsublite.proto.PublisherProto
+        .internal_static_google_cloud_pubsublite_v1_PublishResponse_fieldAccessorTable
         .ensureFieldAccessorsInitialized(
-            com.google.cloud.pubsublite.proto.PublishResponse.class, com.google.cloud.pubsublite.proto.PublishResponse.Builder.class);
+            com.google.cloud.pubsublite.proto.PublishResponse.class,
+            com.google.cloud.pubsublite.proto.PublishResponse.Builder.class);
   }
 
   private int responseTypeCase_ = 0;
   private java.lang.Object responseType_;
+
   public enum ResponseTypeCase
-      implements com.google.protobuf.Internal.EnumLite,
+      implements
+          com.google.protobuf.Internal.EnumLite,
           com.google.protobuf.AbstractMessage.InternalOneOfEnum {
     INITIAL_RESPONSE(1),
     MESSAGE_RESPONSE(2),
     RESPONSETYPE_NOT_SET(0);
     private final int value;
+
     private ResponseTypeCase(int value) {
       this.value = value;
     }
@@ -136,104 +154,126 @@ private static final long serialVersionUID = 0L;
 
     public static ResponseTypeCase forNumber(int value) {
       switch (value) {
-        case 1: return INITIAL_RESPONSE;
-        case 2: return MESSAGE_RESPONSE;
-        case 0: return RESPONSETYPE_NOT_SET;
-        default: return null;
+        case 1:
+          return INITIAL_RESPONSE;
+        case 2:
+          return MESSAGE_RESPONSE;
+        case 0:
+          return RESPONSETYPE_NOT_SET;
+        default:
+          return null;
       }
     }
+
     public int getNumber() {
       return this.value;
     }
   };
 
-  public ResponseTypeCase
-  getResponseTypeCase() {
-    return ResponseTypeCase.forNumber(
-        responseTypeCase_);
+  public ResponseTypeCase getResponseTypeCase() {
+    return ResponseTypeCase.forNumber(responseTypeCase_);
   }
 
   public static final int INITIAL_RESPONSE_FIELD_NUMBER = 1;
   /**
+   *
+   *
    * <pre>
    * Initial response on the stream.
    * </pre>
    *
    * <code>.google.cloud.pubsublite.v1.InitialPublishResponse initial_response = 1;</code>
+   *
    * @return Whether the initialResponse field is set.
    */
   public boolean hasInitialResponse() {
     return responseTypeCase_ == 1;
   }
   /**
+   *
+   *
    * <pre>
    * Initial response on the stream.
    * </pre>
    *
    * <code>.google.cloud.pubsublite.v1.InitialPublishResponse initial_response = 1;</code>
+   *
    * @return The initialResponse.
    */
   public com.google.cloud.pubsublite.proto.InitialPublishResponse getInitialResponse() {
     if (responseTypeCase_ == 1) {
-       return (com.google.cloud.pubsublite.proto.InitialPublishResponse) responseType_;
+      return (com.google.cloud.pubsublite.proto.InitialPublishResponse) responseType_;
     }
     return com.google.cloud.pubsublite.proto.InitialPublishResponse.getDefaultInstance();
   }
   /**
+   *
+   *
    * <pre>
    * Initial response on the stream.
    * </pre>
    *
    * <code>.google.cloud.pubsublite.v1.InitialPublishResponse initial_response = 1;</code>
    */
-  public com.google.cloud.pubsublite.proto.InitialPublishResponseOrBuilder getInitialResponseOrBuilder() {
+  public com.google.cloud.pubsublite.proto.InitialPublishResponseOrBuilder
+      getInitialResponseOrBuilder() {
     if (responseTypeCase_ == 1) {
-       return (com.google.cloud.pubsublite.proto.InitialPublishResponse) responseType_;
+      return (com.google.cloud.pubsublite.proto.InitialPublishResponse) responseType_;
     }
     return com.google.cloud.pubsublite.proto.InitialPublishResponse.getDefaultInstance();
   }
 
   public static final int MESSAGE_RESPONSE_FIELD_NUMBER = 2;
   /**
+   *
+   *
    * <pre>
    * Response to publishing messages.
    * </pre>
    *
    * <code>.google.cloud.pubsublite.v1.MessagePublishResponse message_response = 2;</code>
+   *
    * @return Whether the messageResponse field is set.
    */
   public boolean hasMessageResponse() {
     return responseTypeCase_ == 2;
   }
   /**
+   *
+   *
    * <pre>
    * Response to publishing messages.
    * </pre>
    *
    * <code>.google.cloud.pubsublite.v1.MessagePublishResponse message_response = 2;</code>
+   *
    * @return The messageResponse.
    */
   public com.google.cloud.pubsublite.proto.MessagePublishResponse getMessageResponse() {
     if (responseTypeCase_ == 2) {
-       return (com.google.cloud.pubsublite.proto.MessagePublishResponse) responseType_;
+      return (com.google.cloud.pubsublite.proto.MessagePublishResponse) responseType_;
     }
     return com.google.cloud.pubsublite.proto.MessagePublishResponse.getDefaultInstance();
   }
   /**
+   *
+   *
    * <pre>
    * Response to publishing messages.
    * </pre>
    *
    * <code>.google.cloud.pubsublite.v1.MessagePublishResponse message_response = 2;</code>
    */
-  public com.google.cloud.pubsublite.proto.MessagePublishResponseOrBuilder getMessageResponseOrBuilder() {
+  public com.google.cloud.pubsublite.proto.MessagePublishResponseOrBuilder
+      getMessageResponseOrBuilder() {
     if (responseTypeCase_ == 2) {
-       return (com.google.cloud.pubsublite.proto.MessagePublishResponse) responseType_;
+      return (com.google.cloud.pubsublite.proto.MessagePublishResponse) responseType_;
     }
     return com.google.cloud.pubsublite.proto.MessagePublishResponse.getDefaultInstance();
   }
 
   private byte memoizedIsInitialized = -1;
+
   @java.lang.Override
   public final boolean isInitialized() {
     byte isInitialized = memoizedIsInitialized;
@@ -245,13 +285,14 @@ private static final long serialVersionUID = 0L;
   }
 
   @java.lang.Override
-  public void writeTo(com.google.protobuf.CodedOutputStream output)
-                      throws java.io.IOException {
+  public void writeTo(com.google.protobuf.CodedOutputStream output) throws java.io.IOException {
     if (responseTypeCase_ == 1) {
-      output.writeMessage(1, (com.google.cloud.pubsublite.proto.InitialPublishResponse) responseType_);
+      output.writeMessage(
+          1, (com.google.cloud.pubsublite.proto.InitialPublishResponse) responseType_);
     }
     if (responseTypeCase_ == 2) {
-      output.writeMessage(2, (com.google.cloud.pubsublite.proto.MessagePublishResponse) responseType_);
+      output.writeMessage(
+          2, (com.google.cloud.pubsublite.proto.MessagePublishResponse) responseType_);
     }
     unknownFields.writeTo(output);
   }
@@ -263,12 +304,14 @@ private static final long serialVersionUID = 0L;
 
     size = 0;
     if (responseTypeCase_ == 1) {
-      size += com.google.protobuf.CodedOutputStream
-        .computeMessageSize(1, (com.google.cloud.pubsublite.proto.InitialPublishResponse) responseType_);
+      size +=
+          com.google.protobuf.CodedOutputStream.computeMessageSize(
+              1, (com.google.cloud.pubsublite.proto.InitialPublishResponse) responseType_);
     }
     if (responseTypeCase_ == 2) {
-      size += com.google.protobuf.CodedOutputStream
-        .computeMessageSize(2, (com.google.cloud.pubsublite.proto.MessagePublishResponse) responseType_);
+      size +=
+          com.google.protobuf.CodedOutputStream.computeMessageSize(
+              2, (com.google.cloud.pubsublite.proto.MessagePublishResponse) responseType_);
     }
     size += unknownFields.getSerializedSize();
     memoizedSize = size;
@@ -278,22 +321,21 @@ private static final long serialVersionUID = 0L;
   @java.lang.Override
   public boolean equals(final java.lang.Object obj) {
     if (obj == this) {
-     return true;
+      return true;
     }
     if (!(obj instanceof com.google.cloud.pubsublite.proto.PublishResponse)) {
       return super.equals(obj);
     }
-    com.google.cloud.pubsublite.proto.PublishResponse other = (com.google.cloud.pubsublite.proto.PublishResponse) obj;
+    com.google.cloud.pubsublite.proto.PublishResponse other =
+        (com.google.cloud.pubsublite.proto.PublishResponse) obj;
 
     if (!getResponseTypeCase().equals(other.getResponseTypeCase())) return false;
     switch (responseTypeCase_) {
       case 1:
-        if (!getInitialResponse()
-            .equals(other.getInitialResponse())) return false;
+        if (!getInitialResponse().equals(other.getInitialResponse())) return false;
         break;
       case 2:
-        if (!getMessageResponse()
-            .equals(other.getMessageResponse())) return false;
+        if (!getMessageResponse().equals(other.getMessageResponse())) return false;
         break;
       case 0:
       default:
@@ -327,117 +369,126 @@ private static final long serialVersionUID = 0L;
   }
 
   public static com.google.cloud.pubsublite.proto.PublishResponse parseFrom(
-      java.nio.ByteBuffer data)
-      throws com.google.protobuf.InvalidProtocolBufferException {
+      java.nio.ByteBuffer data) throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
+
   public static com.google.cloud.pubsublite.proto.PublishResponse parseFrom(
-      java.nio.ByteBuffer data,
-      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+      java.nio.ByteBuffer data, com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
+
   public static com.google.cloud.pubsublite.proto.PublishResponse parseFrom(
       com.google.protobuf.ByteString data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
+
   public static com.google.cloud.pubsublite.proto.PublishResponse parseFrom(
       com.google.protobuf.ByteString data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
+
   public static com.google.cloud.pubsublite.proto.PublishResponse parseFrom(byte[] data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
+
   public static com.google.cloud.pubsublite.proto.PublishResponse parseFrom(
-      byte[] data,
-      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+      byte[] data, com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static com.google.cloud.pubsublite.proto.PublishResponse parseFrom(java.io.InputStream input)
-      throws java.io.IOException {
-    return com.google.protobuf.GeneratedMessageV3
-        .parseWithIOException(PARSER, input);
-  }
+
   public static com.google.cloud.pubsublite.proto.PublishResponse parseFrom(
-      java.io.InputStream input,
-      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-      throws java.io.IOException {
-    return com.google.protobuf.GeneratedMessageV3
-        .parseWithIOException(PARSER, input, extensionRegistry);
+      java.io.InputStream input) throws java.io.IOException {
+    return com.google.protobuf.GeneratedMessageV3.parseWithIOException(PARSER, input);
   }
-  public static com.google.cloud.pubsublite.proto.PublishResponse parseDelimitedFrom(java.io.InputStream input)
+
+  public static com.google.cloud.pubsublite.proto.PublishResponse parseFrom(
+      java.io.InputStream input, com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
-    return com.google.protobuf.GeneratedMessageV3
-        .parseDelimitedWithIOException(PARSER, input);
+    return com.google.protobuf.GeneratedMessageV3.parseWithIOException(
+        PARSER, input, extensionRegistry);
   }
+
   public static com.google.cloud.pubsublite.proto.PublishResponse parseDelimitedFrom(
-      java.io.InputStream input,
-      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-      throws java.io.IOException {
-    return com.google.protobuf.GeneratedMessageV3
-        .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+      java.io.InputStream input) throws java.io.IOException {
+    return com.google.protobuf.GeneratedMessageV3.parseDelimitedWithIOException(PARSER, input);
   }
+
+  public static com.google.cloud.pubsublite.proto.PublishResponse parseDelimitedFrom(
+      java.io.InputStream input, com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+      throws java.io.IOException {
+    return com.google.protobuf.GeneratedMessageV3.parseDelimitedWithIOException(
+        PARSER, input, extensionRegistry);
+  }
+
   public static com.google.cloud.pubsublite.proto.PublishResponse parseFrom(
-      com.google.protobuf.CodedInputStream input)
-      throws java.io.IOException {
-    return com.google.protobuf.GeneratedMessageV3
-        .parseWithIOException(PARSER, input);
+      com.google.protobuf.CodedInputStream input) throws java.io.IOException {
+    return com.google.protobuf.GeneratedMessageV3.parseWithIOException(PARSER, input);
   }
+
   public static com.google.cloud.pubsublite.proto.PublishResponse parseFrom(
       com.google.protobuf.CodedInputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
-    return com.google.protobuf.GeneratedMessageV3
-        .parseWithIOException(PARSER, input, extensionRegistry);
+    return com.google.protobuf.GeneratedMessageV3.parseWithIOException(
+        PARSER, input, extensionRegistry);
   }
 
   @java.lang.Override
-  public Builder newBuilderForType() { return newBuilder(); }
+  public Builder newBuilderForType() {
+    return newBuilder();
+  }
+
   public static Builder newBuilder() {
     return DEFAULT_INSTANCE.toBuilder();
   }
+
   public static Builder newBuilder(com.google.cloud.pubsublite.proto.PublishResponse prototype) {
     return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
   }
+
   @java.lang.Override
   public Builder toBuilder() {
-    return this == DEFAULT_INSTANCE
-        ? new Builder() : new Builder().mergeFrom(this);
+    return this == DEFAULT_INSTANCE ? new Builder() : new Builder().mergeFrom(this);
   }
 
   @java.lang.Override
-  protected Builder newBuilderForType(
-      com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+  protected Builder newBuilderForType(com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
     Builder builder = new Builder(parent);
     return builder;
   }
   /**
+   *
+   *
    * <pre>
    * Response to a PublishRequest.
    * </pre>
    *
    * Protobuf type {@code google.cloud.pubsublite.v1.PublishResponse}
    */
-  public static final class Builder extends
-      com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+  public static final class Builder extends com.google.protobuf.GeneratedMessageV3.Builder<Builder>
+      implements
       // @@protoc_insertion_point(builder_implements:google.cloud.pubsublite.v1.PublishResponse)
       com.google.cloud.pubsublite.proto.PublishResponseOrBuilder {
-    public static final com.google.protobuf.Descriptors.Descriptor
-        getDescriptor() {
-      return com.google.cloud.pubsublite.proto.PublisherProto.internal_static_google_cloud_pubsublite_v1_PublishResponse_descriptor;
+    public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
+      return com.google.cloud.pubsublite.proto.PublisherProto
+          .internal_static_google_cloud_pubsublite_v1_PublishResponse_descriptor;
     }
 
     @java.lang.Override
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return com.google.cloud.pubsublite.proto.PublisherProto.internal_static_google_cloud_pubsublite_v1_PublishResponse_fieldAccessorTable
+      return com.google.cloud.pubsublite.proto.PublisherProto
+          .internal_static_google_cloud_pubsublite_v1_PublishResponse_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              com.google.cloud.pubsublite.proto.PublishResponse.class, com.google.cloud.pubsublite.proto.PublishResponse.Builder.class);
+              com.google.cloud.pubsublite.proto.PublishResponse.class,
+              com.google.cloud.pubsublite.proto.PublishResponse.Builder.class);
     }
 
     // Construct using com.google.cloud.pubsublite.proto.PublishResponse.newBuilder()
@@ -445,16 +496,15 @@ private static final long serialVersionUID = 0L;
       maybeForceBuilderInitialization();
     }
 
-    private Builder(
-        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+    private Builder(com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
       super(parent);
       maybeForceBuilderInitialization();
     }
+
     private void maybeForceBuilderInitialization() {
-      if (com.google.protobuf.GeneratedMessageV3
-              .alwaysUseFieldBuilders) {
-      }
+      if (com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders) {}
     }
+
     @java.lang.Override
     public Builder clear() {
       super.clear();
@@ -464,9 +514,9 @@ private static final long serialVersionUID = 0L;
     }
 
     @java.lang.Override
-    public com.google.protobuf.Descriptors.Descriptor
-        getDescriptorForType() {
-      return com.google.cloud.pubsublite.proto.PublisherProto.internal_static_google_cloud_pubsublite_v1_PublishResponse_descriptor;
+    public com.google.protobuf.Descriptors.Descriptor getDescriptorForType() {
+      return com.google.cloud.pubsublite.proto.PublisherProto
+          .internal_static_google_cloud_pubsublite_v1_PublishResponse_descriptor;
     }
 
     @java.lang.Override
@@ -485,7 +535,8 @@ private static final long serialVersionUID = 0L;
 
     @java.lang.Override
     public com.google.cloud.pubsublite.proto.PublishResponse buildPartial() {
-      com.google.cloud.pubsublite.proto.PublishResponse result = new com.google.cloud.pubsublite.proto.PublishResponse(this);
+      com.google.cloud.pubsublite.proto.PublishResponse result =
+          new com.google.cloud.pubsublite.proto.PublishResponse(this);
       if (responseTypeCase_ == 1) {
         if (initialResponseBuilder_ == null) {
           result.responseType_ = responseType_;
@@ -509,38 +560,39 @@ private static final long serialVersionUID = 0L;
     public Builder clone() {
       return super.clone();
     }
+
     @java.lang.Override
     public Builder setField(
-        com.google.protobuf.Descriptors.FieldDescriptor field,
-        java.lang.Object value) {
+        com.google.protobuf.Descriptors.FieldDescriptor field, java.lang.Object value) {
       return super.setField(field, value);
     }
+
     @java.lang.Override
-    public Builder clearField(
-        com.google.protobuf.Descriptors.FieldDescriptor field) {
+    public Builder clearField(com.google.protobuf.Descriptors.FieldDescriptor field) {
       return super.clearField(field);
     }
+
     @java.lang.Override
-    public Builder clearOneof(
-        com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+    public Builder clearOneof(com.google.protobuf.Descriptors.OneofDescriptor oneof) {
       return super.clearOneof(oneof);
     }
+
     @java.lang.Override
     public Builder setRepeatedField(
-        com.google.protobuf.Descriptors.FieldDescriptor field,
-        int index, java.lang.Object value) {
+        com.google.protobuf.Descriptors.FieldDescriptor field, int index, java.lang.Object value) {
       return super.setRepeatedField(field, index, value);
     }
+
     @java.lang.Override
     public Builder addRepeatedField(
-        com.google.protobuf.Descriptors.FieldDescriptor field,
-        java.lang.Object value) {
+        com.google.protobuf.Descriptors.FieldDescriptor field, java.lang.Object value) {
       return super.addRepeatedField(field, value);
     }
+
     @java.lang.Override
     public Builder mergeFrom(com.google.protobuf.Message other) {
       if (other instanceof com.google.cloud.pubsublite.proto.PublishResponse) {
-        return mergeFrom((com.google.cloud.pubsublite.proto.PublishResponse)other);
+        return mergeFrom((com.google.cloud.pubsublite.proto.PublishResponse) other);
       } else {
         super.mergeFrom(other);
         return this;
@@ -548,19 +600,23 @@ private static final long serialVersionUID = 0L;
     }
 
     public Builder mergeFrom(com.google.cloud.pubsublite.proto.PublishResponse other) {
-      if (other == com.google.cloud.pubsublite.proto.PublishResponse.getDefaultInstance()) return this;
+      if (other == com.google.cloud.pubsublite.proto.PublishResponse.getDefaultInstance())
+        return this;
       switch (other.getResponseTypeCase()) {
-        case INITIAL_RESPONSE: {
-          mergeInitialResponse(other.getInitialResponse());
-          break;
-        }
-        case MESSAGE_RESPONSE: {
-          mergeMessageResponse(other.getMessageResponse());
-          break;
-        }
-        case RESPONSETYPE_NOT_SET: {
-          break;
-        }
+        case INITIAL_RESPONSE:
+          {
+            mergeInitialResponse(other.getInitialResponse());
+            break;
+          }
+        case MESSAGE_RESPONSE:
+          {
+            mergeMessageResponse(other.getMessageResponse());
+            break;
+          }
+        case RESPONSETYPE_NOT_SET:
+          {
+            break;
+          }
       }
       this.mergeUnknownFields(other.unknownFields);
       onChanged();
@@ -581,7 +637,8 @@ private static final long serialVersionUID = 0L;
       try {
         parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        parsedMessage = (com.google.cloud.pubsublite.proto.PublishResponse) e.getUnfinishedMessage();
+        parsedMessage =
+            (com.google.cloud.pubsublite.proto.PublishResponse) e.getUnfinishedMessage();
         throw e.unwrapIOException();
       } finally {
         if (parsedMessage != null) {
@@ -590,12 +647,12 @@ private static final long serialVersionUID = 0L;
       }
       return this;
     }
+
     private int responseTypeCase_ = 0;
     private java.lang.Object responseType_;
-    public ResponseTypeCase
-        getResponseTypeCase() {
-      return ResponseTypeCase.forNumber(
-          responseTypeCase_);
+
+    public ResponseTypeCase getResponseTypeCase() {
+      return ResponseTypeCase.forNumber(responseTypeCase_);
     }
 
     public Builder clearResponseType() {
@@ -605,26 +662,34 @@ private static final long serialVersionUID = 0L;
       return this;
     }
 
-
     private com.google.protobuf.SingleFieldBuilderV3<
-        com.google.cloud.pubsublite.proto.InitialPublishResponse, com.google.cloud.pubsublite.proto.InitialPublishResponse.Builder, com.google.cloud.pubsublite.proto.InitialPublishResponseOrBuilder> initialResponseBuilder_;
+            com.google.cloud.pubsublite.proto.InitialPublishResponse,
+            com.google.cloud.pubsublite.proto.InitialPublishResponse.Builder,
+            com.google.cloud.pubsublite.proto.InitialPublishResponseOrBuilder>
+        initialResponseBuilder_;
     /**
+     *
+     *
      * <pre>
      * Initial response on the stream.
      * </pre>
      *
      * <code>.google.cloud.pubsublite.v1.InitialPublishResponse initial_response = 1;</code>
+     *
      * @return Whether the initialResponse field is set.
      */
     public boolean hasInitialResponse() {
       return responseTypeCase_ == 1;
     }
     /**
+     *
+     *
      * <pre>
      * Initial response on the stream.
      * </pre>
      *
      * <code>.google.cloud.pubsublite.v1.InitialPublishResponse initial_response = 1;</code>
+     *
      * @return The initialResponse.
      */
     public com.google.cloud.pubsublite.proto.InitialPublishResponse getInitialResponse() {
@@ -641,13 +706,16 @@ private static final long serialVersionUID = 0L;
       }
     }
     /**
+     *
+     *
      * <pre>
      * Initial response on the stream.
      * </pre>
      *
      * <code>.google.cloud.pubsublite.v1.InitialPublishResponse initial_response = 1;</code>
      */
-    public Builder setInitialResponse(com.google.cloud.pubsublite.proto.InitialPublishResponse value) {
+    public Builder setInitialResponse(
+        com.google.cloud.pubsublite.proto.InitialPublishResponse value) {
       if (initialResponseBuilder_ == null) {
         if (value == null) {
           throw new NullPointerException();
@@ -661,6 +729,8 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
+     *
+     *
      * <pre>
      * Initial response on the stream.
      * </pre>
@@ -679,18 +749,25 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
+     *
+     *
      * <pre>
      * Initial response on the stream.
      * </pre>
      *
      * <code>.google.cloud.pubsublite.v1.InitialPublishResponse initial_response = 1;</code>
      */
-    public Builder mergeInitialResponse(com.google.cloud.pubsublite.proto.InitialPublishResponse value) {
+    public Builder mergeInitialResponse(
+        com.google.cloud.pubsublite.proto.InitialPublishResponse value) {
       if (initialResponseBuilder_ == null) {
-        if (responseTypeCase_ == 1 &&
-            responseType_ != com.google.cloud.pubsublite.proto.InitialPublishResponse.getDefaultInstance()) {
-          responseType_ = com.google.cloud.pubsublite.proto.InitialPublishResponse.newBuilder((com.google.cloud.pubsublite.proto.InitialPublishResponse) responseType_)
-              .mergeFrom(value).buildPartial();
+        if (responseTypeCase_ == 1
+            && responseType_
+                != com.google.cloud.pubsublite.proto.InitialPublishResponse.getDefaultInstance()) {
+          responseType_ =
+              com.google.cloud.pubsublite.proto.InitialPublishResponse.newBuilder(
+                      (com.google.cloud.pubsublite.proto.InitialPublishResponse) responseType_)
+                  .mergeFrom(value)
+                  .buildPartial();
         } else {
           responseType_ = value;
         }
@@ -705,6 +782,8 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
+     *
+     *
      * <pre>
      * Initial response on the stream.
      * </pre>
@@ -728,23 +807,29 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
+     *
+     *
      * <pre>
      * Initial response on the stream.
      * </pre>
      *
      * <code>.google.cloud.pubsublite.v1.InitialPublishResponse initial_response = 1;</code>
      */
-    public com.google.cloud.pubsublite.proto.InitialPublishResponse.Builder getInitialResponseBuilder() {
+    public com.google.cloud.pubsublite.proto.InitialPublishResponse.Builder
+        getInitialResponseBuilder() {
       return getInitialResponseFieldBuilder().getBuilder();
     }
     /**
+     *
+     *
      * <pre>
      * Initial response on the stream.
      * </pre>
      *
      * <code>.google.cloud.pubsublite.v1.InitialPublishResponse initial_response = 1;</code>
      */
-    public com.google.cloud.pubsublite.proto.InitialPublishResponseOrBuilder getInitialResponseOrBuilder() {
+    public com.google.cloud.pubsublite.proto.InitialPublishResponseOrBuilder
+        getInitialResponseOrBuilder() {
       if ((responseTypeCase_ == 1) && (initialResponseBuilder_ != null)) {
         return initialResponseBuilder_.getMessageOrBuilder();
       } else {
@@ -755,6 +840,8 @@ private static final long serialVersionUID = 0L;
       }
     }
     /**
+     *
+     *
      * <pre>
      * Initial response on the stream.
      * </pre>
@@ -762,43 +849,59 @@ private static final long serialVersionUID = 0L;
      * <code>.google.cloud.pubsublite.v1.InitialPublishResponse initial_response = 1;</code>
      */
     private com.google.protobuf.SingleFieldBuilderV3<
-        com.google.cloud.pubsublite.proto.InitialPublishResponse, com.google.cloud.pubsublite.proto.InitialPublishResponse.Builder, com.google.cloud.pubsublite.proto.InitialPublishResponseOrBuilder> 
+            com.google.cloud.pubsublite.proto.InitialPublishResponse,
+            com.google.cloud.pubsublite.proto.InitialPublishResponse.Builder,
+            com.google.cloud.pubsublite.proto.InitialPublishResponseOrBuilder>
         getInitialResponseFieldBuilder() {
       if (initialResponseBuilder_ == null) {
         if (!(responseTypeCase_ == 1)) {
-          responseType_ = com.google.cloud.pubsublite.proto.InitialPublishResponse.getDefaultInstance();
+          responseType_ =
+              com.google.cloud.pubsublite.proto.InitialPublishResponse.getDefaultInstance();
         }
-        initialResponseBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
-            com.google.cloud.pubsublite.proto.InitialPublishResponse, com.google.cloud.pubsublite.proto.InitialPublishResponse.Builder, com.google.cloud.pubsublite.proto.InitialPublishResponseOrBuilder>(
+        initialResponseBuilder_ =
+            new com.google.protobuf.SingleFieldBuilderV3<
+                com.google.cloud.pubsublite.proto.InitialPublishResponse,
+                com.google.cloud.pubsublite.proto.InitialPublishResponse.Builder,
+                com.google.cloud.pubsublite.proto.InitialPublishResponseOrBuilder>(
                 (com.google.cloud.pubsublite.proto.InitialPublishResponse) responseType_,
                 getParentForChildren(),
                 isClean());
         responseType_ = null;
       }
       responseTypeCase_ = 1;
-      onChanged();;
+      onChanged();
+      ;
       return initialResponseBuilder_;
     }
 
     private com.google.protobuf.SingleFieldBuilderV3<
-        com.google.cloud.pubsublite.proto.MessagePublishResponse, com.google.cloud.pubsublite.proto.MessagePublishResponse.Builder, com.google.cloud.pubsublite.proto.MessagePublishResponseOrBuilder> messageResponseBuilder_;
+            com.google.cloud.pubsublite.proto.MessagePublishResponse,
+            com.google.cloud.pubsublite.proto.MessagePublishResponse.Builder,
+            com.google.cloud.pubsublite.proto.MessagePublishResponseOrBuilder>
+        messageResponseBuilder_;
     /**
+     *
+     *
      * <pre>
      * Response to publishing messages.
      * </pre>
      *
      * <code>.google.cloud.pubsublite.v1.MessagePublishResponse message_response = 2;</code>
+     *
      * @return Whether the messageResponse field is set.
      */
     public boolean hasMessageResponse() {
       return responseTypeCase_ == 2;
     }
     /**
+     *
+     *
      * <pre>
      * Response to publishing messages.
      * </pre>
      *
      * <code>.google.cloud.pubsublite.v1.MessagePublishResponse message_response = 2;</code>
+     *
      * @return The messageResponse.
      */
     public com.google.cloud.pubsublite.proto.MessagePublishResponse getMessageResponse() {
@@ -815,13 +918,16 @@ private static final long serialVersionUID = 0L;
       }
     }
     /**
+     *
+     *
      * <pre>
      * Response to publishing messages.
      * </pre>
      *
      * <code>.google.cloud.pubsublite.v1.MessagePublishResponse message_response = 2;</code>
      */
-    public Builder setMessageResponse(com.google.cloud.pubsublite.proto.MessagePublishResponse value) {
+    public Builder setMessageResponse(
+        com.google.cloud.pubsublite.proto.MessagePublishResponse value) {
       if (messageResponseBuilder_ == null) {
         if (value == null) {
           throw new NullPointerException();
@@ -835,6 +941,8 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
+     *
+     *
      * <pre>
      * Response to publishing messages.
      * </pre>
@@ -853,18 +961,25 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
+     *
+     *
      * <pre>
      * Response to publishing messages.
      * </pre>
      *
      * <code>.google.cloud.pubsublite.v1.MessagePublishResponse message_response = 2;</code>
      */
-    public Builder mergeMessageResponse(com.google.cloud.pubsublite.proto.MessagePublishResponse value) {
+    public Builder mergeMessageResponse(
+        com.google.cloud.pubsublite.proto.MessagePublishResponse value) {
       if (messageResponseBuilder_ == null) {
-        if (responseTypeCase_ == 2 &&
-            responseType_ != com.google.cloud.pubsublite.proto.MessagePublishResponse.getDefaultInstance()) {
-          responseType_ = com.google.cloud.pubsublite.proto.MessagePublishResponse.newBuilder((com.google.cloud.pubsublite.proto.MessagePublishResponse) responseType_)
-              .mergeFrom(value).buildPartial();
+        if (responseTypeCase_ == 2
+            && responseType_
+                != com.google.cloud.pubsublite.proto.MessagePublishResponse.getDefaultInstance()) {
+          responseType_ =
+              com.google.cloud.pubsublite.proto.MessagePublishResponse.newBuilder(
+                      (com.google.cloud.pubsublite.proto.MessagePublishResponse) responseType_)
+                  .mergeFrom(value)
+                  .buildPartial();
         } else {
           responseType_ = value;
         }
@@ -879,6 +994,8 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
+     *
+     *
      * <pre>
      * Response to publishing messages.
      * </pre>
@@ -902,23 +1019,29 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
+     *
+     *
      * <pre>
      * Response to publishing messages.
      * </pre>
      *
      * <code>.google.cloud.pubsublite.v1.MessagePublishResponse message_response = 2;</code>
      */
-    public com.google.cloud.pubsublite.proto.MessagePublishResponse.Builder getMessageResponseBuilder() {
+    public com.google.cloud.pubsublite.proto.MessagePublishResponse.Builder
+        getMessageResponseBuilder() {
       return getMessageResponseFieldBuilder().getBuilder();
     }
     /**
+     *
+     *
      * <pre>
      * Response to publishing messages.
      * </pre>
      *
      * <code>.google.cloud.pubsublite.v1.MessagePublishResponse message_response = 2;</code>
      */
-    public com.google.cloud.pubsublite.proto.MessagePublishResponseOrBuilder getMessageResponseOrBuilder() {
+    public com.google.cloud.pubsublite.proto.MessagePublishResponseOrBuilder
+        getMessageResponseOrBuilder() {
       if ((responseTypeCase_ == 2) && (messageResponseBuilder_ != null)) {
         return messageResponseBuilder_.getMessageOrBuilder();
       } else {
@@ -929,6 +1052,8 @@ private static final long serialVersionUID = 0L;
       }
     }
     /**
+     *
+     *
      * <pre>
      * Response to publishing messages.
      * </pre>
@@ -936,26 +1061,33 @@ private static final long serialVersionUID = 0L;
      * <code>.google.cloud.pubsublite.v1.MessagePublishResponse message_response = 2;</code>
      */
     private com.google.protobuf.SingleFieldBuilderV3<
-        com.google.cloud.pubsublite.proto.MessagePublishResponse, com.google.cloud.pubsublite.proto.MessagePublishResponse.Builder, com.google.cloud.pubsublite.proto.MessagePublishResponseOrBuilder> 
+            com.google.cloud.pubsublite.proto.MessagePublishResponse,
+            com.google.cloud.pubsublite.proto.MessagePublishResponse.Builder,
+            com.google.cloud.pubsublite.proto.MessagePublishResponseOrBuilder>
         getMessageResponseFieldBuilder() {
       if (messageResponseBuilder_ == null) {
         if (!(responseTypeCase_ == 2)) {
-          responseType_ = com.google.cloud.pubsublite.proto.MessagePublishResponse.getDefaultInstance();
+          responseType_ =
+              com.google.cloud.pubsublite.proto.MessagePublishResponse.getDefaultInstance();
         }
-        messageResponseBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
-            com.google.cloud.pubsublite.proto.MessagePublishResponse, com.google.cloud.pubsublite.proto.MessagePublishResponse.Builder, com.google.cloud.pubsublite.proto.MessagePublishResponseOrBuilder>(
+        messageResponseBuilder_ =
+            new com.google.protobuf.SingleFieldBuilderV3<
+                com.google.cloud.pubsublite.proto.MessagePublishResponse,
+                com.google.cloud.pubsublite.proto.MessagePublishResponse.Builder,
+                com.google.cloud.pubsublite.proto.MessagePublishResponseOrBuilder>(
                 (com.google.cloud.pubsublite.proto.MessagePublishResponse) responseType_,
                 getParentForChildren(),
                 isClean());
         responseType_ = null;
       }
       responseTypeCase_ = 2;
-      onChanged();;
+      onChanged();
+      ;
       return messageResponseBuilder_;
     }
+
     @java.lang.Override
-    public final Builder setUnknownFields(
-        final com.google.protobuf.UnknownFieldSet unknownFields) {
+    public final Builder setUnknownFields(final com.google.protobuf.UnknownFieldSet unknownFields) {
       return super.setUnknownFields(unknownFields);
     }
 
@@ -965,12 +1097,12 @@ private static final long serialVersionUID = 0L;
       return super.mergeUnknownFields(unknownFields);
     }
 
-
     // @@protoc_insertion_point(builder_scope:google.cloud.pubsublite.v1.PublishResponse)
   }
 
   // @@protoc_insertion_point(class_scope:google.cloud.pubsublite.v1.PublishResponse)
   private static final com.google.cloud.pubsublite.proto.PublishResponse DEFAULT_INSTANCE;
+
   static {
     DEFAULT_INSTANCE = new com.google.cloud.pubsublite.proto.PublishResponse();
   }
@@ -979,16 +1111,16 @@ private static final long serialVersionUID = 0L;
     return DEFAULT_INSTANCE;
   }
 
-  private static final com.google.protobuf.Parser<PublishResponse>
-      PARSER = new com.google.protobuf.AbstractParser<PublishResponse>() {
-    @java.lang.Override
-    public PublishResponse parsePartialFrom(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return new PublishResponse(input, extensionRegistry);
-    }
-  };
+  private static final com.google.protobuf.Parser<PublishResponse> PARSER =
+      new com.google.protobuf.AbstractParser<PublishResponse>() {
+        @java.lang.Override
+        public PublishResponse parsePartialFrom(
+            com.google.protobuf.CodedInputStream input,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws com.google.protobuf.InvalidProtocolBufferException {
+          return new PublishResponse(input, extensionRegistry);
+        }
+      };
 
   public static com.google.protobuf.Parser<PublishResponse> parser() {
     return PARSER;
@@ -1003,6 +1135,4 @@ private static final long serialVersionUID = 0L;
   public com.google.cloud.pubsublite.proto.PublishResponse getDefaultInstanceForType() {
     return DEFAULT_INSTANCE;
   }
-
 }
-

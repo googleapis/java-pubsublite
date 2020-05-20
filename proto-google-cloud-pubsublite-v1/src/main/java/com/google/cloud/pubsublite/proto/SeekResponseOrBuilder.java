@@ -3,29 +3,38 @@
 
 package com.google.cloud.pubsublite.proto;
 
-public interface SeekResponseOrBuilder extends
+public interface SeekResponseOrBuilder
+    extends
     // @@protoc_insertion_point(interface_extends:google.cloud.pubsublite.v1.SeekResponse)
     com.google.protobuf.MessageOrBuilder {
 
   /**
+   *
+   *
    * <pre>
    * The new delivery cursor for the current stream.
    * </pre>
    *
    * <code>.google.cloud.pubsublite.v1.Cursor cursor = 1;</code>
+   *
    * @return Whether the cursor field is set.
    */
   boolean hasCursor();
   /**
+   *
+   *
    * <pre>
    * The new delivery cursor for the current stream.
    * </pre>
    *
    * <code>.google.cloud.pubsublite.v1.Cursor cursor = 1;</code>
+   *
    * @return The cursor.
    */
   com.google.cloud.pubsublite.proto.Cursor getCursor();
   /**
+   *
+   *
    * <pre>
    * The new delivery cursor for the current stream.
    * </pre>

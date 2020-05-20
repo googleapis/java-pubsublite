@@ -3,31 +3,43 @@
 
 package com.google.cloud.pubsublite.proto;
 
-public interface ListTopicSubscriptionsRequestOrBuilder extends
+public interface ListTopicSubscriptionsRequestOrBuilder
+    extends
     // @@protoc_insertion_point(interface_extends:google.cloud.pubsublite.v1.ListTopicSubscriptionsRequest)
     com.google.protobuf.MessageOrBuilder {
 
   /**
+   *
+   *
    * <pre>
    * The name of the topic whose subscriptions to list.
    * </pre>
    *
-   * <code>string name = 1 [(.google.api.field_behavior) = REQUIRED, (.google.api.resource_reference) = { ... }</code>
+   * <code>
+   * string name = 1 [(.google.api.field_behavior) = REQUIRED, (.google.api.resource_reference) = { ... }
+   * </code>
+   *
    * @return The name.
    */
   java.lang.String getName();
   /**
+   *
+   *
    * <pre>
    * The name of the topic whose subscriptions to list.
    * </pre>
    *
-   * <code>string name = 1 [(.google.api.field_behavior) = REQUIRED, (.google.api.resource_reference) = { ... }</code>
+   * <code>
+   * string name = 1 [(.google.api.field_behavior) = REQUIRED, (.google.api.resource_reference) = { ... }
+   * </code>
+   *
    * @return The bytes for name.
    */
-  com.google.protobuf.ByteString
-      getNameBytes();
+  com.google.protobuf.ByteString getNameBytes();
 
   /**
+   *
+   *
    * <pre>
    * The maximum number of subscriptions to return. The service may return fewer
    * than this value.
@@ -35,11 +47,14 @@ public interface ListTopicSubscriptionsRequestOrBuilder extends
    * </pre>
    *
    * <code>int32 page_size = 2;</code>
+   *
    * @return The pageSize.
    */
   int getPageSize();
 
   /**
+   *
+   *
    * <pre>
    * A page token, received from a previous `ListTopicSubscriptions` call.
    * Provide this to retrieve the subsequent page.
@@ -48,10 +63,13 @@ public interface ListTopicSubscriptionsRequestOrBuilder extends
    * </pre>
    *
    * <code>string page_token = 3;</code>
+   *
    * @return The pageToken.
    */
   java.lang.String getPageToken();
   /**
+   *
+   *
    * <pre>
    * A page token, received from a previous `ListTopicSubscriptions` call.
    * Provide this to retrieve the subsequent page.
@@ -60,8 +78,8 @@ public interface ListTopicSubscriptionsRequestOrBuilder extends
    * </pre>
    *
    * <code>string page_token = 3;</code>
+   *
    * @return The bytes for pageToken.
    */
-  com.google.protobuf.ByteString
-      getPageTokenBytes();
+  com.google.protobuf.ByteString getPageTokenBytes();
 }

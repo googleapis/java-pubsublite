@@ -3,29 +3,38 @@
 
 package com.google.cloud.pubsublite.proto;
 
-public interface StreamingCommitCursorRequestOrBuilder extends
+public interface StreamingCommitCursorRequestOrBuilder
+    extends
     // @@protoc_insertion_point(interface_extends:google.cloud.pubsublite.v1.StreamingCommitCursorRequest)
     com.google.protobuf.MessageOrBuilder {
 
   /**
+   *
+   *
    * <pre>
    * Initial request on the stream.
    * </pre>
    *
    * <code>.google.cloud.pubsublite.v1.InitialCommitCursorRequest initial = 1;</code>
+   *
    * @return Whether the initial field is set.
    */
   boolean hasInitial();
   /**
+   *
+   *
    * <pre>
    * Initial request on the stream.
    * </pre>
    *
    * <code>.google.cloud.pubsublite.v1.InitialCommitCursorRequest initial = 1;</code>
+   *
    * @return The initial.
    */
   com.google.cloud.pubsublite.proto.InitialCommitCursorRequest getInitial();
   /**
+   *
+   *
    * <pre>
    * Initial request on the stream.
    * </pre>
@@ -35,24 +44,32 @@ public interface StreamingCommitCursorRequestOrBuilder extends
   com.google.cloud.pubsublite.proto.InitialCommitCursorRequestOrBuilder getInitialOrBuilder();
 
   /**
+   *
+   *
    * <pre>
    * Request to commit a new cursor value.
    * </pre>
    *
    * <code>.google.cloud.pubsublite.v1.SequencedCommitCursorRequest commit = 2;</code>
+   *
    * @return Whether the commit field is set.
    */
   boolean hasCommit();
   /**
+   *
+   *
    * <pre>
    * Request to commit a new cursor value.
    * </pre>
    *
    * <code>.google.cloud.pubsublite.v1.SequencedCommitCursorRequest commit = 2;</code>
+   *
    * @return The commit.
    */
   com.google.cloud.pubsublite.proto.SequencedCommitCursorRequest getCommit();
   /**
+   *
+   *
    * <pre>
    * Request to commit a new cursor value.
    * </pre>
@@ -61,5 +78,6 @@ public interface StreamingCommitCursorRequestOrBuilder extends
    */
   com.google.cloud.pubsublite.proto.SequencedCommitCursorRequestOrBuilder getCommitOrBuilder();
 
-  public com.google.cloud.pubsublite.proto.StreamingCommitCursorRequest.RequestCase getRequestCase();
+  public com.google.cloud.pubsublite.proto.StreamingCommitCursorRequest.RequestCase
+      getRequestCase();
 }

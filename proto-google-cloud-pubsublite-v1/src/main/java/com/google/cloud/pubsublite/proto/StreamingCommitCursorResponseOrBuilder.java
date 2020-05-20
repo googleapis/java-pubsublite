@@ -3,29 +3,38 @@
 
 package com.google.cloud.pubsublite.proto;
 
-public interface StreamingCommitCursorResponseOrBuilder extends
+public interface StreamingCommitCursorResponseOrBuilder
+    extends
     // @@protoc_insertion_point(interface_extends:google.cloud.pubsublite.v1.StreamingCommitCursorResponse)
     com.google.protobuf.MessageOrBuilder {
 
   /**
+   *
+   *
    * <pre>
    * Initial response on the stream.
    * </pre>
    *
    * <code>.google.cloud.pubsublite.v1.InitialCommitCursorResponse initial = 1;</code>
+   *
    * @return Whether the initial field is set.
    */
   boolean hasInitial();
   /**
+   *
+   *
    * <pre>
    * Initial response on the stream.
    * </pre>
    *
    * <code>.google.cloud.pubsublite.v1.InitialCommitCursorResponse initial = 1;</code>
+   *
    * @return The initial.
    */
   com.google.cloud.pubsublite.proto.InitialCommitCursorResponse getInitial();
   /**
+   *
+   *
    * <pre>
    * Initial response on the stream.
    * </pre>
@@ -35,24 +44,32 @@ public interface StreamingCommitCursorResponseOrBuilder extends
   com.google.cloud.pubsublite.proto.InitialCommitCursorResponseOrBuilder getInitialOrBuilder();
 
   /**
+   *
+   *
    * <pre>
    * Response to committing a new cursor value.
    * </pre>
    *
    * <code>.google.cloud.pubsublite.v1.SequencedCommitCursorResponse commit = 2;</code>
+   *
    * @return Whether the commit field is set.
    */
   boolean hasCommit();
   /**
+   *
+   *
    * <pre>
    * Response to committing a new cursor value.
    * </pre>
    *
    * <code>.google.cloud.pubsublite.v1.SequencedCommitCursorResponse commit = 2;</code>
+   *
    * @return The commit.
    */
   com.google.cloud.pubsublite.proto.SequencedCommitCursorResponse getCommit();
   /**
+   *
+   *
    * <pre>
    * Response to committing a new cursor value.
    * </pre>
@@ -61,5 +78,6 @@ public interface StreamingCommitCursorResponseOrBuilder extends
    */
   com.google.cloud.pubsublite.proto.SequencedCommitCursorResponseOrBuilder getCommitOrBuilder();
 
-  public com.google.cloud.pubsublite.proto.StreamingCommitCursorResponse.RequestCase getRequestCase();
+  public com.google.cloud.pubsublite.proto.StreamingCommitCursorResponse.RequestCase
+      getRequestCase();
 }

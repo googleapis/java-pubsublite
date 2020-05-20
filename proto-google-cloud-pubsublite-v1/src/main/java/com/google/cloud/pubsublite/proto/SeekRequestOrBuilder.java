@@ -3,50 +3,65 @@
 
 package com.google.cloud.pubsublite.proto;
 
-public interface SeekRequestOrBuilder extends
+public interface SeekRequestOrBuilder
+    extends
     // @@protoc_insertion_point(interface_extends:google.cloud.pubsublite.v1.SeekRequest)
     com.google.protobuf.MessageOrBuilder {
 
   /**
+   *
+   *
    * <pre>
    * A named target.
    * </pre>
    *
    * <code>.google.cloud.pubsublite.v1.SeekRequest.NamedTarget named_target = 1;</code>
+   *
    * @return The enum numeric value on the wire for namedTarget.
    */
   int getNamedTargetValue();
   /**
+   *
+   *
    * <pre>
    * A named target.
    * </pre>
    *
    * <code>.google.cloud.pubsublite.v1.SeekRequest.NamedTarget named_target = 1;</code>
+   *
    * @return The namedTarget.
    */
   com.google.cloud.pubsublite.proto.SeekRequest.NamedTarget getNamedTarget();
 
   /**
+   *
+   *
    * <pre>
    * A target corresponding to the cursor, pointing to anywhere in the
    * topic partition.
    * </pre>
    *
    * <code>.google.cloud.pubsublite.v1.Cursor cursor = 2;</code>
+   *
    * @return Whether the cursor field is set.
    */
   boolean hasCursor();
   /**
+   *
+   *
    * <pre>
    * A target corresponding to the cursor, pointing to anywhere in the
    * topic partition.
    * </pre>
    *
    * <code>.google.cloud.pubsublite.v1.Cursor cursor = 2;</code>
+   *
    * @return The cursor.
    */
   com.google.cloud.pubsublite.proto.Cursor getCursor();
   /**
+   *
+   *
    * <pre>
    * A target corresponding to the cursor, pointing to anywhere in the
    * topic partition.

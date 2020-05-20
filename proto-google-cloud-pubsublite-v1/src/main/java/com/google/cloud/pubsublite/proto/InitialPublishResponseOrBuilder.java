@@ -3,7 +3,7 @@
 
 package com.google.cloud.pubsublite.proto;
 
-public interface InitialPublishResponseOrBuilder extends
+public interface InitialPublishResponseOrBuilder
+    extends
     // @@protoc_insertion_point(interface_extends:google.cloud.pubsublite.v1.InitialPublishResponse)
-    com.google.protobuf.MessageOrBuilder {
-}
+    com.google.protobuf.MessageOrBuilder {}

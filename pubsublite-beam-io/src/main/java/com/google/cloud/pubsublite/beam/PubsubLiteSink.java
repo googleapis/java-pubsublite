@@ -115,7 +115,8 @@ class PubsubLiteSink extends DoFn<Message, Void> {
               errorsSinceLastFinish.push(ExtractStatus.toCanonical(t));
             }
           }
-        }, executor);
+        },
+        executor);
   }
 
   // Intentionally don't flush on bundle finish to allow multi-sink client reuse.

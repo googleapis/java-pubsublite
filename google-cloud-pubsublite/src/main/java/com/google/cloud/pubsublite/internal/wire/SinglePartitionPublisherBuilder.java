@@ -64,7 +64,10 @@ public abstract class SinglePartitionPublisherBuilder {
     public SinglePartitionPublisher build() throws StatusException {
       SinglePartitionPublisherBuilder builder = autoBuild();
       PublisherBuilder.Builder publisherBuilder =
-          PublisherBuilder.builder().setTopic(builder.topic()).setPartition(builder.partition());
+          PublisherBuilder.builder()
+              .setTopic(builder.topic())
+              .setPartition(builder.partition())
+              .setContext(builder.context());
       builder.stub().ifPresent(publisherBuilder::setStub);
       builder.batchingSettings().ifPresent(publisherBuilder::setBatching);
       return new SinglePartitionPublisher(publisherBuilder.build(), builder.partition());

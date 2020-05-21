@@ -30,6 +30,7 @@ import com.google.cloud.pubsublite.Offset;
 import com.google.cloud.pubsublite.Partition;
 import com.google.cloud.pubsublite.SequencedMessage;
 import com.google.cloud.pubsublite.beam.PubsubLiteUnboundedReader.SubscriberState;
+import com.google.cloud.pubsublite.internal.FakeApiService;
 import com.google.cloud.pubsublite.internal.wire.Committer;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
@@ -48,6 +49,8 @@ import org.joda.time.Instant;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
+import org.mockito.MockitoAnnotations;
+import org.mockito.Spy;
 
 @RunWith(JUnit4.class)
 public class PubsubLiteUnboundedReaderTest {
@@ -57,8 +60,10 @@ public class PubsubLiteUnboundedReaderTest {
   @SuppressWarnings("unchecked")
   private final PullSubscriber<SequencedMessage> subscriber8 = mock(PullSubscriber.class);
 
-  private final Committer committer5 = mock(Committer.class);
-  private final Committer committer8 = mock(Committer.class);
+  abstract static class CommitterFakeService extends FakeApiService implements Committer {}
+
+  @Spy private CommitterFakeService committer5;
+  @Spy private CommitterFakeService committer8;
 
   @SuppressWarnings("unchecked")
   private final UnboundedSource<SequencedMessage, ?> source = mock(UnboundedSource.class);
@@ -78,6 +83,7 @@ public class PubsubLiteUnboundedReaderTest {
   }
 
   public PubsubLiteUnboundedReaderTest() throws StatusException {
+    MockitoAnnotations.initMocks(this);
     SubscriberState state5 = new SubscriberState();
     state5.subscriber = subscriber5;
     state5.committer = committer5;
@@ -208,6 +214,5 @@ public class PubsubLiteUnboundedReaderTest {
     when(committer5.commitOffset(Offset.of(10))).thenReturn(ApiFutures.immediateFuture(null));
     mark.finalizeCheckpoint();
     verify(committer5).commitOffset(Offset.of(10));
-    verifyNoMoreInteractions(committer5, committer8);
   }
 }

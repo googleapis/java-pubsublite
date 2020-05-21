@@ -280,8 +280,7 @@ SubscriptionPath subscriptionPath =
 
 FlowControlSettings flowControlSettings =
     FlowControlSettings.builder()
-        // Set outstanding bytes to 10 MiB per partition.
-        .setBytesOutstanding(10 * 1024 * 1024L)
+        .setBytesOutstanding(10 * 1024 * 1024L) // 10 MiB per partition.
         .setMessagesOutstanding(Long.MAX_VALUE)
         .build();
 

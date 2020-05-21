@@ -1,0 +1,259 @@
+custom_content: |
+  #### Creating a topic
+
+  With Pub/Sub Lite you can create topics. A topic is a named resource to which messages are sent by
+  publishers. Add the following imports at the top of your file:
+
+  ```java
+  import com.google.cloud.pubsublite.*;
+  import com.google.cloud.pubsublite.proto.Topic;
+  import com.google.cloud.pubsublite.proto.Topic.*;
+  import com.google.protobuf.util.Durations;
+  ```
+  Then, to create the topic, use the following code:
+
+  ```java
+  CloudRegion region = CloudRegion.of("us-central1");
+  TopicPath topicPath =
+      TopicPaths.newBuilder()
+        .setZone(CloudZone.of(region, 'b'))
+        .setProjectNumber(ProjectNumber.of(123L)) // Your project number.
+        .setTopicName(TopicName.of("my-new-topic"))
+        .build();
+
+  Topic topic =
+      Topic.newBuilder()
+        .setPartitionConfig(
+          PartitionConfig.newBuilder()
+            .setScale(1) // Set publishing throughput to 1*4 MiB per sec. This must be 1-4.
+            .setCount(2)) // The number of partitions.
+        .setRetentionConfig(
+          RetentionConfig.newBuilder()
+            .setPeriod(Durations.fromDays(7))
+            .setPerPartitionBytes(100000000000L)) // 100 GiB. This must be 30 GiB-10 TiB.
+        .setName(topicPath.value())
+        .build();
+
+  AdminClientSettings settings =
+      AdminClientSettings.newBuilder().setRegion(region).build();
+  try (AdminClient client = AdminClient.create(settings)) {
+    Topic response = client.createTopic(topic).get();
+    System.out.println(response.getAllFields());
+  }
+  ```
+
+  #### Publishing messages
+
+  With Pub/Sub Lite, you can publish messages to a topic. Add the following import at the top of your file:
+
+  ```java
+  import com.google.api.core.*;
+  import com.google.cloud.pubsublite.*;
+  import com.google.cloud.pubsublite.cloudpubsub.*;
+  import com.google.protobuf.ByteString;
+  import com.google.pubsub.v1.PubsubMessage;
+  import java.util.*;
+  ```
+  Then, to publish messages asynchronously, use the following code:
+
+  ```java
+  public class PublisherExample {
+    private static final int MESSAGE_COUNT = 10;
+
+    // Load the project number from a commandline flag.
+    private static final long PROJECT_NUMBER = 123L;
+    // Load the zone from a commandline flag.
+    private static final String ZONE = "us-central1-b";
+    // Load the topic name from a commandline flag.
+    private static final String TOPIC_NAME = "my-new-topic";
+
+    public static List<ApiFuture<String>> runPublisher(Publisher publisher) throws Exception {
+      List<ApiFuture<String>> futures = new ArrayList<>();
+      for (int i = 0; i < MESSAGE_COUNT; i++) {
+        String message = "message-" + i;
+
+        // Convert the message to a byte string.
+        ByteString data = ByteString.copyFromUtf8(message);
+        PubsubMessage pubsubMessage = PubsubMessage.newBuilder().setData(data).build();
+
+        // Schedule a message to be published. Messages are automatically batched.
+        ApiFuture<String> future = publisher.publish(pubsubMessage);
+        futures.add(future);
+      }
+      return futures;
+    }
+
+    // Publish messages to a topic.
+    public static void main(String[] args) throws Exception {
+      PublisherSettings settings =
+          PublisherSettings.newBuilder()
+              .setTopicPath(
+                  TopicPaths.newBuilder()
+                      .setProjectNumber(ProjectNumber.of(PROJECT_NUMBER))
+                      .setZone(CloudZone.parse(ZONE))
+                      .setTopicName(TopicName.of(TOPIC_NAME))
+                      .build())
+              .build();
+      Publisher publisher = Publisher.create(settings);
+      publisher.startAsync().awaitRunning();
+      List<ApiFuture<String>> futureAckIds = runPublisher(publisher);
+      publisher.stopAsync().awaitTerminated();
+
+      List<String> ackIds = ApiFutures.allAsList(futureAckIds).get();
+      ArrayList<PublishMetadata> metadata = new ArrayList<>();
+      for (String id : ackIds) {
+        metadata.add(PublishMetadata.decode(id));
+      }
+      for (PublishMetadata one : metadata) {
+        System.out.println(one);
+      }
+    }
+  }
+  ```
+
+  #### Creating a subscription
+
+  With Pub/Sub Lite you can create subscriptions. A subscription represents the stream of messages from a
+  single, specific topic. Add the following imports at the top of your file:
+
+  ```java
+  import com.google.cloud.pubsublite.*;
+  import com.google.cloud.pubsublite.proto.Subscription;
+  import com.google.cloud.pubsublite.proto.Subscription.*;
+  import com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig.*;
+  ```
+  Then, to create the subscription, use the following code:
+
+  ```java
+  // CloudZone must be the zone of the topic.
+  CloudRegion region = CloudRegion.of("us-central1");
+  CloudZone zone = CloudZone.of(region, 'b');
+  ProjectNumber projectNum = ProjectNumber.of(123L);
+  TopicName topicName = TopicName.of("my-new-topic");
+  SubscriptionName subscriptionName = SubscriptionName.of("my-new-sub");
+
+  TopicPath topicPath =
+  TopicPaths.newBuilder()
+    .setZone(zone)
+    .setProjectNumber(projectNum)
+    .setTopicName(topicName)
+    .build();
+
+  SubscriptionPath subscriptionPath =
+  SubscriptionPaths.newBuilder()
+    .setZone(zone)
+    .setProjectNumber(projectNum)
+    .setSubscriptionName(subscriptionName)
+    .build();
+
+  Subscription subscription =
+  Subscription.newBuilder()
+    .setDeliveryConfig(
+      DeliveryConfig.newBuilder()
+        .setDeliveryRequirement(DeliveryRequirement.DELIVER_IMMEDIATELY))
+    .setName(subscriptionPath.value())
+    .setTopic(topicPath.value())
+    .build();
+
+  AdminClientSettings settings =
+      AdminClientSettings.newBuilder().setRegion(region).build();
+  try (AdminClient client = AdminClient.create(settings)) {
+    Subscription response = client.createSubscription(subscription).get();
+    System.out.println(response.getAllFields());
+  }
+  ```
+
+  #### Receiving messages
+
+  With Pub/Sub Lite you can receive messages from a subscription. Add the
+  following imports at the top of your file:
+
+  ```java
+  import com.google.cloud.pubsub.v1.AckReplyConsumer;
+  import com.google.cloud.pubsub.v1.MessageReceiver;
+  import com.google.cloud.pubsublite.*;
+  import com.google.cloud.pubsublite.cloudpubsub.*;
+  import com.google.common.util.concurrent.MoreExecutors;
+  import com.google.pubsub.v1.PubsubMessage;
+  import java.util.*;
+  ```
+  Then, to pull messages asynchronously, use the following code:
+
+  ```java
+  CloudZone zone = CloudZone.parse("us-central1-b");
+  ProjectNumber projectNum = ProjectNumber.of(123L);
+  SubscriptionName subscriptionName = SubscriptionName.of("my-new-sub");
+
+  SubscriptionPath subscriptionPath =
+      SubscriptionPaths.newBuilder()
+        .setZone(zone)
+        .setProjectNumber(projectNum)
+        .setSubscriptionName(subscriptionName)
+        .build();
+
+  FlowControlSettings flowControlSettings =
+      FlowControlSettings.builder()
+          .setBytesOutstanding(10 * 1024 * 1024L) // 10 MiB per partition.
+          .setMessagesOutstanding(Long.MAX_VALUE)
+          .build();
+
+  // Connect to partitions 0, 1. Note that we configured the topic with 2
+  // partitions.
+  List<Partition> partitions = Arrays.asList(Partition.of(0), Partition.of(1));
+
+  MessageReceiver receiver =
+    new MessageReceiver() {
+      @Override
+      public void receiveMessage(PubsubMessage message, AckReplyConsumer consumer) {
+        System.out.println("got message: " + message.getData().toStringUtf8());
+        if (isValid(message)) {
+          consumer.ack();
+        } else {
+          // 'nack' is not valid by default and will result in Subscriber failure,
+          // but this behavior can be configured.
+          consumer.nack();  // Fail the subscriber with a permanent error.
+        }
+      }
+    };
+
+  Subscriber subscriber = null;
+  try {
+    subscriber = Subscriber.create(SubscriberSettings.newBuilder()
+           .setSubscriptionPath(subscriptionPath)
+           .setPerPartitionFlowControlSettings(flowControlSettings)
+           .setReceiver(receiver)
+           .setPartitions(partitions)
+           .build());
+    subscriber.addListener(
+      new Subscriber.Listener() {
+        @Override
+        public void failed(Subscriber.State from, Throwable failure) {
+          // Handle failure. This is called when the Subscriber encountered a
+          // fatal error and is shutting down.
+          System.err.println(failure);
+        }
+      },
+      MoreExecutors.directExecutor());
+    subscriber.startAsync().awaitRunning();
+    //...
+  } finally {
+    if (subscriber != null) {
+      subscriber.stopAsync().awaitTerminated();
+    }
+  }
+  ```
+about: |
+  [Google Pub/Sub Lite][product-docs] is designed to provide reliable,
+  many-to-many, asynchronous messaging between applications. Publisher
+  applications can send messages to a topic and other applications can
+  subscribe to that topic to receive the messages. By decoupling senders and
+  receivers, Google Cloud Pub/Sub allows developers to communicate between
+  independently written applications.
+
+  Compared to Google Pub/Sub, Pub/Sub Lite provides partitioned zonal data
+  storage with predefined capacity. Both products present a similar API, but
+  Pub/Sub Lite has more usage caveats.
+
+  See the [Google Pub/Sub Lite docs](https://cloud.google.com/pubsub/quickstart-console#before-you-begin) for more details on how to activate
+  Pub/Sub Lite for your project, as well as guidance on how to choose between
+  Cloud Pub/Sub and Pub/Sub Lite.

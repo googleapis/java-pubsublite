@@ -8,6 +8,7 @@
   "transport": "grpc",
   "requires_billing": true,
   "language": "java",
+  "min_java_version": 8,
   "repo": "googleapis/java-pubsublite",
   "repo_short": "java-pubsublite",
   "distribution_name": "com.google.cloud:google-cloud-pubsublite",

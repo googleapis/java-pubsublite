@@ -19,6 +19,7 @@ import synthtool.languages.java as java
 # TODO: generate library protos when publicly available
 
 java.common_templates(excludes=[
+  '.kokoro/*/samples.cfg',
   # TODO: allow README generation when public
   'README.md',
   # TODO: allow when pubsublite is available in libraries-bom

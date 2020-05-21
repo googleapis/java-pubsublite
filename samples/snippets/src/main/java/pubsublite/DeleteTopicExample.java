@@ -72,4 +72,4 @@ public class DeleteTopicExample {
       throw statusException;
     }
   }
-} // [START pubsublite_delete_topic]
+} // [END pubsublite_delete_topic]

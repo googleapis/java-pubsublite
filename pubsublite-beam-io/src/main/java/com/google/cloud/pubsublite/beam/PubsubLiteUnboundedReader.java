@@ -23,6 +23,7 @@ import com.google.cloud.pubsublite.Partition;
 import com.google.cloud.pubsublite.SequencedMessage;
 import com.google.cloud.pubsublite.internal.CloseableMonitor;
 import com.google.cloud.pubsublite.internal.ExtractStatus;
+import com.google.cloud.pubsublite.internal.ProxyService;
 import com.google.cloud.pubsublite.internal.wire.Committer;
 import com.google.common.collect.ImmutableMap;
 import com.google.errorprone.annotations.concurrent.GuardedBy;
@@ -33,11 +34,14 @@ import io.grpc.StatusException;
 import java.io.IOException;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.Queue;
+import java.util.function.Consumer;
+import java.util.stream.Collectors;
 import org.apache.beam.sdk.io.UnboundedSource;
 import org.apache.beam.sdk.io.UnboundedSource.CheckpointMark;
 import org.apache.beam.sdk.io.UnboundedSource.UnboundedReader;
@@ -52,17 +56,51 @@ class PubsubLiteUnboundedReader extends UnboundedReader<SequencedMessage>
   @GuardedBy("monitor.monitor")
   private final ImmutableMap<Partition, SubscriberState> subscriberMap;
 
+  private final CommitterProxy committerProxy;
+
   @GuardedBy("monitor.monitor")
   private final Queue<PartitionedSequencedMessage> messages = new ArrayDeque<>();
 
   @GuardedBy("monitor.monitor")
   private Optional<StatusException> permanentError = Optional.empty();
 
+  private static class CommitterProxy extends ProxyService {
+    private final Consumer<StatusException> permanentErrorSetter;
+
+    CommitterProxy(
+        Collection<SubscriberState> states, Consumer<StatusException> permanentErrorSetter)
+        throws StatusException {
+      this.permanentErrorSetter = permanentErrorSetter;
+      addServices(states.stream().map(state -> state.committer).collect(Collectors.toList()));
+    }
+
+    @Override
+    protected void start() {}
+
+    @Override
+    protected void stop() {}
+
+    @Override
+    protected void handlePermanentError(StatusException error) {
+      permanentErrorSetter.accept(error);
+    }
+  }
+
   public PubsubLiteUnboundedReader(
       UnboundedSource<SequencedMessage, ?> source,
-      ImmutableMap<Partition, SubscriberState> subscriberMap) {
+      ImmutableMap<Partition, SubscriberState> subscriberMap)
+      throws StatusException {
     this.source = source;
     this.subscriberMap = subscriberMap;
+    this.committerProxy =
+        new CommitterProxy(
+            subscriberMap.values(),
+            error -> {
+              try (CloseableMonitor.Hold h = monitor.enter()) {
+                permanentError = Optional.of(permanentError.orElse(error));
+              }
+            });
+    this.committerProxy.startAsync().awaitRunning();
   }
 
   @Override
@@ -188,7 +226,6 @@ class PubsubLiteUnboundedReader extends UnboundedReader<SequencedMessage>
   public void close() {
     try (CloseableMonitor.Hold h = monitor.enter()) {
       for (SubscriberState state : subscriberMap.values()) {
-        state.committer.stopAsync().awaitTerminated();
         try {
           state.subscriber.close();
         } catch (Exception e) {
@@ -196,6 +233,7 @@ class PubsubLiteUnboundedReader extends UnboundedReader<SequencedMessage>
         }
       }
     }
+    committerProxy.stopAsync().awaitTerminated();
   }
 
   @Override

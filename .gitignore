@@ -24,6 +24,7 @@ hs_err_pid*
 
 # intellij project folder
 .idea/
+*.iml
 
 # maven build directory
 target/

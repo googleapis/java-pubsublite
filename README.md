@@ -20,7 +20,7 @@ If you are using Maven, add this to your pom.xml file:
 <dependency>
   <groupId>com.google.cloud</groupId>
   <artifactId>google-cloud-pubsublite</artifactId>
-  <version>0.1.4</version>
+  <version>0.1.5</version>
 </dependency>
 <dependency>
   <groupId>com.google.cloud</groupId>
@@ -41,11 +41,11 @@ If you are using Maven, add this to your pom.xml file:
 
 If you are using Gradle, add this to your dependencies
 ```Groovy
-compile 'com.google.cloud:google-cloud-pubsublite:0.1.4'
+compile 'com.google.cloud:google-cloud-pubsublite:0.1.5'
 ```
 If you are using SBT, add this to your dependencies
 ```Scala
-libraryDependencies += "com.google.cloud" % "google-cloud-pubsublite" % "0.1.4"
+libraryDependencies += "com.google.cloud" % "google-cloud-pubsublite" % "0.1.5"
 ```
 [//]: # ({x-version-update-end})
 
@@ -100,32 +100,47 @@ import com.google.protobuf.util.Durations;
 Then, to create the topic, use the following code:
 
 ```java
-CloudRegion region = CloudRegion.of("us-central1");
+CloudRegion cloudRegion = CloudRegion.of(CLOUD_REGION);
+CloudZone zone = CloudZone.of(cloudRegion, ZONE_ID);
+ProjectNumber projectNum = ProjectNumber.of(PROJECT_NUMBER);
+TopicName topicName = TopicName.of(TOPIC_NAME);
+
 TopicPath topicPath =
     TopicPaths.newBuilder()
-      .setZone(CloudZone.of(region, 'b'))
-      .setProjectNumber(ProjectNumber.of(123L)) // Your project number.
-      .setTopicName(TopicName.of("my-new-topic"))
-      .build();
+        .setZone(zone)
+        .setProjectNumber(projectNum)
+        .setTopicName(topicName)
+        .build();
 
 Topic topic =
     Topic.newBuilder()
-      .setPartitionConfig(
-        PartitionConfig.newBuilder()
-          .setScale(1) // Set publishing throughput to 1*4 MiB per sec. This must be 1-4.
-          .setCount(2)) // The number of partitions.
-      .setRetentionConfig(
-        RetentionConfig.newBuilder()
-          .setPeriod(Durations.fromDays(7))
-          .setPerPartitionBytes(100000000000L)) // 100 GiB. This must be 30 GiB-10 TiB.
-      .setName(topicPath.value())
-      .build();
+        .setPartitionConfig(
+            PartitionConfig.newBuilder()
+                // Set publishing throughput to 1 times the standard partition
+                // throughput of 4 MiB per sec. This must be in the range [1,4]. A
+                // topic with `scale` of 2 and count of 10 is charged for 20 partitions.
+                .setScale(1)
+                .setCount(PARTITIONS))
+        .setRetentionConfig(
+            RetentionConfig.newBuilder()
+                // How long messages are retained.
+                .setPeriod(Durations.fromDays(1))
+                // Set storage per partition to 100 GiB. This must be 30 GiB-10 TiB.
+                // If the number of bytes stored in any of the topic's partitions grows
+                // beyond this value, older messages will be dropped to make room for
+                // newer ones, regardless of the value of `period`.
+                .setPerPartitionBytes(100 * 1024 * 1024 * 1024L))
+        .setName(topicPath.value())
+        .build();
 
-AdminClientSettings settings =
-    AdminClientSettings.newBuilder().setRegion(region).build();
-try (AdminClient client = AdminClient.create(settings)) {
-  Topic response = client.createTopic(topic).get();
-  System.out.println(response.getAllFields());
+AdminClientSettings adminClientSettings =
+    AdminClientSettings.newBuilder().setRegion(cloudRegion).build();
+
+try (AdminClient adminClient = AdminClient.create(adminClientSettings)) {
+
+  Topic response = adminClient.createTopic(topic).get();
+
+  System.out.println(response.getAllFields() + "created successfully.");
 }
 ```
 
@@ -212,41 +227,48 @@ import com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig.*;
 Then, to create the subscription, use the following code:
 
 ```java
-// CloudZone must be the zone of the topic.
-CloudRegion region = CloudRegion.of("us-central1");
-CloudZone zone = CloudZone.of(region, 'b');
-ProjectNumber projectNum = ProjectNumber.of(123L);
-TopicName topicName = TopicName.of("my-new-topic");
-SubscriptionName subscriptionName = SubscriptionName.of("my-new-sub");
+CloudRegion cloudRegion = CloudRegion.of(CLOUD_REGION);
+CloudZone zone = CloudZone.of(cloudRegion, ZONE_ID);
+ProjectNumber projectNum = ProjectNumber.of(PROJECT_NUMBER);
+TopicName topicName = TopicName.of(TOPIC_NAME);
+SubscriptionName subscriptionName = SubscriptionName.of(SUBSCRIPTION_NAME);
 
 TopicPath topicPath =
-TopicPaths.newBuilder()
-  .setZone(zone)
-  .setProjectNumber(projectNum)
-  .setTopicName(topicName)
-  .build();
+    TopicPaths.newBuilder()
+        .setZone(zone)
+        .setProjectNumber(projectNum)
+        .setTopicName(topicName)
+        .build();
 
 SubscriptionPath subscriptionPath =
-SubscriptionPaths.newBuilder()
-  .setZone(zone)
-  .setProjectNumber(projectNum)
-  .setSubscriptionName(subscriptionName)
-  .build();
+    SubscriptionPaths.newBuilder()
+        .setZone(zone)
+        .setProjectNumber(projectNum)
+        .setSubscriptionName(subscriptionName)
+        .build();
 
 Subscription subscription =
-Subscription.newBuilder()
-  .setDeliveryConfig(
-    DeliveryConfig.newBuilder()
-      .setDeliveryRequirement(DeliveryRequirement.DELIVER_IMMEDIATELY))
-  .setName(subscriptionPath.value())
-  .setTopic(topicPath.value())
-  .build();
+    Subscription.newBuilder()
+        .setDeliveryConfig(
+            // The server does not wait for a published message to be successfully
+            // written to storage before delivering it to subscribers. As such, a
+            // subscriber may receive a message for which the write to storage failed.
+            // If the subscriber re-reads the offset of that message later on, there
+            // may be a gap at that offset.
+            DeliveryConfig.newBuilder()
+                .setDeliveryRequirement(DeliveryRequirement.DELIVER_IMMEDIATELY))
+        .setName(subscriptionPath.value())
+        .setTopic(topicPath.value())
+        .build();
 
-AdminClientSettings settings =
-    AdminClientSettings.newBuilder().setRegion(region).build();
-try (AdminClient client = AdminClient.create(settings)) {
-  Subscription response = client.createSubscription(subscription).get();
-  System.out.println(response.getAllFields());
+AdminClientSettings adminClientSettings =
+    AdminClientSettings.newBuilder().setRegion(cloudRegion).build();
+
+try (AdminClient adminClient = AdminClient.create(adminClientSettings)) {
+
+  Subscription response = adminClient.createSubscription(subscription).get();
+
+  System.out.println(response.getAllFields() + "created successfully.");
 }
 ```
 
@@ -267,66 +289,66 @@ import java.util.*;
 Then, to pull messages asynchronously, use the following code:
 
 ```java
-CloudZone zone = CloudZone.parse("us-central1-b");
-ProjectNumber projectNum = ProjectNumber.of(123L);
-SubscriptionName subscriptionName = SubscriptionName.of("my-new-sub");
+CloudRegion cloudRegion = CloudRegion.of(CLOUD_REGION);
+CloudZone zone = CloudZone.of(cloudRegion, ZONE_ID);
+ProjectNumber projectNum = ProjectNumber.of(PROJECT_NUMBER);
+SubscriptionName subscriptionName = SubscriptionName.of(SUBSCRIPTION_NAME);
 
 SubscriptionPath subscriptionPath =
     SubscriptionPaths.newBuilder()
-      .setZone(zone)
-      .setProjectNumber(projectNum)
-      .setSubscriptionName(subscriptionName)
-      .build();
+        .setZone(zone)
+        .setProjectNumber(projectNum)
+        .setSubscriptionName(subscriptionName)
+        .build();
 
 FlowControlSettings flowControlSettings =
     FlowControlSettings.builder()
-        .setBytesOutstanding(10 * 1024 * 1024L) // 10 MiB per partition.
+        // Set outstanding bytes to 10 MiB per partition.
+        .setBytesOutstanding(10 * 1024 * 1024L)
         .setMessagesOutstanding(Long.MAX_VALUE)
         .build();
 
-// Connect to partitions 0, 1. Note that we configured the topic with 2
-// partitions.
-List<Partition> partitions = Arrays.asList(Partition.of(0), Partition.of(1));
+List<Partition> partitions = new ArrayList<>();
+for (Integer num : PARTITION_NOS) {
+  partitions.add(Partition.of(num));
+}
 
 MessageReceiver receiver =
-  new MessageReceiver() {
-    @Override
-    public void receiveMessage(PubsubMessage message, AckReplyConsumer consumer) {
-      System.out.println("got message: " + message.getData().toStringUtf8());
-      if (isValid(message)) {
-        consumer.ack();
-      } else {
-        // 'nack' is not valid by default and will result in Subscriber failure,
-        // but this behavior can be configured.
-        consumer.nack();  // Fail the subscriber with a permanent error.
-      }
-    }
-  };
-
-Subscriber subscriber = null;
-try {
-  subscriber = Subscriber.create(SubscriberSettings.newBuilder()
-         .setSubscriptionPath(subscriptionPath)
-         .setPerPartitionFlowControlSettings(flowControlSettings)
-         .setReceiver(receiver)
-         .setPartitions(partitions)
-         .build());
-  subscriber.addListener(
-    new Subscriber.Listener() {
+    new MessageReceiver() {
       @Override
-      public void failed(Subscriber.State from, Throwable failure) {
-        // Handle failure. This is called when the Subscriber encountered a
-        // fatal error and is shutting down.
-        System.err.println(failure);
+      public void receiveMessage(PubsubMessage message, AckReplyConsumer consumer) {
+        System.out.println("Id : " + message.getMessageId());
+        System.out.println("Data : " + message.getData().toStringUtf8());
+        consumer.ack();
       }
-    },
-    MoreExecutors.directExecutor());
-  subscriber.startAsync().awaitRunning();
-  //...
-} finally {
-  if (subscriber != null) {
-    subscriber.stopAsync().awaitTerminated();
-  }
+    };
+
+SubscriberSettings subscriberSettings =
+    SubscriberSettings.newBuilder()
+        .setSubscriptionPath(subscriptionPath)
+        .setPerPartitionFlowControlSettings(flowControlSettings)
+        .setPartitions(partitions)
+        .setReceiver(receiver)
+        .build();
+
+Subscriber subscriber = Subscriber.create(subscriberSettings);
+
+// Start the subscriber. Upon successful starting, its state will become RUNNING.
+subscriber.startAsync().awaitRunning();
+
+System.out.println("Listening to messages on " + subscriptionPath.value() + " ...");
+
+try {
+  System.out.println(subscriber.state());
+  // Wait 30 seconds for the subscriber to reach TERMINATED state. If it encounters
+  // unrecoverable errors before then, its state will change to FAILED and
+  // an IllegalStateException will be thrown.
+  subscriber.awaitTerminated(30, TimeUnit.SECONDS);
+} catch (TimeoutException t) {
+  // Shut down the subscriber. This will change the state of the
+  // subscriber to TERMINATED.
+  subscriber.stopAsync();
+  System.out.println(subscriber.state());
 }
 ```
 

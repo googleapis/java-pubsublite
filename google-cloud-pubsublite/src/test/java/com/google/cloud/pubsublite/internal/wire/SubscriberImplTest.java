@@ -19,6 +19,7 @@ package com.google.cloud.pubsublite.internal.wire;
 import static com.google.cloud.pubsublite.internal.StatusExceptionMatcher.assertFutureThrowsCode;
 import static com.google.common.truth.Truth.assertThat;
 import static org.junit.Assert.assertThrows;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.ArgumentMatchers.eq;
@@ -40,6 +41,7 @@ import com.google.cloud.pubsublite.SubscriptionName;
 import com.google.cloud.pubsublite.SubscriptionPaths;
 import com.google.cloud.pubsublite.internal.StatusExceptionMatcher;
 import com.google.cloud.pubsublite.internal.wire.ConnectedSubscriber.Response;
+import com.google.cloud.pubsublite.proto.Cursor;
 import com.google.cloud.pubsublite.proto.FlowControlRequest;
 import com.google.cloud.pubsublite.proto.InitialSubscribeRequest;
 import com.google.cloud.pubsublite.proto.SeekRequest;
@@ -96,7 +98,7 @@ public class SubscriberImplTest {
 
   private final Listener permanentErrorHandler = mock(Listener.class);
 
-  private Subscriber subscriber;
+  private SubscriberImpl subscriber;
   private StreamObserver<Response> leakedResponseObserver;
 
   @Before
@@ -221,5 +223,42 @@ public class SubscriberImplTest {
     leakedResponseObserver.onNext(Response.ofMessages(messages2));
     verify(permanentErrorHandler)
         .failed(any(), argThat(new StatusExceptionMatcher(Code.FAILED_PRECONDITION)));
+  }
+
+  @Test
+  public void reinitialize_resendsInFlightSeek() {
+    Offset offset = Offset.of(1);
+    SeekRequest seekRequest =
+        SeekRequest.newBuilder()
+            .setCursor(Cursor.newBuilder().setOffset(offset.value()))
+            .build();
+    ApiFuture<Offset> future = subscriber.seek(seekRequest);
+    assertThat(subscriber.seekInFlight()).isTrue();
+
+    subscriber.triggerReinitialize();
+    verify(mockConnectedSubscriber, times(2)).seek(seekRequest);
+
+    leakedResponseObserver.onNext(Response.ofSeekOffset(offset));
+    assertTrue(future.isDone());
+    assertThat(subscriber.seekInFlight()).isFalse();
+  }
+
+  @Test
+  public void reinitialize_sendsNextOffsetSeek() {
+    subscriber.allowFlow(bigFlowControlRequest());
+    ImmutableList<SequencedMessage> messages =
+        ImmutableList.of(
+            SequencedMessage.of(Message.builder().build(), Timestamps.EPOCH, Offset.of(0), 10),
+            SequencedMessage.of(Message.builder().build(), Timestamps.EPOCH, Offset.of(1), 10));
+    leakedResponseObserver.onNext(Response.ofMessages(messages));
+    verify(mockMessageConsumer).accept(messages);
+
+    subscriber.triggerReinitialize();
+    verify(mockConnectedSubscriber).seek(
+        SeekRequest.newBuilder()
+            .setCursor(Cursor.newBuilder().setOffset(2))
+            .build());
+    assertThat(subscriber.seekInFlight()).isFalse();
+    leakedResponseObserver.onNext(Response.ofSeekOffset(Offset.of(2)));
   }
 }

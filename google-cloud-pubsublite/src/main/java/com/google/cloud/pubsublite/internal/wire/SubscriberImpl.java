@@ -34,6 +34,7 @@ import com.google.cloud.pubsublite.proto.SubscribeRequest;
 import com.google.cloud.pubsublite.proto.SubscriberServiceGrpc.SubscriberServiceStub;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.ImmutableList;
+import com.google.common.util.concurrent.Monitor;
 import io.grpc.Status;
 import io.grpc.StatusException;
 import java.util.Optional;
@@ -56,10 +57,23 @@ public class SubscriberImpl extends ProxyService
   private final TokenCounter tokenCounter = new TokenCounter();
 
   @GuardedBy("monitor.monitor")
-  private Optional<SettableApiFuture<Offset>> inFlightSeek = Optional.empty();
+  private Optional<InFlightSeek> inFlightSeek = Optional.empty();
+
+  @GuardedBy("monitor.monitor")
+  private boolean internalSeekInFlight = false;
 
   @GuardedBy("monitor.monitor")
   private boolean shutdown = false;
+
+  private static class InFlightSeek {
+    final SeekRequest seekRequest;
+    final SettableApiFuture<Offset> seekFuture;
+
+    InFlightSeek(SeekRequest request, SettableApiFuture<Offset> future) {
+      seekRequest = request;
+      seekFuture = future;
+    }
+  }
 
   @VisibleForTesting
   SubscriberImpl(
@@ -91,7 +105,7 @@ public class SubscriberImpl extends ProxyService
   protected void handlePermanentError(StatusException error) {
     try (CloseableMonitor.Hold h = monitor.enter()) {
       shutdown = true;
-      inFlightSeek.ifPresent(inFlight -> inFlight.setException(error));
+      inFlightSeek.ifPresent(inFlight -> inFlight.seekFuture.setException(error));
       inFlightSeek = Optional.empty();
       onPermanentError(error);
     }
@@ -106,7 +120,7 @@ public class SubscriberImpl extends ProxyService
       shutdown = true;
       inFlightSeek.ifPresent(
           inFlight ->
-              inFlight.setException(
+              inFlight.seekFuture.setException(
                   Status.ABORTED
                       .withDescription("Client stopped while seek in flight.")
                       .asException()));
@@ -115,13 +129,20 @@ public class SubscriberImpl extends ProxyService
 
   @Override
   public ApiFuture<Offset> seek(SeekRequest request) {
-    try (CloseableMonitor.Hold h = monitor.enter()) {
+    try (CloseableMonitor.Hold h =
+        monitor.enterWhenUninterruptibly(
+            new Monitor.Guard(monitor.monitor) {
+              @Override
+              public boolean isSatisfied() {
+                return !internalSeekInFlight;
+              }
+            })) {
       checkArgument(
           Predicates.isValidSeekRequest(request), "Sent SeekRequest with no location set.");
       checkState(!shutdown, "Seeked after the stream shut down.");
       checkState(!inFlightSeek.isPresent(), "Seeked while seek is already in flight.");
       SettableApiFuture<Offset> future = SettableApiFuture.create();
-      inFlightSeek = Optional.of(future);
+      inFlightSeek = Optional.of(new InFlightSeek(request, future));
       connection.modifyConnection(
           connectedSubscriber ->
               connectedSubscriber.ifPresent(subscriber -> subscriber.seek(request)));
@@ -164,13 +185,17 @@ public class SubscriberImpl extends ProxyService
           connectedSubscriber -> {
             checkArgument(monitor.monitor.isOccupiedByCurrentThread());
             checkArgument(connectedSubscriber.isPresent());
-            nextOffsetTracker
-                .requestForRestart()
-                .ifPresent(
-                    request -> {
-                      inFlightSeek = Optional.of(SettableApiFuture.create());
-                      connectedSubscriber.get().seek(request);
-                    });
+            if (inFlightSeek.isPresent()) {
+              connectedSubscriber.get().seek(inFlightSeek.get().seekRequest);
+            } else {
+              nextOffsetTracker
+                  .requestForRestart()
+                  .ifPresent(
+                      request -> {
+                        internalSeekInFlight = true;
+                        connectedSubscriber.get().seek(request);
+                      });
+            }
             tokenCounter
                 .requestForRestart()
                 .ifPresent(request -> connectedSubscriber.get().allowFlow(request));
@@ -212,9 +237,13 @@ public class SubscriberImpl extends ProxyService
       if (shutdown) {
         return Status.OK;
       }
+      if (internalSeekInFlight) {
+        internalSeekInFlight = false;
+        return Status.OK;
+      }
       checkState(inFlightSeek.isPresent(), "No in flight seek, but received a seek response.");
       nextOffsetTracker.onClientSeek(seekOffset);
-      inFlightSeek.get().set(seekOffset);
+      inFlightSeek.get().seekFuture.set(seekOffset);
       inFlightSeek = Optional.empty();
       return Status.OK;
     } catch (StatusException e) {

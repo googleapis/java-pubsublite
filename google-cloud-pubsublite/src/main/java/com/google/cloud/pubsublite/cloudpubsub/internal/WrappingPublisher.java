@@ -16,8 +16,11 @@
 
 package com.google.cloud.pubsublite.cloudpubsub.internal;
 
+import static com.google.cloud.pubsublite.internal.Preconditions.checkState;
+
 import com.google.api.core.ApiFuture;
 import com.google.api.core.ApiFutures;
+import com.google.api.core.ApiService;
 import com.google.cloud.pubsublite.Message;
 import com.google.cloud.pubsublite.MessageTransformer;
 import com.google.cloud.pubsublite.PublishMetadata;
@@ -60,6 +63,15 @@ public class WrappingPublisher extends ProxyService implements Publisher {
       wireMessage = transformer.transform(message);
     } catch (StatusException e) {
       onPermanentError(e);
+      return ApiFutures.immediateFailedFuture(e);
+    }
+    try {
+      ApiService.State currentState = state();
+      checkState(
+          currentState == ApiService.State.RUNNING,
+          String.format("Cannot publish when Publisher state is %s.", currentState.name()));
+    } catch (StatusException e) {
+      // Non-permanent error.
       return ApiFutures.immediateFailedFuture(e);
     }
     return ApiFutures.transform(

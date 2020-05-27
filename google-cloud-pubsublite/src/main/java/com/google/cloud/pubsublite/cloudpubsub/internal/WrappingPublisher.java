@@ -18,7 +18,6 @@ package com.google.cloud.pubsublite.cloudpubsub.internal;
 
 import com.google.api.core.ApiFuture;
 import com.google.api.core.ApiFutures;
-import com.google.api.core.ApiService;
 import com.google.cloud.pubsublite.Message;
 import com.google.cloud.pubsublite.MessageTransformer;
 import com.google.cloud.pubsublite.PublishMetadata;
@@ -26,7 +25,6 @@ import com.google.cloud.pubsublite.cloudpubsub.Publisher;
 import com.google.cloud.pubsublite.internal.ProxyService;
 import com.google.common.util.concurrent.MoreExecutors;
 import com.google.pubsub.v1.PubsubMessage;
-import io.grpc.Status;
 import io.grpc.StatusException;
 
 // A WrappingPublisher wraps the wire protocol client with a Cloud Pub/Sub api compliant
@@ -57,15 +55,6 @@ public class WrappingPublisher extends ProxyService implements Publisher {
   // Publisher implementation.
   @Override
   public ApiFuture<String> publish(PubsubMessage message) {
-    ApiService.State currentState = state();
-    if (currentState != ApiService.State.RUNNING) {
-      return ApiFutures.immediateFailedFuture(
-          Status.FAILED_PRECONDITION
-              .withDescription(
-                  String.format("Cannot publish when Publisher state is %s.", currentState.name()))
-              .asException());
-    }
-
     Message wireMessage;
     try {
       wireMessage = transformer.transform(message);

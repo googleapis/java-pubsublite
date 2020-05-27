@@ -20,6 +20,7 @@ import static com.google.cloud.pubsublite.internal.Preconditions.checkState;
 
 import com.google.api.core.ApiFuture;
 import com.google.api.core.ApiFutures;
+import com.google.api.core.ApiService;
 import com.google.api.core.SettableApiFuture;
 import com.google.api.gax.batching.BatchingSettings;
 import com.google.cloud.pubsublite.Constants;
@@ -193,6 +194,15 @@ public final class PublisherImpl extends ProxyService
 
   @Override
   public ApiFuture<Offset> publish(Message message) {
+    ApiService.State currentState = state();
+    if (currentState != ApiService.State.RUNNING) {
+      return ApiFutures.immediateFailedFuture(
+          Status.FAILED_PRECONDITION
+              .withDescription(
+                  String.format("Cannot publish when Publisher state is %s.", currentState.name()))
+              .asException());
+    }
+
     PubSubMessage proto = message.toProto();
     if (proto.getSerializedSize() > Constants.MAX_PUBLISH_MESSAGE_BYTES) {
       Status error =

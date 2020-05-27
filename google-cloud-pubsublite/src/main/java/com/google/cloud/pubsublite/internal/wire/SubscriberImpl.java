@@ -143,6 +143,7 @@ public class SubscriberImpl extends ProxyService
       checkState(!inFlightSeek.isPresent(), "Seeked while seek is already in flight.");
       SettableApiFuture<Offset> future = SettableApiFuture.create();
       inFlightSeek = Optional.of(new InFlightSeek(request, future));
+      tokenCounter.onClientSeek();
       connection.modifyConnection(
           connectedSubscriber ->
               connectedSubscriber.ifPresent(subscriber -> subscriber.seek(request)));

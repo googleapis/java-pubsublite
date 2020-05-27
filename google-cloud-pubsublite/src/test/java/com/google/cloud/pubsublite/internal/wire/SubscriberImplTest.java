@@ -229,9 +229,7 @@ public class SubscriberImplTest {
   public void reinitialize_resendsInFlightSeek() {
     Offset offset = Offset.of(1);
     SeekRequest seekRequest =
-        SeekRequest.newBuilder()
-            .setCursor(Cursor.newBuilder().setOffset(offset.value()))
-            .build();
+        SeekRequest.newBuilder().setCursor(Cursor.newBuilder().setOffset(offset.value())).build();
     ApiFuture<Offset> future = subscriber.seek(seekRequest);
     assertThat(subscriber.seekInFlight()).isTrue();
 
@@ -254,10 +252,8 @@ public class SubscriberImplTest {
     verify(mockMessageConsumer).accept(messages);
 
     subscriber.triggerReinitialize();
-    verify(mockConnectedSubscriber).seek(
-        SeekRequest.newBuilder()
-            .setCursor(Cursor.newBuilder().setOffset(2))
-            .build());
+    verify(mockConnectedSubscriber)
+        .seek(SeekRequest.newBuilder().setCursor(Cursor.newBuilder().setOffset(2)).build());
     assertThat(subscriber.seekInFlight()).isFalse();
     leakedResponseObserver.onNext(Response.ofSeekOffset(Offset.of(2)));
   }

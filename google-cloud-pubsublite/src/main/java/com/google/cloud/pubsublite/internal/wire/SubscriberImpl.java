@@ -134,7 +134,7 @@ public class SubscriberImpl extends ProxyService
             new Monitor.Guard(monitor.monitor) {
               @Override
               public boolean isSatisfied() {
-                return !internalSeekInFlight;
+                return !internalSeekInFlight || shutdown;
               }
             })) {
       checkArgument(

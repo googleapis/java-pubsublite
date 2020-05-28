@@ -116,20 +116,25 @@ public class PublisherImplTest {
             INITIAL_PUBLISH_REQUEST.getInitialRequest(),
             BATCHING_SETTINGS_THAT_NEVER_FIRE);
     publisher.addListener(permanentErrorHandler, MoreExecutors.directExecutor());
+  }
+
+  private void startPublisher() {
     publisher.startAsync().awaitRunning();
+
     assertThat(leakedOffsetStream).isNotNull();
+    verify(mockPublisherFactory).New(any(), any(), eq(INITIAL_PUBLISH_REQUEST));
   }
 
   @Test
   public void construct_CallsFactoryNew() {
-    verify(mockPublisherFactory).New(any(), any(), eq(INITIAL_PUBLISH_REQUEST));
+    startPublisher();
     verifyNoMoreInteractions(mockPublisherFactory);
     verifyZeroInteractions(mockBatchPublisher);
   }
 
   @Test
   public void construct_FlushSendsBatched() throws Exception {
-    verify(mockPublisherFactory).New(any(), any(), eq(INITIAL_PUBLISH_REQUEST));
+    startPublisher();
     Message message = Message.builder().build();
     Future<Offset> future = publisher.publish(message);
 
@@ -151,7 +156,7 @@ public class PublisherImplTest {
 
   @Test
   public void construct_CloseSendsBatched() throws Exception {
-    verify(mockPublisherFactory).New(any(), any(), eq(INITIAL_PUBLISH_REQUEST));
+    startPublisher();
     Message message = Message.builder().build();
     Future<Offset> future = publisher.publish(message);
 
@@ -173,8 +178,21 @@ public class PublisherImplTest {
   }
 
   @Test
+  public void publishBeforeStart_IsError() throws Exception {
+    Message message = Message.builder().build();
+    Future<Offset> future = publisher.publish(message);
+    ExecutionException e = assertThrows(ExecutionException.class, future::get);
+    Optional<Status> statusOr = ExtractStatus.extract(e.getCause());
+    assertThat(statusOr.isPresent()).isTrue();
+    assertThat(statusOr.get().getCode()).isEqualTo(Code.FAILED_PRECONDITION);
+
+    verifyZeroInteractions(mockPublisherFactory);
+    verifyZeroInteractions(mockBatchPublisher);
+  }
+
+  @Test
   public void publishAfterError_IsError() throws Exception {
-    verify(mockPublisherFactory).New(any(), any(), eq(INITIAL_PUBLISH_REQUEST));
+    startPublisher();
     leakedOffsetStream.onError(Status.PERMISSION_DENIED.asRuntimeException());
     assertThrows(IllegalStateException.class, publisher::awaitTerminated);
     errorOccurredLatch.await();
@@ -191,7 +209,7 @@ public class PublisherImplTest {
 
   @Test
   public void multipleBatches_Ok() throws Exception {
-    verify(mockPublisherFactory).New(any(), any(), eq(INITIAL_PUBLISH_REQUEST));
+    startPublisher();
     Message message1 = Message.builder().build();
     Message message2 = Message.builder().setData(ByteString.copyFromUtf8("data")).build();
     Message message3 = Message.builder().setData(ByteString.copyFromUtf8("other_data")).build();
@@ -226,7 +244,7 @@ public class PublisherImplTest {
 
   @Test
   public void retryableError_RecreatesAndRetriesAll() throws Exception {
-    verify(mockPublisherFactory).New(any(), any(), eq(INITIAL_PUBLISH_REQUEST));
+    startPublisher();
     Message message1 = Message.builder().setData(ByteString.copyFromUtf8("message1")).build();
     Message message2 = Message.builder().setData(ByteString.copyFromUtf8("message2")).build();
     Future<Offset> future1 = publisher.publish(message1);
@@ -276,7 +294,7 @@ public class PublisherImplTest {
 
   @Test
   public void invalidOffsetSequence_SetsPermanentException() throws Exception {
-    verify(mockPublisherFactory).New(any(), any(), eq(INITIAL_PUBLISH_REQUEST));
+    startPublisher();
     Message message1 = Message.builder().build();
     Message message2 = Message.builder().setData(ByteString.copyFromUtf8("data")).build();
     Message message3 = Message.builder().setData(ByteString.copyFromUtf8("other_data")).build();

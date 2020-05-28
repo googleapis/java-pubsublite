@@ -202,7 +202,6 @@ public final class PublisherImpl extends ProxyService
                   String.format("Cannot publish when Publisher state is %s.", currentState.name()))
               .asException());
     }
-
     PubSubMessage proto = message.toProto();
     if (proto.getSerializedSize() > Constants.MAX_PUBLISH_MESSAGE_BYTES) {
       Status error =

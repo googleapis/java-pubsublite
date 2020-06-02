@@ -36,6 +36,7 @@ import com.google.cloud.pubsublite.Offset;
 import com.google.cloud.pubsublite.ProjectNumber;
 import com.google.cloud.pubsublite.SubscriptionName;
 import com.google.cloud.pubsublite.SubscriptionPaths;
+import com.google.cloud.pubsublite.internal.ExtractStatus;
 import com.google.cloud.pubsublite.internal.StatusExceptionMatcher;
 import com.google.cloud.pubsublite.proto.CursorServiceGrpc;
 import com.google.cloud.pubsublite.proto.CursorServiceGrpc.CursorServiceStub;
@@ -44,6 +45,7 @@ import com.google.cloud.pubsublite.proto.SequencedCommitCursorResponse;
 import com.google.cloud.pubsublite.proto.StreamingCommitCursorRequest;
 import com.google.common.util.concurrent.MoreExecutors;
 import io.grpc.ManagedChannel;
+import io.grpc.Status;
 import io.grpc.Status.Code;
 import io.grpc.StatusException;
 import io.grpc.inprocess.InProcessChannelBuilder;
@@ -177,5 +179,20 @@ public class CommitterImplTest {
     assertThat(future3.isDone()).isTrue();
 
     verify(permanentErrorHandler, times(0)).failed(any(), any());
+  }
+
+  @Test
+  public void stopInCommitCallback() throws Exception {
+    ApiFuture<Void> future = committer.commitOffset(Offset.of(10));
+    CountDownLatch latch = new CountDownLatch(1);
+    ExtractStatus.addFailureHandler(future, (error) -> {
+      committer.stopAsync();
+      latch.countDown();
+    });
+    leakedResponseObserver.onError(Status.FAILED_PRECONDITION.asException());
+    latch.await();
+    assertFutureThrowsCode(future, Code.FAILED_PRECONDITION);
+    verify(permanentErrorHandler)
+        .failed(any(), argThat(new StatusExceptionMatcher(Code.FAILED_PRECONDITION)));
   }
 }

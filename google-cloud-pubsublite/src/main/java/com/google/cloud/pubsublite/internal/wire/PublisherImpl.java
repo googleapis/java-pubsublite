@@ -214,7 +214,6 @@ public final class PublisherImpl extends ProxyService
       checkState(
           currentState == ApiService.State.RUNNING,
           String.format("Cannot publish when Publisher state is %s.", currentState.name()));
-      // This is an assertion. If the service is running, it should not be shutdown.
       checkState(!shutdown, "Published after the stream shut down.");
       ApiFuture<Offset> messageFuture = batcher.add(proto);
       if (batcher.shouldFlush()) {

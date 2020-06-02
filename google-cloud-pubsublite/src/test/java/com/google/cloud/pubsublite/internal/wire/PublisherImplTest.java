@@ -178,14 +178,11 @@ public class PublisherImplTest {
   }
 
   @Test
-  public void publishBeforeStart_IsError() throws Exception {
+  public void publishBeforeStart_IsPermanentError() throws Exception {
     Message message = Message.builder().build();
-    Future<Offset> future = publisher.publish(message);
-    ExecutionException e = assertThrows(ExecutionException.class, future::get);
-    Optional<Status> statusOr = ExtractStatus.extract(e.getCause());
-    assertThat(statusOr.isPresent()).isTrue();
-    assertThat(statusOr.get().getCode()).isEqualTo(Code.FAILED_PRECONDITION);
+    assertThrows(IllegalStateException.class, () -> publisher.publish(message));
 
+    assertThat(publisher.isShutdown()).isTrue();
     verifyZeroInteractions(mockPublisherFactory);
     verifyZeroInteractions(mockBatchPublisher);
   }

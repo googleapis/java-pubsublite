@@ -194,14 +194,6 @@ public final class PublisherImpl extends ProxyService
 
   @Override
   public ApiFuture<Offset> publish(Message message) {
-    ApiService.State currentState = state();
-    if (currentState != ApiService.State.RUNNING) {
-      return ApiFutures.immediateFailedFuture(
-          Status.FAILED_PRECONDITION
-              .withDescription(
-                  String.format("Cannot publish when Publisher state is %s.", currentState.name()))
-              .asException());
-    }
     PubSubMessage proto = message.toProto();
     if (proto.getSerializedSize() > Constants.MAX_PUBLISH_MESSAGE_BYTES) {
       Status error =
@@ -218,12 +210,12 @@ public final class PublisherImpl extends ProxyService
       return ApiFutures.immediateFailedFuture(error.asException());
     }
     try (CloseableMonitor.Hold h = monitor.enter()) {
-      if (shutdown) {
-        return ApiFutures.immediateFailedFuture(
-            Status.FAILED_PRECONDITION
-                .withDescription("Published after the stream shut down.")
-                .asException());
-      }
+      ApiService.State currentState = state();
+      checkState(
+          currentState == ApiService.State.RUNNING,
+          String.format("Cannot publish when Publisher state is %s.", currentState.name()));
+      // This is an assertion. If the service is running, it should not be shutdown.
+      checkState(!shutdown, "Published after the stream shut down.");
       ApiFuture<Offset> messageFuture = batcher.add(proto);
       if (batcher.shouldFlush()) {
         processBatch(batcher.flush());
@@ -242,6 +234,13 @@ public final class PublisherImpl extends ProxyService
       processBatch(batcher.flush());
     } catch (StatusException e) {
       onPermanentError(e);
+    }
+  }
+
+  @VisibleForTesting
+  boolean isShutdown() {
+    try (CloseableMonitor.Hold h = monitor.enter()) {
+      return shutdown;
     }
   }
 

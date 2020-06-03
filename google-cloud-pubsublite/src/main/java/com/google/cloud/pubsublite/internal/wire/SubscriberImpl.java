@@ -38,14 +38,23 @@ import com.google.common.util.concurrent.Monitor;
 import io.grpc.Status;
 import io.grpc.StatusException;
 import java.util.Optional;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 import javax.annotation.concurrent.GuardedBy;
 
 public class SubscriberImpl extends ProxyService
     implements Subscriber, RetryingConnectionObserver<Response> {
+  private static final long BATCH_FLOW_REQUESTS_INTERVAL_MS = 100;
+
   private final Consumer<ImmutableList<SequencedMessage>> messageConsumer;
 
   private final CloseableMonitor monitor = new CloseableMonitor();
+
+  private final ScheduledExecutorService executorService;
+  private Future<?> alarmFuture;
 
   @GuardedBy("monitor.monitor")
   private final RetryingConnection<ConnectedSubscriber> connection;
@@ -54,7 +63,7 @@ public class SubscriberImpl extends ProxyService
   private final NextOffsetTracker nextOffsetTracker = new NextOffsetTracker();
 
   @GuardedBy("monitor.monitor")
-  private final TokenCounter tokenCounter = new TokenCounter();
+  private final FlowControlBatcher flowControlBatcher = new FlowControlBatcher();
 
   @GuardedBy("monitor.monitor")
   private Optional<InFlightSeek> inFlightSeek = Optional.empty();
@@ -89,6 +98,7 @@ public class SubscriberImpl extends ProxyService
             factory,
             SubscribeRequest.newBuilder().setInitial(initialRequest).build(),
             this);
+    this.executorService = Executors.newSingleThreadScheduledExecutor();
     addServices(this.connection);
   }
 
@@ -112,10 +122,21 @@ public class SubscriberImpl extends ProxyService
   }
 
   @Override
-  protected void start() {}
+  protected void start() {
+    try (CloseableMonitor.Hold h = monitor.enter()) {
+      alarmFuture =
+          executorService.scheduleWithFixedDelay(
+              this::processBatchFlowRequest,
+              BATCH_FLOW_REQUESTS_INTERVAL_MS,
+              BATCH_FLOW_REQUESTS_INTERVAL_MS,
+              TimeUnit.MILLISECONDS);
+    }
+  }
 
   @Override
   protected void stop() {
+    alarmFuture.cancel(false /* mayInterruptIfRunning */);
+    executorService.shutdown();
     try (CloseableMonitor.Hold h = monitor.enter()) {
       shutdown = true;
       inFlightSeek.ifPresent(
@@ -143,7 +164,7 @@ public class SubscriberImpl extends ProxyService
       checkState(!inFlightSeek.isPresent(), "Seeked while seek is already in flight.");
       SettableApiFuture<Offset> future = SettableApiFuture.create();
       inFlightSeek = Optional.of(new InFlightSeek(request, future));
-      tokenCounter.onClientSeek();
+      flowControlBatcher.onClientSeek();
       connection.modifyConnection(
           connectedSubscriber ->
               connectedSubscriber.ifPresent(subscriber -> subscriber.seek(request)));
@@ -161,15 +182,16 @@ public class SubscriberImpl extends ProxyService
     }
   }
 
-  // TODO: Consider batching these requests before sending to the stream.
   @Override
-  public void allowFlow(FlowControlRequest request) {
+  public void allowFlow(FlowControlRequest clientRequest) {
     try (CloseableMonitor.Hold h = monitor.enter()) {
       if (shutdown) return;
-      tokenCounter.onClientFlowRequest(request);
-      connection.modifyConnection(
-          connectedSubscriber ->
-              connectedSubscriber.ifPresent(subscriber -> subscriber.allowFlow(request)));
+      flowControlBatcher.onClientFlowRequest(clientRequest);
+      if (flowControlBatcher.shouldExpediteBatchRequest()) {
+        connection.modifyConnection(
+            connectedSubscriber ->
+                connectedSubscriber.ifPresent(subscriber -> flushBatchFlowRequest(subscriber)));
+      }
     } catch (StatusException e) {
       onPermanentError(e);
       throw e.getStatus().asRuntimeException();
@@ -197,9 +219,13 @@ public class SubscriberImpl extends ProxyService
                         connectedSubscriber.get().seek(request);
                       });
             }
-            tokenCounter
+            flowControlBatcher
                 .requestForRestart()
-                .ifPresent(request -> connectedSubscriber.get().allowFlow(request));
+                .ifPresent(
+                    request -> {
+                      connectedSubscriber.get().allowFlow(request);
+                      flowControlBatcher.onFlowRequestDispatched();
+                    });
           });
     } catch (StatusException e) {
       onPermanentError(e);
@@ -223,7 +249,7 @@ public class SubscriberImpl extends ProxyService
         return Status.OK;
       }
       nextOffsetTracker.onMessages(messages);
-      tokenCounter.onMessages(messages);
+      flowControlBatcher.onMessages(messages);
     } catch (StatusException e) {
 
       onPermanentError(e);
@@ -250,6 +276,30 @@ public class SubscriberImpl extends ProxyService
     } catch (StatusException e) {
       onPermanentError(e);
       return e.getStatus();
+    }
+  }
+
+  @VisibleForTesting
+  void processBatchFlowRequest() {
+    try (CloseableMonitor.Hold h = monitor.enter()) {
+      if (shutdown) return;
+      connection.modifyConnection(
+          connectedSubscriber ->
+              connectedSubscriber.ifPresent(subscriber -> flushBatchFlowRequest(subscriber)));
+    } catch (StatusException e) {
+      onPermanentError(e);
+    }
+  }
+
+  private void flushBatchFlowRequest(ConnectedSubscriber subscriber) {
+    try (CloseableMonitor.Hold h = monitor.enter()) {
+      flowControlBatcher
+          .pendingBatchRequest()
+          .ifPresent(
+              flowControlRequest -> {
+                subscriber.allowFlow(flowControlRequest);
+                flowControlBatcher.onFlowRequestDispatched();
+              });
     }
   }
 }

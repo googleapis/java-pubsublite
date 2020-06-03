@@ -42,6 +42,7 @@
 
   <dependencies>
     <!-- {x-version-update-start:google-cloud-pubsublite:released} -->
+    <!-- {x-version-update-start:google-cloud-pubsub:released} -->
     <!-- [START pubsublite_install_without_bom] -->
     <!-- [START pubsublite_java_dependencies] -->
     <dependency>
@@ -63,6 +64,7 @@
     </dependency>
     <!-- [END pubsublite_java_dependencies] -->
     <!-- [END pubsublite_install_without_bom] -->
+    <!-- {x-version-update-end} -->
     <!-- {x-version-update-end} -->
 
     <dependency>

@@ -48,7 +48,7 @@
       <version>0.1.7-SNAPSHOT</version>
     </dependency>
     <!-- {x-version-update-end} -->
-    <!-- {x-version-update-start:google-cloud-pubsublite:released} -->
+    <!-- {x-version-update-start:google-cloud-pubsub:released} -->
     <dependency>
       <groupId>com.google.cloud</groupId>
       <artifactId>google-cloud-pubsub</artifactId>

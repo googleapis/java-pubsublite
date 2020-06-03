@@ -24,28 +24,28 @@ import java.util.Optional;
 
 // A FlowControlBatcher manages batching of FlowControlRequests.
 class FlowControlBatcher {
-  // If the pending flow request exceeds this ratio of the current state, the pending flow request
-  // should be flushed to the stream ASAP.
+  // If the pending flow request exceeds this ratio of the current outstanding tokens, the pending
+  // flow request should be flushed to the stream ASAP.
   private static double EXPEDITE_BATCH_REQUEST_RATIO = 0.5;
 
-  // The current count of outstanding byte and message flow control tokens.
-  private TokenCounter currentState = new TokenCounter();
+  // The current amount of outstanding byte and message flow control tokens.
+  private TokenCounter currentOutstandingTokens = new TokenCounter();
 
   // The pending aggregate flow control request that needs to be sent to the stream.
   private TokenCounter pendingFlowRequest = new TokenCounter();
 
   void onClientFlowRequest(FlowControlRequest request) throws StatusException {
-    currentState.add(request.getAllowedBytes(), request.getAllowedMessages());
+    currentOutstandingTokens.add(request.getAllowedBytes(), request.getAllowedMessages());
     pendingFlowRequest.add(request.getAllowedBytes(), request.getAllowedMessages());
   }
 
   void onMessages(Collection<SequencedMessage> received) throws StatusException {
     long byteSize = received.stream().mapToLong(SequencedMessage::byteSize).sum();
-    currentState.sub(byteSize, received.size());
+    currentOutstandingTokens.sub(byteSize, received.size());
   }
 
   void onClientSeek() {
-    currentState.reset();
+    currentOutstandingTokens.reset();
     pendingFlowRequest.reset();
   }
 
@@ -55,7 +55,7 @@ class FlowControlBatcher {
   }
 
   Optional<FlowControlRequest> requestForRestart() {
-    return currentState.toFlowControlRequest();
+    return currentOutstandingTokens.toFlowControlRequest();
   }
 
   Optional<FlowControlRequest> pendingBatchRequest() {
@@ -63,12 +63,14 @@ class FlowControlBatcher {
   }
 
   boolean shouldExpediteBatchRequest() {
-    if (currentState.bytes() > 0
-        && pendingFlowRequest.bytes() / currentState.bytes() > EXPEDITE_BATCH_REQUEST_RATIO)
+    if (exceedsExpediteRatio(pendingFlowRequest.bytes(), currentOutstandingTokens.bytes()))
       return true;
-    if (currentState.messages() > 0
-        && pendingFlowRequest.messages() / currentState.messages() > EXPEDITE_BATCH_REQUEST_RATIO)
+    if (exceedsExpediteRatio(pendingFlowRequest.messages(), currentOutstandingTokens.messages()))
       return true;
     return false;
+  }
+
+  private boolean exceedsExpediteRatio(long pending, long current) {
+    return current > 0 && (pending / current) > EXPEDITE_BATCH_REQUEST_RATIO;
   }
 }

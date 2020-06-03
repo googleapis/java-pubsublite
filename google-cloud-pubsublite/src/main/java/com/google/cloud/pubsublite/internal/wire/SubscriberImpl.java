@@ -47,7 +47,7 @@ import javax.annotation.concurrent.GuardedBy;
 
 public class SubscriberImpl extends ProxyService
     implements Subscriber, RetryingConnectionObserver<Response> {
-  private static final long BATCH_FLOW_REQUESTS_INTERVAL_MS = 100;
+  private static final long FLOW_REQUESTS_FLUSH_INTERVAL_MS = 100;
 
   private final Consumer<ImmutableList<SequencedMessage>> messageConsumer;
 
@@ -127,8 +127,8 @@ public class SubscriberImpl extends ProxyService
       alarmFuture =
           executorService.scheduleWithFixedDelay(
               this::processBatchFlowRequest,
-              BATCH_FLOW_REQUESTS_INTERVAL_MS,
-              BATCH_FLOW_REQUESTS_INTERVAL_MS,
+              FLOW_REQUESTS_FLUSH_INTERVAL_MS,
+              FLOW_REQUESTS_FLUSH_INTERVAL_MS,
               TimeUnit.MILLISECONDS);
     }
   }

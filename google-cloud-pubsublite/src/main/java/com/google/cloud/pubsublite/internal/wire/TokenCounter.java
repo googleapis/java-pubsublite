@@ -29,14 +29,6 @@ class TokenCounter {
   private long bytes = 0;
   private long messages = 0;
 
-  long bytes() {
-    return bytes;
-  }
-
-  long messages() {
-    return messages;
-  }
-
   void add(long deltaBytes, long deltaMessages) throws StatusException {
     checkArgument(deltaBytes >= 0);
     checkArgument(deltaMessages >= 0);
@@ -59,6 +51,14 @@ class TokenCounter {
   void reset() {
     bytes = 0;
     messages = 0;
+  }
+
+  long bytes() {
+    return bytes;
+  }
+
+  long messages() {
+    return messages;
   }
 
   Optional<FlowControlRequest> toFlowControlRequest() {

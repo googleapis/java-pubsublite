@@ -48,11 +48,13 @@
       <version>0.1.7-SNAPSHOT</version>
     </dependency>
     <!-- {x-version-update-end} -->
+    <!-- {x-version-update-start:google-cloud-pubsublite:released} -->
     <dependency>
       <groupId>com.google.cloud</groupId>
       <artifactId>google-cloud-pubsub</artifactId>
       <version>1.105.0</version>
     </dependency>
+    <!-- {x-version-update-end} -->
 
     <!-- A logging dependency used by the underlying library  -->
     <dependency>

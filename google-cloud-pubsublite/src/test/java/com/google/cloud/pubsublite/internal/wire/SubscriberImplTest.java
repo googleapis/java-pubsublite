@@ -182,7 +182,7 @@ public class SubscriberImplTest {
     subscriber.allowFlow(deltaFlowRequest);
     verifyZeroInteractions(mockConnectedSubscriber);
 
-    allowFlowLatch.await(500, TimeUnit.MILLISECONDS);
+    allowFlowLatch.await(SubscriberImpl.FLOW_REQUESTS_FLUSH_INTERVAL_MS * 4, TimeUnit.MILLISECONDS);
     FlowControlRequest expectedBatchFlowRequest =
         FlowControlRequest.newBuilder().setAllowedBytes(200).setAllowedMessages(20).build();
     verify(mockConnectedSubscriber).allowFlow(expectedBatchFlowRequest);

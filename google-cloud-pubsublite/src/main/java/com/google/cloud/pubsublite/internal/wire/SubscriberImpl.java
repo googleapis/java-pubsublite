@@ -47,7 +47,7 @@ import javax.annotation.concurrent.GuardedBy;
 
 public class SubscriberImpl extends ProxyService
     implements Subscriber, RetryingConnectionObserver<Response> {
-  private static final long FLOW_REQUESTS_FLUSH_INTERVAL_MS = 100;
+  @VisibleForTesting static final long FLOW_REQUESTS_FLUSH_INTERVAL_MS = 100;
 
   private final Consumer<ImmutableList<SequencedMessage>> messageConsumer;
 

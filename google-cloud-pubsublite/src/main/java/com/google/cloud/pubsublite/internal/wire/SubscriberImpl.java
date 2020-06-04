@@ -220,12 +220,8 @@ public class SubscriberImpl extends ProxyService
                       });
             }
             flowControlBatcher
-                .requestForRestart()
-                .ifPresent(
-                    request -> {
-                      connectedSubscriber.get().allowFlow(request);
-                      flowControlBatcher.onFlowRequestDispatched();
-                    });
+                .releaseRequestForRestart()
+                .ifPresent(request -> connectedSubscriber.get().allowFlow(request));
           });
     } catch (StatusException e) {
       onPermanentError(e);
@@ -294,12 +290,8 @@ public class SubscriberImpl extends ProxyService
   private void flushBatchFlowRequest(ConnectedSubscriber subscriber) {
     try (CloseableMonitor.Hold h = monitor.enter()) {
       flowControlBatcher
-          .pendingBatchRequest()
-          .ifPresent(
-              flowControlRequest -> {
-                subscriber.allowFlow(flowControlRequest);
-                flowControlBatcher.onFlowRequestDispatched();
-              });
+          .releasePendingRequest()
+          .ifPresent(request -> subscriber.allowFlow(request));
     }
   }
 }

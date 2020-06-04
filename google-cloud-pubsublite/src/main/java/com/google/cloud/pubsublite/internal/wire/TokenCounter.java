@@ -24,7 +24,8 @@ import com.google.common.math.LongMath;
 import io.grpc.StatusException;
 import java.util.Optional;
 
-// A TokenCounter stores the amount of outstanding byte and message flow control tokens.
+// A TokenCounter stores the amount of outstanding byte and message flow control tokens that the
+// client believes exists for the stream.
 class TokenCounter {
   private long bytes = 0;
   private long messages = 0;

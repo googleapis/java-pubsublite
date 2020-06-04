@@ -29,48 +29,46 @@ class FlowControlBatcher {
   private static double EXPEDITE_BATCH_REQUEST_RATIO = 0.5;
 
   // The current amount of outstanding byte and message flow control tokens.
-  private TokenCounter currentOutstandingTokens = new TokenCounter();
+  private TokenCounter clientTokens = new TokenCounter();
 
   // The pending aggregate flow control request that needs to be sent to the stream.
-  private TokenCounter pendingFlowRequest = new TokenCounter();
+  private TokenCounter pendingTokens = new TokenCounter();
 
   void onClientFlowRequest(FlowControlRequest request) throws StatusException {
-    currentOutstandingTokens.add(request.getAllowedBytes(), request.getAllowedMessages());
-    pendingFlowRequest.add(request.getAllowedBytes(), request.getAllowedMessages());
+    clientTokens.add(request.getAllowedBytes(), request.getAllowedMessages());
+    pendingTokens.add(request.getAllowedBytes(), request.getAllowedMessages());
   }
 
   void onMessages(Collection<SequencedMessage> received) throws StatusException {
     long byteSize = received.stream().mapToLong(SequencedMessage::byteSize).sum();
-    currentOutstandingTokens.sub(byteSize, received.size());
+    clientTokens.sub(byteSize, received.size());
   }
 
   void onClientSeek() {
-    currentOutstandingTokens.reset();
-    pendingFlowRequest.reset();
+    clientTokens.reset();
+    pendingTokens.reset();
   }
 
-  // Must be called after a FlowControlRequest has been sent to the stream.
-  void onFlowRequestDispatched() {
-    pendingFlowRequest.reset();
+  // The caller must send the FlowControlRequest to the stream.
+  Optional<FlowControlRequest> releaseRequestForRestart() {
+    pendingTokens.reset();
+    return clientTokens.toFlowControlRequest();
   }
 
-  Optional<FlowControlRequest> requestForRestart() {
-    return currentOutstandingTokens.toFlowControlRequest();
-  }
-
-  Optional<FlowControlRequest> pendingBatchRequest() {
-    return pendingFlowRequest.toFlowControlRequest();
+  // The caller must send the FlowControlRequest to the stream.
+  Optional<FlowControlRequest> releasePendingRequest() {
+    Optional<FlowControlRequest> request = pendingTokens.toFlowControlRequest();
+    pendingTokens.reset();
+    return request;
   }
 
   boolean shouldExpediteBatchRequest() {
-    if (exceedsExpediteRatio(pendingFlowRequest.bytes(), currentOutstandingTokens.bytes()))
-      return true;
-    if (exceedsExpediteRatio(pendingFlowRequest.messages(), currentOutstandingTokens.messages()))
-      return true;
+    if (exceedsExpediteRatio(pendingTokens.bytes(), clientTokens.bytes())) return true;
+    if (exceedsExpediteRatio(pendingTokens.messages(), clientTokens.messages())) return true;
     return false;
   }
 
-  private boolean exceedsExpediteRatio(long pending, long current) {
-    return current > 0 && (pending / current) > EXPEDITE_BATCH_REQUEST_RATIO;
+  private boolean exceedsExpediteRatio(long pending, long client) {
+    return client > 0 && ((double) pending / client) >= EXPEDITE_BATCH_REQUEST_RATIO;
   }
 }

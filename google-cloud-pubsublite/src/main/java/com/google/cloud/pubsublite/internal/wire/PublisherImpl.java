@@ -236,13 +236,6 @@ public final class PublisherImpl extends ProxyService
     }
   }
 
-  @VisibleForTesting
-  boolean isShutdown() {
-    try (CloseableMonitor.Hold h = monitor.enter()) {
-      return shutdown;
-    }
-  }
-
   // Flushable implementation
   @Override
   public void flush() {

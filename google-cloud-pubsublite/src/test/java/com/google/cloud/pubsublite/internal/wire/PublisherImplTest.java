@@ -181,8 +181,7 @@ public class PublisherImplTest {
   public void publishBeforeStart_IsPermanentError() throws Exception {
     Message message = Message.builder().build();
     assertThrows(IllegalStateException.class, () -> publisher.publish(message));
-
-    assertThat(publisher.isShutdown()).isTrue();
+    assertThrows(IllegalStateException.class, () -> publisher.startAsync().awaitRunning());
     verifyZeroInteractions(mockPublisherFactory);
     verifyZeroInteractions(mockBatchPublisher);
   }

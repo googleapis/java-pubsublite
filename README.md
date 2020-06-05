@@ -20,12 +20,12 @@ If you are using Maven, add this to your pom.xml file:
 <dependency>
   <groupId>com.google.cloud</groupId>
   <artifactId>google-cloud-pubsublite</artifactId>
-  <version>0.1.5</version>
+  <version>0.1.6</version>
 </dependency>
 <dependency>
   <groupId>com.google.cloud</groupId>
   <artifactId>google-cloud-pubsub</artifactId>
-  <version>1.105.0</version>
+  <version>1.106.0</version>
 </dependency>
 <!-- A logging dependency used by the underlying library  -->
 <dependency>

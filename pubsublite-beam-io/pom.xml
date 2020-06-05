@@ -57,7 +57,7 @@
     <dependency>
       <groupId>com.google.errorprone</groupId>
       <artifactId>error_prone_annotations</artifactId>
-      <version>2.3.4</version>
+      <version>2.4.0</version>
     </dependency>
     <dependency>
       <groupId>com.google.auto.value</groupId>
@@ -66,7 +66,7 @@
     <dependency>
       <groupId>joda-time</groupId>
       <artifactId>joda-time</artifactId>
-      <version>2.10.5</version>
+      <version>2.10.6</version>
     </dependency>
     <dependency>
       <groupId>com.google.api.grpc</groupId>
@@ -110,13 +110,13 @@
     <dependency>
       <groupId>org.mockito</groupId>
       <artifactId>mockito-core</artifactId>
-      <version>3.2.0</version>
+      <version>3.3.3</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>io.grpc</groupId>
       <artifactId>grpc-testing</artifactId>
-      <version>1.28.1</version>
+      <version>1.29.0</version>
       <scope>test</scope>
     </dependency>
     <dependency>

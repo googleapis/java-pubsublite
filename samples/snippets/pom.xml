@@ -46,7 +46,7 @@
     <dependency>
       <groupId>com.google.cloud</groupId>
       <artifactId>google-cloud-pubsublite</artifactId>
-      <version>0.1.6</version>
+      <version>0.1.7</version>
     </dependency>
     <dependency>
       <groupId>com.google.cloud</groupId>
@@ -98,7 +98,7 @@
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>exec-maven-plugin</artifactId>
-        <version>1.6.0</version>
+        <version>3.0.0</version>
         <configuration>
           <cleanupDaemonThreads>false</cleanupDaemonThreads>
         </configuration>

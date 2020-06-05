@@ -46,6 +46,9 @@ public class CommitterImpl extends ProxyService
   private boolean shutdown = false;
 
   @GuardedBy("monitor.monitor")
+  private boolean hadPermanentError = false;
+
+  @GuardedBy("monitor.monitor")
   private final CommitState state = new CommitState();
 
   @VisibleForTesting
@@ -72,6 +75,7 @@ public class CommitterImpl extends ProxyService
   @Override
   protected void handlePermanentError(StatusException error) {
     try (CloseableMonitor.Hold h = monitor.enter()) {
+      hadPermanentError = true;
       shutdown = true;
       state.abort(error);
     }
@@ -90,9 +94,8 @@ public class CommitterImpl extends ProxyService
             new Guard(monitor.monitor) {
               @Override
               public boolean isSatisfied() {
-                // Wait until the state is empty. It will be made empty by a call to state.abort()
-                // if an error occurs.
-                return state.isEmpty();
+                // Wait until the state is empty or a permanent error occurred.
+                return state.isEmpty() || hadPermanentError;
               }
             })) {}
   }

@@ -50,6 +50,11 @@ class TokenCounter {
     messages -= received.size();
   }
 
+  void onClientSeek() {
+    bytes = 0;
+    messages = 0;
+  }
+
   Optional<FlowControlRequest> requestForRestart() {
     if (bytes == 0 && messages == 0) return Optional.empty();
     return Optional.of(

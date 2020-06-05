@@ -20,8 +20,6 @@ import synthtool.languages.java as java
 
 java.common_templates(excludes=[
   '.kokoro/*/samples.cfg',
-  # TODO: allow README generation when public
-  'README.md',
   # TODO: allow when pubsublite is available in libraries-bom
   'samples/install-without-bom/*',
 ])

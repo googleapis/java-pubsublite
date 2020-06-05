@@ -19,9 +19,9 @@ package com.google.cloud.pubsublite.beam;
 import static com.google.common.truth.Truth.assertThat;
 import static com.google.common.truth.Truth8.assertThat;
 import static org.junit.Assert.assertThrows;
+import static org.junit.Assert.fail;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doAnswer;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -39,12 +39,15 @@ import com.google.cloud.pubsublite.PublishMetadata;
 import com.google.cloud.pubsublite.TopicName;
 import com.google.cloud.pubsublite.TopicPaths;
 import com.google.cloud.pubsublite.internal.ExtractStatus;
+import com.google.cloud.pubsublite.internal.FakeApiService;
 import com.google.cloud.pubsublite.internal.Publisher;
 import com.google.common.collect.ImmutableList;
 import com.google.protobuf.ByteString;
 import io.grpc.Status;
 import io.grpc.StatusException;
 import java.util.Optional;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import org.apache.beam.sdk.Pipeline.PipelineExecutionException;
@@ -58,14 +61,18 @@ import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
+import org.mockito.MockitoAnnotations;
+import org.mockito.Spy;
 import org.mockito.stubbing.Answer;
 
 @RunWith(JUnit4.class)
 public class PubsubLiteSinkTest {
   @Rule public final TestPipeline pipeline = TestPipeline.create();
 
-  @SuppressWarnings("unchecked")
-  private final Publisher<PublishMetadata> publisher = mock(Publisher.class);
+  abstract static class PublisherFakeService extends FakeApiService
+      implements Publisher<PublishMetadata> {}
+
+  @Spy private PublisherFakeService publisher;
 
   private final PublisherOptions defaultOptions() {
     try {
@@ -99,6 +106,7 @@ public class PubsubLiteSinkTest {
 
   @Before
   public void setUp() throws Exception {
+    MockitoAnnotations.initMocks(this);
     PerServerPublisherCache.cache.set(defaultOptions(), publisher);
     doAnswer(
             (Answer<Void>)
@@ -151,12 +159,41 @@ public class PubsubLiteSinkTest {
     Message message1 = Message.builder().build();
     Message message2 = Message.builder().setKey(ByteString.copyFromUtf8("abc")).build();
     Message message3 = Message.builder().setKey(ByteString.copyFromUtf8("def")).build();
+    SettableApiFuture<PublishMetadata> future1 = SettableApiFuture.create();
+    SettableApiFuture<PublishMetadata> future2 = SettableApiFuture.create();
+    SettableApiFuture<PublishMetadata> future3 = SettableApiFuture.create();
+    CountDownLatch startedLatch = new CountDownLatch(3);
     when(publisher.publish(message1))
-        .thenReturn(ApiFutures.immediateFuture(PublishMetadata.of(Partition.of(1), Offset.of(2))));
+        .then(
+            invocation -> {
+              startedLatch.countDown();
+              return future1;
+            });
     when(publisher.publish(message2))
-        .thenReturn(ApiFutures.immediateFailedFuture(Status.INTERNAL.asException()));
+        .then(
+            invocation -> {
+              startedLatch.countDown();
+              return future2;
+            });
     when(publisher.publish(message3))
-        .thenReturn(ApiFutures.immediateFuture(PublishMetadata.of(Partition.of(1), Offset.of(3))));
+        .then(
+            invocation -> {
+              startedLatch.countDown();
+              return future3;
+            });
+    ExecutorService exec = Executors.newCachedThreadPool();
+    exec.execute(
+        () -> {
+          try {
+            startedLatch.await();
+            future1.set(PublishMetadata.of(Partition.of(1), Offset.of(2)));
+            future2.setException(Status.INTERNAL.asException());
+            future3.set(PublishMetadata.of(Partition.of(1), Offset.of(3)));
+          } catch (StatusException | InterruptedException e) {
+            fail();
+            throw new RuntimeException(e);
+          }
+        });
     PipelineExecutionException e =
         assertThrows(PipelineExecutionException.class, () -> runWith(message1, message2, message3));
     verify(publisher, times(3)).publish(publishedMessageCaptor.capture());
@@ -164,6 +201,7 @@ public class PubsubLiteSinkTest {
     Optional<Status> statusOr = ExtractStatus.extract(e.getCause());
     assertThat(statusOr).isPresent();
     assertThat(statusOr.get().getCode()).isEqualTo(Status.Code.INTERNAL);
+    exec.shutdownNow();
   }
 
   @Test

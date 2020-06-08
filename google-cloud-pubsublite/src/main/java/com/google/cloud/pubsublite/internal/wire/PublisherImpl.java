@@ -20,6 +20,7 @@ import static com.google.cloud.pubsublite.internal.Preconditions.checkState;
 
 import com.google.api.core.ApiFuture;
 import com.google.api.core.ApiFutures;
+import com.google.api.core.ApiService;
 import com.google.api.core.SettableApiFuture;
 import com.google.api.gax.batching.BatchingSettings;
 import com.google.cloud.pubsublite.Constants;
@@ -209,12 +210,11 @@ public final class PublisherImpl extends ProxyService
       return ApiFutures.immediateFailedFuture(error.asException());
     }
     try (CloseableMonitor.Hold h = monitor.enter()) {
-      if (shutdown) {
-        return ApiFutures.immediateFailedFuture(
-            Status.FAILED_PRECONDITION
-                .withDescription("Published after the stream shut down.")
-                .asException());
-      }
+      ApiService.State currentState = state();
+      checkState(
+          currentState == ApiService.State.RUNNING,
+          String.format("Cannot publish when Publisher state is %s.", currentState.name()));
+      checkState(!shutdown, "Published after the stream shut down.");
       ApiFuture<Offset> messageFuture = batcher.add(proto);
       if (batcher.shouldFlush()) {
         processBatch(batcher.flush());

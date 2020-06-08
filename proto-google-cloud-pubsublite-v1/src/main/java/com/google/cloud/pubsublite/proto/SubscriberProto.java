@@ -44,6 +44,22 @@ public final class SubscriberProto {
       internal_static_google_cloud_pubsublite_v1_SubscribeResponse_descriptor;
   static final com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_google_cloud_pubsublite_v1_SubscribeResponse_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+      internal_static_google_cloud_pubsublite_v1_InitialPartitionAssignmentRequest_descriptor;
+  static final com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_google_cloud_pubsublite_v1_InitialPartitionAssignmentRequest_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+      internal_static_google_cloud_pubsublite_v1_PartitionAssignment_descriptor;
+  static final com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_google_cloud_pubsublite_v1_PartitionAssignment_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+      internal_static_google_cloud_pubsublite_v1_PartitionAssignmentAck_descriptor;
+  static final com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_google_cloud_pubsublite_v1_PartitionAssignmentAck_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+      internal_static_google_cloud_pubsublite_v1_PartitionAssignmentRequest_descriptor;
+  static final com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_google_cloud_pubsublite_v1_PartitionAssignmentRequest_fieldAccessorTable;
 
   public static com.google.protobuf.Descriptors.FileDescriptor getDescriptor() {
     return descriptor;
@@ -82,12 +98,25 @@ public final class SubscriberProto {
           + "onseH\000\0228\n\004seek\030\002 \001(\0132(.google.cloud.pubs"
           + "ublite.v1.SeekResponseH\000\022?\n\010messages\030\003 \001"
           + "(\0132+.google.cloud.pubsublite.v1.MessageR"
-          + "esponseH\000B\n\n\010response2\203\001\n\021SubscriberServ"
-          + "ice\022n\n\tSubscribe\022,.google.cloud.pubsubli"
-          + "te.v1.SubscribeRequest\032-.google.cloud.pu"
-          + "bsublite.v1.SubscribeResponse\"\000(\0010\001B9\n!c"
-          + "om.google.cloud.pubsublite.protoB\017Subscr"
-          + "iberProtoP\001\370\001\001b\006proto3"
+          + "esponseH\000B\n\n\010response\"L\n!InitialPartitio"
+          + "nAssignmentRequest\022\024\n\014subscription\030\001 \001(\t"
+          + "\022\021\n\tclient_id\030\002 \001(\014\")\n\023PartitionAssignme"
+          + "nt\022\022\n\npartitions\030\001 \003(\003\"\030\n\026PartitionAssig"
+          + "nmentAck\"\274\001\n\032PartitionAssignmentRequest\022"
+          + "P\n\007initial\030\001 \001(\0132=.google.cloud.pubsubli"
+          + "te.v1.InitialPartitionAssignmentRequestH"
+          + "\000\022A\n\003ack\030\002 \001(\01322.google.cloud.pubsublite"
+          + ".v1.PartitionAssignmentAckH\000B\t\n\007request2"
+          + "\203\001\n\021SubscriberService\022n\n\tSubscribe\022,.goo"
+          + "gle.cloud.pubsublite.v1.SubscribeRequest"
+          + "\032-.google.cloud.pubsublite.v1.SubscribeR"
+          + "esponse\"\000(\0010\0012\240\001\n\032PartitionAssignmentSer"
+          + "vice\022\201\001\n\020AssignPartitions\0226.google.cloud"
+          + ".pubsublite.v1.PartitionAssignmentReques"
+          + "t\032/.google.cloud.pubsublite.v1.Partition"
+          + "Assignment\"\000(\0010\001B9\n!com.google.cloud.pub"
+          + "sublite.protoB\017SubscriberProtoP\001\370\001\001b\006pro"
+          + "to3"
     };
     descriptor =
         com.google.protobuf.Descriptors.FileDescriptor.internalBuildGeneratedFileFrom(
@@ -158,6 +187,36 @@ public final class SubscriberProto {
             internal_static_google_cloud_pubsublite_v1_SubscribeResponse_descriptor,
             new java.lang.String[] {
               "Initial", "Seek", "Messages", "Response",
+            });
+    internal_static_google_cloud_pubsublite_v1_InitialPartitionAssignmentRequest_descriptor =
+        getDescriptor().getMessageTypes().get(8);
+    internal_static_google_cloud_pubsublite_v1_InitialPartitionAssignmentRequest_fieldAccessorTable =
+        new com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+            internal_static_google_cloud_pubsublite_v1_InitialPartitionAssignmentRequest_descriptor,
+            new java.lang.String[] {
+              "Subscription", "ClientId",
+            });
+    internal_static_google_cloud_pubsublite_v1_PartitionAssignment_descriptor =
+        getDescriptor().getMessageTypes().get(9);
+    internal_static_google_cloud_pubsublite_v1_PartitionAssignment_fieldAccessorTable =
+        new com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+            internal_static_google_cloud_pubsublite_v1_PartitionAssignment_descriptor,
+            new java.lang.String[] {
+              "Partitions",
+            });
+    internal_static_google_cloud_pubsublite_v1_PartitionAssignmentAck_descriptor =
+        getDescriptor().getMessageTypes().get(10);
+    internal_static_google_cloud_pubsublite_v1_PartitionAssignmentAck_fieldAccessorTable =
+        new com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+            internal_static_google_cloud_pubsublite_v1_PartitionAssignmentAck_descriptor,
+            new java.lang.String[] {});
+    internal_static_google_cloud_pubsublite_v1_PartitionAssignmentRequest_descriptor =
+        getDescriptor().getMessageTypes().get(11);
+    internal_static_google_cloud_pubsublite_v1_PartitionAssignmentRequest_fieldAccessorTable =
+        new com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+            internal_static_google_cloud_pubsublite_v1_PartitionAssignmentRequest_descriptor,
+            new java.lang.String[] {
+              "Initial", "Ack", "Request",
             });
     com.google.cloud.pubsublite.proto.CommonProto.getDescriptor();
   }

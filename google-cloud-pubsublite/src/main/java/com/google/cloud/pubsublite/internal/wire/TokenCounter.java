@@ -19,43 +19,50 @@ package com.google.cloud.pubsublite.internal.wire;
 import static com.google.cloud.pubsublite.internal.Preconditions.checkArgument;
 import static com.google.cloud.pubsublite.internal.Preconditions.checkState;
 
-import com.google.cloud.pubsublite.SequencedMessage;
 import com.google.cloud.pubsublite.proto.FlowControlRequest;
 import com.google.common.math.LongMath;
 import io.grpc.StatusException;
-import java.util.Collection;
 import java.util.Optional;
 
-// A TokenCounter counts the amount of outstanding byte and message flow control tokens that the
+// A TokenCounter stores the amount of outstanding byte and message flow control tokens that the
 // client believes exists for the stream.
 class TokenCounter {
   private long bytes = 0;
   private long messages = 0;
 
-  void onClientFlowRequest(FlowControlRequest request) throws StatusException {
-    checkArgument(request.getAllowedMessages() >= 0);
-    checkArgument(request.getAllowedBytes() >= 0);
+  void add(long deltaBytes, long deltaMessages) throws StatusException {
+    checkArgument(deltaBytes >= 0);
+    checkArgument(deltaMessages >= 0);
 
-    bytes = LongMath.saturatedAdd(bytes, request.getAllowedBytes());
-    messages = LongMath.saturatedAdd(messages, request.getAllowedMessages());
+    bytes = LongMath.saturatedAdd(bytes, deltaBytes);
+    messages = LongMath.saturatedAdd(messages, deltaMessages);
   }
 
-  void onMessages(Collection<SequencedMessage> received) throws StatusException {
-    long byteSize = received.stream().mapToLong(SequencedMessage::byteSize).sum();
+  void sub(long deltaBytes, long deltaMessages) throws StatusException {
+    checkArgument(deltaBytes >= 0);
+    checkArgument(deltaMessages >= 0);
     checkState(
-        byteSize <= bytes, "Received messages that account for more bytes than were requested.");
-    checkState(received.size() <= messages, "Received more messages than were requested.");
+        deltaBytes <= bytes, "Received messages that account for more bytes than were requested.");
+    checkState(deltaMessages <= messages, "Received more messages than were requested.");
 
-    bytes -= byteSize;
-    messages -= received.size();
+    bytes -= deltaBytes;
+    messages -= deltaMessages;
   }
 
-  void onClientSeek() {
+  void reset() {
     bytes = 0;
     messages = 0;
   }
 
-  Optional<FlowControlRequest> requestForRestart() {
+  long bytes() {
+    return bytes;
+  }
+
+  long messages() {
+    return messages;
+  }
+
+  Optional<FlowControlRequest> toFlowControlRequest() {
     if (bytes == 0 && messages == 0) return Optional.empty();
     return Optional.of(
         FlowControlRequest.newBuilder()

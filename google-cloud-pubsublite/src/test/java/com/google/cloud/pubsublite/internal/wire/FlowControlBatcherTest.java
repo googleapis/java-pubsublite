@@ -42,8 +42,8 @@ public class FlowControlBatcherTest {
 
     assertThat(batcher.releasePendingRequest().get()).isEqualTo(clientFlowRequest);
     assertThat(batcher.releasePendingRequest().isPresent()).isFalse();
-    assertThat(batcher.releaseRequestForRestart().get()).isEqualTo(clientFlowRequest);
-    assertThat(batcher.releaseRequestForRestart().get()).isEqualTo(clientFlowRequest);
+    assertThat(batcher.requestForRestart().get()).isEqualTo(clientFlowRequest);
+    assertThat(batcher.requestForRestart().get()).isEqualTo(clientFlowRequest);
   }
 
   @Test
@@ -60,7 +60,7 @@ public class FlowControlBatcherTest {
     assertThat(batcher.releasePendingRequest().get()).isEqualTo(clientFlowRequest);
     FlowControlRequest expectedRequestForRestart =
         FlowControlRequest.newBuilder().setAllowedBytes(250).setAllowedMessages(8).build();
-    assertThat(batcher.releaseRequestForRestart().get()).isEqualTo(expectedRequestForRestart);
+    assertThat(batcher.requestForRestart().get()).isEqualTo(expectedRequestForRestart);
   }
 
   @Test

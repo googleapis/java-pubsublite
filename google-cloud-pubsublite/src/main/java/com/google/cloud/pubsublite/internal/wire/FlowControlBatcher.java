@@ -29,10 +29,10 @@ class FlowControlBatcher {
   private static double EXPEDITE_BATCH_REQUEST_RATIO = 0.5;
 
   // The current amount of outstanding byte and message flow control tokens.
-  private TokenCounter clientTokens = new TokenCounter();
+  private final TokenCounter clientTokens = new TokenCounter();
 
   // The pending aggregate flow control request that needs to be sent to the stream.
-  private TokenCounter pendingTokens = new TokenCounter();
+  private final TokenCounter pendingTokens = new TokenCounter();
 
   void onClientFlowRequest(FlowControlRequest request) throws StatusException {
     clientTokens.add(request.getAllowedBytes(), request.getAllowedMessages());
@@ -49,13 +49,13 @@ class FlowControlBatcher {
     pendingTokens.reset();
   }
 
-  // The caller must send the FlowControlRequest to the stream.
-  Optional<FlowControlRequest> releaseRequestForRestart() {
+  // The caller must send the FlowControlRequest to the stream, as pending tokens are reset.
+  Optional<FlowControlRequest> requestForRestart() {
     pendingTokens.reset();
     return clientTokens.toFlowControlRequest();
   }
 
-  // The caller must send the FlowControlRequest to the stream.
+  // The caller must send the FlowControlRequest to the stream, as pending tokens are reset.
   Optional<FlowControlRequest> releasePendingRequest() {
     Optional<FlowControlRequest> request = pendingTokens.toFlowControlRequest();
     pendingTokens.reset();

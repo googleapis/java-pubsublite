@@ -220,7 +220,7 @@ public class SubscriberImpl extends ProxyService
                       });
             }
             flowControlBatcher
-                .releaseRequestForRestart()
+                .requestForRestart()
                 .ifPresent(request -> connectedSubscriber.get().allowFlow(request));
           });
     } catch (StatusException e) {

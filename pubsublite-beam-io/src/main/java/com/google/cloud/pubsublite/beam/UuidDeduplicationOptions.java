@@ -23,6 +23,8 @@ import com.google.cloud.pubsublite.SequencedMessage;
 import com.google.common.collect.ImmutableList;
 import com.google.protobuf.ByteString;
 import java.io.Serializable;
+import org.apache.beam.sdk.state.TimeDomain;
+import org.apache.beam.sdk.transforms.Deduplicate;
 
 @AutoValue
 public abstract class UuidDeduplicationOptions implements Serializable {
@@ -44,7 +46,7 @@ public abstract class UuidDeduplicationOptions implements Serializable {
   // All parameters are optional.
   public abstract SerializableStatusFunction<SequencedMessage, Uuid> uuidExtractor();
 
-  public abstract DeduplicationFnOptions<Uuid> deduplicationFnOptions();
+  public abstract Deduplicate.KeyedValues<Uuid, SequencedMessage> deduplicate();
 
   // The number of partitions to hash values into.
   public abstract int hashPartitions();
@@ -53,8 +55,8 @@ public abstract class UuidDeduplicationOptions implements Serializable {
   public static Builder newBuilder() {
     Builder builder = new AutoValue_UuidDeduplicationOptions.Builder();
     builder.setUuidExtractor(DEFAULT_UUID_EXTRACTOR);
-    builder.setDeduplicationFnOptions(
-        DeduplicationFnOptions.<Uuid>newBuilder().setKeyCoder(Uuid.getCoder()).build());
+    builder.setDeduplicate(
+        Deduplicate.<Uuid, SequencedMessage>keyedValues().withTimeDomain(TimeDomain.EVENT_TIME));
     builder.setHashPartitions(DEFAULT_HASH_PARTITIONS);
     return builder;
   }
@@ -64,7 +66,8 @@ public abstract class UuidDeduplicationOptions implements Serializable {
     public abstract Builder setUuidExtractor(
         SerializableStatusFunction<SequencedMessage, Uuid> uuidExtractor);
 
-    public abstract Builder setDeduplicationFnOptions(DeduplicationFnOptions<Uuid> options);
+    public abstract Builder setDeduplicate(
+        Deduplicate.KeyedValues<Uuid, SequencedMessage> deduplicate);
 
     public abstract Builder setHashPartitions(int partitions);
 

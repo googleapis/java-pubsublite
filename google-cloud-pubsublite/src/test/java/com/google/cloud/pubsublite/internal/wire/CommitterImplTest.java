@@ -185,10 +185,12 @@ public class CommitterImplTest {
   public void stopInCommitCallback() throws Exception {
     ApiFuture<Void> future = committer.commitOffset(Offset.of(10));
     CountDownLatch latch = new CountDownLatch(1);
-    ExtractStatus.addFailureHandler(future, (error) -> {
-      committer.stopAsync();
-      latch.countDown();
-    });
+    ExtractStatus.addFailureHandler(
+        future,
+        (error) -> {
+          committer.stopAsync();
+          latch.countDown();
+        });
     leakedResponseObserver.onError(Status.FAILED_PRECONDITION.asException());
     latch.await();
     assertFutureThrowsCode(future, Code.FAILED_PRECONDITION);

@@ -27,6 +27,7 @@ import com.google.protobuf.util.Timestamps;
 import org.apache.beam.sdk.testing.PAssert;
 import org.apache.beam.sdk.testing.TestPipeline;
 import org.apache.beam.sdk.testing.TestStream;
+import org.apache.beam.sdk.transforms.Deduplicate;
 import org.apache.beam.sdk.values.PCollection;
 import org.joda.time.Duration;
 import org.joda.time.Instant;
@@ -60,7 +61,7 @@ public class UuidDeduplicationTransformTest {
         TestStream.create(new SequencedMessageCoder())
             .advanceWatermarkTo(START)
             .addElements(message1)
-            .advanceWatermarkTo(START.plus(DeduplicationFnOptions.DEFAULT_GC_DELAY.dividedBy(2)))
+            .advanceWatermarkTo(START.plus(Deduplicate.DEFAULT_DURATION.dividedBy(2)))
             .addElements(message2)
             .advanceWatermarkToInfinity();
     PCollection<SequencedMessage> results =
@@ -81,7 +82,7 @@ public class UuidDeduplicationTransformTest {
         TestStream.create(new SequencedMessageCoder())
             .advanceWatermarkTo(START)
             .addElements(message)
-            .advanceWatermarkTo(START.plus(DeduplicationFnOptions.DEFAULT_GC_DELAY.dividedBy(2)))
+            .advanceWatermarkTo(START.plus(Deduplicate.DEFAULT_DURATION.dividedBy(2)))
             .advanceWatermarkToInfinity();
     PCollection<SequencedMessage> results =
         pipeline
@@ -101,8 +102,7 @@ public class UuidDeduplicationTransformTest {
         TestStream.create(new SequencedMessageCoder())
             .advanceWatermarkTo(START)
             .addElements(message1)
-            .advanceWatermarkTo(
-                START.plus(DeduplicationFnOptions.DEFAULT_GC_DELAY.plus(Duration.millis(1))))
+            .advanceWatermarkTo(START.plus(Deduplicate.DEFAULT_DURATION.plus(Duration.millis(1))))
             .addElements(message1)
             .advanceWatermarkToInfinity();
     PCollection<SequencedMessage> results =

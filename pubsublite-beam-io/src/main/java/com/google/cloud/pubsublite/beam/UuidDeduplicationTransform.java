@@ -17,10 +17,8 @@
 package com.google.cloud.pubsublite.beam;
 
 import com.google.cloud.pubsublite.SequencedMessage;
-import java.math.BigInteger;
 import org.apache.beam.sdk.transforms.MapElements;
 import org.apache.beam.sdk.transforms.PTransform;
-import org.apache.beam.sdk.transforms.ParDo;
 import org.apache.beam.sdk.transforms.ProcessFunction;
 import org.apache.beam.sdk.transforms.Values;
 import org.apache.beam.sdk.values.KV;
@@ -48,22 +46,8 @@ class UuidDeduplicationTransform
         input.apply(
             "MapUuids",
             MapElements.into(new TypeDescriptor<KV<Uuid, SequencedMessage>>() {}).via(mapWithKeys));
-    ProcessFunction<KV<Uuid, SequencedMessage>, KV<Integer, KV<Uuid, SequencedMessage>>>
-        mapWithHash =
-            kv ->
-                KV.of(
-                    new BigInteger(/*signum=*/ 1, kv.getKey().value().toByteArray())
-                        .mod(BigInteger.valueOf(options.hashPartitions()))
-                        .intValue(),
-                    kv);
-    PCollection<KV<Integer, KV<Uuid, SequencedMessage>>> hashedUuids =
-        uuidMapped.apply(
-            "HashUuids",
-            MapElements.into(new TypeDescriptor<KV<Integer, KV<Uuid, SequencedMessage>>>() {})
-                .via(mapWithHash));
     PCollection<KV<Uuid, SequencedMessage>> unique =
-        hashedUuids.apply(
-            "Deduplicate", ParDo.of(new DeduplicationFn<>(options.deduplicationFnOptions())));
+        uuidMapped.apply("Deduplicate", options.deduplicate());
     return unique.apply("StripUuids", Values.create());
   }
 }

@@ -24,16 +24,20 @@ import com.google.cloud.pubsublite.SequencedMessage;
 import com.google.cloud.pubsublite.SubscriptionPath;
 import com.google.cloud.pubsublite.SubscriptionPaths;
 import com.google.cloud.pubsublite.cloudpubsub.internal.AckSetTrackerImpl;
+import com.google.cloud.pubsublite.cloudpubsub.internal.AssigningSubscriber;
 import com.google.cloud.pubsublite.cloudpubsub.internal.MultiPartitionSubscriber;
+import com.google.cloud.pubsublite.cloudpubsub.internal.PartitionSubscriberFactory;
 import com.google.cloud.pubsublite.cloudpubsub.internal.SinglePartitionSubscriber;
 import com.google.cloud.pubsublite.internal.Preconditions;
+import com.google.cloud.pubsublite.internal.wire.AssignerBuilder;
+import com.google.cloud.pubsublite.internal.wire.AssignerFactory;
 import com.google.cloud.pubsublite.internal.wire.CommitterBuilder;
 import com.google.cloud.pubsublite.internal.wire.PubsubContext;
 import com.google.cloud.pubsublite.internal.wire.PubsubContext.Framework;
 import com.google.cloud.pubsublite.internal.wire.SubscriberBuilder;
 import com.google.cloud.pubsublite.proto.CursorServiceGrpc;
+import com.google.cloud.pubsublite.proto.PartitionAssignmentServiceGrpc.PartitionAssignmentServiceStub;
 import com.google.cloud.pubsublite.proto.SubscriberServiceGrpc;
-import com.google.common.collect.ImmutableList;
 import com.google.pubsub.v1.PubsubMessage;
 import io.grpc.StatusException;
 import java.util.ArrayList;
@@ -51,16 +55,20 @@ public abstract class SubscriberSettings {
 
   abstract SubscriptionPath subscriptionPath();
 
-  abstract ImmutableList<Partition> partitions();
-
   abstract FlowControlSettings perPartitionFlowControlSettings();
 
   // Optional parameters.
+
+  // If set, disables auto-assignment.
+  abstract Optional<List<Partition>> partitions();
+
   abstract Optional<MessageTransformer<SequencedMessage, PubsubMessage>> transformer();
 
   abstract Optional<SubscriberServiceGrpc.SubscriberServiceStub> subscriberServiceStub();
 
   abstract Optional<CursorServiceGrpc.CursorServiceStub> cursorServiceStub();
+
+  abstract Optional<PartitionAssignmentServiceStub> assignmentServiceStub();
 
   abstract Optional<NackHandler> nackHandler();
 
@@ -76,11 +84,12 @@ public abstract class SubscriberSettings {
 
     public abstract Builder setSubscriptionPath(SubscriptionPath path);
 
-    public abstract Builder setPartitions(List<Partition> partition);
-
     public abstract Builder setPerPartitionFlowControlSettings(FlowControlSettings settings);
 
     // Optional parameters.
+    /** If set, disables auto-assignment. */
+    public abstract Builder setPartitions(List<Partition> partition);
+
     public abstract Builder setTransformer(
         MessageTransformer<SequencedMessage, PubsubMessage> transformer);
 
@@ -89,6 +98,8 @@ public abstract class SubscriberSettings {
 
     public abstract Builder setCursorServiceStub(CursorServiceGrpc.CursorServiceStub stub);
 
+    public abstract Builder setAssignmentServiceStub(PartitionAssignmentServiceStub stub);
+
     public abstract Builder setNackHandler(NackHandler nackHandler);
 
     abstract SubscriberSettings autoBuild();
@@ -96,7 +107,8 @@ public abstract class SubscriberSettings {
     public SubscriberSettings build() throws StatusException {
       SubscriberSettings settings = autoBuild();
       Preconditions.checkArgument(
-          !settings.partitions().isEmpty(), "Must provide at least one partition.");
+          !settings.partitions().isPresent() || !settings.partitions().get().isEmpty(),
+          "Must provide at least one partition if setting partitions explicitly.");
       SubscriptionPaths.check(settings.subscriptionPath());
       return settings;
     }
@@ -113,18 +125,36 @@ public abstract class SubscriberSettings {
     wireCommitterBuilder.setSubscriptionPath(subscriptionPath());
     cursorServiceStub().ifPresent(wireCommitterBuilder::setCursorStub);
 
-    List<Subscriber> perPartitionSubscribers = new ArrayList<>();
-    for (Partition partition : partitions()) {
-      wireSubscriberBuilder.setPartition(partition);
-      wireCommitterBuilder.setPartition(partition);
-      perPartitionSubscribers.add(
-          new SinglePartitionSubscriber(
+    PartitionSubscriberFactory partitionSubscriberFactory =
+        partition -> {
+          wireSubscriberBuilder.setPartition(partition);
+          wireCommitterBuilder.setPartition(partition);
+          return new SinglePartitionSubscriber(
               receiver(),
               transformer().orElse(MessageTransforms.toCpsSubscribeTransformer()),
               new AckSetTrackerImpl(wireCommitterBuilder.build()),
               nackHandler().orElse(new NackHandler() {}),
               messageConsumer -> wireSubscriberBuilder.setMessageConsumer(messageConsumer).build(),
-              perPartitionFlowControlSettings()));
+              perPartitionFlowControlSettings());
+        };
+
+    if (!partitions().isPresent()) {
+      AssignerBuilder.Builder assignerBuilder = AssignerBuilder.newBuilder();
+      assignerBuilder.setSubscriptionPath(subscriptionPath());
+      assignmentServiceStub().ifPresent(assignerBuilder::setAssignmentStub);
+      AssignerFactory assignerFactory =
+          receiver -> {
+            assignerBuilder.setReceiver(receiver);
+            return assignerBuilder.build();
+          };
+      return new AssigningSubscriber(partitionSubscriberFactory, assignerFactory);
+    }
+
+    List<Subscriber> perPartitionSubscribers = new ArrayList<>();
+    for (Partition partition : partitions().get()) {
+      wireSubscriberBuilder.setPartition(partition);
+      wireCommitterBuilder.setPartition(partition);
+      perPartitionSubscribers.add(partitionSubscriberFactory.New(partition));
     }
     return MultiPartitionSubscriber.of(perPartitionSubscribers);
   }

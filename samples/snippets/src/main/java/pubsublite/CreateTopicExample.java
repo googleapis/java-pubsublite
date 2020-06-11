@@ -38,7 +38,7 @@ public class CreateTopicExample {
     char zoneId = 'b';
     String topicId = "your-topic-id";
     long projectNumber = Long.parseLong("123456789");
-    Integer partitions = 1;
+    int partitions = 1;
 
     createTopicExample(cloudRegion, zoneId, projectNumber, topicId, partitions);
   }
@@ -67,11 +67,11 @@ public class CreateTopicExample {
                 RetentionConfig.newBuilder()
                     // How long messages are retained.
                     .setPeriod(Durations.fromDays(1))
-                    // Set storage per partition to 100 GiB. This must be 30 GiB-10 TiB.
+                    // Set storage per partition to 30 GiB. This must be 30 GiB-10 TiB.
                     // If the number of bytes stored in any of the topic's partitions grows
                     // beyond this value, older messages will be dropped to make room for
                     // newer ones, regardless of the value of `period`.
-                    .setPerPartitionBytes(100 * 1024 * 1024 * 1024L))
+                    .setPerPartitionBytes(30 * 1024 * 1024 * 1024L))
             .setName(topicPath.value())
             .build();
 

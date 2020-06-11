@@ -3,7 +3,7 @@
   <parent>
     <groupId>com.google.cloud</groupId>
     <artifactId>google-cloud-shared-config</artifactId>
-    <version>0.6.0</version>
+    <version>0.8.0</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.google.cloud</groupId>
@@ -25,7 +25,7 @@
       <dependency>
         <groupId>com.google.cloud</groupId>
         <artifactId>google-cloud-pubsub-bom</artifactId>
-        <version>1.106.0</version>
+        <version>1.107.0</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
@@ -52,7 +52,7 @@
               <path>
                 <groupId>com.google.auto.value</groupId>
                 <artifactId>auto-value</artifactId>
-                <version>1.7.2</version>
+                <version>1.7.3</version>
               </path>
               <path>
                 <groupId>com.google.auto.service</groupId>

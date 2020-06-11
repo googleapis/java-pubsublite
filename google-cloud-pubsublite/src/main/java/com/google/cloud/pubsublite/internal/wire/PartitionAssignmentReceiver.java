@@ -16,12 +16,13 @@
 
 package com.google.cloud.pubsublite.internal.wire;
 
-import com.google.cloud.pubsublite.proto.PartitionAssignment;
+import com.google.cloud.pubsublite.Partition;
+import java.util.Set;
 
 /**
  * A receiver for partition assignments. All updates to reflect the assignment should be performed
  * inline.
  */
 public interface PartitionAssignmentReceiver {
-  void DeliverAssignment(PartitionAssignment assignment);
+  void handleAssignment(Set<Partition> assignment);
 }

@@ -16,6 +16,7 @@
 
 package com.google.cloud.pubsublite.internal.wire;
 
+import com.google.cloud.pubsublite.Partition;
 import com.google.cloud.pubsublite.internal.CloseableMonitor;
 import com.google.cloud.pubsublite.internal.ProxyService;
 import com.google.cloud.pubsublite.proto.InitialPartitionAssignmentRequest;
@@ -26,6 +27,8 @@ import com.google.common.annotations.VisibleForTesting;
 import com.google.errorprone.annotations.concurrent.GuardedBy;
 import io.grpc.Status;
 import io.grpc.StatusException;
+import java.util.HashSet;
+import java.util.Set;
 
 public class AssignerImpl extends ProxyService
     implements Assigner, RetryingConnectionObserver<PartitionAssignment> {
@@ -70,10 +73,18 @@ public class AssignerImpl extends ProxyService
     }
   }
 
+  private static Set<Partition> toSet(PartitionAssignment assignment) throws StatusException {
+    Set<Partition> partitions = new HashSet<>();
+    for (long partition : assignment.getPartitionsList()) {
+      partitions.add(Partition.of(partition));
+    }
+    return partitions;
+  }
+
   @Override
   public Status onClientResponse(PartitionAssignment value) {
     try (CloseableMonitor.Hold h = monitor.enter()) {
-      receiver.DeliverAssignment(value);
+      receiver.handleAssignment(toSet(value));
       connection.modifyConnection(connectionOr -> connectionOr.ifPresent(ConnectedAssigner::ack));
     } catch (StatusException e) {
       return e.getStatus();

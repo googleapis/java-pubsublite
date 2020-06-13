@@ -56,6 +56,8 @@ public class ConnectedAssignerImpl
   // SingleConnection implementation.
   @Override
   protected Status handleInitialResponse(PartitionAssignment response) {
+    // The assignment stream is server-initiated by sending a PartitionAssignment. The
+    // initial response from the server is handled identically to other responses.
     return handleStreamResponse(response);
   }
 

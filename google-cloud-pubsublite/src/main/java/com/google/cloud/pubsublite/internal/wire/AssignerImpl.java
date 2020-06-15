@@ -1,0 +1,83 @@
+/*
+ * Copyright 2020 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package com.google.cloud.pubsublite.internal.wire;
+
+import com.google.cloud.pubsublite.internal.CloseableMonitor;
+import com.google.cloud.pubsublite.internal.ProxyService;
+import com.google.cloud.pubsublite.proto.InitialPartitionAssignmentRequest;
+import com.google.cloud.pubsublite.proto.PartitionAssignment;
+import com.google.cloud.pubsublite.proto.PartitionAssignmentRequest;
+import com.google.cloud.pubsublite.proto.PartitionAssignmentServiceGrpc.PartitionAssignmentServiceStub;
+import com.google.common.annotations.VisibleForTesting;
+import com.google.errorprone.annotations.concurrent.GuardedBy;
+import io.grpc.Status;
+import io.grpc.StatusException;
+
+public class AssignerImpl extends ProxyService
+    implements Assigner, RetryingConnectionObserver<PartitionAssignment> {
+  @GuardedBy("monitor.monitor")
+  private final RetryingConnection<ConnectedAssigner> connection;
+
+  @GuardedBy("monitor.monitor")
+  private final PartitionAssignmentReceiver receiver;
+
+  private final CloseableMonitor monitor = new CloseableMonitor();
+
+  @VisibleForTesting
+  AssignerImpl(
+      PartitionAssignmentServiceStub stub,
+      ConnectedAssignerFactory factory,
+      InitialPartitionAssignmentRequest initialRequest,
+      PartitionAssignmentReceiver receiver)
+      throws StatusException {
+    this.receiver = receiver;
+    this.connection =
+        new RetryingConnectionImpl<>(
+            stub::assignPartitions,
+            factory,
+            PartitionAssignmentRequest.newBuilder().setInitial(initialRequest).build(),
+            this);
+    addServices(this.connection);
+  }
+
+  @Override
+  protected void start() {}
+
+  @Override
+  protected void stop() {}
+
+  @Override
+  protected void handlePermanentError(StatusException error) {}
+
+  @Override
+  public void triggerReinitialize() {
+    try (CloseableMonitor.Hold h = monitor.enter()) {
+      connection.reinitialize();
+    }
+  }
+
+  @Override
+  public Status onClientResponse(PartitionAssignment value) {
+    try (CloseableMonitor.Hold h = monitor.enter()) {
+      receiver.DeliverAssignment(value);
+      connection.modifyConnection(connectionOr -> connectionOr.ifPresent(ConnectedAssigner::ack));
+    } catch (StatusException e) {
+      return e.getStatus();
+    }
+    return Status.OK;
+  }
+}

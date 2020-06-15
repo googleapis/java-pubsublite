@@ -76,7 +76,7 @@ public abstract class AssignerBuilder {
         } catch (IOException e) {
           throw Status.INTERNAL
               .withCause(e)
-              .withDescription("Creating cursor stub failed.")
+              .withDescription("Creating assigner stub failed.")
               .asException();
         }
       }

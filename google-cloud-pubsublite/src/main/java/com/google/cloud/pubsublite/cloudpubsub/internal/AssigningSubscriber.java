@@ -107,7 +107,9 @@ public class AssigningSubscriber extends ProxyService implements Subscriber {
 
           @Override
           public void terminated(State from) {
-            stoppingSubscribers.remove(subscriber);
+            try (CloseableMonitor.Hold h = monitor.enter()) {
+              stoppingSubscribers.remove(subscriber);
+            }
           }
         },
         MoreExecutors.directExecutor());

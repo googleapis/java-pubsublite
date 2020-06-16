@@ -19,9 +19,9 @@ package com.google.cloud.pubsublite.internal.wire;
 import static org.mockito.AdditionalAnswers.delegatesTo;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.argThat;
-import static org.mockito.Mockito.clearInvocations;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 
@@ -180,8 +180,8 @@ public class ConnectedAssignerImplTest {
         .onNext(initialRequest());
     assigner = FACTORY.New(stub::assignPartitions, mockOutputStream, initialRequest());
     verify(mockRequestStream).onNext(initialRequest());
-    clearInvocations(mockRequestStream);
-    clearInvocations(mockOutputStream);
+    reset(mockRequestStream);
+    reset(mockOutputStream);
   }
 
   @Test

@@ -17,6 +17,7 @@
 package com.google.cloud.pubsublite.internal.wire;
 
 import static com.google.common.truth.Truth.assertThat;
+import static com.google.common.truth.Truth8.assertThat;
 
 import com.google.cloud.pubsublite.Message;
 import com.google.cloud.pubsublite.Offset;
@@ -41,7 +42,7 @@ public class FlowControlBatcherTest {
     batcher.onClientFlowRequest(clientFlowRequest);
 
     assertThat(batcher.releasePendingRequest().get()).isEqualTo(clientFlowRequest);
-    assertThat(batcher.releasePendingRequest().isPresent()).isFalse();
+    assertThat(batcher.releasePendingRequest()).isEmpty();
     assertThat(batcher.requestForRestart().get()).isEqualTo(clientFlowRequest);
     assertThat(batcher.requestForRestart().get()).isEqualTo(clientFlowRequest);
   }
@@ -65,9 +66,10 @@ public class FlowControlBatcherTest {
 
   @Test
   public void shouldExpediteBatchRequestChecksByteRatio() throws StatusException {
-    batcher.onClientFlowRequest(
-        FlowControlRequest.newBuilder().setAllowedBytes(100).setAllowedMessages(100).build());
-    batcher.releasePendingRequest();
+    FlowControlRequest request =
+        FlowControlRequest.newBuilder().setAllowedBytes(100).setAllowedMessages(100).build();
+    batcher.onClientFlowRequest(request);
+    assertThat(batcher.releasePendingRequest()).hasValue(request);
 
     batcher.onClientFlowRequest(FlowControlRequest.newBuilder().setAllowedBytes(10).build());
     assertThat(batcher.shouldExpediteBatchRequest()).isFalse();
@@ -78,9 +80,10 @@ public class FlowControlBatcherTest {
 
   @Test
   public void shouldExpediteBatchRequestChecksMessageRatio() throws StatusException {
-    batcher.onClientFlowRequest(
-        FlowControlRequest.newBuilder().setAllowedBytes(100).setAllowedMessages(100).build());
-    batcher.releasePendingRequest();
+    FlowControlRequest request =
+        FlowControlRequest.newBuilder().setAllowedBytes(100).setAllowedMessages(100).build();
+    batcher.onClientFlowRequest(request);
+    assertThat(batcher.releasePendingRequest()).hasValue(request);
 
     batcher.onClientFlowRequest(FlowControlRequest.newBuilder().setAllowedMessages(80).build());
     assertThat(batcher.shouldExpediteBatchRequest()).isFalse();

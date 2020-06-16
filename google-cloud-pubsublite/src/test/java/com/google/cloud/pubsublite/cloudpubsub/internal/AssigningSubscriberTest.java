@@ -18,7 +18,7 @@ package com.google.cloud.pubsublite.cloudpubsub.internal;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.clearInvocations;
+import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
@@ -84,7 +84,7 @@ public class AssigningSubscriberTest {
     leakedReceiver.handleAssignment(ImmutableSet.of(Partition.of(1)));
     verify(subscriberFactory).New(Partition.of(1));
     verify(sub1).startAsync();
-    clearInvocations(sub1);
+    reset(sub1);
 
     Subscriber sub2 = spy(FakeSubscriber.class);
     when(subscriberFactory.New(Partition.of(2))).thenReturn(sub2);
@@ -101,7 +101,7 @@ public class AssigningSubscriberTest {
     leakedReceiver.handleAssignment(ImmutableSet.of(Partition.of(1)));
     verify(subscriberFactory).New(Partition.of(1));
     verify(sub1).startAsync();
-    clearInvocations(sub1);
+    reset(sub1);
 
     Subscriber sub2 = spy(FakeSubscriber.class);
     when(subscriberFactory.New(Partition.of(2))).thenReturn(sub2);
@@ -117,7 +117,7 @@ public class AssigningSubscriberTest {
     leakedReceiver.handleAssignment(ImmutableSet.of(Partition.of(1)));
     verify(subscriberFactory).New(Partition.of(1));
     verify(sub1).startAsync();
-    clearInvocations(sub1);
+    reset(sub1);
     return sub1;
   }
 

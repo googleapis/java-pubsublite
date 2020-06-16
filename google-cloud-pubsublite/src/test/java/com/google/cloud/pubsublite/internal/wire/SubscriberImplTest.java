@@ -18,6 +18,7 @@ package com.google.cloud.pubsublite.internal.wire;
 
 import static com.google.cloud.pubsublite.internal.StatusExceptionMatcher.assertFutureThrowsCode;
 import static com.google.common.truth.Truth.assertThat;
+import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static org.junit.Assert.assertThrows;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
@@ -60,7 +61,6 @@ import io.grpc.inprocess.InProcessChannelBuilder;
 import io.grpc.stub.StreamObserver;
 import io.grpc.testing.GrpcCleanupRule;
 import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 import org.junit.Before;
 import org.junit.Rule;
@@ -182,7 +182,7 @@ public class SubscriberImplTest {
     subscriber.allowFlow(deltaFlowRequest);
     verifyZeroInteractions(mockConnectedSubscriber);
 
-    allowFlowLatch.await(SubscriberImpl.FLOW_REQUESTS_FLUSH_INTERVAL_MS * 4, TimeUnit.MILLISECONDS);
+    allowFlowLatch.await(SubscriberImpl.FLOW_REQUESTS_FLUSH_INTERVAL_MS * 4, MILLISECONDS);
     FlowControlRequest expectedBatchFlowRequest =
         FlowControlRequest.newBuilder().setAllowedBytes(200).setAllowedMessages(20).build();
     verify(mockConnectedSubscriber).allowFlow(expectedBatchFlowRequest);

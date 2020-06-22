@@ -41,65 +41,62 @@ public class SubscriberExample {
 
   public static void main(String... args) throws Exception {
     // TODO(developer): Replace these variables before running the sample.
-    String CLOUD_REGION = "Your Cloud Region";
-    char ZONE_ID = 'b';
-    String SUBSCRIPTION_NAME = "Your Subscription Name";
-    long PROJECT_NUMBER = Long.parseLong("123456789");
+    String cloudRegion = "your-cloud-region";
+    char zoneId = 'b';
+    // Choose an existing subscription for the subscribe example to work.
+    String subscriptionId = "your-subscription-id";
+    long projectNumber = Long.parseLong("123456789");
     // List of partitions to subscribe to. It can be all the partitions in a topic or
     // a subset of them. A topic of N partitions has partition numbers [0~N-1].
-    List<Integer> PARTITION_NOS = ImmutableList.of(0);
+    List<Integer> partitionNumbers = ImmutableList.of(0);
 
-    subscriberExample(CLOUD_REGION, ZONE_ID, PROJECT_NUMBER, SUBSCRIPTION_NAME, PARTITION_NOS);
+    subscriberExample(cloudRegion, zoneId, projectNumber, subscriptionId, partitionNumbers);
   }
 
   public static void subscriberExample(
-      String CLOUD_REGION,
-      char ZONE_ID,
-      long PROJECT_NUMBER,
-      String SUBSCRIPTION_NAME,
-      List<Integer> PARTITION_NOS)
+      String cloudRegion,
+      char zoneId,
+      long projectNumber,
+      String subscriptionId,
+      List<Integer> partitionNumbers)
       throws Exception {
-
-    CloudRegion cloudRegion = CloudRegion.of(CLOUD_REGION);
-    CloudZone zone = CloudZone.of(cloudRegion, ZONE_ID);
-    ProjectNumber projectNum = ProjectNumber.of(PROJECT_NUMBER);
-    SubscriptionName subscriptionName = SubscriptionName.of(SUBSCRIPTION_NAME);
 
     SubscriptionPath subscriptionPath =
         SubscriptionPaths.newBuilder()
-            .setZone(zone)
-            .setProjectNumber(projectNum)
-            .setSubscriptionName(subscriptionName)
+            .setZone(CloudZone.of(CloudRegion.of(cloudRegion), zoneId))
+            .setProjectNumber(ProjectNumber.of(projectNumber))
+            .setSubscriptionName(SubscriptionName.of(subscriptionId))
             .build();
 
     FlowControlSettings flowControlSettings =
         FlowControlSettings.builder()
-            // Set outstanding bytes to 10 MiB per partition.
+            // 10 MiB. Must be >0. It controls the maximum size of messages the subscriber
+            // receives before pausing the message stream.
             .setBytesOutstanding(10 * 1024 * 1024L)
-            .setMessagesOutstanding(Long.MAX_VALUE)
+            // 1,000 outstanding messages. Must be >0. It controls the maximum number of messages
+            // the subscriber receives before pausing the message stream.
+            .setMessagesOutstanding(1000L)
             .build();
 
     List<Partition> partitions = new ArrayList<>();
-    for (Integer num : PARTITION_NOS) {
+    for (Integer num : partitionNumbers) {
       partitions.add(Partition.of(num));
     }
 
     MessageReceiver receiver =
-        new MessageReceiver() {
-          @Override
-          public void receiveMessage(PubsubMessage message, AckReplyConsumer consumer) {
-            System.out.println("Id : " + message.getMessageId());
-            System.out.println("Data : " + message.getData().toStringUtf8());
-            consumer.ack();
-          }
+        (PubsubMessage message, AckReplyConsumer consumer) -> {
+          System.out.println("Id : " + message.getMessageId());
+          System.out.println("Data : " + message.getData().toStringUtf8());
+          consumer.ack();
         };
 
     SubscriberSettings subscriberSettings =
         SubscriberSettings.newBuilder()
             .setSubscriptionPath(subscriptionPath)
-            .setPerPartitionFlowControlSettings(flowControlSettings)
             .setPartitions(partitions)
             .setReceiver(receiver)
+            // Flow control settings are set at the partition level.
+            .setPerPartitionFlowControlSettings(flowControlSettings)
             .build();
 
     Subscriber subscriber = Subscriber.create(subscriberSettings);
@@ -110,16 +107,14 @@ public class SubscriberExample {
     System.out.println("Listening to messages on " + subscriptionPath.value() + " ...");
 
     try {
-      System.out.println(subscriber.state());
       // Wait 30 seconds for the subscriber to reach TERMINATED state. If it encounters
-      // unrecoverable errors before then, its state will change to FAILED and
-      // an IllegalStateException will be thrown.
+      // unrecoverable errors before then, its state will change to FAILED and an
+      // IllegalStateException will be thrown.
       subscriber.awaitTerminated(30, TimeUnit.SECONDS);
     } catch (TimeoutException t) {
-      // Shut down the subscriber. This will change the state of the
-      // subscriber to TERMINATED.
+      // Shut down the subscriber. This will change the state of the subscriber to TERMINATED.
       subscriber.stopAsync();
-      System.out.println(subscriber.state());
+      System.out.println("Subscriber is shut down: " + subscriber.state());
     }
   }
 }

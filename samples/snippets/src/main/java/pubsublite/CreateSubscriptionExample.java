@@ -17,7 +17,6 @@
 package pubsublite;
 
 // [START pubsublite_create_subscription]
-
 import com.google.cloud.pubsublite.AdminClient;
 import com.google.cloud.pubsublite.AdminClientSettings;
 import com.google.cloud.pubsublite.CloudRegion;
@@ -32,79 +31,58 @@ import com.google.cloud.pubsublite.TopicPaths;
 import com.google.cloud.pubsublite.proto.Subscription;
 import com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig;
 import com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig.DeliveryRequirement;
-import io.grpc.StatusException;
 
 public class CreateSubscriptionExample {
 
   public static void main(String... args) throws Exception {
     // TODO(developer): Replace these variables before running the sample.
-    String CLOUD_REGION = "Your Cloud Region";
-    char ZONE_ID = 'b';
-    long PROJECT_NUMBER = Long.parseLong("123456789");
-    String TOPIC_NAME = "Your Topic Name";
-    String SUBSCRIPTION_NAME = "Your Subscription Name";
+    String cloudRegion = "your-cloud-region";
+    char zoneId = 'b';
+    String topicId = "your-topic-id";
+    String subscriptionId = "your-subscription-id";
+    long projectNumber = Long.parseLong("123456789");
 
-    createSubscriptionExample(CLOUD_REGION, ZONE_ID, PROJECT_NUMBER, TOPIC_NAME, SUBSCRIPTION_NAME);
+    createSubscriptionExample(cloudRegion, zoneId, projectNumber, topicId, subscriptionId);
   }
 
   public static void createSubscriptionExample(
-      String CLOUD_REGION,
-      char ZONE_ID,
-      long PROJECT_NUMBER,
-      String TOPIC_NAME,
-      String SUBSCRIPTION_NAME)
+      String cloudRegion, char zoneId, long projectNumber, String topicId, String subscriptionId)
       throws Exception {
 
-    try {
-      CloudRegion cloudRegion = CloudRegion.of(CLOUD_REGION);
-      CloudZone zone = CloudZone.of(cloudRegion, ZONE_ID);
-      ProjectNumber projectNum = ProjectNumber.of(PROJECT_NUMBER);
-      TopicName topicName = TopicName.of(TOPIC_NAME);
-      SubscriptionName subscriptionName = SubscriptionName.of(SUBSCRIPTION_NAME);
+    TopicPath topicPath =
+        TopicPaths.newBuilder()
+            .setProjectNumber(ProjectNumber.of(projectNumber))
+            .setZone(CloudZone.of(CloudRegion.of(cloudRegion), zoneId))
+            .setTopicName(TopicName.of(topicId))
+            .build();
 
-      TopicPath topicPath =
-          TopicPaths.newBuilder()
-              .setZone(zone)
-              .setProjectNumber(projectNum)
-              .setTopicName(topicName)
-              .build();
+    SubscriptionPath subscriptionPath =
+        SubscriptionPaths.newBuilder()
+            .setZone(CloudZone.of(CloudRegion.of(cloudRegion), zoneId))
+            .setProjectNumber(ProjectNumber.of(projectNumber))
+            .setSubscriptionName(SubscriptionName.of(subscriptionId))
+            .build();
 
-      SubscriptionPath subscriptionPath =
-          SubscriptionPaths.newBuilder()
-              .setZone(zone)
-              .setProjectNumber(projectNum)
-              .setSubscriptionName(subscriptionName)
-              .build();
+    Subscription subscription =
+        Subscription.newBuilder()
+            .setDeliveryConfig(
+                // The server does not wait for a published message to be successfully
+                // written to storage before delivering it to subscribers. As such, a
+                // subscriber may receive a message for which the write to storage failed.
+                // If the subscriber re-reads the offset of that message later on, there
+                // may be a gap at that offset.
+                DeliveryConfig.newBuilder()
+                    .setDeliveryRequirement(DeliveryRequirement.DELIVER_IMMEDIATELY))
+            .setName(subscriptionPath.value())
+            .setTopic(topicPath.value())
+            .build();
 
-      Subscription subscription =
-          Subscription.newBuilder()
-              .setDeliveryConfig(
-                  // The server does not wait for a published message to be successfully
-                  // written to storage before delivering it to subscribers. As such, a
-                  // subscriber may receive a message for which the write to storage failed.
-                  // If the subscriber re-reads the offset of that message later on, there
-                  // may be a gap at that offset.
-                  DeliveryConfig.newBuilder()
-                      .setDeliveryRequirement(DeliveryRequirement.DELIVER_IMMEDIATELY))
-              .setName(subscriptionPath.value())
-              .setTopic(topicPath.value())
-              .build();
+    AdminClientSettings adminClientSettings =
+        AdminClientSettings.newBuilder().setRegion(CloudRegion.of(cloudRegion)).build();
 
-      AdminClientSettings adminClientSettings =
-          AdminClientSettings.newBuilder().setRegion(cloudRegion).build();
-
-      try (AdminClient adminClient = AdminClient.create(adminClientSettings)) {
-
-        Subscription response = adminClient.createSubscription(subscription).get();
-
-        System.out.println(response.getAllFields() + "created successfully.");
-      }
-
-    } catch (StatusException statusException) {
-      System.out.println("Failed to create a subscription: " + statusException);
-      System.out.println(statusException.getStatus().getCode());
-      System.out.println(statusException.getStatus());
-      throw statusException;
+    try (AdminClient adminClient = AdminClient.create(adminClientSettings)) {
+      Subscription response = adminClient.createSubscription(subscription).get();
+      System.out.println(response.getAllFields() + "created successfully.");
     }
   }
 }

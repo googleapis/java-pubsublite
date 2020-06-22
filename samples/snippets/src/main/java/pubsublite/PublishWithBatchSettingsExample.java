@@ -17,7 +17,6 @@
 package pubsublite;
 
 // [START pubsublite_publish_batch]
-
 import com.google.api.core.ApiFuture;
 import com.google.api.core.ApiFutures;
 import com.google.api.gax.batching.BatchingSettings;
@@ -94,10 +93,7 @@ public class PublishWithBatchSettingsExample {
 
         // Convert the message to a byte string.
         ByteString data = ByteString.copyFromUtf8(message);
-        PubsubMessage pubsubMessage =
-            PubsubMessage.newBuilder()
-                .setData(data)
-                .build();
+        PubsubMessage pubsubMessage = PubsubMessage.newBuilder().setData(data).build();
 
         // Schedule a message to be published.
         ApiFuture<String> future = publisher.publish(pubsubMessage);
@@ -106,7 +102,7 @@ public class PublishWithBatchSettingsExample {
     } finally {
       ArrayList<PublishMetadata> metadata = new ArrayList<>();
       List<String> ackIds = ApiFutures.allAsList(futures).get();
-      System.out.println("Published " + ackIds.size() + "  messages with batch settings.");
+      System.out.println("Published " + ackIds.size() + " messages with batch settings.");
 
       if (publisher != null) {
         // Shut down the publisher.

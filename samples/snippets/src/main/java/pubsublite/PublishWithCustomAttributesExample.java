@@ -17,7 +17,6 @@
 package pubsublite;
 
 // [START pubsublite_publish_custom_attributes]
-
 import com.google.api.core.ApiFuture;
 import com.google.cloud.pubsublite.CloudRegion;
 import com.google.cloud.pubsublite.CloudZone;
@@ -83,7 +82,6 @@ public class PublishWithCustomAttributesExample {
     String ackId = future.get();
     PublishMetadata metadata = PublishMetadata.decode(ackId);
     System.out.println("Published a message with custom attributes:\n" + metadata);
- }
+  }
 }
 // [END pubsublite_publish_custom_attributes]
-

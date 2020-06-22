@@ -17,7 +17,6 @@
 package pubsublite;
 
 // [START pubsublite_publish_ordering_key]
-
 import com.google.api.core.ApiFuture;
 import com.google.cloud.pubsublite.CloudRegion;
 import com.google.cloud.pubsublite.CloudZone;

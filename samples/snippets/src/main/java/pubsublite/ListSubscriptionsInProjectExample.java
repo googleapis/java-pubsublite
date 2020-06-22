@@ -17,7 +17,6 @@
 package pubsublite;
 
 // [START pubsublite_list_subscriptions_in_project]
-
 import com.google.cloud.pubsublite.AdminClient;
 import com.google.cloud.pubsublite.AdminClientSettings;
 import com.google.cloud.pubsublite.CloudRegion;
@@ -26,48 +25,37 @@ import com.google.cloud.pubsublite.LocationPath;
 import com.google.cloud.pubsublite.LocationPaths;
 import com.google.cloud.pubsublite.ProjectNumber;
 import com.google.cloud.pubsublite.proto.Subscription;
-import io.grpc.StatusException;
 import java.util.List;
 
 public class ListSubscriptionsInProjectExample {
 
   public static void main(String... args) throws Exception {
     // TODO(developer): Replace these variables before running the sample.
-    String CLOUD_REGION = "Your Cloud Region";
-    char ZONE_ID = 'b';
-    long PROJECT_NUMBER = Long.parseLong("123456789");
+    String cloudRegion = "your-cloud-region";
+    char zoneId = 'b';
+    long projectNumber = Long.parseLong("123456789");
 
-    ListSubscriptionsInProjectExample.listSubscriptionsInProjectExample(
-        CLOUD_REGION, ZONE_ID, PROJECT_NUMBER);
+    listSubscriptionsInProjectExample(cloudRegion, zoneId, projectNumber);
   }
 
   public static void listSubscriptionsInProjectExample(
-      String CLOUD_REGION, char ZONE_ID, long PROJECT_NUMBER) throws Exception {
+      String cloudRegion, char zoneId, long projectNumber) throws Exception {
 
-    try {
-      CloudRegion cloudRegion = CloudRegion.of(CLOUD_REGION);
-      CloudZone zone = CloudZone.of(cloudRegion, ZONE_ID);
-      ProjectNumber projectNum = ProjectNumber.of(PROJECT_NUMBER);
+    AdminClientSettings adminClientSettings =
+        AdminClientSettings.newBuilder().setRegion(CloudRegion.of(cloudRegion)).build();
 
-      LocationPath locationPath =
-          LocationPaths.newBuilder().setProjectNumber(projectNum).setZone(zone).build();
+    LocationPath locationPath =
+        LocationPaths.newBuilder()
+            .setProjectNumber(ProjectNumber.of(projectNumber))
+            .setZone(CloudZone.of(CloudRegion.of(cloudRegion), zoneId))
+            .build();
 
-      AdminClientSettings adminClientSettings =
-          AdminClientSettings.newBuilder().setRegion(cloudRegion).build();
-
-      try (AdminClient adminClient = AdminClient.create(adminClientSettings)) {
-        List<Subscription> subscriptions = adminClient.listSubscriptions(locationPath).get();
-        for (Subscription subscription : subscriptions) {
-          System.out.println(subscription.getAllFields());
-        }
-        System.out.println(subscriptions.size() + " subscription(s) listed.");
+    try (AdminClient adminClient = AdminClient.create(adminClientSettings)) {
+      List<Subscription> subscriptions = adminClient.listSubscriptions(locationPath).get();
+      for (Subscription subscription : subscriptions) {
+        System.out.println(subscription.getAllFields());
       }
-
-    } catch (StatusException statusException) {
-      System.out.println("Failed to list subscriptions in the project: " + statusException);
-      System.out.println(statusException.getStatus().getCode());
-      System.out.println(statusException.getStatus());
-      throw statusException;
+      System.out.println(subscriptions.size() + " subscription(s) listed.");
     }
   }
 }

@@ -17,7 +17,6 @@
 package pubsublite;
 
 // [START pubsublite_quickstart_publisher]
-
 import com.google.api.core.ApiFuture;
 import com.google.api.core.ApiFutures;
 import com.google.cloud.pubsublite.CloudRegion;
@@ -45,13 +44,13 @@ public class PublisherExample {
     long projectNumber = Long.parseLong("123456789");
     int messageCount = 100;
 
-    PublisherExample.publisherExample(
-        cloudRegion, zoneId, projectNumber, topicId, messageCount);
+    publisherExample(cloudRegion, zoneId, projectNumber, topicId, messageCount);
   }
 
   // Publish messages to a topic.
   public static void publisherExample(
-      String cloudRegion, char zoneId, long projectNumber, String topicId, int messageCount) throws Exception {
+      String cloudRegion, char zoneId, long projectNumber, String topicId, int messageCount)
+      throws Exception {
 
     TopicPath topicPath =
         TopicPaths.newBuilder()
@@ -76,10 +75,7 @@ public class PublisherExample {
 
         // Convert the message to a byte string.
         ByteString data = ByteString.copyFromUtf8(message);
-        PubsubMessage pubsubMessage =
-            PubsubMessage.newBuilder()
-                .setData(data)
-                .build();
+        PubsubMessage pubsubMessage = PubsubMessage.newBuilder().setData(data).build();
 
         // Schedule a message to be published. Messages are automatically batched.
         ApiFuture<String> future = publisher.publish(pubsubMessage);
@@ -92,7 +88,7 @@ public class PublisherExample {
         // Decoded metadata contains partition and offset.
         metadata.add(PublishMetadata.decode(id));
       }
-      System.out.println(metadata + "\nPublished " + ackIds.size() + "  messages.");
+      System.out.println(metadata + "\nPublished " + ackIds.size() + " messages.");
 
       if (publisher != null) {
         // Shut down the publisher.

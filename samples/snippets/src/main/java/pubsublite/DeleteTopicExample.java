@@ -17,7 +17,6 @@
 package pubsublite;
 
 // [START pubsublite_delete_topic]
-
 import com.google.cloud.pubsublite.AdminClient;
 import com.google.cloud.pubsublite.AdminClientSettings;
 import com.google.cloud.pubsublite.CloudRegion;
@@ -26,50 +25,35 @@ import com.google.cloud.pubsublite.ProjectNumber;
 import com.google.cloud.pubsublite.TopicName;
 import com.google.cloud.pubsublite.TopicPath;
 import com.google.cloud.pubsublite.TopicPaths;
-import io.grpc.StatusException;
 
 public class DeleteTopicExample {
 
   public static void main(String... args) throws Exception {
     // TODO(developer): Replace these variables before running the sample.
-    String CLOUD_REGION = "Your Cloud Region";
-    char ZONE_ID = 'b';
-    String TOPIC_NAME = "Your Topic Name";
-    long PROJECT_NUMBER = Long.parseLong("123456789");
+    String cloudRegion = "your-cloud-region";
+    char zoneId = 'b';
+    // Choose an existing topic.
+    String topicId = "your-topic-id";
+    long projectNumber = Long.parseLong("123456789");
 
-    DeleteTopicExample.deleteTopicExample(CLOUD_REGION, ZONE_ID, PROJECT_NUMBER, TOPIC_NAME);
+    deleteTopicExample(cloudRegion, zoneId, projectNumber, topicId);
   }
 
   public static void deleteTopicExample(
-      String CLOUD_REGION, char ZONE_ID, long PROJECT_NUMBER, String TOPIC_NAME) throws Exception {
+      String cloudRegion, char zoneId, long projectNumber, String topicId) throws Exception {
+    TopicPath topicPath =
+        TopicPaths.newBuilder()
+            .setProjectNumber(ProjectNumber.of(projectNumber))
+            .setZone(CloudZone.of(CloudRegion.of(cloudRegion), zoneId))
+            .setTopicName(TopicName.of(topicId))
+            .build();
 
-    try {
-      CloudRegion cloudRegion = CloudRegion.of(CLOUD_REGION);
-      CloudZone zone = CloudZone.of(cloudRegion, ZONE_ID);
-      ProjectNumber projectNum = ProjectNumber.of(PROJECT_NUMBER);
-      TopicName topicName = TopicName.of(TOPIC_NAME);
+    AdminClientSettings adminClientSettings =
+        AdminClientSettings.newBuilder().setRegion(CloudRegion.of(cloudRegion)).build();
 
-      TopicPath topicPath =
-          TopicPaths.newBuilder()
-              .setZone(zone)
-              .setProjectNumber(projectNum)
-              .setTopicName(topicName)
-              .build();
-
-      AdminClientSettings adminClientSettings =
-          AdminClientSettings.newBuilder().setRegion(cloudRegion).build();
-
-      try (AdminClient adminClient = AdminClient.create(adminClientSettings)) {
-        adminClient.deleteTopic(topicPath).get();
-
-        System.out.println(topicPath.value() + " deleted successfully.");
-      }
-
-    } catch (StatusException statusException) {
-      System.out.println("Failed to delete the topic: " + statusException);
-      System.out.println(statusException.getStatus().getCode());
-      System.out.println(statusException.getStatus());
-      throw statusException;
+    try (AdminClient adminClient = AdminClient.create(adminClientSettings)) {
+      adminClient.deleteTopic(topicPath).get();
+      System.out.println(topicPath.value() + " deleted successfully.");
     }
   }
 } // [END pubsublite_delete_topic]

@@ -17,7 +17,6 @@
 package pubsublite;
 
 // [START pubsublite_quickstart_subscriber]
-
 import com.google.cloud.pubsub.v1.AckReplyConsumer;
 import com.google.cloud.pubsub.v1.MessageReceiver;
 import com.google.cloud.pubsublite.CloudRegion;

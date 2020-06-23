@@ -67,13 +67,13 @@ public class SubscriberExample {
             .setSubscriptionName(SubscriptionName.of(subscriptionId))
             .build();
 
+    // The message stream is paused based on the maximum size or number of messages that the
+    // subscriber has already received, whichever condition is met first.
     FlowControlSettings flowControlSettings =
         FlowControlSettings.builder()
-            // 10 MiB. Must be >0. It controls the maximum size of messages the subscriber
-            // receives before pausing the message stream.
+            // 10 MiB. Must be greater than the size of the largest message.
             .setBytesOutstanding(10 * 1024 * 1024L)
-            // 1,000 outstanding messages. Must be >0. It controls the maximum number of messages
-            // the subscriber receives before pausing the message stream.
+            // 1,000 outstanding messages. Must be >0.
             .setMessagesOutstanding(1000L)
             .build();
 

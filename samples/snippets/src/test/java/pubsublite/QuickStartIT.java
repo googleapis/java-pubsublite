@@ -133,7 +133,26 @@ public class QuickStartIT {
     // Publish.
     PublisherExample.publisherExample(
         CLOUD_REGION, ZONE_ID, PROJECT_NUMBER, TOPIC_NAME, MESSAGE_COUNT);
-    assertThat(bout.toString()).contains("Published " + MESSAGE_COUNT);
+    assertThat(bout.toString()).contains("Published " + MESSAGE_COUNT + " messages.");
+
+    bout.reset();
+    // Publish with ordering key.
+    PublishWithOrderingKeyExample.publishWithOrderingKeyExample(
+        CLOUD_REGION, ZONE_ID, PROJECT_NUMBER, TOPIC_NAME);
+    assertThat(bout.toString()).contains("Published a message with ordering key:");
+
+    bout.reset();
+    // Publish messages with custom attributes.
+    PublishWithCustomAttributesExample.publishWithCustomAttributesExample(
+        CLOUD_REGION, ZONE_ID, PROJECT_NUMBER, TOPIC_NAME);
+    assertThat(bout.toString()).contains("Published a message with custom attributes:");
+
+    bout.reset();
+    // Publish with batch settings.
+    PublishWithBatchSettingsExample.publishWithBatchSettingsExample(
+        CLOUD_REGION, ZONE_ID, PROJECT_NUMBER, TOPIC_NAME, MESSAGE_COUNT);
+    assertThat(bout.toString())
+        .contains("Published " + MESSAGE_COUNT + " messages with batch settings.");
 
     bout.reset();
     // Subscribe.
@@ -141,6 +160,7 @@ public class QuickStartIT {
         CLOUD_REGION, ZONE_ID, PROJECT_NUMBER, SUBSCRIPTION_NAME, PARTITION_NOS);
     assertThat(bout.toString()).contains("Listening");
     assertThat(bout.toString()).contains("Data : message-0");
+    assertThat(bout.toString()).contains("Subscriber is shut down: TERMINATED");
 
     bout.reset();
     // Delete a subscription.

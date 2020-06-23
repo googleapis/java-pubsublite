@@ -17,7 +17,6 @@
 package pubsublite;
 
 // [START pubsublite_get_subscription]
-
 import com.google.cloud.pubsublite.AdminClient;
 import com.google.cloud.pubsublite.AdminClientSettings;
 import com.google.cloud.pubsublite.CloudRegion;
@@ -27,53 +26,36 @@ import com.google.cloud.pubsublite.SubscriptionName;
 import com.google.cloud.pubsublite.SubscriptionPath;
 import com.google.cloud.pubsublite.SubscriptionPaths;
 import com.google.cloud.pubsublite.proto.Subscription;
-import io.grpc.StatusException;
 
 public class GetSubscriptionExample {
 
   public static void main(String... args) throws Exception {
     // TODO(developer): Replace these variables before running the sample.
-    String CLOUD_REGION = "Your Cloud Region";
-    char ZONE_ID = 'b';
-    long PROJECT_NUMBER = Long.parseLong("123456789");
-    String SUBSCRIPTION_NAME = "Your Lite Subscription Name";
+    String cloudRegion = "your-cloud-region";
+    char zoneId = 'b';
+    // Choose an existing subscription.
+    String subscriptionId = "your-subscription-id";
+    long projectNumber = Long.parseLong("123456789");
 
-    GetSubscriptionExample.getSubscriptionExample(
-        CLOUD_REGION, ZONE_ID, PROJECT_NUMBER, SUBSCRIPTION_NAME);
+    getSubscriptionExample(cloudRegion, zoneId, projectNumber, subscriptionId);
   }
 
   public static void getSubscriptionExample(
-      String CLOUD_REGION, char ZONE_ID, long PROJECT_NUMBER, String SUBSCRIPTION_NAME)
-      throws Exception {
+      String cloudRegion, char zoneId, long projectNumber, String subscriptionId) throws Exception {
 
-    try {
-      CloudRegion cloudRegion = CloudRegion.of(CLOUD_REGION);
-      CloudZone zone = CloudZone.of(cloudRegion, ZONE_ID);
-      ProjectNumber projectNum = ProjectNumber.of(PROJECT_NUMBER);
-      SubscriptionName subscriptionName = SubscriptionName.of(SUBSCRIPTION_NAME);
+    SubscriptionPath subscriptionPath =
+        SubscriptionPaths.newBuilder()
+            .setZone(CloudZone.of(CloudRegion.of(cloudRegion), zoneId))
+            .setProjectNumber(ProjectNumber.of(projectNumber))
+            .setSubscriptionName(SubscriptionName.of(subscriptionId))
+            .build();
 
-      SubscriptionPath subscriptionPath =
-          SubscriptionPaths.newBuilder()
-              .setZone(zone)
-              .setProjectNumber(projectNum)
-              .setSubscriptionName(subscriptionName)
-              .build();
+    AdminClientSettings adminClientSettings =
+        AdminClientSettings.newBuilder().setRegion(CloudRegion.of(cloudRegion)).build();
 
-      AdminClientSettings adminClientSettings =
-          AdminClientSettings.newBuilder().setRegion(cloudRegion).build();
-
-      try (AdminClient adminClient = AdminClient.create(adminClientSettings)) {
-
-        Subscription subscription = adminClient.getSubscription(subscriptionPath).get();
-
-        System.out.println("Subscription: " + subscription.getAllFields());
-      }
-
-    } catch (StatusException statusException) {
-      System.out.println("Failed to get the subscription: " + statusException);
-      System.out.println(statusException.getStatus().getCode());
-      System.out.println(statusException.getStatus());
-      throw statusException;
+    try (AdminClient adminClient = AdminClient.create(adminClientSettings)) {
+      Subscription subscription = adminClient.getSubscription(subscriptionPath).get();
+      System.out.println("Subscription: " + subscription.getAllFields());
     }
   }
 }

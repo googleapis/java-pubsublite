@@ -17,7 +17,6 @@
 package pubsublite;
 
 // [START pubsublite_update_subscription]
-
 import com.google.cloud.pubsublite.AdminClient;
 import com.google.cloud.pubsublite.AdminClientSettings;
 import com.google.cloud.pubsublite.CloudRegion;
@@ -30,70 +29,52 @@ import com.google.cloud.pubsublite.proto.Subscription;
 import com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig;
 import com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig.DeliveryRequirement;
 import com.google.protobuf.FieldMask;
-import io.grpc.StatusException;
 
 public class UpdateSubscriptionExample {
 
   public static void main(String... args) throws Exception {
     // TODO(developer): Replace these variables before running the sample.
-    String CLOUD_REGION = "Your Cloud Region";
-    char ZONE_ID = 'b';
-    String SUBSCRIPTION_NAME = "Your Subscription Name"; // Please use an existing subscription
-    long PROJECT_NUMBER = Long.parseLong("123456789");
+    String cloudRegion = "your-cloud-region";
+    char zoneId = 'b';
+    // Choose an existing subscription for the sample to work.
+    String subscriptionId = "your-subscription-id";
+    long projectNumber = Long.parseLong("123456789");
 
-    UpdateSubscriptionExample.updateSubscriptionExample(
-        CLOUD_REGION, ZONE_ID, PROJECT_NUMBER, SUBSCRIPTION_NAME);
+    updateSubscriptionExample(cloudRegion, zoneId, projectNumber, subscriptionId);
   }
 
   public static void updateSubscriptionExample(
-      String CLOUD_REGION, char ZONE_ID, long PROJECT_NUMBER, String SUBSCRIPTION_NAME)
-      throws Exception {
+      String cloudRegion, char zoneId, long projectNumber, String subscriptionId) throws Exception {
+    SubscriptionPath subscriptionPath =
+        SubscriptionPaths.newBuilder()
+            .setZone(CloudZone.of(CloudRegion.of(cloudRegion), zoneId))
+            .setProjectNumber(ProjectNumber.of(projectNumber))
+            .setSubscriptionName(SubscriptionName.of(subscriptionId))
+            .build();
 
-    try {
-      CloudRegion cloudRegion = CloudRegion.of(CLOUD_REGION);
-      CloudZone zone = CloudZone.of(cloudRegion, ZONE_ID);
-      ProjectNumber projectNum = ProjectNumber.of(PROJECT_NUMBER);
-      SubscriptionName subscriptionName = SubscriptionName.of(SUBSCRIPTION_NAME);
+    FieldMask MASK =
+        FieldMask.newBuilder().addPaths("delivery_config.delivery_requirement").build();
 
-      // TODO: add a link to documentation.
-      FieldMask MASK =
-          FieldMask.newBuilder().addPaths("delivery_config.delivery_requirement").build();
+    Subscription subscription =
+        Subscription.newBuilder()
+            .setDeliveryConfig(
+                // DELIVER_AFTER_STORED ensures that the server won't deliver a published message
+                // to subscribers until the message has been successfully written to storage.
+                DeliveryConfig.newBuilder()
+                    .setDeliveryRequirement(DeliveryRequirement.DELIVER_AFTER_STORED))
+            .setName(subscriptionPath.value())
+            .build();
 
-      SubscriptionPath subscriptionPath =
-          SubscriptionPaths.newBuilder()
-              .setZone(zone)
-              .setProjectNumber(projectNum)
-              .setSubscriptionName(subscriptionName)
-              .build();
+    AdminClientSettings adminClientSettings =
+        AdminClientSettings.newBuilder().setRegion(CloudRegion.of(cloudRegion)).build();
 
-      Subscription subscription =
-          Subscription.newBuilder()
-              .setDeliveryConfig(
-                  // DELIVER_AFTER_STORED ensures that the server won't deliver a published message
-                  // to subscribers until the message has been successfully written to storage.
-                  DeliveryConfig.newBuilder()
-                      .setDeliveryRequirement(DeliveryRequirement.DELIVER_AFTER_STORED))
-              .setName(subscriptionPath.value())
-              .build();
+    try (AdminClient adminClient = AdminClient.create(adminClientSettings)) {
+      Subscription subscriptionBeforeUpdate = adminClient.getSubscription(subscriptionPath).get();
+      System.out.println("Before update: " + subscriptionBeforeUpdate.getAllFields());
 
-      AdminClientSettings adminClientSettings =
-          AdminClientSettings.newBuilder().setRegion(cloudRegion).build();
-
-      try (AdminClient adminClient = AdminClient.create(adminClientSettings)) {
-
-        Subscription subscriptionBeforeUpdate = adminClient.getSubscription(subscriptionPath).get();
-        System.out.println("Before update: " + subscriptionBeforeUpdate.getAllFields());
-
-        Subscription subscriptionAfterUpdate =
-            adminClient.updateSubscription(subscription, MASK).get();
-        System.out.println("After update: " + subscriptionAfterUpdate.getAllFields());
-      }
-
-    } catch (StatusException statusException) {
-      System.out.println("Failed to update subscription: " + statusException);
-      System.out.println(statusException.getStatus().getCode());
-      System.out.println(statusException.getStatus());
-      throw statusException;
+      Subscription subscriptionAfterUpdate =
+          adminClient.updateSubscription(subscription, MASK).get();
+      System.out.println("After update: " + subscriptionAfterUpdate.getAllFields());
     }
   }
 }

@@ -16,9 +16,8 @@
 
 package pubsublite;
 
-// [START pubsublite_quickstart_publisher]
+// [START pubsublite_publish_ordering_key]
 import com.google.api.core.ApiFuture;
-import com.google.api.core.ApiFutures;
 import com.google.cloud.pubsublite.CloudRegion;
 import com.google.cloud.pubsublite.CloudZone;
 import com.google.cloud.pubsublite.ProjectNumber;
@@ -31,12 +30,9 @@ import com.google.cloud.pubsublite.cloudpubsub.PublisherSettings;
 import com.google.protobuf.ByteString;
 import com.google.pubsub.v1.PubsubMessage;
 import io.grpc.StatusException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.ExecutionException;
 
-public class PublisherExample {
-
+public class PublishWithOrderingKeyExample {
   public static void main(String... args) throws Exception {
     // TODO(developer): Replace these variables before running the sample.
     String cloudRegion = "your-cloud-region";
@@ -44,14 +40,13 @@ public class PublisherExample {
     // Choose an existing topic for the publish example to work.
     String topicId = "your-topic-id";
     long projectNumber = Long.parseLong("123456789");
-    int messageCount = 100;
 
-    publisherExample(cloudRegion, zoneId, projectNumber, topicId, messageCount);
+    publishWithOrderingKeyExample(cloudRegion, zoneId, projectNumber, topicId);
   }
 
-  // Publish messages to a topic.
-  public static void publisherExample(
-      String cloudRegion, char zoneId, long projectNumber, String topicId, int messageCount)
+  // Publish a message to a topic with an ordering key.
+  public static void publishWithOrderingKeyExample(
+      String cloudRegion, char zoneId, long projectNumber, String topicId)
       throws StatusException, ExecutionException, InterruptedException {
 
     TopicPath topicPath =
@@ -60,44 +55,37 @@ public class PublisherExample {
             .setZone(CloudZone.of(CloudRegion.of(cloudRegion), zoneId))
             .setTopicName(TopicName.of(topicId))
             .build();
-    Publisher publisher = null;
-    List<ApiFuture<String>> futures = new ArrayList<>();
 
-    try {
-      PublisherSettings publisherSettings =
-          PublisherSettings.newBuilder().setTopicPath(topicPath).build();
+    PublisherSettings publisherSettings =
+        PublisherSettings.newBuilder().setTopicPath(topicPath).build();
 
-      publisher = Publisher.create(publisherSettings);
+    Publisher publisher = Publisher.create(publisherSettings);
 
-      // Start the publisher. Upon successful starting, its state will become RUNNING.
-      publisher.startAsync().awaitRunning();
+    // Start the publisher. Upon successful starting, its state will become RUNNING.
+    publisher.startAsync().awaitRunning();
 
-      for (int i = 0; i < messageCount; i++) {
-        String message = "message-" + i;
+    String message = "message-with-ordering-key";
 
-        // Convert the message to a byte string.
-        ByteString data = ByteString.copyFromUtf8(message);
-        PubsubMessage pubsubMessage = PubsubMessage.newBuilder().setData(data).build();
+    // Convert the message to a byte string.
+    ByteString data = ByteString.copyFromUtf8(message);
+    PubsubMessage pubsubMessage =
+        PubsubMessage.newBuilder()
+            .setData(data)
+            // Messages of the same ordering key will always get published to the
+            // same partition. When OrderingKey is unset, messages can get published
+            // to different partitions if more than one partition exists for the topic.
+            .setOrderingKey("testing")
+            .build();
 
-        // Publish a message. Messages are automatically batched.
-        ApiFuture<String> future = publisher.publish(pubsubMessage);
-        futures.add(future);
-      }
-    } finally {
-      ArrayList<PublishMetadata> metadata = new ArrayList<>();
-      List<String> ackIds = ApiFutures.allAsList(futures).get();
-      for (String id : ackIds) {
-        // Decoded metadata contains partition and offset.
-        metadata.add(PublishMetadata.decode(id));
-      }
-      System.out.println(metadata + "\nPublished " + ackIds.size() + " messages.");
+    // Publish a message.
+    ApiFuture<String> future = publisher.publish(pubsubMessage);
 
-      if (publisher != null) {
-        // Shut down the publisher.
-        publisher.stopAsync().awaitTerminated();
-        System.out.println("Publisher is shut down.");
-      }
-    }
+    // Shut down the publisher.
+    publisher.stopAsync().awaitTerminated();
+
+    String ackId = future.get();
+    PublishMetadata metadata = PublishMetadata.decode(ackId);
+    System.out.println("Published a message with ordering key:\n" + metadata);
   }
 }
-// [END pubsublite_quickstart_publisher]
+// [END pubsublite_publish_ordering_key]

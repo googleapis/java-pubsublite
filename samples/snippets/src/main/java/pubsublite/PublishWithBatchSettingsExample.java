@@ -16,9 +16,10 @@
 
 package pubsublite;
 
-// [START pubsublite_quickstart_publisher]
+// [START pubsublite_publish_batch]
 import com.google.api.core.ApiFuture;
 import com.google.api.core.ApiFutures;
+import com.google.api.gax.batching.BatchingSettings;
 import com.google.cloud.pubsublite.CloudRegion;
 import com.google.cloud.pubsublite.CloudZone;
 import com.google.cloud.pubsublite.ProjectNumber;
@@ -34,9 +35,9 @@ import io.grpc.StatusException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
+import org.threeten.bp.Duration;
 
-public class PublisherExample {
-
+public class PublishWithBatchSettingsExample {
   public static void main(String... args) throws Exception {
     // TODO(developer): Replace these variables before running the sample.
     String cloudRegion = "your-cloud-region";
@@ -46,11 +47,11 @@ public class PublisherExample {
     long projectNumber = Long.parseLong("123456789");
     int messageCount = 100;
 
-    publisherExample(cloudRegion, zoneId, projectNumber, topicId, messageCount);
+    publishWithBatchSettingsExample(cloudRegion, zoneId, projectNumber, topicId, messageCount);
   }
 
-  // Publish messages to a topic.
-  public static void publisherExample(
+  // Publish messages to a topic with batch settings.
+  public static void publishWithBatchSettingsExample(
       String cloudRegion, char zoneId, long projectNumber, String topicId, int messageCount)
       throws StatusException, ExecutionException, InterruptedException {
 
@@ -64,8 +65,25 @@ public class PublisherExample {
     List<ApiFuture<String>> futures = new ArrayList<>();
 
     try {
+      // Batch settings control how the publisher batches messages
+      long requestBytesThreshold = 5000L; // default : 3_500_000 bytes
+      long messageCountBatchSize = 100L; // default : 1000L message
+      Duration publishDelayThreshold = Duration.ofMillis(100); // default : 50 ms
+
+      // Publish request get triggered based on request size, messages count & time since last
+      // publish, whichever condition is met first.
+      BatchingSettings batchingSettings =
+          BatchingSettings.newBuilder()
+              .setRequestByteThreshold(requestBytesThreshold)
+              .setElementCountThreshold(messageCountBatchSize)
+              .setDelayThreshold(publishDelayThreshold)
+              .build();
+
       PublisherSettings publisherSettings =
-          PublisherSettings.newBuilder().setTopicPath(topicPath).build();
+          PublisherSettings.newBuilder()
+              .setTopicPath(topicPath)
+              .setBatchingSettings(batchingSettings)
+              .build();
 
       publisher = Publisher.create(publisherSettings);
 
@@ -79,25 +97,20 @@ public class PublisherExample {
         ByteString data = ByteString.copyFromUtf8(message);
         PubsubMessage pubsubMessage = PubsubMessage.newBuilder().setData(data).build();
 
-        // Publish a message. Messages are automatically batched.
+        // Publish a message.
         ApiFuture<String> future = publisher.publish(pubsubMessage);
         futures.add(future);
       }
     } finally {
       ArrayList<PublishMetadata> metadata = new ArrayList<>();
       List<String> ackIds = ApiFutures.allAsList(futures).get();
-      for (String id : ackIds) {
-        // Decoded metadata contains partition and offset.
-        metadata.add(PublishMetadata.decode(id));
-      }
-      System.out.println(metadata + "\nPublished " + ackIds.size() + " messages.");
+      System.out.println("Published " + ackIds.size() + " messages with batch settings.");
 
       if (publisher != null) {
         // Shut down the publisher.
         publisher.stopAsync().awaitTerminated();
-        System.out.println("Publisher is shut down.");
       }
     }
   }
 }
-// [END pubsublite_quickstart_publisher]
+// [END pubsublite_publish_batch]

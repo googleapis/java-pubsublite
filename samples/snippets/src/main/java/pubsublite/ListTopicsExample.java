@@ -17,7 +17,6 @@
 package pubsublite;
 
 // [START pubsublite_list_topics]
-
 import com.google.cloud.pubsublite.AdminClient;
 import com.google.cloud.pubsublite.AdminClientSettings;
 import com.google.cloud.pubsublite.CloudRegion;
@@ -26,47 +25,37 @@ import com.google.cloud.pubsublite.LocationPath;
 import com.google.cloud.pubsublite.LocationPaths;
 import com.google.cloud.pubsublite.ProjectNumber;
 import com.google.cloud.pubsublite.proto.Topic;
-import io.grpc.StatusException;
 import java.util.List;
 
 public class ListTopicsExample {
 
   public static void main(String... args) throws Exception {
     // TODO(developer): Replace these variables before running the sample.
-    String CLOUD_REGION = "Your Cloud Region";
-    char ZONE_ID = 'b';
-    long PROJECT_NUMBER = Long.parseLong("123456789");
+    String cloudRegion = "your-cloud-region";
+    char zoneId = 'b';
+    long projectNumber = Long.parseLong("123456789");
 
-    ListTopicsExample.listTopicsExample(CLOUD_REGION, ZONE_ID, PROJECT_NUMBER);
+    listTopicsExample(cloudRegion, zoneId, projectNumber);
   }
 
-  public static void listTopicsExample(String CLOUD_REGION, char ZONE_ID, long PROJECT_NUMBER)
+  public static void listTopicsExample(String cloudRegion, char zoneId, long projectNumber)
       throws Exception {
 
-    try {
-      CloudRegion cloudRegion = CloudRegion.of(CLOUD_REGION);
-      CloudZone zone = CloudZone.of(cloudRegion, ZONE_ID);
-      ProjectNumber projectNum = ProjectNumber.of(PROJECT_NUMBER);
+    AdminClientSettings adminClientSettings =
+        AdminClientSettings.newBuilder().setRegion(CloudRegion.of(cloudRegion)).build();
 
-      LocationPath locationPath =
-          LocationPaths.newBuilder().setProjectNumber(projectNum).setZone(zone).build();
+    LocationPath locationPath =
+        LocationPaths.newBuilder()
+            .setProjectNumber(ProjectNumber.of(projectNumber))
+            .setZone(CloudZone.of(CloudRegion.of(cloudRegion), zoneId))
+            .build();
 
-      AdminClientSettings adminClientSettings =
-          AdminClientSettings.newBuilder().setRegion(cloudRegion).build();
-
-      try (AdminClient adminClient = AdminClient.create(adminClientSettings)) {
-        List<Topic> topics = adminClient.listTopics(locationPath).get();
-        for (Topic t : topics) {
-          System.out.println(t.getAllFields());
-        }
-        System.out.println(topics.size() + " topic(s) listed.");
+    try (AdminClient adminClient = AdminClient.create(adminClientSettings)) {
+      List<Topic> topics = adminClient.listTopics(locationPath).get();
+      for (Topic topic : topics) {
+        System.out.println(topic.getAllFields());
       }
-
-    } catch (StatusException statusException) {
-      System.out.println("Failed to list topics: " + statusException);
-      System.out.println(statusException.getStatus().getCode());
-      System.out.println(statusException.getStatus());
-      throw statusException;
+      System.out.println(topics.size() + " topic(s) listed.");
     }
   }
 }

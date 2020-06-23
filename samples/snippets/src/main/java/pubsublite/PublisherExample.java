@@ -30,8 +30,10 @@ import com.google.cloud.pubsublite.cloudpubsub.Publisher;
 import com.google.cloud.pubsublite.cloudpubsub.PublisherSettings;
 import com.google.protobuf.ByteString;
 import com.google.pubsub.v1.PubsubMessage;
+import io.grpc.StatusException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 public class PublisherExample {
 
@@ -50,7 +52,7 @@ public class PublisherExample {
   // Publish messages to a topic.
   public static void publisherExample(
       String cloudRegion, char zoneId, long projectNumber, String topicId, int messageCount)
-      throws Exception {
+      throws StatusException, ExecutionException, InterruptedException {
 
     TopicPath topicPath =
         TopicPaths.newBuilder()

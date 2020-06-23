@@ -29,6 +29,8 @@ import com.google.cloud.pubsublite.cloudpubsub.Publisher;
 import com.google.cloud.pubsublite.cloudpubsub.PublisherSettings;
 import com.google.protobuf.ByteString;
 import com.google.pubsub.v1.PubsubMessage;
+import io.grpc.StatusException;
+import java.util.concurrent.ExecutionException;
 
 public class PublishWithOrderingKeyExample {
   public static void main(String... args) throws Exception {
@@ -44,7 +46,8 @@ public class PublishWithOrderingKeyExample {
 
   // Publish a message to a topic with an ordering key.
   public static void publishWithOrderingKeyExample(
-      String cloudRegion, char zoneId, long projectNumber, String topicId) throws Exception {
+      String cloudRegion, char zoneId, long projectNumber, String topicId)
+      throws StatusException, ExecutionException, InterruptedException {
 
     TopicPath topicPath =
         TopicPaths.newBuilder()

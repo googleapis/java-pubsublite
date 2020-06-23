@@ -31,6 +31,7 @@ import com.google.cloud.pubsublite.cloudpubsub.Subscriber;
 import com.google.cloud.pubsublite.cloudpubsub.SubscriberSettings;
 import com.google.common.collect.ImmutableList;
 import com.google.pubsub.v1.PubsubMessage;
+import io.grpc.StatusException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -58,7 +59,7 @@ public class SubscriberExample {
       long projectNumber,
       String subscriptionId,
       List<Integer> partitionNumbers)
-      throws Exception {
+      throws StatusException {
 
     SubscriptionPath subscriptionPath =
         SubscriptionPaths.newBuilder()
@@ -71,7 +72,7 @@ public class SubscriberExample {
     // subscriber has already received, whichever condition is met first.
     FlowControlSettings flowControlSettings =
         FlowControlSettings.builder()
-            // 10 MiB. Must be greater than the size of the largest message.
+            // 10 MiB. Must be greater than the allowed size of the largest message (1 MiB).
             .setBytesOutstanding(10 * 1024 * 1024L)
             // 1,000 outstanding messages. Must be >0.
             .setMessagesOutstanding(1000L)

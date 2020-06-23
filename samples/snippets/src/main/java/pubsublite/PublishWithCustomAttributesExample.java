@@ -73,7 +73,7 @@ public class PublishWithCustomAttributesExample {
             .putAllAttributes(ImmutableMap.of("year", "2020", "author", "unknown"))
             .build();
 
-    // Schedule a message to be published.
+    // Publish a message.
     ApiFuture<String> future = publisher.publish(pubsubMessage);
 
     // Shut down the publisher.

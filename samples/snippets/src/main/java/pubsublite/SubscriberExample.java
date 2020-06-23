@@ -103,7 +103,7 @@ public class SubscriberExample {
     // Start the subscriber. Upon successful starting, its state will become RUNNING.
     subscriber.startAsync().awaitRunning();
 
-    System.out.println("Listening to messages on " + subscriptionPath.value() + " ...");
+    System.out.println("Listening to messages on " + subscriptionPath.value() + "...");
 
     try {
       // Wait 30 seconds for the subscriber to reach TERMINATED state. If it encounters
@@ -112,7 +112,7 @@ public class SubscriberExample {
       subscriber.awaitTerminated(30, TimeUnit.SECONDS);
     } catch (TimeoutException t) {
       // Shut down the subscriber. This will change the state of the subscriber to TERMINATED.
-      subscriber.stopAsync();
+      subscriber.stopAsync().awaitTerminated();
       System.out.println("Subscriber is shut down: " + subscriber.state());
     }
   }

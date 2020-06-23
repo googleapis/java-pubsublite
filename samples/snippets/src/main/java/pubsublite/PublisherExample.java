@@ -77,7 +77,7 @@ public class PublisherExample {
         ByteString data = ByteString.copyFromUtf8(message);
         PubsubMessage pubsubMessage = PubsubMessage.newBuilder().setData(data).build();
 
-        // Schedule a message to be published. Messages are automatically batched.
+        // Publish a message. Messages are automatically batched.
         ApiFuture<String> future = publisher.publish(pubsubMessage);
         futures.add(future);
       }

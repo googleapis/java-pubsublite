@@ -70,11 +70,11 @@ public class PublishWithOrderingKeyExample {
             .setData(data)
             // Messages of the same ordering key will always get published to the
             // same partition. When OrderingKey is unset, messages can get published
-            // to different partitions if more than one partition exist for the topic.
+            // to different partitions if more than one partition exists for the topic.
             .setOrderingKey("testing")
             .build();
 
-    // Schedule a message to be published.
+    // Publish a message.
     ApiFuture<String> future = publisher.publish(pubsubMessage);
 
     // Shut down the publisher.

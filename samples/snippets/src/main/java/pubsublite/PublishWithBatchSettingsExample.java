@@ -95,7 +95,7 @@ public class PublishWithBatchSettingsExample {
         ByteString data = ByteString.copyFromUtf8(message);
         PubsubMessage pubsubMessage = PubsubMessage.newBuilder().setData(data).build();
 
-        // Schedule a message to be published.
+        // Publish a message.
         ApiFuture<String> future = publisher.publish(pubsubMessage);
         futures.add(future);
       }

@@ -155,6 +155,7 @@ public class ITVPCNegativeTest {
                 DeliveryConfig.newBuilder()
                     .setDeliveryRequirement(DeliveryRequirement.DELIVER_AFTER_STORED))
             .setName(subscriptionPath.value())
+            .setTopic(topicPath.value())
             .build();
 
     // Instantiate an AdminClient to test with.
@@ -163,7 +164,9 @@ public class ITVPCNegativeTest {
   }
 
   @After
-  public void tearDown() throws Exception {}
+  public void tearDown() throws Exception {
+    adminClient.close();
+  }
 
   private void checkExceptionForVPCError(StatusRuntimeException e) {
     assertEquals(Status.Code.PERMISSION_DENIED, e.getStatus().getCode());

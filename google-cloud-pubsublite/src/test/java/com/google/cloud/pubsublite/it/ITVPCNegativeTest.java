@@ -16,6 +16,7 @@
 
 package com.google.cloud.pubsublite.it;
 
+import static com.google.cloud.pubsublite.internal.ExtractStatus.toCanonical;
 import static com.google.common.truth.Truth.assertThat;
 import static junit.framework.TestCase.assertNotNull;
 import static org.junit.Assert.assertEquals;
@@ -179,14 +180,13 @@ public class ITVPCNegativeTest {
     } catch (InterruptedException e) {
       fail("Expected PERMISSION_DENIED StatusRuntimeException but got: " + e.toString());
     } catch (ExecutionException e) {
-      Throwable thrown = e.getCause();
-      checkExceptionForVPCError((StatusRuntimeException) thrown);
+      checkExceptionForVPCError(toCanonical(e.getCause()));
       return;
     }
 
     // If we successfully create a topic we need to clean it up.
     try {
-      adminClient.deleteSubscription(subscriptionPath).get();
+      adminClient.deleteTopic(topicPath).get();
       fail("Expected PERMISSION_DENIED StatusRuntimeException during createTopic");
     } catch (Exception e) {
       fail(
@@ -203,8 +203,7 @@ public class ITVPCNegativeTest {
     } catch (InterruptedException e) {
       fail("Expected PERMISSION_DENIED StatusRuntimeException but got: " + e.toString());
     } catch (ExecutionException e) {
-      Throwable thrown = e.getCause();
-      checkExceptionForVPCError((StatusRuntimeException) thrown);
+      checkExceptionForVPCError(toCanonical(e.getCause()));
     }
   }
 
@@ -216,8 +215,7 @@ public class ITVPCNegativeTest {
     } catch (InterruptedException e) {
       fail("Expected PERMISSION_DENIED StatusRuntimeException but got: " + e.toString());
     } catch (ExecutionException e) {
-      Throwable thrown = e.getCause();
-      checkExceptionForVPCError((StatusRuntimeException) thrown);
+      checkExceptionForVPCError(toCanonical(e.getCause()));
     }
   }
 
@@ -229,8 +227,7 @@ public class ITVPCNegativeTest {
     } catch (InterruptedException e) {
       fail("Expected PERMISSION_DENIED StatusRuntimeException but got: " + e.toString());
     } catch (ExecutionException e) {
-      Throwable thrown = e.getCause();
-      checkExceptionForVPCError((StatusRuntimeException) thrown);
+      checkExceptionForVPCError(toCanonical(e.getCause()));
     }
   }
 
@@ -242,8 +239,7 @@ public class ITVPCNegativeTest {
     } catch (InterruptedException e) {
       fail("Expected PERMISSION_DENIED StatusRuntimeException but got: " + e.toString());
     } catch (ExecutionException e) {
-      Throwable thrown = e.getCause();
-      checkExceptionForVPCError((StatusRuntimeException) thrown);
+      checkExceptionForVPCError(toCanonical(e.getCause()));
     }
   }
 
@@ -256,8 +252,7 @@ public class ITVPCNegativeTest {
     } catch (InterruptedException e) {
       fail("Expected PERMISSION_DENIED StatusRuntimeException but got: " + e.toString());
     } catch (ExecutionException e) {
-      Throwable thrown = e.getCause();
-      checkExceptionForVPCError((StatusRuntimeException) thrown);
+      checkExceptionForVPCError(toCanonical(e.getCause()));
     }
   }
 
@@ -268,8 +263,7 @@ public class ITVPCNegativeTest {
     } catch (InterruptedException e) {
       fail("Expected PERMISSION_DENIED StatusRuntimeException but got: " + e.toString());
     } catch (ExecutionException e) {
-      Throwable thrown = e.getCause();
-      checkExceptionForVPCError((StatusRuntimeException) thrown);
+      checkExceptionForVPCError(toCanonical(e.getCause()));
       return;
     }
 
@@ -292,8 +286,7 @@ public class ITVPCNegativeTest {
     } catch (InterruptedException e) {
       fail("Expected PERMISSION_DENIED StatusRuntimeException but got: " + e.toString());
     } catch (ExecutionException e) {
-      Throwable thrown = e.getCause();
-      checkExceptionForVPCError((StatusRuntimeException) thrown);
+      checkExceptionForVPCError(toCanonical(e.getCause()));
     }
   }
 
@@ -305,8 +298,7 @@ public class ITVPCNegativeTest {
     } catch (InterruptedException e) {
       fail("Expected PERMISSION_DENIED StatusRuntimeException but got: " + e.toString());
     } catch (ExecutionException e) {
-      Throwable thrown = e.getCause();
-      checkExceptionForVPCError((StatusRuntimeException) thrown);
+      checkExceptionForVPCError(toCanonical(e.getCause()));
     }
   }
 
@@ -318,8 +310,7 @@ public class ITVPCNegativeTest {
     } catch (InterruptedException e) {
       fail("Expected PERMISSION_DENIED StatusRuntimeException but got: " + e.toString());
     } catch (ExecutionException e) {
-      Throwable thrown = e.getCause();
-      checkExceptionForVPCError((StatusRuntimeException) thrown);
+      checkExceptionForVPCError(toCanonical(e.getCause()));
     }
   }
 
@@ -333,8 +324,7 @@ public class ITVPCNegativeTest {
     } catch (InterruptedException e) {
       fail("Expected PERMISSION_DENIED StatusRuntimeException but got: " + e.toString());
     } catch (ExecutionException e) {
-      Throwable thrown = e.getCause();
-      checkExceptionForVPCError((StatusRuntimeException) thrown);
+      checkExceptionForVPCError(toCanonical(e.getCause()));
     }
   }
 
@@ -384,8 +374,7 @@ public class ITVPCNegativeTest {
     } catch (TimeoutException t) {
       fail("Expected PERMISSION_DENIED StatusException but got: " + t.toString());
     } catch (IllegalStateException e) {
-      Throwable thrown = e.getCause();
-      checkExceptionForVPCError((StatusException) thrown);
+      checkExceptionForVPCError(toCanonical(e.getCause()));
     }
   }
 }

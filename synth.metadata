@@ -3,15 +3,15 @@
     {
       "git": {
         "name": ".",
-        "remote": "https://github.com/googleapis/java-pubsublite.git",
-        "sha": "ff77de91c7b0bbab945215a1e3ab865a21f985a9"
+        "remote": "git@github.com:googleapis/java-pubsublite.git",
+        "sha": "549628330b065199b0a99075575ad62d62710af4"
       }
     },
     {
       "git": {
         "name": "synthtool",
         "remote": "https://github.com/googleapis/synthtool.git",
-        "sha": "c4f3059c27591eb24d6942a0e357ec94c80459f2"
+        "sha": "303271797a360f8a439203413f13a160f2f5b3b4"
       }
     }
   ]

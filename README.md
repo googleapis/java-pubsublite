@@ -25,7 +25,7 @@ If you are using Maven, add this to your pom.xml file:
 <dependency>
   <groupId>com.google.cloud</groupId>
   <artifactId>google-cloud-pubsub</artifactId>
-  <version>1.107.0</version>
+  <version>1.108.0</version>
 </dependency>
 <!-- A logging dependency used by the underlying library  -->
 <dependency>

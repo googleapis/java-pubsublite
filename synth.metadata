@@ -3,8 +3,8 @@
     {
       "git": {
         "name": ".",
-        "remote": "git@github.com:googleapis/java-pubsublite.git",
-        "sha": "549628330b065199b0a99075575ad62d62710af4"
+        "remote": "https://github.com/googleapis/java-pubsublite.git",
+        "sha": "924052b9445dd00c0a429ca11d5b203a5051740b"
       }
     },
     {

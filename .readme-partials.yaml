@@ -40,11 +40,11 @@ custom_content: |
               RetentionConfig.newBuilder()
                   // How long messages are retained.
                   .setPeriod(Durations.fromDays(1))
-                  // Set storage per partition to 30 GiB. This must be 30 GiB-10 TiB.
+                  // Set storage per partition to 100 GiB. This must be 30 GiB-10 TiB.
                   // If the number of bytes stored in any of the topic's partitions grows
                   // beyond this value, older messages will be dropped to make room for
                   // newer ones, regardless of the value of `period`.
-                  .setPerPartitionBytes(30 * 1024 * 1024 * 1024L))
+                  .setPerPartitionBytes(100 * 1024 * 1024 * 1024L))
           .setName(topicPath.value())
           .build();
 
@@ -210,6 +210,7 @@ custom_content: |
   String topicId = "your-topic-id";
   // Choose an existing subscription.
   String subscriptionId = "your-subscription-id";
+  List<Integer> partitionNumbers = ImmutableList.of(0);
 
   SubscriptionPath subscriptionPath =
       SubscriptionPaths.newBuilder()
@@ -228,6 +229,11 @@ custom_content: |
           .setMessagesOutstanding(1000L)
           .build();
 
+  List<Partition> partitions = new ArrayList<>();
+  for (Integer num : partitionNumbers) {
+    partitions.add(Partition.of(num));
+  }
+
   MessageReceiver receiver =
       (PubsubMessage message, AckReplyConsumer consumer) -> {
         System.out.println("Id : " + message.getMessageId());
@@ -238,6 +244,7 @@ custom_content: |
   SubscriberSettings subscriberSettings =
       SubscriberSettings.newBuilder()
           .setSubscriptionPath(subscriptionPath)
+          .setPartitions(partitions)
           .setReceiver(receiver)
           // Flow control settings are set at the partition level.
           .setPerPartitionFlowControlSettings(flowControlSettings)
@@ -251,10 +258,10 @@ custom_content: |
   System.out.println("Listening to messages on " + subscriptionPath.value() + "...");
 
   try {
-    // Wait 90 seconds for the subscriber to reach TERMINATED state. If it encounters
+    // Wait 30 seconds for the subscriber to reach TERMINATED state. If it encounters
     // unrecoverable errors before then, its state will change to FAILED and an
     // IllegalStateException will be thrown.
-    subscriber.awaitTerminated(90, TimeUnit.SECONDS);
+    subscriber.awaitTerminated(30, TimeUnit.SECONDS);
   } catch (TimeoutException t) {
     // Shut down the subscriber. This will change the state of the subscriber to TERMINATED.
     subscriber.stopAsync().awaitTerminated();

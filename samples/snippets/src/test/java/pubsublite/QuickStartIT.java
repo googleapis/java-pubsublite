@@ -19,10 +19,8 @@ package pubsublite;
 import static com.google.common.truth.Truth.assertThat;
 import static junit.framework.TestCase.assertNotNull;
 
-import com.google.common.collect.ImmutableList;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
-import java.util.List;
 import java.util.UUID;
 import org.junit.After;
 import org.junit.Before;

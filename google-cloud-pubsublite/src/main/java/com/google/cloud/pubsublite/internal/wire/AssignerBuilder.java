@@ -24,6 +24,7 @@ import com.google.cloud.pubsublite.SubscriptionPaths;
 import com.google.cloud.pubsublite.proto.InitialPartitionAssignmentRequest;
 import com.google.cloud.pubsublite.proto.PartitionAssignmentServiceGrpc;
 import com.google.cloud.pubsublite.proto.PartitionAssignmentServiceGrpc.PartitionAssignmentServiceStub;
+import com.google.common.flogger.GoogleLogger;
 import com.google.protobuf.ByteString;
 import io.grpc.Status;
 import io.grpc.StatusException;
@@ -34,6 +35,7 @@ import java.util.UUID;
 
 @AutoValue
 public abstract class AssignerBuilder {
+  private static final GoogleLogger logger = GoogleLogger.forEnclosingClass();
   // Required parameters.
   abstract SubscriptionPath subscriptionPath();
 
@@ -85,6 +87,9 @@ public abstract class AssignerBuilder {
       ByteBuffer uuidBuffer = ByteBuffer.allocate(16);
       uuidBuffer.putLong(uuid.getMostSignificantBits());
       uuidBuffer.putLong(uuid.getLeastSignificantBits());
+      logger.atInfo().log(
+          "Subscription %s using UUID %s for assignment.",
+          builder.subscriptionPath().value(), uuid);
 
       InitialPartitionAssignmentRequest initial =
           InitialPartitionAssignmentRequest.newBuilder()

@@ -146,4 +146,11 @@ public interface AdminClient extends BackgroundResource {
    *     status {@link io.grpc.Status.Code#NOT_FOUND}
    */
   ApiFuture<Void> deleteSubscription(SubscriptionPath path);
+
+  /**
+   * Tear down this admin client.
+   *
+   * @throws StatusException on a failure to properly terminate.
+   */
+  void close() throws StatusException;
 }

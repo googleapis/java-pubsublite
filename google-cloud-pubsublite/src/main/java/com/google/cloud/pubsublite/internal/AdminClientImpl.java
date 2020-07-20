@@ -18,7 +18,6 @@ package com.google.cloud.pubsublite.internal;
 
 import com.google.api.core.ApiFuture;
 import com.google.api.core.NanoClock;
-import com.google.api.gax.core.BackgroundResourceAggregation;
 import com.google.api.gax.core.ExecutorAsBackgroundResource;
 import com.google.api.gax.retrying.ExponentialRetryAlgorithm;
 import com.google.api.gax.retrying.ResultRetryAlgorithm;
@@ -54,13 +53,16 @@ import com.google.cloud.pubsublite.proto.UpdateTopicRequest;
 import com.google.common.collect.ImmutableList;
 import com.google.protobuf.FieldMask;
 import io.grpc.Status;
+import io.grpc.StatusException;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
-public class AdminClientImpl extends BackgroundResourceAggregation implements AdminClient {
+public class AdminClientImpl implements AdminClient {
+  private final ExecutorAsBackgroundResource executorResource;
   private final CloudRegion region;
   private final AdminServiceGrpc.AdminServiceBlockingStub stub;
   private final RetryingExecutor<Void> voidRetryingExecutor;
@@ -75,20 +77,8 @@ public class AdminClientImpl extends BackgroundResourceAggregation implements Ad
       CloudRegion region,
       AdminServiceGrpc.AdminServiceBlockingStub stub,
       RetrySettings retrySettings) {
-    this(
-        region,
-        stub,
-        retrySettings,
-        // TODO: Consider allowing tuning in the future.
-        Executors.newScheduledThreadPool(6));
-  }
-
-  private AdminClientImpl(
-      CloudRegion region,
-      AdminServiceGrpc.AdminServiceBlockingStub stub,
-      RetrySettings retrySettings,
-      ScheduledExecutorService executor) {
-    super(ImmutableList.of(new ExecutorAsBackgroundResource(executor)));
+    ScheduledExecutorService executor = Executors.newScheduledThreadPool(6);
+    this.executorResource = new ExecutorAsBackgroundResource(executor);
     this.region = region;
     this.stub = stub;
     this.voidRetryingExecutor = retryingExecutor(retrySettings, executor);
@@ -100,6 +90,42 @@ public class AdminClientImpl extends BackgroundResourceAggregation implements Ad
     this.listTopicSubscriptionsRetryingExecutor = retryingExecutor(retrySettings, executor);
   }
 
+  // BackgroundResource implementation.
+  @Override
+  public void shutdown() {
+    executorResource.shutdown();
+  }
+
+  @Override
+  public boolean isShutdown() {
+    return executorResource.isShutdown();
+  }
+
+  @Override
+  public boolean isTerminated() {
+    return executorResource.isTerminated();
+  }
+
+  @Override
+  public void shutdownNow() {
+    executorResource.shutdownNow();
+  }
+
+  @Override
+  public boolean awaitTermination(long duration, TimeUnit unit) throws InterruptedException {
+    return executorResource.awaitTermination(duration, unit);
+  }
+
+  @Override
+  public void close() throws StatusException {
+    try {
+      executorResource.close();
+    } catch (Exception e) {
+      throw ExtractStatus.toCanonical(e);
+    }
+  }
+
+  // AdminClient implementation.
   private static <T> RetryingExecutor<T> retryingExecutor(
       RetrySettings settings, ScheduledExecutorService executor) {
     return new ScheduledRetryingExecutor<>(retryAlgorithm(settings), executor);

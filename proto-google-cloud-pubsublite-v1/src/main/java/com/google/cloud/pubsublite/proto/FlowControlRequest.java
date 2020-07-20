@@ -111,6 +111,7 @@ public final class FlowControlRequest extends com.google.protobuf.GeneratedMessa
    *
    * @return The allowedMessages.
    */
+  @java.lang.Override
   public long getAllowedMessages() {
     return allowedMessages_;
   }
@@ -128,6 +129,7 @@ public final class FlowControlRequest extends com.google.protobuf.GeneratedMessa
    *
    * @return The allowedBytes.
    */
+  @java.lang.Override
   public long getAllowedBytes() {
     return allowedBytes_;
   }
@@ -477,6 +479,7 @@ public final class FlowControlRequest extends com.google.protobuf.GeneratedMessa
      *
      * @return The allowedMessages.
      */
+    @java.lang.Override
     public long getAllowedMessages() {
       return allowedMessages_;
     }
@@ -528,6 +531,7 @@ public final class FlowControlRequest extends com.google.protobuf.GeneratedMessa
      *
      * @return The allowedBytes.
      */
+    @java.lang.Override
     public long getAllowedBytes() {
       return allowedBytes_;
     }

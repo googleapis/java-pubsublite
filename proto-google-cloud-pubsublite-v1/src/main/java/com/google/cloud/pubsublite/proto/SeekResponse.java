@@ -116,6 +116,7 @@ public final class SeekResponse extends com.google.protobuf.GeneratedMessageV3
    *
    * @return Whether the cursor field is set.
    */
+  @java.lang.Override
   public boolean hasCursor() {
     return cursor_ != null;
   }
@@ -130,6 +131,7 @@ public final class SeekResponse extends com.google.protobuf.GeneratedMessageV3
    *
    * @return The cursor.
    */
+  @java.lang.Override
   public com.google.cloud.pubsublite.proto.Cursor getCursor() {
     return cursor_ == null
         ? com.google.cloud.pubsublite.proto.Cursor.getDefaultInstance()
@@ -144,6 +146,7 @@ public final class SeekResponse extends com.google.protobuf.GeneratedMessageV3
    *
    * <code>.google.cloud.pubsublite.v1.Cursor cursor = 1;</code>
    */
+  @java.lang.Override
   public com.google.cloud.pubsublite.proto.CursorOrBuilder getCursorOrBuilder() {
     return getCursor();
   }

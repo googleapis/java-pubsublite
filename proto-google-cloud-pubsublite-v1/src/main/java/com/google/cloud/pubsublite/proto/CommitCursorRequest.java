@@ -130,6 +130,7 @@ public final class CommitCursorRequest extends com.google.protobuf.GeneratedMess
    *
    * @return The subscription.
    */
+  @java.lang.Override
   public java.lang.String getSubscription() {
     java.lang.Object ref = subscription_;
     if (ref instanceof java.lang.String) {
@@ -152,6 +153,7 @@ public final class CommitCursorRequest extends com.google.protobuf.GeneratedMess
    *
    * @return The bytes for subscription.
    */
+  @java.lang.Override
   public com.google.protobuf.ByteString getSubscriptionBytes() {
     java.lang.Object ref = subscription_;
     if (ref instanceof java.lang.String) {
@@ -178,6 +180,7 @@ public final class CommitCursorRequest extends com.google.protobuf.GeneratedMess
    *
    * @return The partition.
    */
+  @java.lang.Override
   public long getPartition() {
     return partition_;
   }
@@ -195,6 +198,7 @@ public final class CommitCursorRequest extends com.google.protobuf.GeneratedMess
    *
    * @return Whether the cursor field is set.
    */
+  @java.lang.Override
   public boolean hasCursor() {
     return cursor_ != null;
   }
@@ -209,6 +213,7 @@ public final class CommitCursorRequest extends com.google.protobuf.GeneratedMess
    *
    * @return The cursor.
    */
+  @java.lang.Override
   public com.google.cloud.pubsublite.proto.Cursor getCursor() {
     return cursor_ == null
         ? com.google.cloud.pubsublite.proto.Cursor.getDefaultInstance()
@@ -223,6 +228,7 @@ public final class CommitCursorRequest extends com.google.protobuf.GeneratedMess
    *
    * <code>.google.cloud.pubsublite.v1.Cursor cursor = 3;</code>
    */
+  @java.lang.Override
   public com.google.cloud.pubsublite.proto.CursorOrBuilder getCursorOrBuilder() {
     return getCursor();
   }
@@ -708,6 +714,7 @@ public final class CommitCursorRequest extends com.google.protobuf.GeneratedMess
      *
      * @return The partition.
      */
+    @java.lang.Override
     public long getPartition() {
       return partition_;
     }

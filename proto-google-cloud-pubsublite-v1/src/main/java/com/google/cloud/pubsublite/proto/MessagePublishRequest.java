@@ -108,23 +108,28 @@ public final class MessagePublishRequest extends com.google.protobuf.GeneratedMe
   public static final int MESSAGES_FIELD_NUMBER = 1;
   private java.util.List<com.google.cloud.pubsublite.proto.PubSubMessage> messages_;
   /** <code>repeated .google.cloud.pubsublite.v1.PubSubMessage messages = 1;</code> */
+  @java.lang.Override
   public java.util.List<com.google.cloud.pubsublite.proto.PubSubMessage> getMessagesList() {
     return messages_;
   }
   /** <code>repeated .google.cloud.pubsublite.v1.PubSubMessage messages = 1;</code> */
+  @java.lang.Override
   public java.util.List<? extends com.google.cloud.pubsublite.proto.PubSubMessageOrBuilder>
       getMessagesOrBuilderList() {
     return messages_;
   }
   /** <code>repeated .google.cloud.pubsublite.v1.PubSubMessage messages = 1;</code> */
+  @java.lang.Override
   public int getMessagesCount() {
     return messages_.size();
   }
   /** <code>repeated .google.cloud.pubsublite.v1.PubSubMessage messages = 1;</code> */
+  @java.lang.Override
   public com.google.cloud.pubsublite.proto.PubSubMessage getMessages(int index) {
     return messages_.get(index);
   }
   /** <code>repeated .google.cloud.pubsublite.v1.PubSubMessage messages = 1;</code> */
+  @java.lang.Override
   public com.google.cloud.pubsublite.proto.PubSubMessageOrBuilder getMessagesOrBuilder(int index) {
     return messages_.get(index);
   }

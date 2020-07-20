@@ -117,6 +117,7 @@ public final class MessagePublishResponse extends com.google.protobuf.GeneratedM
    *
    * @return Whether the startCursor field is set.
    */
+  @java.lang.Override
   public boolean hasStartCursor() {
     return startCursor_ != null;
   }
@@ -132,6 +133,7 @@ public final class MessagePublishResponse extends com.google.protobuf.GeneratedM
    *
    * @return The startCursor.
    */
+  @java.lang.Override
   public com.google.cloud.pubsublite.proto.Cursor getStartCursor() {
     return startCursor_ == null
         ? com.google.cloud.pubsublite.proto.Cursor.getDefaultInstance()
@@ -147,6 +149,7 @@ public final class MessagePublishResponse extends com.google.protobuf.GeneratedM
    *
    * <code>.google.cloud.pubsublite.v1.Cursor start_cursor = 1;</code>
    */
+  @java.lang.Override
   public com.google.cloud.pubsublite.proto.CursorOrBuilder getStartCursorOrBuilder() {
     return getStartCursor();
   }

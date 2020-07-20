@@ -107,6 +107,7 @@ public final class SequencedCommitCursorResponse extends com.google.protobuf.Gen
    *
    * @return The acknowledgedCommits.
    */
+  @java.lang.Override
   public long getAcknowledgedCommits() {
     return acknowledgedCommits_;
   }
@@ -447,6 +448,7 @@ public final class SequencedCommitCursorResponse extends com.google.protobuf.Gen
      *
      * @return The acknowledgedCommits.
      */
+    @java.lang.Override
     public long getAcknowledgedCommits() {
       return acknowledgedCommits_;
     }

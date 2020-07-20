@@ -136,6 +136,7 @@ public final class CreateSubscriptionRequest extends com.google.protobuf.Generat
    *
    * @return The parent.
    */
+  @java.lang.Override
   public java.lang.String getParent() {
     java.lang.Object ref = parent_;
     if (ref instanceof java.lang.String) {
@@ -161,6 +162,7 @@ public final class CreateSubscriptionRequest extends com.google.protobuf.Generat
    *
    * @return The bytes for parent.
    */
+  @java.lang.Override
   public com.google.protobuf.ByteString getParentBytes() {
     java.lang.Object ref = parent_;
     if (ref instanceof java.lang.String) {
@@ -188,6 +190,7 @@ public final class CreateSubscriptionRequest extends com.google.protobuf.Generat
    *
    * @return Whether the subscription field is set.
    */
+  @java.lang.Override
   public boolean hasSubscription() {
     return subscription_ != null;
   }
@@ -204,6 +207,7 @@ public final class CreateSubscriptionRequest extends com.google.protobuf.Generat
    *
    * @return The subscription.
    */
+  @java.lang.Override
   public com.google.cloud.pubsublite.proto.Subscription getSubscription() {
     return subscription_ == null
         ? com.google.cloud.pubsublite.proto.Subscription.getDefaultInstance()
@@ -220,6 +224,7 @@ public final class CreateSubscriptionRequest extends com.google.protobuf.Generat
    * .google.cloud.pubsublite.v1.Subscription subscription = 2 [(.google.api.field_behavior) = REQUIRED];
    * </code>
    */
+  @java.lang.Override
   public com.google.cloud.pubsublite.proto.SubscriptionOrBuilder getSubscriptionOrBuilder() {
     return getSubscription();
   }
@@ -239,6 +244,7 @@ public final class CreateSubscriptionRequest extends com.google.protobuf.Generat
    *
    * @return The subscriptionId.
    */
+  @java.lang.Override
   public java.lang.String getSubscriptionId() {
     java.lang.Object ref = subscriptionId_;
     if (ref instanceof java.lang.String) {
@@ -263,6 +269,7 @@ public final class CreateSubscriptionRequest extends com.google.protobuf.Generat
    *
    * @return The bytes for subscriptionId.
    */
+  @java.lang.Override
   public com.google.protobuf.ByteString getSubscriptionIdBytes() {
     java.lang.Object ref = subscriptionId_;
     if (ref instanceof java.lang.String) {

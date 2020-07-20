@@ -186,6 +186,7 @@ public final class PublishResponse extends com.google.protobuf.GeneratedMessageV
    *
    * @return Whether the initialResponse field is set.
    */
+  @java.lang.Override
   public boolean hasInitialResponse() {
     return responseTypeCase_ == 1;
   }
@@ -200,6 +201,7 @@ public final class PublishResponse extends com.google.protobuf.GeneratedMessageV
    *
    * @return The initialResponse.
    */
+  @java.lang.Override
   public com.google.cloud.pubsublite.proto.InitialPublishResponse getInitialResponse() {
     if (responseTypeCase_ == 1) {
       return (com.google.cloud.pubsublite.proto.InitialPublishResponse) responseType_;
@@ -215,6 +217,7 @@ public final class PublishResponse extends com.google.protobuf.GeneratedMessageV
    *
    * <code>.google.cloud.pubsublite.v1.InitialPublishResponse initial_response = 1;</code>
    */
+  @java.lang.Override
   public com.google.cloud.pubsublite.proto.InitialPublishResponseOrBuilder
       getInitialResponseOrBuilder() {
     if (responseTypeCase_ == 1) {
@@ -235,6 +238,7 @@ public final class PublishResponse extends com.google.protobuf.GeneratedMessageV
    *
    * @return Whether the messageResponse field is set.
    */
+  @java.lang.Override
   public boolean hasMessageResponse() {
     return responseTypeCase_ == 2;
   }
@@ -249,6 +253,7 @@ public final class PublishResponse extends com.google.protobuf.GeneratedMessageV
    *
    * @return The messageResponse.
    */
+  @java.lang.Override
   public com.google.cloud.pubsublite.proto.MessagePublishResponse getMessageResponse() {
     if (responseTypeCase_ == 2) {
       return (com.google.cloud.pubsublite.proto.MessagePublishResponse) responseType_;
@@ -264,6 +269,7 @@ public final class PublishResponse extends com.google.protobuf.GeneratedMessageV
    *
    * <code>.google.cloud.pubsublite.v1.MessagePublishResponse message_response = 2;</code>
    */
+  @java.lang.Override
   public com.google.cloud.pubsublite.proto.MessagePublishResponseOrBuilder
       getMessageResponseOrBuilder() {
     if (responseTypeCase_ == 2) {
@@ -678,6 +684,7 @@ public final class PublishResponse extends com.google.protobuf.GeneratedMessageV
      *
      * @return Whether the initialResponse field is set.
      */
+    @java.lang.Override
     public boolean hasInitialResponse() {
       return responseTypeCase_ == 1;
     }
@@ -692,6 +699,7 @@ public final class PublishResponse extends com.google.protobuf.GeneratedMessageV
      *
      * @return The initialResponse.
      */
+    @java.lang.Override
     public com.google.cloud.pubsublite.proto.InitialPublishResponse getInitialResponse() {
       if (initialResponseBuilder_ == null) {
         if (responseTypeCase_ == 1) {
@@ -828,6 +836,7 @@ public final class PublishResponse extends com.google.protobuf.GeneratedMessageV
      *
      * <code>.google.cloud.pubsublite.v1.InitialPublishResponse initial_response = 1;</code>
      */
+    @java.lang.Override
     public com.google.cloud.pubsublite.proto.InitialPublishResponseOrBuilder
         getInitialResponseOrBuilder() {
       if ((responseTypeCase_ == 1) && (initialResponseBuilder_ != null)) {
@@ -890,6 +899,7 @@ public final class PublishResponse extends com.google.protobuf.GeneratedMessageV
      *
      * @return Whether the messageResponse field is set.
      */
+    @java.lang.Override
     public boolean hasMessageResponse() {
       return responseTypeCase_ == 2;
     }
@@ -904,6 +914,7 @@ public final class PublishResponse extends com.google.protobuf.GeneratedMessageV
      *
      * @return The messageResponse.
      */
+    @java.lang.Override
     public com.google.cloud.pubsublite.proto.MessagePublishResponse getMessageResponse() {
       if (messageResponseBuilder_ == null) {
         if (responseTypeCase_ == 2) {
@@ -1040,6 +1051,7 @@ public final class PublishResponse extends com.google.protobuf.GeneratedMessageV
      *
      * <code>.google.cloud.pubsublite.v1.MessagePublishResponse message_response = 2;</code>
      */
+    @java.lang.Override
     public com.google.cloud.pubsublite.proto.MessagePublishResponseOrBuilder
         getMessageResponseOrBuilder() {
       if ((responseTypeCase_ == 2) && (messageResponseBuilder_ != null)) {

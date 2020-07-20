@@ -16,7 +16,7 @@ import static io.grpc.stub.ServerCalls.asyncUnimplementedStreamingCall;
  * </pre>
  */
 @javax.annotation.Generated(
-    value = "by gRPC proto compiler (version 1.28.1)",
+    value = "by gRPC proto compiler (version 1.30.2)",
     comments = "Source: google/cloud/pubsublite/v1/publisher.proto")
 public final class PublisherServiceGrpc {
 

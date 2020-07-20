@@ -131,6 +131,7 @@ public final class PartitionAssignment extends com.google.protobuf.GeneratedMess
    *
    * @return A list containing the partitions.
    */
+  @java.lang.Override
   public java.util.List<java.lang.Long> getPartitionsList() {
     return partitions_;
   }

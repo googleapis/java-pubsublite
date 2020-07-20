@@ -204,6 +204,7 @@ public final class SubscribeResponse extends com.google.protobuf.GeneratedMessag
    *
    * @return Whether the initial field is set.
    */
+  @java.lang.Override
   public boolean hasInitial() {
     return responseCase_ == 1;
   }
@@ -218,6 +219,7 @@ public final class SubscribeResponse extends com.google.protobuf.GeneratedMessag
    *
    * @return The initial.
    */
+  @java.lang.Override
   public com.google.cloud.pubsublite.proto.InitialSubscribeResponse getInitial() {
     if (responseCase_ == 1) {
       return (com.google.cloud.pubsublite.proto.InitialSubscribeResponse) response_;
@@ -233,6 +235,7 @@ public final class SubscribeResponse extends com.google.protobuf.GeneratedMessag
    *
    * <code>.google.cloud.pubsublite.v1.InitialSubscribeResponse initial = 1;</code>
    */
+  @java.lang.Override
   public com.google.cloud.pubsublite.proto.InitialSubscribeResponseOrBuilder getInitialOrBuilder() {
     if (responseCase_ == 1) {
       return (com.google.cloud.pubsublite.proto.InitialSubscribeResponse) response_;
@@ -252,6 +255,7 @@ public final class SubscribeResponse extends com.google.protobuf.GeneratedMessag
    *
    * @return Whether the seek field is set.
    */
+  @java.lang.Override
   public boolean hasSeek() {
     return responseCase_ == 2;
   }
@@ -266,6 +270,7 @@ public final class SubscribeResponse extends com.google.protobuf.GeneratedMessag
    *
    * @return The seek.
    */
+  @java.lang.Override
   public com.google.cloud.pubsublite.proto.SeekResponse getSeek() {
     if (responseCase_ == 2) {
       return (com.google.cloud.pubsublite.proto.SeekResponse) response_;
@@ -281,6 +286,7 @@ public final class SubscribeResponse extends com.google.protobuf.GeneratedMessag
    *
    * <code>.google.cloud.pubsublite.v1.SeekResponse seek = 2;</code>
    */
+  @java.lang.Override
   public com.google.cloud.pubsublite.proto.SeekResponseOrBuilder getSeekOrBuilder() {
     if (responseCase_ == 2) {
       return (com.google.cloud.pubsublite.proto.SeekResponse) response_;
@@ -300,6 +306,7 @@ public final class SubscribeResponse extends com.google.protobuf.GeneratedMessag
    *
    * @return Whether the messages field is set.
    */
+  @java.lang.Override
   public boolean hasMessages() {
     return responseCase_ == 3;
   }
@@ -314,6 +321,7 @@ public final class SubscribeResponse extends com.google.protobuf.GeneratedMessag
    *
    * @return The messages.
    */
+  @java.lang.Override
   public com.google.cloud.pubsublite.proto.MessageResponse getMessages() {
     if (responseCase_ == 3) {
       return (com.google.cloud.pubsublite.proto.MessageResponse) response_;
@@ -329,6 +337,7 @@ public final class SubscribeResponse extends com.google.protobuf.GeneratedMessag
    *
    * <code>.google.cloud.pubsublite.v1.MessageResponse messages = 3;</code>
    */
+  @java.lang.Override
   public com.google.cloud.pubsublite.proto.MessageResponseOrBuilder getMessagesOrBuilder() {
     if (responseCase_ == 3) {
       return (com.google.cloud.pubsublite.proto.MessageResponse) response_;
@@ -768,6 +777,7 @@ public final class SubscribeResponse extends com.google.protobuf.GeneratedMessag
      *
      * @return Whether the initial field is set.
      */
+    @java.lang.Override
     public boolean hasInitial() {
       return responseCase_ == 1;
     }
@@ -782,6 +792,7 @@ public final class SubscribeResponse extends com.google.protobuf.GeneratedMessag
      *
      * @return The initial.
      */
+    @java.lang.Override
     public com.google.cloud.pubsublite.proto.InitialSubscribeResponse getInitial() {
       if (initialBuilder_ == null) {
         if (responseCase_ == 1) {
@@ -916,6 +927,7 @@ public final class SubscribeResponse extends com.google.protobuf.GeneratedMessag
      *
      * <code>.google.cloud.pubsublite.v1.InitialSubscribeResponse initial = 1;</code>
      */
+    @java.lang.Override
     public com.google.cloud.pubsublite.proto.InitialSubscribeResponseOrBuilder
         getInitialOrBuilder() {
       if ((responseCase_ == 1) && (initialBuilder_ != null)) {
@@ -978,6 +990,7 @@ public final class SubscribeResponse extends com.google.protobuf.GeneratedMessag
      *
      * @return Whether the seek field is set.
      */
+    @java.lang.Override
     public boolean hasSeek() {
       return responseCase_ == 2;
     }
@@ -992,6 +1005,7 @@ public final class SubscribeResponse extends com.google.protobuf.GeneratedMessag
      *
      * @return The seek.
      */
+    @java.lang.Override
     public com.google.cloud.pubsublite.proto.SeekResponse getSeek() {
       if (seekBuilder_ == null) {
         if (responseCase_ == 2) {
@@ -1123,6 +1137,7 @@ public final class SubscribeResponse extends com.google.protobuf.GeneratedMessag
      *
      * <code>.google.cloud.pubsublite.v1.SeekResponse seek = 2;</code>
      */
+    @java.lang.Override
     public com.google.cloud.pubsublite.proto.SeekResponseOrBuilder getSeekOrBuilder() {
       if ((responseCase_ == 2) && (seekBuilder_ != null)) {
         return seekBuilder_.getMessageOrBuilder();
@@ -1183,6 +1198,7 @@ public final class SubscribeResponse extends com.google.protobuf.GeneratedMessag
      *
      * @return Whether the messages field is set.
      */
+    @java.lang.Override
     public boolean hasMessages() {
       return responseCase_ == 3;
     }
@@ -1197,6 +1213,7 @@ public final class SubscribeResponse extends com.google.protobuf.GeneratedMessag
      *
      * @return The messages.
      */
+    @java.lang.Override
     public com.google.cloud.pubsublite.proto.MessageResponse getMessages() {
       if (messagesBuilder_ == null) {
         if (responseCase_ == 3) {
@@ -1330,6 +1347,7 @@ public final class SubscribeResponse extends com.google.protobuf.GeneratedMessag
      *
      * <code>.google.cloud.pubsublite.v1.MessageResponse messages = 3;</code>
      */
+    @java.lang.Override
     public com.google.cloud.pubsublite.proto.MessageResponseOrBuilder getMessagesOrBuilder() {
       if ((responseCase_ == 3) && (messagesBuilder_ != null)) {
         return messagesBuilder_.getMessageOrBuilder();

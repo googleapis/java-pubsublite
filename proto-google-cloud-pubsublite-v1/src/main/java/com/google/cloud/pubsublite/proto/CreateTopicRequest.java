@@ -136,6 +136,7 @@ public final class CreateTopicRequest extends com.google.protobuf.GeneratedMessa
    *
    * @return The parent.
    */
+  @java.lang.Override
   public java.lang.String getParent() {
     java.lang.Object ref = parent_;
     if (ref instanceof java.lang.String) {
@@ -161,6 +162,7 @@ public final class CreateTopicRequest extends com.google.protobuf.GeneratedMessa
    *
    * @return The bytes for parent.
    */
+  @java.lang.Override
   public com.google.protobuf.ByteString getParentBytes() {
     java.lang.Object ref = parent_;
     if (ref instanceof java.lang.String) {
@@ -187,6 +189,7 @@ public final class CreateTopicRequest extends com.google.protobuf.GeneratedMessa
    *
    * @return Whether the topic field is set.
    */
+  @java.lang.Override
   public boolean hasTopic() {
     return topic_ != null;
   }
@@ -202,6 +205,7 @@ public final class CreateTopicRequest extends com.google.protobuf.GeneratedMessa
    *
    * @return The topic.
    */
+  @java.lang.Override
   public com.google.cloud.pubsublite.proto.Topic getTopic() {
     return topic_ == null ? com.google.cloud.pubsublite.proto.Topic.getDefaultInstance() : topic_;
   }
@@ -215,6 +219,7 @@ public final class CreateTopicRequest extends com.google.protobuf.GeneratedMessa
    * <code>.google.cloud.pubsublite.v1.Topic topic = 2 [(.google.api.field_behavior) = REQUIRED];
    * </code>
    */
+  @java.lang.Override
   public com.google.cloud.pubsublite.proto.TopicOrBuilder getTopicOrBuilder() {
     return getTopic();
   }
@@ -234,6 +239,7 @@ public final class CreateTopicRequest extends com.google.protobuf.GeneratedMessa
    *
    * @return The topicId.
    */
+  @java.lang.Override
   public java.lang.String getTopicId() {
     java.lang.Object ref = topicId_;
     if (ref instanceof java.lang.String) {
@@ -258,6 +264,7 @@ public final class CreateTopicRequest extends com.google.protobuf.GeneratedMessa
    *
    * @return The bytes for topicId.
    */
+  @java.lang.Override
   public com.google.protobuf.ByteString getTopicIdBytes() {
     java.lang.Object ref = topicId_;
     if (ref instanceof java.lang.String) {

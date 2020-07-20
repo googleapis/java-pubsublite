@@ -238,6 +238,10 @@ public final class SeekRequest extends com.google.protobuf.GeneratedMessageV3
         };
 
     public final com.google.protobuf.Descriptors.EnumValueDescriptor getValueDescriptor() {
+      if (this == UNRECOGNIZED) {
+        throw new java.lang.IllegalStateException(
+            "Can't get the descriptor of an unrecognized enum value.");
+      }
       return getDescriptor().getValues().get(ordinal());
     }
 
@@ -372,6 +376,7 @@ public final class SeekRequest extends com.google.protobuf.GeneratedMessageV3
    *
    * @return Whether the cursor field is set.
    */
+  @java.lang.Override
   public boolean hasCursor() {
     return targetCase_ == 2;
   }
@@ -387,6 +392,7 @@ public final class SeekRequest extends com.google.protobuf.GeneratedMessageV3
    *
    * @return The cursor.
    */
+  @java.lang.Override
   public com.google.cloud.pubsublite.proto.Cursor getCursor() {
     if (targetCase_ == 2) {
       return (com.google.cloud.pubsublite.proto.Cursor) target_;
@@ -403,6 +409,7 @@ public final class SeekRequest extends com.google.protobuf.GeneratedMessageV3
    *
    * <code>.google.cloud.pubsublite.v1.Cursor cursor = 2;</code>
    */
+  @java.lang.Override
   public com.google.cloud.pubsublite.proto.CursorOrBuilder getCursorOrBuilder() {
     if (targetCase_ == 2) {
       return (com.google.cloud.pubsublite.proto.Cursor) target_;
@@ -805,6 +812,7 @@ public final class SeekRequest extends com.google.protobuf.GeneratedMessageV3
      *
      * @return The enum numeric value on the wire for namedTarget.
      */
+    @java.lang.Override
     public int getNamedTargetValue() {
       if (targetCase_ == 1) {
         return ((java.lang.Integer) target_).intValue();
@@ -840,6 +848,7 @@ public final class SeekRequest extends com.google.protobuf.GeneratedMessageV3
      *
      * @return The namedTarget.
      */
+    @java.lang.Override
     public com.google.cloud.pubsublite.proto.SeekRequest.NamedTarget getNamedTarget() {
       if (targetCase_ == 1) {
         @SuppressWarnings("deprecation")
@@ -910,6 +919,7 @@ public final class SeekRequest extends com.google.protobuf.GeneratedMessageV3
      *
      * @return Whether the cursor field is set.
      */
+    @java.lang.Override
     public boolean hasCursor() {
       return targetCase_ == 2;
     }
@@ -925,6 +935,7 @@ public final class SeekRequest extends com.google.protobuf.GeneratedMessageV3
      *
      * @return The cursor.
      */
+    @java.lang.Override
     public com.google.cloud.pubsublite.proto.Cursor getCursor() {
       if (cursorBuilder_ == null) {
         if (targetCase_ == 2) {
@@ -1062,6 +1073,7 @@ public final class SeekRequest extends com.google.protobuf.GeneratedMessageV3
      *
      * <code>.google.cloud.pubsublite.v1.Cursor cursor = 2;</code>
      */
+    @java.lang.Override
     public com.google.cloud.pubsublite.proto.CursorOrBuilder getCursorOrBuilder() {
       if ((targetCase_ == 2) && (cursorBuilder_ != null)) {
         return cursorBuilder_.getMessageOrBuilder();

@@ -188,6 +188,7 @@ public final class StreamingCommitCursorRequest extends com.google.protobuf.Gene
    *
    * @return Whether the initial field is set.
    */
+  @java.lang.Override
   public boolean hasInitial() {
     return requestCase_ == 1;
   }
@@ -202,6 +203,7 @@ public final class StreamingCommitCursorRequest extends com.google.protobuf.Gene
    *
    * @return The initial.
    */
+  @java.lang.Override
   public com.google.cloud.pubsublite.proto.InitialCommitCursorRequest getInitial() {
     if (requestCase_ == 1) {
       return (com.google.cloud.pubsublite.proto.InitialCommitCursorRequest) request_;
@@ -217,6 +219,7 @@ public final class StreamingCommitCursorRequest extends com.google.protobuf.Gene
    *
    * <code>.google.cloud.pubsublite.v1.InitialCommitCursorRequest initial = 1;</code>
    */
+  @java.lang.Override
   public com.google.cloud.pubsublite.proto.InitialCommitCursorRequestOrBuilder
       getInitialOrBuilder() {
     if (requestCase_ == 1) {
@@ -237,6 +240,7 @@ public final class StreamingCommitCursorRequest extends com.google.protobuf.Gene
    *
    * @return Whether the commit field is set.
    */
+  @java.lang.Override
   public boolean hasCommit() {
     return requestCase_ == 2;
   }
@@ -251,6 +255,7 @@ public final class StreamingCommitCursorRequest extends com.google.protobuf.Gene
    *
    * @return The commit.
    */
+  @java.lang.Override
   public com.google.cloud.pubsublite.proto.SequencedCommitCursorRequest getCommit() {
     if (requestCase_ == 2) {
       return (com.google.cloud.pubsublite.proto.SequencedCommitCursorRequest) request_;
@@ -266,6 +271,7 @@ public final class StreamingCommitCursorRequest extends com.google.protobuf.Gene
    *
    * <code>.google.cloud.pubsublite.v1.SequencedCommitCursorRequest commit = 2;</code>
    */
+  @java.lang.Override
   public com.google.cloud.pubsublite.proto.SequencedCommitCursorRequestOrBuilder
       getCommitOrBuilder() {
     if (requestCase_ == 2) {
@@ -684,6 +690,7 @@ public final class StreamingCommitCursorRequest extends com.google.protobuf.Gene
      *
      * @return Whether the initial field is set.
      */
+    @java.lang.Override
     public boolean hasInitial() {
       return requestCase_ == 1;
     }
@@ -698,6 +705,7 @@ public final class StreamingCommitCursorRequest extends com.google.protobuf.Gene
      *
      * @return The initial.
      */
+    @java.lang.Override
     public com.google.cloud.pubsublite.proto.InitialCommitCursorRequest getInitial() {
       if (initialBuilder_ == null) {
         if (requestCase_ == 1) {
@@ -834,6 +842,7 @@ public final class StreamingCommitCursorRequest extends com.google.protobuf.Gene
      *
      * <code>.google.cloud.pubsublite.v1.InitialCommitCursorRequest initial = 1;</code>
      */
+    @java.lang.Override
     public com.google.cloud.pubsublite.proto.InitialCommitCursorRequestOrBuilder
         getInitialOrBuilder() {
       if ((requestCase_ == 1) && (initialBuilder_ != null)) {
@@ -896,6 +905,7 @@ public final class StreamingCommitCursorRequest extends com.google.protobuf.Gene
      *
      * @return Whether the commit field is set.
      */
+    @java.lang.Override
     public boolean hasCommit() {
       return requestCase_ == 2;
     }
@@ -910,6 +920,7 @@ public final class StreamingCommitCursorRequest extends com.google.protobuf.Gene
      *
      * @return The commit.
      */
+    @java.lang.Override
     public com.google.cloud.pubsublite.proto.SequencedCommitCursorRequest getCommit() {
       if (commitBuilder_ == null) {
         if (requestCase_ == 2) {
@@ -1046,6 +1057,7 @@ public final class StreamingCommitCursorRequest extends com.google.protobuf.Gene
      *
      * <code>.google.cloud.pubsublite.v1.SequencedCommitCursorRequest commit = 2;</code>
      */
+    @java.lang.Override
     public com.google.cloud.pubsublite.proto.SequencedCommitCursorRequestOrBuilder
         getCommitOrBuilder() {
       if ((requestCase_ == 2) && (commitBuilder_ != null)) {

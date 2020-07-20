@@ -106,6 +106,7 @@ public final class Cursor extends com.google.protobuf.GeneratedMessageV3
    *
    * @return The offset.
    */
+  @java.lang.Override
   public long getOffset() {
     return offset_;
   }
@@ -437,6 +438,7 @@ public final class Cursor extends com.google.protobuf.GeneratedMessageV3
      *
      * @return The offset.
      */
+    @java.lang.Override
     public long getOffset() {
       return offset_;
     }

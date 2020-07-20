@@ -122,6 +122,7 @@ public final class MessageResponse extends com.google.protobuf.GeneratedMessageV
    *
    * <code>repeated .google.cloud.pubsublite.v1.SequencedMessage messages = 1;</code>
    */
+  @java.lang.Override
   public java.util.List<com.google.cloud.pubsublite.proto.SequencedMessage> getMessagesList() {
     return messages_;
   }
@@ -134,6 +135,7 @@ public final class MessageResponse extends com.google.protobuf.GeneratedMessageV
    *
    * <code>repeated .google.cloud.pubsublite.v1.SequencedMessage messages = 1;</code>
    */
+  @java.lang.Override
   public java.util.List<? extends com.google.cloud.pubsublite.proto.SequencedMessageOrBuilder>
       getMessagesOrBuilderList() {
     return messages_;
@@ -147,6 +149,7 @@ public final class MessageResponse extends com.google.protobuf.GeneratedMessageV
    *
    * <code>repeated .google.cloud.pubsublite.v1.SequencedMessage messages = 1;</code>
    */
+  @java.lang.Override
   public int getMessagesCount() {
     return messages_.size();
   }
@@ -159,6 +162,7 @@ public final class MessageResponse extends com.google.protobuf.GeneratedMessageV
    *
    * <code>repeated .google.cloud.pubsublite.v1.SequencedMessage messages = 1;</code>
    */
+  @java.lang.Override
   public com.google.cloud.pubsublite.proto.SequencedMessage getMessages(int index) {
     return messages_.get(index);
   }
@@ -171,6 +175,7 @@ public final class MessageResponse extends com.google.protobuf.GeneratedMessageV
    *
    * <code>repeated .google.cloud.pubsublite.v1.SequencedMessage messages = 1;</code>
    */
+  @java.lang.Override
   public com.google.cloud.pubsublite.proto.SequencedMessageOrBuilder getMessagesOrBuilder(
       int index) {
     return messages_.get(index);

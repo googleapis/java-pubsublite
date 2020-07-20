@@ -272,6 +272,7 @@ public final class Topic extends com.google.protobuf.GeneratedMessageV3
      *
      * @return The count.
      */
+    @java.lang.Override
     public long getCount() {
       return count_;
     }
@@ -293,6 +294,7 @@ public final class Topic extends com.google.protobuf.GeneratedMessageV3
      *
      * @return The scale.
      */
+    @java.lang.Override
     public int getScale() {
       return scale_;
     }
@@ -646,6 +648,7 @@ public final class Topic extends com.google.protobuf.GeneratedMessageV3
        *
        * @return The count.
        */
+      @java.lang.Override
       public long getCount() {
         return count_;
       }
@@ -701,6 +704,7 @@ public final class Topic extends com.google.protobuf.GeneratedMessageV3
        *
        * @return The scale.
        */
+      @java.lang.Override
       public int getScale() {
         return scale_;
       }
@@ -982,6 +986,7 @@ public final class Topic extends com.google.protobuf.GeneratedMessageV3
      *
      * @return The perPartitionBytes.
      */
+    @java.lang.Override
     public long getPerPartitionBytes() {
       return perPartitionBytes_;
     }
@@ -1001,6 +1006,7 @@ public final class Topic extends com.google.protobuf.GeneratedMessageV3
      *
      * @return Whether the period field is set.
      */
+    @java.lang.Override
     public boolean hasPeriod() {
       return period_ != null;
     }
@@ -1017,6 +1023,7 @@ public final class Topic extends com.google.protobuf.GeneratedMessageV3
      *
      * @return The period.
      */
+    @java.lang.Override
     public com.google.protobuf.Duration getPeriod() {
       return period_ == null ? com.google.protobuf.Duration.getDefaultInstance() : period_;
     }
@@ -1031,6 +1038,7 @@ public final class Topic extends com.google.protobuf.GeneratedMessageV3
      *
      * <code>.google.protobuf.Duration period = 2;</code>
      */
+    @java.lang.Override
     public com.google.protobuf.DurationOrBuilder getPeriodOrBuilder() {
       return getPeriod();
     }
@@ -1400,6 +1408,7 @@ public final class Topic extends com.google.protobuf.GeneratedMessageV3
        *
        * @return The perPartitionBytes.
        */
+      @java.lang.Override
       public long getPerPartitionBytes() {
         return perPartitionBytes_;
       }
@@ -1709,6 +1718,7 @@ public final class Topic extends com.google.protobuf.GeneratedMessageV3
    *
    * @return The name.
    */
+  @java.lang.Override
   public java.lang.String getName() {
     java.lang.Object ref = name_;
     if (ref instanceof java.lang.String) {
@@ -1733,6 +1743,7 @@ public final class Topic extends com.google.protobuf.GeneratedMessageV3
    *
    * @return The bytes for name.
    */
+  @java.lang.Override
   public com.google.protobuf.ByteString getNameBytes() {
     java.lang.Object ref = name_;
     if (ref instanceof java.lang.String) {
@@ -1758,6 +1769,7 @@ public final class Topic extends com.google.protobuf.GeneratedMessageV3
    *
    * @return Whether the partitionConfig field is set.
    */
+  @java.lang.Override
   public boolean hasPartitionConfig() {
     return partitionConfig_ != null;
   }
@@ -1772,6 +1784,7 @@ public final class Topic extends com.google.protobuf.GeneratedMessageV3
    *
    * @return The partitionConfig.
    */
+  @java.lang.Override
   public com.google.cloud.pubsublite.proto.Topic.PartitionConfig getPartitionConfig() {
     return partitionConfig_ == null
         ? com.google.cloud.pubsublite.proto.Topic.PartitionConfig.getDefaultInstance()
@@ -1786,6 +1799,7 @@ public final class Topic extends com.google.protobuf.GeneratedMessageV3
    *
    * <code>.google.cloud.pubsublite.v1.Topic.PartitionConfig partition_config = 2;</code>
    */
+  @java.lang.Override
   public com.google.cloud.pubsublite.proto.Topic.PartitionConfigOrBuilder
       getPartitionConfigOrBuilder() {
     return getPartitionConfig();
@@ -1804,6 +1818,7 @@ public final class Topic extends com.google.protobuf.GeneratedMessageV3
    *
    * @return Whether the retentionConfig field is set.
    */
+  @java.lang.Override
   public boolean hasRetentionConfig() {
     return retentionConfig_ != null;
   }
@@ -1818,6 +1833,7 @@ public final class Topic extends com.google.protobuf.GeneratedMessageV3
    *
    * @return The retentionConfig.
    */
+  @java.lang.Override
   public com.google.cloud.pubsublite.proto.Topic.RetentionConfig getRetentionConfig() {
     return retentionConfig_ == null
         ? com.google.cloud.pubsublite.proto.Topic.RetentionConfig.getDefaultInstance()
@@ -1832,6 +1848,7 @@ public final class Topic extends com.google.protobuf.GeneratedMessageV3
    *
    * <code>.google.cloud.pubsublite.v1.Topic.RetentionConfig retention_config = 3;</code>
    */
+  @java.lang.Override
   public com.google.cloud.pubsublite.proto.Topic.RetentionConfigOrBuilder
       getRetentionConfigOrBuilder() {
     return getRetentionConfig();

@@ -159,6 +159,7 @@ public final class PubSubMessage extends com.google.protobuf.GeneratedMessageV3
    *
    * @return The key.
    */
+  @java.lang.Override
   public com.google.protobuf.ByteString getKey() {
     return key_;
   }
@@ -176,6 +177,7 @@ public final class PubSubMessage extends com.google.protobuf.GeneratedMessageV3
    *
    * @return The data.
    */
+  @java.lang.Override
   public com.google.protobuf.ByteString getData() {
     return data_;
   }
@@ -222,6 +224,7 @@ public final class PubSubMessage extends com.google.protobuf.GeneratedMessageV3
    *
    * <code>map&lt;string, .google.cloud.pubsublite.v1.AttributeValues&gt; attributes = 3;</code>
    */
+  @java.lang.Override
   public boolean containsAttributes(java.lang.String key) {
     if (key == null) {
       throw new java.lang.NullPointerException();
@@ -229,6 +232,7 @@ public final class PubSubMessage extends com.google.protobuf.GeneratedMessageV3
     return internalGetAttributes().getMap().containsKey(key);
   }
   /** Use {@link #getAttributesMap()} instead. */
+  @java.lang.Override
   @java.lang.Deprecated
   public java.util.Map<java.lang.String, com.google.cloud.pubsublite.proto.AttributeValues>
       getAttributes() {
@@ -243,6 +247,7 @@ public final class PubSubMessage extends com.google.protobuf.GeneratedMessageV3
    *
    * <code>map&lt;string, .google.cloud.pubsublite.v1.AttributeValues&gt; attributes = 3;</code>
    */
+  @java.lang.Override
   public java.util.Map<java.lang.String, com.google.cloud.pubsublite.proto.AttributeValues>
       getAttributesMap() {
     return internalGetAttributes().getMap();
@@ -256,6 +261,7 @@ public final class PubSubMessage extends com.google.protobuf.GeneratedMessageV3
    *
    * <code>map&lt;string, .google.cloud.pubsublite.v1.AttributeValues&gt; attributes = 3;</code>
    */
+  @java.lang.Override
   public com.google.cloud.pubsublite.proto.AttributeValues getAttributesOrDefault(
       java.lang.String key, com.google.cloud.pubsublite.proto.AttributeValues defaultValue) {
     if (key == null) {
@@ -274,6 +280,7 @@ public final class PubSubMessage extends com.google.protobuf.GeneratedMessageV3
    *
    * <code>map&lt;string, .google.cloud.pubsublite.v1.AttributeValues&gt; attributes = 3;</code>
    */
+  @java.lang.Override
   public com.google.cloud.pubsublite.proto.AttributeValues getAttributesOrThrow(
       java.lang.String key) {
     if (key == null) {
@@ -300,6 +307,7 @@ public final class PubSubMessage extends com.google.protobuf.GeneratedMessageV3
    *
    * @return Whether the eventTime field is set.
    */
+  @java.lang.Override
   public boolean hasEventTime() {
     return eventTime_ != null;
   }
@@ -314,6 +322,7 @@ public final class PubSubMessage extends com.google.protobuf.GeneratedMessageV3
    *
    * @return The eventTime.
    */
+  @java.lang.Override
   public com.google.protobuf.Timestamp getEventTime() {
     return eventTime_ == null ? com.google.protobuf.Timestamp.getDefaultInstance() : eventTime_;
   }
@@ -326,6 +335,7 @@ public final class PubSubMessage extends com.google.protobuf.GeneratedMessageV3
    *
    * <code>.google.protobuf.Timestamp event_time = 4;</code>
    */
+  @java.lang.Override
   public com.google.protobuf.TimestampOrBuilder getEventTimeOrBuilder() {
     return getEventTime();
   }
@@ -749,6 +759,7 @@ public final class PubSubMessage extends com.google.protobuf.GeneratedMessageV3
      *
      * @return The key.
      */
+    @java.lang.Override
     public com.google.protobuf.ByteString getKey() {
       return key_;
     }
@@ -807,6 +818,7 @@ public final class PubSubMessage extends com.google.protobuf.GeneratedMessageV3
      *
      * @return The data.
      */
+    @java.lang.Override
     public com.google.protobuf.ByteString getData() {
       return data_;
     }
@@ -890,6 +902,7 @@ public final class PubSubMessage extends com.google.protobuf.GeneratedMessageV3
      *
      * <code>map&lt;string, .google.cloud.pubsublite.v1.AttributeValues&gt; attributes = 3;</code>
      */
+    @java.lang.Override
     public boolean containsAttributes(java.lang.String key) {
       if (key == null) {
         throw new java.lang.NullPointerException();
@@ -897,6 +910,7 @@ public final class PubSubMessage extends com.google.protobuf.GeneratedMessageV3
       return internalGetAttributes().getMap().containsKey(key);
     }
     /** Use {@link #getAttributesMap()} instead. */
+    @java.lang.Override
     @java.lang.Deprecated
     public java.util.Map<java.lang.String, com.google.cloud.pubsublite.proto.AttributeValues>
         getAttributes() {
@@ -911,6 +925,7 @@ public final class PubSubMessage extends com.google.protobuf.GeneratedMessageV3
      *
      * <code>map&lt;string, .google.cloud.pubsublite.v1.AttributeValues&gt; attributes = 3;</code>
      */
+    @java.lang.Override
     public java.util.Map<java.lang.String, com.google.cloud.pubsublite.proto.AttributeValues>
         getAttributesMap() {
       return internalGetAttributes().getMap();
@@ -924,6 +939,7 @@ public final class PubSubMessage extends com.google.protobuf.GeneratedMessageV3
      *
      * <code>map&lt;string, .google.cloud.pubsublite.v1.AttributeValues&gt; attributes = 3;</code>
      */
+    @java.lang.Override
     public com.google.cloud.pubsublite.proto.AttributeValues getAttributesOrDefault(
         java.lang.String key, com.google.cloud.pubsublite.proto.AttributeValues defaultValue) {
       if (key == null) {
@@ -942,6 +958,7 @@ public final class PubSubMessage extends com.google.protobuf.GeneratedMessageV3
      *
      * <code>map&lt;string, .google.cloud.pubsublite.v1.AttributeValues&gt; attributes = 3;</code>
      */
+    @java.lang.Override
     public com.google.cloud.pubsublite.proto.AttributeValues getAttributesOrThrow(
         java.lang.String key) {
       if (key == null) {

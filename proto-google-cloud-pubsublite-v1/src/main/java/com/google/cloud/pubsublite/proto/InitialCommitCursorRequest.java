@@ -116,6 +116,7 @@ public final class InitialCommitCursorRequest extends com.google.protobuf.Genera
    *
    * @return The subscription.
    */
+  @java.lang.Override
   public java.lang.String getSubscription() {
     java.lang.Object ref = subscription_;
     if (ref instanceof java.lang.String) {
@@ -138,6 +139,7 @@ public final class InitialCommitCursorRequest extends com.google.protobuf.Genera
    *
    * @return The bytes for subscription.
    */
+  @java.lang.Override
   public com.google.protobuf.ByteString getSubscriptionBytes() {
     java.lang.Object ref = subscription_;
     if (ref instanceof java.lang.String) {
@@ -164,6 +166,7 @@ public final class InitialCommitCursorRequest extends com.google.protobuf.Genera
    *
    * @return The partition.
    */
+  @java.lang.Override
   public long getPartition() {
     return partition_;
   }
@@ -625,6 +628,7 @@ public final class InitialCommitCursorRequest extends com.google.protobuf.Genera
      *
      * @return The partition.
      */
+    @java.lang.Override
     public long getPartition() {
       return partition_;
     }

@@ -204,6 +204,7 @@ public final class SubscribeRequest extends com.google.protobuf.GeneratedMessage
    *
    * @return Whether the initial field is set.
    */
+  @java.lang.Override
   public boolean hasInitial() {
     return requestCase_ == 1;
   }
@@ -218,6 +219,7 @@ public final class SubscribeRequest extends com.google.protobuf.GeneratedMessage
    *
    * @return The initial.
    */
+  @java.lang.Override
   public com.google.cloud.pubsublite.proto.InitialSubscribeRequest getInitial() {
     if (requestCase_ == 1) {
       return (com.google.cloud.pubsublite.proto.InitialSubscribeRequest) request_;
@@ -233,6 +235,7 @@ public final class SubscribeRequest extends com.google.protobuf.GeneratedMessage
    *
    * <code>.google.cloud.pubsublite.v1.InitialSubscribeRequest initial = 1;</code>
    */
+  @java.lang.Override
   public com.google.cloud.pubsublite.proto.InitialSubscribeRequestOrBuilder getInitialOrBuilder() {
     if (requestCase_ == 1) {
       return (com.google.cloud.pubsublite.proto.InitialSubscribeRequest) request_;
@@ -252,6 +255,7 @@ public final class SubscribeRequest extends com.google.protobuf.GeneratedMessage
    *
    * @return Whether the seek field is set.
    */
+  @java.lang.Override
   public boolean hasSeek() {
     return requestCase_ == 2;
   }
@@ -266,6 +270,7 @@ public final class SubscribeRequest extends com.google.protobuf.GeneratedMessage
    *
    * @return The seek.
    */
+  @java.lang.Override
   public com.google.cloud.pubsublite.proto.SeekRequest getSeek() {
     if (requestCase_ == 2) {
       return (com.google.cloud.pubsublite.proto.SeekRequest) request_;
@@ -281,6 +286,7 @@ public final class SubscribeRequest extends com.google.protobuf.GeneratedMessage
    *
    * <code>.google.cloud.pubsublite.v1.SeekRequest seek = 2;</code>
    */
+  @java.lang.Override
   public com.google.cloud.pubsublite.proto.SeekRequestOrBuilder getSeekOrBuilder() {
     if (requestCase_ == 2) {
       return (com.google.cloud.pubsublite.proto.SeekRequest) request_;
@@ -300,6 +306,7 @@ public final class SubscribeRequest extends com.google.protobuf.GeneratedMessage
    *
    * @return Whether the flowControl field is set.
    */
+  @java.lang.Override
   public boolean hasFlowControl() {
     return requestCase_ == 3;
   }
@@ -314,6 +321,7 @@ public final class SubscribeRequest extends com.google.protobuf.GeneratedMessage
    *
    * @return The flowControl.
    */
+  @java.lang.Override
   public com.google.cloud.pubsublite.proto.FlowControlRequest getFlowControl() {
     if (requestCase_ == 3) {
       return (com.google.cloud.pubsublite.proto.FlowControlRequest) request_;
@@ -329,6 +337,7 @@ public final class SubscribeRequest extends com.google.protobuf.GeneratedMessage
    *
    * <code>.google.cloud.pubsublite.v1.FlowControlRequest flow_control = 3;</code>
    */
+  @java.lang.Override
   public com.google.cloud.pubsublite.proto.FlowControlRequestOrBuilder getFlowControlOrBuilder() {
     if (requestCase_ == 3) {
       return (com.google.cloud.pubsublite.proto.FlowControlRequest) request_;
@@ -767,6 +776,7 @@ public final class SubscribeRequest extends com.google.protobuf.GeneratedMessage
      *
      * @return Whether the initial field is set.
      */
+    @java.lang.Override
     public boolean hasInitial() {
       return requestCase_ == 1;
     }
@@ -781,6 +791,7 @@ public final class SubscribeRequest extends com.google.protobuf.GeneratedMessage
      *
      * @return The initial.
      */
+    @java.lang.Override
     public com.google.cloud.pubsublite.proto.InitialSubscribeRequest getInitial() {
       if (initialBuilder_ == null) {
         if (requestCase_ == 1) {
@@ -914,6 +925,7 @@ public final class SubscribeRequest extends com.google.protobuf.GeneratedMessage
      *
      * <code>.google.cloud.pubsublite.v1.InitialSubscribeRequest initial = 1;</code>
      */
+    @java.lang.Override
     public com.google.cloud.pubsublite.proto.InitialSubscribeRequestOrBuilder
         getInitialOrBuilder() {
       if ((requestCase_ == 1) && (initialBuilder_ != null)) {
@@ -975,6 +987,7 @@ public final class SubscribeRequest extends com.google.protobuf.GeneratedMessage
      *
      * @return Whether the seek field is set.
      */
+    @java.lang.Override
     public boolean hasSeek() {
       return requestCase_ == 2;
     }
@@ -989,6 +1002,7 @@ public final class SubscribeRequest extends com.google.protobuf.GeneratedMessage
      *
      * @return The seek.
      */
+    @java.lang.Override
     public com.google.cloud.pubsublite.proto.SeekRequest getSeek() {
       if (seekBuilder_ == null) {
         if (requestCase_ == 2) {
@@ -1120,6 +1134,7 @@ public final class SubscribeRequest extends com.google.protobuf.GeneratedMessage
      *
      * <code>.google.cloud.pubsublite.v1.SeekRequest seek = 2;</code>
      */
+    @java.lang.Override
     public com.google.cloud.pubsublite.proto.SeekRequestOrBuilder getSeekOrBuilder() {
       if ((requestCase_ == 2) && (seekBuilder_ != null)) {
         return seekBuilder_.getMessageOrBuilder();
@@ -1180,6 +1195,7 @@ public final class SubscribeRequest extends com.google.protobuf.GeneratedMessage
      *
      * @return Whether the flowControl field is set.
      */
+    @java.lang.Override
     public boolean hasFlowControl() {
       return requestCase_ == 3;
     }
@@ -1194,6 +1210,7 @@ public final class SubscribeRequest extends com.google.protobuf.GeneratedMessage
      *
      * @return The flowControl.
      */
+    @java.lang.Override
     public com.google.cloud.pubsublite.proto.FlowControlRequest getFlowControl() {
       if (flowControlBuilder_ == null) {
         if (requestCase_ == 3) {
@@ -1327,6 +1344,7 @@ public final class SubscribeRequest extends com.google.protobuf.GeneratedMessage
      *
      * <code>.google.cloud.pubsublite.v1.FlowControlRequest flow_control = 3;</code>
      */
+    @java.lang.Override
     public com.google.cloud.pubsublite.proto.FlowControlRequestOrBuilder getFlowControlOrBuilder() {
       if ((requestCase_ == 3) && (flowControlBuilder_ != null)) {
         return flowControlBuilder_.getMessageOrBuilder();

@@ -105,6 +105,7 @@ public final class TopicPartitions extends com.google.protobuf.GeneratedMessageV
    *
    * @return The partitionCount.
    */
+  @java.lang.Override
   public long getPartitionCount() {
     return partitionCount_;
   }
@@ -438,6 +439,7 @@ public final class TopicPartitions extends com.google.protobuf.GeneratedMessageV
      *
      * @return The partitionCount.
      */
+    @java.lang.Override
     public long getPartitionCount() {
       return partitionCount_;
     }

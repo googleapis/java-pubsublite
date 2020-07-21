@@ -121,6 +121,7 @@ public final class PartitionCursor extends com.google.protobuf.GeneratedMessageV
    *
    * @return The partition.
    */
+  @java.lang.Override
   public long getPartition() {
     return partition_;
   }
@@ -138,6 +139,7 @@ public final class PartitionCursor extends com.google.protobuf.GeneratedMessageV
    *
    * @return Whether the cursor field is set.
    */
+  @java.lang.Override
   public boolean hasCursor() {
     return cursor_ != null;
   }
@@ -152,6 +154,7 @@ public final class PartitionCursor extends com.google.protobuf.GeneratedMessageV
    *
    * @return The cursor.
    */
+  @java.lang.Override
   public com.google.cloud.pubsublite.proto.Cursor getCursor() {
     return cursor_ == null
         ? com.google.cloud.pubsublite.proto.Cursor.getDefaultInstance()
@@ -166,6 +169,7 @@ public final class PartitionCursor extends com.google.protobuf.GeneratedMessageV
    *
    * <code>.google.cloud.pubsublite.v1.Cursor cursor = 2;</code>
    */
+  @java.lang.Override
   public com.google.cloud.pubsublite.proto.CursorOrBuilder getCursorOrBuilder() {
     return getCursor();
   }
@@ -527,6 +531,7 @@ public final class PartitionCursor extends com.google.protobuf.GeneratedMessageV
      *
      * @return The partition.
      */
+    @java.lang.Override
     public long getPartition() {
       return partition_;
     }

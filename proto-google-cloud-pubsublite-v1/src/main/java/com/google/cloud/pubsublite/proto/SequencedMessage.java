@@ -144,6 +144,7 @@ public final class SequencedMessage extends com.google.protobuf.GeneratedMessage
    *
    * @return Whether the cursor field is set.
    */
+  @java.lang.Override
   public boolean hasCursor() {
     return cursor_ != null;
   }
@@ -158,6 +159,7 @@ public final class SequencedMessage extends com.google.protobuf.GeneratedMessage
    *
    * @return The cursor.
    */
+  @java.lang.Override
   public com.google.cloud.pubsublite.proto.Cursor getCursor() {
     return cursor_ == null
         ? com.google.cloud.pubsublite.proto.Cursor.getDefaultInstance()
@@ -172,6 +174,7 @@ public final class SequencedMessage extends com.google.protobuf.GeneratedMessage
    *
    * <code>.google.cloud.pubsublite.v1.Cursor cursor = 1;</code>
    */
+  @java.lang.Override
   public com.google.cloud.pubsublite.proto.CursorOrBuilder getCursorOrBuilder() {
     return getCursor();
   }
@@ -190,6 +193,7 @@ public final class SequencedMessage extends com.google.protobuf.GeneratedMessage
    *
    * @return Whether the publishTime field is set.
    */
+  @java.lang.Override
   public boolean hasPublishTime() {
     return publishTime_ != null;
   }
@@ -205,6 +209,7 @@ public final class SequencedMessage extends com.google.protobuf.GeneratedMessage
    *
    * @return The publishTime.
    */
+  @java.lang.Override
   public com.google.protobuf.Timestamp getPublishTime() {
     return publishTime_ == null ? com.google.protobuf.Timestamp.getDefaultInstance() : publishTime_;
   }
@@ -218,6 +223,7 @@ public final class SequencedMessage extends com.google.protobuf.GeneratedMessage
    *
    * <code>.google.protobuf.Timestamp publish_time = 2;</code>
    */
+  @java.lang.Override
   public com.google.protobuf.TimestampOrBuilder getPublishTimeOrBuilder() {
     return getPublishTime();
   }
@@ -235,6 +241,7 @@ public final class SequencedMessage extends com.google.protobuf.GeneratedMessage
    *
    * @return Whether the message field is set.
    */
+  @java.lang.Override
   public boolean hasMessage() {
     return message_ != null;
   }
@@ -249,6 +256,7 @@ public final class SequencedMessage extends com.google.protobuf.GeneratedMessage
    *
    * @return The message.
    */
+  @java.lang.Override
   public com.google.cloud.pubsublite.proto.PubSubMessage getMessage() {
     return message_ == null
         ? com.google.cloud.pubsublite.proto.PubSubMessage.getDefaultInstance()
@@ -263,6 +271,7 @@ public final class SequencedMessage extends com.google.protobuf.GeneratedMessage
    *
    * <code>.google.cloud.pubsublite.v1.PubSubMessage message = 3;</code>
    */
+  @java.lang.Override
   public com.google.cloud.pubsublite.proto.PubSubMessageOrBuilder getMessageOrBuilder() {
     return getMessage();
   }
@@ -280,6 +289,7 @@ public final class SequencedMessage extends com.google.protobuf.GeneratedMessage
    *
    * @return The sizeBytes.
    */
+  @java.lang.Override
   public long getSizeBytes() {
     return sizeBytes_;
   }
@@ -1254,6 +1264,7 @@ public final class SequencedMessage extends com.google.protobuf.GeneratedMessage
      *
      * @return The sizeBytes.
      */
+    @java.lang.Override
     public long getSizeBytes() {
       return sizeBytes_;
     }

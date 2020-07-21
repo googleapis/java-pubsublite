@@ -125,6 +125,7 @@ public final class ListPartitionCursorsResponse extends com.google.protobuf.Gene
    *
    * <code>repeated .google.cloud.pubsublite.v1.PartitionCursor partition_cursors = 1;</code>
    */
+  @java.lang.Override
   public java.util.List<com.google.cloud.pubsublite.proto.PartitionCursor>
       getPartitionCursorsList() {
     return partitionCursors_;
@@ -138,6 +139,7 @@ public final class ListPartitionCursorsResponse extends com.google.protobuf.Gene
    *
    * <code>repeated .google.cloud.pubsublite.v1.PartitionCursor partition_cursors = 1;</code>
    */
+  @java.lang.Override
   public java.util.List<? extends com.google.cloud.pubsublite.proto.PartitionCursorOrBuilder>
       getPartitionCursorsOrBuilderList() {
     return partitionCursors_;
@@ -151,6 +153,7 @@ public final class ListPartitionCursorsResponse extends com.google.protobuf.Gene
    *
    * <code>repeated .google.cloud.pubsublite.v1.PartitionCursor partition_cursors = 1;</code>
    */
+  @java.lang.Override
   public int getPartitionCursorsCount() {
     return partitionCursors_.size();
   }
@@ -163,6 +166,7 @@ public final class ListPartitionCursorsResponse extends com.google.protobuf.Gene
    *
    * <code>repeated .google.cloud.pubsublite.v1.PartitionCursor partition_cursors = 1;</code>
    */
+  @java.lang.Override
   public com.google.cloud.pubsublite.proto.PartitionCursor getPartitionCursors(int index) {
     return partitionCursors_.get(index);
   }
@@ -175,6 +179,7 @@ public final class ListPartitionCursorsResponse extends com.google.protobuf.Gene
    *
    * <code>repeated .google.cloud.pubsublite.v1.PartitionCursor partition_cursors = 1;</code>
    */
+  @java.lang.Override
   public com.google.cloud.pubsublite.proto.PartitionCursorOrBuilder getPartitionCursorsOrBuilder(
       int index) {
     return partitionCursors_.get(index);
@@ -194,6 +199,7 @@ public final class ListPartitionCursorsResponse extends com.google.protobuf.Gene
    *
    * @return The nextPageToken.
    */
+  @java.lang.Override
   public java.lang.String getNextPageToken() {
     java.lang.Object ref = nextPageToken_;
     if (ref instanceof java.lang.String) {
@@ -217,6 +223,7 @@ public final class ListPartitionCursorsResponse extends com.google.protobuf.Gene
    *
    * @return The bytes for nextPageToken.
    */
+  @java.lang.Override
   public com.google.protobuf.ByteString getNextPageTokenBytes() {
     java.lang.Object ref = nextPageToken_;
     if (ref instanceof java.lang.String) {

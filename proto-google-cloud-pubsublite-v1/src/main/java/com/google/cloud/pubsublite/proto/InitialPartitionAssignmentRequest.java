@@ -119,6 +119,7 @@ public final class InitialPartitionAssignmentRequest extends com.google.protobuf
    *
    * @return The subscription.
    */
+  @java.lang.Override
   public java.lang.String getSubscription() {
     java.lang.Object ref = subscription_;
     if (ref instanceof java.lang.String) {
@@ -143,6 +144,7 @@ public final class InitialPartitionAssignmentRequest extends com.google.protobuf
    *
    * @return The bytes for subscription.
    */
+  @java.lang.Override
   public com.google.protobuf.ByteString getSubscriptionBytes() {
     java.lang.Object ref = subscription_;
     if (ref instanceof java.lang.String) {
@@ -174,6 +176,7 @@ public final class InitialPartitionAssignmentRequest extends com.google.protobuf
    *
    * @return The clientId.
    */
+  @java.lang.Override
   public com.google.protobuf.ByteString getClientId() {
     return clientId_;
   }
@@ -655,6 +658,7 @@ public final class InitialPartitionAssignmentRequest extends com.google.protobuf
      *
      * @return The clientId.
      */
+    @java.lang.Override
     public com.google.protobuf.ByteString getClientId() {
       return clientId_;
     }

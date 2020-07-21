@@ -115,6 +115,7 @@ public final class InitialSubscribeRequest extends com.google.protobuf.Generated
    *
    * @return The subscription.
    */
+  @java.lang.Override
   public java.lang.String getSubscription() {
     java.lang.Object ref = subscription_;
     if (ref instanceof java.lang.String) {
@@ -137,6 +138,7 @@ public final class InitialSubscribeRequest extends com.google.protobuf.Generated
    *
    * @return The bytes for subscription.
    */
+  @java.lang.Override
   public com.google.protobuf.ByteString getSubscriptionBytes() {
     java.lang.Object ref = subscription_;
     if (ref instanceof java.lang.String) {
@@ -163,6 +165,7 @@ public final class InitialSubscribeRequest extends com.google.protobuf.Generated
    *
    * @return The partition.
    */
+  @java.lang.Override
   public long getPartition() {
     return partition_;
   }
@@ -621,6 +624,7 @@ public final class InitialSubscribeRequest extends com.google.protobuf.Generated
      *
      * @return The partition.
      */
+    @java.lang.Override
     public long getPartition() {
       return partition_;
     }

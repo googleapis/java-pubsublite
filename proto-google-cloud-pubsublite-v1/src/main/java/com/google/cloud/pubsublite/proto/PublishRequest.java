@@ -186,6 +186,7 @@ public final class PublishRequest extends com.google.protobuf.GeneratedMessageV3
    *
    * @return Whether the initialRequest field is set.
    */
+  @java.lang.Override
   public boolean hasInitialRequest() {
     return requestTypeCase_ == 1;
   }
@@ -200,6 +201,7 @@ public final class PublishRequest extends com.google.protobuf.GeneratedMessageV3
    *
    * @return The initialRequest.
    */
+  @java.lang.Override
   public com.google.cloud.pubsublite.proto.InitialPublishRequest getInitialRequest() {
     if (requestTypeCase_ == 1) {
       return (com.google.cloud.pubsublite.proto.InitialPublishRequest) requestType_;
@@ -215,6 +217,7 @@ public final class PublishRequest extends com.google.protobuf.GeneratedMessageV3
    *
    * <code>.google.cloud.pubsublite.v1.InitialPublishRequest initial_request = 1;</code>
    */
+  @java.lang.Override
   public com.google.cloud.pubsublite.proto.InitialPublishRequestOrBuilder
       getInitialRequestOrBuilder() {
     if (requestTypeCase_ == 1) {
@@ -235,6 +238,7 @@ public final class PublishRequest extends com.google.protobuf.GeneratedMessageV3
    *
    * @return Whether the messagePublishRequest field is set.
    */
+  @java.lang.Override
   public boolean hasMessagePublishRequest() {
     return requestTypeCase_ == 2;
   }
@@ -249,6 +253,7 @@ public final class PublishRequest extends com.google.protobuf.GeneratedMessageV3
    *
    * @return The messagePublishRequest.
    */
+  @java.lang.Override
   public com.google.cloud.pubsublite.proto.MessagePublishRequest getMessagePublishRequest() {
     if (requestTypeCase_ == 2) {
       return (com.google.cloud.pubsublite.proto.MessagePublishRequest) requestType_;
@@ -264,6 +269,7 @@ public final class PublishRequest extends com.google.protobuf.GeneratedMessageV3
    *
    * <code>.google.cloud.pubsublite.v1.MessagePublishRequest message_publish_request = 2;</code>
    */
+  @java.lang.Override
   public com.google.cloud.pubsublite.proto.MessagePublishRequestOrBuilder
       getMessagePublishRequestOrBuilder() {
     if (requestTypeCase_ == 2) {
@@ -677,6 +683,7 @@ public final class PublishRequest extends com.google.protobuf.GeneratedMessageV3
      *
      * @return Whether the initialRequest field is set.
      */
+    @java.lang.Override
     public boolean hasInitialRequest() {
       return requestTypeCase_ == 1;
     }
@@ -691,6 +698,7 @@ public final class PublishRequest extends com.google.protobuf.GeneratedMessageV3
      *
      * @return The initialRequest.
      */
+    @java.lang.Override
     public com.google.cloud.pubsublite.proto.InitialPublishRequest getInitialRequest() {
       if (initialRequestBuilder_ == null) {
         if (requestTypeCase_ == 1) {
@@ -827,6 +835,7 @@ public final class PublishRequest extends com.google.protobuf.GeneratedMessageV3
      *
      * <code>.google.cloud.pubsublite.v1.InitialPublishRequest initial_request = 1;</code>
      */
+    @java.lang.Override
     public com.google.cloud.pubsublite.proto.InitialPublishRequestOrBuilder
         getInitialRequestOrBuilder() {
       if ((requestTypeCase_ == 1) && (initialRequestBuilder_ != null)) {
@@ -889,6 +898,7 @@ public final class PublishRequest extends com.google.protobuf.GeneratedMessageV3
      *
      * @return Whether the messagePublishRequest field is set.
      */
+    @java.lang.Override
     public boolean hasMessagePublishRequest() {
       return requestTypeCase_ == 2;
     }
@@ -903,6 +913,7 @@ public final class PublishRequest extends com.google.protobuf.GeneratedMessageV3
      *
      * @return The messagePublishRequest.
      */
+    @java.lang.Override
     public com.google.cloud.pubsublite.proto.MessagePublishRequest getMessagePublishRequest() {
       if (messagePublishRequestBuilder_ == null) {
         if (requestTypeCase_ == 2) {
@@ -1039,6 +1050,7 @@ public final class PublishRequest extends com.google.protobuf.GeneratedMessageV3
      *
      * <code>.google.cloud.pubsublite.v1.MessagePublishRequest message_publish_request = 2;</code>
      */
+    @java.lang.Override
     public com.google.cloud.pubsublite.proto.MessagePublishRequestOrBuilder
         getMessagePublishRequestOrBuilder() {
       if ((requestTypeCase_ == 2) && (messagePublishRequestBuilder_ != null)) {

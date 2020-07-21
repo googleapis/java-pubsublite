@@ -114,6 +114,7 @@ public final class InitialPublishRequest extends com.google.protobuf.GeneratedMe
    *
    * @return The topic.
    */
+  @java.lang.Override
   public java.lang.String getTopic() {
     java.lang.Object ref = topic_;
     if (ref instanceof java.lang.String) {
@@ -136,6 +137,7 @@ public final class InitialPublishRequest extends com.google.protobuf.GeneratedMe
    *
    * @return The bytes for topic.
    */
+  @java.lang.Override
   public com.google.protobuf.ByteString getTopicBytes() {
     java.lang.Object ref = topic_;
     if (ref instanceof java.lang.String) {
@@ -163,6 +165,7 @@ public final class InitialPublishRequest extends com.google.protobuf.GeneratedMe
    *
    * @return The partition.
    */
+  @java.lang.Override
   public long getPartition() {
     return partition_;
   }
@@ -621,6 +624,7 @@ public final class InitialPublishRequest extends com.google.protobuf.GeneratedMe
      *
      * @return The partition.
      */
+    @java.lang.Override
     public long getPartition() {
       return partition_;
     }

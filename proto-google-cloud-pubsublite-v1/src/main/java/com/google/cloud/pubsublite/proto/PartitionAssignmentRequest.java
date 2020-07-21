@@ -187,6 +187,7 @@ public final class PartitionAssignmentRequest extends com.google.protobuf.Genera
    *
    * @return Whether the initial field is set.
    */
+  @java.lang.Override
   public boolean hasInitial() {
     return requestCase_ == 1;
   }
@@ -201,6 +202,7 @@ public final class PartitionAssignmentRequest extends com.google.protobuf.Genera
    *
    * @return The initial.
    */
+  @java.lang.Override
   public com.google.cloud.pubsublite.proto.InitialPartitionAssignmentRequest getInitial() {
     if (requestCase_ == 1) {
       return (com.google.cloud.pubsublite.proto.InitialPartitionAssignmentRequest) request_;
@@ -216,6 +218,7 @@ public final class PartitionAssignmentRequest extends com.google.protobuf.Genera
    *
    * <code>.google.cloud.pubsublite.v1.InitialPartitionAssignmentRequest initial = 1;</code>
    */
+  @java.lang.Override
   public com.google.cloud.pubsublite.proto.InitialPartitionAssignmentRequestOrBuilder
       getInitialOrBuilder() {
     if (requestCase_ == 1) {
@@ -236,6 +239,7 @@ public final class PartitionAssignmentRequest extends com.google.protobuf.Genera
    *
    * @return Whether the ack field is set.
    */
+  @java.lang.Override
   public boolean hasAck() {
     return requestCase_ == 2;
   }
@@ -250,6 +254,7 @@ public final class PartitionAssignmentRequest extends com.google.protobuf.Genera
    *
    * @return The ack.
    */
+  @java.lang.Override
   public com.google.cloud.pubsublite.proto.PartitionAssignmentAck getAck() {
     if (requestCase_ == 2) {
       return (com.google.cloud.pubsublite.proto.PartitionAssignmentAck) request_;
@@ -265,6 +270,7 @@ public final class PartitionAssignmentRequest extends com.google.protobuf.Genera
    *
    * <code>.google.cloud.pubsublite.v1.PartitionAssignmentAck ack = 2;</code>
    */
+  @java.lang.Override
   public com.google.cloud.pubsublite.proto.PartitionAssignmentAckOrBuilder getAckOrBuilder() {
     if (requestCase_ == 2) {
       return (com.google.cloud.pubsublite.proto.PartitionAssignmentAck) request_;
@@ -680,6 +686,7 @@ public final class PartitionAssignmentRequest extends com.google.protobuf.Genera
      *
      * @return Whether the initial field is set.
      */
+    @java.lang.Override
     public boolean hasInitial() {
       return requestCase_ == 1;
     }
@@ -694,6 +701,7 @@ public final class PartitionAssignmentRequest extends com.google.protobuf.Genera
      *
      * @return The initial.
      */
+    @java.lang.Override
     public com.google.cloud.pubsublite.proto.InitialPartitionAssignmentRequest getInitial() {
       if (initialBuilder_ == null) {
         if (requestCase_ == 1) {
@@ -835,6 +843,7 @@ public final class PartitionAssignmentRequest extends com.google.protobuf.Genera
      *
      * <code>.google.cloud.pubsublite.v1.InitialPartitionAssignmentRequest initial = 1;</code>
      */
+    @java.lang.Override
     public com.google.cloud.pubsublite.proto.InitialPartitionAssignmentRequestOrBuilder
         getInitialOrBuilder() {
       if ((requestCase_ == 1) && (initialBuilder_ != null)) {
@@ -899,6 +908,7 @@ public final class PartitionAssignmentRequest extends com.google.protobuf.Genera
      *
      * @return Whether the ack field is set.
      */
+    @java.lang.Override
     public boolean hasAck() {
       return requestCase_ == 2;
     }
@@ -913,6 +923,7 @@ public final class PartitionAssignmentRequest extends com.google.protobuf.Genera
      *
      * @return The ack.
      */
+    @java.lang.Override
     public com.google.cloud.pubsublite.proto.PartitionAssignmentAck getAck() {
       if (ackBuilder_ == null) {
         if (requestCase_ == 2) {
@@ -1046,6 +1057,7 @@ public final class PartitionAssignmentRequest extends com.google.protobuf.Genera
      *
      * <code>.google.cloud.pubsublite.v1.PartitionAssignmentAck ack = 2;</code>
      */
+    @java.lang.Override
     public com.google.cloud.pubsublite.proto.PartitionAssignmentAckOrBuilder getAckOrBuilder() {
       if ((requestCase_ == 2) && (ackBuilder_ != null)) {
         return ackBuilder_.getMessageOrBuilder();

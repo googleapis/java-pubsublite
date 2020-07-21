@@ -124,6 +124,7 @@ public final class ListTopicsResponse extends com.google.protobuf.GeneratedMessa
    *
    * <code>repeated .google.cloud.pubsublite.v1.Topic topics = 1;</code>
    */
+  @java.lang.Override
   public java.util.List<com.google.cloud.pubsublite.proto.Topic> getTopicsList() {
     return topics_;
   }
@@ -137,6 +138,7 @@ public final class ListTopicsResponse extends com.google.protobuf.GeneratedMessa
    *
    * <code>repeated .google.cloud.pubsublite.v1.Topic topics = 1;</code>
    */
+  @java.lang.Override
   public java.util.List<? extends com.google.cloud.pubsublite.proto.TopicOrBuilder>
       getTopicsOrBuilderList() {
     return topics_;
@@ -151,6 +153,7 @@ public final class ListTopicsResponse extends com.google.protobuf.GeneratedMessa
    *
    * <code>repeated .google.cloud.pubsublite.v1.Topic topics = 1;</code>
    */
+  @java.lang.Override
   public int getTopicsCount() {
     return topics_.size();
   }
@@ -164,6 +167,7 @@ public final class ListTopicsResponse extends com.google.protobuf.GeneratedMessa
    *
    * <code>repeated .google.cloud.pubsublite.v1.Topic topics = 1;</code>
    */
+  @java.lang.Override
   public com.google.cloud.pubsublite.proto.Topic getTopics(int index) {
     return topics_.get(index);
   }
@@ -177,6 +181,7 @@ public final class ListTopicsResponse extends com.google.protobuf.GeneratedMessa
    *
    * <code>repeated .google.cloud.pubsublite.v1.Topic topics = 1;</code>
    */
+  @java.lang.Override
   public com.google.cloud.pubsublite.proto.TopicOrBuilder getTopicsOrBuilder(int index) {
     return topics_.get(index);
   }
@@ -195,6 +200,7 @@ public final class ListTopicsResponse extends com.google.protobuf.GeneratedMessa
    *
    * @return The nextPageToken.
    */
+  @java.lang.Override
   public java.lang.String getNextPageToken() {
     java.lang.Object ref = nextPageToken_;
     if (ref instanceof java.lang.String) {
@@ -218,6 +224,7 @@ public final class ListTopicsResponse extends com.google.protobuf.GeneratedMessa
    *
    * @return The bytes for nextPageToken.
    */
+  @java.lang.Override
   public com.google.protobuf.ByteString getNextPageTokenBytes() {
     java.lang.Object ref = nextPageToken_;
     if (ref instanceof java.lang.String) {

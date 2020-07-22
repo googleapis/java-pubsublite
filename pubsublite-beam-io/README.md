@@ -1,8 +1,13 @@
 # Instructions for PubsubLiteIO usage.
 
-1. Acquire PubsubLiteIO sources. This is currently through downloading the
-sources and including them in your project, but a release jar will be available
-soon.
+1. Add the following to your POM file to download the Pub/Sub Lite I/O.
+```xml
+<dependency>
+  <groupId>com.google.cloud</groupId>
+  <artifactId>pubsublite-beam-io</artifactId>
+  <version>0.1.7</version>
+</dependency>
+```
 1. Create a topic using `gcloud pubsub lite-topics create`
 1. Write some messages using:
 

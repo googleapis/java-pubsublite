@@ -16,7 +16,14 @@
 
 import synthtool.languages.java as java
 
-# TODO: generate library protos when publicly available
+service = 'pubsublite'
+version = 'v1'
+
+library = java.bazel_library(
+    service=service,
+    version=version,
+    bazel_target=f'//google/cloud/{service}/{version}:google-cloud-{service}-{version}-java',
+)
 
 java.common_templates(excludes=[
   '.kokoro/*/samples.cfg',

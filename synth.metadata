@@ -4,14 +4,25 @@
       "git": {
         "name": ".",
         "remote": "https://github.com/googleapis/java-pubsublite.git",
-        "sha": "924052b9445dd00c0a429ca11d5b203a5051740b"
+        "sha": "8861705fb08e9a23c69346ffb59aeed50d09cd03"
       }
     },
     {
       "git": {
         "name": "synthtool",
         "remote": "https://github.com/googleapis/synthtool.git",
-        "sha": "303271797a360f8a439203413f13a160f2f5b3b4"
+        "sha": "5cd8aef73e845e60e57fc65eb2406d1a4159b241"
+      }
+    }
+  ],
+  "destinations": [
+    {
+      "client": {
+        "source": "googleapis",
+        "apiName": "pubsublite",
+        "apiVersion": "v1",
+        "language": "java",
+        "generator": "bazel"
       }
     }
   ]

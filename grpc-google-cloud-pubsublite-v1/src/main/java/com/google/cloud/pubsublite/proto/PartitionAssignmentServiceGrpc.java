@@ -1,3 +1,18 @@
+/*
+ * Copyright 2020 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.google.cloud.pubsublite.proto;
 
 import static io.grpc.MethodDescriptor.generateFullMethodName;
@@ -11,10 +26,12 @@ import static io.grpc.stub.ServerCalls.asyncUnimplementedStreamingCall;
  * <pre>
  * The service that a subscriber client application uses to determine which
  * partitions it should connect to.
+ * This is an under development API being published to build client libraries.
+ * Users will not be able to access it until fully launched.
  * </pre>
  */
 @javax.annotation.Generated(
-    value = "by gRPC proto compiler (version 1.30.2)",
+    value = "by gRPC proto compiler",
     comments = "Source: google/cloud/pubsublite/v1/subscriber.proto")
 public final class PartitionAssignmentServiceGrpc {
 
@@ -120,6 +137,8 @@ public final class PartitionAssignmentServiceGrpc {
    * <pre>
    * The service that a subscriber client application uses to determine which
    * partitions it should connect to.
+   * This is an under development API being published to build client libraries.
+   * Users will not be able to access it until fully launched.
    * </pre>
    */
   public abstract static class PartitionAssignmentServiceImplBase
@@ -164,6 +183,8 @@ public final class PartitionAssignmentServiceGrpc {
    * <pre>
    * The service that a subscriber client application uses to determine which
    * partitions it should connect to.
+   * This is an under development API being published to build client libraries.
+   * Users will not be able to access it until fully launched.
    * </pre>
    */
   public static final class PartitionAssignmentServiceStub
@@ -206,6 +227,8 @@ public final class PartitionAssignmentServiceGrpc {
    * <pre>
    * The service that a subscriber client application uses to determine which
    * partitions it should connect to.
+   * This is an under development API being published to build client libraries.
+   * Users will not be able to access it until fully launched.
    * </pre>
    */
   public static final class PartitionAssignmentServiceBlockingStub
@@ -228,6 +251,8 @@ public final class PartitionAssignmentServiceGrpc {
    * <pre>
    * The service that a subscriber client application uses to determine which
    * partitions it should connect to.
+   * This is an under development API being published to build client libraries.
+   * Users will not be able to access it until fully launched.
    * </pre>
    */
   public static final class PartitionAssignmentServiceFutureStub

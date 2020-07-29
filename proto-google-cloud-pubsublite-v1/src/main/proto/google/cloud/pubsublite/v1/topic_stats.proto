@@ -23,12 +23,16 @@ import "google/cloud/pubsublite/v1/common.proto";
 import "google/protobuf/timestamp.proto";
 import "google/api/client.proto";
 
+option go_package = "google.golang.org/genproto/googleapis/cloud/pubsublite/v1;pubsublite";
 option java_multiple_files = true;
 option java_outer_classname = "TopicStatsProto";
 option java_package = "com.google.cloud.pubsublite.proto";
 
 // This service allows users to get stats about messages in their topic.
 service TopicStatsService {
+  option (google.api.default_host) = "pubsublite.googleapis.com";
+  option (google.api.oauth_scopes) = "https://www.googleapis.com/auth/cloud-platform";
+
   // Compute statistics about a range of messages in a given topic and
   // partition.
   rpc ComputeMessageStats(ComputeMessageStatsRequest) returns (ComputeMessageStatsResponse) {
@@ -79,4 +83,3 @@ message ComputeMessageStatsResponse {
   // time. The timestamp will be unset if there are no messages.
   google.protobuf.Timestamp minimum_event_time = 4;
 }
-

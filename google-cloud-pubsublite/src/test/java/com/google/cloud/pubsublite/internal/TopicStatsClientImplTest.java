@@ -29,6 +29,7 @@ import static org.mockito.Mockito.mock;
 import com.google.api.core.ApiFuture;
 import com.google.cloud.pubsublite.CloudRegion;
 import com.google.cloud.pubsublite.CloudZone;
+import com.google.cloud.pubsublite.Constants;
 import com.google.cloud.pubsublite.ErrorCodes;
 import com.google.cloud.pubsublite.Offset;
 import com.google.cloud.pubsublite.Partition;
@@ -46,12 +47,10 @@ import io.grpc.Status.Code;
 import io.grpc.StatusException;
 import io.grpc.inprocess.InProcessChannelBuilder;
 import io.grpc.inprocess.InProcessServerBuilder;
-import io.grpc.stub.StreamObserver;
 import io.grpc.testing.GrpcCleanupRule;
 import java.io.IOException;
 import java.util.Optional;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.atomic.AtomicInteger;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
@@ -128,8 +127,7 @@ public class TopicStatsClientImplTest {
         grpcCleanup.register(InProcessChannelBuilder.forName(serverName).directExecutor().build());
     TopicStatsServiceGrpc.TopicStatsServiceBlockingStub stub =
         TopicStatsServiceGrpc.newBlockingStub(channel);
-    client =
-        new TopicStatsClientImpl(REGION, stub, TopicStatsClientSettings.DEFAULT_RETRY_SETTINGS);
+    client = new TopicStatsClientImpl(REGION, stub, Constants.DEFAULT_RETRY_SETTINGS);
   }
 
   @After
@@ -144,29 +142,15 @@ public class TopicStatsClientImplTest {
   }
 
   private static <T> Answer<Void> answerWith(T response) {
-    return invocation -> {
-      StreamObserver<T> responseObserver = invocation.getArgument(1);
-      responseObserver.onNext(response);
-      responseObserver.onCompleted();
-      return null;
-    };
+    return TestUtil.answerWith(response);
   }
 
   private static Answer<Void> answerWith(Status status) {
-    return invocation -> {
-      StreamObserver<?> responseObserver = invocation.getArgument(1);
-      responseObserver.onError(status.asRuntimeException());
-      return null;
-    };
+    return TestUtil.answerWith(status);
   }
 
   private static Answer<Void> inOrder(Answer<Void>... answers) {
-    AtomicInteger count = new AtomicInteger(0);
-    return invocation -> {
-      int index = count.getAndIncrement();
-
-      return answers[index].answer(invocation);
-    };
+    return TestUtil.inOrder(answers);
   }
 
   @Test

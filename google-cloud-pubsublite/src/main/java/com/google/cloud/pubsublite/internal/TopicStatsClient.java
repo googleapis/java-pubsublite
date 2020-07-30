@@ -45,4 +45,11 @@ public interface TopicStatsClient extends BackgroundResource {
    */
   ApiFuture<ComputeMessageStatsResponse> computeMessageStats(
       TopicPath path, Partition partition, Offset start, Offset end);
+
+  /**
+   * Tear down this admin client.
+   *
+   * @throws StatusException on a failure to properly terminate.
+   */
+  void close() throws StatusException;
 }

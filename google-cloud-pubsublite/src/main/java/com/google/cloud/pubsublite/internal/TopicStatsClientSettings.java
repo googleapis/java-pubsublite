@@ -18,6 +18,7 @@ package com.google.cloud.pubsublite.internal;
 import com.google.api.gax.retrying.RetrySettings;
 import com.google.auto.value.AutoValue;
 import com.google.cloud.pubsublite.CloudRegion;
+import com.google.cloud.pubsublite.Constants;
 import com.google.cloud.pubsublite.Endpoints;
 import com.google.cloud.pubsublite.Stubs;
 import com.google.cloud.pubsublite.proto.TopicStatsServiceGrpc;
@@ -26,30 +27,21 @@ import io.grpc.Status;
 import io.grpc.StatusException;
 import java.io.IOException;
 import java.util.Optional;
-import org.threeten.bp.Duration;
 
 @AutoValue
 public abstract class TopicStatsClientSettings {
-
-  public static final RetrySettings DEFAULT_RETRY_SETTINGS =
-      RetrySettings.newBuilder()
-          .setInitialRetryDelay(Duration.ofMillis(100))
-          .setRetryDelayMultiplier(1.3)
-          .setMaxRetryDelay(Duration.ofSeconds(60))
-          .setJittered(true)
-          .setTotalTimeout(Duration.ofMinutes(10))
-          .build();
 
   // Required parameters.
   abstract CloudRegion region();
 
   // Optional parameters.
-  abstract Optional<RetrySettings> retrySettings();
+  abstract RetrySettings retrySettings();
 
   abstract Optional<TopicStatsServiceBlockingStub> stub();
 
   public static Builder newBuilder() {
-    return new AutoValue_TopicStatsClientSettings.Builder();
+    return new AutoValue_TopicStatsClientSettings.Builder()
+        .setRetrySettings(Constants.DEFAULT_RETRY_SETTINGS);
   }
 
   @AutoValue.Builder
@@ -58,9 +50,9 @@ public abstract class TopicStatsClientSettings {
     // Required parameters.
     public abstract Builder setRegion(CloudRegion region);
 
-    // Optional parameters.
     public abstract Builder setRetrySettings(RetrySettings retrySettings);
 
+    // Optional parameters.
     public abstract Builder setStub(TopicStatsServiceBlockingStub stub);
 
     public abstract TopicStatsClientSettings build();
@@ -82,6 +74,6 @@ public abstract class TopicStatsClientSettings {
             .asException();
       }
     }
-    return new TopicStatsClientImpl(region(), stub, retrySettings().orElse(DEFAULT_RETRY_SETTINGS));
+    return new TopicStatsClientImpl(region(), stub, retrySettings());
   }
 }

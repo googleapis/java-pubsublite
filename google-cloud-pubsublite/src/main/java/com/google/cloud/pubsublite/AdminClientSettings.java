@@ -25,29 +25,21 @@ import io.grpc.Status;
 import io.grpc.StatusException;
 import java.io.IOException;
 import java.util.Optional;
-import org.threeten.bp.Duration;
 
 @AutoValue
 public abstract class AdminClientSettings {
-  public static final RetrySettings DEFAULT_RETRY_SETTINGS =
-      RetrySettings.newBuilder()
-          .setInitialRetryDelay(Duration.ofMillis(100))
-          .setRetryDelayMultiplier(1.3)
-          .setMaxRetryDelay(Duration.ofSeconds(60))
-          .setJittered(true)
-          .setTotalTimeout(Duration.ofMinutes(10))
-          .build();
 
   // Required parameters.
   abstract CloudRegion region();
 
-  // Optional parameters.
-  abstract Optional<RetrySettings> retrySettings();
+  abstract RetrySettings retrySettings();
 
+  // Optional parameters.
   abstract Optional<AdminServiceBlockingStub> stub();
 
   public static Builder newBuilder() {
-    return new AutoValue_AdminClientSettings.Builder();
+    return new AutoValue_AdminClientSettings.Builder()
+        .setRetrySettings(Constants.DEFAULT_RETRY_SETTINGS);
   }
 
   @AutoValue.Builder
@@ -79,6 +71,6 @@ public abstract class AdminClientSettings {
             .asException();
       }
     }
-    return new AdminClientImpl(region(), stub, retrySettings().orElse(DEFAULT_RETRY_SETTINGS));
+    return new AdminClientImpl(region(), stub, retrySettings());
   }
 }

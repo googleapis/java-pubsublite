@@ -37,8 +37,6 @@ public abstract class SingleConnection<StreamRequestT, StreamResponseT, ClientRe
   private static final GoogleLogger log = GoogleLogger.forEnclosingClass();
 
   private final StreamObserver<StreamRequestT> requestStream;
-  // onError and onCompleted may be called with connectionMonitor held. All messages will be sent
-  // without it held.
   private final StreamObserver<ClientResponseT> clientStream;
 
   private final CloseableMonitor connectionMonitor = new CloseableMonitor();
@@ -101,10 +99,7 @@ public abstract class SingleConnection<StreamRequestT, StreamResponseT, ClientRe
 
   protected void setError(Status error) {
     Preconditions.checkArgument(!error.isOk());
-    try (CloseableMonitor.Hold h = connectionMonitor.enter()) {
-      if (completed) return;
-      abort(error);
-    }
+    abort(error);
   }
 
   protected boolean isCompleted() {
@@ -123,10 +118,12 @@ public abstract class SingleConnection<StreamRequestT, StreamResponseT, ClientRe
     clientStream.onCompleted();
   }
 
-  @GuardedBy("connectionMonitor.monitor")
   private void abort(Status error) {
     Preconditions.checkArgument(!error.isOk());
-    completed = true;
+    try (CloseableMonitor.Hold h = connectionMonitor.enter()) {
+      if (completed) return;
+      completed = true;
+    }
     requestStream.onError(error.asRuntimeException());
     clientStream.onError(error.asRuntimeException());
   }
@@ -150,9 +147,7 @@ public abstract class SingleConnection<StreamRequestT, StreamResponseT, ClientRe
       responseStatus = handleStreamResponse(response);
     }
     if (!responseStatus.isOk()) {
-      try (CloseableMonitor.Hold h = connectionMonitor.enter()) {
-        abort(responseStatus);
-      }
+      abort(responseStatus);
     }
   }
 

@@ -17,7 +17,6 @@
 package pubsublite;
 
 // [START pubsublite_list_subscriptions_in_topic]
-
 import com.google.cloud.pubsublite.AdminClient;
 import com.google.cloud.pubsublite.AdminClientSettings;
 import com.google.cloud.pubsublite.CloudRegion;
@@ -27,60 +26,40 @@ import com.google.cloud.pubsublite.SubscriptionPath;
 import com.google.cloud.pubsublite.TopicName;
 import com.google.cloud.pubsublite.TopicPath;
 import com.google.cloud.pubsublite.TopicPaths;
-import io.grpc.StatusException;
 import java.util.List;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
 
 public class ListSubscriptionsInTopicExample {
 
   public static void main(String... args) throws Exception {
     // TODO(developer): Replace these variables before running the sample.
-    String CLOUD_REGION = "Your Cloud Region";
-    char ZONE_ID = 'b';
-    long PROJECT_NUMBER = Long.parseLong("123456789");
-    String TOPIC_NAME = "Your Lite Topic Name";
+    String cloudRegion = "your-cloud-region";
+    char zoneId = 'b';
+    long projectNumber = Long.parseLong("123456789");
+    String topicId = "your-topic-id";
 
-    ListSubscriptionsInTopicExample.listSubscriptionsInTopicExample(
-        CLOUD_REGION, ZONE_ID, PROJECT_NUMBER, TOPIC_NAME);
+    listSubscriptionsInTopicExample(cloudRegion, zoneId, projectNumber, topicId);
   }
 
   public static void listSubscriptionsInTopicExample(
-      String CLOUD_REGION, char ZONE_ID, long PROJECT_NUMBER, String TOPIC_NAME) throws Exception {
+      String cloudRegion, char zoneId, long projectNumber, String topicId) throws Exception {
 
-    ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
+    TopicPath topicPath =
+        TopicPaths.newBuilder()
+            .setProjectNumber(ProjectNumber.of(projectNumber))
+            .setZone(CloudZone.of(CloudRegion.of(cloudRegion), zoneId))
+            .setTopicName(TopicName.of(topicId))
+            .build();
 
-    try {
-      CloudRegion cloudRegion = CloudRegion.of(CLOUD_REGION);
-      CloudZone zone = CloudZone.of(cloudRegion, ZONE_ID);
-      ProjectNumber projectNum = ProjectNumber.of(PROJECT_NUMBER);
-      TopicName topicName = TopicName.of(TOPIC_NAME);
+    AdminClientSettings adminClientSettings =
+        AdminClientSettings.newBuilder().setRegion(CloudRegion.of(cloudRegion)).build();
 
-      TopicPath topicPath =
-          TopicPaths.newBuilder()
-              .setProjectNumber(projectNum)
-              .setZone(zone)
-              .setTopicName(topicName)
-              .build();
-
-      AdminClientSettings adminClientSettings =
-          AdminClientSettings.newBuilder().setRegion(cloudRegion).build();
-
-      try (AdminClient adminClient = AdminClient.create(adminClientSettings)) {
-
-        List<SubscriptionPath> subscriptionPaths =
-            adminClient.listTopicSubscriptions(topicPath).get();
-        for (SubscriptionPath subscription : subscriptionPaths) {
-          System.out.println(subscription.value());
-        }
-        System.out.println(subscriptionPaths.size() + " subscription(s) listed.");
+    try (AdminClient adminClient = AdminClient.create(adminClientSettings)) {
+      List<SubscriptionPath> subscriptionPaths =
+          adminClient.listTopicSubscriptions(topicPath).get();
+      for (SubscriptionPath subscription : subscriptionPaths) {
+        System.out.println(subscription.value());
       }
-
-    } catch (StatusException statusException) {
-      System.out.println("Failed to list subscriptions in the topic: " + statusException);
-      System.out.println(statusException.getStatus().getCode());
-      System.out.println(statusException.getStatus());
-      throw statusException;
+      System.out.println(subscriptionPaths.size() + " subscription(s) listed.");
     }
   }
 }

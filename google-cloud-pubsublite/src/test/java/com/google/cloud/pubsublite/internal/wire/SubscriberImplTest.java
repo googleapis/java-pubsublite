@@ -18,6 +18,7 @@ package com.google.cloud.pubsublite.internal.wire;
 
 import static com.google.cloud.pubsublite.internal.StatusExceptionMatcher.assertFutureThrowsCode;
 import static com.google.common.truth.Truth.assertThat;
+import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static org.junit.Assert.assertThrows;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
@@ -28,6 +29,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.verifyZeroInteractions;
 
 import com.google.api.core.ApiFuture;
 import com.google.api.core.ApiService.Listener;
@@ -58,12 +60,14 @@ import io.grpc.StatusRuntimeException;
 import io.grpc.inprocess.InProcessChannelBuilder;
 import io.grpc.stub.StreamObserver;
 import io.grpc.testing.GrpcCleanupRule;
+import java.util.concurrent.CountDownLatch;
 import java.util.function.Consumer;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
+import org.mockito.stubbing.Answer;
 
 @RunWith(JUnit4.class)
 public class SubscriberImplTest {
@@ -153,6 +157,38 @@ public class SubscriberImplTest {
   public void anyFlowAllowedAndProxies() {
     subscriber.allowFlow(bigFlowControlRequest());
     verify(mockConnectedSubscriber).allowFlow(bigFlowControlRequest());
+  }
+
+  @Test
+  public void batchesFlowControlRequests() throws Exception {
+    CountDownLatch allowFlowLatch = new CountDownLatch(2);
+    doAnswer(
+            (Answer<Void>)
+                args -> {
+                  allowFlowLatch.countDown();
+                  return null;
+                })
+        .when(mockConnectedSubscriber)
+        .allowFlow(any());
+
+    FlowControlRequest initialFlowRequest =
+        FlowControlRequest.newBuilder().setAllowedBytes(10000).setAllowedMessages(1000).build();
+    subscriber.allowFlow(initialFlowRequest);
+    verify(mockConnectedSubscriber).allowFlow(initialFlowRequest);
+
+    FlowControlRequest deltaFlowRequest =
+        FlowControlRequest.newBuilder().setAllowedBytes(100).setAllowedMessages(10).build();
+    subscriber.allowFlow(deltaFlowRequest);
+    subscriber.allowFlow(deltaFlowRequest);
+    verifyZeroInteractions(mockConnectedSubscriber);
+
+    allowFlowLatch.await(SubscriberImpl.FLOW_REQUESTS_FLUSH_INTERVAL_MS * 4, MILLISECONDS);
+    FlowControlRequest expectedBatchFlowRequest =
+        FlowControlRequest.newBuilder().setAllowedBytes(200).setAllowedMessages(20).build();
+    verify(mockConnectedSubscriber).allowFlow(expectedBatchFlowRequest);
+
+    subscriber.processBatchFlowRequest();
+    verifyNoMoreInteractions(mockConnectedSubscriber);
   }
 
   @Test

@@ -17,7 +17,6 @@
 package pubsublite;
 
 // [START pubsublite_create_topic]
-
 import com.google.cloud.pubsublite.AdminClient;
 import com.google.cloud.pubsublite.AdminClientSettings;
 import com.google.cloud.pubsublite.CloudRegion;
@@ -30,75 +29,58 @@ import com.google.cloud.pubsublite.proto.Topic;
 import com.google.cloud.pubsublite.proto.Topic.PartitionConfig;
 import com.google.cloud.pubsublite.proto.Topic.RetentionConfig;
 import com.google.protobuf.util.Durations;
-import io.grpc.StatusException;
 
 public class CreateTopicExample {
 
   public static void main(String... args) throws Exception {
     // TODO(developer): Replace these variables before running the sample.
-    String CLOUD_REGION = "Your Cloud Region";
-    char ZONE_ID = 'b';
-    String TOPIC_NAME = "Your Topic Name";
-    long PROJECT_NUMBER = Long.parseLong("123456789");
-    Integer PARTITIONS = 1;
+    String cloudRegion = "your-cloud-region";
+    char zoneId = 'b';
+    String topicId = "your-topic-id";
+    long projectNumber = Long.parseLong("123456789");
+    Integer partitions = 1;
 
-    CreateTopicExample.createTopicExample(
-        CLOUD_REGION, ZONE_ID, PROJECT_NUMBER, TOPIC_NAME, PARTITIONS);
+    createTopicExample(cloudRegion, zoneId, projectNumber, topicId, partitions);
   }
 
   public static void createTopicExample(
-      String CLOUD_REGION, char ZONE_ID, long PROJECT_NUMBER, String TOPIC_NAME, int PARTITIONS)
+      String cloudRegion, char zoneId, long projectNumber, String topicId, int partitions)
       throws Exception {
 
-    try {
-      CloudRegion cloudRegion = CloudRegion.of(CLOUD_REGION);
-      CloudZone zone = CloudZone.of(cloudRegion, ZONE_ID);
-      ProjectNumber projectNum = ProjectNumber.of(PROJECT_NUMBER);
-      TopicName topicName = TopicName.of(TOPIC_NAME);
+    TopicPath topicPath =
+        TopicPaths.newBuilder()
+            .setProjectNumber(ProjectNumber.of(projectNumber))
+            .setZone(CloudZone.of(CloudRegion.of(cloudRegion), zoneId))
+            .setTopicName(TopicName.of(topicId))
+            .build();
 
-      TopicPath topicPath =
-          TopicPaths.newBuilder()
-              .setZone(zone)
-              .setProjectNumber(projectNum)
-              .setTopicName(topicName)
-              .build();
+    Topic topic =
+        Topic.newBuilder()
+            .setPartitionConfig(
+                PartitionConfig.newBuilder()
+                    // Set publishing throughput to 1 times the standard partition
+                    // throughput of 4 MiB per sec. This must be in the range [1,4]. A
+                    // topic with `scale` of 2 and count of 10 is charged for 20 partitions.
+                    .setScale(1)
+                    .setCount(partitions))
+            .setRetentionConfig(
+                RetentionConfig.newBuilder()
+                    // How long messages are retained.
+                    .setPeriod(Durations.fromDays(1))
+                    // Set storage per partition to 100 GiB. This must be 30 GiB-10 TiB.
+                    // If the number of bytes stored in any of the topic's partitions grows
+                    // beyond this value, older messages will be dropped to make room for
+                    // newer ones, regardless of the value of `period`.
+                    .setPerPartitionBytes(100 * 1024 * 1024 * 1024L))
+            .setName(topicPath.value())
+            .build();
 
-      Topic topic =
-          Topic.newBuilder()
-              .setPartitionConfig(
-                  PartitionConfig.newBuilder()
-                      // Set publishing throughput to 1 times the standard partition
-                      // throughput of 4 MiB per sec. This must be in the range [1,4]. A
-                      // topic with `scale` of 2 and count of 10 is charged for 20 partitions.
-                      .setScale(1)
-                      .setCount(PARTITIONS))
-              .setRetentionConfig(
-                  RetentionConfig.newBuilder()
-                      // How long messages are retained.
-                      .setPeriod(Durations.fromDays(1))
-                      // Set storage per partition to 100 GiB. This must be 30 GiB-10 TiB.
-                      // If the number of bytes stored in any of the topic's partitions grows
-                      // beyond this value, older messages will be dropped to make room for
-                      // newer ones, regardless of the value of `period`.
-                      .setPerPartitionBytes(100 * 1024 * 1024 * 1024L))
-              .setName(topicPath.value())
-              .build();
+    AdminClientSettings adminClientSettings =
+        AdminClientSettings.newBuilder().setRegion(CloudRegion.of(cloudRegion)).build();
 
-      AdminClientSettings adminClientSettings =
-          AdminClientSettings.newBuilder().setRegion(cloudRegion).build();
-
-      try (AdminClient adminClient = AdminClient.create(adminClientSettings)) {
-
-        Topic response = adminClient.createTopic(topic).get();
-
-        System.out.println(response.getAllFields() + "created successfully.");
-      }
-
-    } catch (StatusException statusException) {
-      System.out.println("Failed to create a topic: " + statusException);
-      System.out.println(statusException.getStatus().getCode());
-      System.out.println(statusException.getStatus());
-      throw statusException;
+    try (AdminClient adminClient = AdminClient.create(adminClientSettings)) {
+      Topic response = adminClient.createTopic(topic).get();
+      System.out.println(response.getAllFields() + "created successfully.");
     }
   }
 }

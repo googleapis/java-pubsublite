@@ -1,35 +1,59 @@
-/*
- * Copyright 2020 Google LLC
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *       http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Copyright 2020 Google LLC
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 
 syntax = "proto3";
 
 package google.cloud.pubsublite.v1;
 
 import "google/cloud/pubsublite/v1/common.proto";
+import "google/api/client.proto";
 
 option cc_enable_arenas = true;
-option java_package = "com.google.cloud.pubsublite.proto";
-option java_outer_classname = "SubscriberProto";
+option go_package = "google.golang.org/genproto/googleapis/cloud/pubsublite/v1;pubsublite";
 option java_multiple_files = true;
+option java_outer_classname = "SubscriberProto";
+option java_package = "com.google.cloud.pubsublite.proto";
 
 // The service that a subscriber client application uses to receive messages
 // from subscriptions.
 service SubscriberService {
+  option (google.api.default_host) = "pubsublite.googleapis.com";
+  option (google.api.oauth_scopes) = "https://www.googleapis.com/auth/cloud-platform";
+
   // Establishes a stream with the server for receiving messages.
-  rpc Subscribe(stream SubscribeRequest) returns (stream SubscribeResponse) {}
+  rpc Subscribe(stream SubscribeRequest) returns (stream SubscribeResponse) {
+  }
+}
+
+// The service that a subscriber client application uses to determine which
+// partitions it should connect to.
+//
+// This is an under development API being published to build client libraries.
+// Users will not be able to access it until fully launched.
+service PartitionAssignmentService {
+  option (google.api.default_host) = "pubsublite.googleapis.com";
+  option (google.api.oauth_scopes) = "https://www.googleapis.com/auth/cloud-platform";
+
+  // Assign partitions for this client to handle for the specified subscription.
+  //
+  // The client must send an InitialPartitionAssignmentRequest first.
+  // The server will then send at most one unacknowledged PartitionAssignment
+  // outstanding on the stream at a time.
+  // The client should send a PartitionAssignmentAck after updating the
+  // partitions it is connected to to reflect the new assignment.
+  rpc AssignPartitions(stream PartitionAssignmentRequest) returns (stream PartitionAssignment) {
+  }
 }
 
 // The first request that must be sent on a newly-opened stream. The client must
@@ -91,6 +115,7 @@ message SeekResponse {
 message FlowControlRequest {
   // The number of message tokens to grant. Must be greater than or equal to 0.
   int64 allowed_messages = 1;
+
   // The number of byte tokens to grant. Must be greater than or equal to 0.
   int64 allowed_bytes = 2;
 }
@@ -131,5 +156,52 @@ message SubscribeResponse {
 
     // Response containing messages from the topic partition.
     MessageResponse messages = 3;
+  }
+}
+
+// The first request that must be sent on a newly-opened stream. The client must
+// wait for the response before sending subsequent requests on the stream.
+message InitialPartitionAssignmentRequest {
+  // The subscription name. Structured like:
+  // projects/<project number>/locations/<zone name>/subscriptions/<subscription
+  // id>
+  string subscription = 1;
+
+  // An opaque, unique client identifier. This field must be exactly 16 bytes
+  // long and is interpreted as an unsigned 128 bit integer. Other size values
+  // will be rejected and the stream will be failed with a non-retryable error.
+  //
+  // This field is large enough to fit a uuid from standard uuid algorithms like
+  // uuid1 or uuid4, which should be used to generate this number. The same
+  // identifier should be reused following disconnections with retryable stream
+  // errors.
+  bytes client_id = 2;
+}
+
+// PartitionAssignments should not race with acknowledgements. There
+// should be exactly one unacknowledged PartitionAssignment at a time. If not,
+// the client must break the stream.
+message PartitionAssignment {
+  // The list of partition numbers this subscriber is assigned to.
+  repeated int64 partitions = 1;
+}
+
+// Acknowledge receipt and handling of the previous assignment.
+// If not sent within a short period after receiving the assignment,
+// partitions may remain unassigned for a period of time until the
+// client is known to be inactive, after which time the server will break the
+// stream.
+message PartitionAssignmentAck {
+
+}
+
+// A request on the PartitionAssignment stream.
+message PartitionAssignmentRequest {
+  oneof request {
+    // Initial request on the stream.
+    InitialPartitionAssignmentRequest initial = 1;
+
+    // Acknowledgement of a partition assignment.
+    PartitionAssignmentAck ack = 2;
   }
 }

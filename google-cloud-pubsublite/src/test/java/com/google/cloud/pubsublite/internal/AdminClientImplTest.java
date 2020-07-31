@@ -27,9 +27,9 @@ import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.mock;
 
 import com.google.api.core.ApiFuture;
-import com.google.cloud.pubsublite.AdminClientSettings;
 import com.google.cloud.pubsublite.CloudRegion;
 import com.google.cloud.pubsublite.CloudZone;
+import com.google.cloud.pubsublite.Constants;
 import com.google.cloud.pubsublite.ErrorCodes;
 import com.google.cloud.pubsublite.LocationPath;
 import com.google.cloud.pubsublite.ProjectNumber;
@@ -66,13 +66,11 @@ import io.grpc.Status.Code;
 import io.grpc.StatusException;
 import io.grpc.inprocess.InProcessChannelBuilder;
 import io.grpc.inprocess.InProcessServerBuilder;
-import io.grpc.stub.StreamObserver;
 import io.grpc.testing.GrpcCleanupRule;
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.atomic.AtomicInteger;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
@@ -189,7 +187,19 @@ public class AdminClientImplTest {
     ManagedChannel channel =
         grpcCleanup.register(InProcessChannelBuilder.forName(serverName).directExecutor().build());
     AdminServiceGrpc.AdminServiceBlockingStub stub = AdminServiceGrpc.newBlockingStub(channel);
-    client = new AdminClientImpl(REGION, stub, AdminClientSettings.DEFAULT_RETRY_SETTINGS);
+    client = new AdminClientImpl(REGION, stub, Constants.DEFAULT_RETRY_SETTINGS);
+  }
+
+  private static <T> Answer<Void> answerWith(T response) {
+    return TestUtil.answerWith(response);
+  }
+
+  private static Answer<Void> answerWith(Status status) {
+    return TestUtil.answerWith(status);
+  }
+
+  private static Answer<Void> inOrder(Answer<Void>... answers) {
+    return TestUtil.inOrder(answers);
   }
 
   @After
@@ -201,32 +211,6 @@ public class AdminClientImplTest {
   @Test
   public void region_isConstructedRegion() {
     assertThat(client.region()).isEqualTo(REGION);
-  }
-
-  private static <T> Answer<Void> answerWith(T response) {
-    return invocation -> {
-      StreamObserver<T> responseObserver = invocation.getArgument(1);
-      responseObserver.onNext(response);
-      responseObserver.onCompleted();
-      return null;
-    };
-  }
-
-  private static Answer<Void> answerWith(Status status) {
-    return invocation -> {
-      StreamObserver<?> responseObserver = invocation.getArgument(1);
-      responseObserver.onError(status.asRuntimeException());
-      return null;
-    };
-  }
-
-  private static Answer<Void> inOrder(Answer<Void>... answers) {
-    AtomicInteger count = new AtomicInteger(0);
-    return invocation -> {
-      int index = count.getAndIncrement();
-
-      return answers[index].answer(invocation);
-    };
   }
 
   @Test

@@ -45,7 +45,6 @@ public class Stubs {
 
   public static <StubT extends AbstractStub<StubT>> StubT defaultStub(
       String target, Function<Channel, StubT> stubFactory) throws IOException {
-
     return stubFactory
         .apply(ClientInterceptors.intercept(channels.get(target), getClientInterceptors()))
         .withCallCredentials(

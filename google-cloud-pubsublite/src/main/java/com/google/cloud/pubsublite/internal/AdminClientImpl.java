@@ -17,20 +17,12 @@
 package com.google.cloud.pubsublite.internal;
 
 import com.google.api.core.ApiFuture;
-import com.google.api.core.NanoClock;
 import com.google.api.gax.core.BackgroundResourceAggregation;
 import com.google.api.gax.core.ExecutorAsBackgroundResource;
-import com.google.api.gax.retrying.ExponentialRetryAlgorithm;
-import com.google.api.gax.retrying.ResultRetryAlgorithm;
-import com.google.api.gax.retrying.RetryAlgorithm;
 import com.google.api.gax.retrying.RetrySettings;
 import com.google.api.gax.retrying.RetryingExecutor;
-import com.google.api.gax.retrying.RetryingFuture;
-import com.google.api.gax.retrying.ScheduledRetryingExecutor;
-import com.google.api.gax.retrying.TimedAttemptSettings;
 import com.google.cloud.pubsublite.AdminClient;
 import com.google.cloud.pubsublite.CloudRegion;
-import com.google.cloud.pubsublite.ErrorCodes;
 import com.google.cloud.pubsublite.LocationPath;
 import com.google.cloud.pubsublite.SubscriptionPath;
 import com.google.cloud.pubsublite.SubscriptionPaths;
@@ -53,10 +45,7 @@ import com.google.cloud.pubsublite.proto.UpdateSubscriptionRequest;
 import com.google.cloud.pubsublite.proto.UpdateTopicRequest;
 import com.google.common.collect.ImmutableList;
 import com.google.protobuf.FieldMask;
-import io.grpc.Status;
 import java.util.List;
-import java.util.Optional;
-import java.util.concurrent.Callable;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 
@@ -91,42 +80,18 @@ public class AdminClientImpl extends BackgroundResourceAggregation implements Ad
     super(ImmutableList.of(new ExecutorAsBackgroundResource(executor)));
     this.region = region;
     this.stub = stub;
-    this.voidRetryingExecutor = retryingExecutor(retrySettings, executor);
-    this.topicRetryingExecutor = retryingExecutor(retrySettings, executor);
-    this.subscriptionRetryingExecutor = retryingExecutor(retrySettings, executor);
-    this.partitionCountRetryingExecutor = retryingExecutor(retrySettings, executor);
-    this.listTopicsRetryingExecutor = retryingExecutor(retrySettings, executor);
-    this.listSubscriptionsRetryingExecutor = retryingExecutor(retrySettings, executor);
-    this.listTopicSubscriptionsRetryingExecutor = retryingExecutor(retrySettings, executor);
-  }
-
-  private static <T> RetryingExecutor<T> retryingExecutor(
-      RetrySettings settings, ScheduledExecutorService executor) {
-    return new ScheduledRetryingExecutor<>(retryAlgorithm(settings), executor);
-  }
-
-  private static <T> RetryAlgorithm<T> retryAlgorithm(RetrySettings retrySettings) {
-    return new RetryAlgorithm<>(
-        resultRetryAlgorithm(),
-        new ExponentialRetryAlgorithm(retrySettings, NanoClock.getDefaultClock()));
-  }
-
-  private static <T> ResultRetryAlgorithm<T> resultRetryAlgorithm() {
-    return new ResultRetryAlgorithm<T>() {
-      @Override
-      public TimedAttemptSettings createNextAttempt(
-          Throwable prevThrowable, T prevResponse, TimedAttemptSettings prevSettings) {
-        return null; // Null means no specific settings.
-      }
-
-      @Override
-      public boolean shouldRetry(Throwable prevThrowable, T prevResponse) {
-        if (null != prevResponse) return false;
-        Optional<Status> statusOr = ExtractStatus.extract(prevThrowable);
-        if (!statusOr.isPresent()) return false; // Received a non-grpc error.
-        return ErrorCodes.IsRetryable(statusOr.get().getCode());
-      }
-    };
+    this.voidRetryingExecutor = RetryingExecutorUtil.retryingExecutor(retrySettings, executor);
+    this.topicRetryingExecutor = RetryingExecutorUtil.retryingExecutor(retrySettings, executor);
+    this.subscriptionRetryingExecutor =
+        RetryingExecutorUtil.retryingExecutor(retrySettings, executor);
+    this.partitionCountRetryingExecutor =
+        RetryingExecutorUtil.retryingExecutor(retrySettings, executor);
+    this.listTopicsRetryingExecutor =
+        RetryingExecutorUtil.retryingExecutor(retrySettings, executor);
+    this.listSubscriptionsRetryingExecutor =
+        RetryingExecutorUtil.retryingExecutor(retrySettings, executor);
+    this.listTopicSubscriptionsRetryingExecutor =
+        RetryingExecutorUtil.retryingExecutor(retrySettings, executor);
   }
 
   @Override
@@ -134,16 +99,9 @@ public class AdminClientImpl extends BackgroundResourceAggregation implements Ad
     return region;
   }
 
-  private static <T> ApiFuture<T> runWithRetries(
-      Callable<T> callable, RetryingExecutor<T> executor) {
-    RetryingFuture<T> retryingFuture = executor.createFuture(callable);
-    retryingFuture.setAttemptFuture(executor.submit(retryingFuture));
-    return retryingFuture;
-  }
-
   @Override
   public ApiFuture<Topic> createTopic(Topic topic) {
-    return runWithRetries(
+    return RetryingExecutorUtil.runWithRetries(
         () -> {
           TopicPath path = TopicPath.of(topic.getName());
           return stub.createTopic(
@@ -158,14 +116,14 @@ public class AdminClientImpl extends BackgroundResourceAggregation implements Ad
 
   @Override
   public ApiFuture<Topic> getTopic(TopicPath path) {
-    return runWithRetries(
+    return RetryingExecutorUtil.runWithRetries(
         () -> stub.getTopic(GetTopicRequest.newBuilder().setName(path.value()).build()),
         topicRetryingExecutor);
   }
 
   @Override
   public ApiFuture<Long> getTopicPartitionCount(TopicPath path) {
-    return runWithRetries(
+    return RetryingExecutorUtil.runWithRetries(
         () ->
             stub.getTopicPartitions(
                     GetTopicPartitionsRequest.newBuilder().setName(path.value()).build())
@@ -175,7 +133,7 @@ public class AdminClientImpl extends BackgroundResourceAggregation implements Ad
 
   @Override
   public ApiFuture<List<Topic>> listTopics(LocationPath path) {
-    return runWithRetries(
+    return RetryingExecutorUtil.runWithRetries(
         () -> {
           return stub.listTopics(ListTopicsRequest.newBuilder().setParent(path.value()).build())
               .getTopicsList();
@@ -185,7 +143,7 @@ public class AdminClientImpl extends BackgroundResourceAggregation implements Ad
 
   @Override
   public ApiFuture<Topic> updateTopic(Topic topic, FieldMask mask) {
-    return runWithRetries(
+    return RetryingExecutorUtil.runWithRetries(
         () -> {
           return stub.updateTopic(
               UpdateTopicRequest.newBuilder().setTopic(topic).setUpdateMask(mask).build());
@@ -196,7 +154,7 @@ public class AdminClientImpl extends BackgroundResourceAggregation implements Ad
   @Override
   @SuppressWarnings("UnusedReturnValue")
   public ApiFuture<Void> deleteTopic(TopicPath path) {
-    return runWithRetries(
+    return RetryingExecutorUtil.runWithRetries(
         () -> {
           stub.deleteTopic(DeleteTopicRequest.newBuilder().setName(path.value()).build());
           return null;
@@ -206,7 +164,7 @@ public class AdminClientImpl extends BackgroundResourceAggregation implements Ad
 
   @Override
   public ApiFuture<List<SubscriptionPath>> listTopicSubscriptions(TopicPath path) {
-    return runWithRetries(
+    return RetryingExecutorUtil.runWithRetries(
         () -> {
           ImmutableList.Builder<SubscriptionPath> builder = ImmutableList.builder();
           for (String subscription :
@@ -224,7 +182,7 @@ public class AdminClientImpl extends BackgroundResourceAggregation implements Ad
 
   @Override
   public ApiFuture<Subscription> createSubscription(Subscription subscription) {
-    return runWithRetries(
+    return RetryingExecutorUtil.runWithRetries(
         () -> {
           SubscriptionPath path = SubscriptionPath.of(subscription.getName());
           return stub.createSubscription(
@@ -239,7 +197,7 @@ public class AdminClientImpl extends BackgroundResourceAggregation implements Ad
 
   @Override
   public ApiFuture<Subscription> getSubscription(SubscriptionPath path) {
-    return runWithRetries(
+    return RetryingExecutorUtil.runWithRetries(
         () ->
             stub.getSubscription(GetSubscriptionRequest.newBuilder().setName(path.value()).build()),
         subscriptionRetryingExecutor);
@@ -247,7 +205,7 @@ public class AdminClientImpl extends BackgroundResourceAggregation implements Ad
 
   @Override
   public ApiFuture<List<Subscription>> listSubscriptions(LocationPath path) {
-    return runWithRetries(
+    return RetryingExecutorUtil.runWithRetries(
         () -> {
           return stub.listSubscriptions(
                   ListSubscriptionsRequest.newBuilder().setParent(path.value()).build())
@@ -258,7 +216,7 @@ public class AdminClientImpl extends BackgroundResourceAggregation implements Ad
 
   @Override
   public ApiFuture<Subscription> updateSubscription(Subscription subscription, FieldMask mask) {
-    return runWithRetries(
+    return RetryingExecutorUtil.runWithRetries(
         () -> {
           return stub.updateSubscription(
               UpdateSubscriptionRequest.newBuilder()
@@ -272,7 +230,7 @@ public class AdminClientImpl extends BackgroundResourceAggregation implements Ad
   @Override
   @SuppressWarnings("UnusedReturnValue")
   public ApiFuture<Void> deleteSubscription(SubscriptionPath path) {
-    return runWithRetries(
+    return RetryingExecutorUtil.runWithRetries(
         () -> {
           stub.deleteSubscription(
               DeleteSubscriptionRequest.newBuilder().setName(path.value()).build());

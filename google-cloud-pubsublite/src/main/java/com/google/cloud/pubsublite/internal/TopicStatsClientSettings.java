@@ -13,21 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-package com.google.cloud.pubsublite;
+package com.google.cloud.pubsublite.internal;
 
 import com.google.api.gax.retrying.RetrySettings;
 import com.google.auto.value.AutoValue;
-import com.google.cloud.pubsublite.internal.AdminClientImpl;
-import com.google.cloud.pubsublite.proto.AdminServiceGrpc;
-import com.google.cloud.pubsublite.proto.AdminServiceGrpc.AdminServiceBlockingStub;
+import com.google.cloud.pubsublite.CloudRegion;
+import com.google.cloud.pubsublite.Constants;
+import com.google.cloud.pubsublite.Endpoints;
+import com.google.cloud.pubsublite.Stubs;
+import com.google.cloud.pubsublite.proto.TopicStatsServiceGrpc;
+import com.google.cloud.pubsublite.proto.TopicStatsServiceGrpc.TopicStatsServiceBlockingStub;
 import io.grpc.Status;
 import io.grpc.StatusException;
 import java.io.IOException;
 import java.util.Optional;
 
 @AutoValue
-public abstract class AdminClientSettings {
+public abstract class TopicStatsClientSettings {
 
   // Required parameters.
   abstract CloudRegion region();
@@ -35,42 +37,43 @@ public abstract class AdminClientSettings {
   // Optional parameters.
   abstract RetrySettings retrySettings();
 
-  abstract Optional<AdminServiceBlockingStub> stub();
+  abstract Optional<TopicStatsServiceBlockingStub> stub();
 
   public static Builder newBuilder() {
-    return new AutoValue_AdminClientSettings.Builder()
+    return new AutoValue_TopicStatsClientSettings.Builder()
         .setRetrySettings(Constants.DEFAULT_RETRY_SETTINGS);
   }
 
   @AutoValue.Builder
   public abstract static class Builder {
+
     // Required parameters.
     public abstract Builder setRegion(CloudRegion region);
 
-    // Optional parameters.
     public abstract Builder setRetrySettings(RetrySettings retrySettings);
 
-    public abstract Builder setStub(AdminServiceBlockingStub stub);
+    // Optional parameters.
+    public abstract Builder setStub(TopicStatsServiceBlockingStub stub);
 
-    public abstract AdminClientSettings build();
+    public abstract TopicStatsClientSettings build();
   }
 
-  AdminClient instantiate() throws StatusException {
-    AdminServiceBlockingStub stub;
+  TopicStatsClient instantiate() throws StatusException {
+    TopicStatsServiceBlockingStub stub;
     if (stub().isPresent()) {
       stub = stub().get();
     } else {
       try {
         stub =
             Stubs.defaultStub(
-                Endpoints.regionalEndpoint(region()), AdminServiceGrpc::newBlockingStub);
+                Endpoints.regionalEndpoint(region()), TopicStatsServiceGrpc::newBlockingStub);
       } catch (IOException e) {
         throw Status.INTERNAL
             .withCause(e)
-            .withDescription("Creating admin stub failed.")
+            .withDescription("Creating topic stats stub failed.")
             .asException();
       }
     }
-    return new AdminClientImpl(region(), stub, retrySettings());
+    return new TopicStatsClientImpl(region(), stub, retrySettings());
   }
 }

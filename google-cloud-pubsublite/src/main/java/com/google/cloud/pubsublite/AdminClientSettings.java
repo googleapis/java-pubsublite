@@ -32,9 +32,9 @@ public abstract class AdminClientSettings {
   // Required parameters.
   abstract CloudRegion region();
 
+  // Optional parameters.
   abstract RetrySettings retrySettings();
 
-  // Optional parameters.
   abstract Optional<AdminServiceBlockingStub> stub();
 
   public static Builder newBuilder() {

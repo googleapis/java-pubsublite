@@ -58,7 +58,7 @@ public class Stubs {
     List<ClientInterceptor> clientInterceptors = new ArrayList<>();
     Map<String, String> apiClientHeaders =
         ApiClientHeaderProvider.newBuilder()
-            .setGeneratedLibToken("gapic", GaxProperties.getLibraryVersion(Stubs.class))
+            .setClientLibToken("gccl", GaxProperties.getLibraryVersion(Stubs.class))
             .setTransportToken(
                 GaxGrpcProperties.getGrpcTokenName(), GaxGrpcProperties.getGrpcVersion())
             .build()

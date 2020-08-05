@@ -52,7 +52,6 @@ public class QuickStartIT {
   private static final String SUBSCRIPTION_NAME = "lite-subscription-" + SUFFIX;
   private static final int PARTITIONS = 2;
   private static final int MESSAGE_COUNT = 10;
-  private static final List<Integer> PARTITION_NOS = ImmutableList.of(0);
 
   private static void requireEnvVar(String varName) {
     assertNotNull(
@@ -163,9 +162,11 @@ public class QuickStartIT {
     bout.reset();
     // Subscribe.
     SubscriberExample.subscriberExample(
-        CLOUD_REGION, ZONE_ID, PROJECT_NUMBER, SUBSCRIPTION_NAME, PARTITION_NOS);
+        CLOUD_REGION, ZONE_ID, PROJECT_NUMBER, SUBSCRIPTION_NAME);
     assertThat(bout.toString()).contains("Listening");
-    assertThat(bout.toString()).contains("Data : message-0");
+    for (int i = 0; i < MESSAGE_COUNT; ++i) {
+      assertThat(bout.toString()).contains(String.format("Data : message-%s", i));
+    }
     assertThat(bout.toString()).contains("Subscriber is shut down: TERMINATED");
 
     bout.reset();

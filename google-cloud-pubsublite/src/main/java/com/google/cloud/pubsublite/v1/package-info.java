@@ -94,9 +94,6 @@
  * <p>Service Description: The service that a subscriber client application uses to determine which
  * partitions it should connect to.
  *
- * <p>This is an under development API being published to build client libraries. Users will not be
- * able to access it until fully launched.
- *
  * <p>Sample for PartitionAssignmentServiceClient:
  *
  * <pre>

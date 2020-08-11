@@ -26,8 +26,6 @@ import static io.grpc.stub.ServerCalls.asyncUnimplementedStreamingCall;
  * <pre>
  * The service that a subscriber client application uses to determine which
  * partitions it should connect to.
- * This is an under development API being published to build client libraries.
- * Users will not be able to access it until fully launched.
  * </pre>
  */
 @javax.annotation.Generated(
@@ -137,8 +135,6 @@ public final class PartitionAssignmentServiceGrpc {
    * <pre>
    * The service that a subscriber client application uses to determine which
    * partitions it should connect to.
-   * This is an under development API being published to build client libraries.
-   * Users will not be able to access it until fully launched.
    * </pre>
    */
   public abstract static class PartitionAssignmentServiceImplBase
@@ -183,8 +179,6 @@ public final class PartitionAssignmentServiceGrpc {
    * <pre>
    * The service that a subscriber client application uses to determine which
    * partitions it should connect to.
-   * This is an under development API being published to build client libraries.
-   * Users will not be able to access it until fully launched.
    * </pre>
    */
   public static final class PartitionAssignmentServiceStub
@@ -227,8 +221,6 @@ public final class PartitionAssignmentServiceGrpc {
    * <pre>
    * The service that a subscriber client application uses to determine which
    * partitions it should connect to.
-   * This is an under development API being published to build client libraries.
-   * Users will not be able to access it until fully launched.
    * </pre>
    */
   public static final class PartitionAssignmentServiceBlockingStub
@@ -251,8 +243,6 @@ public final class PartitionAssignmentServiceGrpc {
    * <pre>
    * The service that a subscriber client application uses to determine which
    * partitions it should connect to.
-   * This is an under development API being published to build client libraries.
-   * Users will not be able to access it until fully launched.
    * </pre>
    */
   public static final class PartitionAssignmentServiceFutureStub

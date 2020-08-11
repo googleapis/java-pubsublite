@@ -1,5 +1,53 @@
 # Changelog
 
+## [0.2.0](https://www.github.com/googleapis/java-pubsublite/compare/v0.1.8...v0.2.0) (2020-08-11)
+
+
+### Features
+
+* add api client headers to outbound requests ([#182](https://www.github.com/googleapis/java-pubsublite/issues/182)) ([0b47e06](https://www.github.com/googleapis/java-pubsublite/commit/0b47e060972676f6295a07bda5ef813ab18fcb6c))
+* Add the ability to use automatic subscriber assignment to the subscriber settings ([#163](https://www.github.com/googleapis/java-pubsublite/issues/163)) ([a396f24](https://www.github.com/googleapis/java-pubsublite/commit/a396f2474ac515f287ec0a1dab63d5d7061203a9))
+* Add the TopicStats client ([#179](https://www.github.com/googleapis/java-pubsublite/issues/179)) ([7eb7861](https://www.github.com/googleapis/java-pubsublite/commit/7eb78616809345d0ca7f32645210a4b03f704c7f))
+* Implement Assigner, which delivers partition assignments to a PartitionAssignmentReceiver ([#133](https://www.github.com/googleapis/java-pubsublite/issues/133)) ([a4485d9](https://www.github.com/googleapis/java-pubsublite/commit/a4485d91d54a0ac8d475aea29ee7e327fccf465e))
+
+
+### Bug Fixes
+
+* add clirr ignored diffs files ([#184](https://www.github.com/googleapis/java-pubsublite/issues/184)) ([0122757](https://www.github.com/googleapis/java-pubsublite/commit/012275744a3b97b171065c8828ef6553bf852a9e))
+* Add missing monitor from startSubscriber. ([#142](https://www.github.com/googleapis/java-pubsublite/issues/142)) ([d2a90d8](https://www.github.com/googleapis/java-pubsublite/commit/d2a90d8bab74036bd3db0f3f54bdc8c0036c8dec))
+* Fix assorted lint errors. ([#143](https://www.github.com/googleapis/java-pubsublite/issues/143)) ([403efb6](https://www.github.com/googleapis/java-pubsublite/commit/403efb655ba8e674ae97f7f9f2395393eb230578))
+* Update SingleConnection to not hold the monitor on upcalls ([#151](https://www.github.com/googleapis/java-pubsublite/issues/151)) ([8274753](https://www.github.com/googleapis/java-pubsublite/commit/8274753de9d3fd9cf9358ab7a36535c21d42741e))
+* Update synth.py and run synthtool to get new pubsublite sources. ([#171](https://www.github.com/googleapis/java-pubsublite/issues/171)) ([90bb70d](https://www.github.com/googleapis/java-pubsublite/commit/90bb70d07a554cffa070f4843d5558394b4c7ac5))
+
+
+### Dependencies
+
+* update dependency com.google.auto.value:auto-value to v1.7.3 ([#129](https://www.github.com/googleapis/java-pubsublite/issues/129)) ([c9492a0](https://www.github.com/googleapis/java-pubsublite/commit/c9492a019789861b8dca881e6c895db3758a60cf))
+* update dependency com.google.auto.value:auto-value to v1.7.4 ([#156](https://www.github.com/googleapis/java-pubsublite/issues/156)) ([cb4cd9f](https://www.github.com/googleapis/java-pubsublite/commit/cb4cd9f1037bedd029f48f44f2aac0b5b3038226))
+* update dependency com.google.cloud:google-cloud-pubsub to v1.107.0 ([#123](https://www.github.com/googleapis/java-pubsublite/issues/123)) ([5c3e977](https://www.github.com/googleapis/java-pubsublite/commit/5c3e977211cf36184f9bd48879afa9af90676ebc))
+* update dependency com.google.cloud:google-cloud-pubsub to v1.108.0 ([#158](https://www.github.com/googleapis/java-pubsublite/issues/158)) ([924052b](https://www.github.com/googleapis/java-pubsublite/commit/924052b9445dd00c0a429ca11d5b203a5051740b))
+* update dependency com.google.cloud:google-cloud-pubsub to v1.108.1 ([#186](https://www.github.com/googleapis/java-pubsublite/issues/186)) ([c466e2f](https://www.github.com/googleapis/java-pubsublite/commit/c466e2fc5445c77ceb86c9732a5ab80081bd8cc3))
+* update dependency com.google.cloud:google-cloud-pubsub-bom to v1.107.0 ([#124](https://www.github.com/googleapis/java-pubsublite/issues/124)) ([b7e9e91](https://www.github.com/googleapis/java-pubsublite/commit/b7e9e91200a0e2117402ce908461a138b745af99))
+* update dependency com.google.cloud:google-cloud-pubsub-bom to v1.108.0 ([#157](https://www.github.com/googleapis/java-pubsublite/issues/157)) ([56a8003](https://www.github.com/googleapis/java-pubsublite/commit/56a8003a437a101faf6d0a29fbf6afc6218b3790))
+* update dependency com.google.cloud:google-cloud-pubsub-bom to v1.108.1 ([#187](https://www.github.com/googleapis/java-pubsublite/issues/187)) ([24ab8e2](https://www.github.com/googleapis/java-pubsublite/commit/24ab8e2279d863746f66d881c4a1fa55632eb7b4))
+* update dependency com.google.cloud:google-cloud-shared-dependencies to v0.8.1 ([#138](https://www.github.com/googleapis/java-pubsublite/issues/138)) ([176101e](https://www.github.com/googleapis/java-pubsublite/commit/176101e305828e763ec74cfe5a2cce2bb33abdf7))
+* update dependency com.google.cloud:google-cloud-shared-dependencies to v0.8.2 ([#154](https://www.github.com/googleapis/java-pubsublite/issues/154)) ([6739d11](https://www.github.com/googleapis/java-pubsublite/commit/6739d11d105fe1f3dd8a7b83646f4ec31b60dc1d))
+* update dependency com.google.cloud:google-cloud-shared-dependencies to v0.8.3 ([#159](https://www.github.com/googleapis/java-pubsublite/issues/159)) ([8d3e0de](https://www.github.com/googleapis/java-pubsublite/commit/8d3e0def69316f5efb6fbe256fe4f45736d9f761))
+* update dependency com.google.cloud:google-cloud-shared-dependencies to v0.8.5 ([#192](https://www.github.com/googleapis/java-pubsublite/issues/192)) ([9894260](https://www.github.com/googleapis/java-pubsublite/commit/98942601980624be9867889e1163785629dbd0b7))
+* update dependency com.google.cloud:google-cloud-shared-dependencies to v0.8.6 ([#195](https://www.github.com/googleapis/java-pubsublite/issues/195)) ([8effb81](https://www.github.com/googleapis/java-pubsublite/commit/8effb8182aa3b37efd4f70abf8f53f09dbcb5003))
+* update dependency io.grpc:grpc-testing to v1.30.2 ([#145](https://www.github.com/googleapis/java-pubsublite/issues/145)) ([ff77de9](https://www.github.com/googleapis/java-pubsublite/commit/ff77de91c7b0bbab945215a1e3ab865a21f985a9))
+* update dependency io.grpc:grpc-testing to v1.31.0 ([#177](https://www.github.com/googleapis/java-pubsublite/issues/177)) ([f3c4f79](https://www.github.com/googleapis/java-pubsublite/commit/f3c4f79d5c6fe21e8a93e891e446721e9a4c5dff))
+* update dependency org.mockito:mockito-core to v3.4.0 ([#161](https://www.github.com/googleapis/java-pubsublite/issues/161)) ([c3c2c6f](https://www.github.com/googleapis/java-pubsublite/commit/c3c2c6f3f2672c0c12b392a8bed7a543730d9db3))
+* update dependency org.mockito:mockito-core to v3.4.2 ([#164](https://www.github.com/googleapis/java-pubsublite/issues/164)) ([f0f1e06](https://www.github.com/googleapis/java-pubsublite/commit/f0f1e06ace0e678135ac9507eda35541ce5dae78))
+* update dependency org.mockito:mockito-core to v3.4.3 ([#165](https://www.github.com/googleapis/java-pubsublite/issues/165)) ([6d0554a](https://www.github.com/googleapis/java-pubsublite/commit/6d0554a10bdcf881b9421362b46071b480c9d3d5))
+* update dependency org.mockito:mockito-core to v3.4.4 ([#167](https://www.github.com/googleapis/java-pubsublite/issues/167)) ([8815e9e](https://www.github.com/googleapis/java-pubsublite/commit/8815e9e6cb933944ea62c7b5b2611c17f496f896))
+* update dependency org.mockito:mockito-core to v3.4.6 ([#176](https://www.github.com/googleapis/java-pubsublite/issues/176)) ([5de006f](https://www.github.com/googleapis/java-pubsublite/commit/5de006fc227e83c8b5eb932d36dbf9358a804611))
+
+
+### Documentation
+
+* update readme samples ([#155](https://www.github.com/googleapis/java-pubsublite/issues/155)) ([28930f8](https://www.github.com/googleapis/java-pubsublite/commit/28930f8fbdaefbf6964b0cc7a04116fbaaaa1b68))
+
 ### [0.1.8](https://www.github.com/googleapis/java-pubsublite/compare/v0.1.7...v0.1.8) (2020-06-09)
 
 

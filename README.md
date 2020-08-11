@@ -25,7 +25,7 @@ If you are using Maven, add this to your pom.xml file:
 <dependency>
   <groupId>com.google.cloud</groupId>
   <artifactId>google-cloud-pubsub</artifactId>
-  <version>1.108.0</version>
+  <version>1.108.1</version>
 </dependency>
 <!-- A logging dependency used by the underlying library  -->
 <dependency>
@@ -41,11 +41,11 @@ If you are using Maven, add this to your pom.xml file:
 
 If you are using Gradle, add this to your dependencies
 ```Groovy
-compile 'com.google.cloud:google-cloud-pubsublite:0.1.7'
+compile 'com.google.cloud:google-cloud-pubsublite:0.2.0'
 ```
 If you are using SBT, add this to your dependencies
 ```Scala
-libraryDependencies += "com.google.cloud" % "google-cloud-pubsublite" % "0.1.7"
+libraryDependencies += "com.google.cloud" % "google-cloud-pubsublite" % "0.2.0"
 ```
 [//]: # ({x-version-update-end})
 

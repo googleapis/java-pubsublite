@@ -31,9 +31,6 @@ import javax.annotation.Generated;
  * Service Description: The service that a subscriber client application uses to determine which
  * partitions it should connect to.
  *
- * <p>This is an under development API being published to build client libraries. Users will not be
- * able to access it until fully launched.
- *
  * <p>This class provides the ability to make remote calls to the backing service through method
  * calls that map to API methods. Sample code to get started:
  *

@@ -22,9 +22,7 @@ import static junit.framework.TestCase.assertNotNull;
 import com.google.common.collect.ImmutableList;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Random;
 import java.util.UUID;
 import org.junit.After;
 import org.junit.Before;
@@ -37,21 +35,18 @@ public class QuickStartIT {
 
   private ByteArrayOutputStream bout;
   private PrintStream out;
-  private Random rand = new Random();
-  private List<String> cloudRegions =
-      Arrays.asList(
-          "us-central1", "europe-north1", "asia-east1", "australia-southeast1", "asia-northeast2");
 
   private static final String GOOGLE_CLOUD_PROJECT_NUMBER =
       System.getenv("GOOGLE_CLOUD_PROJECT_NUMBER");
-  private String CLOUD_REGION = cloudRegions.get(rand.nextInt(cloudRegions.size()));
+  private static final String CLOUD_REGION = "us-central1";
   private static final char ZONE_ID = 'b';
   private static final Long PROJECT_NUMBER = Long.parseLong(GOOGLE_CLOUD_PROJECT_NUMBER);
   private static final String SUFFIX = UUID.randomUUID().toString();
   private static final String TOPIC_NAME = "lite-topic-" + SUFFIX;
   private static final String SUBSCRIPTION_NAME = "lite-subscription-" + SUFFIX;
-  private static final int PARTITIONS = 2;
-  private static final int MESSAGE_COUNT = 10;
+  private static final int PARTITIONS = 1;
+  private static final int MESSAGE_COUNT = 1;
+  private static final List<Integer> PARTITION_NOS = ImmutableList.of(0);
 
   private static void requireEnvVar(String varName) {
     assertNotNull(
@@ -89,7 +84,7 @@ public class QuickStartIT {
     // Get a topic.
     GetTopicExample.getTopicExample(CLOUD_REGION, ZONE_ID, PROJECT_NUMBER, TOPIC_NAME);
     assertThat(bout.toString()).contains(TOPIC_NAME);
-    assertThat(bout.toString()).contains(String.format("%s partition(s).", PARTITIONS));
+    assertThat(bout.toString()).contains("1 partition(s).");
 
     bout.reset();
     // List topics.
@@ -162,11 +157,9 @@ public class QuickStartIT {
     bout.reset();
     // Subscribe.
     SubscriberExample.subscriberExample(
-        CLOUD_REGION, ZONE_ID, PROJECT_NUMBER, SUBSCRIPTION_NAME);
+        CLOUD_REGION, ZONE_ID, PROJECT_NUMBER, SUBSCRIPTION_NAME, PARTITION_NOS);
     assertThat(bout.toString()).contains("Listening");
-    for (int i = 0; i < MESSAGE_COUNT; ++i) {
-      assertThat(bout.toString()).contains(String.format("Data : message-%s", i));
-    }
+    assertThat(bout.toString()).contains("Data : message-0");
     assertThat(bout.toString()).contains("Subscriber is shut down: TERMINATED");
 
     bout.reset();

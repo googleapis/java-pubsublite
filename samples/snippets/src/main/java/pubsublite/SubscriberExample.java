@@ -46,15 +46,19 @@ public class SubscriberExample {
     // Choose an existing subscription for the subscribe example to work.
     String subscriptionId = "your-subscription-id";
     long projectNumber = Long.parseLong("123456789");
+    // List of partitions to subscribe to. It can be all the partitions in a topic or
+    // a subset of them. A topic of N partitions has partition numbers [0~N-1].
+    List<Integer> partitionNumbers = ImmutableList.of(0);
 
-    subscriberExample(cloudRegion, zoneId, projectNumber, subscriptionId);
+    subscriberExample(cloudRegion, zoneId, projectNumber, subscriptionId, partitionNumbers);
   }
 
   public static void subscriberExample(
       String cloudRegion,
       char zoneId,
       long projectNumber,
-      String subscriptionId)
+      String subscriptionId,
+      List<Integer> partitionNumbers)
       throws StatusException {
 
     SubscriptionPath subscriptionPath =
@@ -74,6 +78,11 @@ public class SubscriberExample {
             .setMessagesOutstanding(1000L)
             .build();
 
+    List<Partition> partitions = new ArrayList<>();
+    for (Integer num : partitionNumbers) {
+      partitions.add(Partition.of(num));
+    }
+
     MessageReceiver receiver =
         (PubsubMessage message, AckReplyConsumer consumer) -> {
           System.out.println("Id : " + message.getMessageId());
@@ -84,6 +93,7 @@ public class SubscriberExample {
     SubscriberSettings subscriberSettings =
         SubscriberSettings.newBuilder()
             .setSubscriptionPath(subscriptionPath)
+            .setPartitions(partitions)
             .setReceiver(receiver)
             // Flow control settings are set at the partition level.
             .setPerPartitionFlowControlSettings(flowControlSettings)
@@ -97,11 +107,10 @@ public class SubscriberExample {
     System.out.println("Listening to messages on " + subscriptionPath.value() + "...");
 
     try {
-      System.out.println(subscriber.state());
-      // Wait 90 seconds for the subscriber to reach TERMINATED state. If it encounters
+      // Wait 30 seconds for the subscriber to reach TERMINATED state. If it encounters
       // unrecoverable errors before then, its state will change to FAILED and an
       // IllegalStateException will be thrown.
-      subscriber.awaitTerminated(90, TimeUnit.SECONDS);
+      subscriber.awaitTerminated(30, TimeUnit.SECONDS);
     } catch (TimeoutException t) {
       // Shut down the subscriber. This will change the state of the subscriber to TERMINATED.
       subscriber.stopAsync().awaitTerminated();

@@ -19,11 +19,8 @@ package pubsublite;
 import static com.google.common.truth.Truth.assertThat;
 import static junit.framework.TestCase.assertNotNull;
 
-import com.google.common.collect.ImmutableList;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Random;
 import java.util.UUID;
 import org.junit.After;
@@ -37,15 +34,12 @@ public class QuickStartIT {
 
   private ByteArrayOutputStream bout;
   private PrintStream out;
-  private Random rand = new Random();
-  private List<String> cloudRegions =
-      Arrays.asList(
-          "us-central1", "europe-north1", "asia-east1", "australia-southeast1", "asia-northeast2");
+  Random rand = new Random();
 
   private static final String GOOGLE_CLOUD_PROJECT_NUMBER =
       System.getenv("GOOGLE_CLOUD_PROJECT_NUMBER");
-  private String CLOUD_REGION = cloudRegions.get(rand.nextInt(cloudRegions.size()));
-  private static final char ZONE_ID = 'b';
+  private String CLOUD_REGION = "us-central1";
+  private final char ZONE_ID = (char) (rand.nextInt(3) + 'a');;
   private static final Long PROJECT_NUMBER = Long.parseLong(GOOGLE_CLOUD_PROJECT_NUMBER);
   private static final String SUFFIX = UUID.randomUUID().toString();
   private static final String TOPIC_NAME = "lite-topic-" + SUFFIX;
@@ -161,8 +155,7 @@ public class QuickStartIT {
 
     bout.reset();
     // Subscribe.
-    SubscriberExample.subscriberExample(
-        CLOUD_REGION, ZONE_ID, PROJECT_NUMBER, SUBSCRIPTION_NAME);
+    SubscriberExample.subscriberExample(CLOUD_REGION, ZONE_ID, PROJECT_NUMBER, SUBSCRIPTION_NAME);
     assertThat(bout.toString()).contains("Listening");
     for (int i = 0; i < MESSAGE_COUNT; ++i) {
       assertThat(bout.toString()).contains(String.format("Data : message-%s", i));

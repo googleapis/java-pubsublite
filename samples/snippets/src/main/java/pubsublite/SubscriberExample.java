@@ -21,7 +21,6 @@ import com.google.cloud.pubsub.v1.AckReplyConsumer;
 import com.google.cloud.pubsub.v1.MessageReceiver;
 import com.google.cloud.pubsublite.CloudRegion;
 import com.google.cloud.pubsublite.CloudZone;
-import com.google.cloud.pubsublite.Partition;
 import com.google.cloud.pubsublite.ProjectNumber;
 import com.google.cloud.pubsublite.SubscriptionName;
 import com.google.cloud.pubsublite.SubscriptionPath;
@@ -29,11 +28,8 @@ import com.google.cloud.pubsublite.SubscriptionPaths;
 import com.google.cloud.pubsublite.cloudpubsub.FlowControlSettings;
 import com.google.cloud.pubsublite.cloudpubsub.Subscriber;
 import com.google.cloud.pubsublite.cloudpubsub.SubscriberSettings;
-import com.google.common.collect.ImmutableList;
 import com.google.pubsub.v1.PubsubMessage;
 import io.grpc.StatusException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
@@ -51,10 +47,7 @@ public class SubscriberExample {
   }
 
   public static void subscriberExample(
-      String cloudRegion,
-      char zoneId,
-      long projectNumber,
-      String subscriptionId)
+      String cloudRegion, char zoneId, long projectNumber, String subscriptionId)
       throws StatusException {
 
     SubscriptionPath subscriptionPath =

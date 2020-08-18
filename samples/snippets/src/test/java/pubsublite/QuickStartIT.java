@@ -36,16 +36,15 @@ public class QuickStartIT {
   private PrintStream out;
   Random rand = new Random();
 
-  private static final String GOOGLE_CLOUD_PROJECT_NUMBER =
-      System.getenv("GOOGLE_CLOUD_PROJECT_NUMBER");
-  private String CLOUD_REGION = "us-central1";
-  private final char ZONE_ID = (char) (rand.nextInt(3) + 'a');;
-  private static final Long PROJECT_NUMBER = Long.parseLong(GOOGLE_CLOUD_PROJECT_NUMBER);
-  private static final String SUFFIX = UUID.randomUUID().toString();
-  private static final String TOPIC_NAME = "lite-topic-" + SUFFIX;
-  private static final String SUBSCRIPTION_NAME = "lite-subscription-" + SUFFIX;
-  private static final int PARTITIONS = 2;
-  private static final int MESSAGE_COUNT = 10;
+  private static final Long projectNumber =
+      Long.parseLong(System.getenv("GOOGLE_CLOUD_PROJECT_NUMBER"));
+  private String cloudRegion = "us-central1";
+  private final char zoneId = (char) (rand.nextInt(3) + 'a');;
+  private static final String suffix = UUID.randomUUID().toString();
+  private static final String topicId = "lite-topic-" + suffix;
+  private static final String subscriptionId = "lite-subscription-" + suffix;
+  private static final int partitions = 2;
+  private static final int messageCount = 10;
 
   private static void requireEnvVar(String varName) {
     assertNotNull(
@@ -75,24 +74,23 @@ public class QuickStartIT {
   @Test
   public void testQuickstart() throws Exception {
     // Create a topic.
-    CreateTopicExample.createTopicExample(
-        CLOUD_REGION, ZONE_ID, PROJECT_NUMBER, TOPIC_NAME, PARTITIONS);
+    CreateTopicExample.createTopicExample(cloudRegion, zoneId, projectNumber, topicId, partitions);
     assertThat(bout.toString()).contains("created successfully");
 
     bout.reset();
     // Get a topic.
-    GetTopicExample.getTopicExample(CLOUD_REGION, ZONE_ID, PROJECT_NUMBER, TOPIC_NAME);
-    assertThat(bout.toString()).contains(TOPIC_NAME);
-    assertThat(bout.toString()).contains(String.format("%s partition(s).", PARTITIONS));
+    GetTopicExample.getTopicExample(cloudRegion, zoneId, projectNumber, topicId);
+    assertThat(bout.toString()).contains(topicId);
+    assertThat(bout.toString()).contains(String.format("%s partition(s).", partitions));
 
     bout.reset();
     // List topics.
-    ListTopicsExample.listTopicsExample(CLOUD_REGION, ZONE_ID, PROJECT_NUMBER);
+    ListTopicsExample.listTopicsExample(cloudRegion, zoneId, projectNumber);
     assertThat(bout.toString()).contains("topic(s) listed");
 
     bout.reset();
     // Update a topic.
-    UpdateTopicExample.updateTopicExample(CLOUD_REGION, ZONE_ID, PROJECT_NUMBER, TOPIC_NAME);
+    UpdateTopicExample.updateTopicExample(cloudRegion, zoneId, projectNumber, topicId);
     assertThat(bout.toString()).contains("seconds: 604800");
     assertThat(bout.toString()).contains("per_partition_bytes: 214748364800");
     assertThat(bout.toString()).contains("scale: 4");
@@ -100,64 +98,63 @@ public class QuickStartIT {
     bout.reset();
     // Create a subscription.
     CreateSubscriptionExample.createSubscriptionExample(
-        CLOUD_REGION, ZONE_ID, PROJECT_NUMBER, TOPIC_NAME, SUBSCRIPTION_NAME);
+        cloudRegion, zoneId, projectNumber, topicId, subscriptionId);
     assertThat(bout.toString()).contains("created successfully");
 
     bout.reset();
     // Get a subscription.
     GetSubscriptionExample.getSubscriptionExample(
-        CLOUD_REGION, ZONE_ID, PROJECT_NUMBER, SUBSCRIPTION_NAME);
+        cloudRegion, zoneId, projectNumber, subscriptionId);
     assertThat(bout.toString()).contains("Subscription: ");
-    assertThat(bout.toString()).contains(SUBSCRIPTION_NAME);
+    assertThat(bout.toString()).contains(subscriptionId);
 
     bout.reset();
     // List subscriptions in a topic.
     ListSubscriptionsInTopicExample.listSubscriptionsInTopicExample(
-        CLOUD_REGION, ZONE_ID, PROJECT_NUMBER, TOPIC_NAME);
+        cloudRegion, zoneId, projectNumber, topicId);
     assertThat(bout.toString()).contains("subscription(s) listed");
 
     bout.reset();
     // List subscriptions in a project.
     ListSubscriptionsInProjectExample.listSubscriptionsInProjectExample(
-        CLOUD_REGION, ZONE_ID, PROJECT_NUMBER);
+        cloudRegion, zoneId, projectNumber);
     assertThat(bout.toString()).contains("subscription(s) listed");
 
     bout.reset();
     // Update a subscription.
     UpdateSubscriptionExample.updateSubscriptionExample(
-        CLOUD_REGION, ZONE_ID, PROJECT_NUMBER, SUBSCRIPTION_NAME);
+        cloudRegion, zoneId, projectNumber, subscriptionId);
     assertThat(bout.toString()).contains("delivery_requirement: DELIVER_AFTER_STORED");
 
     bout.reset();
     // Publish.
-    PublisherExample.publisherExample(
-        CLOUD_REGION, ZONE_ID, PROJECT_NUMBER, TOPIC_NAME, MESSAGE_COUNT);
-    assertThat(bout.toString()).contains("Published " + MESSAGE_COUNT + " messages.");
+    PublisherExample.publisherExample(cloudRegion, zoneId, projectNumber, topicId, messageCount);
+    assertThat(bout.toString()).contains("Published " + messageCount + " messages.");
 
     bout.reset();
     // Publish with ordering key.
     PublishWithOrderingKeyExample.publishWithOrderingKeyExample(
-        CLOUD_REGION, ZONE_ID, PROJECT_NUMBER, TOPIC_NAME);
+        cloudRegion, zoneId, projectNumber, topicId);
     assertThat(bout.toString()).contains("Published a message with ordering key:");
 
     bout.reset();
     // Publish messages with custom attributes.
     PublishWithCustomAttributesExample.publishWithCustomAttributesExample(
-        CLOUD_REGION, ZONE_ID, PROJECT_NUMBER, TOPIC_NAME);
+        cloudRegion, zoneId, projectNumber, topicId);
     assertThat(bout.toString()).contains("Published a message with custom attributes:");
 
     bout.reset();
     // Publish with batch settings.
     PublishWithBatchSettingsExample.publishWithBatchSettingsExample(
-        CLOUD_REGION, ZONE_ID, PROJECT_NUMBER, TOPIC_NAME, MESSAGE_COUNT);
+        cloudRegion, zoneId, projectNumber, topicId, messageCount);
     assertThat(bout.toString())
-        .contains("Published " + MESSAGE_COUNT + " messages with batch settings.");
+        .contains("Published " + messageCount + " messages with batch settings.");
 
     bout.reset();
     // Subscribe.
-    SubscriberExample.subscriberExample(CLOUD_REGION, ZONE_ID, PROJECT_NUMBER, SUBSCRIPTION_NAME);
+    SubscriberExample.subscriberExample(cloudRegion, zoneId, projectNumber, subscriptionId);
     assertThat(bout.toString()).contains("Listening");
-    for (int i = 0; i < MESSAGE_COUNT; ++i) {
+    for (int i = 0; i < messageCount; ++i) {
       assertThat(bout.toString()).contains(String.format("Data : message-%s", i));
     }
     assertThat(bout.toString()).contains("Subscriber is shut down: TERMINATED");
@@ -165,12 +162,12 @@ public class QuickStartIT {
     bout.reset();
     // Delete a subscription.
     DeleteSubscriptionExample.deleteSubscriptionExample(
-        CLOUD_REGION, ZONE_ID, PROJECT_NUMBER, SUBSCRIPTION_NAME);
+        cloudRegion, zoneId, projectNumber, subscriptionId);
     assertThat(bout.toString()).contains("deleted successfully");
 
     bout.reset();
     // Delete a topic.
-    DeleteTopicExample.deleteTopicExample(CLOUD_REGION, ZONE_ID, PROJECT_NUMBER, TOPIC_NAME);
+    DeleteTopicExample.deleteTopicExample(cloudRegion, zoneId, projectNumber, topicId);
     assertThat(bout.toString()).contains("deleted successfully");
   }
 }

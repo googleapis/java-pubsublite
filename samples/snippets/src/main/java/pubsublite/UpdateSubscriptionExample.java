@@ -52,7 +52,7 @@ public class UpdateSubscriptionExample {
             .setSubscriptionName(SubscriptionName.of(subscriptionId))
             .build();
 
-    FieldMask MASK =
+    FieldMask fieldMask =
         FieldMask.newBuilder().addPaths("delivery_config.delivery_requirement").build();
 
     Subscription subscription =
@@ -73,7 +73,7 @@ public class UpdateSubscriptionExample {
       System.out.println("Before update: " + subscriptionBeforeUpdate.getAllFields());
 
       Subscription subscriptionAfterUpdate =
-          adminClient.updateSubscription(subscription, MASK).get();
+          adminClient.updateSubscription(subscription, fieldMask).get();
       System.out.println("After update: " + subscriptionAfterUpdate.getAllFields());
     }
   }

@@ -60,7 +60,7 @@ public class UpdateTopicExample {
             "retention_config.per_partition_bytes",
             "retention_config.period");
 
-    FieldMask MASK = FieldMask.newBuilder().addAllPaths(iterablePaths).build();
+    FieldMask fieldMask = FieldMask.newBuilder().addAllPaths(iterablePaths).build();
 
     Topic topic =
         Topic.newBuilder()
@@ -91,7 +91,7 @@ public class UpdateTopicExample {
       Topic topicBeforeUpdate = adminClient.getTopic(topicPath).get();
       System.out.println("Before update: " + topicBeforeUpdate.getAllFields());
 
-      Topic topicAfterUpdate = adminClient.updateTopic(topic, MASK).get();
+      Topic topicAfterUpdate = adminClient.updateTopic(topic, fieldMask).get();
       System.out.println("After update: " + topicAfterUpdate.getAllFields());
     }
   }

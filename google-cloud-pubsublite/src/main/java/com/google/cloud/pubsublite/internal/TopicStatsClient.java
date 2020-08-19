@@ -51,5 +51,6 @@ public interface TopicStatsClient extends BackgroundResource {
    *
    * @throws StatusException on a failure to properly terminate.
    */
+  @Override
   void close() throws StatusException;
 }

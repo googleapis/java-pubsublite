@@ -96,7 +96,7 @@ public class TopicStatsClientImplTest {
 
   private static ComputeMessageStatsRequest request() {
     return ComputeMessageStatsRequest.newBuilder()
-        .setTopic(path().toString())
+        .setTopic(path().value())
         .setPartition(partition().value())
         .setStartCursor(Cursor.newBuilder().setOffset(start().value()).build())
         .setEndCursor(Cursor.newBuilder().setOffset(end().value()).build())

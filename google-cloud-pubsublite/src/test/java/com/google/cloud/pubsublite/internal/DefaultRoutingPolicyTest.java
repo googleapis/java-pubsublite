@@ -31,21 +31,28 @@ import org.junit.Test;
 
 public class DefaultRoutingPolicyTest {
   private static final int NUM_PARTITIONS = 29;
-  private static final RoutingPolicy policy = ((Supplier<RoutingPolicy>)() -> {
-    try {
-      return new DefaultRoutingPolicy(NUM_PARTITIONS);
-    } catch (StatusException e) {
-      throw e.getStatus().asRuntimeException();
-    }
-  }).get();
+  private static final RoutingPolicy policy =
+      ((Supplier<RoutingPolicy>)
+              () -> {
+                try {
+                  return new DefaultRoutingPolicy(NUM_PARTITIONS);
+                } catch (StatusException e) {
+                  throw e.getStatus().asRuntimeException();
+                }
+              })
+          .get();
 
   private static Map<ByteString, Partition> loadTestCases() throws Exception {
     Gson gson = new Gson();
-    String json = new String(Files.readAllBytes(Paths.get(DefaultRoutingPolicyTest.class.getResource("/routing_tests.json").toURI())));
+    String json =
+        new String(
+            Files.readAllBytes(
+                Paths.get(
+                    DefaultRoutingPolicyTest.class.getResource("/routing_tests.json").toURI())));
     Map<String, Double> map = gson.fromJson(json, Map.class);
     ImmutableMap.Builder<ByteString, Partition> output = ImmutableMap.builder();
     for (String key : map.keySet()) {
-      output.put(ByteString.copyFromUtf8(key), Partition.of((int)map.get(key).doubleValue()));
+      output.put(ByteString.copyFromUtf8(key), Partition.of((int) map.get(key).doubleValue()));
     }
     return output.build();
   }

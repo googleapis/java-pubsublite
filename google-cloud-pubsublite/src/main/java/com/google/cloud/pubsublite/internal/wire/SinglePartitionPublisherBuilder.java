@@ -39,8 +39,13 @@ public abstract class SinglePartitionPublisherBuilder {
   // Rarely set parameters.
   abstract PubsubContext context();
 
+  // For testing.
+  abstract PublisherBuilder.Builder underlyingBuilder();
+
   public static Builder newBuilder() {
-    return new AutoValue_SinglePartitionPublisherBuilder.Builder().setContext(PubsubContext.of());
+    return new AutoValue_SinglePartitionPublisherBuilder.Builder()
+        .setContext(PubsubContext.of())
+        .setUnderlyingBuilder(PublisherBuilder.builder());
   }
 
   @AutoValue.Builder
@@ -59,12 +64,16 @@ public abstract class SinglePartitionPublisherBuilder {
     // Rarely set parameters.
     public abstract Builder setContext(PubsubContext context);
 
+    // For testing.
+    abstract Builder setUnderlyingBuilder(PublisherBuilder.Builder underlyingBuilder);
+
     abstract SinglePartitionPublisherBuilder autoBuild();
 
     public SinglePartitionPublisher build() throws StatusException {
       SinglePartitionPublisherBuilder builder = autoBuild();
       PublisherBuilder.Builder publisherBuilder =
-          PublisherBuilder.builder()
+          builder
+              .underlyingBuilder()
               .setTopic(builder.topic())
               .setPartition(builder.partition())
               .setContext(builder.context());

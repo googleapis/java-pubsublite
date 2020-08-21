@@ -22,6 +22,7 @@ import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 
@@ -34,6 +35,7 @@ import com.google.cloud.pubsublite.SubscriptionPaths;
 import com.google.cloud.pubsublite.internal.StatusExceptionMatcher;
 import com.google.cloud.pubsublite.internal.wire.ConnectedSubscriber.Response;
 import com.google.cloud.pubsublite.proto.Cursor;
+import com.google.cloud.pubsublite.proto.FlowControlRequest;
 import com.google.cloud.pubsublite.proto.InitialSubscribeRequest;
 import com.google.cloud.pubsublite.proto.InitialSubscribeResponse;
 import com.google.cloud.pubsublite.proto.MessageResponse;
@@ -45,6 +47,7 @@ import com.google.cloud.pubsublite.proto.SubscribeRequest;
 import com.google.cloud.pubsublite.proto.SubscribeResponse;
 import com.google.cloud.pubsublite.proto.SubscriberServiceGrpc;
 import com.google.common.base.Preconditions;
+import com.google.common.collect.ImmutableList;
 import com.google.protobuf.ByteString;
 import io.grpc.ManagedChannel;
 import io.grpc.Status;
@@ -243,8 +246,8 @@ public class ConnectedSubscriberImplTest {
   @Test
   public void duplicateInitial_Abort() {
     initialize();
-    SubscribeResponse.Builder builder = SubscribeResponse.newBuilder();
-    builder.getInitial();
+    SubscribeResponse.Builder builder =
+        SubscribeResponse.newBuilder().setInitial(InitialSubscribeResponse.getDefaultInstance());
     leakedResponseStream.get().onNext(builder.build());
     verify(mockOutputStream).onError(argThat(new StatusExceptionMatcher(Code.FAILED_PRECONDITION)));
     leakedResponseStream = Optional.empty();
@@ -253,8 +256,8 @@ public class ConnectedSubscriberImplTest {
   @Test
   public void emptyMessagesResponse_Abort() {
     initialize();
-    SubscribeResponse.Builder builder = SubscribeResponse.newBuilder();
-    builder.getMessages();
+    SubscribeResponse.Builder builder =
+        SubscribeResponse.newBuilder().setMessages(MessageResponse.getDefaultInstance());
     leakedResponseStream.get().onNext(builder.build());
     verify(mockOutputStream).onError(argThat(new StatusExceptionMatcher(Code.FAILED_PRECONDITION)));
     leakedResponseStream = Optional.empty();
@@ -276,6 +279,32 @@ public class ConnectedSubscriberImplTest {
     leakedResponseStream.get().onNext(builder.build());
     verify(mockOutputStream).onError(argThat(new StatusExceptionMatcher(Code.FAILED_PRECONDITION)));
     leakedResponseStream = Optional.empty();
+  }
+
+  @Test
+  public void validMessagesResponse() {
+    initialize();
+    SubscribeResponse.Builder builder = SubscribeResponse.newBuilder();
+    builder.getMessagesBuilder().addMessages(messageWithOffset(Offset.of(10)));
+    builder.getMessagesBuilder().addMessages(messageWithOffset(Offset.of(11)));
+    leakedResponseStream.get().onNext(builder.build());
+    verify(mockOutputStream)
+        .onNext(
+            Response.ofMessages(
+                ImmutableList.of(
+                    com.google.cloud.pubsublite.SequencedMessage.fromProto(
+                        messageWithOffset(Offset.of(10))),
+                    com.google.cloud.pubsublite.SequencedMessage.fromProto(
+                        messageWithOffset(Offset.of(11))))));
+  }
+
+  @Test
+  public void allowFlowRequest() {
+    initialize();
+    FlowControlRequest request =
+        FlowControlRequest.newBuilder().setAllowedBytes(2).setAllowedMessages(3).build();
+    subscriber.allowFlow(request);
+    verify(mockRequestStream).onNext(SubscribeRequest.newBuilder().setFlowControl(request).build());
   }
 
   @Test
@@ -345,6 +374,30 @@ public class ConnectedSubscriberImplTest {
                         .setNamedTarget(SeekRequest.NamedTarget.COMMITTED_CURSOR)
                         .build())
                 .build());
+  }
+
+  @Test
+  public void messagesWithOutstandingSeekDropped() {
+    initialize();
+    SubscribeRequest request = SubscribeRequest.newBuilder().setSeek(validSeekRequest()).build();
+    doAnswer(
+            AnswerWith(
+                SubscribeResponse.newBuilder()
+                    .setMessages(
+                        MessageResponse.newBuilder()
+                            .addMessages(messageWithOffset(Offset.of(11)))
+                            .build())
+                    .build()))
+        .when(mockRequestStream)
+        .onNext(request);
+    subscriber.seek(validSeekRequest());
+    verify(mockRequestStream).onNext(request);
+    verify(mockOutputStream, times(0))
+        .onNext(
+            Response.ofMessages(
+                ImmutableList.of(
+                    com.google.cloud.pubsublite.SequencedMessage.fromProto(
+                        messageWithOffset(Offset.of(11))))));
   }
 
   @Test

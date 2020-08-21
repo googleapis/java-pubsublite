@@ -17,22 +17,32 @@
 package com.google.cloud.pubsublite.internal.wire;
 
 import com.google.api.gax.core.GaxProperties;
+import com.google.common.annotations.VisibleForTesting;
 
 /** The version number of this library. */
 final class Versions {
-  private Versions() {}
+  private final String versionString;
 
-  private static String[] GetVersionSplits() {
+  @VisibleForTesting
+  Versions(String versionString) {
+    this.versionString = versionString;
+  }
+
+  private Versions() {
+    this(GaxProperties.getLibraryVersion(Versions.class));
+  }
+
+  private String[] getVersionSplits() {
     try {
-      String versionString = GaxProperties.getLibraryVersion(Versions.class);
       return versionString.split("\\.");
     } catch (Exception e) {
       return new String[0];
     }
   }
 
-  private static int GetMajorVersion() {
-    String[] splits = GetVersionSplits();
+  @VisibleForTesting
+  int getMajorVersion() {
+    String[] splits = getVersionSplits();
     if (splits.length != 3) return 0;
     try {
       return Integer.parseInt(splits[0]);
@@ -41,8 +51,9 @@ final class Versions {
     }
   }
 
-  private static int GetMinorVersion() {
-    String[] splits = GetVersionSplits();
+  @VisibleForTesting
+  int getMinorVersion() {
+    String[] splits = getVersionSplits();
     if (splits.length != 3) return 0;
     try {
       return Integer.parseInt(splits[1]);
@@ -51,7 +62,8 @@ final class Versions {
     }
   }
 
+  private static final Versions VERSIONS = new Versions();
   // TODO: Do this using generation automation as opposed to maven packaging.
-  static final int MAJOR_VERSION = GetMajorVersion();
-  static final int MINOR_VERSION = GetMinorVersion();
+  static final int MAJOR_VERSION = VERSIONS.getMajorVersion();
+  static final int MINOR_VERSION = VERSIONS.getMinorVersion();
 }

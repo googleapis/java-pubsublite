@@ -25,7 +25,6 @@ import com.google.cloud.pubsublite.ProjectNumber;
 import com.google.cloud.pubsublite.SubscriptionName;
 import com.google.cloud.pubsublite.SubscriptionPaths;
 import com.google.cloud.pubsublite.proto.CursorServiceGrpc;
-import com.google.cloud.pubsublite.proto.PartitionAssignmentServiceGrpc;
 import io.grpc.Channel;
 import org.junit.Test;
 import org.junit.runner.RunWith;

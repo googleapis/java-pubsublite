@@ -26,22 +26,18 @@ import com.google.cloud.pubsublite.ProjectNumber;
 import com.google.cloud.pubsublite.SequencedMessage;
 import com.google.cloud.pubsublite.SubscriptionName;
 import com.google.cloud.pubsublite.SubscriptionPaths;
-import com.google.cloud.pubsublite.proto.PartitionAssignmentServiceGrpc;
 import com.google.cloud.pubsublite.proto.SubscriberServiceGrpc;
 import com.google.common.collect.ImmutableList;
 import io.grpc.Channel;
-import java.util.List;
 import java.util.function.Consumer;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 
 @RunWith(JUnit4.class)
 public class SubscriberBuilderTest {
-  @Mock
-  public Consumer<ImmutableList<SequencedMessage>> mockConsumer;
+  @Mock public Consumer<ImmutableList<SequencedMessage>> mockConsumer;
 
   @Test
   public void testBuilder() throws Exception {

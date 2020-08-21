@@ -16,21 +16,31 @@
 
 package com.google.cloud.pubsublite.internal;
 
+import com.google.common.annotations.VisibleForTesting;
 import io.grpc.Channel;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Function;
 
 /** A ChannelCache creates and stores default channels for use with api methods. */
 public class ChannelCache {
+  private final Function<String, ManagedChannel> channelFactory;
   private final ConcurrentHashMap<String, ManagedChannel> channels = new ConcurrentHashMap<>();
 
   public ChannelCache() {
+    this(ChannelCache::newChannel);
     Runtime.getRuntime().addShutdownHook(new Thread(this::onShutdown));
   }
 
-  private void onShutdown() {
+  @VisibleForTesting
+  ChannelCache(Function<String, ManagedChannel> channelFactory) {
+    this.channelFactory = channelFactory;
+  }
+
+  @VisibleForTesting
+  void onShutdown() {
     channels.forEachValue(
         channels.size(),
         channel -> {
@@ -43,10 +53,10 @@ public class ChannelCache {
   }
 
   public Channel get(String target) {
-    return channels.computeIfAbsent(target, this::newChannel);
+    return channels.computeIfAbsent(target, channelFactory);
   }
 
-  private ManagedChannel newChannel(String target) {
+  private static ManagedChannel newChannel(String target) {
     return ManagedChannelBuilder.forTarget(target).build();
   }
 }

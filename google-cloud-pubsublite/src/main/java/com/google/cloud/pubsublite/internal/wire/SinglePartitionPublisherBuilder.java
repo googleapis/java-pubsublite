@@ -19,7 +19,9 @@ package com.google.cloud.pubsublite.internal.wire;
 import com.google.api.gax.batching.BatchingSettings;
 import com.google.auto.value.AutoValue;
 import com.google.cloud.pubsublite.Partition;
+import com.google.cloud.pubsublite.PublishMetadata;
 import com.google.cloud.pubsublite.TopicPath;
+import com.google.cloud.pubsublite.internal.Publisher;
 import com.google.cloud.pubsublite.proto.PublisherServiceGrpc;
 import io.grpc.StatusException;
 import java.util.Optional;
@@ -69,7 +71,7 @@ public abstract class SinglePartitionPublisherBuilder {
 
     abstract SinglePartitionPublisherBuilder autoBuild();
 
-    public SinglePartitionPublisher build() throws StatusException {
+    public Publisher<PublishMetadata> build() throws StatusException {
       SinglePartitionPublisherBuilder builder = autoBuild();
       PublisherBuilder.Builder publisherBuilder =
           builder

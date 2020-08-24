@@ -75,7 +75,10 @@ public final class PartitionLookupUtils {
     }
   }
 
-  /** Look up the number of partitions in the topic associated with a subscription using the provided AdminClient. */
+  /**
+   * Look up the number of partitions in the topic associated with a subscription using the provided
+   * AdminClient.
+   */
   public static int numPartitions(SubscriptionPath subscription, AdminClient client)
       throws StatusException {
     ApiFuture<Subscription> subscriptionFuture = client.getSubscription(subscription);

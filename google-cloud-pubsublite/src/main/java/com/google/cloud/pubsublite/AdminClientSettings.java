@@ -24,9 +24,7 @@ import com.google.cloud.pubsublite.proto.AdminServiceGrpc.AdminServiceBlockingSt
 import io.grpc.StatusException;
 import java.util.Optional;
 
-/**
- * Settings for construction a Pub/Sub Lite AdminClient.
- */
+/** Settings for construction a Pub/Sub Lite AdminClient. */
 @AutoValue
 public abstract class AdminClientSettings {
 

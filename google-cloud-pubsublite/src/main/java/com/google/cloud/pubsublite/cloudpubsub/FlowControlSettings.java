@@ -22,7 +22,8 @@ import com.google.auto.value.AutoValue;
 import io.grpc.StatusException;
 import java.io.Serializable;
 
-/** Describes limits on bytes and messages outstanding for a single partition Pub/Sub Lite
+/**
+ * Describes limits on bytes and messages outstanding for a single partition Pub/Sub Lite
  * subscriber. These are hard limits enforced by the server.
  */
 @AutoValue

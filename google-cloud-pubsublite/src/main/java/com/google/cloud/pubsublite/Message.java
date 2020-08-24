@@ -85,7 +85,9 @@ public abstract class Message {
 
   @AutoValue.Builder
   public abstract static class Builder {
-    /** The key for this message. All messages with the same key are routed to the same partition. */
+    /**
+     * The key for this message. All messages with the same key are routed to the same partition.
+     */
     public abstract Builder setKey(ByteString key);
 
     /** The data payload for this message. */

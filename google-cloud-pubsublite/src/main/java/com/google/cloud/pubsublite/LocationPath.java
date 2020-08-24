@@ -24,8 +24,8 @@ import java.io.Serializable;
 /**
  * A string wrapper representing a project and location. Should be structured like:
  *
- * projects/<project number>/locations/<cloud zone>
- * */
+ * <p>projects/<project number>/locations/<cloud zone>
+ */
 @AutoValue
 public abstract class LocationPath implements Serializable {
   /** The string value of this location path. */

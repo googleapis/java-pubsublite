@@ -30,20 +30,22 @@ import io.grpc.StatusException;
 import java.util.Base64;
 import java.util.Collection;
 
-/** MessageTransforms details how to transform message representations from Cloud Pub/Sub to
-  * Pub/Sub Lite.
-  *
-  * Transformers are made public to allow user code that currently uses PubsubMessages to use
-  * interfaces interacting with Pub/Sub Lite.
-  */
+/**
+ * MessageTransforms details how to transform message representations from Cloud Pub/Sub to Pub/Sub
+ * Lite.
+ *
+ * <p>Transformers are made public to allow user code that currently uses PubsubMessages to use
+ * interfaces interacting with Pub/Sub Lite.
+ */
 public class MessageTransforms {
   private MessageTransforms() {}
 
   public static final String PUBSUB_LITE_EVENT_TIME_TIMESTAMP_PROTO =
       "x-goog-pubsublite-event-time-timestamp-proto";
 
-  /** Encode a timestamp in a way that it will be interpreted as an event time if published on a
-    * message with an attribute named PUBSUB_LITE_EVENT_TIME_TIMESTAMP_PROTO.
+  /**
+   * Encode a timestamp in a way that it will be interpreted as an event time if published on a
+   * message with an attribute named PUBSUB_LITE_EVENT_TIME_TIMESTAMP_PROTO.
    */
   public static String encodeAttributeEventTime(Timestamp timestamp) {
     return Base64.getEncoder().encodeToString(timestamp.toByteArray());
@@ -58,9 +60,11 @@ public class MessageTransforms {
     }
   }
 
-  /** The default attribute parsing logic requires that all attributes could have been generated
-    * from the Cloud Pub/Sub client library shim. This means it requires that all of them are
-    * single entry representations of UTF-8 encoded strings. */
+  /**
+   * The default attribute parsing logic requires that all attributes could have been generated from
+   * the Cloud Pub/Sub client library shim. This means it requires that all of them are single entry
+   * representations of UTF-8 encoded strings.
+   */
   private static String parseAttributes(Collection<ByteString> values) throws StatusException {
     checkArgument(
         values.size() == 1,

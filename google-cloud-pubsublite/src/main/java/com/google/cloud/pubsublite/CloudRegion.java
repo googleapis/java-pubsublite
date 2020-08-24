@@ -19,7 +19,7 @@ package com.google.cloud.pubsublite;
 import com.google.auto.value.AutoValue;
 import java.io.Serializable;
 
-/** A wrapped string representing a Google Cloud region.*/
+/** A wrapped string representing a Google Cloud region. */
 @AutoValue
 public abstract class CloudRegion implements Serializable {
   private static final long serialVersionUID = 6814654654L;

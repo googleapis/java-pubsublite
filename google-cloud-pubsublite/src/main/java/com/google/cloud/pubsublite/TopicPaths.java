@@ -55,9 +55,7 @@ public abstract class TopicPaths {
       return TopicPath.of(
           String.format(
               "projects/%s/locations/%s/topics/%s",
-              built.projectNumber().value(),
-              built.zone().toString(),
-              built.topicName().value()));
+              built.projectNumber().value(), built.zone().toString(), built.topicName().value()));
     }
   }
 

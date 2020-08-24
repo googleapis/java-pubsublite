@@ -83,23 +83,28 @@ public abstract class SubscriberSettings {
 
     // Required parameters.
 
-    /** The receiver which handles new messages sent by the Pub/Sub Lite system. Only one downcall
-     *  from any connected partition will be outstanding at a time, and blocking in this receiver
-     *  callback may block forward progress if it blocks.
+    /**
+     * The receiver which handles new messages sent by the Pub/Sub Lite system. Only one downcall
+     * from any connected partition will be outstanding at a time, and blocking in this receiver
+     * callback may block forward progress if it blocks.
      */
     public abstract Builder setReceiver(MessageReceiver receiver);
 
     /** The subscription to use to receive messages. */
     public abstract Builder setSubscriptionPath(SubscriptionPath path);
 
-    /** The per-partition flow control settings. Because these apply per-partition, if you are using
+    /**
+     * The per-partition flow control settings. Because these apply per-partition, if you are using
      * them to bound memory usage, keep in mind the number of partitions in the associated topic.
      */
     public abstract Builder setPerPartitionFlowControlSettings(FlowControlSettings settings);
 
     // Optional parameters.
 
-    /** The partitions this subscriber should connect to to receive messages. If set, disables auto-assignment. */
+    /**
+     * The partitions this subscriber should connect to to receive messages. If set, disables
+     * auto-assignment.
+     */
     public abstract Builder setPartitions(List<Partition> partition);
 
     /** The MessageTransformer to get PubsubMessages from Pub/Sub Lite wire messages. */
@@ -116,7 +121,11 @@ public abstract class SubscriberSettings {
     /** A stub to connect to the Pub/Sub lite assignment service. */
     public abstract Builder setAssignmentServiceStub(PartitionAssignmentServiceStub stub);
 
-    /** A handler for the action to take when AckReplyConsumer::nack is called. In Pub/Sub Lite, only a single subscriber for a given subscription is connected to any partition at a time, and there is no other client that may be able to handle messages. */
+    /**
+     * A handler for the action to take when AckReplyConsumer::nack is called. In Pub/Sub Lite, only
+     * a single subscriber for a given subscription is connected to any partition at a time, and
+     * there is no other client that may be able to handle messages.
+     */
     public abstract Builder setNackHandler(NackHandler nackHandler);
 
     abstract SubscriberSettings autoBuild();

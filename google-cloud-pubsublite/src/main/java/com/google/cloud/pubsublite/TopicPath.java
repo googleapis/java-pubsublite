@@ -24,8 +24,8 @@ import java.io.Serializable;
 /**
  * A string wrapper representing a topic. Should be structured like:
  *
- * projects/<project number>/locations/<cloud zone>/topics/<id>
- * */
+ * <p>projects/<project number>/locations/<cloud zone>/topics/<id>
+ */
 @AutoValue
 public abstract class TopicPath implements Serializable {
   public abstract String value();

@@ -22,8 +22,11 @@ import org.junit.runners.JUnit4;
 @RunWith(JUnit4.class)
 public class SubscriberSettingsTest {
   SubscriptionPath getPath() throws StatusException {
-    return SubscriptionPaths.newBuilder().setProjectNumber(ProjectNumber.of(56)).setZone(
-        CloudZone.parse("us-central1-a")).setSubscriptionName(SubscriptionName.of("xyz")).build();
+    return SubscriptionPaths.newBuilder()
+        .setProjectNumber(ProjectNumber.of(56))
+        .setZone(CloudZone.parse("us-central1-a"))
+        .setSubscriptionName(SubscriptionName.of("xyz"))
+        .build();
   }
 
   @Test
@@ -32,11 +35,13 @@ public class SubscriberSettingsTest {
     SubscriberSettings.newBuilder()
         .setReceiver(mock(MessageReceiver.class))
         .setSubscriptionPath(getPath())
-        .setPerPartitionFlowControlSettings(FlowControlSettings.builder().setBytesOutstanding(1).setMessagesOutstanding(1).build())
+        .setPerPartitionFlowControlSettings(
+            FlowControlSettings.builder().setBytesOutstanding(1).setMessagesOutstanding(1).build())
         .setCursorServiceStub(CursorServiceGrpc.newStub(mockChannel))
         .setSubscriberServiceStub(SubscriberServiceGrpc.newStub(mockChannel))
         .setPartitions(ImmutableList.of(Partition.of(3), Partition.of(1)))
-        .build().instantiate();
+        .build()
+        .instantiate();
   }
 
   @Test
@@ -45,10 +50,12 @@ public class SubscriberSettingsTest {
     SubscriberSettings.newBuilder()
         .setReceiver(mock(MessageReceiver.class))
         .setSubscriptionPath(getPath())
-        .setPerPartitionFlowControlSettings(FlowControlSettings.builder().setBytesOutstanding(1).setMessagesOutstanding(1).build())
+        .setPerPartitionFlowControlSettings(
+            FlowControlSettings.builder().setBytesOutstanding(1).setMessagesOutstanding(1).build())
         .setAssignmentServiceStub(PartitionAssignmentServiceGrpc.newStub(mockChannel))
         .setCursorServiceStub(CursorServiceGrpc.newStub(mockChannel))
         .setSubscriberServiceStub(SubscriberServiceGrpc.newStub(mockChannel))
-        .build().instantiate();
+        .build()
+        .instantiate();
   }
 }

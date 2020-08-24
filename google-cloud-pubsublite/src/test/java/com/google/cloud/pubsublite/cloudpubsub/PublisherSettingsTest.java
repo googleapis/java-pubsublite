@@ -25,20 +25,24 @@ import org.mockito.Spy;
 @RunWith(JUnit4.class)
 public class PublisherSettingsTest {
   TopicPath getPath() throws StatusException {
-    return TopicPaths.newBuilder().setProjectNumber(ProjectNumber.of(56)).setZone(
-        CloudZone.parse("us-central1-a")).setTopicName(TopicName.of("xyz")).build();
+    return TopicPaths.newBuilder()
+        .setProjectNumber(ProjectNumber.of(56))
+        .setZone(CloudZone.parse("us-central1-a"))
+        .setTopicName(TopicName.of("xyz"))
+        .build();
   }
 
-  abstract static class FakePublisher extends FakeApiService implements Publisher<PublishMetadata> {}
+  abstract static class FakePublisher extends FakeApiService
+      implements Publisher<PublishMetadata> {}
 
-  @Spy
-  private FakePublisher underlying;
+  @Spy private FakePublisher underlying;
 
   @Test
   public void testSettings() throws StatusException {
     initMocks(this);
     Channel mockChannel = mock(Channel.class);
-    SinglePartitionPublisherBuilder.Builder mockBuilder = mock(SinglePartitionPublisherBuilder.Builder.class, RETURNS_SELF);
+    SinglePartitionPublisherBuilder.Builder mockBuilder =
+        mock(SinglePartitionPublisherBuilder.Builder.class, RETURNS_SELF);
     when(mockBuilder.build()).thenReturn(underlying);
     PublisherSettings.newBuilder()
         .setTopicPath(getPath())

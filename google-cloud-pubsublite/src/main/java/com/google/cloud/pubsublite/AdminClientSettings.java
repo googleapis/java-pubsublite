@@ -21,9 +21,7 @@ import com.google.auto.value.AutoValue;
 import com.google.cloud.pubsublite.internal.AdminClientImpl;
 import com.google.cloud.pubsublite.proto.AdminServiceGrpc;
 import com.google.cloud.pubsublite.proto.AdminServiceGrpc.AdminServiceBlockingStub;
-import io.grpc.Status;
 import io.grpc.StatusException;
-import java.io.IOException;
 import java.util.Optional;
 
 @AutoValue
@@ -60,16 +58,7 @@ public abstract class AdminClientSettings {
     if (stub().isPresent()) {
       stub = stub().get();
     } else {
-      try {
-        stub =
-            Stubs.defaultStub(
-                Endpoints.regionalEndpoint(region()), AdminServiceGrpc::newBlockingStub);
-      } catch (IOException e) {
-        throw Status.INTERNAL
-            .withCause(e)
-            .withDescription("Creating admin stub failed.")
-            .asException();
-      }
+      stub = Stubs.defaultStub(region(), AdminServiceGrpc::newBlockingStub);
     }
     return new AdminClientImpl(region(), stub, retrySettings());
   }

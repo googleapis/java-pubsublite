@@ -21,6 +21,7 @@ import com.google.api.gax.grpc.GaxGrpcProperties;
 import com.google.api.gax.rpc.ApiClientHeaderProvider;
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.cloud.pubsublite.internal.ChannelCache;
+import com.google.cloud.pubsublite.internal.ExtractStatus;
 import com.google.common.collect.ImmutableList;
 import io.grpc.CallOptions;
 import io.grpc.Channel;
@@ -31,6 +32,7 @@ import io.grpc.ForwardingClientCall.SimpleForwardingClientCall;
 import io.grpc.Metadata;
 import io.grpc.Metadata.Key;
 import io.grpc.MethodDescriptor;
+import io.grpc.StatusException;
 import io.grpc.auth.MoreCallCredentials;
 import io.grpc.stub.AbstractStub;
 import java.io.IOException;
@@ -44,14 +46,23 @@ public class Stubs {
   private static final ChannelCache channels = new ChannelCache();
 
   public static <StubT extends AbstractStub<StubT>> StubT defaultStub(
-      String target, Function<Channel, StubT> stubFactory) throws IOException {
-    return stubFactory
-        .apply(ClientInterceptors.intercept(channels.get(target), getClientInterceptors()))
-        .withCallCredentials(
-            MoreCallCredentials.from(
-                GoogleCredentials.getApplicationDefault()
-                    .createScoped(
-                        ImmutableList.of("https://www.googleapis.com/auth/cloud-platform"))));
+      CloudRegion target, Function<Channel, StubT> stubFactory) throws StatusException {
+    return defaultStub(Endpoints.regionalEndpoint(target), stubFactory);
+  }
+
+  public static <StubT extends AbstractStub<StubT>> StubT defaultStub(
+      String target, Function<Channel, StubT> stubFactory) throws StatusException {
+    try {
+      return stubFactory
+          .apply(ClientInterceptors.intercept(channels.get(target), getClientInterceptors()))
+          .withCallCredentials(
+              MoreCallCredentials.from(
+                  GoogleCredentials.getApplicationDefault()
+                      .createScoped(
+                          ImmutableList.of("https://www.googleapis.com/auth/cloud-platform"))));
+    } catch (IOException e) {
+      throw ExtractStatus.toCanonical(e);
+    }
   }
 
   private static List<ClientInterceptor> getClientInterceptors() {

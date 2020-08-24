@@ -17,7 +17,6 @@
 package com.google.cloud.pubsublite.internal.wire;
 
 import com.google.auto.value.AutoValue;
-import com.google.cloud.pubsublite.Endpoints;
 import com.google.cloud.pubsublite.Partition;
 import com.google.cloud.pubsublite.SequencedMessage;
 import com.google.cloud.pubsublite.Stubs;
@@ -28,10 +27,8 @@ import com.google.cloud.pubsublite.proto.SubscriberServiceGrpc;
 import com.google.cloud.pubsublite.proto.SubscriberServiceGrpc.SubscriberServiceStub;
 import com.google.common.collect.ImmutableList;
 import io.grpc.Metadata;
-import io.grpc.Status;
 import io.grpc.StatusException;
 import io.grpc.stub.MetadataUtils;
-import java.io.IOException;
 import java.util.Optional;
 import java.util.function.Consumer;
 
@@ -80,18 +77,10 @@ public abstract class SubscriberBuilder {
       if (builder.subscriberServiceStub().isPresent()) {
         subscriberServiceStub = builder.subscriberServiceStub().get();
       } else {
-        try {
-          subscriberServiceStub =
-              Stubs.defaultStub(
-                  Endpoints.regionalEndpoint(
-                      SubscriptionPaths.getZone(builder.subscriptionPath()).region()),
-                  SubscriberServiceGrpc::newStub);
-        } catch (IOException e) {
-          throw Status.INTERNAL
-              .withCause(e)
-              .withDescription("Creating subscriber stub failed.")
-              .asException();
-        }
+        subscriberServiceStub =
+            Stubs.defaultStub(
+                SubscriptionPaths.getZone(builder.subscriptionPath()).region(),
+                SubscriberServiceGrpc::newStub);
       }
       Metadata metadata = builder.context().getMetadata();
       metadata.merge(RoutingMetadata.of(builder.subscriptionPath(), builder.partition()));

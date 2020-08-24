@@ -17,7 +17,6 @@
 package com.google.cloud.pubsublite.internal.wire;
 
 import com.google.auto.value.AutoValue;
-import com.google.cloud.pubsublite.Endpoints;
 import com.google.cloud.pubsublite.Stubs;
 import com.google.cloud.pubsublite.SubscriptionPath;
 import com.google.cloud.pubsublite.SubscriptionPaths;
@@ -26,9 +25,7 @@ import com.google.cloud.pubsublite.proto.PartitionAssignmentServiceGrpc;
 import com.google.cloud.pubsublite.proto.PartitionAssignmentServiceGrpc.PartitionAssignmentServiceStub;
 import com.google.common.flogger.GoogleLogger;
 import com.google.protobuf.ByteString;
-import io.grpc.Status;
 import io.grpc.StatusException;
-import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.Optional;
 import java.util.UUID;
@@ -69,18 +66,10 @@ public abstract class AssignerBuilder {
       if (builder.assignmentStub().isPresent()) {
         stub = builder.assignmentStub().get();
       } else {
-        try {
-          stub =
-              Stubs.defaultStub(
-                  Endpoints.regionalEndpoint(
-                      SubscriptionPaths.getZone(builder.subscriptionPath()).region()),
-                  PartitionAssignmentServiceGrpc::newStub);
-        } catch (IOException e) {
-          throw Status.INTERNAL
-              .withCause(e)
-              .withDescription("Creating assigner stub failed.")
-              .asException();
-        }
+        stub =
+            Stubs.defaultStub(
+                SubscriptionPaths.getZone(builder.subscriptionPath()).region(),
+                PartitionAssignmentServiceGrpc::newStub);
       }
 
       UUID uuid = UUID.randomUUID();

@@ -68,7 +68,7 @@ public class SinglePartitionPublisherTest {
     when(mockBuilder.build()).thenReturn(underlying);
 
     when(mockBuilder.setTopic(topic)).thenReturn(mockBuilder);
-    SinglePartitionPublisher pub =
+    Publisher<PublishMetadata> pub =
         SinglePartitionPublisherBuilder.newBuilder()
             .setTopic(topic)
             .setPartition(partition)

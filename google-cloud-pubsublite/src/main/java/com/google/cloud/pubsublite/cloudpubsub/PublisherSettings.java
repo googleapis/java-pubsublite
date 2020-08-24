@@ -23,6 +23,7 @@ import com.google.cloud.pubsublite.Message;
 import com.google.cloud.pubsublite.MessageTransformer;
 import com.google.cloud.pubsublite.TopicPath;
 import com.google.cloud.pubsublite.cloudpubsub.internal.WrappingPublisher;
+import com.google.cloud.pubsublite.internal.wire.PublisherBuilder;
 import com.google.cloud.pubsublite.internal.wire.PubsubContext;
 import com.google.cloud.pubsublite.internal.wire.PubsubContext.Framework;
 import com.google.cloud.pubsublite.internal.wire.RoutingPublisherBuilder;
@@ -56,8 +57,11 @@ public abstract class PublisherSettings {
 
   abstract Optional<PublisherServiceStub> stub();
 
+  // For testing.
+  abstract SinglePartitionPublisherBuilder.Builder underlyingBuilder();
+
   public static Builder newBuilder() {
-    return new AutoValue_PublisherSettings.Builder();
+    return new AutoValue_PublisherSettings.Builder().setUnderlyingBuilder(SinglePartitionPublisherBuilder.newBuilder());
   }
 
   @AutoValue.Builder
@@ -75,6 +79,9 @@ public abstract class PublisherSettings {
 
     public abstract Builder setStub(PublisherServiceStub stub);
 
+    // For testing.
+    abstract Builder setUnderlyingBuilder(SinglePartitionPublisherBuilder.Builder underlyingBuilder);
+
     public abstract PublisherSettings build();
   }
 
@@ -87,7 +94,7 @@ public abstract class PublisherSettings {
             .orElseGet(() -> MessageTransforms.fromCpsPublishTransformer(keyExtractor));
 
     SinglePartitionPublisherBuilder.Builder singlePartitionPublisherBuilder =
-        SinglePartitionPublisherBuilder.newBuilder()
+        underlyingBuilder()
             .setBatchingSettings(Optional.of(batchingSettings))
             .setStub(stub())
             .setContext(PubsubContext.of(FRAMEWORK));

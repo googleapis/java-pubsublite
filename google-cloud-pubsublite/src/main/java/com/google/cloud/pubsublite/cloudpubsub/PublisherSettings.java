@@ -59,6 +59,9 @@ public abstract class PublisherSettings {
   // For testing.
   abstract SinglePartitionPublisherBuilder.Builder underlyingBuilder();
 
+  // For testing.
+  abstract Optional<Integer> numPartitions();
+
   public static Builder newBuilder() {
     return new AutoValue_PublisherSettings.Builder()
         .setUnderlyingBuilder(SinglePartitionPublisherBuilder.newBuilder());
@@ -83,6 +86,9 @@ public abstract class PublisherSettings {
     abstract Builder setUnderlyingBuilder(
         SinglePartitionPublisherBuilder.Builder underlyingBuilder);
 
+    // For testing.
+    abstract Builder setNumPartitions(int numPartitions);
+
     public abstract PublisherSettings build();
   }
 
@@ -104,6 +110,8 @@ public abstract class PublisherSettings {
         RoutingPublisherBuilder.newBuilder()
             .setTopic(topicPath())
             .setPublisherBuilder(singlePartitionPublisherBuilder);
+
+    numPartitions().ifPresent(wireBuilder::setNumPartitions);
 
     return new WrappingPublisher(wireBuilder.build(), messageTransformer);
   }

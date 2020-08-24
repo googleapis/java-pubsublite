@@ -48,6 +48,8 @@ public class PublisherSettingsTest {
         .setTopicPath(getPath())
         .setStub(PublisherServiceGrpc.newStub(mockChannel))
         .setUnderlyingBuilder(mockBuilder)
-        .build();
+        .setNumPartitions(77)
+        .build()
+        .instantiate();
   }
 }

@@ -1,37 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- see http://www.mojohaus.org/clirr-maven-plugin/examples/ignored-differences.html -->
 <differences>
-  <!-- TODO: remove after next version release -->
-  <difference>
-    <differenceType>6001</differenceType>
-    <className>com/google/cloud/pubsublite/AdminClientSettings</className>
-    <field>DEFAULT_RETRY_SETTINGS</field>
-  </difference>
-  <difference>
-    <differenceType>7013</differenceType>
-    <className>com/google/cloud/pubsublite/cloudpubsub/SubscriberSettings*</className>
-    <method>*</method>
-  </difference>
   <!-- Blanket ignored files -->
   <difference>
     <differenceType>6000</differenceType>
-    <className>com/google/cloud/pubsublite/internal/*</className>
+    <className>com/google/cloud/pubsublite/internal/**</className>
     <method>*</method>
   </difference>
   <difference>
     <differenceType>6001</differenceType>
-    <className>com/google/cloud/pubsublite/internal/*</className>
+    <className>com/google/cloud/pubsublite/internal/**</className>
     <method>*</method>
   </difference>
   <difference>
     <differenceType>7001</differenceType>
-    <className>com/google/cloud/pubsublite/internal/*</className>
+    <className>com/google/cloud/pubsublite/internal/**</className>
     <method>*</method>
   </difference>
   <difference>
     <differenceType>7002</differenceType>
-    <className>com/google/cloud/pubsublite/internal/*</className>
+    <className>com/google/cloud/pubsublite/internal/**</className>
     <method>*</method>
+  </difference>
+  <difference>
+    <differenceType>7006</differenceType>
+    <className>com/google/cloud/pubsublite/internal/**</className>
+    <method>*</method>
+    <to>*</to>
   </difference>
   <difference>
     <differenceType>7011</differenceType>
@@ -40,106 +35,130 @@
   </difference>
   <difference>
     <differenceType>7012</differenceType>
-    <className>com/google/cloud/pubsublite/internal/*</className>
+    <className>com/google/cloud/pubsublite/internal/**</className>
     <method>*</method>
   </difference>
   <difference>
     <differenceType>7013</differenceType>
-    <className>com/google/cloud/pubsublite/internal/*</className>
+    <className>com/google/cloud/pubsublite/internal/**</className>
     <method>*</method>
   </difference>
   <difference>
     <differenceType>8000</differenceType>
-    <className>com/google/cloud/pubsublite/internal/*</className>
+    <className>com/google/cloud/pubsublite/internal/**</className>
   </difference>
   <difference>
     <differenceType>8001</differenceType>
-    <className>com/google/cloud/pubsublite/internal/*</className>
+    <className>com/google/cloud/pubsublite/internal/**</className>
+  </difference>
+  <difference>
+    <differenceType>7012</differenceType>
+    <className>com/google/cloud/pubsublite/internal/**</className>
+    <method>*</method>
+  </difference>
+  <difference>
+    <differenceType>7013</differenceType>
+    <className>com/google/cloud/pubsublite/internal/**</className>
+    <method>*</method>
+  </difference>
+  <difference>
+    <differenceType>8000</differenceType>
+    <className>com/google/cloud/pubsublite/internal/**</className>
+  </difference>
+  <difference>
+    <differenceType>8001</differenceType>
+    <className>com/google/cloud/pubsublite/internal/**</className>
   </difference>
   <difference>
     <differenceType>6000</differenceType>
-    <className>com/google/cloud/pubsublite/cloudpubsub/internal/*</className>
+    <className>com/google/cloud/pubsublite/cloudpubsub/internal/**</className>
     <method>*</method>
   </difference>
   <difference>
     <differenceType>6001</differenceType>
-    <className>com/google/cloud/pubsublite/cloudpubsub/internal/*</className>
+    <className>com/google/cloud/pubsublite/cloudpubsub/internal/**</className>
     <method>*</method>
   </difference>
   <difference>
     <differenceType>7001</differenceType>
-    <className>com/google/cloud/pubsublite/cloudpubsub/internal/*</className>
+    <className>com/google/cloud/pubsublite/cloudpubsub/internal/**</className>
     <method>*</method>
   </difference>
   <difference>
     <differenceType>7002</differenceType>
-    <className>com/google/cloud/pubsublite/cloudpubsub/internal/*</className>
+    <className>com/google/cloud/pubsublite/cloudpubsub/internal/**</className>
     <method>*</method>
   </difference>
   <difference>
+    <differenceType>7006</differenceType>
+    <className>com/google/cloud/pubsublite/cloudpubsub/internal/**</className>
+    <method>*</method>
+    <to>*</to>
+  </difference>
+  <difference>
     <differenceType>7011</differenceType>
-    <className>com/google/cloud/pubsublite/cloudpubsub/internal/*</className>
+    <className>com/google/cloud/pubsublite/cloudpubsub/internal/**</className>
     <method>*</method>
   </difference>
   <difference>
     <differenceType>7012</differenceType>
-    <className>com/google/cloud/pubsublite/cloudpubsub/internal/*</className>
+    <className>com/google/cloud/pubsublite/cloudpubsub/internal/**</className>
     <method>*</method>
   </difference>
   <difference>
     <differenceType>7013</differenceType>
-    <className>com/google/cloud/pubsublite/cloudpubsub/internal/*</className>
+    <className>com/google/cloud/pubsublite/cloudpubsub/internal/**</className>
     <method>*</method>
   </difference>
   <difference>
     <differenceType>8000</differenceType>
-    <className>com/google/cloud/pubsublite/cloudpubsub/internal/*</className>
+    <className>com/google/cloud/pubsublite/cloudpubsub/internal/**</className>
   </difference>
   <difference>
     <differenceType>8001</differenceType>
-    <className>com/google/cloud/pubsublite/cloudpubsub/internal/*</className>
+    <className>com/google/cloud/pubsublite/cloudpubsub/internal/**</className>
   </difference>
   <difference>
     <differenceType>6000</differenceType>
-    <className>com/google/cloud/pubsublite/v1/*</className>
+    <className>com/google/cloud/pubsublite/v1/**</className>
     <method>*</method>
   </difference>
   <difference>
     <differenceType>6001</differenceType>
-    <className>com/google/cloud/pubsublite/v1/*</className>
+    <className>com/google/cloud/pubsublite/v1/**</className>
     <method>*</method>
   </difference>
   <difference>
     <differenceType>7001</differenceType>
-    <className>com/google/cloud/pubsublite/v1/*</className>
+    <className>com/google/cloud/pubsublite/v1/**</className>
     <method>*</method>
   </difference>
   <difference>
     <differenceType>7002</differenceType>
-    <className>com/google/cloud/pubsublite/v1/*</className>
+    <className>com/google/cloud/pubsublite/v1/**</className>
     <method>*</method>
   </difference>
   <difference>
     <differenceType>7011</differenceType>
-    <className>com/google/cloud/pubsublite/v1/*</className>
+    <className>com/google/cloud/pubsublite/v1/**</className>
     <method>*</method>
   </difference>
   <difference>
     <differenceType>7012</differenceType>
-    <className>com/google/cloud/pubsublite/v1/*</className>
+    <className>com/google/cloud/pubsublite/v1/**</className>
     <method>*</method>
   </difference>
   <difference>
     <differenceType>7013</differenceType>
-    <className>com/google/cloud/pubsublite/v1/*</className>
+    <className>com/google/cloud/pubsublite/v1/**</className>
     <method>*</method>
   </difference>
   <difference>
     <differenceType>8000</differenceType>
-    <className>com/google/cloud/pubsublite/v1/*</className>
+    <className>com/google/cloud/pubsublite/v1/**</className>
   </difference>
   <difference>
     <differenceType>8001</differenceType>
-    <className>com/google/cloud/pubsublite/v1/*</className>
+    <className>com/google/cloud/pubsublite/v1/**</className>
   </difference>
 </differences>

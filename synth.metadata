@@ -4,22 +4,22 @@
       "git": {
         "name": ".",
         "remote": "https://github.com/googleapis/java-pubsublite.git",
-        "sha": "db2bc7acb1ee64a0b5406098790432ef1e982d09"
+        "sha": "a6afc60b5f3a48e6baa6fec404214a013b33c89b"
       }
     },
     {
       "git": {
         "name": "googleapis",
         "remote": "https://github.com/googleapis/googleapis.git",
-        "sha": "bea01b071d915207a58af2d0f000c5cb4b0177ae",
-        "internalRef": "325320185"
+        "sha": "72eb54c45231d84266ca059473bc1793c394fcb2",
+        "internalRef": "328059685"
       }
     },
     {
       "git": {
         "name": "synthtool",
         "remote": "https://github.com/googleapis/synthtool.git",
-        "sha": "9602086c6c5b05db77950c7f7495a2a3868f3537"
+        "sha": "05de3e1e14a0b07eab8b474e669164dbd31f81fb"
       }
     }
   ],
@@ -128,8 +128,6 @@
     "google-cloud-pubsublite/src/main/java/com/google/cloud/pubsublite/v1/stub/SubscriberServiceStubSettings.java",
     "google-cloud-pubsublite/src/main/java/com/google/cloud/pubsublite/v1/stub/TopicStatsServiceStub.java",
     "google-cloud-pubsublite/src/main/java/com/google/cloud/pubsublite/v1/stub/TopicStatsServiceStubSettings.java",
-    "google-cloud-pubsublite/src/test/java/com/google/cloud/pubsublite/internal/wire/CommitterBuilderTest.java",
-    "google-cloud-pubsublite/src/test/java/com/google/cloud/pubsublite/internal/wire/SubscriberBuilderTest.java",
     "google-cloud-pubsublite/src/test/java/com/google/cloud/pubsublite/v1/AdminServiceClientTest.java",
     "google-cloud-pubsublite/src/test/java/com/google/cloud/pubsublite/v1/CursorServiceClientTest.java",
     "google-cloud-pubsublite/src/test/java/com/google/cloud/pubsublite/v1/MockAdminService.java",

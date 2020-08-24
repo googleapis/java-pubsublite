@@ -33,6 +33,9 @@ import io.grpc.StatusException;
 import java.util.Optional;
 import org.threeten.bp.Duration;
 
+/**
+ * Settings for instantiating a Pub/Sub Lite publisher emulating the Cloud Pub/Sub Publisher API.
+ */
 @AutoValue
 public abstract class PublisherSettings {
   public static final BatchingSettings DEFAULT_BATCHING_SETTINGS =
@@ -45,15 +48,21 @@ public abstract class PublisherSettings {
   private static final Framework FRAMEWORK = Framework.of("CLOUD_PUBSUB_SHIM");
 
   // Required parameters.
+
+  /** The topic path to publish to. */
   abstract TopicPath topicPath();
 
   // Optional parameters.
+  /** A KeyExtractor for getting the routing key from a message. */
   abstract Optional<KeyExtractor> keyExtractor();
 
+  /** A MessageTransformer for constructing wire messages from Cloud Pub/Sub PubsubMessages. */
   abstract Optional<MessageTransformer<PubsubMessage, Message>> messageTransformer();
 
+  /** Batching settings for this publisher to use. Apply per-partition. */
   abstract Optional<BatchingSettings> batchingSettings();
 
+  /** A stub to connect to the Pub/Sub Lite service. */
   abstract Optional<PublisherServiceStub> stub();
 
   // For testing.
@@ -62,6 +71,7 @@ public abstract class PublisherSettings {
   // For testing.
   abstract Optional<Integer> numPartitions();
 
+  /** Get a new builder for a PublisherSettings. */
   public static Builder newBuilder() {
     return new AutoValue_PublisherSettings.Builder()
         .setUnderlyingBuilder(SinglePartitionPublisherBuilder.newBuilder());
@@ -70,16 +80,22 @@ public abstract class PublisherSettings {
   @AutoValue.Builder
   public abstract static class Builder {
     // Required parameters.
+
+    /** The topic path to publish to. */
     public abstract Builder setTopicPath(TopicPath path);
 
     // Optional parameters.
+    /** A KeyExtractor for getting the routing key from a message. */
     public abstract Builder setKeyExtractor(KeyExtractor keyExtractor);
 
+    /** A MessageTransformer for constructing wire messages from Cloud Pub/Sub PubsubMessages. */
     public abstract Builder setMessageTransformer(
         MessageTransformer<PubsubMessage, Message> messageTransformer);
 
+    /** Batching settings for this publisher to use. Apply per-partition. */
     public abstract Builder setBatchingSettings(BatchingSettings batchingSettings);
 
+    /** A stub to connect to the Pub/Sub Lite service. */
     public abstract Builder setStub(PublisherServiceStub stub);
 
     // For testing.

@@ -21,12 +21,15 @@ import com.google.auto.value.AutoValue;
 /** An offset in the partition. */
 @AutoValue
 public abstract class Offset implements Comparable<Offset> {
+  /** Create an offset. */
   public static Offset of(long offset) {
     return new AutoValue_Offset(offset);
   }
 
+  /** The long value of this offset. */
   public abstract long value();
 
+  /** {@inheritDoc} */
   @Override
   public int compareTo(Offset o) {
     return Long.compare(value(), o.value());

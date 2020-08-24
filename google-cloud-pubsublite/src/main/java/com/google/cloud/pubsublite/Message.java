@@ -27,14 +27,19 @@ import java.util.Optional;
 /** A user message. */
 @AutoValue
 public abstract class Message {
+  /** The key for this message. All messages with the same key are routed to the same partition. */
   public abstract ByteString key();
 
+  /** The data payload for this message. */
   public abstract ByteString data();
 
+  /** A multimap of attributes for this message. */
   public abstract ImmutableListMultimap<String, ByteString> attributes();
 
+  /** The user provided event time for this message. */
   public abstract Optional<Timestamp> eventTime();
 
+  /** Get a new builder for a message. */
   public static Builder builder() {
     return new AutoValue_Message.Builder()
         .setKey(ByteString.EMPTY)
@@ -42,8 +47,10 @@ public abstract class Message {
         .setAttributes(ImmutableListMultimap.of());
   }
 
+  /** Convert an existing message to a builder. */
   public abstract Builder toBuilder();
 
+  /** Convert this to a message proto. */
   public PubSubMessage toProto() {
     PubSubMessage.Builder builder = PubSubMessage.newBuilder();
     builder.setKey(key());
@@ -60,6 +67,7 @@ public abstract class Message {
     return builder.build();
   }
 
+  /** Construct a message from a proto. */
   public static Message fromProto(PubSubMessage proto) {
     Message.Builder builder = Message.builder().setKey(proto.getKey()).setData(proto.getData());
     if (proto.hasEventTime()) {
@@ -77,14 +85,19 @@ public abstract class Message {
 
   @AutoValue.Builder
   public abstract static class Builder {
+    /** The key for this message. All messages with the same key are routed to the same partition. */
     public abstract Builder setKey(ByteString key);
 
+    /** The data payload for this message. */
     public abstract Builder setData(ByteString data);
 
+    /** A multimap of attributes for this message. */
     public abstract Builder setAttributes(ImmutableListMultimap<String, ByteString> attributes);
 
+    /** The user provided event time for this message. */
     public abstract Builder setEventTime(Timestamp eventTime);
 
+    /** Build a message. */
     public abstract Message build();
   }
 }

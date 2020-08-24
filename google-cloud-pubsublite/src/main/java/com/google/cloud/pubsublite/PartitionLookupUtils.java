@@ -24,9 +24,11 @@ import com.google.cloud.pubsublite.proto.Subscription;
 import io.grpc.StatusException;
 import java.util.concurrent.ExecutionException;
 
+/** Utilities for looking up information on partitions. */
 public final class PartitionLookupUtils {
   private PartitionLookupUtils() {}
 
+  /** Look up the number of partitions in a topic. */
   public static int numPartitions(TopicPath topic) throws StatusException {
     try (AdminClient client =
         AdminClient.create(
@@ -39,6 +41,7 @@ public final class PartitionLookupUtils {
     }
   }
 
+  /** Look up the number of partitions in a topic using the provided AdminClient. */
   public static int numPartitions(TopicPath topic, AdminClient client) throws StatusException {
     ApiFuture<Long> partitionCountFuture = client.getTopicPartitionCount(topic);
     try {
@@ -59,6 +62,7 @@ public final class PartitionLookupUtils {
     }
   }
 
+  /** Look up the number of partitions in the topic associated with a subscription. */
   public static int numPartitions(SubscriptionPath subscription) throws StatusException {
     try (AdminClient client =
         AdminClient.create(
@@ -71,6 +75,7 @@ public final class PartitionLookupUtils {
     }
   }
 
+  /** Look up the number of partitions in the topic associated with a subscription using the provided AdminClient. */
   public static int numPartitions(SubscriptionPath subscription, AdminClient client)
       throws StatusException {
     ApiFuture<Subscription> subscriptionFuture = client.getSubscription(subscription);

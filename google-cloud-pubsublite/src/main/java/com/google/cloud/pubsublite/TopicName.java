@@ -21,6 +21,7 @@ import static com.google.cloud.pubsublite.internal.Preconditions.checkArgument;
 import com.google.auto.value.AutoValue;
 import io.grpc.StatusException;
 
+/** A string wrapper for the name of a topic. */
 @AutoValue
 public abstract class TopicName {
   public abstract String value();

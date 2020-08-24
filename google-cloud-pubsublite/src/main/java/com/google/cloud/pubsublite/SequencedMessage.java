@@ -24,11 +24,13 @@ import com.google.protobuf.Timestamp;
 /** A message with its sequencing information in the partition. */
 @AutoValue
 public abstract class SequencedMessage {
+  /** Construct a SequencedMessage from its components. */
   public static SequencedMessage of(
       Message message, Timestamp publishTime, Offset offset, long byteSize) {
     return new AutoValue_SequencedMessage(message, publishTime, offset, byteSize);
   }
 
+  /** Convert a SequencedMessage proto to a SequencedMessage. */
   public static SequencedMessage fromProto(
       com.google.cloud.pubsublite.proto.SequencedMessage proto) {
     Preconditions.checkArgument(proto.getSizeBytes() >= 0);
@@ -39,6 +41,7 @@ public abstract class SequencedMessage {
         proto.getSizeBytes());
   }
 
+  /** Convert to a SequencedMessage proto. */
   public com.google.cloud.pubsublite.proto.SequencedMessage toProto() {
     return com.google.cloud.pubsublite.proto.SequencedMessage.newBuilder()
         .setMessage(message().toProto())
@@ -48,11 +51,15 @@ public abstract class SequencedMessage {
         .build();
   }
 
+  /** The underlying user Message. */
   public abstract Message message();
 
+  /** The time when the message was published. */
   public abstract Timestamp publishTime();
 
+  /** The offset for this message. */
   public abstract Offset offset();
 
+  /** The amount of quota bytes this message counts for. */
   public abstract long byteSize();
 }

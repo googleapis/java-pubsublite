@@ -21,18 +21,24 @@ import com.google.cloud.pubsublite.internal.Preconditions;
 import io.grpc.Status;
 import io.grpc.StatusException;
 
-// Information about a successful publish operation. Can be encoded in the string returned by the
-// Cloud Pub/Sub publish() api.
+/**
+ * Information about a successful publish operation. Can be encoded in the string returned by the
+ * Cloud Pub/Sub publish() api.
+ */
 @AutoValue
 public abstract class PublishMetadata {
+  /** The partition a message was published to. */
   public abstract Partition partition();
 
+  /** The offset a message was assigned. */
   public abstract Offset offset();
 
+  /** Construct a PublishMetadata from a Partition and Offset. */
   public static PublishMetadata of(Partition partition, Offset offset) {
     return new AutoValue_PublishMetadata(partition, offset);
   }
 
+  /** Decode a PublishMetadata from the Cloud Pub/Sub ack id. */
   public static PublishMetadata decode(String encoded) throws StatusException {
     String[] split = encoded.split(":");
     Preconditions.checkArgument(split.length == 2, "Invalid encoded PublishMetadata.");
@@ -48,6 +54,7 @@ public abstract class PublishMetadata {
     }
   }
 
+  /** Encode a publish metadata as a Cloud Pub/Sub ack id. */
   public String encode() {
     return String.format("%s:%s", partition().value(), offset().value());
   }

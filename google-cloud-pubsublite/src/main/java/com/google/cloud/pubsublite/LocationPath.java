@@ -21,10 +21,17 @@ import static com.google.common.base.Preconditions.checkArgument;
 import com.google.auto.value.AutoValue;
 import java.io.Serializable;
 
+/**
+ * A string wrapper representing a project and location. Should be structured like:
+ *
+ * projects/<project number>/locations/<cloud zone>
+ * */
 @AutoValue
 public abstract class LocationPath implements Serializable {
+  /** The string value of this location path. */
   public abstract String value();
 
+  /** Construct a LocationPath from its string value. */
   public static LocationPath of(String value) {
     checkArgument(!value.isEmpty());
     return new AutoValue_LocationPath(value);

@@ -24,15 +24,23 @@ import com.google.cloud.pubsublite.proto.AdminServiceGrpc.AdminServiceBlockingSt
 import io.grpc.StatusException;
 import java.util.Optional;
 
+/**
+ * Settings for construction a Pub/Sub Lite AdminClient.
+ */
 @AutoValue
 public abstract class AdminClientSettings {
 
   // Required parameters.
+
+  /** The cloud region to perform admin operations for. */
   abstract CloudRegion region();
 
   // Optional parameters.
+
+  /** The retry settings for this client. */
   abstract RetrySettings retrySettings();
 
+  /** A stub to use to connect. */
   abstract Optional<AdminServiceBlockingStub> stub();
 
   public static Builder newBuilder() {
@@ -43,13 +51,19 @@ public abstract class AdminClientSettings {
   @AutoValue.Builder
   public abstract static class Builder {
     // Required parameters.
+
+    /** The cloud region to perform admin operations for. */
     public abstract Builder setRegion(CloudRegion region);
 
     // Optional parameters.
+
+    /** The retry settings for this client. */
     public abstract Builder setRetrySettings(RetrySettings retrySettings);
 
+    /** A stub to use to connect. */
     public abstract Builder setStub(AdminServiceBlockingStub stub);
 
+    /** Build the settings object. */
     public abstract AdminClientSettings build();
   }
 

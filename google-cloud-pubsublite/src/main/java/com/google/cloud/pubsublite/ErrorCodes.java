@@ -19,6 +19,7 @@ package com.google.cloud.pubsublite;
 import com.google.common.collect.ImmutableSet;
 import io.grpc.Status.Code;
 
+/** Pub/Sub Lite retryable error codes. */
 public final class ErrorCodes {
   public static final ImmutableSet<Code> RETRYABLE_CODES =
       ImmutableSet.of(

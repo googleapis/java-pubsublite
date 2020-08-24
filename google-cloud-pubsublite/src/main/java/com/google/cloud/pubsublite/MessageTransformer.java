@@ -18,8 +18,11 @@ package com.google.cloud.pubsublite;
 
 import io.grpc.StatusException;
 
-// A MessageTransformer details how to transform a message of one type to another. It is likely that
-// either FromT or ToT will be a Message on publish and SequencedMessage on subscribe.
+/**
+ * A MessageTransformer details how to transform a message of one type to another. It is likely that
+ * either FromT or ToT will be a Message on publish and SequencedMessage on subscribe.
+ */
 public interface MessageTransformer<FromT, ToT> {
+  /** Transform one message type to another. */
   ToT transform(FromT from) throws StatusException;
 }

@@ -22,20 +22,24 @@ import static com.google.cloud.pubsublite.internal.Preconditions.checkArgument;
 import com.google.auto.value.AutoValue;
 import io.grpc.StatusException;
 
+/** Helpers for constructing valid ProjectPaths. */
 @AutoValue
 public abstract class ProjectPaths {
   abstract ProjectNumber projectNumber();
 
+  /** Create a new LocationPath builder. */
   public static Builder newBuilder() {
     return new AutoValue_ProjectPaths.Builder();
   }
 
   @AutoValue.Builder
   public abstract static class Builder {
+    /** The project number. */
     public abstract Builder setProjectNumber(ProjectNumber number);
 
     abstract ProjectPaths autoBuild();
 
+    /** Build a new ProjectPath. */
     public ProjectPath build() {
       ProjectPaths built = autoBuild();
       return ProjectPath.of(String.format("projects/%s", built.projectNumber().value()));
@@ -47,10 +51,12 @@ public abstract class ProjectPaths {
     checkArgument(splits[0].equals("projects"));
   }
 
+  /** Check that the provided ProjectPath is valid. */
   public static void check(ProjectPath path) throws StatusException {
     ProjectNumber unusedProjectNumber = getProjectNumber(path);
   }
 
+  /** Get the ProjectNumber from a ProjectPath. */
   public static ProjectNumber getProjectNumber(ProjectPath path) throws StatusException {
     String[] splits = path.value().split("/");
     checkSplits(splits);

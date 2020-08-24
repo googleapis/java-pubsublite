@@ -22,6 +22,7 @@ import static com.google.cloud.pubsublite.internal.Preconditions.checkArgument;
 import com.google.auto.value.AutoValue;
 import io.grpc.StatusException;
 
+/** Helpers for constructing valid SubscriptionPaths. */
 @AutoValue
 public abstract class SubscriptionPaths {
   abstract ProjectNumber projectNumber();
@@ -30,20 +31,25 @@ public abstract class SubscriptionPaths {
 
   abstract SubscriptionName subscriptionName();
 
+  /** Create a new SubscriptionPath builder. */
   public static Builder newBuilder() {
     return new AutoValue_SubscriptionPaths.Builder();
   }
 
   @AutoValue.Builder
   public abstract static class Builder {
+    /** The project number. */
     public abstract Builder setProjectNumber(ProjectNumber number);
 
+    /** The Google Cloud zone. */
     public abstract Builder setZone(CloudZone zone);
 
+    /** The subscription name. */
     public abstract Builder setSubscriptionName(SubscriptionName name);
 
     abstract SubscriptionPaths autoBuild();
 
+    /** Build a new SubscriptionPath. */
     public SubscriptionPath build() {
       SubscriptionPaths built = autoBuild();
       return SubscriptionPath.of(
@@ -62,12 +68,14 @@ public abstract class SubscriptionPaths {
     checkArgument(splits[4].equals("subscriptions"));
   }
 
+  /** Check that the provided SubscriptionPath is valid. */
   public static void check(SubscriptionPath path) throws StatusException {
     ProjectNumber unusedProjectNumber = getProjectNumber(path);
     CloudZone unusedZone = getZone(path);
     SubscriptionName unusedName = getSubscriptionName(path);
   }
 
+  /** Get the ProjectNumber from a SubscriptionPath. */
   public static ProjectNumber getProjectNumber(SubscriptionPath path) throws StatusException {
     String[] splits = path.value().split("/");
     checkSplits(splits);
@@ -78,18 +86,21 @@ public abstract class SubscriptionPaths {
     }
   }
 
+  /** Get the CloudZone from a SubscriptionPath. */
   public static CloudZone getZone(SubscriptionPath path) throws StatusException {
     String[] splits = path.value().split("/");
     checkSplits(splits);
     return CloudZone.parse(splits[3]);
   }
 
+  /** Get the SubscriptionName from a SubscriptionPath. */
   public static SubscriptionName getSubscriptionName(SubscriptionPath path) throws StatusException {
     String[] splits = path.value().split("/");
     checkSplits(splits);
     return SubscriptionName.of(splits[5]);
   }
 
+  /** Get the LocationPath from a SubscriptionPath. */
   public static LocationPath getLocationPath(SubscriptionPath path) throws StatusException {
     return LocationPaths.newBuilder()
         .setProjectNumber(getProjectNumber(path))

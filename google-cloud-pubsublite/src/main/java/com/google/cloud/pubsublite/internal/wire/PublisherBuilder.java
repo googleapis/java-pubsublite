@@ -20,13 +20,11 @@ import com.google.api.gax.batching.BatchingSettings;
 import com.google.api.gax.batching.FlowController.LimitExceededBehavior;
 import com.google.auto.value.AutoValue;
 import com.google.cloud.pubsublite.Constants;
-import com.google.cloud.pubsublite.Endpoints;
 import com.google.cloud.pubsublite.Offset;
 import com.google.cloud.pubsublite.Partition;
 import com.google.cloud.pubsublite.Stubs;
 import com.google.cloud.pubsublite.TopicPath;
 import com.google.cloud.pubsublite.TopicPaths;
-import com.google.cloud.pubsublite.internal.ExtractStatus;
 import com.google.cloud.pubsublite.internal.Publisher;
 import com.google.cloud.pubsublite.proto.InitialPublishRequest;
 import com.google.cloud.pubsublite.proto.PublisherServiceGrpc;
@@ -34,7 +32,6 @@ import com.google.common.base.Preconditions;
 import io.grpc.Metadata;
 import io.grpc.StatusException;
 import io.grpc.stub.MetadataUtils;
-import java.io.IOException;
 import java.util.Optional;
 import org.threeten.bp.Duration;
 
@@ -107,16 +104,11 @@ public abstract class PublisherBuilder {
     public Publisher<Offset> build() throws StatusException {
       PublisherBuilder autoBuilt = autoBuild();
       PublisherServiceGrpc.PublisherServiceStub actualStub;
-      try {
-        actualStub =
-            autoBuilt.stub().isPresent()
-                ? autoBuilt.stub().get()
-                : Stubs.defaultStub(
-                    Endpoints.regionalEndpoint(TopicPaths.getZone(autoBuilt.topic()).region()),
-                    PublisherServiceGrpc::newStub);
-      } catch (IOException e) {
-        throw ExtractStatus.toCanonical(e);
-      }
+      actualStub =
+          autoBuilt.stub().isPresent()
+              ? autoBuilt.stub().get()
+              : Stubs.defaultStub(
+                  TopicPaths.getZone(autoBuilt.topic()).region(), PublisherServiceGrpc::newStub);
       Metadata metadata = autoBuilt.context().getMetadata();
       metadata.merge(RoutingMetadata.of(autoBuilt.topic(), autoBuilt.partition()));
       actualStub = MetadataUtils.attachHeaders(actualStub, metadata);

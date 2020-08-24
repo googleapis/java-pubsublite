@@ -17,7 +17,6 @@
 package com.google.cloud.pubsublite.internal.wire;
 
 import com.google.auto.value.AutoValue;
-import com.google.cloud.pubsublite.Endpoints;
 import com.google.cloud.pubsublite.Partition;
 import com.google.cloud.pubsublite.Stubs;
 import com.google.cloud.pubsublite.SubscriptionPath;
@@ -25,9 +24,7 @@ import com.google.cloud.pubsublite.SubscriptionPaths;
 import com.google.cloud.pubsublite.proto.CursorServiceGrpc;
 import com.google.cloud.pubsublite.proto.CursorServiceGrpc.CursorServiceStub;
 import com.google.cloud.pubsublite.proto.InitialCommitCursorRequest;
-import io.grpc.Status;
 import io.grpc.StatusException;
-import java.io.IOException;
 import java.util.Optional;
 
 @AutoValue
@@ -65,18 +62,10 @@ public abstract class CommitterBuilder {
       if (builder.cursorStub().isPresent()) {
         cursorStub = builder.cursorStub().get();
       } else {
-        try {
-          cursorStub =
-              Stubs.defaultStub(
-                  Endpoints.regionalEndpoint(
-                      SubscriptionPaths.getZone(builder.subscriptionPath()).region()),
-                  CursorServiceGrpc::newStub);
-        } catch (IOException e) {
-          throw Status.INTERNAL
-              .withCause(e)
-              .withDescription("Creating cursor stub failed.")
-              .asException();
-        }
+        cursorStub =
+            Stubs.defaultStub(
+                SubscriptionPaths.getZone(builder.subscriptionPath()).region(),
+                CursorServiceGrpc::newStub);
       }
 
       InitialCommitCursorRequest initialCommitCursorRequest =

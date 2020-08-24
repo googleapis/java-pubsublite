@@ -19,13 +19,10 @@ import com.google.api.gax.retrying.RetrySettings;
 import com.google.auto.value.AutoValue;
 import com.google.cloud.pubsublite.CloudRegion;
 import com.google.cloud.pubsublite.Constants;
-import com.google.cloud.pubsublite.Endpoints;
 import com.google.cloud.pubsublite.Stubs;
 import com.google.cloud.pubsublite.proto.TopicStatsServiceGrpc;
 import com.google.cloud.pubsublite.proto.TopicStatsServiceGrpc.TopicStatsServiceBlockingStub;
-import io.grpc.Status;
 import io.grpc.StatusException;
-import java.io.IOException;
 import java.util.Optional;
 
 @AutoValue
@@ -63,16 +60,7 @@ public abstract class TopicStatsClientSettings {
     if (stub().isPresent()) {
       stub = stub().get();
     } else {
-      try {
-        stub =
-            Stubs.defaultStub(
-                Endpoints.regionalEndpoint(region()), TopicStatsServiceGrpc::newBlockingStub);
-      } catch (IOException e) {
-        throw Status.INTERNAL
-            .withCause(e)
-            .withDescription("Creating topic stats stub failed.")
-            .asException();
-      }
+      stub = Stubs.defaultStub(region(), TopicStatsServiceGrpc::newBlockingStub);
     }
     return new TopicStatsClientImpl(region(), stub, retrySettings());
   }

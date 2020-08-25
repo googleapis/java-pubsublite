@@ -24,7 +24,7 @@ import java.io.Serializable;
 /**
  * A string wrapper representing a project. Should be structured like:
  *
- * <p>projects/<project number>
+ * <p>projects/&lt;project number&gt;
  */
 @AutoValue
 public abstract class ProjectPath implements Serializable {

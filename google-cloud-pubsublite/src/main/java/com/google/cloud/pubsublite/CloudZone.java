@@ -32,7 +32,7 @@ public abstract class CloudZone implements Serializable {
 
   /**
    * Construct a CloudZone from a valid zone string. `zone` must be formatted as:
-   * <location>-<direction><number>-<letter>
+   * &lt;location&gt;-&lt;direction&gt;&lt;number&gt;-&lt;letter&gt;
    */
   public static CloudZone parse(String zone) throws StatusException {
     String[] splits = zone.split("-", -1);

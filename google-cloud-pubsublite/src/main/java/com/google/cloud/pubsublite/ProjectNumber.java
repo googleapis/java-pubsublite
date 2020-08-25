@@ -31,6 +31,11 @@ public abstract class ProjectNumber {
   /** The long value of this project number. */
   public abstract long value();
 
+  @Override
+  public String toString() {
+    return Long.toString(value());
+  }
+
   /** Construct a ProjectNumber from its long value. */
   public static ProjectNumber of(long value) throws StatusException {
     checkArgument(value > 0);

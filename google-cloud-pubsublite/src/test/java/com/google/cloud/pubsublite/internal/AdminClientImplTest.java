@@ -31,7 +31,6 @@ import com.google.cloud.pubsublite.CloudRegion;
 import com.google.cloud.pubsublite.CloudZone;
 import com.google.cloud.pubsublite.Constants;
 import com.google.cloud.pubsublite.ErrorCodes;
-import com.google.cloud.pubsublite.LocationPath;
 import com.google.cloud.pubsublite.ProjectNumber;
 import com.google.cloud.pubsublite.SubscriptionName;
 import com.google.cloud.pubsublite.SubscriptionPath;
@@ -105,23 +104,15 @@ public class AdminClientImplTest {
 
   private static TopicPath topicPath() {
     return TopicPaths.newBuilder()
-        .setZone(ZONE)
-        .setProjectNumber(projectNumber())
-        .setTopicName(topicName())
+        .setLocation(ZONE)
+        .setProject(projectNumber())
+        .setName(topicName())
         .build();
-  }
-
-  private static LocationPath topicParent() {
-    try {
-      return TopicPaths.getLocationPath(topicPath());
-    } catch (StatusException e) {
-      throw e.getStatus().asRuntimeException();
-    }
   }
 
   private static final Topic TOPIC =
       Topic.newBuilder()
-          .setName(topicPath().value())
+          .setName(topicPath().toString())
           .setPartitionConfig(PartitionConfig.newBuilder().setCount(10))
           .setRetentionConfig(RetentionConfig.newBuilder().setPeriod(Durations.fromDays(1)))
           .build();
@@ -138,18 +129,10 @@ public class AdminClientImplTest {
 
   private static SubscriptionPath subscriptionPath() {
     return SubscriptionPaths.newBuilder()
-        .setZone(ZONE)
-        .setProjectNumber(projectNumber())
-        .setSubscriptionName(subscriptionName())
+        .setLocation(ZONE)
+        .setProject(projectNumber())
+        .setName(subscriptionName())
         .build();
-  }
-
-  private static LocationPath subscriptionParent() {
-    try {
-      return SubscriptionPaths.getLocationPath(subscriptionPath());
-    } catch (StatusException e) {
-      throw e.getStatus().asRuntimeException();
-    }
   }
 
   private static final Subscription SUBSCRIPTION =
@@ -157,8 +140,8 @@ public class AdminClientImplTest {
           .setDeliveryConfig(
               DeliveryConfig.newBuilder()
                   .setDeliveryRequirement(DeliveryConfig.DeliveryRequirement.DELIVER_AFTER_STORED))
-          .setName(subscriptionPath().value())
-          .setTopic(topicPath().value())
+          .setName(subscriptionPath().toString())
+          .setTopic(topicPath().toString())
           .build();
   private static final Subscription SUBSCRIPTION_2 =
       SUBSCRIPTION
@@ -217,7 +200,7 @@ public class AdminClientImplTest {
   public void createTopic_Ok() throws Exception {
     CreateTopicRequest request =
         CreateTopicRequest.newBuilder()
-            .setParent(topicParent().value())
+            .setParent(topicPath().location().toString())
             .setTopic(TOPIC)
             .setTopicId(topicName().value())
             .build();
@@ -232,7 +215,7 @@ public class AdminClientImplTest {
     assertThat(ErrorCodes.IsRetryable(Code.FAILED_PRECONDITION)).isFalse();
     CreateTopicRequest request =
         CreateTopicRequest.newBuilder()
-            .setParent(topicParent().value())
+            .setParent(topicPath().location().toString())
             .setTopic(TOPIC)
             .setTopicId(topicName().value())
             .build();
@@ -254,7 +237,7 @@ public class AdminClientImplTest {
       assertThat(ErrorCodes.IsRetryable(code)).isTrue();
       CreateTopicRequest request =
           CreateTopicRequest.newBuilder()
-              .setParent(topicParent().value())
+              .setParent(topicPath().location().toString())
               .setTopic(TOPIC)
               .setTopicId(topicName().value())
               .build();
@@ -272,7 +255,7 @@ public class AdminClientImplTest {
     assertThat(ErrorCodes.IsRetryable(Code.DEADLINE_EXCEEDED)).isTrue();
     CreateTopicRequest request =
         CreateTopicRequest.newBuilder()
-            .setParent(topicParent().value())
+            .setParent(topicPath().location().toString())
             .setTopic(TOPIC)
             .setTopicId(topicName().value())
             .build();
@@ -350,7 +333,7 @@ public class AdminClientImplTest {
   @Test
   public void deleteTopic_Ok() throws Exception {
     DeleteTopicRequest request =
-        DeleteTopicRequest.newBuilder().setName(topicPath().value()).build();
+        DeleteTopicRequest.newBuilder().setName(topicPath().toString()).build();
 
     doAnswer(answerWith(Empty.getDefaultInstance()))
         .when(serviceImpl)
@@ -363,7 +346,7 @@ public class AdminClientImplTest {
   public void deleteTopic_NonRetryableError() {
     assertThat(ErrorCodes.IsRetryable(Code.FAILED_PRECONDITION)).isFalse();
     DeleteTopicRequest request =
-        DeleteTopicRequest.newBuilder().setName(topicPath().value()).build();
+        DeleteTopicRequest.newBuilder().setName(topicPath().toString()).build();
 
     doAnswer(answerWith(Status.FAILED_PRECONDITION))
         .when(serviceImpl)
@@ -381,7 +364,7 @@ public class AdminClientImplTest {
     for (Code code : ErrorCodes.RETRYABLE_CODES) {
       assertThat(ErrorCodes.IsRetryable(code)).isTrue();
       DeleteTopicRequest request =
-          DeleteTopicRequest.newBuilder().setName(topicPath().value()).build();
+          DeleteTopicRequest.newBuilder().setName(topicPath().toString()).build();
 
       doAnswer(inOrder(answerWith(Status.fromCode(code)), answerWith(Empty.getDefaultInstance())))
           .when(serviceImpl)
@@ -395,7 +378,7 @@ public class AdminClientImplTest {
   public void deleteTopic_MultipleRetryableErrors() throws Exception {
     assertThat(ErrorCodes.IsRetryable(Code.DEADLINE_EXCEEDED)).isTrue();
     DeleteTopicRequest request =
-        DeleteTopicRequest.newBuilder().setName(topicPath().value()).build();
+        DeleteTopicRequest.newBuilder().setName(topicPath().toString()).build();
 
     doAnswer(
             inOrder(
@@ -410,7 +393,7 @@ public class AdminClientImplTest {
 
   @Test
   public void getTopic_Ok() throws Exception {
-    GetTopicRequest request = GetTopicRequest.newBuilder().setName(topicPath().value()).build();
+    GetTopicRequest request = GetTopicRequest.newBuilder().setName(topicPath().toString()).build();
 
     doAnswer(answerWith(TOPIC)).when(serviceImpl).getTopic(eq(request), any());
 
@@ -420,7 +403,7 @@ public class AdminClientImplTest {
   @Test
   public void getTopic_NonRetryableError() {
     assertThat(ErrorCodes.IsRetryable(Code.FAILED_PRECONDITION)).isFalse();
-    GetTopicRequest request = GetTopicRequest.newBuilder().setName(topicPath().value()).build();
+    GetTopicRequest request = GetTopicRequest.newBuilder().setName(topicPath().toString()).build();
 
     doAnswer(answerWith(Status.FAILED_PRECONDITION)).when(serviceImpl).getTopic(eq(request), any());
 
@@ -435,7 +418,8 @@ public class AdminClientImplTest {
   public void getTopic_RetryableError() throws Exception {
     for (Code code : ErrorCodes.RETRYABLE_CODES) {
       assertThat(ErrorCodes.IsRetryable(code)).isTrue();
-      GetTopicRequest request = GetTopicRequest.newBuilder().setName(topicPath().value()).build();
+      GetTopicRequest request =
+          GetTopicRequest.newBuilder().setName(topicPath().toString()).build();
 
       doAnswer(inOrder(answerWith(Status.fromCode(code)), answerWith(Topic.getDefaultInstance())))
           .when(serviceImpl)
@@ -448,7 +432,7 @@ public class AdminClientImplTest {
   @Test
   public void getTopic_MultipleRetryableErrors() throws Exception {
     assertThat(ErrorCodes.IsRetryable(Code.DEADLINE_EXCEEDED)).isTrue();
-    GetTopicRequest request = GetTopicRequest.newBuilder().setName(topicPath().value()).build();
+    GetTopicRequest request = GetTopicRequest.newBuilder().setName(topicPath().toString()).build();
 
     doAnswer(
             inOrder(
@@ -464,7 +448,7 @@ public class AdminClientImplTest {
   @Test
   public void getTopicPartitionCount_Ok() throws Exception {
     GetTopicPartitionsRequest request =
-        GetTopicPartitionsRequest.newBuilder().setName(topicPath().value()).build();
+        GetTopicPartitionsRequest.newBuilder().setName(topicPath().toString()).build();
 
     doAnswer(answerWith(TopicPartitions.newBuilder().setPartitionCount(10).build()))
         .when(serviceImpl)
@@ -477,7 +461,7 @@ public class AdminClientImplTest {
   public void getTopicPartitionCount_NonRetryableError() {
     assertThat(ErrorCodes.IsRetryable(Code.FAILED_PRECONDITION)).isFalse();
     GetTopicPartitionsRequest request =
-        GetTopicPartitionsRequest.newBuilder().setName(topicPath().value()).build();
+        GetTopicPartitionsRequest.newBuilder().setName(topicPath().toString()).build();
 
     doAnswer(answerWith(Status.FAILED_PRECONDITION))
         .when(serviceImpl)
@@ -495,7 +479,7 @@ public class AdminClientImplTest {
     for (Code code : ErrorCodes.RETRYABLE_CODES) {
       assertThat(ErrorCodes.IsRetryable(code)).isTrue();
       GetTopicPartitionsRequest request =
-          GetTopicPartitionsRequest.newBuilder().setName(topicPath().value()).build();
+          GetTopicPartitionsRequest.newBuilder().setName(topicPath().toString()).build();
 
       doAnswer(
               inOrder(
@@ -512,7 +496,7 @@ public class AdminClientImplTest {
   public void getTopicPartitionCount_MultipleRetryableErrors() throws Exception {
     assertThat(ErrorCodes.IsRetryable(Code.DEADLINE_EXCEEDED)).isTrue();
     GetTopicPartitionsRequest request =
-        GetTopicPartitionsRequest.newBuilder().setName(topicPath().value()).build();
+        GetTopicPartitionsRequest.newBuilder().setName(topicPath().toString()).build();
 
     doAnswer(
             inOrder(
@@ -528,24 +512,24 @@ public class AdminClientImplTest {
   @Test
   public void listTopicSubscriptions_Ok() throws Exception {
     ListTopicSubscriptionsRequest request =
-        ListTopicSubscriptionsRequest.newBuilder().setName(topicPath().value()).build();
+        ListTopicSubscriptionsRequest.newBuilder().setName(topicPath().toString()).build();
 
     SubscriptionPath path1 =
         SubscriptionPaths.newBuilder()
-            .setProjectNumber(ProjectNumber.of(111))
-            .setSubscriptionName(SubscriptionName.of("def"))
-            .setZone(ZONE)
+            .setProject(ProjectNumber.of(111))
+            .setName(SubscriptionName.of("def"))
+            .setLocation(ZONE)
             .build();
     SubscriptionPath path2 =
         SubscriptionPaths.newBuilder()
-            .setProjectNumber(ProjectNumber.of(222))
-            .setSubscriptionName(SubscriptionName.of("abc"))
-            .setZone(ZONE)
+            .setProject(ProjectNumber.of(222))
+            .setName(SubscriptionName.of("abc"))
+            .setLocation(ZONE)
             .build();
     ListTopicSubscriptionsResponse response =
         ListTopicSubscriptionsResponse.newBuilder()
-            .addSubscriptions(path1.value())
-            .addSubscriptions(path2.value())
+            .addSubscriptions(path1.toString())
+            .addSubscriptions(path2.toString())
             .build();
 
     doAnswer(answerWith(response)).when(serviceImpl).listTopicSubscriptions(eq(request), any());
@@ -557,7 +541,7 @@ public class AdminClientImplTest {
   public void listTopicSubscriptions_NonRetryableError() {
     assertThat(ErrorCodes.IsRetryable(Code.FAILED_PRECONDITION)).isFalse();
     ListTopicSubscriptionsRequest request =
-        ListTopicSubscriptionsRequest.newBuilder().setName(topicPath().value()).build();
+        ListTopicSubscriptionsRequest.newBuilder().setName(topicPath().toString()).build();
 
     doAnswer(answerWith(Status.FAILED_PRECONDITION))
         .when(serviceImpl)
@@ -575,7 +559,7 @@ public class AdminClientImplTest {
     for (Code code : ErrorCodes.RETRYABLE_CODES) {
       assertThat(ErrorCodes.IsRetryable(code)).isTrue();
       ListTopicSubscriptionsRequest request =
-          ListTopicSubscriptionsRequest.newBuilder().setName(topicPath().value()).build();
+          ListTopicSubscriptionsRequest.newBuilder().setName(topicPath().toString()).build();
 
       doAnswer(
               inOrder(
@@ -592,7 +576,7 @@ public class AdminClientImplTest {
   public void listTopicSubscriptions_MultipleRetryableErrors() throws Exception {
     assertThat(ErrorCodes.IsRetryable(Code.DEADLINE_EXCEEDED)).isTrue();
     ListTopicSubscriptionsRequest request =
-        ListTopicSubscriptionsRequest.newBuilder().setName(topicPath().value()).build();
+        ListTopicSubscriptionsRequest.newBuilder().setName(topicPath().toString()).build();
 
     doAnswer(
             inOrder(
@@ -609,7 +593,7 @@ public class AdminClientImplTest {
   public void createSubscription_Ok() throws Exception {
     CreateSubscriptionRequest request =
         CreateSubscriptionRequest.newBuilder()
-            .setParent(subscriptionParent().value())
+            .setParent(subscriptionPath().location().toString())
             .setSubscription(SUBSCRIPTION)
             .setSubscriptionId(subscriptionName().value())
             .build();
@@ -624,7 +608,7 @@ public class AdminClientImplTest {
     assertThat(ErrorCodes.IsRetryable(Code.FAILED_PRECONDITION)).isFalse();
     CreateSubscriptionRequest request =
         CreateSubscriptionRequest.newBuilder()
-            .setParent(subscriptionParent().value())
+            .setParent(subscriptionPath().location().toString())
             .setSubscription(SUBSCRIPTION)
             .setSubscriptionId(subscriptionName().value())
             .build();
@@ -646,7 +630,7 @@ public class AdminClientImplTest {
       assertThat(ErrorCodes.IsRetryable(code)).isTrue();
       CreateSubscriptionRequest request =
           CreateSubscriptionRequest.newBuilder()
-              .setParent(subscriptionParent().value())
+              .setParent(subscriptionPath().location().toString())
               .setSubscription(SUBSCRIPTION)
               .setSubscriptionId(subscriptionName().value())
               .build();
@@ -664,7 +648,7 @@ public class AdminClientImplTest {
     assertThat(ErrorCodes.IsRetryable(Code.DEADLINE_EXCEEDED)).isTrue();
     CreateSubscriptionRequest request =
         CreateSubscriptionRequest.newBuilder()
-            .setParent(subscriptionParent().value())
+            .setParent(subscriptionPath().location().toString())
             .setSubscription(SUBSCRIPTION)
             .setSubscriptionId(subscriptionName().value())
             .build();
@@ -754,7 +738,7 @@ public class AdminClientImplTest {
   @Test
   public void deleteSubscription_Ok() throws Exception {
     DeleteSubscriptionRequest request =
-        DeleteSubscriptionRequest.newBuilder().setName(subscriptionPath().value()).build();
+        DeleteSubscriptionRequest.newBuilder().setName(subscriptionPath().toString()).build();
 
     doAnswer(answerWith(Empty.getDefaultInstance()))
         .when(serviceImpl)
@@ -767,7 +751,7 @@ public class AdminClientImplTest {
   public void deleteSubscription_NonRetryableError() {
     assertThat(ErrorCodes.IsRetryable(Code.FAILED_PRECONDITION)).isFalse();
     DeleteSubscriptionRequest request =
-        DeleteSubscriptionRequest.newBuilder().setName(subscriptionPath().value()).build();
+        DeleteSubscriptionRequest.newBuilder().setName(subscriptionPath().toString()).build();
 
     doAnswer(answerWith(Status.FAILED_PRECONDITION))
         .when(serviceImpl)
@@ -785,7 +769,7 @@ public class AdminClientImplTest {
     for (Code code : ErrorCodes.RETRYABLE_CODES) {
       assertThat(ErrorCodes.IsRetryable(code)).isTrue();
       DeleteSubscriptionRequest request =
-          DeleteSubscriptionRequest.newBuilder().setName(subscriptionPath().value()).build();
+          DeleteSubscriptionRequest.newBuilder().setName(subscriptionPath().toString()).build();
 
       doAnswer(inOrder(answerWith(Status.fromCode(code)), answerWith(Empty.getDefaultInstance())))
           .when(serviceImpl)
@@ -799,7 +783,7 @@ public class AdminClientImplTest {
   public void deleteSubscription_MultipleRetryableErrors() throws Exception {
     assertThat(ErrorCodes.IsRetryable(Code.DEADLINE_EXCEEDED)).isTrue();
     DeleteSubscriptionRequest request =
-        DeleteSubscriptionRequest.newBuilder().setName(subscriptionPath().value()).build();
+        DeleteSubscriptionRequest.newBuilder().setName(subscriptionPath().toString()).build();
 
     doAnswer(
             inOrder(
@@ -815,7 +799,7 @@ public class AdminClientImplTest {
   @Test
   public void getSubscription_Ok() throws Exception {
     GetSubscriptionRequest request =
-        GetSubscriptionRequest.newBuilder().setName(subscriptionPath().value()).build();
+        GetSubscriptionRequest.newBuilder().setName(subscriptionPath().toString()).build();
 
     doAnswer(answerWith(SUBSCRIPTION)).when(serviceImpl).getSubscription(eq(request), any());
 
@@ -826,7 +810,7 @@ public class AdminClientImplTest {
   public void getSubscription_NonRetryableError() {
     assertThat(ErrorCodes.IsRetryable(Code.FAILED_PRECONDITION)).isFalse();
     GetSubscriptionRequest request =
-        GetSubscriptionRequest.newBuilder().setName(subscriptionPath().value()).build();
+        GetSubscriptionRequest.newBuilder().setName(subscriptionPath().toString()).build();
 
     doAnswer(answerWith(Status.FAILED_PRECONDITION))
         .when(serviceImpl)
@@ -844,7 +828,7 @@ public class AdminClientImplTest {
     for (Code code : ErrorCodes.RETRYABLE_CODES) {
       assertThat(ErrorCodes.IsRetryable(code)).isTrue();
       GetSubscriptionRequest request =
-          GetSubscriptionRequest.newBuilder().setName(subscriptionPath().value()).build();
+          GetSubscriptionRequest.newBuilder().setName(subscriptionPath().toString()).build();
 
       doAnswer(
               inOrder(
@@ -860,7 +844,7 @@ public class AdminClientImplTest {
   public void getSubscription_MultipleRetryableErrors() throws Exception {
     assertThat(ErrorCodes.IsRetryable(Code.DEADLINE_EXCEEDED)).isTrue();
     GetSubscriptionRequest request =
-        GetSubscriptionRequest.newBuilder().setName(subscriptionPath().value()).build();
+        GetSubscriptionRequest.newBuilder().setName(subscriptionPath().toString()).build();
 
     doAnswer(
             inOrder(

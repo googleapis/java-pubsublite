@@ -65,11 +65,11 @@ public class AssignerImplTest {
               InitialPartitionAssignmentRequest.newBuilder()
                   .setSubscription(
                       SubscriptionPaths.newBuilder()
-                          .setProjectNumber(ProjectNumber.of(12345))
-                          .setZone(CloudZone.of(CloudRegion.of("us-east1"), 'a'))
-                          .setSubscriptionName(SubscriptionName.of("some_subscription"))
+                          .setProject(ProjectNumber.of(12345))
+                          .setLocation(CloudZone.of(CloudRegion.of("us-east1"), 'a'))
+                          .setName(SubscriptionName.of("some_subscription"))
                           .build()
-                          .value()))
+                          .toString()))
           .build();
     } catch (StatusException e) {
       throw e.getStatus().asRuntimeException();

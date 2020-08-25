@@ -26,6 +26,11 @@ import io.grpc.StatusException;
 public abstract class TopicName {
   public abstract String value();
 
+  @Override
+  public String toString() {
+    return value();
+  }
+
   public static TopicName of(String value) throws StatusException {
     checkArgument(!value.isEmpty());
     return new AutoValue_TopicName(value);

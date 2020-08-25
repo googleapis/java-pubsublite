@@ -20,7 +20,6 @@ import com.google.auto.value.AutoValue;
 import com.google.cloud.pubsublite.Partition;
 import com.google.cloud.pubsublite.Stubs;
 import com.google.cloud.pubsublite.SubscriptionPath;
-import com.google.cloud.pubsublite.SubscriptionPaths;
 import com.google.cloud.pubsublite.proto.CursorServiceGrpc;
 import com.google.cloud.pubsublite.proto.CursorServiceGrpc.CursorServiceStub;
 import com.google.cloud.pubsublite.proto.InitialCommitCursorRequest;
@@ -56,7 +55,6 @@ public abstract class CommitterBuilder {
     @SuppressWarnings("CheckReturnValue")
     public Committer build() throws StatusException {
       CommitterBuilder builder = autoBuild();
-      SubscriptionPaths.check(builder.subscriptionPath());
 
       CursorServiceStub cursorStub;
       if (builder.cursorStub().isPresent()) {
@@ -64,13 +62,13 @@ public abstract class CommitterBuilder {
       } else {
         cursorStub =
             Stubs.defaultStub(
-                SubscriptionPaths.getZone(builder.subscriptionPath()).region(),
+                builder.subscriptionPath().location().location().region(),
                 CursorServiceGrpc::newStub);
       }
 
       InitialCommitCursorRequest initialCommitCursorRequest =
           InitialCommitCursorRequest.newBuilder()
-              .setSubscription(builder.subscriptionPath().value())
+              .setSubscription(builder.subscriptionPath().toString())
               .setPartition(builder.partition().value())
               .build();
       return new CommitterImpl(cursorStub, initialCommitCursorRequest);

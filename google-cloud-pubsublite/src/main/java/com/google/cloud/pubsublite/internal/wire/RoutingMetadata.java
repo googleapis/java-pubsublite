@@ -35,7 +35,7 @@ final class RoutingMetadata {
   static Metadata of(TopicPath topic, Partition partition) {
     try {
       Metadata metadata = new Metadata();
-      String topic_value = URLEncoder.encode(topic.value(), StandardCharsets.UTF_8.toString());
+      String topic_value = URLEncoder.encode(topic.toString(), StandardCharsets.UTF_8.toString());
       String params = String.format("partition=%s&topic=%s", partition.value(), topic_value);
       metadata.put(PARAMS_KEY, params);
       return metadata;
@@ -48,7 +48,7 @@ final class RoutingMetadata {
     try {
       Metadata metadata = new Metadata();
       String subscription_value =
-          URLEncoder.encode(subscription.value(), StandardCharsets.UTF_8.toString());
+          URLEncoder.encode(subscription.toString(), StandardCharsets.UTF_8.toString());
       String params =
           String.format("partition=%s&subscription=%s", partition.value(), subscription_value);
       metadata.put(PARAMS_KEY, params);

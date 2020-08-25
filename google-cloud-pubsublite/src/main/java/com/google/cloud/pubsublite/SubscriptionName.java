@@ -26,6 +26,11 @@ import io.grpc.StatusException;
 public abstract class SubscriptionName {
   public abstract String value();
 
+  @Override
+  public String toString() {
+    return value();
+  }
+
   public static SubscriptionName of(String value) throws StatusException {
     checkArgument(!value.isEmpty());
     return new AutoValue_SubscriptionName(value);

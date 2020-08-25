@@ -37,9 +37,9 @@ public class CommitterBuilderTest {
     CommitterBuilder.newBuilder()
         .setSubscriptionPath(
             SubscriptionPaths.newBuilder()
-                .setZone(CloudZone.of(CloudRegion.of("us-central1"), 'a'))
-                .setProjectNumber(ProjectNumber.of(3))
-                .setSubscriptionName(SubscriptionName.of("abc"))
+                .setLocation(CloudZone.of(CloudRegion.of("us-central1"), 'a'))
+                .setProject(ProjectNumber.of(3))
+                .setName(SubscriptionName.of("abc"))
                 .build())
         .setPartition(Partition.of(987))
         .setCursorStub(CursorServiceGrpc.newStub(mock(Channel.class)))

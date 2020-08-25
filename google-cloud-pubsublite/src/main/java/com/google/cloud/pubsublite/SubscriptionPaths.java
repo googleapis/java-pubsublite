@@ -16,20 +16,16 @@
 
 package com.google.cloud.pubsublite;
 
-import static com.google.cloud.pubsublite.internal.ExtractStatus.toCanonical;
-import static com.google.cloud.pubsublite.internal.Preconditions.checkArgument;
-
 import com.google.auto.value.AutoValue;
-import io.grpc.StatusException;
 
 /** Helpers for constructing valid SubscriptionPaths. */
 @AutoValue
 public abstract class SubscriptionPaths {
-  abstract ProjectNumber projectNumber();
+  abstract ProjectIdOrNumber project();
 
-  abstract CloudZone zone();
+  abstract CloudZone location();
 
-  abstract SubscriptionName subscriptionName();
+  abstract SubscriptionName name();
 
   /** Create a new SubscriptionPath builder. */
   public static Builder newBuilder() {
@@ -37,15 +33,10 @@ public abstract class SubscriptionPaths {
   }
 
   @AutoValue.Builder
-  public abstract static class Builder {
-    /** The project number. */
-    public abstract Builder setProjectNumber(ProjectNumber number);
+  public abstract static class Builder extends ProjectBuilderHelper<Builder> {
+    public abstract Builder setLocation(CloudZone zone);
 
-    /** The Google Cloud zone. */
-    public abstract Builder setZone(CloudZone zone);
-
-    /** The subscription name. */
-    public abstract Builder setSubscriptionName(SubscriptionName name);
+    public abstract Builder setName(SubscriptionName name);
 
     abstract SubscriptionPaths autoBuild();
 
@@ -53,58 +44,7 @@ public abstract class SubscriptionPaths {
     public SubscriptionPath build() {
       SubscriptionPaths built = autoBuild();
       return SubscriptionPath.of(
-          String.format(
-              "projects/%s/locations/%s/subscriptions/%s",
-              built.projectNumber().value(),
-              built.zone().toString(),
-              built.subscriptionName().value()));
+          LocationPath.of(ProjectPath.of(built.project()), built.location()), built.name());
     }
-  }
-
-  private static void checkSplits(String[] splits) throws StatusException {
-    checkArgument(splits.length == 6);
-    checkArgument(splits[0].equals("projects"));
-    checkArgument(splits[2].equals("locations"));
-    checkArgument(splits[4].equals("subscriptions"));
-  }
-
-  /** Check that the provided SubscriptionPath is valid. */
-  public static void check(SubscriptionPath path) throws StatusException {
-    ProjectNumber unusedProjectNumber = getProjectNumber(path);
-    CloudZone unusedZone = getZone(path);
-    SubscriptionName unusedName = getSubscriptionName(path);
-  }
-
-  /** Get the ProjectNumber from a SubscriptionPath. */
-  public static ProjectNumber getProjectNumber(SubscriptionPath path) throws StatusException {
-    String[] splits = path.value().split("/");
-    checkSplits(splits);
-    try {
-      return ProjectNumber.of(Long.parseLong(splits[1]));
-    } catch (NumberFormatException e) {
-      throw toCanonical(e);
-    }
-  }
-
-  /** Get the CloudZone from a SubscriptionPath. */
-  public static CloudZone getZone(SubscriptionPath path) throws StatusException {
-    String[] splits = path.value().split("/");
-    checkSplits(splits);
-    return CloudZone.parse(splits[3]);
-  }
-
-  /** Get the SubscriptionName from a SubscriptionPath. */
-  public static SubscriptionName getSubscriptionName(SubscriptionPath path) throws StatusException {
-    String[] splits = path.value().split("/");
-    checkSplits(splits);
-    return SubscriptionName.of(splits[5]);
-  }
-
-  /** Get the LocationPath from a SubscriptionPath. */
-  public static LocationPath getLocationPath(SubscriptionPath path) throws StatusException {
-    return LocationPaths.newBuilder()
-        .setProjectNumber(getProjectNumber(path))
-        .setZone(getZone(path))
-        .build();
   }
 }

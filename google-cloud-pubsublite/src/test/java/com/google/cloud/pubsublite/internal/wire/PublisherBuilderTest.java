@@ -38,9 +38,9 @@ public class PublisherBuilderTest {
         .setBatching(PublisherBuilder.DEFAULT_BATCHING_SETTINGS)
         .setTopic(
             TopicPaths.newBuilder()
-                .setZone(CloudZone.of(CloudRegion.of("us-central1"), 'a'))
-                .setProjectNumber(ProjectNumber.of(3))
-                .setTopicName(TopicName.of("abc"))
+                .setLocation(CloudZone.of(CloudRegion.of("us-central1"), 'a'))
+                .setProject(ProjectNumber.of(3))
+                .setName(TopicName.of("abc"))
                 .build())
         .setPartition(Partition.of(85))
         .setStub(PublisherServiceGrpc.newStub(mock(Channel.class)))

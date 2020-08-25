@@ -58,9 +58,9 @@ public class SinglePartitionPublisherTest {
   public void publishResultTransformed() throws Exception {
     TopicPath topic =
         TopicPaths.newBuilder()
-            .setTopicName(TopicName.of("abc"))
-            .setProjectNumber(ProjectNumber.of(123))
-            .setZone(CloudZone.of(CloudRegion.of("us-central1"), 'a'))
+            .setName(TopicName.of("abc"))
+            .setProject(ProjectNumber.of(123))
+            .setLocation(CloudZone.of(CloudRegion.of("us-central1"), 'a'))
             .build();
     Partition partition = Partition.of(3);
 

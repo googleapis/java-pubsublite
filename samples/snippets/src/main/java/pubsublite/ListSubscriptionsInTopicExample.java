@@ -45,9 +45,9 @@ public class ListSubscriptionsInTopicExample {
 
     TopicPath topicPath =
         TopicPaths.newBuilder()
-            .setProjectNumber(ProjectNumber.of(projectNumber))
-            .setZone(CloudZone.of(CloudRegion.of(cloudRegion), zoneId))
-            .setTopicName(TopicName.of(topicId))
+            .setProject(ProjectNumber.of(projectNumber))
+            .setLocation(CloudZone.of(CloudRegion.of(cloudRegion), zoneId))
+            .setName(TopicName.of(topicId))
             .build();
 
     AdminClientSettings adminClientSettings =

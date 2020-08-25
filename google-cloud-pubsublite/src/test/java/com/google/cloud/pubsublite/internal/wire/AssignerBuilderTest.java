@@ -36,9 +36,9 @@ public class AssignerBuilderTest {
     AssignerBuilder.newBuilder()
         .setSubscriptionPath(
             SubscriptionPaths.newBuilder()
-                .setZone(CloudZone.of(CloudRegion.of("us-central1"), 'a'))
-                .setProjectNumber(ProjectNumber.of(3))
-                .setSubscriptionName(SubscriptionName.of("abc"))
+                .setLocation(CloudZone.of(CloudRegion.of("us-central1"), 'a'))
+                .setProject(ProjectNumber.of(3))
+                .setName(SubscriptionName.of("abc"))
                 .build())
         .setReceiver(mock(PartitionAssignmentReceiver.class))
         .setAssignmentStub(PartitionAssignmentServiceGrpc.newStub(mock(Channel.class)))

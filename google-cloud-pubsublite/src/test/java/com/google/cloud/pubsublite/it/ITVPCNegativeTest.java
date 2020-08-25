@@ -117,14 +117,10 @@ public class ITVPCNegativeTest {
     CloudRegion cloudRegion = CloudRegion.of(CLOUD_REGION);
     CloudZone zone = CloudZone.of(cloudRegion, ZONE_ID);
     ProjectNumber projectNum = ProjectNumber.of(PROJECT_NUMBER);
-    locationPath = LocationPaths.newBuilder().setProjectNumber(projectNum).setZone(zone).build();
+    locationPath = LocationPaths.newBuilder().setProject(projectNum).setLocation(zone).build();
     TopicName topicName = TopicName.of(TOPIC_NAME);
     topicPath =
-        TopicPaths.newBuilder()
-            .setZone(zone)
-            .setProjectNumber(projectNum)
-            .setTopicName(topicName)
-            .build();
+        TopicPaths.newBuilder().setLocation(zone).setProject(projectNum).setName(topicName).build();
     topic =
         Topic.newBuilder()
             .setPartitionConfig(PartitionConfig.newBuilder().setScale(1).setCount(PARTITIONS))
@@ -132,22 +128,22 @@ public class ITVPCNegativeTest {
                 RetentionConfig.newBuilder()
                     .setPeriod(Durations.fromDays(1))
                     .setPerPartitionBytes(100 * 1024 * 1024 * 1024L))
-            .setName(topicPath.value())
+            .setName(topicPath.toString())
             .build();
     SubscriptionName subscriptionName = SubscriptionName.of(SUBSCRIPTION_NAME);
     subscriptionPath =
         SubscriptionPaths.newBuilder()
-            .setZone(zone)
-            .setProjectNumber(projectNum)
-            .setSubscriptionName(subscriptionName)
+            .setLocation(zone)
+            .setProject(projectNum)
+            .setName(subscriptionName)
             .build();
     subscription =
         Subscription.newBuilder()
             .setDeliveryConfig(
                 DeliveryConfig.newBuilder()
                     .setDeliveryRequirement(DeliveryRequirement.DELIVER_AFTER_STORED))
-            .setName(subscriptionPath.value())
-            .setTopic(topicPath.value())
+            .setName(subscriptionPath.toString())
+            .setTopic(topicPath.toString())
             .build();
 
     // Instantiate an AdminClient to test with.

@@ -16,20 +16,16 @@
 
 package com.google.cloud.pubsublite;
 
-import static com.google.cloud.pubsublite.internal.ExtractStatus.toCanonical;
-import static com.google.cloud.pubsublite.internal.Preconditions.checkArgument;
-
 import com.google.auto.value.AutoValue;
-import io.grpc.StatusException;
 
 /** Helpers for constructing valid TopicPaths. */
 @AutoValue
 public abstract class TopicPaths {
-  abstract ProjectNumber projectNumber();
+  abstract ProjectIdOrNumber project();
 
-  abstract CloudZone zone();
+  abstract CloudZone location();
 
-  abstract TopicName topicName();
+  abstract TopicName name();
 
   /** Create a new TopicPath builder. */
   public static Builder newBuilder() {
@@ -37,15 +33,10 @@ public abstract class TopicPaths {
   }
 
   @AutoValue.Builder
-  public abstract static class Builder {
-    /** The project number. */
-    public abstract Builder setProjectNumber(ProjectNumber number);
+  public abstract static class Builder extends ProjectBuilderHelper<Builder> {
+    public abstract Builder setLocation(CloudZone zone);
 
-    /** The Google Cloud zone. */
-    public abstract Builder setZone(CloudZone zone);
-
-    /** The topic name. */
-    public abstract Builder setTopicName(TopicName name);
+    public abstract Builder setName(TopicName name);
 
     abstract TopicPaths autoBuild();
 
@@ -53,56 +44,7 @@ public abstract class TopicPaths {
     public TopicPath build() {
       TopicPaths built = autoBuild();
       return TopicPath.of(
-          String.format(
-              "projects/%s/locations/%s/topics/%s",
-              built.projectNumber().value(), built.zone().toString(), built.topicName().value()));
+          LocationPath.of(ProjectPath.of(built.project()), built.location()), built.name());
     }
-  }
-
-  private static void checkSplits(String[] splits) throws StatusException {
-    checkArgument(splits.length == 6);
-    checkArgument(splits[0].equals("projects"));
-    checkArgument(splits[2].equals("locations"));
-    checkArgument(splits[4].equals("topics"));
-  }
-
-  /** Check that the provided TopicPath is valid. */
-  public static void check(TopicPath path) throws StatusException {
-    ProjectNumber unusedProjectNumber = getProjectNumber(path);
-    CloudZone unusedZone = getZone(path);
-    TopicName unusedName = getTopicName(path);
-  }
-
-  /** Get the ProjectNumber from a TopicPath. */
-  public static ProjectNumber getProjectNumber(TopicPath path) throws StatusException {
-    String[] splits = path.value().split("/");
-    checkSplits(splits);
-    try {
-      return ProjectNumber.of(Long.parseLong(splits[1]));
-    } catch (NumberFormatException e) {
-      throw toCanonical(e);
-    }
-  }
-
-  /** Get the CloudZone from a TopicPath. */
-  public static CloudZone getZone(TopicPath path) throws StatusException {
-    String[] splits = path.value().split("/");
-    checkSplits(splits);
-    return CloudZone.parse(splits[3]);
-  }
-
-  /** Get the TopicName from a TopicPath. */
-  public static TopicName getTopicName(TopicPath path) throws StatusException {
-    String[] splits = path.value().split("/");
-    checkSplits(splits);
-    return TopicName.of(splits[5]);
-  }
-
-  /** Get the LocationPath from a TopicPath. */
-  public static LocationPath getLocationPath(TopicPath path) throws StatusException {
-    return LocationPaths.newBuilder()
-        .setProjectNumber(getProjectNumber(path))
-        .setZone(getZone(path))
-        .build();
   }
 }

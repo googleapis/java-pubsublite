@@ -22,7 +22,6 @@ import com.google.cloud.pubsublite.MessageTransformer;
 import com.google.cloud.pubsublite.Partition;
 import com.google.cloud.pubsublite.SequencedMessage;
 import com.google.cloud.pubsublite.SubscriptionPath;
-import com.google.cloud.pubsublite.SubscriptionPaths;
 import com.google.cloud.pubsublite.cloudpubsub.internal.AckSetTrackerImpl;
 import com.google.cloud.pubsublite.cloudpubsub.internal.AssigningSubscriber;
 import com.google.cloud.pubsublite.cloudpubsub.internal.MultiPartitionSubscriber;
@@ -137,7 +136,6 @@ public abstract class SubscriberSettings {
       Preconditions.checkArgument(
           !settings.partitions().isPresent() || !settings.partitions().get().isEmpty(),
           "Must provide at least one partition if setting partitions explicitly.");
-      SubscriptionPaths.check(settings.subscriptionPath());
       return settings;
     }
   }

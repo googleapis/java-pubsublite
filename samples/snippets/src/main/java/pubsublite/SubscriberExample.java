@@ -52,9 +52,9 @@ public class SubscriberExample {
 
     SubscriptionPath subscriptionPath =
         SubscriptionPaths.newBuilder()
-            .setZone(CloudZone.of(CloudRegion.of(cloudRegion), zoneId))
-            .setProjectNumber(ProjectNumber.of(projectNumber))
-            .setSubscriptionName(SubscriptionName.of(subscriptionId))
+            .setLocation(CloudZone.of(CloudRegion.of(cloudRegion), zoneId))
+            .setProject(ProjectNumber.of(projectNumber))
+            .setName(SubscriptionName.of(subscriptionId))
             .build();
 
     // The message stream is paused based on the maximum size or number of messages that the

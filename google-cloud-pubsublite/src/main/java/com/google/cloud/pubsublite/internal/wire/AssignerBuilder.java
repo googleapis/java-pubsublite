@@ -19,7 +19,6 @@ package com.google.cloud.pubsublite.internal.wire;
 import com.google.auto.value.AutoValue;
 import com.google.cloud.pubsublite.Stubs;
 import com.google.cloud.pubsublite.SubscriptionPath;
-import com.google.cloud.pubsublite.SubscriptionPaths;
 import com.google.cloud.pubsublite.proto.InitialPartitionAssignmentRequest;
 import com.google.cloud.pubsublite.proto.PartitionAssignmentServiceGrpc;
 import com.google.cloud.pubsublite.proto.PartitionAssignmentServiceGrpc.PartitionAssignmentServiceStub;
@@ -60,7 +59,6 @@ public abstract class AssignerBuilder {
     @SuppressWarnings("CheckReturnValue")
     public Assigner build() throws StatusException {
       AssignerBuilder builder = autoBuild();
-      SubscriptionPaths.check(builder.subscriptionPath());
 
       PartitionAssignmentServiceStub stub;
       if (builder.assignmentStub().isPresent()) {
@@ -68,7 +66,7 @@ public abstract class AssignerBuilder {
       } else {
         stub =
             Stubs.defaultStub(
-                SubscriptionPaths.getZone(builder.subscriptionPath()).region(),
+                builder.subscriptionPath().location().location().region(),
                 PartitionAssignmentServiceGrpc::newStub);
       }
 
@@ -77,12 +75,11 @@ public abstract class AssignerBuilder {
       uuidBuffer.putLong(uuid.getMostSignificantBits());
       uuidBuffer.putLong(uuid.getLeastSignificantBits());
       logger.atInfo().log(
-          "Subscription %s using UUID %s for assignment.",
-          builder.subscriptionPath().value(), uuid);
+          "Subscription %s using UUID %s for assignment.", builder.subscriptionPath(), uuid);
 
       InitialPartitionAssignmentRequest initial =
           InitialPartitionAssignmentRequest.newBuilder()
-              .setSubscription(builder.subscriptionPath().value())
+              .setSubscription(builder.subscriptionPath().toString())
               .setClientId(ByteString.copyFrom(uuidBuffer.array()))
               .build();
       return new AssignerImpl(

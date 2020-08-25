@@ -16,29 +16,22 @@
 
 package com.google.cloud.pubsublite;
 
+import static com.google.cloud.pubsublite.internal.Preconditions.checkArgument;
+
 import com.google.auto.value.AutoValue;
+import io.grpc.StatusException;
 
-/** Helpers for constructing valid LocationPaths. */
 @AutoValue
-public abstract class LocationPaths {
-  abstract ProjectIdOrNumber project();
+public abstract class ProjectId {
+  public abstract String value();
 
-  abstract CloudZone location();
-
-  /** Create a new LocationPath builder. */
-  public static Builder newBuilder() {
-    return new AutoValue_LocationPaths.Builder();
+  @Override
+  public String toString() {
+    return value();
   }
 
-  @AutoValue.Builder
-  public abstract static class Builder extends ProjectBuilderHelper<Builder> {
-    public abstract Builder setLocation(CloudZone zone);
-
-    abstract LocationPaths autoBuild();
-
-    public LocationPath build() {
-      LocationPaths built = autoBuild();
-      return LocationPath.of(ProjectPath.of(built.project()), built.location());
-    }
+  public static ProjectId of(String value) throws StatusException {
+    checkArgument(!value.isEmpty());
+    return new AutoValue_ProjectId(value);
   }
 }

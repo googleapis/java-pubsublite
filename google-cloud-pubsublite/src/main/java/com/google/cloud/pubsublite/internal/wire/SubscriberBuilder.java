@@ -21,7 +21,6 @@ import com.google.cloud.pubsublite.Partition;
 import com.google.cloud.pubsublite.SequencedMessage;
 import com.google.cloud.pubsublite.Stubs;
 import com.google.cloud.pubsublite.SubscriptionPath;
-import com.google.cloud.pubsublite.SubscriptionPaths;
 import com.google.cloud.pubsublite.proto.InitialSubscribeRequest;
 import com.google.cloud.pubsublite.proto.SubscriberServiceGrpc;
 import com.google.cloud.pubsublite.proto.SubscriberServiceGrpc.SubscriberServiceStub;
@@ -71,7 +70,6 @@ public abstract class SubscriberBuilder {
     @SuppressWarnings("CheckReturnValue")
     public Subscriber build() throws StatusException {
       SubscriberBuilder builder = autoBuild();
-      SubscriptionPaths.check(builder.subscriptionPath());
 
       SubscriberServiceGrpc.SubscriberServiceStub subscriberServiceStub;
       if (builder.subscriberServiceStub().isPresent()) {
@@ -79,7 +77,7 @@ public abstract class SubscriberBuilder {
       } else {
         subscriberServiceStub =
             Stubs.defaultStub(
-                SubscriptionPaths.getZone(builder.subscriptionPath()).region(),
+                builder.subscriptionPath().location().location().region(),
                 SubscriberServiceGrpc::newStub);
       }
       Metadata metadata = builder.context().getMetadata();
@@ -88,7 +86,7 @@ public abstract class SubscriberBuilder {
 
       InitialSubscribeRequest initialSubscribeRequest =
           InitialSubscribeRequest.newBuilder()
-              .setSubscription(builder.subscriptionPath().value())
+              .setSubscription(builder.subscriptionPath().toString())
               .setPartition(builder.partition().value())
               .build();
       return new SubscriberImpl(

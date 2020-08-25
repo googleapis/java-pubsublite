@@ -16,25 +16,16 @@
 
 package com.google.cloud.pubsublite;
 
-import com.google.auto.value.AutoValue;
+abstract class ProjectBuilderHelper<Builder extends ProjectBuilderHelper<Builder>> {
+  public abstract Builder setProject(ProjectIdOrNumber project);
 
-/** Helpers for constructing valid ProjectPaths. */
-@AutoValue
-public abstract class ProjectPaths {
-  abstract ProjectIdOrNumber project();
-
-  /** Create a new LocationPath builder. */
-  public static Builder newBuilder() {
-    return new AutoValue_ProjectPaths.Builder();
+  public Builder setProject(ProjectId project) {
+    setProject(ProjectIdOrNumber.of(project));
+    return (Builder) this;
   }
 
-  @AutoValue.Builder
-  public abstract static class Builder extends ProjectBuilderHelper<Builder> {
-    abstract ProjectPaths autoBuild();
-
-    public ProjectPath build() {
-      ProjectPaths built = autoBuild();
-      return ProjectPath.of(built.project());
-    }
+  public Builder setProject(ProjectNumber project) {
+    setProject(ProjectIdOrNumber.of(project));
+    return (Builder) this;
   }
 }

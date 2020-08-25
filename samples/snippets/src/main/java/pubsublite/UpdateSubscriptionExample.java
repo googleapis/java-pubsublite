@@ -47,9 +47,9 @@ public class UpdateSubscriptionExample {
       String cloudRegion, char zoneId, long projectNumber, String subscriptionId) throws Exception {
     SubscriptionPath subscriptionPath =
         SubscriptionPaths.newBuilder()
-            .setZone(CloudZone.of(CloudRegion.of(cloudRegion), zoneId))
-            .setProjectNumber(ProjectNumber.of(projectNumber))
-            .setSubscriptionName(SubscriptionName.of(subscriptionId))
+            .setLocation(CloudZone.of(CloudRegion.of(cloudRegion), zoneId))
+            .setProject(ProjectNumber.of(projectNumber))
+            .setName(SubscriptionName.of(subscriptionId))
             .build();
 
     FieldMask fieldMask =

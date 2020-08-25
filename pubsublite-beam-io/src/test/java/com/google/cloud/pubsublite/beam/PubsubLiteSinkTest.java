@@ -79,9 +79,9 @@ public class PubsubLiteSinkTest {
       return PublisherOptions.newBuilder()
           .setTopicPath(
               TopicPaths.newBuilder()
-                  .setProjectNumber(ProjectNumber.of(9))
-                  .setTopicName(TopicName.of("abc"))
-                  .setZone(CloudZone.of(CloudRegion.of("us-east1"), 'a'))
+                  .setProject(ProjectNumber.of(9))
+                  .setName(TopicName.of("abc"))
+                  .setLocation(CloudZone.of(CloudRegion.of("us-east1"), 'a'))
                   .build())
           .build();
     } catch (StatusException e) {

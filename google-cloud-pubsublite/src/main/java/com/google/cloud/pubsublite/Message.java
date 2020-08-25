@@ -36,7 +36,7 @@ public abstract class Message {
   /** A multimap of attributes for this message. */
   public abstract ImmutableListMultimap<String, ByteString> attributes();
 
-  /** The user provided event time for this message. */
+  /** The user-provided event time for this message. */
   public abstract Optional<Timestamp> eventTime();
 
   /** Get a new builder for a message. */

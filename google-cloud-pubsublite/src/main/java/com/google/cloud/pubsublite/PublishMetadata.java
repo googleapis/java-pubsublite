@@ -23,7 +23,7 @@ import io.grpc.StatusException;
 
 /**
  * Information about a successful publish operation. Can be encoded in the string returned by the
- * Cloud Pub/Sub publish() api.
+ * Cloud Pub/Sub {@link com.google.cloud.pubsub.v1.Publisher#publish} api.
  */
 @AutoValue
 public abstract class PublishMetadata {

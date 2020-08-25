@@ -30,7 +30,10 @@ public abstract class AdminClientSettings {
 
   // Required parameters.
 
-  /** The cloud region to perform admin operations for. */
+  /**
+   * The <a href="https://cloud.google.com/pubsub/lite/docs/locations">cloud region</a> to perform
+   * admin operations for.
+   */
   abstract CloudRegion region();
 
   // Optional parameters.

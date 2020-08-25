@@ -21,7 +21,11 @@ import static com.google.cloud.pubsublite.internal.Preconditions.checkArgument;
 import com.google.auto.value.AutoValue;
 import io.grpc.StatusException;
 
-/** A wrapper class for the ProjectNumber. */
+/**
+ * A wrapper class for the <a
+ * href="https://cloud.google.com/resource-manager/docs/creating-managing-projects#before_you_begin">project
+ * number</a>.
+ */
 @AutoValue
 public abstract class ProjectNumber {
   /** The long value of this project number. */

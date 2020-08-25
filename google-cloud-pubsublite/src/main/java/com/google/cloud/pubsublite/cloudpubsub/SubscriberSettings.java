@@ -86,7 +86,7 @@ public abstract class SubscriberSettings {
     /**
      * The receiver which handles new messages sent by the Pub/Sub Lite system. Only one downcall
      * from any connected partition will be outstanding at a time, and blocking in this receiver
-     * callback may block forward progress if it blocks.
+     * callback will block forward progress.
      */
     public abstract Builder setReceiver(MessageReceiver receiver);
 
@@ -122,9 +122,10 @@ public abstract class SubscriberSettings {
     public abstract Builder setAssignmentServiceStub(PartitionAssignmentServiceStub stub);
 
     /**
-     * A handler for the action to take when AckReplyConsumer::nack is called. In Pub/Sub Lite, only
-     * a single subscriber for a given subscription is connected to any partition at a time, and
-     * there is no other client that may be able to handle messages.
+     * A handler for the action to take when {@link
+     * com.google.cloud.pubsub.v1.AckReplyConsumer#nack} is called. In Pub/Sub Lite, only a single
+     * subscriber for a given subscription is connected to any partition at a time, and there is no
+     * other client that may be able to handle messages.
      */
     public abstract Builder setNackHandler(NackHandler nackHandler);
 

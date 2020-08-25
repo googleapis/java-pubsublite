@@ -20,6 +20,7 @@ import com.google.cloud.pubsub.v1.SubscriberInterface;
 import io.grpc.StatusException;
 
 public interface Subscriber extends SubscriberInterface {
+  /** Create a new Pub/Sub Lite subscriber using the provided settings. */
   static Subscriber create(SubscriberSettings settings) throws StatusException {
     return settings.instantiate();
   }

@@ -22,24 +22,29 @@ import static com.google.cloud.pubsublite.internal.Preconditions.checkArgument;
 import com.google.auto.value.AutoValue;
 import io.grpc.StatusException;
 
+/** Helpers for constructing valid LocationPaths. */
 @AutoValue
 public abstract class LocationPaths {
   abstract ProjectNumber projectNumber();
 
   abstract CloudZone zone();
 
+  /** Create a new LocationPath builder. */
   public static Builder newBuilder() {
     return new AutoValue_LocationPaths.Builder();
   }
 
   @AutoValue.Builder
   public abstract static class Builder {
+    /** The project number. */
     public abstract Builder setProjectNumber(ProjectNumber number);
 
+    /** The Google Cloud zone. */
     public abstract Builder setZone(CloudZone zone);
 
     abstract LocationPaths autoBuild();
 
+    /** Build a new LocationPath. */
     public LocationPath build() {
       LocationPaths built = autoBuild();
       return LocationPath.of(
@@ -53,11 +58,13 @@ public abstract class LocationPaths {
     checkArgument(splits[2].equals("locations"));
   }
 
+  /** Check that the provided LocationPath is valid. */
   public static void check(LocationPath path) throws StatusException {
     ProjectNumber unusedProjectNumber = getProjectNumber(path);
     CloudZone unusedZone = getZone(path);
   }
 
+  /** Get the ProjectNumber from a LocationPath. */
   public static ProjectNumber getProjectNumber(LocationPath path) throws StatusException {
     String[] splits = path.value().split("/");
     checkSplits(splits);
@@ -68,6 +75,7 @@ public abstract class LocationPaths {
     }
   }
 
+  /** Get the CloudZone from a LocationPath. */
   public static CloudZone getZone(LocationPath path) throws StatusException {
     String[] splits = path.value().split("/");
     checkSplits(splits);

@@ -27,9 +27,9 @@ public class CloseableMonitor {
   /**
    * try-with-resources wrapper for enterWhenUninterruptibly. For example:
    *
-   * <pre>{@code
+   * <pre>
    * final Monitor.Guard guard = new Monitor.Guard(monitor.monitor) {
-   *     @Override
+   *     &#64;Override
    *     public boolean isSatisfied() {
    *       assertThat(monitor.monitor.isOccupied()).isTrue();
    *       return state;
@@ -40,7 +40,7 @@ public class CloseableMonitor {
    *   // Do stuff
    * }
    * // Monitor is automatically released
-   * }</pre>
+   * </pre>
    */
   @LockMethod("monitor")
   public Hold enterWhenUninterruptibly(Monitor.Guard condition) {

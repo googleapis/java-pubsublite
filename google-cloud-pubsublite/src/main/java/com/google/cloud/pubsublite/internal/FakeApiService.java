@@ -23,7 +23,7 @@ import com.google.api.core.AbstractApiService;
  *
  * <pre>
  * static abstract class SubscriberFakeService extends FakeApiService implements Subscriber {};
- * @Spy private SubscriberFakeService wireSubscriber;
+ * &#64;Spy private SubscriberFakeService wireSubscriber;
  * </pre>
  */
 public abstract class FakeApiService extends AbstractApiService {

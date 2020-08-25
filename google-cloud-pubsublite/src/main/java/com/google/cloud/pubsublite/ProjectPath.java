@@ -21,10 +21,17 @@ import static com.google.common.base.Preconditions.checkArgument;
 import com.google.auto.value.AutoValue;
 import java.io.Serializable;
 
+/**
+ * A string wrapper representing a project. Should be structured like:
+ *
+ * <p>projects/&lt;project number&gt;
+ */
 @AutoValue
 public abstract class ProjectPath implements Serializable {
+  /** The string value of this project path. */
   public abstract String value();
 
+  /** Construct a ProjectPath from its string value. */
   public static ProjectPath of(String value) {
     checkArgument(!value.isEmpty());
     return new AutoValue_ProjectPath(value);

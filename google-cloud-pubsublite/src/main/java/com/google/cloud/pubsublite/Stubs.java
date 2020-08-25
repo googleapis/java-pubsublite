@@ -42,6 +42,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.function.Function;
 
+/** Helpers for constructing canonical stubs for Pub/Sub Lite endpoints. */
 public class Stubs {
   private static final ChannelCache channels = new ChannelCache();
 

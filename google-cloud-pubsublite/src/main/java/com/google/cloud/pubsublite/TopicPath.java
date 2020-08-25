@@ -21,6 +21,11 @@ import static com.google.common.base.Preconditions.checkArgument;
 import com.google.auto.value.AutoValue;
 import java.io.Serializable;
 
+/**
+ * A string wrapper representing a topic. Should be structured like:
+ *
+ * <p>projects/&lt;project number&gt;/locations/&lt;cloud zone&gt;/topics/&lt;id&gt;
+ */
 @AutoValue
 public abstract class TopicPath implements Serializable {
   public abstract String value();

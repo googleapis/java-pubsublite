@@ -21,6 +21,11 @@ import static com.google.common.base.Preconditions.checkArgument;
 import com.google.auto.value.AutoValue;
 import java.io.Serializable;
 
+/**
+ * A string wrapper representing a subscription. Should be structured like:
+ *
+ * <p>projects/&lt;project number&gt;/locations/&lt;cloud zone&gt;/subscriptions/&lt;id&gt;
+ */
 @AutoValue
 public abstract class SubscriptionPath implements Serializable {
   public abstract String value();

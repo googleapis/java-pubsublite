@@ -22,6 +22,7 @@ import static com.google.cloud.pubsublite.internal.Preconditions.checkArgument;
 import com.google.auto.value.AutoValue;
 import io.grpc.StatusException;
 
+/** Helpers for constructing valid TopicPaths. */
 @AutoValue
 public abstract class TopicPaths {
   abstract ProjectNumber projectNumber();
@@ -30,20 +31,25 @@ public abstract class TopicPaths {
 
   abstract TopicName topicName();
 
+  /** Create a new TopicPath builder. */
   public static Builder newBuilder() {
     return new AutoValue_TopicPaths.Builder();
   }
 
   @AutoValue.Builder
   public abstract static class Builder {
+    /** The project number. */
     public abstract Builder setProjectNumber(ProjectNumber number);
 
+    /** The Google Cloud zone. */
     public abstract Builder setZone(CloudZone zone);
 
+    /** The topic name. */
     public abstract Builder setTopicName(TopicName name);
 
     abstract TopicPaths autoBuild();
 
+    /** Build a new TopicPath. */
     public TopicPath build() {
       TopicPaths built = autoBuild();
       return TopicPath.of(
@@ -60,12 +66,14 @@ public abstract class TopicPaths {
     checkArgument(splits[4].equals("topics"));
   }
 
+  /** Check that the provided TopicPath is valid. */
   public static void check(TopicPath path) throws StatusException {
     ProjectNumber unusedProjectNumber = getProjectNumber(path);
     CloudZone unusedZone = getZone(path);
     TopicName unusedName = getTopicName(path);
   }
 
+  /** Get the ProjectNumber from a TopicPath. */
   public static ProjectNumber getProjectNumber(TopicPath path) throws StatusException {
     String[] splits = path.value().split("/");
     checkSplits(splits);
@@ -76,18 +84,21 @@ public abstract class TopicPaths {
     }
   }
 
+  /** Get the CloudZone from a TopicPath. */
   public static CloudZone getZone(TopicPath path) throws StatusException {
     String[] splits = path.value().split("/");
     checkSplits(splits);
     return CloudZone.parse(splits[3]);
   }
 
+  /** Get the TopicName from a TopicPath. */
   public static TopicName getTopicName(TopicPath path) throws StatusException {
     String[] splits = path.value().split("/");
     checkSplits(splits);
     return TopicName.of(splits[5]);
   }
 
+  /** Get the LocationPath from a TopicPath. */
   public static LocationPath getLocationPath(TopicPath path) throws StatusException {
     return LocationPaths.newBuilder()
         .setProjectNumber(getProjectNumber(path))

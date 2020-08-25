@@ -19,6 +19,7 @@ package com.google.cloud.pubsublite;
 import com.google.api.gax.retrying.RetrySettings;
 import org.threeten.bp.Duration;
 
+/** Useful general constants for Pub/Sub Lite. */
 public class Constants {
   public static final RetrySettings DEFAULT_RETRY_SETTINGS =
       RetrySettings.newBuilder()

@@ -27,7 +27,7 @@ import io.grpc.Status;
  * with the nacked message.
  *
  * <p>If the returned future is successful, the message is acknowledged. If the future fails, the
- * subscriber client will be failed. The default behavior is to fail the client
+ * subscriber client will be failed. The default behavior is to immediately fail the client.
  */
 public interface NackHandler {
   default ApiFuture<Void> nack(PubsubMessage message) {

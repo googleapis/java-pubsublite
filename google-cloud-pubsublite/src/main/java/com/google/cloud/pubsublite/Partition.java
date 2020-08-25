@@ -27,10 +27,12 @@ import java.io.Serializable;
 public abstract class Partition implements Serializable {
   private static final long serialVersionUID = 7583927435022345L;
 
+  /** Create a partition from its long value. */
   public static Partition of(long partition) throws StatusException {
     checkArgument(partition >= 0, "Partitions are zero indexed.");
     return new AutoValue_Partition(partition);
   }
 
+  /** The long value of this partition. */
   public abstract long value();
 }

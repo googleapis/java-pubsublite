@@ -21,10 +21,17 @@ import static com.google.cloud.pubsublite.internal.Preconditions.checkArgument;
 import com.google.auto.value.AutoValue;
 import io.grpc.StatusException;
 
+/**
+ * A wrapper class for the <a
+ * href="https://cloud.google.com/resource-manager/docs/creating-managing-projects#before_you_begin">project
+ * number</a>.
+ */
 @AutoValue
 public abstract class ProjectNumber {
+  /** The long value of this project number. */
   public abstract long value();
 
+  /** Construct a ProjectNumber from its long value. */
   public static ProjectNumber of(long value) throws StatusException {
     checkArgument(value > 0);
     return new AutoValue_ProjectNumber(value);

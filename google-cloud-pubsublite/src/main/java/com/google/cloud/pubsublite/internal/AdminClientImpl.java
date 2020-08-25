@@ -24,6 +24,7 @@ import com.google.api.gax.retrying.RetryingExecutor;
 import com.google.cloud.pubsublite.AdminClient;
 import com.google.cloud.pubsublite.CloudRegion;
 import com.google.cloud.pubsublite.LocationPath;
+import com.google.cloud.pubsublite.ProjectLookupUtils;
 import com.google.cloud.pubsublite.SubscriptionPath;
 import com.google.cloud.pubsublite.TopicPath;
 import com.google.cloud.pubsublite.proto.AdminServiceGrpc;
@@ -101,7 +102,7 @@ public class AdminClientImpl extends BackgroundResourceAggregation implements Ad
   public ApiFuture<Topic> createTopic(Topic topic) {
     return RetryingExecutorUtil.runWithRetries(
         () -> {
-          TopicPath path = TopicPath.parse(topic.getName());
+          TopicPath path = ProjectLookupUtils.toCannonical(TopicPath.parse(topic.getName()));
           return stub.createTopic(
               CreateTopicRequest.newBuilder()
                   .setParent(path.location().toString())
@@ -115,7 +116,11 @@ public class AdminClientImpl extends BackgroundResourceAggregation implements Ad
   @Override
   public ApiFuture<Topic> getTopic(TopicPath path) {
     return RetryingExecutorUtil.runWithRetries(
-        () -> stub.getTopic(GetTopicRequest.newBuilder().setName(path.toString()).build()),
+        () ->
+            stub.getTopic(
+                GetTopicRequest.newBuilder()
+                    .setName(ProjectLookupUtils.toCannonical(path).toString())
+                    .build()),
         topicRetryingExecutor);
   }
 
@@ -124,7 +129,9 @@ public class AdminClientImpl extends BackgroundResourceAggregation implements Ad
     return RetryingExecutorUtil.runWithRetries(
         () ->
             stub.getTopicPartitions(
-                    GetTopicPartitionsRequest.newBuilder().setName(path.toString()).build())
+                    GetTopicPartitionsRequest.newBuilder()
+                        .setName(ProjectLookupUtils.toCannonical(path).toString())
+                        .build())
                 .getPartitionCount(),
         partitionCountRetryingExecutor);
   }
@@ -133,7 +140,10 @@ public class AdminClientImpl extends BackgroundResourceAggregation implements Ad
   public ApiFuture<List<Topic>> listTopics(LocationPath path) {
     return RetryingExecutorUtil.runWithRetries(
         () -> {
-          return stub.listTopics(ListTopicsRequest.newBuilder().setParent(path.toString()).build())
+          return stub.listTopics(
+                  ListTopicsRequest.newBuilder()
+                      .setParent(ProjectLookupUtils.toCannonical(path).toString())
+                      .build())
               .getTopicsList();
         },
         listTopicsRetryingExecutor);
@@ -143,8 +153,14 @@ public class AdminClientImpl extends BackgroundResourceAggregation implements Ad
   public ApiFuture<Topic> updateTopic(Topic topic, FieldMask mask) {
     return RetryingExecutorUtil.runWithRetries(
         () -> {
+          Topic canonical =
+              topic
+                  .toBuilder()
+                  .setName(
+                      ProjectLookupUtils.toCannonical(TopicPath.parse(topic.getName())).toString())
+                  .build();
           return stub.updateTopic(
-              UpdateTopicRequest.newBuilder().setTopic(topic).setUpdateMask(mask).build());
+              UpdateTopicRequest.newBuilder().setTopic(canonical).setUpdateMask(mask).build());
         },
         topicRetryingExecutor);
   }
@@ -154,7 +170,10 @@ public class AdminClientImpl extends BackgroundResourceAggregation implements Ad
   public ApiFuture<Void> deleteTopic(TopicPath path) {
     return RetryingExecutorUtil.runWithRetries(
         () -> {
-          stub.deleteTopic(DeleteTopicRequest.newBuilder().setName(path.toString()).build());
+          stub.deleteTopic(
+              DeleteTopicRequest.newBuilder()
+                  .setName(ProjectLookupUtils.toCannonical(path).toString())
+                  .build());
           return null;
         },
         voidRetryingExecutor);
@@ -167,7 +186,9 @@ public class AdminClientImpl extends BackgroundResourceAggregation implements Ad
           ImmutableList.Builder<SubscriptionPath> builder = ImmutableList.builder();
           for (String subscription :
               stub.listTopicSubscriptions(
-                      ListTopicSubscriptionsRequest.newBuilder().setName(path.toString()).build())
+                      ListTopicSubscriptionsRequest.newBuilder()
+                          .setName(ProjectLookupUtils.toCannonical(path).toString())
+                          .build())
                   .getSubscriptionsList()) {
             SubscriptionPath subscription_path = SubscriptionPath.parse(subscription);
             builder.add(subscription_path);
@@ -181,7 +202,8 @@ public class AdminClientImpl extends BackgroundResourceAggregation implements Ad
   public ApiFuture<Subscription> createSubscription(Subscription subscription) {
     return RetryingExecutorUtil.runWithRetries(
         () -> {
-          SubscriptionPath path = SubscriptionPath.parse(subscription.getName());
+          SubscriptionPath path =
+              ProjectLookupUtils.toCannonical(SubscriptionPath.parse(subscription.getName()));
           return stub.createSubscription(
               CreateSubscriptionRequest.newBuilder()
                   .setParent(path.location().toString())
@@ -197,7 +219,9 @@ public class AdminClientImpl extends BackgroundResourceAggregation implements Ad
     return RetryingExecutorUtil.runWithRetries(
         () ->
             stub.getSubscription(
-                GetSubscriptionRequest.newBuilder().setName(path.toString()).build()),
+                GetSubscriptionRequest.newBuilder()
+                    .setName(ProjectLookupUtils.toCannonical(path).toString())
+                    .build()),
         subscriptionRetryingExecutor);
   }
 
@@ -206,7 +230,9 @@ public class AdminClientImpl extends BackgroundResourceAggregation implements Ad
     return RetryingExecutorUtil.runWithRetries(
         () -> {
           return stub.listSubscriptions(
-                  ListSubscriptionsRequest.newBuilder().setParent(path.toString()).build())
+                  ListSubscriptionsRequest.newBuilder()
+                      .setParent(ProjectLookupUtils.toCannonical(path).toString())
+                      .build())
               .getSubscriptionsList();
         },
         listSubscriptionsRetryingExecutor);
@@ -216,9 +242,17 @@ public class AdminClientImpl extends BackgroundResourceAggregation implements Ad
   public ApiFuture<Subscription> updateSubscription(Subscription subscription, FieldMask mask) {
     return RetryingExecutorUtil.runWithRetries(
         () -> {
+          Subscription canonical =
+              subscription
+                  .toBuilder()
+                  .setName(
+                      ProjectLookupUtils.toCannonical(
+                              SubscriptionPath.parse(subscription.getName()))
+                          .toString())
+                  .build();
           return stub.updateSubscription(
               UpdateSubscriptionRequest.newBuilder()
-                  .setSubscription(subscription)
+                  .setSubscription(canonical)
                   .setUpdateMask(mask)
                   .build());
         },
@@ -231,7 +265,9 @@ public class AdminClientImpl extends BackgroundResourceAggregation implements Ad
     return RetryingExecutorUtil.runWithRetries(
         () -> {
           stub.deleteSubscription(
-              DeleteSubscriptionRequest.newBuilder().setName(path.toString()).build());
+              DeleteSubscriptionRequest.newBuilder()
+                  .setName(ProjectLookupUtils.toCannonical(path).toString())
+                  .build());
           return null;
         },
         voidRetryingExecutor);

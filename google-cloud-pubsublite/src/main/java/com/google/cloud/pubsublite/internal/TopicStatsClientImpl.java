@@ -23,6 +23,7 @@ import com.google.api.gax.retrying.RetryingExecutor;
 import com.google.cloud.pubsublite.CloudRegion;
 import com.google.cloud.pubsublite.Offset;
 import com.google.cloud.pubsublite.Partition;
+import com.google.cloud.pubsublite.ProjectLookupUtils;
 import com.google.cloud.pubsublite.TopicPath;
 import com.google.cloud.pubsublite.proto.ComputeMessageStatsRequest;
 import com.google.cloud.pubsublite.proto.ComputeMessageStatsResponse;
@@ -110,7 +111,7 @@ public class TopicStatsClientImpl implements BackgroundResource, TopicStatsClien
         () -> {
           return stub.computeMessageStats(
               ComputeMessageStatsRequest.newBuilder()
-                  .setTopic(path.toString())
+                  .setTopic(ProjectLookupUtils.toCannonical(path).toString())
                   .setPartition(partition.value())
                   .setStartCursor(Cursor.newBuilder().setOffset(start.value()).build())
                   .setEndCursor(Cursor.newBuilder().setOffset(end.value()).build())

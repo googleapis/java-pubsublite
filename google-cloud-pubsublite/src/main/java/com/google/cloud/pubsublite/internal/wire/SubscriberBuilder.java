@@ -18,6 +18,7 @@ package com.google.cloud.pubsublite.internal.wire;
 
 import com.google.auto.value.AutoValue;
 import com.google.cloud.pubsublite.Partition;
+import com.google.cloud.pubsublite.ProjectLookupUtils;
 import com.google.cloud.pubsublite.SequencedMessage;
 import com.google.cloud.pubsublite.Stubs;
 import com.google.cloud.pubsublite.SubscriptionPath;
@@ -86,7 +87,8 @@ public abstract class SubscriberBuilder {
 
       InitialSubscribeRequest initialSubscribeRequest =
           InitialSubscribeRequest.newBuilder()
-              .setSubscription(builder.subscriptionPath().toString())
+              .setSubscription(
+                  ProjectLookupUtils.toCannonical(builder.subscriptionPath()).toString())
               .setPartition(builder.partition().value())
               .build();
       return new SubscriberImpl(

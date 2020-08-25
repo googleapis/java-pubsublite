@@ -22,6 +22,7 @@ import com.google.auto.value.AutoValue;
 import com.google.cloud.pubsublite.Constants;
 import com.google.cloud.pubsublite.Offset;
 import com.google.cloud.pubsublite.Partition;
+import com.google.cloud.pubsublite.ProjectLookupUtils;
 import com.google.cloud.pubsublite.Stubs;
 import com.google.cloud.pubsublite.TopicPath;
 import com.google.cloud.pubsublite.internal.Publisher;
@@ -114,7 +115,7 @@ public abstract class PublisherBuilder {
       return new PublisherImpl(
           actualStub,
           InitialPublishRequest.newBuilder()
-              .setTopic(autoBuilt.topic().toString())
+              .setTopic(ProjectLookupUtils.toCannonical(autoBuilt.topic()).toString())
               .setPartition(autoBuilt.partition().value())
               .build(),
           validateBatchingSettings(autoBuilt.batching()));

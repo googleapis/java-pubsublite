@@ -46,8 +46,8 @@ public class ListTopicsExample {
 
     LocationPath locationPath =
         LocationPaths.newBuilder()
-            .setProject(ProjectNumber.of(projectNumber))
-            .setLocation(CloudZone.of(CloudRegion.of(cloudRegion), zoneId))
+            .setProjectNumber(ProjectNumber.of(projectNumber))
+            .setZone(CloudZone.of(CloudRegion.of(cloudRegion), zoneId))
             .build();
 
     try (AdminClient adminClient = AdminClient.create(adminClientSettings)) {

@@ -51,16 +51,16 @@ public class CreateSubscriptionExample {
 
     TopicPath topicPath =
         TopicPaths.newBuilder()
-            .setProject(ProjectNumber.of(projectNumber))
-            .setLocation(CloudZone.of(CloudRegion.of(cloudRegion), zoneId))
-            .setName(TopicName.of(topicId))
+            .setProjectNumber(ProjectNumber.of(projectNumber))
+            .setZone(CloudZone.of(CloudRegion.of(cloudRegion), zoneId))
+            .setTopicName(TopicName.of(topicId))
             .build();
 
     SubscriptionPath subscriptionPath =
         SubscriptionPaths.newBuilder()
-            .setLocation(CloudZone.of(CloudRegion.of(cloudRegion), zoneId))
-            .setProject(ProjectNumber.of(projectNumber))
-            .setName(SubscriptionName.of(subscriptionId))
+            .setZone(CloudZone.of(CloudRegion.of(cloudRegion), zoneId))
+            .setProjectNumber(ProjectNumber.of(projectNumber))
+            .setSubscriptionName(SubscriptionName.of(subscriptionId))
             .build();
 
     Subscription subscription =

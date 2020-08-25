@@ -56,9 +56,9 @@ public class PublisherExample {
 
     TopicPath topicPath =
         TopicPaths.newBuilder()
-            .setProject(ProjectNumber.of(projectNumber))
-            .setLocation(CloudZone.of(CloudRegion.of(cloudRegion), zoneId))
-            .setName(TopicName.of(topicId))
+            .setProjectNumber(ProjectNumber.of(projectNumber))
+            .setZone(CloudZone.of(CloudRegion.of(cloudRegion), zoneId))
+            .setTopicName(TopicName.of(topicId))
             .build();
     Publisher publisher = null;
     List<ApiFuture<String>> futures = new ArrayList<>();

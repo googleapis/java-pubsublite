@@ -44,9 +44,9 @@ public class DeleteSubscriptionExample {
 
     SubscriptionPath subscriptionPath =
         SubscriptionPaths.newBuilder()
-            .setLocation(CloudZone.of(CloudRegion.of(cloudRegion), zoneId))
-            .setProject(ProjectNumber.of(projectNumber))
-            .setName(SubscriptionName.of(subscriptionId))
+            .setZone(CloudZone.of(CloudRegion.of(cloudRegion), zoneId))
+            .setProjectNumber(ProjectNumber.of(projectNumber))
+            .setSubscriptionName(SubscriptionName.of(subscriptionId))
             .build();
 
     AdminClientSettings adminClientSettings =

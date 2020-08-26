@@ -23,6 +23,7 @@ import com.google.cloud.pubsublite.Partition;
 import com.google.cloud.pubsublite.SequencedMessage;
 import com.google.cloud.pubsublite.internal.wire.Committer;
 import com.google.cloud.pubsublite.internal.wire.SubscriberFactory;
+import com.google.common.base.Ticker;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
@@ -93,7 +94,11 @@ class PubsubLiteUnboundedSource extends UnboundedSource<SequencedMessage, Offset
         }
         statesBuilder.put(partition, state);
       }
-      return new PubsubLiteUnboundedReader(this, statesBuilder.build());
+      return new PubsubLiteUnboundedReader(
+          this,
+          statesBuilder.build(),
+          subscriberOptions.topicBacklogReader(),
+          Ticker.systemTicker());
     } catch (StatusException e) {
       throw new IOException(e);
     }

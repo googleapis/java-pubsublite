@@ -25,6 +25,11 @@ import com.google.cloud.pubsublite.internal.CloseableMonitor;
 import com.google.cloud.pubsublite.internal.ExtractStatus;
 import com.google.cloud.pubsublite.internal.ProxyService;
 import com.google.cloud.pubsublite.internal.wire.Committer;
+import com.google.cloud.pubsublite.proto.ComputeMessageStatsResponse;
+import com.google.common.base.Ticker;
+import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.CacheLoader;
+import com.google.common.cache.LoadingCache;
 import com.google.common.collect.ImmutableMap;
 import com.google.errorprone.annotations.concurrent.GuardedBy;
 import com.google.protobuf.Timestamp;
@@ -40,6 +45,8 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.Queue;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import org.apache.beam.sdk.io.UnboundedSource;
@@ -47,10 +54,15 @@ import org.apache.beam.sdk.io.UnboundedSource.CheckpointMark;
 import org.apache.beam.sdk.io.UnboundedSource.UnboundedReader;
 import org.apache.beam.sdk.transforms.windowing.BoundedWindow;
 import org.joda.time.Instant;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 class PubsubLiteUnboundedReader extends UnboundedReader<SequencedMessage>
     implements OffsetFinalizer {
+  private static final Logger logger = LoggerFactory.getLogger(PubsubLiteUnboundedReader.class);
   private final UnboundedSource<SequencedMessage, ?> source;
+  private final TopicBacklogReader backlogReader;
+  private final LoadingCache<String, Long> backlogCache;
   private final CloseableMonitor monitor = new CloseableMonitor();
 
   @GuardedBy("monitor.monitor")
@@ -88,7 +100,9 @@ class PubsubLiteUnboundedReader extends UnboundedReader<SequencedMessage>
 
   public PubsubLiteUnboundedReader(
       UnboundedSource<SequencedMessage, ?> source,
-      ImmutableMap<Partition, SubscriberState> subscriberMap)
+      ImmutableMap<Partition, SubscriberState> subscriberMap,
+      TopicBacklogReader backlogReader,
+      Ticker ticker)
       throws StatusException {
     this.source = source;
     this.subscriberMap = subscriberMap;
@@ -100,7 +114,30 @@ class PubsubLiteUnboundedReader extends UnboundedReader<SequencedMessage>
                 permanentError = Optional.of(permanentError.orElse(error));
               }
             });
+    this.backlogReader = backlogReader;
+    this.backlogCache =
+        CacheBuilder.newBuilder()
+            .ticker(ticker)
+            .maximumSize(1)
+            .expireAfterWrite(1, TimeUnit.MINUTES)
+            .refreshAfterWrite(10, TimeUnit.SECONDS)
+            .build(
+                new CacheLoader<Object, Long>() {
+                  public Long load(Object val) throws InterruptedException, ExecutionException {
+                    return computeSplitBacklog().get().getMessageBytes();
+                  }
+                });
     this.committerProxy.startAsync().awaitRunning();
+  }
+
+  private ApiFuture<ComputeMessageStatsResponse> computeSplitBacklog() {
+    ImmutableMap.Builder<Partition, Offset> builder = ImmutableMap.builder();
+    try (CloseableMonitor.Hold h = monitor.enter()) {
+      subscriberMap.forEach(
+          (partition, subscriberState) ->
+              builder.put(partition, subscriberState.lastDelivered.orElse(Offset.of(0))));
+    }
+    return backlogReader.computeMessageStats(builder.build());
   }
 
   @Override
@@ -254,6 +291,23 @@ class PubsubLiteUnboundedReader extends UnboundedReader<SequencedMessage>
           (partition, subscriberState) ->
               subscriberState.lastDelivered.ifPresent(offset -> builder.put(partition, offset)));
       return new OffsetCheckpointMark(this, builder.build());
+    }
+  }
+
+  @Override
+  public long getSplitBacklogBytes() {
+    try {
+      // We use the cache because it allows us to coalesce request, periodically refresh the value
+      // and expire the value after a maximum staleness, but there is only ever one key.
+      return backlogCache.get("Backlog");
+    } catch (ExecutionException e) {
+      logger.warn(
+          "Failed to retrieve backlog information, reporting the backlog size as UNKNOWN: {}",
+          e.getCause().getMessage());
+      if (e.getCause() instanceof InterruptedException) {
+        Thread.currentThread().interrupt();
+      }
+      return BACKLOG_UNKNOWN;
     }
   }
 

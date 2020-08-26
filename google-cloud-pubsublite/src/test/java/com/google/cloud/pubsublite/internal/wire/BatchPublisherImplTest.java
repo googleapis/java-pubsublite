@@ -78,7 +78,7 @@ public class BatchPublisherImplTest {
                   .setTopic(
                       TopicPaths.newBuilder()
                           .setProject(ProjectNumber.of(1864654))
-                          .setName(TopicName.of("some_topic"))
+                          .setTopicName(TopicName.of("some_topic"))
                           .setLocation(CloudZone.of(CloudRegion.of("us-east1"), 'a'))
                           .build()
                           .toString())

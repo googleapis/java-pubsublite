@@ -41,7 +41,7 @@ public class SubscriberSettingsTest {
     return SubscriptionPaths.newBuilder()
         .setProject(ProjectNumber.of(56))
         .setLocation(CloudZone.parse("us-central1-a"))
-        .setName(SubscriptionName.of("xyz"))
+        .setSubscriptionName(SubscriptionName.of("xyz"))
         .build();
   }
 

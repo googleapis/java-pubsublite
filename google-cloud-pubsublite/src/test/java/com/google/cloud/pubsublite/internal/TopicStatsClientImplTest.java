@@ -68,7 +68,7 @@ public class TopicStatsClientImplTest {
   private static TopicPath path() {
     try {
       return TopicPaths.newBuilder()
-          .setName(TopicName.of("a"))
+          .setTopicName(TopicName.of("a"))
           .setProject(ProjectNumber.of(4))
           .setLocation(CloudZone.of(REGION, 'a'))
           .build();

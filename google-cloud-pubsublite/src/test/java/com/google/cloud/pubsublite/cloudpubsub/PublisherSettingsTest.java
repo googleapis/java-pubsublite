@@ -44,7 +44,7 @@ public class PublisherSettingsTest {
     return TopicPaths.newBuilder()
         .setProject(ProjectNumber.of(56))
         .setLocation(CloudZone.parse("us-central1-a"))
-        .setName(TopicName.of("xyz"))
+        .setTopicName(TopicName.of("xyz"))
         .build();
   }
 

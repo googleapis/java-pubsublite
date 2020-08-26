@@ -71,7 +71,7 @@ public class ConnectedCommitterImplTest {
                       SubscriptionPaths.newBuilder()
                           .setProject(ProjectNumber.of(12345))
                           .setLocation(CloudZone.of(CloudRegion.of("us-east1"), 'a'))
-                          .setName(SubscriptionName.of("some_subscription"))
+                          .setSubscriptionName(SubscriptionName.of("some_subscription"))
                           .build()
                           .toString())
                   .setPartition(1024))

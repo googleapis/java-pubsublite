@@ -22,9 +22,7 @@ import com.google.auto.value.AutoValue;
 import io.grpc.StatusException;
 import java.io.Serializable;
 
-/**
- * A string wrapper representing a project.
- */
+/** A string wrapper representing a project. */
 @AutoValue
 public abstract class ProjectPath implements Serializable {
   public abstract ProjectIdOrNumber project();
@@ -39,7 +37,7 @@ public abstract class ProjectPath implements Serializable {
   }
 
   /**
-   * Parse a project path.  Should be structured like:
+   * Parse a project path. Should be structured like:
    *
    * <p>projects/&lt;project number&gt;
    */
@@ -51,7 +49,8 @@ public abstract class ProjectPath implements Serializable {
     try {
       return ProjectPath.of(ProjectIdOrNumber.of(ProjectNumber.of(Long.parseLong(splits[1]))));
     } catch (NumberFormatException e) {
-      // Pass, treat as a name.
+      // Pass, treat as a name. Project ids must start with a letter.
+      // https://cloud.google.com/resource-manager/docs/creating-managing-projects#before_you_begin
     }
     return ProjectPath.of(ProjectIdOrNumber.of(ProjectId.of(splits[1])));
   }

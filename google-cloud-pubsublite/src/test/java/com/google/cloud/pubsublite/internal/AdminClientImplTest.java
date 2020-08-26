@@ -106,7 +106,7 @@ public class AdminClientImplTest {
     return TopicPaths.newBuilder()
         .setLocation(ZONE)
         .setProject(projectNumber())
-        .setName(topicName())
+        .setTopicName(topicName())
         .build();
   }
 
@@ -131,7 +131,7 @@ public class AdminClientImplTest {
     return SubscriptionPaths.newBuilder()
         .setLocation(ZONE)
         .setProject(projectNumber())
-        .setName(subscriptionName())
+        .setSubscriptionName(subscriptionName())
         .build();
   }
 
@@ -517,13 +517,13 @@ public class AdminClientImplTest {
     SubscriptionPath path1 =
         SubscriptionPaths.newBuilder()
             .setProject(ProjectNumber.of(111))
-            .setName(SubscriptionName.of("def"))
+            .setSubscriptionName(SubscriptionName.of("def"))
             .setLocation(ZONE)
             .build();
     SubscriptionPath path2 =
         SubscriptionPaths.newBuilder()
             .setProject(ProjectNumber.of(222))
-            .setName(SubscriptionName.of("abc"))
+            .setSubscriptionName(SubscriptionName.of("abc"))
             .setLocation(ZONE)
             .build();
     ListTopicSubscriptionsResponse response =

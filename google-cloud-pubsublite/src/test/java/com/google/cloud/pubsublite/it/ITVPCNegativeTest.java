@@ -120,7 +120,11 @@ public class ITVPCNegativeTest {
     locationPath = LocationPaths.newBuilder().setProject(projectNum).setLocation(zone).build();
     TopicName topicName = TopicName.of(TOPIC_NAME);
     topicPath =
-        TopicPaths.newBuilder().setLocation(zone).setProject(projectNum).setName(topicName).build();
+        TopicPaths.newBuilder()
+            .setLocation(zone)
+            .setProject(projectNum)
+            .setTopicName(topicName)
+            .build();
     topic =
         Topic.newBuilder()
             .setPartitionConfig(PartitionConfig.newBuilder().setScale(1).setCount(PARTITIONS))
@@ -135,7 +139,7 @@ public class ITVPCNegativeTest {
         SubscriptionPaths.newBuilder()
             .setLocation(zone)
             .setProject(projectNum)
-            .setName(subscriptionName)
+            .setSubscriptionName(subscriptionName)
             .build();
     subscription =
         Subscription.newBuilder()

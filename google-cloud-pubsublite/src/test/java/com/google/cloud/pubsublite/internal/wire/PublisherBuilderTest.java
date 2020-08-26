@@ -40,7 +40,7 @@ public class PublisherBuilderTest {
             TopicPaths.newBuilder()
                 .setLocation(CloudZone.of(CloudRegion.of("us-central1"), 'a'))
                 .setProject(ProjectNumber.of(3))
-                .setName(TopicName.of("abc"))
+                .setTopicName(TopicName.of("abc"))
                 .build())
         .setPartition(Partition.of(85))
         .setStub(PublisherServiceGrpc.newStub(mock(Channel.class)))

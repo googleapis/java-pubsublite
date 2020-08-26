@@ -43,7 +43,7 @@ import org.threeten.bp.Duration;
  *   .setTopic(
  *     TopicPaths.newBuilder()
  *       .setProject(MY_PROJECT)
- *       .setName(MY_TOPIC)
+ *       .setTopicName(MY_TOPIC)
  *       .setLocation(CloudZone.of("us-east1-a"))
  *       .build())
  *  .setPartition(Partition.of(10))

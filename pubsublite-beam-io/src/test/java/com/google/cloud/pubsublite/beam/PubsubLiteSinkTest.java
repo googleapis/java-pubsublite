@@ -80,7 +80,7 @@ public class PubsubLiteSinkTest {
           .setTopicPath(
               TopicPaths.newBuilder()
                   .setProject(ProjectNumber.of(9))
-                  .setName(TopicName.of("abc"))
+                  .setTopicName(TopicName.of("abc"))
                   .setLocation(CloudZone.of(CloudRegion.of("us-east1"), 'a'))
                   .build())
           .build();

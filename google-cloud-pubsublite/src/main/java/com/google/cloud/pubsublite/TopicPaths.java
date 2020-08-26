@@ -25,7 +25,7 @@ public abstract class TopicPaths {
 
   abstract CloudZone location();
 
-  abstract TopicName name();
+  abstract TopicName topicName();
 
   /** Create a new TopicPath builder. */
   public static Builder newBuilder() {
@@ -36,7 +36,7 @@ public abstract class TopicPaths {
   public abstract static class Builder extends ProjectBuilderHelper<Builder> {
     public abstract Builder setLocation(CloudZone zone);
 
-    public abstract Builder setName(TopicName name);
+    public abstract Builder setTopicName(TopicName name);
 
     abstract TopicPaths autoBuild();
 
@@ -44,7 +44,7 @@ public abstract class TopicPaths {
     public TopicPath build() {
       TopicPaths built = autoBuild();
       return TopicPath.of(
-          LocationPath.of(ProjectPath.of(built.project()), built.location()), built.name());
+          LocationPath.of(ProjectPath.of(built.project()), built.location()), built.topicName());
     }
   }
 }

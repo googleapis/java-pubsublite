@@ -23,9 +23,7 @@ import io.grpc.StatusException;
 import java.io.Serializable;
 import java.util.Arrays;
 
-/**
- * A string wrapper representing a project and location.
- */
+/** A string wrapper representing a project and location. */
 @AutoValue
 public abstract class LocationPath implements Serializable {
   public abstract ProjectPath project();

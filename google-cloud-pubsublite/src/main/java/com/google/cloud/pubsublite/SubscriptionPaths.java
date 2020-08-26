@@ -25,7 +25,7 @@ public abstract class SubscriptionPaths {
 
   abstract CloudZone location();
 
-  abstract SubscriptionName name();
+  abstract SubscriptionName subscriptionName();
 
   /** Create a new SubscriptionPath builder. */
   public static Builder newBuilder() {
@@ -36,7 +36,7 @@ public abstract class SubscriptionPaths {
   public abstract static class Builder extends ProjectBuilderHelper<Builder> {
     public abstract Builder setLocation(CloudZone zone);
 
-    public abstract Builder setName(SubscriptionName name);
+    public abstract Builder setSubscriptionName(SubscriptionName name);
 
     abstract SubscriptionPaths autoBuild();
 
@@ -44,7 +44,8 @@ public abstract class SubscriptionPaths {
     public SubscriptionPath build() {
       SubscriptionPaths built = autoBuild();
       return SubscriptionPath.of(
-          LocationPath.of(ProjectPath.of(built.project()), built.location()), built.name());
+          LocationPath.of(ProjectPath.of(built.project()), built.location()),
+          built.subscriptionName());
     }
   }
 }

@@ -36,7 +36,6 @@ import io.grpc.Status;
 import io.grpc.Status.Code;
 import io.grpc.StatusException;
 import java.util.concurrent.ExecutionException;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -49,11 +48,9 @@ import org.mockito.junit.MockitoRule;
 @RunWith(JUnit4.class)
 public final class TopicBacklogReaderImplTest {
 
-  @Rule
-  public final MockitoRule mockito = MockitoJUnit.rule();
+  @Rule public final MockitoRule mockito = MockitoJUnit.rule();
 
-  @Mock
-  TopicStatsClient mockClient;
+  @Mock TopicStatsClient mockClient;
 
   private TopicPath topicPath;
   private TopicBacklogReader reader;
@@ -62,9 +59,9 @@ public final class TopicBacklogReaderImplTest {
   public void setUp() throws Exception {
     this.topicPath =
         TopicPaths.newBuilder()
-            .setProjectNumber(ProjectNumber.of(4))
+            .setProject(ProjectNumber.of(4))
             .setTopicName(TopicName.of("test"))
-            .setZone(CloudZone.parse("us-central1-b"))
+            .setLocation(CloudZone.parse("us-central1-b"))
             .build();
     this.reader = new TopicBacklogReaderImpl(mockClient, topicPath);
   }
@@ -74,16 +71,16 @@ public final class TopicBacklogReaderImplTest {
     ComputeMessageStatsResponse partition1 = ComputeMessageStatsResponse.getDefaultInstance();
 
     when(mockClient.computeMessageStats(
-        topicPath, Partition.of(1), Offset.of(10), Offset.of(Integer.MAX_VALUE)))
+            topicPath, Partition.of(1), Offset.of(10), Offset.of(Integer.MAX_VALUE)))
         .thenReturn(ApiFutures.immediateFuture(partition1));
     when(mockClient.computeMessageStats(
-        topicPath, Partition.of(2), Offset.of(20), Offset.of(Integer.MAX_VALUE)))
+            topicPath, Partition.of(2), Offset.of(20), Offset.of(Integer.MAX_VALUE)))
         .thenReturn(ApiFutures.immediateFailedFuture(new StatusException(Status.UNAVAILABLE)));
 
     ImmutableMap.Builder<Partition, Offset> builder = ImmutableMap.builder();
     ApiFuture<ComputeMessageStatsResponse> future =
-        reader.computeMessageStats(ImmutableMap.of(Partition.of(1), Offset.of(10),
-            Partition.of(2), Offset.of(20)));
+        reader.computeMessageStats(
+            ImmutableMap.of(Partition.of(1), Offset.of(10), Partition.of(2), Offset.of(20)));
 
     ExecutionException ex = assertThrows(ExecutionException.class, future::get);
     assertEquals(ExtractStatus.extract(ex.getCause()).get().getCode(), Code.UNAVAILABLE);
@@ -96,17 +93,16 @@ public final class TopicBacklogReaderImplTest {
     ComputeMessageStatsResponse aggregate = ComputeMessageStatsResponse.getDefaultInstance();
 
     when(mockClient.computeMessageStats(
-        topicPath, Partition.of(1), Offset.of(10), Offset.of(Integer.MAX_VALUE)))
+            topicPath, Partition.of(1), Offset.of(10), Offset.of(Integer.MAX_VALUE)))
         .thenReturn(ApiFutures.immediateFuture(partition1));
     when(mockClient.computeMessageStats(
-        topicPath, Partition.of(2), Offset.of(20), Offset.of(Integer.MAX_VALUE)))
+            topicPath, Partition.of(2), Offset.of(20), Offset.of(Integer.MAX_VALUE)))
         .thenReturn(ApiFutures.immediateFuture(partition2));
 
     ImmutableMap.Builder<Partition, Offset> builder = ImmutableMap.builder();
     ApiFuture<ComputeMessageStatsResponse> future =
         reader.computeMessageStats(
-            ImmutableMap.of(Partition.of(1), Offset.of(10),
-                Partition.of(2), Offset.of(20)));
+            ImmutableMap.of(Partition.of(1), Offset.of(10), Partition.of(2), Offset.of(20)));
 
     assertEquals(future.get(), aggregate);
   }
@@ -126,16 +122,16 @@ public final class TopicBacklogReaderImplTest {
             .build();
 
     when(mockClient.computeMessageStats(
-        topicPath, Partition.of(1), Offset.of(10), Offset.of(Integer.MAX_VALUE)))
+            topicPath, Partition.of(1), Offset.of(10), Offset.of(Integer.MAX_VALUE)))
         .thenReturn(ApiFutures.immediateFuture(partition1));
     when(mockClient.computeMessageStats(
-        topicPath, Partition.of(2), Offset.of(20), Offset.of(Integer.MAX_VALUE)))
+            topicPath, Partition.of(2), Offset.of(20), Offset.of(Integer.MAX_VALUE)))
         .thenReturn(ApiFutures.immediateFuture(partition2));
 
     ImmutableMap.Builder<Partition, Offset> builder = ImmutableMap.builder();
     ApiFuture<ComputeMessageStatsResponse> future =
-        reader.computeMessageStats(ImmutableMap.of(Partition.of(1), Offset.of(10),
-            Partition.of(2), Offset.of(20)));
+        reader.computeMessageStats(
+            ImmutableMap.of(Partition.of(1), Offset.of(10), Partition.of(2), Offset.of(20)));
 
     assertEquals(future.get(), aggregate);
   }
@@ -167,16 +163,16 @@ public final class TopicBacklogReaderImplTest {
             .build();
 
     when(mockClient.computeMessageStats(
-        topicPath, Partition.of(1), Offset.of(10), Offset.of(Integer.MAX_VALUE)))
+            topicPath, Partition.of(1), Offset.of(10), Offset.of(Integer.MAX_VALUE)))
         .thenReturn(ApiFutures.immediateFuture(partition1));
     when(mockClient.computeMessageStats(
-        topicPath, Partition.of(2), Offset.of(20), Offset.of(Integer.MAX_VALUE)))
+            topicPath, Partition.of(2), Offset.of(20), Offset.of(Integer.MAX_VALUE)))
         .thenReturn(ApiFutures.immediateFuture(partition2));
 
     ImmutableMap.Builder<Partition, Offset> builder = ImmutableMap.builder();
     ApiFuture<ComputeMessageStatsResponse> future =
-        reader.computeMessageStats(ImmutableMap.of(Partition.of(1), Offset.of(10),
-            Partition.of(2), Offset.of(20)));
+        reader.computeMessageStats(
+            ImmutableMap.of(Partition.of(1), Offset.of(10), Partition.of(2), Offset.of(20)));
 
     assertEquals(future.get(), aggregate);
   }

@@ -67,12 +67,10 @@ public final class TopicBacklogReaderImpl implements TopicBacklogReader {
             messageBytes += response.getMessageBytes();
             messageCount += response.getMessageCount();
             if (response.hasMinimumPublishTime()) {
-              minPublishTime =
-                  minTimestamp(minPublishTime, response.getMinimumPublishTime());
+              minPublishTime = minTimestamp(minPublishTime, response.getMinimumPublishTime());
             }
             if (response.hasMinimumEventTime()) {
-              minEventTime =
-                  minTimestamp(minPublishTime, response.getMinimumEventTime());
+              minEventTime = minTimestamp(minPublishTime, response.getMinimumEventTime());
             }
           }
           ComputeMessageStatsResponse.Builder builder =

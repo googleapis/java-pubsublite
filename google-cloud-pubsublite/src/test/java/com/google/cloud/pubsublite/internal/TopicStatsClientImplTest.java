@@ -69,8 +69,8 @@ public class TopicStatsClientImplTest {
     try {
       return TopicPaths.newBuilder()
           .setTopicName(TopicName.of("a"))
-          .setProjectNumber(ProjectNumber.of(4))
-          .setZone(CloudZone.of(REGION, 'a'))
+          .setProject(ProjectNumber.of(4))
+          .setLocation(CloudZone.of(REGION, 'a'))
           .build();
 
     } catch (StatusException e) {
@@ -96,7 +96,7 @@ public class TopicStatsClientImplTest {
 
   private static ComputeMessageStatsRequest request() {
     return ComputeMessageStatsRequest.newBuilder()
-        .setTopic(path().value())
+        .setTopic(path().toString())
         .setPartition(partition().value())
         .setStartCursor(Cursor.newBuilder().setOffset(start().value()).build())
         .setEndCursor(Cursor.newBuilder().setOffset(end().value()).build())

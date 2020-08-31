@@ -33,7 +33,7 @@ public final class PartitionLookupUtils {
     try (AdminClient client =
         AdminClient.create(
             AdminClientSettings.newBuilder()
-                .setRegion(TopicPaths.getZone(topic).region())
+                .setRegion(topic.location().location().region())
                 .build())) {;
       return numPartitions(topic, client);
     } catch (Exception e) {
@@ -67,7 +67,7 @@ public final class PartitionLookupUtils {
     try (AdminClient client =
         AdminClient.create(
             AdminClientSettings.newBuilder()
-                .setRegion(SubscriptionPaths.getZone(subscription).region())
+                .setRegion(subscription.location().location().region())
                 .build())) {
       return numPartitions(subscription, client);
     } catch (Exception e) {
@@ -83,7 +83,7 @@ public final class PartitionLookupUtils {
       throws StatusException {
     ApiFuture<Subscription> subscriptionFuture = client.getSubscription(subscription);
     try {
-      return numPartitions(TopicPath.of(subscriptionFuture.get().getTopic()), client);
+      return numPartitions(TopicPath.parse(subscriptionFuture.get().getTopic()), client);
     } catch (ExecutionException e) {
       throw ExtractStatus.toCanonical(e.getCause());
     } catch (Throwable t) {

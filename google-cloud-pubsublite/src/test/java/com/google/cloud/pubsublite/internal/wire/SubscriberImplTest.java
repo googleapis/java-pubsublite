@@ -80,11 +80,11 @@ public class SubscriberImplTest {
               InitialSubscribeRequest.newBuilder()
                   .setSubscription(
                       SubscriptionPaths.newBuilder()
-                          .setProjectNumber(ProjectNumber.of(12345))
-                          .setZone(CloudZone.of(CloudRegion.of("us-east1"), 'a'))
+                          .setProject(ProjectNumber.of(12345))
+                          .setLocation(CloudZone.of(CloudRegion.of("us-east1"), 'a'))
                           .setSubscriptionName(SubscriptionName.of("some_subscription"))
                           .build()
-                          .value())
+                          .toString())
                   .setPartition(1024))
           .build();
     } catch (StatusException e) {

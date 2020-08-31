@@ -117,12 +117,12 @@ public class ITVPCNegativeTest {
     CloudRegion cloudRegion = CloudRegion.of(CLOUD_REGION);
     CloudZone zone = CloudZone.of(cloudRegion, ZONE_ID);
     ProjectNumber projectNum = ProjectNumber.of(PROJECT_NUMBER);
-    locationPath = LocationPaths.newBuilder().setProjectNumber(projectNum).setZone(zone).build();
+    locationPath = LocationPaths.newBuilder().setProject(projectNum).setLocation(zone).build();
     TopicName topicName = TopicName.of(TOPIC_NAME);
     topicPath =
         TopicPaths.newBuilder()
-            .setZone(zone)
-            .setProjectNumber(projectNum)
+            .setLocation(zone)
+            .setProject(projectNum)
             .setTopicName(topicName)
             .build();
     topic =
@@ -132,13 +132,13 @@ public class ITVPCNegativeTest {
                 RetentionConfig.newBuilder()
                     .setPeriod(Durations.fromDays(1))
                     .setPerPartitionBytes(100 * 1024 * 1024 * 1024L))
-            .setName(topicPath.value())
+            .setName(topicPath.toString())
             .build();
     SubscriptionName subscriptionName = SubscriptionName.of(SUBSCRIPTION_NAME);
     subscriptionPath =
         SubscriptionPaths.newBuilder()
-            .setZone(zone)
-            .setProjectNumber(projectNum)
+            .setLocation(zone)
+            .setProject(projectNum)
             .setSubscriptionName(subscriptionName)
             .build();
     subscription =
@@ -146,8 +146,8 @@ public class ITVPCNegativeTest {
             .setDeliveryConfig(
                 DeliveryConfig.newBuilder()
                     .setDeliveryRequirement(DeliveryRequirement.DELIVER_AFTER_STORED))
-            .setName(subscriptionPath.value())
-            .setTopic(topicPath.value())
+            .setName(subscriptionPath.toString())
+            .setTopic(topicPath.toString())
             .build();
 
     // Instantiate an AdminClient to test with.

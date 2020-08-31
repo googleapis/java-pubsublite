@@ -16,16 +16,12 @@
 
 package com.google.cloud.pubsublite;
 
-import static com.google.cloud.pubsublite.internal.ExtractStatus.toCanonical;
-import static com.google.cloud.pubsublite.internal.Preconditions.checkArgument;
-
 import com.google.auto.value.AutoValue;
-import io.grpc.StatusException;
 
 /** Helpers for constructing valid ProjectPaths. */
 @AutoValue
 public abstract class ProjectPaths {
-  abstract ProjectNumber projectNumber();
+  abstract ProjectIdOrNumber project();
 
   /** Create a new LocationPath builder. */
   public static Builder newBuilder() {
@@ -33,37 +29,12 @@ public abstract class ProjectPaths {
   }
 
   @AutoValue.Builder
-  public abstract static class Builder {
-    /** The project number. */
-    public abstract Builder setProjectNumber(ProjectNumber number);
-
+  public abstract static class Builder extends ProjectBuilderHelper<Builder> {
     abstract ProjectPaths autoBuild();
 
-    /** Build a new ProjectPath. */
     public ProjectPath build() {
       ProjectPaths built = autoBuild();
-      return ProjectPath.of(String.format("projects/%s", built.projectNumber().value()));
-    }
-  }
-
-  private static void checkSplits(String[] splits) throws StatusException {
-    checkArgument(splits.length == 2);
-    checkArgument(splits[0].equals("projects"));
-  }
-
-  /** Check that the provided ProjectPath is valid. */
-  public static void check(ProjectPath path) throws StatusException {
-    ProjectNumber unusedProjectNumber = getProjectNumber(path);
-  }
-
-  /** Get the ProjectNumber from a ProjectPath. */
-  public static ProjectNumber getProjectNumber(ProjectPath path) throws StatusException {
-    String[] splits = path.value().split("/");
-    checkSplits(splits);
-    try {
-      return ProjectNumber.of(Long.parseLong(splits[1]));
-    } catch (NumberFormatException e) {
-      throw toCanonical(e);
+      return ProjectPath.of(built.project());
     }
   }
 }

@@ -22,9 +22,8 @@ import com.google.auto.value.AutoValue;
 import io.grpc.StatusException;
 import java.io.Serializable;
 
-/** A string wrapper for the name of a topic. */
 @AutoValue
-public abstract class TopicName implements Serializable {
+public abstract class ProjectId implements Serializable {
   public abstract String value();
 
   @Override
@@ -32,8 +31,8 @@ public abstract class TopicName implements Serializable {
     return value();
   }
 
-  public static TopicName of(String value) throws StatusException {
+  public static ProjectId of(String value) throws StatusException {
     checkArgument(!value.isEmpty());
-    return new AutoValue_TopicName(value);
+    return new AutoValue_ProjectId(value);
   }
 }

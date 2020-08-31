@@ -39,8 +39,8 @@ import org.junit.runners.JUnit4;
 public class SubscriberSettingsTest {
   SubscriptionPath getPath() throws StatusException {
     return SubscriptionPaths.newBuilder()
-        .setProjectNumber(ProjectNumber.of(56))
-        .setZone(CloudZone.parse("us-central1-a"))
+        .setProject(ProjectNumber.of(56))
+        .setLocation(CloudZone.parse("us-central1-a"))
         .setSubscriptionName(SubscriptionName.of("xyz"))
         .build();
   }

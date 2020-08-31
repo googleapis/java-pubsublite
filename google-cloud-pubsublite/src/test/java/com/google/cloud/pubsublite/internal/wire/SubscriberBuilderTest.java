@@ -45,8 +45,8 @@ public class SubscriberBuilderTest {
     SubscriberBuilder.newBuilder()
         .setSubscriptionPath(
             SubscriptionPaths.newBuilder()
-                .setZone(CloudZone.of(CloudRegion.of("us-central1"), 'a'))
-                .setProjectNumber(ProjectNumber.of(3))
+                .setLocation(CloudZone.of(CloudRegion.of("us-central1"), 'a'))
+                .setProject(ProjectNumber.of(3))
                 .setSubscriptionName(SubscriptionName.of("abc"))
                 .build())
         .setMessageConsumer(mockConsumer)

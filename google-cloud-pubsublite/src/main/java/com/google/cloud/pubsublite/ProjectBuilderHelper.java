@@ -16,24 +16,16 @@
 
 package com.google.cloud.pubsublite;
 
-import static com.google.cloud.pubsublite.internal.Preconditions.checkArgument;
+abstract class ProjectBuilderHelper<Builder extends ProjectBuilderHelper<Builder>> {
+  public abstract Builder setProject(ProjectIdOrNumber project);
 
-import com.google.auto.value.AutoValue;
-import io.grpc.StatusException;
-import java.io.Serializable;
-
-/** A string wrapper for the name of a topic. */
-@AutoValue
-public abstract class TopicName implements Serializable {
-  public abstract String value();
-
-  @Override
-  public String toString() {
-    return value();
+  public Builder setProject(ProjectId project) {
+    setProject(ProjectIdOrNumber.of(project));
+    return (Builder) this;
   }
 
-  public static TopicName of(String value) throws StatusException {
-    checkArgument(!value.isEmpty());
-    return new AutoValue_TopicName(value);
+  public Builder setProject(ProjectNumber project) {
+    setProject(ProjectIdOrNumber.of(project));
+    return (Builder) this;
   }
 }

@@ -42,8 +42,8 @@ import org.mockito.Spy;
 public class PublisherSettingsTest {
   TopicPath getPath() throws StatusException {
     return TopicPaths.newBuilder()
-        .setProjectNumber(ProjectNumber.of(56))
-        .setZone(CloudZone.parse("us-central1-a"))
+        .setProject(ProjectNumber.of(56))
+        .setLocation(CloudZone.parse("us-central1-a"))
         .setTopicName(TopicName.of("xyz"))
         .build();
   }

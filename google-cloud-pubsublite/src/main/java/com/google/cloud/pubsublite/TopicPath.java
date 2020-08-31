@@ -16,10 +16,12 @@
 
 package com.google.cloud.pubsublite;
 
-import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.cloud.pubsublite.internal.Preconditions.checkArgument;
 
 import com.google.auto.value.AutoValue;
+import io.grpc.StatusException;
 import java.io.Serializable;
+import java.util.Arrays;
 
 /**
  * A string wrapper representing a topic. Should be structured like:
@@ -28,10 +30,24 @@ import java.io.Serializable;
  */
 @AutoValue
 public abstract class TopicPath implements Serializable {
-  public abstract String value();
+  public abstract LocationPath location();
 
-  public static TopicPath of(String value) {
-    checkArgument(!value.isEmpty());
-    return new AutoValue_TopicPath(value);
+  public abstract TopicName name();
+
+  @Override
+  public String toString() {
+    return location() + "/topics/" + name();
+  }
+
+  public static TopicPath of(LocationPath location, TopicName name) {
+    return new AutoValue_TopicPath(location, name);
+  }
+
+  public static TopicPath parse(String path) throws StatusException {
+    String[] splits = path.split("/");
+    checkArgument(splits.length == 6);
+    checkArgument(splits[4].equals("topics"));
+    LocationPath location = LocationPath.parse(String.join("/", Arrays.copyOf(splits, 4)));
+    return TopicPath.of(location, TopicName.of(splits[5]));
   }
 }

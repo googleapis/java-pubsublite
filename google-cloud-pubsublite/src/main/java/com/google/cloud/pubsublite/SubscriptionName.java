@@ -20,11 +20,17 @@ import static com.google.cloud.pubsublite.internal.Preconditions.checkArgument;
 
 import com.google.auto.value.AutoValue;
 import io.grpc.StatusException;
+import java.io.Serializable;
 
 /** A string wrapper for the name of a subscription. */
 @AutoValue
-public abstract class SubscriptionName {
+public abstract class SubscriptionName implements Serializable {
   public abstract String value();
+
+  @Override
+  public String toString() {
+    return value();
+  }
 
   public static SubscriptionName of(String value) throws StatusException {
     checkArgument(!value.isEmpty());

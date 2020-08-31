@@ -77,11 +77,11 @@ public class BatchPublisherImplTest {
               InitialPublishRequest.newBuilder()
                   .setTopic(
                       TopicPaths.newBuilder()
-                          .setProjectNumber(ProjectNumber.of(1864654))
+                          .setProject(ProjectNumber.of(1864654))
                           .setTopicName(TopicName.of("some_topic"))
-                          .setZone(CloudZone.of(CloudRegion.of("us-east1"), 'a'))
+                          .setLocation(CloudZone.of(CloudRegion.of("us-east1"), 'a'))
                           .build()
-                          .value())
+                          .toString())
                   .setPartition(1024)
                   .build())
           .build();

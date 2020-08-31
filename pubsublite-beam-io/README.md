@@ -27,9 +27,9 @@
     messages.apply("Write messages", PubsubLiteIO.write(
         PublisherOptions.newBuilder()
             .setTopicPath(TopicPaths.newBuilder()
-                .setZone(CloudZone.parse(ZONE))
+                .setLocation(CloudZone.parse(ZONE))
                 .setProject(ProjectNumber.of(PROJECT_NUM))
-                .setTopicName(TopicName.of("my-topic"))
+                .setName(TopicName.of("my-topic"))
                 .build())
             .build()));
     ```
@@ -53,9 +53,9 @@
     PCollection<SequencedMessage> messages = pipeline.apply("Read messages", PubsubLiteIO.read(
         SubscriberOptions.newBuilder()
             .setSubscriptionPath(SubscriptionPaths.newBuilder()
-                .setZone(CloudZone.parse(ZONE))
+                .setLocation(CloudZone.parse(ZONE))
                 .setProject(ProjectNumber.of(PROJECT_NUM))
-                .setTopicName(SubscriptionName.of("my-sub"))
+                .setName(SubscriptionName.of("my-sub"))
                 .build())
             .setFlowControlSettings(FlowControlSettings.builder()
                 .setBytesOutstanding(100_000_000)  // 100 MB

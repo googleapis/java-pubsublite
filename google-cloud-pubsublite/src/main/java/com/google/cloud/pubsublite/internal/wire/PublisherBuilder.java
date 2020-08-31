@@ -22,9 +22,9 @@ import com.google.auto.value.AutoValue;
 import com.google.cloud.pubsublite.Constants;
 import com.google.cloud.pubsublite.Offset;
 import com.google.cloud.pubsublite.Partition;
+import com.google.cloud.pubsublite.ProjectLookupUtils;
 import com.google.cloud.pubsublite.Stubs;
 import com.google.cloud.pubsublite.TopicPath;
-import com.google.cloud.pubsublite.TopicPaths;
 import com.google.cloud.pubsublite.internal.Publisher;
 import com.google.cloud.pubsublite.proto.InitialPublishRequest;
 import com.google.cloud.pubsublite.proto.PublisherServiceGrpc;
@@ -42,9 +42,9 @@ import org.threeten.bp.Duration;
  * Publisher<Offset> publisher = PublisherBuilder.builder()
  *   .setTopic(
  *     TopicPaths.newBuilder()
- *       .setProjectNumber(MY_PROJECT)
+ *       .setProject(MY_PROJECT)
  *       .setTopicName(MY_TOPIC)
- *       .setZone(CloudZone.of("us-east1-a"))
+ *       .setLocation(CloudZone.of("us-east1-a"))
  *       .build())
  *  .setPartition(Partition.of(10))
  *  .build();
@@ -108,14 +108,14 @@ public abstract class PublisherBuilder {
           autoBuilt.stub().isPresent()
               ? autoBuilt.stub().get()
               : Stubs.defaultStub(
-                  TopicPaths.getZone(autoBuilt.topic()).region(), PublisherServiceGrpc::newStub);
+                  autoBuilt.topic().location().location().region(), PublisherServiceGrpc::newStub);
       Metadata metadata = autoBuilt.context().getMetadata();
       metadata.merge(RoutingMetadata.of(autoBuilt.topic(), autoBuilt.partition()));
       actualStub = MetadataUtils.attachHeaders(actualStub, metadata);
       return new PublisherImpl(
           actualStub,
           InitialPublishRequest.newBuilder()
-              .setTopic(autoBuilt.topic().value())
+              .setTopic(ProjectLookupUtils.toCannonical(autoBuilt.topic()).toString())
               .setPartition(autoBuilt.partition().value())
               .build(),
           validateBatchingSettings(autoBuilt.batching()));

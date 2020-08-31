@@ -20,6 +20,7 @@ import static com.google.cloud.pubsublite.internal.Preconditions.checkArgument;
 
 import com.google.auto.value.AutoValue;
 import io.grpc.StatusException;
+import java.io.Serializable;
 
 /**
  * A wrapper class for the <a
@@ -27,7 +28,7 @@ import io.grpc.StatusException;
  * number</a>.
  */
 @AutoValue
-public abstract class ProjectNumber {
+public abstract class ProjectNumber implements Serializable {
   /** The long value of this project number. */
   public abstract long value();
 

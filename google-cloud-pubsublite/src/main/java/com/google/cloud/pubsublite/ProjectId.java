@@ -20,9 +20,10 @@ import static com.google.cloud.pubsublite.internal.Preconditions.checkArgument;
 
 import com.google.auto.value.AutoValue;
 import io.grpc.StatusException;
+import java.io.Serializable;
 
 @AutoValue
-public abstract class ProjectId {
+public abstract class ProjectId implements Serializable {
   public abstract String value();
 
   @Override

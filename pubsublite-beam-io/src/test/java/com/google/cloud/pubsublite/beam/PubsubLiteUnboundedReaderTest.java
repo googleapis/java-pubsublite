@@ -247,8 +247,7 @@ public class PubsubLiteUnboundedReaderTest {
 
   @Test
   public void splitBacklogBytes_returnsUnknownBacklogOnError() throws Exception {
-    when(backlogReader.computeMessageStats(
-            ImmutableMap.of(Partition.of(5), Offset.of(0), Partition.of(8), Offset.of(0))))
+    when(backlogReader.computeMessageStats(ImmutableMap.of()))
         .thenReturn(ApiFutures.immediateFailedFuture(new StatusException(Status.UNAVAILABLE)));
     Assert.assertEquals(PubsubLiteUnboundedReader.BACKLOG_UNKNOWN, reader.getSplitBacklogBytes());
   }
@@ -257,8 +256,7 @@ public class PubsubLiteUnboundedReaderTest {
   public void splitBacklogBytes_computesBacklog() throws Exception {
     ComputeMessageStatsResponse response =
         ComputeMessageStatsResponse.newBuilder().setMessageBytes(40).build();
-    when(backlogReader.computeMessageStats(
-            ImmutableMap.of(Partition.of(5), Offset.of(0), Partition.of(8), Offset.of(0))))
+    when(backlogReader.computeMessageStats(ImmutableMap.of()))
         .thenReturn(ApiFutures.immediateFuture(response));
     Assert.assertEquals(response.getMessageBytes(), reader.getSplitBacklogBytes());
   }
@@ -270,8 +268,7 @@ public class PubsubLiteUnboundedReaderTest {
     ComputeMessageStatsResponse response2 =
         ComputeMessageStatsResponse.newBuilder().setMessageBytes(50).build();
 
-    when(backlogReader.computeMessageStats(
-            ImmutableMap.of(Partition.of(5), Offset.of(0), Partition.of(8), Offset.of(0))))
+    when(backlogReader.computeMessageStats(ImmutableMap.of()))
         .thenReturn(ApiFutures.immediateFuture(response1), ApiFutures.immediateFuture(response2));
 
     Assert.assertEquals(response1.getMessageBytes(), reader.getSplitBacklogBytes());
@@ -286,8 +283,7 @@ public class PubsubLiteUnboundedReaderTest {
     ComputeMessageStatsResponse response =
         ComputeMessageStatsResponse.newBuilder().setMessageBytes(40).build();
 
-    when(backlogReader.computeMessageStats(
-            ImmutableMap.of(Partition.of(5), Offset.of(0), Partition.of(8), Offset.of(0))))
+    when(backlogReader.computeMessageStats(ImmutableMap.of()))
         .thenReturn(
             ApiFutures.immediateFuture(response),
             ApiFutures.immediateFailedFuture(new StatusException(Status.UNAVAILABLE)));

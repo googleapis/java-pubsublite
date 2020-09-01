@@ -135,7 +135,7 @@ class PubsubLiteUnboundedReader extends UnboundedReader<SequencedMessage>
     try (CloseableMonitor.Hold h = monitor.enter()) {
       subscriberMap.forEach(
           (partition, subscriberState) ->
-              builder.put(partition, subscriberState.lastDelivered.orElse(Offset.of(0))));
+              subscriberState.lastDelivered.ifPresent(offset -> builder.put(partition, offset)));
     }
     return backlogReader.computeMessageStats(builder.build());
   }
@@ -304,9 +304,6 @@ class PubsubLiteUnboundedReader extends UnboundedReader<SequencedMessage>
       logger.warn(
           "Failed to retrieve backlog information, reporting the backlog size as UNKNOWN: {}",
           e.getCause().getMessage());
-      if (e.getCause() instanceof InterruptedException) {
-        Thread.currentThread().interrupt();
-      }
       return BACKLOG_UNKNOWN;
     }
   }

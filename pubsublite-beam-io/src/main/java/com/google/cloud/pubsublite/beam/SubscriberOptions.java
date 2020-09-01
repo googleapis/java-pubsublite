@@ -22,7 +22,6 @@ import com.google.cloud.pubsublite.AdminClientSettings;
 import com.google.cloud.pubsublite.Partition;
 import com.google.cloud.pubsublite.PartitionLookupUtils;
 import com.google.cloud.pubsublite.SubscriptionPath;
-import com.google.cloud.pubsublite.SubscriptionPaths;
 import com.google.cloud.pubsublite.TopicPath;
 import com.google.cloud.pubsublite.cloudpubsub.FlowControlSettings;
 import com.google.cloud.pubsublite.internal.ExtractStatus;
@@ -78,8 +77,6 @@ public abstract class SubscriberOptions implements Serializable {
    * useful for testing.
    */
   abstract Optional<SerializableSupplier<Committer>> committerSupplier();
-
-
 
   public static Builder newBuilder() {
     Builder builder = new AutoValue_SubscriberOptions.Builder();
@@ -153,7 +150,6 @@ public abstract class SubscriberOptions implements Serializable {
 
     abstract Builder setCommitterSupplier(SerializableSupplier<Committer> committerSupplier);
 
-
     // Used for implementing build();
     abstract SubscriptionPath subscriptionPath();
 
@@ -167,14 +163,13 @@ public abstract class SubscriberOptions implements Serializable {
       if (!partitions().isEmpty() && topicBacklogReader().isPresent()) {
         return autoBuild();
       }
-      AdminClient adminClient =
+      TopicPath path;
+      try (AdminClient adminClient =
           AdminClient.create(
               AdminClientSettings.newBuilder()
-                  .setRegion(SubscriptionPaths.getZone(subscriptionPath()).region())
-                  .build());
-      TopicPath path;
-      try {
-        path = TopicPath.of(adminClient.getSubscription(subscriptionPath()).get().getTopic());
+                  .setRegion(subscriptionPath().location().location().region())
+                  .build())) {
+        path = TopicPath.parse(adminClient.getSubscription(subscriptionPath()).get().getTopic());
       } catch (ExecutionException e) {
         throw ExtractStatus.toCanonical(e.getCause());
       } catch (Throwable t) {

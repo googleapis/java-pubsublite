@@ -77,12 +77,13 @@
       <groupId>com.google.api.grpc</groupId>
       <artifactId>proto-google-cloud-pubsub-v1</artifactId>
     </dependency>
+    <!--test dependencies-->
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-api</artifactId>
       <version>1.7.30</version>
+      <scope>test</scope>
     </dependency>
-    <!--test dependencies-->
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>

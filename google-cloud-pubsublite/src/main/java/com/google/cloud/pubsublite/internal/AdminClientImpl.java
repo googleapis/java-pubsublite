@@ -105,7 +105,7 @@ public class AdminClientImpl extends BackgroundResourceAggregation implements Ad
           TopicPath path = ProjectLookupUtils.toCannonical(TopicPath.parse(topic.getName()));
           return stub.createTopic(
               CreateTopicRequest.newBuilder()
-                  .setParent(path.location().toString())
+                  .setParent(path.locationPath().toString())
                   .setTopic(topic)
                   .setTopicId(path.name().value())
                   .build());
@@ -139,13 +139,11 @@ public class AdminClientImpl extends BackgroundResourceAggregation implements Ad
   @Override
   public ApiFuture<List<Topic>> listTopics(LocationPath path) {
     return RetryingExecutorUtil.runWithRetries(
-        () -> {
-          return stub.listTopics(
-                  ListTopicsRequest.newBuilder()
-                      .setParent(ProjectLookupUtils.toCannonical(path).toString())
-                      .build())
-              .getTopicsList();
-        },
+        () -> stub.listTopics(
+                ListTopicsRequest.newBuilder()
+                    .setParent(ProjectLookupUtils.toCannonical(path).toString())
+                    .build())
+            .getTopicsList(),
         listTopicsRetryingExecutor);
   }
 
@@ -206,7 +204,7 @@ public class AdminClientImpl extends BackgroundResourceAggregation implements Ad
               ProjectLookupUtils.toCannonical(SubscriptionPath.parse(subscription.getName()));
           return stub.createSubscription(
               CreateSubscriptionRequest.newBuilder()
-                  .setParent(path.location().toString())
+                  .setParent(path.locationPath().toString())
                   .setSubscription(subscription)
                   .setSubscriptionId(path.name().toString())
                   .build());
@@ -228,13 +226,11 @@ public class AdminClientImpl extends BackgroundResourceAggregation implements Ad
   @Override
   public ApiFuture<List<Subscription>> listSubscriptions(LocationPath path) {
     return RetryingExecutorUtil.runWithRetries(
-        () -> {
-          return stub.listSubscriptions(
-                  ListSubscriptionsRequest.newBuilder()
-                      .setParent(ProjectLookupUtils.toCannonical(path).toString())
-                      .build())
-              .getSubscriptionsList();
-        },
+        () -> stub.listSubscriptions(
+                ListSubscriptionsRequest.newBuilder()
+                    .setParent(ProjectLookupUtils.toCannonical(path).toString())
+                    .build())
+            .getSubscriptionsList(),
         listSubscriptionsRetryingExecutor);
   }
 

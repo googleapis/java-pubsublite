@@ -31,7 +31,7 @@ import com.google.cloud.pubsublite.CloudZone;
 import com.google.cloud.pubsublite.Offset;
 import com.google.cloud.pubsublite.ProjectNumber;
 import com.google.cloud.pubsublite.TopicName;
-import com.google.cloud.pubsublite.TopicPaths;
+import com.google.cloud.pubsublite.TopicPath;
 import com.google.cloud.pubsublite.internal.StatusExceptionMatcher;
 import com.google.cloud.pubsublite.proto.Cursor;
 import com.google.cloud.pubsublite.proto.InitialPublishRequest;
@@ -76,9 +76,9 @@ public class BatchPublisherImplTest {
           .setInitialRequest(
               InitialPublishRequest.newBuilder()
                   .setTopic(
-                      TopicPaths.newBuilder()
+                      TopicPath.newBuilder()
                           .setProject(ProjectNumber.of(1864654))
-                          .setTopicName(TopicName.of("some_topic"))
+                          .setName(TopicName.of("some_topic"))
                           .setLocation(CloudZone.of(CloudRegion.of("us-east1"), 'a'))
                           .build()
                           .toString())

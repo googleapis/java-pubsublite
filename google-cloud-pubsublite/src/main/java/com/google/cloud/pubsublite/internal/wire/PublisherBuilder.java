@@ -41,9 +41,9 @@ import org.threeten.bp.Duration;
  * <pre>{@code
  * Publisher<Offset> publisher = PublisherBuilder.builder()
  *   .setTopic(
- *     TopicPaths.newBuilder()
+ *     TopicPath.newBuilder()
  *       .setProject(MY_PROJECT)
- *       .setTopicName(MY_TOPIC)
+ *       .setName(MY_TOPIC)
  *       .setLocation(CloudZone.of("us-east1-a"))
  *       .build())
  *  .setPartition(Partition.of(10))
@@ -108,7 +108,7 @@ public abstract class PublisherBuilder {
           autoBuilt.stub().isPresent()
               ? autoBuilt.stub().get()
               : Stubs.defaultStub(
-                  autoBuilt.topic().location().location().region(), PublisherServiceGrpc::newStub);
+                  autoBuilt.topic().location().region(), PublisherServiceGrpc::newStub);
       Metadata metadata = autoBuilt.context().getMetadata();
       metadata.merge(RoutingMetadata.of(autoBuilt.topic(), autoBuilt.partition()));
       actualStub = MetadataUtils.attachHeaders(actualStub, metadata);

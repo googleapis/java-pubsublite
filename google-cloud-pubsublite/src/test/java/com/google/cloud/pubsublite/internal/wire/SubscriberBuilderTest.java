@@ -25,7 +25,7 @@ import com.google.cloud.pubsublite.Partition;
 import com.google.cloud.pubsublite.ProjectNumber;
 import com.google.cloud.pubsublite.SequencedMessage;
 import com.google.cloud.pubsublite.SubscriptionName;
-import com.google.cloud.pubsublite.SubscriptionPaths;
+import com.google.cloud.pubsublite.SubscriptionPath;
 import com.google.cloud.pubsublite.proto.SubscriberServiceGrpc;
 import com.google.common.collect.ImmutableList;
 import io.grpc.Channel;
@@ -44,10 +44,10 @@ public class SubscriberBuilderTest {
     initMocks(this);
     SubscriberBuilder.newBuilder()
         .setSubscriptionPath(
-            SubscriptionPaths.newBuilder()
+            SubscriptionPath.newBuilder()
                 .setLocation(CloudZone.of(CloudRegion.of("us-central1"), 'a'))
                 .setProject(ProjectNumber.of(3))
-                .setSubscriptionName(SubscriptionName.of("abc"))
+                .setName(SubscriptionName.of("abc"))
                 .build())
         .setMessageConsumer(mockConsumer)
         .setPartition(Partition.of(3))

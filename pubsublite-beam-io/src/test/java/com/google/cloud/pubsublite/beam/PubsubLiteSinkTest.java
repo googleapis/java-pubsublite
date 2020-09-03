@@ -37,7 +37,7 @@ import com.google.cloud.pubsublite.Partition;
 import com.google.cloud.pubsublite.ProjectNumber;
 import com.google.cloud.pubsublite.PublishMetadata;
 import com.google.cloud.pubsublite.TopicName;
-import com.google.cloud.pubsublite.TopicPaths;
+import com.google.cloud.pubsublite.TopicPath;
 import com.google.cloud.pubsublite.internal.ExtractStatus;
 import com.google.cloud.pubsublite.internal.FakeApiService;
 import com.google.cloud.pubsublite.internal.Publisher;
@@ -78,9 +78,9 @@ public class PubsubLiteSinkTest {
     try {
       return PublisherOptions.newBuilder()
           .setTopicPath(
-              TopicPaths.newBuilder()
+              TopicPath.newBuilder()
                   .setProject(ProjectNumber.of(9))
-                  .setTopicName(TopicName.of("abc"))
+                  .setName(TopicName.of("abc"))
                   .setLocation(CloudZone.of(CloudRegion.of("us-east1"), 'a'))
                   .build())
           .build();

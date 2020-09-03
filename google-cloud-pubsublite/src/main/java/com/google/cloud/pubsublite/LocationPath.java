@@ -26,17 +26,31 @@ import java.util.Arrays;
 /** A string wrapper representing a project and location. */
 @AutoValue
 public abstract class LocationPath implements Serializable {
-  public abstract ProjectPath project();
+  public abstract ProjectIdOrNumber project();
 
   public abstract CloudZone location();
 
-  @Override
-  public String toString() {
-    return project() + "/locations/" + location();
+  public ProjectPath projectPath() {
+    return ProjectPath.newBuilder().setProject(project()).build();
   }
 
-  public static LocationPath of(ProjectPath project, CloudZone zone) {
-    return new AutoValue_LocationPath(project, zone);
+  @Override
+  public String toString() {
+    return projectPath() + "/locations/" + location();
+  }
+
+  /** Create a new LocationPath builder. */
+  public static Builder newBuilder() {
+    return new AutoValue_LocationPath.Builder();
+  }
+
+  public abstract Builder toBuilder();
+
+  @AutoValue.Builder
+  public abstract static class Builder extends ProjectBuilderHelper<Builder> {
+    public abstract Builder setLocation(CloudZone zone);
+
+    public abstract LocationPath build();
   }
 
   /**
@@ -49,6 +63,9 @@ public abstract class LocationPath implements Serializable {
     checkArgument(splits.length == 4);
     checkArgument(splits[2].equals("locations"));
     ProjectPath project = ProjectPath.parse(String.join("/", Arrays.copyOf(splits, 2)));
-    return LocationPath.of(project, CloudZone.parse(splits[3]));
+    return LocationPath.newBuilder()
+        .setProject(project.project())
+        .setLocation(CloudZone.parse(splits[3]))
+        .build();
   }
 }

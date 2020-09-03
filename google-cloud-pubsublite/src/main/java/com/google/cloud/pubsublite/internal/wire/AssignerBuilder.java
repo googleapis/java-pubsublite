@@ -67,7 +67,7 @@ public abstract class AssignerBuilder {
       } else {
         stub =
             Stubs.defaultStub(
-                builder.subscriptionPath().location().location().region(),
+                builder.subscriptionPath().location().region(),
                 PartitionAssignmentServiceGrpc::newStub);
       }
 

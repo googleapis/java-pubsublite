@@ -36,7 +36,6 @@ import com.google.cloud.pubsublite.Partition;
 import com.google.cloud.pubsublite.ProjectNumber;
 import com.google.cloud.pubsublite.TopicName;
 import com.google.cloud.pubsublite.TopicPath;
-import com.google.cloud.pubsublite.TopicPaths;
 import com.google.cloud.pubsublite.proto.ComputeMessageStatsRequest;
 import com.google.cloud.pubsublite.proto.ComputeMessageStatsResponse;
 import com.google.cloud.pubsublite.proto.Cursor;
@@ -67,8 +66,8 @@ public class TopicStatsClientImplTest {
 
   private static TopicPath path() {
     try {
-      return TopicPaths.newBuilder()
-          .setTopicName(TopicName.of("a"))
+      return TopicPath.newBuilder()
+          .setName(TopicName.of("a"))
           .setProject(ProjectNumber.of(4))
           .setLocation(CloudZone.of(REGION, 'a'))
           .build();

@@ -24,7 +24,6 @@ import com.google.cloud.pubsublite.Partition;
 import com.google.cloud.pubsublite.ProjectNumber;
 import com.google.cloud.pubsublite.SubscriptionName;
 import com.google.cloud.pubsublite.SubscriptionPath;
-import com.google.cloud.pubsublite.SubscriptionPaths;
 import com.google.cloud.pubsublite.proto.CursorServiceGrpc;
 import com.google.cloud.pubsublite.proto.PartitionAssignmentServiceGrpc;
 import com.google.cloud.pubsublite.proto.SubscriberServiceGrpc;
@@ -38,10 +37,10 @@ import org.junit.runners.JUnit4;
 @RunWith(JUnit4.class)
 public class SubscriberSettingsTest {
   SubscriptionPath getPath() throws StatusException {
-    return SubscriptionPaths.newBuilder()
+    return SubscriptionPath.newBuilder()
         .setProject(ProjectNumber.of(56))
         .setLocation(CloudZone.parse("us-central1-a"))
-        .setSubscriptionName(SubscriptionName.of("xyz"))
+        .setName(SubscriptionName.of("xyz"))
         .build();
   }
 

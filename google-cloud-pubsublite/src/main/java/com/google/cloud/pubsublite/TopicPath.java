@@ -30,17 +30,36 @@ import java.util.Arrays;
  */
 @AutoValue
 public abstract class TopicPath implements Serializable {
-  public abstract LocationPath location();
+  public abstract ProjectIdOrNumber project();
+
+  public abstract CloudZone location();
 
   public abstract TopicName name();
 
-  @Override
-  public String toString() {
-    return location() + "/topics/" + name();
+  public LocationPath locationPath() {
+    return LocationPath.newBuilder().setProject(project()).setLocation(location()).build();
   }
 
-  public static TopicPath of(LocationPath location, TopicName name) {
-    return new AutoValue_TopicPath(location, name);
+  @Override
+  public String toString() {
+    return locationPath() + "/topics/" + name();
+  }
+
+  /** Create a new TopicPath builder. */
+  public static Builder newBuilder() {
+    return new AutoValue_TopicPath.Builder();
+  }
+
+  public abstract Builder toBuilder();
+
+  @AutoValue.Builder
+  public abstract static class Builder extends ProjectBuilderHelper<Builder> {
+    public abstract Builder setLocation(CloudZone zone);
+
+    public abstract Builder setName(TopicName name);
+
+    /** Build a new TopicPath. */
+    public abstract TopicPath build();
   }
 
   public static TopicPath parse(String path) throws StatusException {
@@ -48,6 +67,10 @@ public abstract class TopicPath implements Serializable {
     checkArgument(splits.length == 6);
     checkArgument(splits[4].equals("topics"));
     LocationPath location = LocationPath.parse(String.join("/", Arrays.copyOf(splits, 4)));
-    return TopicPath.of(location, TopicName.of(splits[5]));
+    return TopicPath.newBuilder()
+        .setProject(location.project())
+        .setLocation(location.location())
+        .setName(TopicName.of(splits[5]))
+        .build();
   }
 }

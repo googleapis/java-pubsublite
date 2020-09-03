@@ -23,7 +23,7 @@ import com.google.cloud.pubsublite.CloudZone;
 import com.google.cloud.pubsublite.Partition;
 import com.google.cloud.pubsublite.ProjectNumber;
 import com.google.cloud.pubsublite.SubscriptionName;
-import com.google.cloud.pubsublite.SubscriptionPaths;
+import com.google.cloud.pubsublite.SubscriptionPath;
 import com.google.cloud.pubsublite.proto.CursorServiceGrpc;
 import io.grpc.Channel;
 import org.junit.Test;
@@ -36,10 +36,10 @@ public class CommitterBuilderTest {
   public void testBuilder() throws Exception {
     CommitterBuilder.newBuilder()
         .setSubscriptionPath(
-            SubscriptionPaths.newBuilder()
+            SubscriptionPath.newBuilder()
                 .setLocation(CloudZone.of(CloudRegion.of("us-central1"), 'a'))
                 .setProject(ProjectNumber.of(3))
-                .setSubscriptionName(SubscriptionName.of("abc"))
+                .setName(SubscriptionName.of("abc"))
                 .build())
         .setPartition(Partition.of(987))
         .setCursorStub(CursorServiceGrpc.newStub(mock(Channel.class)))

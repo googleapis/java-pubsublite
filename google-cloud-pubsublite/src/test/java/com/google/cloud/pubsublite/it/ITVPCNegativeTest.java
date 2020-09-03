@@ -29,15 +29,12 @@ import com.google.cloud.pubsublite.AdminClientSettings;
 import com.google.cloud.pubsublite.CloudRegion;
 import com.google.cloud.pubsublite.CloudZone;
 import com.google.cloud.pubsublite.LocationPath;
-import com.google.cloud.pubsublite.LocationPaths;
 import com.google.cloud.pubsublite.Partition;
 import com.google.cloud.pubsublite.ProjectNumber;
 import com.google.cloud.pubsublite.SubscriptionName;
 import com.google.cloud.pubsublite.SubscriptionPath;
-import com.google.cloud.pubsublite.SubscriptionPaths;
 import com.google.cloud.pubsublite.TopicName;
 import com.google.cloud.pubsublite.TopicPath;
-import com.google.cloud.pubsublite.TopicPaths;
 import com.google.cloud.pubsublite.cloudpubsub.FlowControlSettings;
 import com.google.cloud.pubsublite.cloudpubsub.Publisher;
 import com.google.cloud.pubsublite.cloudpubsub.PublisherSettings;
@@ -117,14 +114,10 @@ public class ITVPCNegativeTest {
     CloudRegion cloudRegion = CloudRegion.of(CLOUD_REGION);
     CloudZone zone = CloudZone.of(cloudRegion, ZONE_ID);
     ProjectNumber projectNum = ProjectNumber.of(PROJECT_NUMBER);
-    locationPath = LocationPaths.newBuilder().setProject(projectNum).setLocation(zone).build();
+    locationPath = LocationPath.newBuilder().setProject(projectNum).setLocation(zone).build();
     TopicName topicName = TopicName.of(TOPIC_NAME);
     topicPath =
-        TopicPaths.newBuilder()
-            .setLocation(zone)
-            .setProject(projectNum)
-            .setTopicName(topicName)
-            .build();
+        TopicPath.newBuilder().setLocation(zone).setProject(projectNum).setName(topicName).build();
     topic =
         Topic.newBuilder()
             .setPartitionConfig(PartitionConfig.newBuilder().setScale(1).setCount(PARTITIONS))
@@ -136,10 +129,10 @@ public class ITVPCNegativeTest {
             .build();
     SubscriptionName subscriptionName = SubscriptionName.of(SUBSCRIPTION_NAME);
     subscriptionPath =
-        SubscriptionPaths.newBuilder()
+        SubscriptionPath.newBuilder()
             .setLocation(zone)
             .setProject(projectNum)
-            .setSubscriptionName(subscriptionName)
+            .setName(subscriptionName)
             .build();
     subscription =
         Subscription.newBuilder()

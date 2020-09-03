@@ -30,7 +30,7 @@ import com.google.cloud.pubsublite.CloudZone;
 import com.google.cloud.pubsublite.Offset;
 import com.google.cloud.pubsublite.ProjectNumber;
 import com.google.cloud.pubsublite.SubscriptionName;
-import com.google.cloud.pubsublite.SubscriptionPaths;
+import com.google.cloud.pubsublite.SubscriptionPath;
 import com.google.cloud.pubsublite.internal.StatusExceptionMatcher;
 import com.google.cloud.pubsublite.proto.Cursor;
 import com.google.cloud.pubsublite.proto.CursorServiceGrpc;
@@ -68,10 +68,10 @@ public class ConnectedCommitterImplTest {
           .setInitial(
               InitialCommitCursorRequest.newBuilder()
                   .setSubscription(
-                      SubscriptionPaths.newBuilder()
+                      SubscriptionPath.newBuilder()
                           .setProject(ProjectNumber.of(12345))
                           .setLocation(CloudZone.of(CloudRegion.of("us-east1"), 'a'))
-                          .setSubscriptionName(SubscriptionName.of("some_subscription"))
+                          .setName(SubscriptionName.of("some_subscription"))
                           .build()
                           .toString())
                   .setPartition(1024))

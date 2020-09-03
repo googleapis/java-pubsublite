@@ -36,24 +36,24 @@ public class ProjectLookupUtils {
     }
   }
 
-  public static ProjectPath toCannonical(ProjectPath project) throws StatusException {
-    if (project.project().getKind() == Kind.NUMBER) return project;
-    return ProjectPath.of(ProjectIdOrNumber.of(getProjectNumber(project.project().name())));
+  static ProjectNumber toCannonical(ProjectIdOrNumber project) throws StatusException {
+    if (project.getKind() == Kind.NUMBER) return project.number();
+    return getProjectNumber(project.name());
   }
 
-  public static LocationPath toCannonical(LocationPath location) throws StatusException {
-    ProjectPath canonicalProject = toCannonical(location.project());
-    return LocationPath.of(canonicalProject, location.location());
+  public static ProjectPath toCannonical(ProjectPath path) throws StatusException {
+    return path.toBuilder().setProject(toCannonical(path.project())).build();
   }
 
-  public static SubscriptionPath toCannonical(SubscriptionPath subscription)
-      throws StatusException {
-    LocationPath canonicalLocation = toCannonical(subscription.location());
-    return SubscriptionPath.of(canonicalLocation, subscription.name());
+  public static LocationPath toCannonical(LocationPath path) throws StatusException {
+    return path.toBuilder().setProject(toCannonical(path.project())).build();
   }
 
-  public static TopicPath toCannonical(TopicPath topic) throws StatusException {
-    LocationPath canonicalLocation = toCannonical(topic.location());
-    return TopicPath.of(canonicalLocation, topic.name());
+  public static SubscriptionPath toCannonical(SubscriptionPath path) throws StatusException {
+    return path.toBuilder().setProject(toCannonical(path.project())).build();
+  }
+
+  public static TopicPath toCannonical(TopicPath path) throws StatusException {
+    return path.toBuilder().setProject(toCannonical(path.project())).build();
   }
 }

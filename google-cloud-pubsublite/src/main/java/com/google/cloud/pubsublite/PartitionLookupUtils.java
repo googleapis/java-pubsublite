@@ -32,7 +32,7 @@ public final class PartitionLookupUtils {
   public static int numPartitions(TopicPath topic) throws StatusException {
     try (AdminClient client =
         AdminClient.create(
-            AdminClientSettings.newBuilder().setRegion(topic.location().region()).build())) {;
+            AdminClientSettings.newBuilder().setRegion(topic.location().region()).build())) {
       return numPartitions(topic, client);
     } catch (Exception e) {
       throw ExtractStatus.toCanonical(e);

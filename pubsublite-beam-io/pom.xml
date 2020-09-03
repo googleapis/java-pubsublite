@@ -77,11 +77,17 @@
       <groupId>com.google.api.grpc</groupId>
       <artifactId>proto-google-cloud-pubsub-v1</artifactId>
     </dependency>
+    <dependency>
+      <groupId>com.google.flogger</groupId>
+      <artifactId>google-extensions</artifactId>
+      <version>0.5.1</version>
+    </dependency>
+
     <!--test dependencies-->
     <dependency>
-      <groupId>org.slf4j</groupId>
-      <artifactId>slf4j-api</artifactId>
-      <version>1.7.30</version>
+      <groupId>com.google.flogger</groupId>
+      <artifactId>flogger-system-backend</artifactId>
+      <version>0.5.1</version>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -137,6 +143,7 @@
             <ignoredUnusedDeclaredDependencies>
               <ignoredUnusedDeclaredDependency>org.hamcrest:hamcrest</ignoredUnusedDeclaredDependency>
               <ignoredUnusedDeclaredDependency>io.grpc:grpc-testing</ignoredUnusedDeclaredDependency>
+              <ignoredUnusedDeclaredDependency>com.google.flogger:flogger-system-backend</ignoredUnusedDeclaredDependency>
               <ignoredUnusedDeclaredDependency>org.apache.beam:beam-runners-direct-java</ignoredUnusedDeclaredDependency>
               <ignoredUnusedDeclaredDependency>javax.annotation:javax.annotation-api</ignoredUnusedDeclaredDependency>
             </ignoredUnusedDeclaredDependencies>

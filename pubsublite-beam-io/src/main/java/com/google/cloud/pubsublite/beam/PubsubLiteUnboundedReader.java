@@ -31,6 +31,7 @@ import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.flogger.GoogleLogger;
 import com.google.errorprone.annotations.concurrent.GuardedBy;
 import com.google.protobuf.Timestamp;
 import com.google.protobuf.util.Timestamps;
@@ -54,12 +55,10 @@ import org.apache.beam.sdk.io.UnboundedSource.CheckpointMark;
 import org.apache.beam.sdk.io.UnboundedSource.UnboundedReader;
 import org.apache.beam.sdk.transforms.windowing.BoundedWindow;
 import org.joda.time.Instant;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 class PubsubLiteUnboundedReader extends UnboundedReader<SequencedMessage>
     implements OffsetFinalizer {
-  private static final Logger logger = LoggerFactory.getLogger(PubsubLiteUnboundedReader.class);
+  private static final GoogleLogger logger = GoogleLogger.forEnclosingClass();
   private final UnboundedSource<SequencedMessage, ?> source;
   private final TopicBacklogReader backlogReader;
   private final LoadingCache<String, Long> backlogCache;
@@ -301,7 +300,7 @@ class PubsubLiteUnboundedReader extends UnboundedReader<SequencedMessage>
       // and expire the value after a maximum staleness, but there is only ever one key.
       return backlogCache.get("Backlog");
     } catch (ExecutionException e) {
-      logger.warn(
+      logger.atWarning().log(
           "Failed to retrieve backlog information, reporting the backlog size as UNKNOWN: {}",
           e.getCause().getMessage());
       return BACKLOG_UNKNOWN;

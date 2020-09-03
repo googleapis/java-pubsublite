@@ -32,8 +32,16 @@ public abstract class ProjectPath implements Serializable {
     return "projects/" + project();
   }
 
-  public static ProjectPath of(ProjectIdOrNumber value) {
-    return new AutoValue_ProjectPath(value);
+  /** Create a new ProjectPath builder. */
+  public static Builder newBuilder() {
+    return new AutoValue_ProjectPath.Builder();
+  }
+
+  public abstract Builder toBuilder();
+
+  @AutoValue.Builder
+  public abstract static class Builder extends ProjectBuilderHelper<Builder> {
+    public abstract ProjectPath build();
   }
 
   /**
@@ -47,11 +55,12 @@ public abstract class ProjectPath implements Serializable {
     checkArgument(splits[0].equals("projects"));
     checkArgument(!splits[1].isEmpty());
     try {
-      return ProjectPath.of(ProjectIdOrNumber.of(ProjectNumber.of(Long.parseLong(splits[1]))));
+      long val = Long.parseLong(splits[1]);
+      return ProjectPath.newBuilder().setProject(ProjectNumber.of(val)).build();
     } catch (NumberFormatException e) {
       // Pass, treat as a name. Project ids must start with a letter.
       // https://cloud.google.com/resource-manager/docs/creating-managing-projects#before_you_begin
     }
-    return ProjectPath.of(ProjectIdOrNumber.of(ProjectId.of(splits[1])));
+    return ProjectPath.newBuilder().setProject(ProjectId.of(splits[1])).build();
   }
 }

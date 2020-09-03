@@ -63,8 +63,7 @@ public abstract class CommitterBuilder {
       } else {
         cursorStub =
             Stubs.defaultStub(
-                builder.subscriptionPath().location().location().region(),
-                CursorServiceGrpc::newStub);
+                builder.subscriptionPath().location().region(), CursorServiceGrpc::newStub);
       }
 
       InitialCommitCursorRequest initialCommitCursorRequest =

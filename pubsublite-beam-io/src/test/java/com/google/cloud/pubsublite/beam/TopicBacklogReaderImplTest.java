@@ -26,7 +26,6 @@ import com.google.cloud.pubsublite.Partition;
 import com.google.cloud.pubsublite.ProjectNumber;
 import com.google.cloud.pubsublite.TopicName;
 import com.google.cloud.pubsublite.TopicPath;
-import com.google.cloud.pubsublite.TopicPaths;
 import com.google.cloud.pubsublite.internal.ExtractStatus;
 import com.google.cloud.pubsublite.internal.TopicStatsClient;
 import com.google.cloud.pubsublite.proto.ComputeMessageStatsResponse;
@@ -58,9 +57,9 @@ public final class TopicBacklogReaderImplTest {
   @Before
   public void setUp() throws Exception {
     this.topicPath =
-        TopicPaths.newBuilder()
+        TopicPath.newBuilder()
             .setProject(ProjectNumber.of(4))
-            .setTopicName(TopicName.of("test"))
+            .setName(TopicName.of("test"))
             .setLocation(CloudZone.parse("us-central1-b"))
             .build();
     this.reader = new TopicBacklogReaderImpl(mockClient, topicPath);

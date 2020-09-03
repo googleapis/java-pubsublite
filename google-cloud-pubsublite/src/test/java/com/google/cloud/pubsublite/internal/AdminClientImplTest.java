@@ -34,10 +34,8 @@ import com.google.cloud.pubsublite.ErrorCodes;
 import com.google.cloud.pubsublite.ProjectNumber;
 import com.google.cloud.pubsublite.SubscriptionName;
 import com.google.cloud.pubsublite.SubscriptionPath;
-import com.google.cloud.pubsublite.SubscriptionPaths;
 import com.google.cloud.pubsublite.TopicName;
 import com.google.cloud.pubsublite.TopicPath;
-import com.google.cloud.pubsublite.TopicPaths;
 import com.google.cloud.pubsublite.proto.AdminServiceGrpc;
 import com.google.cloud.pubsublite.proto.CreateSubscriptionRequest;
 import com.google.cloud.pubsublite.proto.CreateTopicRequest;
@@ -103,10 +101,10 @@ public class AdminClientImplTest {
   }
 
   private static TopicPath topicPath() {
-    return TopicPaths.newBuilder()
+    return TopicPath.newBuilder()
         .setLocation(ZONE)
         .setProject(projectNumber())
-        .setTopicName(topicName())
+        .setName(topicName())
         .build();
   }
 
@@ -128,10 +126,10 @@ public class AdminClientImplTest {
   }
 
   private static SubscriptionPath subscriptionPath() {
-    return SubscriptionPaths.newBuilder()
+    return SubscriptionPath.newBuilder()
         .setLocation(ZONE)
         .setProject(projectNumber())
-        .setSubscriptionName(subscriptionName())
+        .setName(subscriptionName())
         .build();
   }
 
@@ -200,7 +198,7 @@ public class AdminClientImplTest {
   public void createTopic_Ok() throws Exception {
     CreateTopicRequest request =
         CreateTopicRequest.newBuilder()
-            .setParent(topicPath().location().toString())
+            .setParent(topicPath().locationPath().toString())
             .setTopic(TOPIC)
             .setTopicId(topicName().value())
             .build();
@@ -215,7 +213,7 @@ public class AdminClientImplTest {
     assertThat(ErrorCodes.IsRetryable(Code.FAILED_PRECONDITION)).isFalse();
     CreateTopicRequest request =
         CreateTopicRequest.newBuilder()
-            .setParent(topicPath().location().toString())
+            .setParent(topicPath().locationPath().toString())
             .setTopic(TOPIC)
             .setTopicId(topicName().value())
             .build();
@@ -237,7 +235,7 @@ public class AdminClientImplTest {
       assertThat(ErrorCodes.IsRetryable(code)).isTrue();
       CreateTopicRequest request =
           CreateTopicRequest.newBuilder()
-              .setParent(topicPath().location().toString())
+              .setParent(topicPath().locationPath().toString())
               .setTopic(TOPIC)
               .setTopicId(topicName().value())
               .build();
@@ -255,7 +253,7 @@ public class AdminClientImplTest {
     assertThat(ErrorCodes.IsRetryable(Code.DEADLINE_EXCEEDED)).isTrue();
     CreateTopicRequest request =
         CreateTopicRequest.newBuilder()
-            .setParent(topicPath().location().toString())
+            .setParent(topicPath().locationPath().toString())
             .setTopic(TOPIC)
             .setTopicId(topicName().value())
             .build();
@@ -515,15 +513,15 @@ public class AdminClientImplTest {
         ListTopicSubscriptionsRequest.newBuilder().setName(topicPath().toString()).build();
 
     SubscriptionPath path1 =
-        SubscriptionPaths.newBuilder()
+        SubscriptionPath.newBuilder()
             .setProject(ProjectNumber.of(111))
-            .setSubscriptionName(SubscriptionName.of("def"))
+            .setName(SubscriptionName.of("def"))
             .setLocation(ZONE)
             .build();
     SubscriptionPath path2 =
-        SubscriptionPaths.newBuilder()
+        SubscriptionPath.newBuilder()
             .setProject(ProjectNumber.of(222))
-            .setSubscriptionName(SubscriptionName.of("abc"))
+            .setName(SubscriptionName.of("abc"))
             .setLocation(ZONE)
             .build();
     ListTopicSubscriptionsResponse response =
@@ -593,7 +591,7 @@ public class AdminClientImplTest {
   public void createSubscription_Ok() throws Exception {
     CreateSubscriptionRequest request =
         CreateSubscriptionRequest.newBuilder()
-            .setParent(subscriptionPath().location().toString())
+            .setParent(subscriptionPath().locationPath().toString())
             .setSubscription(SUBSCRIPTION)
             .setSubscriptionId(subscriptionName().value())
             .build();
@@ -608,7 +606,7 @@ public class AdminClientImplTest {
     assertThat(ErrorCodes.IsRetryable(Code.FAILED_PRECONDITION)).isFalse();
     CreateSubscriptionRequest request =
         CreateSubscriptionRequest.newBuilder()
-            .setParent(subscriptionPath().location().toString())
+            .setParent(subscriptionPath().locationPath().toString())
             .setSubscription(SUBSCRIPTION)
             .setSubscriptionId(subscriptionName().value())
             .build();
@@ -630,7 +628,7 @@ public class AdminClientImplTest {
       assertThat(ErrorCodes.IsRetryable(code)).isTrue();
       CreateSubscriptionRequest request =
           CreateSubscriptionRequest.newBuilder()
-              .setParent(subscriptionPath().location().toString())
+              .setParent(subscriptionPath().locationPath().toString())
               .setSubscription(SUBSCRIPTION)
               .setSubscriptionId(subscriptionName().value())
               .build();
@@ -648,7 +646,7 @@ public class AdminClientImplTest {
     assertThat(ErrorCodes.IsRetryable(Code.DEADLINE_EXCEEDED)).isTrue();
     CreateSubscriptionRequest request =
         CreateSubscriptionRequest.newBuilder()
-            .setParent(subscriptionPath().location().toString())
+            .setParent(subscriptionPath().locationPath().toString())
             .setSubscription(SUBSCRIPTION)
             .setSubscriptionId(subscriptionName().value())
             .build();

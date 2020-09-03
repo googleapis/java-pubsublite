@@ -26,7 +26,7 @@
     PCollection<Message> messages = ...;
     messages.apply("Write messages", PubsubLiteIO.write(
         PublisherOptions.newBuilder()
-            .setTopicPath(TopicPaths.newBuilder()
+            .setTopicPath(TopicPath.newBuilder()
                 .setLocation(CloudZone.parse(ZONE))
                 .setProject(ProjectNumber.of(PROJECT_NUM))
                 .setName(TopicName.of("my-topic"))
@@ -52,7 +52,7 @@
     Pipeline pipeline = ...;
     PCollection<SequencedMessage> messages = pipeline.apply("Read messages", PubsubLiteIO.read(
         SubscriberOptions.newBuilder()
-            .setSubscriptionPath(SubscriptionPaths.newBuilder()
+            .setSubscriptionPath(SubscriptionPath.newBuilder()
                 .setLocation(CloudZone.parse(ZONE))
                 .setProject(ProjectNumber.of(PROJECT_NUM))
                 .setName(SubscriptionName.of("my-sub"))

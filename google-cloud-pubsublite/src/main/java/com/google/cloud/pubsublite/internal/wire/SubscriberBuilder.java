@@ -78,8 +78,7 @@ public abstract class SubscriberBuilder {
       } else {
         subscriberServiceStub =
             Stubs.defaultStub(
-                builder.subscriptionPath().location().location().region(),
-                SubscriberServiceGrpc::newStub);
+                builder.subscriptionPath().location().region(), SubscriberServiceGrpc::newStub);
       }
       Metadata metadata = builder.context().getMetadata();
       metadata.merge(RoutingMetadata.of(builder.subscriptionPath(), builder.partition()));

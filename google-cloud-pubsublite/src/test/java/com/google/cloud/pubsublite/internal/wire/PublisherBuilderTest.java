@@ -23,7 +23,7 @@ import com.google.cloud.pubsublite.CloudZone;
 import com.google.cloud.pubsublite.Partition;
 import com.google.cloud.pubsublite.ProjectNumber;
 import com.google.cloud.pubsublite.TopicName;
-import com.google.cloud.pubsublite.TopicPaths;
+import com.google.cloud.pubsublite.TopicPath;
 import com.google.cloud.pubsublite.proto.PublisherServiceGrpc;
 import io.grpc.Channel;
 import org.junit.Test;
@@ -37,10 +37,10 @@ public class PublisherBuilderTest {
     PublisherBuilder.builder()
         .setBatching(PublisherBuilder.DEFAULT_BATCHING_SETTINGS)
         .setTopic(
-            TopicPaths.newBuilder()
+            TopicPath.newBuilder()
                 .setLocation(CloudZone.of(CloudRegion.of("us-central1"), 'a'))
                 .setProject(ProjectNumber.of(3))
-                .setTopicName(TopicName.of("abc"))
+                .setName(TopicName.of("abc"))
                 .build())
         .setPartition(Partition.of(85))
         .setStub(PublisherServiceGrpc.newStub(mock(Channel.class)))

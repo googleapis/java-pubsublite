@@ -33,7 +33,6 @@ import com.google.cloud.pubsublite.ProjectNumber;
 import com.google.cloud.pubsublite.PublishMetadata;
 import com.google.cloud.pubsublite.TopicName;
 import com.google.cloud.pubsublite.TopicPath;
-import com.google.cloud.pubsublite.TopicPaths;
 import com.google.cloud.pubsublite.internal.FakeApiService;
 import com.google.cloud.pubsublite.internal.Publisher;
 import com.google.protobuf.ByteString;
@@ -57,8 +56,8 @@ public class SinglePartitionPublisherTest {
   @Test
   public void publishResultTransformed() throws Exception {
     TopicPath topic =
-        TopicPaths.newBuilder()
-            .setTopicName(TopicName.of("abc"))
+        TopicPath.newBuilder()
+            .setName(TopicName.of("abc"))
             .setProject(ProjectNumber.of(123))
             .setLocation(CloudZone.of(CloudRegion.of("us-central1"), 'a'))
             .build();

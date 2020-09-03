@@ -26,7 +26,6 @@ import com.google.cloud.pubsublite.ProjectNumber;
 import com.google.cloud.pubsublite.PublishMetadata;
 import com.google.cloud.pubsublite.TopicName;
 import com.google.cloud.pubsublite.TopicPath;
-import com.google.cloud.pubsublite.TopicPaths;
 import com.google.cloud.pubsublite.internal.FakeApiService;
 import com.google.cloud.pubsublite.internal.Publisher;
 import com.google.cloud.pubsublite.internal.wire.SinglePartitionPublisherBuilder;
@@ -41,10 +40,10 @@ import org.mockito.Spy;
 @RunWith(JUnit4.class)
 public class PublisherSettingsTest {
   TopicPath getPath() throws StatusException {
-    return TopicPaths.newBuilder()
+    return TopicPath.newBuilder()
         .setProject(ProjectNumber.of(56))
         .setLocation(CloudZone.parse("us-central1-a"))
-        .setTopicName(TopicName.of("xyz"))
+        .setName(TopicName.of("xyz"))
         .build();
   }
 

@@ -23,6 +23,11 @@
     <className>com/google/cloud/pubsublite/*Path*</className>
     <method>*</method>
   </difference>
+  <difference>
+    <differenceType>8001</differenceType>
+    <className>com/google/cloud/pubsublite/*Paths*</className>
+    <method>*</method>
+  </difference>
   <!-- Blanket ignored files -->
   <difference>
     <differenceType>6000</differenceType>

@@ -30,17 +30,36 @@ import java.util.Arrays;
  */
 @AutoValue
 public abstract class SubscriptionPath implements Serializable {
-  public abstract LocationPath location();
+  public abstract ProjectIdOrNumber project();
+
+  public abstract CloudZone location();
 
   public abstract SubscriptionName name();
 
-  @Override
-  public String toString() {
-    return location() + "/subscriptions/" + name();
+  public LocationPath locationPath() {
+    return LocationPath.newBuilder().setProject(project()).setLocation(location()).build();
   }
 
-  public static SubscriptionPath of(LocationPath location, SubscriptionName name) {
-    return new AutoValue_SubscriptionPath(location, name);
+  @Override
+  public String toString() {
+    return locationPath() + "/subscriptions/" + name();
+  }
+
+  /** Create a new SubscriptionPath builder. */
+  public static Builder newBuilder() {
+    return new AutoValue_SubscriptionPath.Builder();
+  }
+
+  public abstract Builder toBuilder();
+
+  @AutoValue.Builder
+  public abstract static class Builder extends ProjectBuilderHelper<Builder> {
+    public abstract Builder setLocation(CloudZone zone);
+
+    public abstract Builder setName(SubscriptionName name);
+
+    /** Build a new SubscriptionPath. */
+    public abstract SubscriptionPath build();
   }
 
   public static SubscriptionPath parse(String path) throws StatusException {
@@ -48,6 +67,10 @@ public abstract class SubscriptionPath implements Serializable {
     checkArgument(splits.length == 6);
     checkArgument(splits[4].equals("subscriptions"));
     LocationPath location = LocationPath.parse(String.join("/", Arrays.copyOf(splits, 4)));
-    return SubscriptionPath.of(location, SubscriptionName.of(splits[5]));
+    return SubscriptionPath.newBuilder()
+        .setProject(location.project())
+        .setLocation(location.location())
+        .setName(SubscriptionName.of(splits[5]))
+        .build();
   }
 }

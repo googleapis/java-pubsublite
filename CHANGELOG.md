@@ -1,5 +1,40 @@
 # Changelog
 
+## [0.3.0](https://www.github.com/googleapis/java-pubsublite/compare/v0.2.0...v0.3.0) (2020-09-03)
+
+
+### Features
+
+* Enable project id usage by performing lookups where necessary. ([#223](https://www.github.com/googleapis/java-pubsublite/issues/223)) ([e30896e](https://www.github.com/googleapis/java-pubsublite/commit/e30896e3a9418801fb099edf2d6a27199193e073))
+
+
+### Bug Fixes
+
+* Add Documentation ([#221](https://www.github.com/googleapis/java-pubsublite/issues/221)) ([6c430da](https://www.github.com/googleapis/java-pubsublite/commit/6c430da5fad6f20146c0aa0d2d6645dc7e341c45))
+* Add more coverage ([#220](https://www.github.com/googleapis/java-pubsublite/issues/220)) ([f92f828](https://www.github.com/googleapis/java-pubsublite/commit/f92f828d0a1afe69c02021c8f859c3f181330426))
+* add test coverage for cloudpubsub folder. ([#218](https://www.github.com/googleapis/java-pubsublite/issues/218)) ([a70a60f](https://www.github.com/googleapis/java-pubsublite/commit/a70a60f70e37587428817c4d035d7ce73af03525))
+* change toString to value in TopicStatsClient ([#210](https://www.github.com/googleapis/java-pubsublite/issues/210)) ([30f0b10](https://www.github.com/googleapis/java-pubsublite/commit/30f0b10e27f1998f084fac8ae49dd8fd2a959856))
+* Embed builder in path classes and make components directly accessible ([#231](https://www.github.com/googleapis/java-pubsublite/issues/231)) ([e5e7d7d](https://www.github.com/googleapis/java-pubsublite/commit/e5e7d7df6d7b9bce83796a046a94608a2d8094d6))
+* Implement DefaultRoutingPolicyTest ([#188](https://www.github.com/googleapis/java-pubsublite/issues/188)) ([fa49931](https://www.github.com/googleapis/java-pubsublite/commit/fa499311de3cab4a7838af7255c7aa137ed20049))
+* Improve test coverage for internal/wire folder. ([#214](https://www.github.com/googleapis/java-pubsublite/issues/214)) ([db2bc7a](https://www.github.com/googleapis/java-pubsublite/commit/db2bc7acb1ee64a0b5406098790432ef1e982d09))
+* temporarily disable reporting to unblock releases ([#225](https://www.github.com/googleapis/java-pubsublite/issues/225)) ([2b66535](https://www.github.com/googleapis/java-pubsublite/commit/2b66535ac6160fd36e3f7cdab375ac28e0e74ea6))
+
+
+### Reverts
+
+* Revert "samples: update samples for automatic subscriber assignment (#189)" (#198) ([eefe717](https://www.github.com/googleapis/java-pubsublite/commit/eefe71725d345e75ded336ce13829d5623d79803)), closes [#189](https://www.github.com/googleapis/java-pubsublite/issues/189) [#198](https://www.github.com/googleapis/java-pubsublite/issues/198)
+
+
+### Dependencies
+
+* update dependency io.grpc:grpc-testing to v1.31.1 ([#205](https://www.github.com/googleapis/java-pubsublite/issues/205)) ([219c832](https://www.github.com/googleapis/java-pubsublite/commit/219c832766924498e036ba9a7773530b80dfc8dc))
+* update dependency org.mockito:mockito-core to v3.5.0 ([#206](https://www.github.com/googleapis/java-pubsublite/issues/206)) ([7b3d297](https://www.github.com/googleapis/java-pubsublite/commit/7b3d29795ef1cf4b8b91aa114c903bf949122a33))
+* update dependency org.mockito:mockito-core to v3.5.2 ([#209](https://www.github.com/googleapis/java-pubsublite/issues/209)) ([a4ca349](https://www.github.com/googleapis/java-pubsublite/commit/a4ca3497de0efc3a27a5c6e1cae82a57460673d7))
+* update dependency org.mockito:mockito-core to v3.5.5 ([#217](https://www.github.com/googleapis/java-pubsublite/issues/217)) ([a6afc60](https://www.github.com/googleapis/java-pubsublite/commit/a6afc60b5f3a48e6baa6fec404214a013b33c89b))
+* update dependency org.mockito:mockito-core to v3.5.6 ([#222](https://www.github.com/googleapis/java-pubsublite/issues/222)) ([f25077d](https://www.github.com/googleapis/java-pubsublite/commit/f25077d7cdbca31ded869aecef6fea27da0b0fd8))
+* update dependency org.mockito:mockito-core to v3.5.7 ([#224](https://www.github.com/googleapis/java-pubsublite/issues/224)) ([e4061ba](https://www.github.com/googleapis/java-pubsublite/commit/e4061bae7883044161719bda423959141d1d79ad))
+* update shared-dependencies to a version with a working GRPC version. ([89f6582](https://www.github.com/googleapis/java-pubsublite/commit/89f6582465a5fa4541fe9d7108118d11178ec05e))
+
 ## [0.2.0](https://www.github.com/googleapis/java-pubsublite/compare/v0.1.8...v0.2.0) (2020-08-11)
 
 

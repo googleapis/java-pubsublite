@@ -139,11 +139,12 @@ public class AdminClientImpl extends BackgroundResourceAggregation implements Ad
   @Override
   public ApiFuture<List<Topic>> listTopics(LocationPath path) {
     return RetryingExecutorUtil.runWithRetries(
-        () -> stub.listTopics(
-                ListTopicsRequest.newBuilder()
-                    .setParent(ProjectLookupUtils.toCannonical(path).toString())
-                    .build())
-            .getTopicsList(),
+        () ->
+            stub.listTopics(
+                    ListTopicsRequest.newBuilder()
+                        .setParent(ProjectLookupUtils.toCannonical(path).toString())
+                        .build())
+                .getTopicsList(),
         listTopicsRetryingExecutor);
   }
 
@@ -226,11 +227,12 @@ public class AdminClientImpl extends BackgroundResourceAggregation implements Ad
   @Override
   public ApiFuture<List<Subscription>> listSubscriptions(LocationPath path) {
     return RetryingExecutorUtil.runWithRetries(
-        () -> stub.listSubscriptions(
-                ListSubscriptionsRequest.newBuilder()
-                    .setParent(ProjectLookupUtils.toCannonical(path).toString())
-                    .build())
-            .getSubscriptionsList(),
+        () ->
+            stub.listSubscriptions(
+                    ListSubscriptionsRequest.newBuilder()
+                        .setParent(ProjectLookupUtils.toCannonical(path).toString())
+                        .build())
+                .getSubscriptionsList(),
         listSubscriptionsRetryingExecutor);
   }
 

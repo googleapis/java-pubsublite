@@ -24,7 +24,6 @@ import com.google.cloud.pubsublite.CloudZone;
 import com.google.cloud.pubsublite.ProjectNumber;
 import com.google.cloud.pubsublite.SubscriptionName;
 import com.google.cloud.pubsublite.SubscriptionPath;
-import com.google.cloud.pubsublite.SubscriptionPaths;
 import com.google.cloud.pubsublite.cloudpubsub.FlowControlSettings;
 import com.google.cloud.pubsublite.cloudpubsub.Subscriber;
 import com.google.cloud.pubsublite.cloudpubsub.SubscriberSettings;
@@ -51,10 +50,10 @@ public class SubscriberExample {
       throws StatusException {
 
     SubscriptionPath subscriptionPath =
-        SubscriptionPaths.newBuilder()
-            .setZone(CloudZone.of(CloudRegion.of(cloudRegion), zoneId))
-            .setProjectNumber(ProjectNumber.of(projectNumber))
-            .setSubscriptionName(SubscriptionName.of(subscriptionId))
+        SubscriptionPath.newBuilder()
+            .setLocation(CloudZone.of(CloudRegion.of(cloudRegion), zoneId))
+            .setProject(ProjectNumber.of(projectNumber))
+            .setName(SubscriptionName.of(subscriptionId))
             .build();
 
     // The message stream is paused based on the maximum size or number of messages that the
@@ -87,7 +86,7 @@ public class SubscriberExample {
     // Start the subscriber. Upon successful starting, its state will become RUNNING.
     subscriber.startAsync().awaitRunning();
 
-    System.out.println("Listening to messages on " + subscriptionPath.value() + "...");
+    System.out.println("Listening to messages on " + subscriptionPath.toString() + "...");
 
     try {
       System.out.println(subscriber.state());

@@ -25,7 +25,6 @@ import com.google.cloud.pubsublite.ProjectNumber;
 import com.google.cloud.pubsublite.SubscriptionPath;
 import com.google.cloud.pubsublite.TopicName;
 import com.google.cloud.pubsublite.TopicPath;
-import com.google.cloud.pubsublite.TopicPaths;
 import java.util.List;
 
 public class ListSubscriptionsInTopicExample {
@@ -44,10 +43,10 @@ public class ListSubscriptionsInTopicExample {
       String cloudRegion, char zoneId, long projectNumber, String topicId) throws Exception {
 
     TopicPath topicPath =
-        TopicPaths.newBuilder()
-            .setProjectNumber(ProjectNumber.of(projectNumber))
-            .setZone(CloudZone.of(CloudRegion.of(cloudRegion), zoneId))
-            .setTopicName(TopicName.of(topicId))
+        TopicPath.newBuilder()
+            .setProject(ProjectNumber.of(projectNumber))
+            .setLocation(CloudZone.of(CloudRegion.of(cloudRegion), zoneId))
+            .setName(TopicName.of(topicId))
             .build();
 
     AdminClientSettings adminClientSettings =
@@ -57,7 +56,7 @@ public class ListSubscriptionsInTopicExample {
       List<SubscriptionPath> subscriptionPaths =
           adminClient.listTopicSubscriptions(topicPath).get();
       for (SubscriptionPath subscription : subscriptionPaths) {
-        System.out.println(subscription.value());
+        System.out.println(subscription.toString());
       }
       System.out.println(subscriptionPaths.size() + " subscription(s) listed.");
     }

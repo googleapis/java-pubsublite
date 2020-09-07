@@ -24,7 +24,6 @@ import com.google.gson.Gson;
 import com.google.protobuf.ByteString;
 import io.grpc.StatusException;
 import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.Map;
 import java.util.function.Supplier;
 import org.junit.Test;
@@ -47,7 +46,7 @@ public class DefaultRoutingPolicyTest {
     String json =
         new String(
             Files.readAllBytes(
-                Paths.get(
+                Path.get(
                     DefaultRoutingPolicyTest.class.getResource("/routing_tests.json").toURI())));
     Map<String, Double> map = gson.fromJson(json, Map.class);
     ImmutableMap.Builder<ByteString, Partition> output = ImmutableMap.builder();

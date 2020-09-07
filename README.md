@@ -108,10 +108,10 @@ String topicId = "your-topic-id";
 Integer partitions = 1;
 
 TopicPath topicPath =
-    TopicPaths.newBuilder()
-        .setProjectNumber(ProjectNumber.of(projectNumber))
-        .setZone(CloudZone.of(CloudRegion.of(cloudRegion), zoneId))
-        .setTopicName(TopicName.of(topicId))
+    TopicPath.newBuilder()
+        .setProject(ProjectNumber.of(projectNumber))
+        .setLocation(CloudZone.of(CloudRegion.of(cloudRegion), zoneId))
+        .setName(TopicName.of(topicId))
         .build();
 
 Topic topic =
@@ -132,7 +132,7 @@ Topic topic =
                 // beyond this value, older messages will be dropped to make room for
                 // newer ones, regardless of the value of `period`.
                 .setPerPartitionBytes(30 * 1024 * 1024 * 1024L))
-        .setName(topicPath.value())
+        .setName(topicPath.toString())
         .build();
 
 AdminClientSettings adminClientSettings =
@@ -168,10 +168,10 @@ String topicId = "your-topic-id";
 int messageCount = 100;
 
 TopicPath topicPath =
-    TopicPaths.newBuilder()
-        .setProjectNumber(ProjectNumber.of(projectNumber))
-        .setZone(CloudZone.of(CloudRegion.of(cloudRegion), zoneId))
-        .setTopicName(TopicName.of(topicId))
+    TopicPath.newBuilder()
+        .setProject(ProjectNumber.of(projectNumber))
+        .setLocation(CloudZone.of(CloudRegion.of(cloudRegion), zoneId))
+        .setName(TopicName.of(topicId))
         .build();
 Publisher publisher = null;
 List<ApiFuture<String>> futures = new ArrayList<>();
@@ -236,17 +236,17 @@ String topicId = "your-topic-id";
 String subscriptionId = "your-subscription-id";
 
 TopicPath topicPath =
-    TopicPaths.newBuilder()
-        .setProjectNumber(ProjectNumber.of(projectNumber))
-        .setZone(CloudZone.of(CloudRegion.of(cloudRegion), zoneId))
-        .setTopicName(TopicName.of(topicId))
+    TopicPath.newBuilder()
+        .setProject(ProjectNumber.of(projectNumber))
+        .setLocation(CloudZone.of(CloudRegion.of(cloudRegion), zoneId))
+        .setName(TopicName.of(topicId))
         .build();
 
 SubscriptionPath subscriptionPath =
-    SubscriptionPaths.newBuilder()
-        .setZone(CloudZone.of(CloudRegion.of(cloudRegion), zoneId))
-        .setProjectNumber(ProjectNumber.of(projectNumber))
-        .setSubscriptionName(SubscriptionName.of(subscriptionId))
+    SubscriptionPath.newBuilder()
+        .setLocation(CloudZone.of(CloudRegion.of(cloudRegion), zoneId))
+        .setProject(ProjectNumber.of(projectNumber))
+        .setName(SubscriptionName.of(subscriptionId))
         .build();
 
 Subscription subscription =
@@ -259,8 +259,8 @@ Subscription subscription =
             // may be a gap at that offset.
             DeliveryConfig.newBuilder()
                 .setDeliveryRequirement(DeliveryRequirement.DELIVER_IMMEDIATELY))
-        .setName(subscriptionPath.value())
-        .setTopic(topicPath.value())
+        .setName(subscriptionPath.toString())
+        .setTopic(topicPath.toString())
         .build();
 
 AdminClientSettings adminClientSettings =
@@ -299,10 +299,10 @@ String topicId = "your-topic-id";
 String subscriptionId = "your-subscription-id";
 
 SubscriptionPath subscriptionPath =
-    SubscriptionPaths.newBuilder()
-        .setZone(CloudZone.of(CloudRegion.of(cloudRegion), zoneId))
-        .setProjectNumber(ProjectNumber.of(projectNumber))
-        .setSubscriptionName(SubscriptionName.of(subscriptionId))
+    SubscriptionPath.newBuilder()
+        .setLocation(CloudZone.of(CloudRegion.of(cloudRegion), zoneId))
+        .setProject(ProjectNumber.of(projectNumber))
+        .setName(SubscriptionName.of(subscriptionId))
         .build();
 
 // The message stream is paused based on the maximum size or number of messages that the
@@ -335,7 +335,7 @@ Subscriber subscriber = Subscriber.create(subscriberSettings);
 // Start the subscriber. Upon successful starting, its state will become RUNNING.
 subscriber.startAsync().awaitRunning();
 
-System.out.println("Listening to messages on " + subscriptionPath.value() + "...");
+System.out.println("Listening to messages on " + subscriptionPath.toString() + "...");
 
 try {
   System.out.println(subscriber.state());

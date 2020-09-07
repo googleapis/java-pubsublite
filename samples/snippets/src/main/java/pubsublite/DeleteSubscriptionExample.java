@@ -24,7 +24,6 @@ import com.google.cloud.pubsublite.CloudZone;
 import com.google.cloud.pubsublite.ProjectNumber;
 import com.google.cloud.pubsublite.SubscriptionName;
 import com.google.cloud.pubsublite.SubscriptionPath;
-import com.google.cloud.pubsublite.SubscriptionPaths;
 
 public class DeleteSubscriptionExample {
 
@@ -43,10 +42,10 @@ public class DeleteSubscriptionExample {
       String cloudRegion, char zoneId, long projectNumber, String subscriptionId) throws Exception {
 
     SubscriptionPath subscriptionPath =
-        SubscriptionPaths.newBuilder()
-            .setZone(CloudZone.of(CloudRegion.of(cloudRegion), zoneId))
-            .setProjectNumber(ProjectNumber.of(projectNumber))
-            .setSubscriptionName(SubscriptionName.of(subscriptionId))
+        SubscriptionPath.newBuilder()
+            .setLocation(CloudZone.of(CloudRegion.of(cloudRegion), zoneId))
+            .setProject(ProjectNumber.of(projectNumber))
+            .setName(SubscriptionName.of(subscriptionId))
             .build();
 
     AdminClientSettings adminClientSettings =
@@ -54,7 +53,7 @@ public class DeleteSubscriptionExample {
 
     try (AdminClient adminClient = AdminClient.create(adminClientSettings)) {
       adminClient.deleteSubscription(subscriptionPath).get();
-      System.out.println(subscriptionPath.value() + " deleted successfully.");
+      System.out.println(subscriptionPath.toString() + " deleted successfully.");
     }
   }
 }

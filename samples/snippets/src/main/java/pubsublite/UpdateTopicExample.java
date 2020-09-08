@@ -24,7 +24,6 @@ import com.google.cloud.pubsublite.CloudZone;
 import com.google.cloud.pubsublite.ProjectNumber;
 import com.google.cloud.pubsublite.TopicName;
 import com.google.cloud.pubsublite.TopicPath;
-import com.google.cloud.pubsublite.TopicPaths;
 import com.google.cloud.pubsublite.proto.Topic;
 import com.google.cloud.pubsublite.proto.Topic.PartitionConfig;
 import com.google.cloud.pubsublite.proto.Topic.RetentionConfig;
@@ -48,10 +47,10 @@ public class UpdateTopicExample {
       String cloudRegion, char zoneId, long projectNumber, String topicId) throws Exception {
 
     TopicPath topicPath =
-        TopicPaths.newBuilder()
-            .setProjectNumber(ProjectNumber.of(projectNumber))
-            .setZone(CloudZone.of(CloudRegion.of(cloudRegion), zoneId))
-            .setTopicName(TopicName.of(topicId))
+        TopicPath.newBuilder()
+            .setProject(ProjectNumber.of(projectNumber))
+            .setLocation(CloudZone.of(CloudRegion.of(cloudRegion), zoneId))
+            .setName(TopicName.of(topicId))
             .build();
 
     Iterable<String> iterablePaths =
@@ -81,7 +80,7 @@ public class UpdateTopicExample {
                     // lost messages.
                     .setPerPartitionBytes(200 * 1024 * 1024 * 1024L)
                     .setPeriod(Durations.fromDays(7)))
-            .setName(topicPath.value())
+            .setName(topicPath.toString())
             .build();
 
     AdminClientSettings adminClientSettings =

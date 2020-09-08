@@ -24,7 +24,6 @@ import com.google.cloud.pubsublite.CloudZone;
 import com.google.cloud.pubsublite.ProjectNumber;
 import com.google.cloud.pubsublite.TopicName;
 import com.google.cloud.pubsublite.TopicPath;
-import com.google.cloud.pubsublite.TopicPaths;
 import com.google.cloud.pubsublite.proto.Topic;
 import com.google.cloud.pubsublite.proto.Topic.PartitionConfig;
 import com.google.cloud.pubsublite.proto.Topic.RetentionConfig;
@@ -48,10 +47,10 @@ public class CreateTopicExample {
       throws Exception {
 
     TopicPath topicPath =
-        TopicPaths.newBuilder()
-            .setProjectNumber(ProjectNumber.of(projectNumber))
-            .setZone(CloudZone.of(CloudRegion.of(cloudRegion), zoneId))
-            .setTopicName(TopicName.of(topicId))
+        TopicPath.newBuilder()
+            .setProject(ProjectNumber.of(projectNumber))
+            .setLocation(CloudZone.of(CloudRegion.of(cloudRegion), zoneId))
+            .setName(TopicName.of(topicId))
             .build();
 
     Topic topic =
@@ -72,7 +71,7 @@ public class CreateTopicExample {
                     // beyond this value, older messages will be dropped to make room for
                     // newer ones, regardless of the value of `period`.
                     .setPerPartitionBytes(30 * 1024 * 1024 * 1024L))
-            .setName(topicPath.value())
+            .setName(topicPath.toString())
             .build();
 
     AdminClientSettings adminClientSettings =

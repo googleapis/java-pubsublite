@@ -44,7 +44,7 @@ public class ChannelCacheTest {
 
   @Test
   public void reusesChannels() {
-    when(channelFactory.apply(any()))
+    when(channelFactory.apply("abc"))
         .thenAnswer(
             (target) -> {
               ManagedChannel channel = mock(ManagedChannel.class);

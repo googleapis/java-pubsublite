@@ -153,7 +153,7 @@ class RetryingConnectionImpl<
       setPermanentError(t);
       return;
     }
-    if (!ErrorCodes.IsRetryable(statusOr.get().getCode())) {
+    if (!ErrorCodes.IsRetryableForStreams(statusOr.get().getCode())) {
       setPermanentError(statusOr.get().asRuntimeException());
       return;
     }

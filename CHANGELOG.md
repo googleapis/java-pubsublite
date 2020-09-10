@@ -1,5 +1,18 @@
 # Changelog
 
+### [0.3.1](https://www.github.com/googleapis/java-pubsublite/compare/v0.3.0...v0.3.1) (2020-09-10)
+
+
+### Bug Fixes
+
+* Create a pool of Channels for each target. ([36b472b](https://www.github.com/googleapis/java-pubsublite/commit/36b472b95b39c6bd4af6514c2eae2c38254987e6))
+* Split retryable codes for streams, and retry RESOURCE_EXHAUSTED errors. ([e4efe0b](https://www.github.com/googleapis/java-pubsublite/commit/e4efe0b10c55df4be66842ec3bad7055db579df5))
+
+
+### Documentation
+
+* Update samples for v0.3.0 ([#235](https://www.github.com/googleapis/java-pubsublite/issues/235)) ([61b1981](https://www.github.com/googleapis/java-pubsublite/commit/61b1981f528c0a3302b65be2746983b852abe95e))
+
 ## [0.3.0](https://www.github.com/googleapis/java-pubsublite/compare/v0.2.0...v0.3.0) (2020-09-03)
 
 

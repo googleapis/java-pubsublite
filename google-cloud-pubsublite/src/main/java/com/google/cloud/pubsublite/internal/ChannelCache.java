@@ -50,7 +50,7 @@ public class ChannelCache {
   }
 
   @VisibleForTesting
-  void onShutdown() {
+  synchronized void onShutdown() {
     channels.forEachValue(
         channels.size(),
         channels -> {
@@ -64,13 +64,10 @@ public class ChannelCache {
         });
   }
 
-  public Channel get(String target) {
-    ManagedChannel channel = null;
-    synchronized (this) {
-      Deque<ManagedChannel> channelQueue = channels.computeIfAbsent(target, this::newChannels);
-      channel = channelQueue.removeFirst();
-      channelQueue.addLast(channel);
-    }
+  public synchronized Channel get(String target) {
+    Deque<ManagedChannel> channelQueue = channels.computeIfAbsent(target, this::newChannels);
+    ManagedChannel channel = channelQueue.removeFirst();
+    channelQueue.addLast(channel);
     return channel;
   }
 

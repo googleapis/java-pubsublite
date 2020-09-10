@@ -16,16 +16,18 @@
 
 package com.google.cloud.pubsublite.internal;
 
-import static com.google.common.truth.Truth.assertThat;
+import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.initMocks;
 
 import io.grpc.Channel;
 import io.grpc.ManagedChannel;
+
+import java.util.HashSet;
+import java.util.Set;
 import java.util.function.Function;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -34,7 +36,6 @@ import org.mockito.Mock;
 
 @RunWith(JUnit4.class)
 public class ChannelCacheTest {
-  @Mock ManagedChannel mockChannel;
   @Mock Function<String, ManagedChannel> channelFactory;
 
   @Before
@@ -44,14 +45,20 @@ public class ChannelCacheTest {
 
   @Test
   public void reusesChannels() {
-    when(channelFactory.apply(any())).thenReturn(mockChannel);
+    when(channelFactory.apply(any())).thenAnswer((target) -> {
+      ManagedChannel channel = mock(ManagedChannel.class);
+      when(channel.shutdownNow()).thenReturn(channel);
+      return channel;
+    });
     ChannelCache cache = new ChannelCache(channelFactory);
-    Channel chan1 = cache.get("abc");
-    Channel chan2 = cache.get("abc");
-    assertThat(chan1).isEqualTo(chan2);
-    verify(channelFactory, times(1)).apply("abc");
-    when(mockChannel.shutdownNow()).thenReturn(mockChannel);
-    cache.onShutdown();
-    verify(mockChannel, times(1)).shutdownNow();
+
+    // Only 10 Channels should be created.
+    Set<Channel> channels = new HashSet<>();
+    for (int i = 0; i < 1000; i++) {
+      channels.add(cache.get("abc"));
+    }
+
+    assertEquals(10, channels.size());
+    cache.onShutdown();;
   }
 }

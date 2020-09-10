@@ -20,6 +20,10 @@ import com.google.common.annotations.VisibleForTesting;
 import io.grpc.Channel;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
@@ -27,7 +31,13 @@ import java.util.function.Function;
 /** A ChannelCache creates and stores default channels for use with api methods. */
 public class ChannelCache {
   private final Function<String, ManagedChannel> channelFactory;
-  private final ConcurrentHashMap<String, ManagedChannel> channels = new ConcurrentHashMap<>();
+  private final ConcurrentHashMap<String, List<ManagedChannel>> channels =
+      new ConcurrentHashMap<>();
+
+  private static final Random rand = new Random();
+  private static final int NUMBER_OF_CHANNELS_PER_TARGET = 10;
+  private static final String NUMBER_OF_CHANNELS_PER_TARGET_VM_OVERRIDE =
+          "google.cloud.pubsublite.channelCacheSize";
 
   public ChannelCache() {
     this(ChannelCache::newChannel);
@@ -43,9 +53,11 @@ public class ChannelCache {
   void onShutdown() {
     channels.forEachValue(
         channels.size(),
-        channel -> {
+        channels -> {
           try {
-            channel.shutdownNow().awaitTermination(60, TimeUnit.SECONDS);
+            for (ManagedChannel channel : channels) {
+              channel.shutdownNow().awaitTermination(60, TimeUnit.SECONDS);
+            }
           } catch (InterruptedException e) {
             e.printStackTrace();
           }
@@ -53,7 +65,22 @@ public class ChannelCache {
   }
 
   public Channel get(String target) {
-    return channels.computeIfAbsent(target, channelFactory);
+    List<ManagedChannel> channelList = channels.computeIfAbsent(target, this::newChannels);
+    return channelList.get(rand.nextInt(channelList.size()));
+  }
+
+  private List<ManagedChannel> newChannels(String target) {
+    int numberOfChannels = NUMBER_OF_CHANNELS_PER_TARGET;
+    String numberOfChannelsOverride = System.getProperty(NUMBER_OF_CHANNELS_PER_TARGET_VM_OVERRIDE);
+    if (numberOfChannelsOverride != null && !numberOfChannelsOverride.isEmpty()) {
+      numberOfChannels = Integer.parseInt((numberOfChannelsOverride));
+    }
+
+    List<ManagedChannel> channels = new ArrayList<>();
+    for (int i = 0; i < numberOfChannels; i++) {
+      channels.add(channelFactory.apply(target));
+    }
+    return channels;
   }
 
   private static ManagedChannel newChannel(String target) {

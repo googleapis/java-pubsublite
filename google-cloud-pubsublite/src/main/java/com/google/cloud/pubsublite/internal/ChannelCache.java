@@ -21,9 +21,8 @@ import com.google.common.flogger.GoogleLogger;
 import io.grpc.Channel;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
-
-import java.util.LinkedList;
 import java.util.Deque;
+import java.util.LinkedList;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
@@ -38,7 +37,7 @@ public class ChannelCache {
 
   private static final int NUMBER_OF_CHANNELS_PER_TARGET = 10;
   private static final String NUMBER_OF_CHANNELS_PER_TARGET_VM_OVERRIDE =
-          "google.cloud.pubsublite.channelCacheSize";
+      "google.cloud.pubsublite.channelCacheSize";
 
   public ChannelCache() {
     this(ChannelCache::newChannel);
@@ -82,7 +81,9 @@ public class ChannelCache {
       try {
         numberOfChannels = Integer.parseInt((numberOfChannelsOverride));
       } catch (NumberFormatException e) {
-        log.atSevere().log("Unable to parse override for number of channels per target: %s", numberOfChannelsOverride);
+        log.atSevere().log(
+            "Unable to parse override for number of channels per target: %s",
+            numberOfChannelsOverride);
       }
     }
 

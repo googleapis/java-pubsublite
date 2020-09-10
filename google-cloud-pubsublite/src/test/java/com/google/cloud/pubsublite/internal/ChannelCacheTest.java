@@ -24,11 +24,9 @@ import static org.mockito.MockitoAnnotations.initMocks;
 
 import io.grpc.Channel;
 import io.grpc.ManagedChannel;
-
 import java.util.HashSet;
 import java.util.Set;
 import java.util.function.Function;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -46,11 +44,13 @@ public class ChannelCacheTest {
 
   @Test
   public void reusesChannels() {
-    when(channelFactory.apply(any())).thenAnswer((target) -> {
-      ManagedChannel channel = mock(ManagedChannel.class);
-      when(channel.shutdownNow()).thenReturn(channel);
-      return channel;
-    });
+    when(channelFactory.apply(any()))
+        .thenAnswer(
+            (target) -> {
+              ManagedChannel channel = mock(ManagedChannel.class);
+              when(channel.shutdownNow()).thenReturn(channel);
+              return channel;
+            });
     ChannelCache cache = new ChannelCache(channelFactory);
 
     // Only 10 Channels should be created.

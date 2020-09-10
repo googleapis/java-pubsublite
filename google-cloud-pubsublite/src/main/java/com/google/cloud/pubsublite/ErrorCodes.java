@@ -25,8 +25,21 @@ public final class ErrorCodes {
       ImmutableSet.of(
           Code.DEADLINE_EXCEEDED, Code.ABORTED, Code.INTERNAL, Code.UNAVAILABLE, Code.UNKNOWN);
 
+  public static final ImmutableSet<Code> STREAM_RETRYABLE_CODES =
+      ImmutableSet.of(
+          Code.DEADLINE_EXCEEDED,
+          Code.ABORTED,
+          Code.INTERNAL,
+          Code.UNAVAILABLE,
+          Code.UNKNOWN,
+          Code.RESOURCE_EXHAUSTED);
+
   public static boolean IsRetryable(Code code) {
     return RETRYABLE_CODES.contains(code);
+  }
+
+  public static boolean IsRetryableForStreams(Code code) {
+    return STREAM_RETRYABLE_CODES.contains(code);
   }
 
   private ErrorCodes() {}

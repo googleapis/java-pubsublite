@@ -20,12 +20,10 @@ abstract class ProjectBuilderHelper<Builder extends ProjectBuilderHelper<Builder
   public abstract Builder setProject(ProjectIdOrNumber project);
 
   public Builder setProject(ProjectId project) {
-    setProject(ProjectIdOrNumber.of(project));
-    return (Builder) this;
+    return setProject(ProjectIdOrNumber.of(project));
   }
 
   public Builder setProject(ProjectNumber project) {
-    setProject(ProjectIdOrNumber.of(project));
-    return (Builder) this;
+    return setProject(ProjectIdOrNumber.of(project));
   }
 }

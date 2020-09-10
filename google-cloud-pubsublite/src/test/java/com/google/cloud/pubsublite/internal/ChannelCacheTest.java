@@ -16,9 +16,10 @@
 
 package com.google.cloud.pubsublite.internal;
 
-import static org.junit.Assert.assertEquals;
+import static com.google.common.truth.Truth.assertThat;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
 import io.grpc.Channel;
@@ -54,11 +55,11 @@ public class ChannelCacheTest {
 
     // Only 10 Channels should be created.
     Set<Channel> channels = new HashSet<>();
-    for (int i = 0; i < 1000; i++) {
+    for (int i = 0; i < 20; i++) {
       channels.add(cache.get("abc"));
     }
 
-    assertEquals(10, channels.size());
-    cache.onShutdown();;
+    assertThat(channels.size()).isEqualTo(10);
+    cache.onShutdown();
   }
 }

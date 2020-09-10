@@ -17,24 +17,25 @@
 package com.google.cloud.pubsublite.internal;
 
 import com.google.common.annotations.VisibleForTesting;
+import com.google.common.flogger.GoogleLogger;
 import io.grpc.Channel;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
+import java.util.LinkedList;
+import java.util.Deque;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 
 /** A ChannelCache creates and stores default channels for use with api methods. */
 public class ChannelCache {
+  private static final GoogleLogger log = GoogleLogger.forEnclosingClass();
+
   private final Function<String, ManagedChannel> channelFactory;
-  private final ConcurrentHashMap<String, List<ManagedChannel>> channels =
+  private final ConcurrentHashMap<String, Deque<ManagedChannel>> channels =
       new ConcurrentHashMap<>();
 
-  private static final Random rand = new Random();
   private static final int NUMBER_OF_CHANNELS_PER_TARGET = 10;
   private static final String NUMBER_OF_CHANNELS_PER_TARGET_VM_OVERRIDE =
           "google.cloud.pubsublite.channelCacheSize";
@@ -65,18 +66,27 @@ public class ChannelCache {
   }
 
   public Channel get(String target) {
-    List<ManagedChannel> channelList = channels.computeIfAbsent(target, this::newChannels);
-    return channelList.get(rand.nextInt(channelList.size()));
+    ManagedChannel channel = null;
+    synchronized (this) {
+      Deque<ManagedChannel> channelQueue = channels.computeIfAbsent(target, this::newChannels);
+      channel = channelQueue.removeFirst();
+      channelQueue.addLast(channel);
+    }
+    return channel;
   }
 
-  private List<ManagedChannel> newChannels(String target) {
+  private Deque<ManagedChannel> newChannels(String target) {
     int numberOfChannels = NUMBER_OF_CHANNELS_PER_TARGET;
     String numberOfChannelsOverride = System.getProperty(NUMBER_OF_CHANNELS_PER_TARGET_VM_OVERRIDE);
     if (numberOfChannelsOverride != null && !numberOfChannelsOverride.isEmpty()) {
-      numberOfChannels = Integer.parseInt((numberOfChannelsOverride));
+      try {
+        numberOfChannels = Integer.parseInt((numberOfChannelsOverride));
+      } catch (NumberFormatException e) {
+        log.atSevere().log("Unable to parse override for number of channels per target: %s", numberOfChannelsOverride);
+      }
     }
 
-    List<ManagedChannel> channels = new ArrayList<>();
+    Deque<ManagedChannel> channels = new LinkedList<>();
     for (int i = 0; i < numberOfChannels; i++) {
       channels.add(channelFactory.apply(target));
     }

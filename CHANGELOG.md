@@ -1,5 +1,12 @@
 # Changelog
 
+### [0.3.2](https://www.github.com/googleapis/java-pubsublite/compare/v0.3.1...v0.3.2) (2020-09-14)
+
+
+### Bug Fixes
+
+* Fix warning due to unchecked cast. ([#241](https://www.github.com/googleapis/java-pubsublite/issues/241)) ([a3a21b4](https://www.github.com/googleapis/java-pubsublite/commit/a3a21b4355a21979e84eb95f1cfa2049a044e151))
+
 ### [0.3.1](https://www.github.com/googleapis/java-pubsublite/compare/v0.3.0...v0.3.1) (2020-09-10)
 
 

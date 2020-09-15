@@ -167,6 +167,8 @@ public final class Topic extends com.google.protobuf.GeneratedMessageV3
      *
      *
      * <pre>
+     * DEPRECATED: Use capacity instead which can express a superset of
+     * configurations.
      * Every partition in the topic is allocated throughput equivalent to
      * `scale` times the standard partition throughput (4 MiB/s). This is also
      * reflected in the cost of this topic; a topic with `scale` of 2 and
@@ -174,10 +176,11 @@ public final class Topic extends com.google.protobuf.GeneratedMessageV3
      * range [1,4].
      * </pre>
      *
-     * <code>int32 scale = 2;</code>
+     * <code>int32 scale = 2 [deprecated = true];</code>
      *
      * @return The scale.
      */
+    @java.lang.Deprecated
     int getScale();
 
     /**
@@ -1020,6 +1023,7 @@ public final class Topic extends com.google.protobuf.GeneratedMessageV3
         implements
             com.google.protobuf.Internal.EnumLite,
             com.google.protobuf.AbstractMessage.InternalOneOfEnum {
+      @java.lang.Deprecated
       SCALE(2),
       CAPACITY(3),
       DIMENSION_NOT_SET(0);
@@ -1083,6 +1087,8 @@ public final class Topic extends com.google.protobuf.GeneratedMessageV3
      *
      *
      * <pre>
+     * DEPRECATED: Use capacity instead which can express a superset of
+     * configurations.
      * Every partition in the topic is allocated throughput equivalent to
      * `scale` times the standard partition throughput (4 MiB/s). This is also
      * reflected in the cost of this topic; a topic with `scale` of 2 and
@@ -1090,11 +1096,12 @@ public final class Topic extends com.google.protobuf.GeneratedMessageV3
      * range [1,4].
      * </pre>
      *
-     * <code>int32 scale = 2;</code>
+     * <code>int32 scale = 2 [deprecated = true];</code>
      *
      * @return The scale.
      */
     @java.lang.Override
+    @java.lang.Deprecated
     public int getScale() {
       if (dimensionCase_ == 2) {
         return (java.lang.Integer) dimension_;
@@ -1615,6 +1622,8 @@ public final class Topic extends com.google.protobuf.GeneratedMessageV3
        *
        *
        * <pre>
+       * DEPRECATED: Use capacity instead which can express a superset of
+       * configurations.
        * Every partition in the topic is allocated throughput equivalent to
        * `scale` times the standard partition throughput (4 MiB/s). This is also
        * reflected in the cost of this topic; a topic with `scale` of 2 and
@@ -1622,10 +1631,11 @@ public final class Topic extends com.google.protobuf.GeneratedMessageV3
        * range [1,4].
        * </pre>
        *
-       * <code>int32 scale = 2;</code>
+       * <code>int32 scale = 2 [deprecated = true];</code>
        *
        * @return The scale.
        */
+      @java.lang.Deprecated
       public int getScale() {
         if (dimensionCase_ == 2) {
           return (java.lang.Integer) dimension_;
@@ -1636,6 +1646,8 @@ public final class Topic extends com.google.protobuf.GeneratedMessageV3
        *
        *
        * <pre>
+       * DEPRECATED: Use capacity instead which can express a superset of
+       * configurations.
        * Every partition in the topic is allocated throughput equivalent to
        * `scale` times the standard partition throughput (4 MiB/s). This is also
        * reflected in the cost of this topic; a topic with `scale` of 2 and
@@ -1643,11 +1655,12 @@ public final class Topic extends com.google.protobuf.GeneratedMessageV3
        * range [1,4].
        * </pre>
        *
-       * <code>int32 scale = 2;</code>
+       * <code>int32 scale = 2 [deprecated = true];</code>
        *
        * @param value The scale to set.
        * @return This builder for chaining.
        */
+      @java.lang.Deprecated
       public Builder setScale(int value) {
         dimensionCase_ = 2;
         dimension_ = value;
@@ -1658,6 +1671,8 @@ public final class Topic extends com.google.protobuf.GeneratedMessageV3
        *
        *
        * <pre>
+       * DEPRECATED: Use capacity instead which can express a superset of
+       * configurations.
        * Every partition in the topic is allocated throughput equivalent to
        * `scale` times the standard partition throughput (4 MiB/s). This is also
        * reflected in the cost of this topic; a topic with `scale` of 2 and
@@ -1665,10 +1680,11 @@ public final class Topic extends com.google.protobuf.GeneratedMessageV3
        * range [1,4].
        * </pre>
        *
-       * <code>int32 scale = 2;</code>
+       * <code>int32 scale = 2 [deprecated = true];</code>
        *
        * @return This builder for chaining.
        */
+      @java.lang.Deprecated
       public Builder clearScale() {
         if (dimensionCase_ == 2) {
           dimensionCase_ = 0;

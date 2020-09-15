@@ -4,15 +4,15 @@
       "git": {
         "name": ".",
         "remote": "https://github.com/googleapis/java-pubsublite.git",
-        "sha": "e4061bae7883044161719bda423959141d1d79ad"
+        "sha": "7deb6109a54245af355ceddd39a814e747c3193c"
       }
     },
     {
       "git": {
         "name": "googleapis",
         "remote": "https://github.com/googleapis/googleapis.git",
-        "sha": "72eb54c45231d84266ca059473bc1793c394fcb2",
-        "internalRef": "328059685"
+        "sha": "8f5d456242fb0bdfc505e96e62e22c66aa6e97fd",
+        "internalRef": "330547201"
       }
     },
     {

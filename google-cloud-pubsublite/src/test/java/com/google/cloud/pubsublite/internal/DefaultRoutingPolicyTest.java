@@ -28,7 +28,10 @@ import java.nio.file.Paths;
 import java.util.Map;
 import java.util.function.Supplier;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 
+@RunWith(JUnit4.class)
 public class DefaultRoutingPolicyTest {
   private static final int NUM_PARTITIONS = 29;
   private static final RoutingPolicy policy =

@@ -42,16 +42,17 @@ public class SubscriberBuilderTest {
   @Test
   public void testBuilder() throws Exception {
     initMocks(this);
-    SubscriberBuilder.newBuilder()
-        .setSubscriptionPath(
-            SubscriptionPath.newBuilder()
-                .setLocation(CloudZone.of(CloudRegion.of("us-central1"), 'a'))
-                .setProject(ProjectNumber.of(3))
-                .setName(SubscriptionName.of("abc"))
-                .build())
-        .setMessageConsumer(mockConsumer)
-        .setPartition(Partition.of(3))
-        .setSubscriberServiceStub(SubscriberServiceGrpc.newStub(mock(Channel.class)))
-        .build();
+    Subscriber unusedSubscriber =
+        SubscriberBuilder.newBuilder()
+            .setSubscriptionPath(
+                SubscriptionPath.newBuilder()
+                    .setLocation(CloudZone.of(CloudRegion.of("us-central1"), 'a'))
+                    .setProject(ProjectNumber.of(3))
+                    .setName(SubscriptionName.of("abc"))
+                    .build())
+            .setMessageConsumer(mockConsumer)
+            .setPartition(Partition.of(3))
+            .setSubscriberServiceStub(SubscriberServiceGrpc.newStub(mock(Channel.class)))
+            .build();
   }
 }

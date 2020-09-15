@@ -115,7 +115,7 @@ public abstract class PublisherBuilder {
       return new PublisherImpl(
           actualStub,
           InitialPublishRequest.newBuilder()
-              .setTopic(ProjectLookupUtils.toCannonical(autoBuilt.topic()).toString())
+              .setTopic(ProjectLookupUtils.toCanonical(autoBuilt.topic()).toString())
               .setPartition(autoBuilt.partition().value())
               .build(),
           validateBatchingSettings(autoBuilt.batching()));

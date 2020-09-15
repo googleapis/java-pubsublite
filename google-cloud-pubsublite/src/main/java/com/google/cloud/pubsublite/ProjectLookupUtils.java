@@ -23,37 +23,45 @@ import com.google.cloud.resourcemanager.ResourceManager;
 import com.google.cloud.resourcemanager.ResourceManagerOptions;
 import io.grpc.StatusException;
 
-public class ProjectLookupUtils {
-  private static final ResourceManager resourceManager =
-      ResourceManagerOptions.getDefaultInstance().getService();
+public final class ProjectLookupUtils {
+  private ProjectLookupUtils() {}
+
+  private static ResourceManager resourceManager = null;
+
+  private static synchronized ResourceManager getResourceManager() {
+    if (resourceManager == null) {
+      resourceManager = ResourceManagerOptions.getDefaultInstance().getService();
+    }
+    return resourceManager;
+  }
 
   private static ProjectNumber getProjectNumber(ProjectId id) throws StatusException {
     try {
-      Project project = resourceManager.get(id.toString());
+      Project project = getResourceManager().get(id.toString());
       return ProjectNumber.of(project.getProjectNumber());
     } catch (Throwable t) {
       throw ExtractStatus.toCanonical(t);
     }
   }
 
-  static ProjectNumber toCannonical(ProjectIdOrNumber project) throws StatusException {
+  static ProjectNumber toCanonical(ProjectIdOrNumber project) throws StatusException {
     if (project.getKind() == Kind.NUMBER) return project.number();
     return getProjectNumber(project.name());
   }
 
-  public static ProjectPath toCannonical(ProjectPath path) throws StatusException {
-    return path.toBuilder().setProject(toCannonical(path.project())).build();
+  public static ProjectPath toCanonical(ProjectPath path) throws StatusException {
+    return path.toBuilder().setProject(toCanonical(path.project())).build();
   }
 
-  public static LocationPath toCannonical(LocationPath path) throws StatusException {
-    return path.toBuilder().setProject(toCannonical(path.project())).build();
+  public static LocationPath toCanonical(LocationPath path) throws StatusException {
+    return path.toBuilder().setProject(toCanonical(path.project())).build();
   }
 
-  public static SubscriptionPath toCannonical(SubscriptionPath path) throws StatusException {
-    return path.toBuilder().setProject(toCannonical(path.project())).build();
+  public static SubscriptionPath toCanonical(SubscriptionPath path) throws StatusException {
+    return path.toBuilder().setProject(toCanonical(path.project())).build();
   }
 
-  public static TopicPath toCannonical(TopicPath path) throws StatusException {
-    return path.toBuilder().setProject(toCannonical(path.project())).build();
+  public static TopicPath toCanonical(TopicPath path) throws StatusException {
+    return path.toBuilder().setProject(toCanonical(path.project())).build();
   }
 }

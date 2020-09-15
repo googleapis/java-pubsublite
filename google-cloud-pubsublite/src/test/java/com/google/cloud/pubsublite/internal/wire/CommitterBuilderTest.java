@@ -34,15 +34,16 @@ import org.junit.runners.JUnit4;
 public class CommitterBuilderTest {
   @Test
   public void testBuilder() throws Exception {
-    CommitterBuilder.newBuilder()
-        .setSubscriptionPath(
-            SubscriptionPath.newBuilder()
-                .setLocation(CloudZone.of(CloudRegion.of("us-central1"), 'a'))
-                .setProject(ProjectNumber.of(3))
-                .setName(SubscriptionName.of("abc"))
-                .build())
-        .setPartition(Partition.of(987))
-        .setCursorStub(CursorServiceGrpc.newStub(mock(Channel.class)))
-        .build();
+    Committer unusedCommitter =
+        CommitterBuilder.newBuilder()
+            .setSubscriptionPath(
+                SubscriptionPath.newBuilder()
+                    .setLocation(CloudZone.of(CloudRegion.of("us-central1"), 'a'))
+                    .setProject(ProjectNumber.of(3))
+                    .setName(SubscriptionName.of("abc"))
+                    .build())
+            .setPartition(Partition.of(987))
+            .setCursorStub(CursorServiceGrpc.newStub(mock(Channel.class)))
+            .build();
   }
 }

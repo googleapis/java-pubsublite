@@ -111,7 +111,7 @@ public class TopicStatsClientImpl implements BackgroundResource, TopicStatsClien
         () -> {
           return stub.computeMessageStats(
               ComputeMessageStatsRequest.newBuilder()
-                  .setTopic(ProjectLookupUtils.toCannonical(path).toString())
+                  .setTopic(ProjectLookupUtils.toCanonical(path).toString())
                   .setPartition(partition.value())
                   .setStartCursor(Cursor.newBuilder().setOffset(start.value()).build())
                   .setEndCursor(Cursor.newBuilder().setOffset(end.value()).build())

@@ -87,7 +87,7 @@ public abstract class SubscriberBuilder {
       InitialSubscribeRequest initialSubscribeRequest =
           InitialSubscribeRequest.newBuilder()
               .setSubscription(
-                  ProjectLookupUtils.toCannonical(builder.subscriptionPath()).toString())
+                  ProjectLookupUtils.toCanonical(builder.subscriptionPath()).toString())
               .setPartition(builder.partition().value())
               .build();
       return new SubscriberImpl(

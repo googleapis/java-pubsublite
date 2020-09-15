@@ -30,10 +30,11 @@ import org.junit.runners.JUnit4;
 public class TopicStatsClientSettingsTest {
   @Test
   public void testSettings() throws StatusException {
-    TopicStatsClientSettings.newBuilder()
-        .setRegion(CloudRegion.of("us-central1"))
-        .setStub(TopicStatsServiceGrpc.newBlockingStub(mock(Channel.class)))
-        .build()
-        .instantiate();
+    TopicStatsClient unusedClient =
+        TopicStatsClientSettings.newBuilder()
+            .setRegion(CloudRegion.of("us-central1"))
+            .setStub(TopicStatsServiceGrpc.newBlockingStub(mock(Channel.class)))
+            .build()
+            .instantiate();
   }
 }

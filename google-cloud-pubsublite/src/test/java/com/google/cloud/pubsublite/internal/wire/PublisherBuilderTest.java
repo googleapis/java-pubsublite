@@ -20,10 +20,12 @@ import static org.mockito.Mockito.mock;
 
 import com.google.cloud.pubsublite.CloudRegion;
 import com.google.cloud.pubsublite.CloudZone;
+import com.google.cloud.pubsublite.Offset;
 import com.google.cloud.pubsublite.Partition;
 import com.google.cloud.pubsublite.ProjectNumber;
 import com.google.cloud.pubsublite.TopicName;
 import com.google.cloud.pubsublite.TopicPath;
+import com.google.cloud.pubsublite.internal.Publisher;
 import com.google.cloud.pubsublite.proto.PublisherServiceGrpc;
 import io.grpc.Channel;
 import org.junit.Test;
@@ -34,16 +36,17 @@ import org.junit.runners.JUnit4;
 public class PublisherBuilderTest {
   @Test
   public void testBuilder() throws Exception {
-    PublisherBuilder.builder()
-        .setBatching(PublisherBuilder.DEFAULT_BATCHING_SETTINGS)
-        .setTopic(
-            TopicPath.newBuilder()
-                .setLocation(CloudZone.of(CloudRegion.of("us-central1"), 'a'))
-                .setProject(ProjectNumber.of(3))
-                .setName(TopicName.of("abc"))
-                .build())
-        .setPartition(Partition.of(85))
-        .setStub(PublisherServiceGrpc.newStub(mock(Channel.class)))
-        .build();
+    Publisher<Offset> unusedPublisher =
+        PublisherBuilder.builder()
+            .setBatching(PublisherBuilder.DEFAULT_BATCHING_SETTINGS)
+            .setTopic(
+                TopicPath.newBuilder()
+                    .setLocation(CloudZone.of(CloudRegion.of("us-central1"), 'a'))
+                    .setProject(ProjectNumber.of(3))
+                    .setName(TopicName.of("abc"))
+                    .build())
+            .setPartition(Partition.of(85))
+            .setStub(PublisherServiceGrpc.newStub(mock(Channel.class)))
+            .build();
   }
 }

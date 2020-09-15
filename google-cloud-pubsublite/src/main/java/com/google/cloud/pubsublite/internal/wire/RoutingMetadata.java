@@ -39,7 +39,7 @@ final class RoutingMetadata {
       Metadata metadata = new Metadata();
       String topic_value =
           URLEncoder.encode(
-              ProjectLookupUtils.toCannonical(topic).toString(), StandardCharsets.UTF_8.toString());
+              ProjectLookupUtils.toCanonical(topic).toString(), StandardCharsets.UTF_8.toString());
       String params = String.format("partition=%s&topic=%s", partition.value(), topic_value);
       metadata.put(PARAMS_KEY, params);
       return metadata;
@@ -53,7 +53,7 @@ final class RoutingMetadata {
       Metadata metadata = new Metadata();
       String subscription_value =
           URLEncoder.encode(
-              ProjectLookupUtils.toCannonical(subscription).toString(),
+              ProjectLookupUtils.toCanonical(subscription).toString(),
               StandardCharsets.UTF_8.toString());
       String params =
           String.format("partition=%s&subscription=%s", partition.value(), subscription_value);

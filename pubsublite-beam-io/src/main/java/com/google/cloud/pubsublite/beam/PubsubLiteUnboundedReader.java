@@ -24,6 +24,7 @@ import com.google.cloud.pubsublite.SequencedMessage;
 import com.google.cloud.pubsublite.internal.CloseableMonitor;
 import com.google.cloud.pubsublite.internal.ExtractStatus;
 import com.google.cloud.pubsublite.internal.ProxyService;
+import com.google.cloud.pubsublite.internal.PullSubscriber;
 import com.google.cloud.pubsublite.internal.wire.Committer;
 import com.google.cloud.pubsublite.proto.ComputeMessageStatsResponse;
 import com.google.common.base.Ticker;

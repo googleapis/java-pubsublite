@@ -14,14 +14,13 @@
  * limitations under the License.
  */
 
-package com.google.cloud.pubsublite.beam;
+package com.google.cloud.pubsublite.internal;
 
 import com.google.api.core.ApiService.Listener;
 import com.google.api.core.ApiService.State;
 import com.google.cloud.pubsublite.Offset;
 import com.google.cloud.pubsublite.SequencedMessage;
 import com.google.cloud.pubsublite.cloudpubsub.FlowControlSettings;
-import com.google.cloud.pubsublite.internal.ExtractStatus;
 import com.google.cloud.pubsublite.internal.wire.Subscriber;
 import com.google.cloud.pubsublite.internal.wire.SubscriberFactory;
 import com.google.cloud.pubsublite.proto.Cursor;
@@ -36,12 +35,12 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.atomic.AtomicReference;
 import javax.annotation.Nullable;
 
-class BufferingPullSubscriber implements PullSubscriber<SequencedMessage> {
+public class BufferingPullSubscriber implements PullSubscriber<SequencedMessage> {
   private final Subscriber underlying;
   private final AtomicReference<StatusException> error = new AtomicReference<>();
   private final LinkedBlockingQueue<SequencedMessage> messages = new LinkedBlockingQueue<>();
 
-  BufferingPullSubscriber(SubscriberFactory factory, FlowControlSettings settings)
+  public BufferingPullSubscriber(SubscriberFactory factory, FlowControlSettings settings)
       throws StatusException {
     underlying = factory.New(messages::addAll);
     underlying.addListener(
@@ -60,7 +59,7 @@ class BufferingPullSubscriber implements PullSubscriber<SequencedMessage> {
             .build());
   }
 
-  BufferingPullSubscriber(
+  public BufferingPullSubscriber(
       SubscriberFactory factory, FlowControlSettings settings, Offset initialLocation)
       throws StatusException {
     this(factory, settings);

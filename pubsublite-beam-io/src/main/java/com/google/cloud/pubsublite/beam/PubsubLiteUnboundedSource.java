@@ -21,6 +21,7 @@ import static com.google.cloud.pubsublite.internal.Preconditions.checkState;
 import com.google.cloud.pubsublite.Offset;
 import com.google.cloud.pubsublite.Partition;
 import com.google.cloud.pubsublite.SequencedMessage;
+import com.google.cloud.pubsublite.internal.BufferingPullSubscriber;
 import com.google.cloud.pubsublite.internal.wire.Committer;
 import com.google.cloud.pubsublite.internal.wire.SubscriberFactory;
 import com.google.common.base.Ticker;

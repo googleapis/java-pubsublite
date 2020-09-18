@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-package com.google.cloud.pubsublite.beam;
+package com.google.cloud.pubsublite.internal;
 
 import com.google.common.collect.ImmutableList;
 import io.grpc.StatusException;
 
 // A PullSubscriber exposes a "pull" mechanism for retrieving messages.
-interface PullSubscriber<T> extends AutoCloseable {
+public interface PullSubscriber<T> extends AutoCloseable {
   // Pull currently available messages from this subscriber. Does not block.
   ImmutableList<T> pull() throws StatusException;
 }

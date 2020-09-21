@@ -17,10 +17,16 @@
 package com.google.cloud.pubsublite.beam;
 
 import com.google.auto.value.AutoValue;
+import com.google.cloud.pubsublite.AdminClient;
+import com.google.cloud.pubsublite.AdminClientSettings;
 import com.google.cloud.pubsublite.Partition;
 import com.google.cloud.pubsublite.PartitionLookupUtils;
 import com.google.cloud.pubsublite.SubscriptionPath;
+import com.google.cloud.pubsublite.TopicPath;
 import com.google.cloud.pubsublite.cloudpubsub.FlowControlSettings;
+import com.google.cloud.pubsublite.internal.ExtractStatus;
+import com.google.cloud.pubsublite.internal.TopicStatsClient;
+import com.google.cloud.pubsublite.internal.TopicStatsClientSettings;
 import com.google.cloud.pubsublite.internal.wire.Committer;
 import com.google.cloud.pubsublite.internal.wire.CommitterBuilder;
 import com.google.cloud.pubsublite.internal.wire.PubsubContext;
@@ -34,6 +40,7 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import io.grpc.StatusException;
 import java.io.Serializable;
+import java.util.concurrent.ExecutionException;
 
 @AutoValue
 public abstract class SubscriberOptions implements Serializable {
@@ -49,6 +56,9 @@ public abstract class SubscriberOptions implements Serializable {
   // Optional parameters.
   /** A set of partitions. If empty, retrieve the set of partitions using an admin client. */
   public abstract ImmutableSet<Partition> partitions();
+
+  /** The class used to read backlog for the subscription described by subscriptionPath() */
+  public abstract TopicBacklogReader topicBacklogReader();
 
   /** A supplier for the subscriber stub to be used. */
   public abstract Optional<SerializableSupplier<SubscriberServiceStub>> subscriberStubSupplier();
@@ -133,24 +143,54 @@ public abstract class SubscriberOptions implements Serializable {
     public abstract Builder setCommitterStubSupplier(
         SerializableSupplier<CursorServiceStub> stubSupplier);
 
+    public abstract Builder setTopicBacklogReader(TopicBacklogReader topicBacklogReader);
+
+    // Used in unit tests
     abstract Builder setSubscriberFactory(SubscriberFactory subscriberFactory);
 
     abstract Builder setCommitterSupplier(SerializableSupplier<Committer> committerSupplier);
 
+    // Used for implementing build();
+    abstract SubscriptionPath subscriptionPath();
+
+    abstract ImmutableSet<Partition> partitions();
+
+    abstract Optional<TopicBacklogReader> topicBacklogReader();
+
     abstract SubscriberOptions autoBuild();
 
     public SubscriberOptions build() throws StatusException {
-      SubscriberOptions built = autoBuild();
-      if (!built.partitions().isEmpty()) {
-        return built;
+      if (!partitions().isEmpty() && topicBacklogReader().isPresent()) {
+        return autoBuild();
       }
-      int partition_count = PartitionLookupUtils.numPartitions(built.subscriptionPath());
-      SubscriberOptions.Builder builder = built.toBuilder();
-      ImmutableSet.Builder<Partition> partitions = ImmutableSet.builder();
-      for (int i = 0; i < partition_count; i++) {
-        partitions.add(Partition.of(i));
+      TopicPath path;
+      try (AdminClient adminClient =
+          AdminClient.create(
+              AdminClientSettings.newBuilder()
+                  .setRegion(subscriptionPath().location().location().region())
+                  .build())) {
+        path = TopicPath.parse(adminClient.getSubscription(subscriptionPath()).get().getTopic());
+      } catch (ExecutionException e) {
+        throw ExtractStatus.toCanonical(e.getCause());
+      } catch (Throwable t) {
+        throw ExtractStatus.toCanonical(t);
       }
-      return builder.setPartitions(partitions.build()).autoBuild();
+
+      if (partitions().isEmpty()) {
+        int partition_count = PartitionLookupUtils.numPartitions(path);
+        ImmutableSet.Builder<Partition> partitions = ImmutableSet.builder();
+        for (int i = 0; i < partition_count; i++) {
+          partitions.add(Partition.of(i));
+        }
+        setPartitions(partitions.build());
+      }
+      if (!topicBacklogReader().isPresent()) {
+        setTopicBacklogReader(
+            new TopicBacklogReaderImpl(
+                TopicStatsClient.create(TopicStatsClientSettings.newBuilder().build()), path));
+      }
+
+      return autoBuild();
     }
   }
 }

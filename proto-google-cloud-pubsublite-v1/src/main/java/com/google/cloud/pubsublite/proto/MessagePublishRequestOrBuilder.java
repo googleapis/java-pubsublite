@@ -23,15 +23,55 @@ public interface MessagePublishRequestOrBuilder
     // @@protoc_insertion_point(interface_extends:google.cloud.pubsublite.v1.MessagePublishRequest)
     com.google.protobuf.MessageOrBuilder {
 
-  /** <code>repeated .google.cloud.pubsublite.v1.PubSubMessage messages = 1;</code> */
+  /**
+   *
+   *
+   * <pre>
+   * The messages to publish.
+   * </pre>
+   *
+   * <code>repeated .google.cloud.pubsublite.v1.PubSubMessage messages = 1;</code>
+   */
   java.util.List<com.google.cloud.pubsublite.proto.PubSubMessage> getMessagesList();
-  /** <code>repeated .google.cloud.pubsublite.v1.PubSubMessage messages = 1;</code> */
+  /**
+   *
+   *
+   * <pre>
+   * The messages to publish.
+   * </pre>
+   *
+   * <code>repeated .google.cloud.pubsublite.v1.PubSubMessage messages = 1;</code>
+   */
   com.google.cloud.pubsublite.proto.PubSubMessage getMessages(int index);
-  /** <code>repeated .google.cloud.pubsublite.v1.PubSubMessage messages = 1;</code> */
+  /**
+   *
+   *
+   * <pre>
+   * The messages to publish.
+   * </pre>
+   *
+   * <code>repeated .google.cloud.pubsublite.v1.PubSubMessage messages = 1;</code>
+   */
   int getMessagesCount();
-  /** <code>repeated .google.cloud.pubsublite.v1.PubSubMessage messages = 1;</code> */
+  /**
+   *
+   *
+   * <pre>
+   * The messages to publish.
+   * </pre>
+   *
+   * <code>repeated .google.cloud.pubsublite.v1.PubSubMessage messages = 1;</code>
+   */
   java.util.List<? extends com.google.cloud.pubsublite.proto.PubSubMessageOrBuilder>
       getMessagesOrBuilderList();
-  /** <code>repeated .google.cloud.pubsublite.v1.PubSubMessage messages = 1;</code> */
+  /**
+   *
+   *
+   * <pre>
+   * The messages to publish.
+   * </pre>
+   *
+   * <code>repeated .google.cloud.pubsublite.v1.PubSubMessage messages = 1;</code>
+   */
   com.google.cloud.pubsublite.proto.PubSubMessageOrBuilder getMessagesOrBuilder(int index);
 }

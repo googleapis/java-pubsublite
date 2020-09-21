@@ -16,13 +16,16 @@
 
 package com.google.cloud.pubsublite.internal.wire;
 
+import static com.google.common.truth.Truth.assertThat;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
 import com.google.api.core.ApiFuture;
+import com.google.api.core.ApiFutures;
 import com.google.cloud.pubsublite.Message;
+import com.google.cloud.pubsublite.Offset;
 import com.google.cloud.pubsublite.Partition;
 import com.google.cloud.pubsublite.PublishMetadata;
 import com.google.cloud.pubsublite.internal.FakeApiService;
@@ -73,8 +76,11 @@ public class RoutingPublisherTest {
   public void publishValidRoute() throws Exception {
     Message message = Message.builder().setKey(ByteString.copyFromUtf8("abc")).build();
     when(routingPolicy.route(message.key())).thenReturn(Partition.of(1));
-    routing.publish(message);
+    PublishMetadata meta = PublishMetadata.of(Partition.of(1), Offset.of(3));
+    when(publisher1.publish(message)).thenReturn(ApiFutures.immediateFuture(meta));
+    ApiFuture<PublishMetadata> fut = routing.publish(message);
     verify(publisher1, times(1)).publish(message);
+    assertThat(fut.get()).isEqualTo(meta);
     this.routing.stopAsync().awaitTerminated();
   }
 

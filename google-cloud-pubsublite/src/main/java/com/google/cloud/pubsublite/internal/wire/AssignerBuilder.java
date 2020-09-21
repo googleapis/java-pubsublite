@@ -81,7 +81,7 @@ public abstract class AssignerBuilder {
       InitialPartitionAssignmentRequest initial =
           InitialPartitionAssignmentRequest.newBuilder()
               .setSubscription(
-                  ProjectLookupUtils.toCannonical(builder.subscriptionPath()).toString())
+                  ProjectLookupUtils.toCanonical(builder.subscriptionPath()).toString())
               .setClientId(ByteString.copyFrom(uuidBuffer.array()))
               .build();
       return new AssignerImpl(

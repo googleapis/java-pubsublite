@@ -69,7 +69,7 @@ public abstract class CommitterBuilder {
       InitialCommitCursorRequest initialCommitCursorRequest =
           InitialCommitCursorRequest.newBuilder()
               .setSubscription(
-                  ProjectLookupUtils.toCannonical(builder.subscriptionPath()).toString())
+                  ProjectLookupUtils.toCanonical(builder.subscriptionPath()).toString())
               .setPartition(builder.partition().value())
               .build();
       return new CommitterImpl(cursorStub, initialCommitCursorRequest);

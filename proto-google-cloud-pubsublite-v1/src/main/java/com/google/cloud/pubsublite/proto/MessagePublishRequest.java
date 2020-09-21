@@ -122,28 +122,68 @@ public final class MessagePublishRequest extends com.google.protobuf.GeneratedMe
 
   public static final int MESSAGES_FIELD_NUMBER = 1;
   private java.util.List<com.google.cloud.pubsublite.proto.PubSubMessage> messages_;
-  /** <code>repeated .google.cloud.pubsublite.v1.PubSubMessage messages = 1;</code> */
+  /**
+   *
+   *
+   * <pre>
+   * The messages to publish.
+   * </pre>
+   *
+   * <code>repeated .google.cloud.pubsublite.v1.PubSubMessage messages = 1;</code>
+   */
   @java.lang.Override
   public java.util.List<com.google.cloud.pubsublite.proto.PubSubMessage> getMessagesList() {
     return messages_;
   }
-  /** <code>repeated .google.cloud.pubsublite.v1.PubSubMessage messages = 1;</code> */
+  /**
+   *
+   *
+   * <pre>
+   * The messages to publish.
+   * </pre>
+   *
+   * <code>repeated .google.cloud.pubsublite.v1.PubSubMessage messages = 1;</code>
+   */
   @java.lang.Override
   public java.util.List<? extends com.google.cloud.pubsublite.proto.PubSubMessageOrBuilder>
       getMessagesOrBuilderList() {
     return messages_;
   }
-  /** <code>repeated .google.cloud.pubsublite.v1.PubSubMessage messages = 1;</code> */
+  /**
+   *
+   *
+   * <pre>
+   * The messages to publish.
+   * </pre>
+   *
+   * <code>repeated .google.cloud.pubsublite.v1.PubSubMessage messages = 1;</code>
+   */
   @java.lang.Override
   public int getMessagesCount() {
     return messages_.size();
   }
-  /** <code>repeated .google.cloud.pubsublite.v1.PubSubMessage messages = 1;</code> */
+  /**
+   *
+   *
+   * <pre>
+   * The messages to publish.
+   * </pre>
+   *
+   * <code>repeated .google.cloud.pubsublite.v1.PubSubMessage messages = 1;</code>
+   */
   @java.lang.Override
   public com.google.cloud.pubsublite.proto.PubSubMessage getMessages(int index) {
     return messages_.get(index);
   }
-  /** <code>repeated .google.cloud.pubsublite.v1.PubSubMessage messages = 1;</code> */
+  /**
+   *
+   *
+   * <pre>
+   * The messages to publish.
+   * </pre>
+   *
+   * <code>repeated .google.cloud.pubsublite.v1.PubSubMessage messages = 1;</code>
+   */
   @java.lang.Override
   public com.google.cloud.pubsublite.proto.PubSubMessageOrBuilder getMessagesOrBuilder(int index) {
     return messages_.get(index);
@@ -527,7 +567,15 @@ public final class MessagePublishRequest extends com.google.protobuf.GeneratedMe
             com.google.cloud.pubsublite.proto.PubSubMessageOrBuilder>
         messagesBuilder_;
 
-    /** <code>repeated .google.cloud.pubsublite.v1.PubSubMessage messages = 1;</code> */
+    /**
+     *
+     *
+     * <pre>
+     * The messages to publish.
+     * </pre>
+     *
+     * <code>repeated .google.cloud.pubsublite.v1.PubSubMessage messages = 1;</code>
+     */
     public java.util.List<com.google.cloud.pubsublite.proto.PubSubMessage> getMessagesList() {
       if (messagesBuilder_ == null) {
         return java.util.Collections.unmodifiableList(messages_);
@@ -535,7 +583,15 @@ public final class MessagePublishRequest extends com.google.protobuf.GeneratedMe
         return messagesBuilder_.getMessageList();
       }
     }
-    /** <code>repeated .google.cloud.pubsublite.v1.PubSubMessage messages = 1;</code> */
+    /**
+     *
+     *
+     * <pre>
+     * The messages to publish.
+     * </pre>
+     *
+     * <code>repeated .google.cloud.pubsublite.v1.PubSubMessage messages = 1;</code>
+     */
     public int getMessagesCount() {
       if (messagesBuilder_ == null) {
         return messages_.size();
@@ -543,7 +599,15 @@ public final class MessagePublishRequest extends com.google.protobuf.GeneratedMe
         return messagesBuilder_.getCount();
       }
     }
-    /** <code>repeated .google.cloud.pubsublite.v1.PubSubMessage messages = 1;</code> */
+    /**
+     *
+     *
+     * <pre>
+     * The messages to publish.
+     * </pre>
+     *
+     * <code>repeated .google.cloud.pubsublite.v1.PubSubMessage messages = 1;</code>
+     */
     public com.google.cloud.pubsublite.proto.PubSubMessage getMessages(int index) {
       if (messagesBuilder_ == null) {
         return messages_.get(index);
@@ -551,7 +615,15 @@ public final class MessagePublishRequest extends com.google.protobuf.GeneratedMe
         return messagesBuilder_.getMessage(index);
       }
     }
-    /** <code>repeated .google.cloud.pubsublite.v1.PubSubMessage messages = 1;</code> */
+    /**
+     *
+     *
+     * <pre>
+     * The messages to publish.
+     * </pre>
+     *
+     * <code>repeated .google.cloud.pubsublite.v1.PubSubMessage messages = 1;</code>
+     */
     public Builder setMessages(int index, com.google.cloud.pubsublite.proto.PubSubMessage value) {
       if (messagesBuilder_ == null) {
         if (value == null) {
@@ -565,7 +637,15 @@ public final class MessagePublishRequest extends com.google.protobuf.GeneratedMe
       }
       return this;
     }
-    /** <code>repeated .google.cloud.pubsublite.v1.PubSubMessage messages = 1;</code> */
+    /**
+     *
+     *
+     * <pre>
+     * The messages to publish.
+     * </pre>
+     *
+     * <code>repeated .google.cloud.pubsublite.v1.PubSubMessage messages = 1;</code>
+     */
     public Builder setMessages(
         int index, com.google.cloud.pubsublite.proto.PubSubMessage.Builder builderForValue) {
       if (messagesBuilder_ == null) {
@@ -577,7 +657,15 @@ public final class MessagePublishRequest extends com.google.protobuf.GeneratedMe
       }
       return this;
     }
-    /** <code>repeated .google.cloud.pubsublite.v1.PubSubMessage messages = 1;</code> */
+    /**
+     *
+     *
+     * <pre>
+     * The messages to publish.
+     * </pre>
+     *
+     * <code>repeated .google.cloud.pubsublite.v1.PubSubMessage messages = 1;</code>
+     */
     public Builder addMessages(com.google.cloud.pubsublite.proto.PubSubMessage value) {
       if (messagesBuilder_ == null) {
         if (value == null) {
@@ -591,7 +679,15 @@ public final class MessagePublishRequest extends com.google.protobuf.GeneratedMe
       }
       return this;
     }
-    /** <code>repeated .google.cloud.pubsublite.v1.PubSubMessage messages = 1;</code> */
+    /**
+     *
+     *
+     * <pre>
+     * The messages to publish.
+     * </pre>
+     *
+     * <code>repeated .google.cloud.pubsublite.v1.PubSubMessage messages = 1;</code>
+     */
     public Builder addMessages(int index, com.google.cloud.pubsublite.proto.PubSubMessage value) {
       if (messagesBuilder_ == null) {
         if (value == null) {
@@ -605,7 +701,15 @@ public final class MessagePublishRequest extends com.google.protobuf.GeneratedMe
       }
       return this;
     }
-    /** <code>repeated .google.cloud.pubsublite.v1.PubSubMessage messages = 1;</code> */
+    /**
+     *
+     *
+     * <pre>
+     * The messages to publish.
+     * </pre>
+     *
+     * <code>repeated .google.cloud.pubsublite.v1.PubSubMessage messages = 1;</code>
+     */
     public Builder addMessages(
         com.google.cloud.pubsublite.proto.PubSubMessage.Builder builderForValue) {
       if (messagesBuilder_ == null) {
@@ -617,7 +721,15 @@ public final class MessagePublishRequest extends com.google.protobuf.GeneratedMe
       }
       return this;
     }
-    /** <code>repeated .google.cloud.pubsublite.v1.PubSubMessage messages = 1;</code> */
+    /**
+     *
+     *
+     * <pre>
+     * The messages to publish.
+     * </pre>
+     *
+     * <code>repeated .google.cloud.pubsublite.v1.PubSubMessage messages = 1;</code>
+     */
     public Builder addMessages(
         int index, com.google.cloud.pubsublite.proto.PubSubMessage.Builder builderForValue) {
       if (messagesBuilder_ == null) {
@@ -629,7 +741,15 @@ public final class MessagePublishRequest extends com.google.protobuf.GeneratedMe
       }
       return this;
     }
-    /** <code>repeated .google.cloud.pubsublite.v1.PubSubMessage messages = 1;</code> */
+    /**
+     *
+     *
+     * <pre>
+     * The messages to publish.
+     * </pre>
+     *
+     * <code>repeated .google.cloud.pubsublite.v1.PubSubMessage messages = 1;</code>
+     */
     public Builder addAllMessages(
         java.lang.Iterable<? extends com.google.cloud.pubsublite.proto.PubSubMessage> values) {
       if (messagesBuilder_ == null) {
@@ -641,7 +761,15 @@ public final class MessagePublishRequest extends com.google.protobuf.GeneratedMe
       }
       return this;
     }
-    /** <code>repeated .google.cloud.pubsublite.v1.PubSubMessage messages = 1;</code> */
+    /**
+     *
+     *
+     * <pre>
+     * The messages to publish.
+     * </pre>
+     *
+     * <code>repeated .google.cloud.pubsublite.v1.PubSubMessage messages = 1;</code>
+     */
     public Builder clearMessages() {
       if (messagesBuilder_ == null) {
         messages_ = java.util.Collections.emptyList();
@@ -652,7 +780,15 @@ public final class MessagePublishRequest extends com.google.protobuf.GeneratedMe
       }
       return this;
     }
-    /** <code>repeated .google.cloud.pubsublite.v1.PubSubMessage messages = 1;</code> */
+    /**
+     *
+     *
+     * <pre>
+     * The messages to publish.
+     * </pre>
+     *
+     * <code>repeated .google.cloud.pubsublite.v1.PubSubMessage messages = 1;</code>
+     */
     public Builder removeMessages(int index) {
       if (messagesBuilder_ == null) {
         ensureMessagesIsMutable();
@@ -663,11 +799,27 @@ public final class MessagePublishRequest extends com.google.protobuf.GeneratedMe
       }
       return this;
     }
-    /** <code>repeated .google.cloud.pubsublite.v1.PubSubMessage messages = 1;</code> */
+    /**
+     *
+     *
+     * <pre>
+     * The messages to publish.
+     * </pre>
+     *
+     * <code>repeated .google.cloud.pubsublite.v1.PubSubMessage messages = 1;</code>
+     */
     public com.google.cloud.pubsublite.proto.PubSubMessage.Builder getMessagesBuilder(int index) {
       return getMessagesFieldBuilder().getBuilder(index);
     }
-    /** <code>repeated .google.cloud.pubsublite.v1.PubSubMessage messages = 1;</code> */
+    /**
+     *
+     *
+     * <pre>
+     * The messages to publish.
+     * </pre>
+     *
+     * <code>repeated .google.cloud.pubsublite.v1.PubSubMessage messages = 1;</code>
+     */
     public com.google.cloud.pubsublite.proto.PubSubMessageOrBuilder getMessagesOrBuilder(
         int index) {
       if (messagesBuilder_ == null) {
@@ -676,7 +828,15 @@ public final class MessagePublishRequest extends com.google.protobuf.GeneratedMe
         return messagesBuilder_.getMessageOrBuilder(index);
       }
     }
-    /** <code>repeated .google.cloud.pubsublite.v1.PubSubMessage messages = 1;</code> */
+    /**
+     *
+     *
+     * <pre>
+     * The messages to publish.
+     * </pre>
+     *
+     * <code>repeated .google.cloud.pubsublite.v1.PubSubMessage messages = 1;</code>
+     */
     public java.util.List<? extends com.google.cloud.pubsublite.proto.PubSubMessageOrBuilder>
         getMessagesOrBuilderList() {
       if (messagesBuilder_ != null) {
@@ -685,17 +845,41 @@ public final class MessagePublishRequest extends com.google.protobuf.GeneratedMe
         return java.util.Collections.unmodifiableList(messages_);
       }
     }
-    /** <code>repeated .google.cloud.pubsublite.v1.PubSubMessage messages = 1;</code> */
+    /**
+     *
+     *
+     * <pre>
+     * The messages to publish.
+     * </pre>
+     *
+     * <code>repeated .google.cloud.pubsublite.v1.PubSubMessage messages = 1;</code>
+     */
     public com.google.cloud.pubsublite.proto.PubSubMessage.Builder addMessagesBuilder() {
       return getMessagesFieldBuilder()
           .addBuilder(com.google.cloud.pubsublite.proto.PubSubMessage.getDefaultInstance());
     }
-    /** <code>repeated .google.cloud.pubsublite.v1.PubSubMessage messages = 1;</code> */
+    /**
+     *
+     *
+     * <pre>
+     * The messages to publish.
+     * </pre>
+     *
+     * <code>repeated .google.cloud.pubsublite.v1.PubSubMessage messages = 1;</code>
+     */
     public com.google.cloud.pubsublite.proto.PubSubMessage.Builder addMessagesBuilder(int index) {
       return getMessagesFieldBuilder()
           .addBuilder(index, com.google.cloud.pubsublite.proto.PubSubMessage.getDefaultInstance());
     }
-    /** <code>repeated .google.cloud.pubsublite.v1.PubSubMessage messages = 1;</code> */
+    /**
+     *
+     *
+     * <pre>
+     * The messages to publish.
+     * </pre>
+     *
+     * <code>repeated .google.cloud.pubsublite.v1.PubSubMessage messages = 1;</code>
+     */
     public java.util.List<com.google.cloud.pubsublite.proto.PubSubMessage.Builder>
         getMessagesBuilderList() {
       return getMessagesFieldBuilder().getBuilderList();

@@ -18,14 +18,13 @@ package com.google.cloud.pubsublite.internal;
 
 import com.google.api.core.ApiService.Listener;
 import com.google.api.core.ApiService.State;
-import com.google.cloud.pubsublite.Offset;
 import com.google.cloud.pubsublite.SequencedMessage;
 import com.google.cloud.pubsublite.cloudpubsub.FlowControlSettings;
 import com.google.cloud.pubsublite.internal.wire.Subscriber;
 import com.google.cloud.pubsublite.internal.wire.SubscriberFactory;
-import com.google.cloud.pubsublite.proto.Cursor;
 import com.google.cloud.pubsublite.proto.FlowControlRequest;
 import com.google.cloud.pubsublite.proto.SeekRequest;
+import com.google.cloud.pubsublite.proto.SeekRequest.NamedTarget;
 import com.google.common.collect.ImmutableList;
 import com.google.common.util.concurrent.MoreExecutors;
 import io.grpc.StatusException;
@@ -42,6 +41,15 @@ public class BufferingPullSubscriber implements PullSubscriber<SequencedMessage>
 
   public BufferingPullSubscriber(SubscriberFactory factory, FlowControlSettings settings)
       throws StatusException {
+    this(
+        factory,
+        settings,
+        SeekRequest.newBuilder().setNamedTarget(NamedTarget.COMMITTED_CURSOR).build());
+  }
+
+  public BufferingPullSubscriber(
+      SubscriberFactory factory, FlowControlSettings settings, SeekRequest initialSeek)
+      throws StatusException {
     underlying = factory.New(messages::addAll);
     underlying.addListener(
         new Listener() {
@@ -52,29 +60,18 @@ public class BufferingPullSubscriber implements PullSubscriber<SequencedMessage>
         },
         MoreExecutors.directExecutor());
     underlying.startAsync().awaitRunning();
-    underlying.allowFlow(
-        FlowControlRequest.newBuilder()
-            .setAllowedMessages(settings.messagesOutstanding())
-            .setAllowedBytes(settings.bytesOutstanding())
-            .build());
-  }
-
-  public BufferingPullSubscriber(
-      SubscriberFactory factory, FlowControlSettings settings, Offset initialLocation)
-      throws StatusException {
-    this(factory, settings);
     try {
-      underlying
-          .seek(
-              SeekRequest.newBuilder()
-                  .setCursor(Cursor.newBuilder().setOffset(initialLocation.value()))
-                  .build())
-          .get();
+      underlying.seek(initialSeek).get();
     } catch (InterruptedException e) {
       throw ExtractStatus.toCanonical(e);
     } catch (ExecutionException e) {
       throw ExtractStatus.toCanonical(e.getCause());
     }
+    underlying.allowFlow(
+        FlowControlRequest.newBuilder()
+            .setAllowedMessages(settings.messagesOutstanding())
+            .setAllowedBytes(settings.bytesOutstanding())
+            .build());
   }
 
   @Override

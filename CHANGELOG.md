@@ -1,5 +1,21 @@
 # Changelog
 
+## [0.4.0](https://www.github.com/googleapis/java-pubsublite/compare/v0.3.1...v0.4.0) (2020-09-24)
+
+
+### Features
+
+* Implement internal CursorClient which will be used by kafka shim. ([#252](https://www.github.com/googleapis/java-pubsublite/issues/252)) ([eabe900](https://www.github.com/googleapis/java-pubsublite/commit/eabe9003b91367add9b30caaeabbd589b14c8149))
+* Use TopicStats to implement getSplitBacklog ([#228](https://www.github.com/googleapis/java-pubsublite/issues/228)) ([9a889a9](https://www.github.com/googleapis/java-pubsublite/commit/9a889a92b41802d5d150b5abbb7427fca0d42ec8))
+
+
+### Bug Fixes
+
+* Assorted warnings. ([#246](https://www.github.com/googleapis/java-pubsublite/issues/246)) ([a65da39](https://www.github.com/googleapis/java-pubsublite/commit/a65da39d4c6fcf92d84a15436e9d67e1d634632f))
+* Fix BufferingPullSubscriber to not seek after sending flow control tokens. ([#253](https://www.github.com/googleapis/java-pubsublite/issues/253)) ([0e20d80](https://www.github.com/googleapis/java-pubsublite/commit/0e20d80f02532dce35e6dda72547e55fda0575a1))
+* Fix warning due to unchecked cast. ([#241](https://www.github.com/googleapis/java-pubsublite/issues/241)) ([a3a21b4](https://www.github.com/googleapis/java-pubsublite/commit/a3a21b4355a21979e84eb95f1cfa2049a044e151))
+* Move settings for the topic backlog reader to TopicBacklogReaderSettings ([#254](https://www.github.com/googleapis/java-pubsublite/issues/254)) ([0ee60eb](https://www.github.com/googleapis/java-pubsublite/commit/0ee60eb43ac4ee52a548138ecf137df10c539c83))
+
 ### [0.3.1](https://www.github.com/googleapis/java-pubsublite/compare/v0.3.0...v0.3.1) (2020-09-10)
 
 

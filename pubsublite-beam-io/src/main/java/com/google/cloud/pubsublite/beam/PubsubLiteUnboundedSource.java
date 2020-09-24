@@ -24,6 +24,8 @@ import com.google.cloud.pubsublite.SequencedMessage;
 import com.google.cloud.pubsublite.internal.BufferingPullSubscriber;
 import com.google.cloud.pubsublite.internal.wire.Committer;
 import com.google.cloud.pubsublite.internal.wire.SubscriberFactory;
+import com.google.cloud.pubsublite.proto.Cursor;
+import com.google.cloud.pubsublite.proto.SeekRequest;
 import com.google.common.base.Ticker;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
@@ -87,7 +89,9 @@ class PubsubLiteUnboundedSource extends UnboundedSource<SequencedMessage, Offset
               new BufferingPullSubscriber(
                   subscriberFactories.get(partition),
                   subscriberOptions.flowControlSettings(),
-                  checkpointed);
+                  SeekRequest.newBuilder()
+                      .setCursor(Cursor.newBuilder().setOffset(checkpointed.value()))
+                      .build());
         } else {
           state.subscriber =
               new BufferingPullSubscriber(

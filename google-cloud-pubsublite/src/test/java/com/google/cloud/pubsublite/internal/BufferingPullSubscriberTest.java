@@ -56,6 +56,10 @@ public class BufferingPullSubscriberTest {
   private final SubscriberFactory underlyingFactory = mock(SubscriberFactory.class);
   private final Subscriber underlying = mock(Subscriber.class);
   private final Offset initialOffset = Offset.of(5);
+  private final SeekRequest initialSeek =
+      SeekRequest.newBuilder()
+          .setCursor(Cursor.newBuilder().setOffset(initialOffset.value()))
+          .build();
   private final FlowControlSettings flowControlSettings =
       ((Supplier<FlowControlSettings>)
               () -> {
@@ -102,15 +106,15 @@ public class BufferingPullSubscriberTest {
         .when(underlying)
         .addListener(any(), any());
 
-    subscriber = new BufferingPullSubscriber(underlyingFactory, flowControlSettings, initialOffset);
+    subscriber = new BufferingPullSubscriber(underlyingFactory, flowControlSettings, initialSeek);
 
     InOrder inOrder = inOrder(underlyingFactory, underlying);
     inOrder.verify(underlyingFactory).New(any());
     inOrder.verify(underlying).addListener(any(), any());
     inOrder.verify(underlying).startAsync();
     inOrder.verify(underlying).awaitRunning();
-    inOrder.verify(underlying).allowFlow(flow);
     inOrder.verify(underlying).seek(seek);
+    inOrder.verify(underlying).allowFlow(flow);
 
     assertThat(messageConsumer).isNotNull();
     assertThat(errorListener).isNotNull();

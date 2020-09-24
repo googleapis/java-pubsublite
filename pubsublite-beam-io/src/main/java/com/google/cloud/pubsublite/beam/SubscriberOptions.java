@@ -167,7 +167,7 @@ public abstract class SubscriberOptions implements Serializable {
       try (AdminClient adminClient =
           AdminClient.create(
               AdminClientSettings.newBuilder()
-                  .setRegion(subscriptionPath().location().location().region())
+                  .setRegion(subscriptionPath().location().region())
                   .build())) {
         path = TopicPath.parse(adminClient.getSubscription(subscriptionPath()).get().getTopic());
       } catch (ExecutionException e) {

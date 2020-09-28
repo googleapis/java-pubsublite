@@ -112,14 +112,16 @@
       <groupId>io.grpc</groupId>
       <artifactId>grpc-protobuf</artifactId>
     </dependency>
+    
+    <!-- Flogger requires a backend to run. Add a runtime dependency on the system backend. --> 
+    <dependency> 
+      <groupId>com.google.flogger</groupId> 
+      <artifactId>flogger-system-backend</artifactId> 
+      <version>0.5.1</version> 
+      <scope>runtime</scope> 
+    </dependency> 
 
     <!--test dependencies-->
-    <dependency>
-      <groupId>com.google.flogger</groupId>
-      <artifactId>flogger-system-backend</artifactId>
-      <version>0.5.1</version>
-      <scope>test</scope>
-    </dependency>
     <dependency>
       <groupId>com.google.truth</groupId>
       <artifactId>truth</artifactId>

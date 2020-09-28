@@ -25,10 +25,10 @@ import com.google.cloud.pubsublite.internal.wire.SubscriberFactory;
 import com.google.cloud.pubsublite.proto.FlowControlRequest;
 import com.google.cloud.pubsublite.proto.SeekRequest;
 import com.google.cloud.pubsublite.proto.SeekRequest.NamedTarget;
-import com.google.common.collect.ImmutableList;
 import com.google.common.util.concurrent.MoreExecutors;
 import io.grpc.StatusException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.atomic.AtomicReference;
@@ -75,7 +75,7 @@ public class BufferingPullSubscriber implements PullSubscriber<SequencedMessage>
   }
 
   @Override
-  public ImmutableList<SequencedMessage> pull() throws StatusException {
+  public List<SequencedMessage> pull() throws StatusException {
     @Nullable StatusException maybeError = error.get();
     if (maybeError != null) {
       throw maybeError;
@@ -88,7 +88,7 @@ public class BufferingPullSubscriber implements PullSubscriber<SequencedMessage>
             .setAllowedBytes(bytes)
             .setAllowedMessages(collection.size())
             .build());
-    return ImmutableList.copyOf(collection);
+    return collection;
   }
 
   @Override

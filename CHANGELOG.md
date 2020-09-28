@@ -1,5 +1,21 @@
 # Changelog
 
+### [0.4.1](https://www.github.com/googleapis/java-pubsublite/compare/v0.4.0...v0.4.1) (2020-09-28)
+
+
+### Bug Fixes
+
+* Make BufferingPullSubscriber use List instead of ImmutableList so it is beam friendly. ([#256](https://www.github.com/googleapis/java-pubsublite/issues/256)) ([a23e26f](https://www.github.com/googleapis/java-pubsublite/commit/a23e26f52fcdb4524c134d9b6d13b90a3a8527d3))
+* Make flogger a runtime dependency by default. ([#265](https://www.github.com/googleapis/java-pubsublite/issues/265)) ([747bc66](https://www.github.com/googleapis/java-pubsublite/commit/747bc66d2b4ba2e7ef2a868e2341b30b7b2da153)), closes [#213](https://www.github.com/googleapis/java-pubsublite/issues/213)
+
+
+### Dependencies
+
+* update dependency com.google.cloud:google-cloud-resourcemanager to v0.118.2-alpha ([#259](https://www.github.com/googleapis/java-pubsublite/issues/259)) ([634116c](https://www.github.com/googleapis/java-pubsublite/commit/634116c6666aa151f1c8b7b1354fde27fe5e18fc))
+* update dependency com.google.cloud:google-cloud-shared-dependencies to v0.10.0 ([#260](https://www.github.com/googleapis/java-pubsublite/issues/260)) ([f4442a0](https://www.github.com/googleapis/java-pubsublite/commit/f4442a04044c6e690f9bbbf062a063a43b3e9680))
+* update dependency io.grpc:grpc-testing to v1.32.1 ([#261](https://www.github.com/googleapis/java-pubsublite/issues/261)) ([2f73e2f](https://www.github.com/googleapis/java-pubsublite/commit/2f73e2f5f77f592b834b11677fa1c0e23634f8ab))
+* update dependency org.mockito:mockito-core to v3.5.13 ([#262](https://www.github.com/googleapis/java-pubsublite/issues/262)) ([43bdd1e](https://www.github.com/googleapis/java-pubsublite/commit/43bdd1e32a95160544aee3868a0dde14b8e44dc2))
+
 ## [0.4.0](https://www.github.com/googleapis/java-pubsublite/compare/v0.3.1...v0.4.0) (2020-09-24)
 
 

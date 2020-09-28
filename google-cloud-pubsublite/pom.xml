@@ -113,13 +113,15 @@
       <artifactId>grpc-protobuf</artifactId>
     </dependency>
 
-    <!--test dependencies-->
+    <!-- Add system backend as a default dependency. This can be excluded if a different backend is needed.-->
     <dependency>
       <groupId>com.google.flogger</groupId>
       <artifactId>flogger-system-backend</artifactId>
       <version>0.5.1</version>
-      <scope>test</scope>
+      <scope>runtime</scope>
     </dependency>
+
+    <!--test dependencies-->
     <dependency>
       <groupId>com.google.truth</groupId>
       <artifactId>truth</artifactId>

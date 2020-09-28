@@ -85,12 +85,6 @@
 
     <!--test dependencies-->
     <dependency>
-      <groupId>com.google.flogger</groupId>
-      <artifactId>flogger-system-backend</artifactId>
-      <version>0.5.1</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
       <version>4.13</version>
@@ -143,7 +137,6 @@
             <ignoredUnusedDeclaredDependencies>
               <ignoredUnusedDeclaredDependency>org.hamcrest:hamcrest</ignoredUnusedDeclaredDependency>
               <ignoredUnusedDeclaredDependency>io.grpc:grpc-testing</ignoredUnusedDeclaredDependency>
-              <ignoredUnusedDeclaredDependency>com.google.flogger:flogger-system-backend</ignoredUnusedDeclaredDependency>
               <ignoredUnusedDeclaredDependency>org.apache.beam:beam-runners-direct-java</ignoredUnusedDeclaredDependency>
               <ignoredUnusedDeclaredDependency>javax.annotation:javax.annotation-api</ignoredUnusedDeclaredDependency>
             </ignoredUnusedDeclaredDependencies>

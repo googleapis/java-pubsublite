@@ -27,13 +27,6 @@ If you are using Maven, add this to your pom.xml file:
   <artifactId>google-cloud-pubsub</artifactId>
   <version>1.108.1</version>
 </dependency>
-<!-- A logging dependency used by the underlying library  -->
-<dependency>
-  <groupId>com.google.flogger</groupId>
-  <artifactId>flogger-system-backend</artifactId>
-  <version>0.5.1</version>
-  <scope>runtime</scope>
-</dependency>
 
 ```
 

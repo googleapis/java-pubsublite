@@ -54,14 +54,6 @@
       <version>1.108.1</version>
     </dependency>
 
-    <!-- A logging dependency used by the underlying library  -->
-    <dependency>
-      <groupId>com.google.flogger</groupId>
-      <artifactId>flogger-system-backend</artifactId>
-      <version>0.5.1</version>
-      <scope>runtime</scope>
-    </dependency>
-
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>

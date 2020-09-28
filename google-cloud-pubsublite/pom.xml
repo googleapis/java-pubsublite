@@ -50,7 +50,7 @@
     <dependency>
       <groupId>com.google.cloud</groupId>
       <artifactId>google-cloud-resourcemanager</artifactId>
-      <version>0.117.2-alpha</version>
+      <version>0.118.2-alpha</version>
     </dependency>
     <dependency>
       <groupId>com.google.api.grpc</groupId>

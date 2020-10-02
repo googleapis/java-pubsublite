@@ -14,18 +14,16 @@
  * limitations under the License.
  */
 
-package com.google.cloud.pubsublite.internal;
+package com.google.cloud.pubsublite.kafka;
 
-import com.google.cloud.pubsublite.Offset;
+import com.google.cloud.pubsublite.Partition;
+import com.google.cloud.pubsublite.SequencedMessage;
+import com.google.cloud.pubsublite.internal.PullSubscriber;
+import com.google.cloud.pubsublite.proto.SeekRequest;
 import io.grpc.StatusException;
-import java.util.List;
-import java.util.Optional;
 
-// A PullSubscriber exposes a "pull" mechanism for retrieving messages.
-public interface PullSubscriber<T> extends AutoCloseable {
-  // Pull currently available messages from this subscriber. Does not block.
-  List<T> pull() throws StatusException;
-
-  // The next offset expected to be returned by this PullSubscriber, or empty if unknown.
-  Optional<Offset> nextOffset();
+/** A factory for making new PullSubscribers for a given partition of a subscription. */
+interface PullSubscriberFactory {
+  PullSubscriber<SequencedMessage> newPullSubscriber(Partition partition, SeekRequest initial)
+      throws StatusException;
 }

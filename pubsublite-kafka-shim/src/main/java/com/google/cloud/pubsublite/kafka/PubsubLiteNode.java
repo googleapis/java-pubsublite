@@ -14,18 +14,13 @@
  * limitations under the License.
  */
 
-package com.google.cloud.pubsublite.internal;
+package com.google.cloud.pubsublite.kafka;
 
-import com.google.cloud.pubsublite.Offset;
-import io.grpc.StatusException;
-import java.util.List;
-import java.util.Optional;
+import org.apache.kafka.common.Node;
 
-// A PullSubscriber exposes a "pull" mechanism for retrieving messages.
-public interface PullSubscriber<T> extends AutoCloseable {
-  // Pull currently available messages from this subscriber. Does not block.
-  List<T> pull() throws StatusException;
+final class PubsubLiteNode {
+  private PubsubLiteNode() {}
 
-  // The next offset expected to be returned by this PullSubscriber, or empty if unknown.
-  Optional<Offset> nextOffset();
+  public static final Node NODE = new Node(0, "pubsublite.googleapis.com", 443);
+  public static final Node[] NODES = {NODE};
 }

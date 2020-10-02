@@ -14,18 +14,30 @@
  * limitations under the License.
  */
 
-package com.google.cloud.pubsublite.internal;
+package com.google.cloud.pubsublite.internal.testing;
 
-import com.google.cloud.pubsublite.Offset;
-import io.grpc.StatusException;
-import java.util.List;
-import java.util.Optional;
+import com.google.api.core.AbstractApiService;
 
-// A PullSubscriber exposes a "pull" mechanism for retrieving messages.
-public interface PullSubscriber<T> extends AutoCloseable {
-  // Pull currently available messages from this subscriber. Does not block.
-  List<T> pull() throws StatusException;
+/**
+ * Fake Pub/Sub Lite service for testing. Used like:
+ *
+ * <pre>
+ * static abstract class SubscriberFakeService extends FakeApiService implements Subscriber {};
+ * &#64;Spy private SubscriberFakeService wireSubscriber;
+ * </pre>
+ */
+public abstract class FakeApiService extends AbstractApiService {
+  public void fail(Throwable t) {
+    notifyFailed(t);
+  }
 
-  // The next offset expected to be returned by this PullSubscriber, or empty if unknown.
-  Optional<Offset> nextOffset();
+  @Override
+  protected void doStart() {
+    notifyStarted();
+  }
+
+  @Override
+  protected void doStop() {
+    notifyStopped();
+  }
 }

@@ -14,30 +14,13 @@
  * limitations under the License.
  */
 
-package com.google.cloud.pubsublite.internal;
+package com.google.cloud.pubsublite.kafka;
 
-import com.google.api.core.AbstractApiService;
+import com.google.cloud.pubsublite.Partition;
+import com.google.cloud.pubsublite.internal.wire.Committer;
+import io.grpc.StatusException;
 
-/**
- * Fake Pub/Sub Lite service for testing. Used like:
- *
- * <pre>
- * static abstract class SubscriberFakeService extends FakeApiService implements Subscriber {};
- * &#64;Spy private SubscriberFakeService wireSubscriber;
- * </pre>
- */
-public abstract class FakeApiService extends AbstractApiService {
-  public void fail(Throwable t) {
-    notifyFailed(t);
-  }
-
-  @Override
-  protected void doStart() {
-    notifyStarted();
-  }
-
-  @Override
-  protected void doStop() {
-    notifyStopped();
-  }
+/** A factory for making new PullSubscribers for a given partition of a subscription. */
+interface CommitterFactory {
+  Committer newCommitter(Partition partition) throws StatusException;
 }

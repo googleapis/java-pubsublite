@@ -23,17 +23,21 @@ import io.grpc.StatusException;
 import io.grpc.StatusRuntimeException;
 import java.util.Optional;
 import java.util.concurrent.ExecutionException;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
+import java.util.function.Function;
 
 public final class ExtractStatus {
   public static Optional<Status> extract(Throwable t) {
-    if (t instanceof StatusException) {
-      return Optional.of(((StatusException) t).getStatus());
+    try {
+      throw t;
+    } catch (StatusException e) {
+      return Optional.of(e.getStatus());
+    } catch (StatusRuntimeException e) {
+      return Optional.of(e.getStatus());
+    } catch (Throwable e) {
+      return Optional.empty();
     }
-    if (t instanceof StatusRuntimeException) {
-      return Optional.of(((StatusRuntimeException) t).getStatus());
-    }
-    return Optional.empty();
   }
 
   public static StatusException toCanonical(Throwable t) {
@@ -54,6 +58,48 @@ public final class ExtractStatus {
           }
         },
         MoreExecutors.directExecutor());
+  }
+
+  public interface StatusFunction<I, O> {
+    O apply(I input) throws StatusException;
+  }
+
+  public interface StatusConsumer<I> {
+    void apply(I input) throws StatusException;
+  }
+
+  public interface StatusBiconsumer<K, V> {
+    void apply(K key, V value) throws StatusException;
+  }
+
+  public static <I, O> Function<I, O> rethrowAsRuntime(StatusFunction<I, O> function) {
+    return i -> {
+      try {
+        return function.apply(i);
+      } catch (StatusException e) {
+        throw e.getStatus().asRuntimeException();
+      }
+    };
+  }
+
+  public static <I> Consumer<I> rethrowAsRuntime(StatusConsumer<I> consumer) {
+    return i -> {
+      try {
+        consumer.apply(i);
+      } catch (StatusException e) {
+        throw e.getStatus().asRuntimeException();
+      }
+    };
+  }
+
+  public static <K, V> BiConsumer<K, V> rethrowAsRuntime(StatusBiconsumer<K, V> consumer) {
+    return (k, v) -> {
+      try {
+        consumer.apply(k, v);
+      } catch (StatusException e) {
+        throw e.getStatus().asRuntimeException();
+      }
+    };
   }
 
   private ExtractStatus() {}

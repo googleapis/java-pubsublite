@@ -14,43 +14,6 @@
   <name>Pub/Sub Lite Kafka Shim</name>
   <url>https://github.com/googleapis/java-pubsublite</url>
   <description>Kafka Producer and Consumer for Google Cloud Pub/Sub Lite</description>
-  <dependencies>
-    <dependency>
-      <groupId>com.google.cloud</groupId>
-      <artifactId>google-cloud-pubsublite</artifactId>
-      <version>0.4.2-SNAPSHOT</version><!-- {x-version-update:google-cloud-pubsublite:current} -->
-    </dependency>
-    <dependency>
-      <groupId>org.apache.kafka</groupId>
-      <artifactId>kafka-clients</artifactId>
-      <version>2.6.0</version>
-    </dependency>
-    <!--test dependencies-->
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>4.13</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>com.google.truth</groupId>
-      <artifactId>truth</artifactId>
-      <version>1.0.1</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>com.google.truth.extensions</groupId>
-      <artifactId>truth-java8-extension</artifactId>
-      <version>1.0.1</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.mockito</groupId>
-      <artifactId>mockito-core</artifactId>
-      <version>3.5.13</version>
-      <scope>test</scope>
-    </dependency>
-  </dependencies>
   <build>
     <plugins>
       <plugin>

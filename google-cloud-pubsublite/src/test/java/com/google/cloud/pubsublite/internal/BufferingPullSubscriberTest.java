@@ -154,9 +154,11 @@ public class BufferingPullSubscriberTest {
         SequencedMessage.of(Message.builder().build(), Timestamps.EPOCH, Offset.of(11), 20);
     SequencedMessage message3 =
         SequencedMessage.of(Message.builder().build(), Timestamps.EPOCH, Offset.of(12), 30);
+    assertThat(subscriber.nextOffset()).isEmpty();
     messageConsumer.accept(ImmutableList.of(message1, message2));
     messageConsumer.accept(ImmutableList.of(message3));
     assertThat(subscriber.pull()).containsExactly(message1, message2, message3);
+    assertThat(subscriber.nextOffset()).hasValue(Offset.of(13));
     assertThat(subscriber.pull()).isEmpty();
 
     FlowControlRequest flowControlRequest =

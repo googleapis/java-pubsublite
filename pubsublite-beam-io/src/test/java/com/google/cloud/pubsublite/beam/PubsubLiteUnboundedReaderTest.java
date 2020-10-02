@@ -30,7 +30,7 @@ import com.google.cloud.pubsublite.Offset;
 import com.google.cloud.pubsublite.Partition;
 import com.google.cloud.pubsublite.SequencedMessage;
 import com.google.cloud.pubsublite.beam.PubsubLiteUnboundedReader.SubscriberState;
-import com.google.cloud.pubsublite.internal.FakeApiService;
+import com.google.cloud.pubsublite.internal.testing.FakeApiService;
 import com.google.cloud.pubsublite.internal.PullSubscriber;
 import com.google.cloud.pubsublite.internal.wire.Committer;
 import com.google.cloud.pubsublite.proto.ComputeMessageStatsResponse;

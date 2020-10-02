@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.google.cloud.pubsublite.internal;
+package com.google.cloud.pubsublite.internal.testing;
 
 import com.google.api.core.AbstractApiService;
 

@@ -28,7 +28,7 @@ import com.google.cloud.pubsublite.Message;
 import com.google.cloud.pubsublite.Offset;
 import com.google.cloud.pubsublite.Partition;
 import com.google.cloud.pubsublite.PublishMetadata;
-import com.google.cloud.pubsublite.internal.FakeApiService;
+import com.google.cloud.pubsublite.internal.testing.FakeApiService;
 import com.google.cloud.pubsublite.internal.Publisher;
 import com.google.cloud.pubsublite.internal.RoutingPolicy;
 import com.google.cloud.pubsublite.internal.StatusExceptionMatcher;

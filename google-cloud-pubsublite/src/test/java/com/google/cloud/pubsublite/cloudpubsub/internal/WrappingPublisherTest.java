@@ -31,7 +31,7 @@ import com.google.cloud.pubsublite.Partition;
 import com.google.cloud.pubsublite.PublishMetadata;
 import com.google.cloud.pubsublite.cloudpubsub.KeyExtractor;
 import com.google.cloud.pubsublite.cloudpubsub.MessageTransforms;
-import com.google.cloud.pubsublite.internal.FakeApiService;
+import com.google.cloud.pubsublite.internal.testing.FakeApiService;
 import com.google.cloud.pubsublite.internal.Publisher;
 import com.google.cloud.pubsublite.internal.StatusExceptionMatcher;
 import com.google.protobuf.ByteString;

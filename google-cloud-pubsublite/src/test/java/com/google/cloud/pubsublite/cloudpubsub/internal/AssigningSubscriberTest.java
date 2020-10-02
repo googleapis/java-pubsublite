@@ -27,7 +27,7 @@ import static org.mockito.MockitoAnnotations.initMocks;
 
 import com.google.cloud.pubsublite.Partition;
 import com.google.cloud.pubsublite.cloudpubsub.Subscriber;
-import com.google.cloud.pubsublite.internal.FakeApiService;
+import com.google.cloud.pubsublite.internal.testing.FakeApiService;
 import com.google.cloud.pubsublite.internal.wire.Assigner;
 import com.google.cloud.pubsublite.internal.wire.AssignerFactory;
 import com.google.cloud.pubsublite.internal.wire.PartitionAssignmentReceiver;

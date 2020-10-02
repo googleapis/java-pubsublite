@@ -33,7 +33,7 @@ import com.google.cloud.pubsublite.ProjectNumber;
 import com.google.cloud.pubsublite.PublishMetadata;
 import com.google.cloud.pubsublite.TopicName;
 import com.google.cloud.pubsublite.TopicPath;
-import com.google.cloud.pubsublite.internal.FakeApiService;
+import com.google.cloud.pubsublite.internal.testing.FakeApiService;
 import com.google.cloud.pubsublite.internal.Publisher;
 import com.google.protobuf.ByteString;
 import org.junit.Before;

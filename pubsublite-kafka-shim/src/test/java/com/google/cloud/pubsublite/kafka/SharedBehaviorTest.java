@@ -36,8 +36,7 @@ import org.mockito.Mock;
 
 @RunWith(JUnit4.class)
 public class SharedBehaviorTest {
-  @Mock
-  AdminClient admin;
+  @Mock AdminClient admin;
 
   @Before
   public void setUp() {
@@ -48,7 +47,8 @@ public class SharedBehaviorTest {
   public void partitionsForSuccess() throws Exception {
     ApiFuture<Long> future = ApiFutures.immediateFuture(2L);
     when(admin.getTopicPartitionCount(example(TopicPath.class))).thenReturn(future);
-    List<PartitionInfo> result = SharedBehavior.partitionsFor(admin, example(TopicPath.class), Duration.ofDays(1));
+    List<PartitionInfo> result =
+        SharedBehavior.partitionsFor(admin, example(TopicPath.class), Duration.ofDays(1));
     assertThat(result.size()).isEqualTo(2);
     assertThat(result.get(0).topic()).isEqualTo(example(TopicPath.class).toString());
     assertThat(result.get(0).partition()).isEqualTo(0);

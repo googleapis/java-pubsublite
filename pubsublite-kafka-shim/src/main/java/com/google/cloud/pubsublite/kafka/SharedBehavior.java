@@ -27,9 +27,7 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 import org.apache.kafka.common.PartitionInfo;
 
-/**
- * Shared behavior for producer and consumer.
- */
+/** Shared behavior for producer and consumer. */
 final class SharedBehavior {
   private SharedBehavior() {}
 

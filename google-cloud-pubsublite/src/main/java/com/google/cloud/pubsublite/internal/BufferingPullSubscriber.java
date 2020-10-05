@@ -18,6 +18,7 @@ package com.google.cloud.pubsublite.internal;
 
 import com.google.api.core.ApiService.Listener;
 import com.google.api.core.ApiService.State;
+import com.google.cloud.pubsublite.Offset;
 import com.google.cloud.pubsublite.SequencedMessage;
 import com.google.cloud.pubsublite.cloudpubsub.FlowControlSettings;
 import com.google.cloud.pubsublite.internal.wire.Subscriber;
@@ -25,19 +26,29 @@ import com.google.cloud.pubsublite.internal.wire.SubscriberFactory;
 import com.google.cloud.pubsublite.proto.FlowControlRequest;
 import com.google.cloud.pubsublite.proto.SeekRequest;
 import com.google.cloud.pubsublite.proto.SeekRequest.NamedTarget;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Iterables;
 import com.google.common.util.concurrent.MoreExecutors;
+import com.google.errorprone.annotations.concurrent.GuardedBy;
 import io.grpc.StatusException;
-import java.util.ArrayList;
+import java.util.ArrayDeque;
+import java.util.Collection;
+import java.util.Deque;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.atomic.AtomicReference;
-import javax.annotation.Nullable;
 
 public class BufferingPullSubscriber implements PullSubscriber<SequencedMessage> {
   private final Subscriber underlying;
-  private final AtomicReference<StatusException> error = new AtomicReference<>();
-  private final LinkedBlockingQueue<SequencedMessage> messages = new LinkedBlockingQueue<>();
+
+  @GuardedBy("this")
+  private Optional<StatusException> error = Optional.empty();
+
+  @GuardedBy("this")
+  private Deque<SequencedMessage> messages = new ArrayDeque<>();
+
+  @GuardedBy("this")
+  private Optional<Offset> lastDelivered = Optional.empty();
 
   public BufferingPullSubscriber(SubscriberFactory factory, FlowControlSettings settings)
       throws StatusException {
@@ -50,12 +61,12 @@ public class BufferingPullSubscriber implements PullSubscriber<SequencedMessage>
   public BufferingPullSubscriber(
       SubscriberFactory factory, FlowControlSettings settings, SeekRequest initialSeek)
       throws StatusException {
-    underlying = factory.New(messages::addAll);
+    underlying = factory.New(this::addMessages);
     underlying.addListener(
         new Listener() {
           @Override
           public void failed(State state, Throwable throwable) {
-            error.set(ExtractStatus.toCanonical(throwable));
+            fail(ExtractStatus.toCanonical(throwable));
           }
         },
         MoreExecutors.directExecutor());
@@ -74,21 +85,37 @@ public class BufferingPullSubscriber implements PullSubscriber<SequencedMessage>
             .build());
   }
 
+  private synchronized void fail(StatusException e) {
+    error = Optional.of(e);
+  }
+
+  private synchronized void addMessages(Collection<SequencedMessage> new_messages) {
+    messages.addAll(new_messages);
+  }
+
   @Override
-  public List<SequencedMessage> pull() throws StatusException {
-    @Nullable StatusException maybeError = error.get();
-    if (maybeError != null) {
-      throw maybeError;
+  public synchronized List<SequencedMessage> pull() throws StatusException {
+    if (error.isPresent()) {
+      throw error.get();
     }
-    ArrayList<SequencedMessage> collection = new ArrayList<>();
-    messages.drainTo(collection);
+    if (messages.isEmpty()) {
+      return ImmutableList.of();
+    }
+    Deque<SequencedMessage> collection = messages;
+    messages = new ArrayDeque<>();
     long bytes = collection.stream().mapToLong(SequencedMessage::byteSize).sum();
     underlying.allowFlow(
         FlowControlRequest.newBuilder()
             .setAllowedBytes(bytes)
             .setAllowedMessages(collection.size())
             .build());
-    return collection;
+    lastDelivered = Optional.of(Iterables.getLast(collection).offset());
+    return ImmutableList.copyOf(collection);
+  }
+
+  @Override
+  public synchronized Optional<Offset> nextOffset() {
+    return lastDelivered.map(offset -> Offset.of(offset.value() + 1));
   }
 
   @Override

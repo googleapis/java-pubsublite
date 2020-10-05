@@ -27,5 +27,6 @@ public interface PullSubscriber<T> extends AutoCloseable {
   List<T> pull() throws StatusException;
 
   // The next offset expected to be returned by this PullSubscriber, or empty if unknown.
+  // Subsequent messages are guaranteed to have offsets of at least this value.
   Optional<Offset> nextOffset();
 }

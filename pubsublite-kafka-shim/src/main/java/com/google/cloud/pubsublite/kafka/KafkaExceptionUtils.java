@@ -25,7 +25,6 @@ import org.apache.kafka.common.errors.AuthorizationException;
 import org.apache.kafka.common.errors.BrokerNotAvailableException;
 import org.apache.kafka.common.errors.InterruptException;
 import org.apache.kafka.common.errors.InvalidRequestException;
-import org.apache.kafka.common.errors.TopicExistsException;
 
 class KafkaExceptionUtils {
   private KafkaExceptionUtils() {}
@@ -37,7 +36,7 @@ class KafkaExceptionUtils {
       case ABORTED:
         return new BrokerNotAvailableException("Aborted.", source);
       case ALREADY_EXISTS:
-        return new TopicExistsException("", source);
+        return new KafkaException("Already exists.", source);
       case CANCELLED:
         return new BrokerNotAvailableException("Cancelled.", source);
       case DATA_LOSS:

@@ -16,11 +16,17 @@
 
 package com.google.cloud.pubsublite.internal;
 
+import com.google.cloud.pubsublite.Offset;
 import io.grpc.StatusException;
 import java.util.List;
+import java.util.Optional;
 
 // A PullSubscriber exposes a "pull" mechanism for retrieving messages.
 public interface PullSubscriber<T> extends AutoCloseable {
   // Pull currently available messages from this subscriber. Does not block.
   List<T> pull() throws StatusException;
+
+  // The next offset expected to be returned by this PullSubscriber, or empty if unknown.
+  // Subsequent messages are guaranteed to have offsets of at least this value.
+  Optional<Offset> nextOffset();
 }

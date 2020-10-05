@@ -37,7 +37,7 @@ class KafkaExceptionUtils {
       case ABORTED:
         return new BrokerNotAvailableException("Aborted.", source);
       case ALREADY_EXISTS:
-        return new TopicExistsException("", source);
+        return new KafkaException("Already exists.", source);
       case CANCELLED:
         return new BrokerNotAvailableException("Cancelled.", source);
       case DATA_LOSS:

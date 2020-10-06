@@ -130,38 +130,43 @@ class SingleSubscriptionConsumerImpl implements SingleSubscriptionConsumer {
     }
   }
 
-  @Override
-  public ConsumerRecords<byte[], byte[]> poll(Duration duration) {
+  @GuardedBy("monitor.monitor")
+  private Map<Partition, Queue<SequencedMessage>> fetchAll() {
     Map<Partition, Queue<SequencedMessage>> partitionQueues = new HashMap<>();
+    partitions.forEach(
+        ExtractStatus.rethrowAsRuntime(
+            (partition, state) -> {
+              List<SequencedMessage> messages = state.subscriber.pull();
+              if (messages.isEmpty()) return;
+              partitionQueues.computeIfAbsent(partition, x -> new ArrayDeque<>()).addAll(messages);
+            }));
+    return partitionQueues;
+  }
+
+  private Map<Partition, Queue<SequencedMessage>> doPoll(Duration duration) {
     try {
-      if (wakeupTriggered) throw new WakeupException();
       while (!duration.isZero()) {
+        try (CloseableMonitor.Hold h = monitor.enter()) {
+          if (wakeupTriggered) throw new WakeupException();
+          Map<Partition, Queue<SequencedMessage>> partitionQueues = fetchAll();
+          if (!partitionQueues.isEmpty()) return partitionQueues;
+        }
         Duration sleepFor = Collections.min(ImmutableList.of(duration, Duration.ofMillis(100)));
-        if (wakeupTriggered) throw new WakeupException();
         Thread.sleep(sleepFor.toMillis());
         duration = duration.minus(sleepFor);
-        try (CloseableMonitor.Hold h = monitor.enter()) {
-          partitions.forEach(
-              ExtractStatus.rethrowAsRuntime(
-                  (partition, state) -> {
-                    partitionQueues
-                        .computeIfAbsent(partition, x -> new ArrayDeque<>())
-                        .addAll(state.subscriber.pull());
-                  }));
-        }
       }
+      // Last fetch to handle duration originally being 0 and last time window sleep.
       try (CloseableMonitor.Hold h = monitor.enter()) {
-        partitions.forEach(
-            ExtractStatus.rethrowAsRuntime(
-                (partition, state) -> {
-                  partitionQueues
-                      .computeIfAbsent(partition, x -> new ArrayDeque<>())
-                      .addAll(state.subscriber.pull());
-                }));
+        return fetchAll();
       }
     } catch (Throwable t) {
       throw toKafka(t);
     }
+  }
+
+  @Override
+  public ConsumerRecords<byte[], byte[]> poll(Duration duration) {
+    Map<Partition, Queue<SequencedMessage>> partitionQueues = doPoll(duration);
     Map<TopicPartition, List<ConsumerRecord<byte[], byte[]>>> records = new HashMap<>();
     if (autocommit) {
       ApiFuture<?> future = commitAll();

@@ -122,8 +122,8 @@ public class SingleSubscriptionConsumerImplTest {
     when(subscriber5.pull()).thenReturn(ImmutableList.of());
     when(subscriber8.pull()).thenReturn(ImmutableList.of());
     // -----------------------------
-    // Pulls ceil(150ms / 100ms) + 1 times (3) when no messages are returned
-    assertConsumerRecordsEqual(consumer.poll(Duration.ofMillis(150)), ImmutableListMultimap.of());
+    // Pulls ceil(15ms / 10ms) + 1 times (3) when no messages are returned
+    assertConsumerRecordsEqual(consumer.poll(Duration.ofMillis(15)), ImmutableListMultimap.of());
     verify(subscriber5, times(3)).pull();
     verify(subscriber8, times(3)).pull();
     verify(committer5, times(0)).commitOffset(any());
@@ -133,7 +133,7 @@ public class SingleSubscriptionConsumerImplTest {
     when(subscriber5.pull()).thenReturn(ImmutableList.of(message(1), message(2), message(3)));
     when(subscriber8.pull()).thenReturn(ImmutableList.of(message(1), message(2), message(4)));
     assertConsumerRecordsEqual(
-        consumer.poll(Duration.ofMillis(150)),
+        consumer.poll(Duration.ofMillis(15)),
         ImmutableListMultimap.<Partition, Offset>builder()
             .putAll(Partition.of(5), ImmutableList.of(Offset.of(1), Offset.of(2), Offset.of(3)))
             .putAll(Partition.of(8), ImmutableList.of(Offset.of(1), Offset.of(2), Offset.of(4)))
@@ -190,8 +190,8 @@ public class SingleSubscriptionConsumerImplTest {
     when(subscriber5.pull()).thenReturn(ImmutableList.of());
     when(subscriber8.pull()).thenReturn(ImmutableList.of());
     // -----------------------------
-    // Pulls ceil(150ms / 100ms) + 1 times (3) when no messages are returned
-    assertConsumerRecordsEqual(consumer.poll(Duration.ofMillis(150)), ImmutableListMultimap.of());
+    // Pulls ceil(15ms / 10ms) + 1 times (3) when no messages are returned
+    assertConsumerRecordsEqual(consumer.poll(Duration.ofMillis(15)), ImmutableListMultimap.of());
     verify(subscriber5, times(3)).pull();
     verify(subscriber8, times(3)).pull();
     verify(committer5, times(0)).commitOffset(any());
@@ -201,7 +201,7 @@ public class SingleSubscriptionConsumerImplTest {
     when(subscriber5.pull()).thenReturn(ImmutableList.of(message(1), message(2), message(3)));
     when(subscriber8.pull()).thenReturn(ImmutableList.of(message(1), message(2), message(4)));
     assertConsumerRecordsEqual(
-        consumer.poll(Duration.ofMillis(150)),
+        consumer.poll(Duration.ofMillis(15)),
         ImmutableListMultimap.<Partition, Offset>builder()
             .putAll(Partition.of(5), ImmutableList.of(Offset.of(1), Offset.of(2), Offset.of(3)))
             .putAll(Partition.of(8), ImmutableList.of(Offset.of(1), Offset.of(2), Offset.of(4)))
@@ -243,7 +243,7 @@ public class SingleSubscriptionConsumerImplTest {
     consumer.setAssignment(ImmutableSet.of(Partition.of(5)));
     when(subscriber5.pull()).thenReturn(ImmutableList.of());
     consumer.wakeup();
-    assertThrows(WakeupException.class, () -> consumer.poll(Duration.ofMillis(150)));
+    assertThrows(WakeupException.class, () -> consumer.poll(Duration.ofMillis(15)));
   }
 
   @Test

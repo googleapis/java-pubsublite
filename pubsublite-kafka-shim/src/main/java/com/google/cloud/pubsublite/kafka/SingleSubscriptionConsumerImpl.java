@@ -151,7 +151,7 @@ class SingleSubscriptionConsumerImpl implements SingleSubscriptionConsumer {
           Map<Partition, Queue<SequencedMessage>> partitionQueues = fetchAll();
           if (!partitionQueues.isEmpty()) return partitionQueues;
         }
-        Duration sleepFor = Collections.min(ImmutableList.of(duration, Duration.ofMillis(100)));
+        Duration sleepFor = Collections.min(ImmutableList.of(duration, Duration.ofMillis(10)));
         Thread.sleep(sleepFor.toMillis());
         duration = duration.minus(sleepFor);
       }

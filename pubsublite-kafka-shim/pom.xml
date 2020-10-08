@@ -50,6 +50,14 @@
       <groupId>com.google.guava</groupId>
       <artifactId>guava</artifactId>
     </dependency>
+    <dependency>
+      <groupId>com.google.flogger</groupId>
+      <artifactId>google-extensions</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.google.auto.value</groupId>
+      <artifactId>auto-value-annotations</artifactId>
+    </dependency>
     <!--test dependencies-->
     <dependency>
       <groupId>junit</groupId>

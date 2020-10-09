@@ -16,6 +16,7 @@
 
 package com.google.cloud.pubsublite.internal.wire;
 
+import static org.junit.Assert.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.ArgumentMatchers.eq;
@@ -132,6 +133,7 @@ public class AssignerImplTest {
   @Test
   public void responseObserverFailure_Fails() {
     leakedResponseObserver.onError(Status.INVALID_ARGUMENT.asException());
+    assertThrows(IllegalStateException.class, () -> assigner.awaitTerminated());
     verify(permanentErrorHandler)
         .failed(any(), argThat(new StatusExceptionMatcher(Code.INVALID_ARGUMENT)));
   }

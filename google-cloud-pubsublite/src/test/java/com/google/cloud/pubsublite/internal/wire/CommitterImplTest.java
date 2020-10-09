@@ -18,6 +18,7 @@ package com.google.cloud.pubsublite.internal.wire;
 
 import static com.google.cloud.pubsublite.internal.StatusExceptionMatcher.assertFutureThrowsCode;
 import static com.google.common.truth.Truth.assertThat;
+import static org.junit.Assert.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.ArgumentMatchers.eq;
@@ -152,6 +153,7 @@ public class CommitterImplTest {
   public void responseMoreThanSentError() {
     ApiFuture<Void> future = committer.commitOffset(Offset.of(10));
     leakedResponseObserver.onNext(ResponseWithCount(2));
+    assertThrows(IllegalStateException.class, () -> committer.awaitTerminated());
     verify(permanentErrorHandler)
         .failed(any(), argThat(new StatusExceptionMatcher(Code.FAILED_PRECONDITION)));
     assertFutureThrowsCode(future, Code.FAILED_PRECONDITION);

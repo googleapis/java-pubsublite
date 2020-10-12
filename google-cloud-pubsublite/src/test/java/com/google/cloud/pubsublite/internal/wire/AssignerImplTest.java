@@ -16,7 +16,6 @@
 
 package com.google.cloud.pubsublite.internal.wire;
 
-import static org.junit.Assert.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.ArgumentMatchers.eq;
@@ -47,6 +46,7 @@ import io.grpc.stub.StreamObserver;
 import io.grpc.testing.GrpcCleanupRule;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.CountDownLatch;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -131,9 +131,17 @@ public class AssignerImplTest {
   }
 
   @Test
-  public void responseObserverFailure_Fails() {
+  public void responseObserverFailure_Fails() throws Exception {
+    CountDownLatch failed = new CountDownLatch(1);
+    doAnswer(
+            args -> {
+              failed.countDown();
+              return null;
+            })
+        .when(permanentErrorHandler)
+        .failed(any(), any());
     leakedResponseObserver.onError(Status.INVALID_ARGUMENT.asException());
-    assertThrows(IllegalStateException.class, () -> assigner.awaitTerminated());
+    failed.await();
     verify(permanentErrorHandler)
         .failed(any(), argThat(new StatusExceptionMatcher(Code.INVALID_ARGUMENT)));
   }

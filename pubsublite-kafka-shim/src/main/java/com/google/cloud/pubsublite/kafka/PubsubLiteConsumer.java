@@ -62,7 +62,8 @@ import org.apache.kafka.common.TopicPartition;
 import org.apache.kafka.common.errors.UnsupportedVersionException;
 
 /**
- * A class that uses a MinimalKafkaConsumer to remove the duplicate methods from the kafka consumer.
+ * A class that uses a SingleSubscriptionConsumer to remove the duplicate methods from the kafka
+ * consumer.
  *
  * <p>This also filters methods that Pub/Sub Lite will not implement.
  */
@@ -247,7 +248,7 @@ class PubsubLiteConsumer implements Consumer<byte[], byte[]> {
     return requireValidConsumer().poll(timeout);
   }
 
-  Map<Partition, Offset> checkAndTransform(Map<TopicPartition, OffsetAndMetadata> map) {
+  Map<Partition, Offset> checkAndTransformOffsets(Map<TopicPartition, OffsetAndMetadata> map) {
     ImmutableMap.Builder<Partition, Offset> output = ImmutableMap.builder();
     try {
       map.forEach(
@@ -271,7 +272,7 @@ class PubsubLiteConsumer implements Consumer<byte[], byte[]> {
   public void commitSync(Map<TopicPartition, OffsetAndMetadata> map, Duration duration) {
     try {
       requireValidConsumer()
-          .commit(checkAndTransform(map))
+          .commit(checkAndTransformOffsets(map))
           .get(duration.toMillis(), TimeUnit.MILLISECONDS);
     } catch (Throwable t) {
       throw toKafka(t);
@@ -282,7 +283,7 @@ class PubsubLiteConsumer implements Consumer<byte[], byte[]> {
   public void commitAsync(
       Map<TopicPartition, OffsetAndMetadata> map, OffsetCommitCallback offsetCommitCallback) {
     ApiFutures.addCallback(
-        requireValidConsumer().commit(checkAndTransform(map)),
+        requireValidConsumer().commit(checkAndTransformOffsets(map)),
         new ApiFutureCallback<Void>() {
           @Override
           public void onFailure(Throwable throwable) {

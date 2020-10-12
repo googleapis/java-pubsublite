@@ -187,16 +187,10 @@ public class CommitterImplTest {
   @Test
   public void stopInCommitCallback() throws Exception {
     ApiFuture<Void> future = committer.commitOffset(Offset.of(10));
-    CountDownLatch latch = new CountDownLatch(1);
-    ExtractStatus.addFailureHandler(
-        future,
-        (error) -> {
-          committer.stopAsync();
-          latch.countDown();
-        });
+    Future<Void> failed = whenFailed(permanentErrorHandler);
     leakedResponseObserver.onError(Status.FAILED_PRECONDITION.asException());
-    latch.await();
     assertFutureThrowsCode(future, Code.FAILED_PRECONDITION);
+    failed.get();
     verify(permanentErrorHandler)
         .failed(any(), argThat(new StatusExceptionMatcher(Code.FAILED_PRECONDITION)));
   }

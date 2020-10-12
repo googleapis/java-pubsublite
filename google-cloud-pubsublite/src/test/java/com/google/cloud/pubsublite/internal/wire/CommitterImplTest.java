@@ -17,6 +17,7 @@
 package com.google.cloud.pubsublite.internal.wire;
 
 import static com.google.cloud.pubsublite.internal.StatusExceptionMatcher.assertFutureThrowsCode;
+import static com.google.cloud.pubsublite.internal.wire.RetryingConnectionHelpers.whenFailed;
 import static com.google.common.truth.Truth.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.argThat;
@@ -150,17 +151,10 @@ public class CommitterImplTest {
 
   @Test
   public void responseMoreThanSentError() throws Exception {
-    CountDownLatch failed = new CountDownLatch(1);
-    doAnswer(
-            args -> {
-              failed.countDown();
-              return null;
-            })
-        .when(permanentErrorHandler)
-        .failed(any(), any());
+    Future<Void> failed = whenFailed(permanentErrorHandler);
     ApiFuture<Void> future = committer.commitOffset(Offset.of(10));
     leakedResponseObserver.onNext(ResponseWithCount(2));
-    failed.await();
+    failed.get();
     verify(permanentErrorHandler)
         .failed(any(), argThat(new StatusExceptionMatcher(Code.FAILED_PRECONDITION)));
     assertFutureThrowsCode(future, Code.FAILED_PRECONDITION);

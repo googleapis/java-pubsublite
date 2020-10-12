@@ -85,8 +85,11 @@ class RetryingConnectionImpl<
 
   @Override
   protected void doStart() {
-    reinitialize();
-    notifyStarted();
+    this.systemExecutor.execute(
+        () -> {
+          reinitialize();
+          notifyStarted();
+        });
   }
 
   // Reinitialize the stream. Must be called in a downcall to prevent deadlock.

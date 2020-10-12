@@ -16,6 +16,7 @@
 
 package com.google.cloud.pubsublite.internal.wire;
 
+import static com.google.cloud.pubsublite.internal.wire.RetryingConnectionHelpers.whenFailed;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.ArgumentMatchers.eq;
@@ -46,6 +47,7 @@ import io.grpc.stub.StreamObserver;
 import io.grpc.testing.GrpcCleanupRule;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.Future;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -130,8 +132,10 @@ public class AssignerImplTest {
   }
 
   @Test
-  public void responseObserverFailure_Fails() {
+  public void responseObserverFailure_Fails() throws Exception {
+    Future<Void> failed = whenFailed(permanentErrorHandler);
     leakedResponseObserver.onError(Status.INVALID_ARGUMENT.asException());
+    failed.get();
     verify(permanentErrorHandler)
         .failed(any(), argThat(new StatusExceptionMatcher(Code.INVALID_ARGUMENT)));
   }

@@ -17,6 +17,7 @@
 package com.google.cloud.pubsublite.internal.wire;
 
 import static com.google.cloud.pubsublite.internal.StatusExceptionMatcher.assertFutureThrowsCode;
+import static com.google.cloud.pubsublite.internal.wire.RetryingConnectionHelpers.whenFailed;
 import static com.google.common.truth.Truth.assertThat;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static org.junit.Assert.assertThrows;
@@ -61,6 +62,7 @@ import io.grpc.inprocess.InProcessChannelBuilder;
 import io.grpc.stub.StreamObserver;
 import io.grpc.testing.GrpcCleanupRule;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.Future;
 import java.util.function.Consumer;
 import org.junit.Before;
 import org.junit.Rule;
@@ -215,14 +217,15 @@ public class SubscriberImplTest {
   }
 
   @Test
-  public void messageBatchesOutOfOrder_IsError() {
+  public void messageBatchesOutOfOrder_IsError() throws Exception {
+    Future<Void> failed = whenFailed(permanentErrorHandler);
     subscriber.allowFlow(bigFlowControlRequest());
     ImmutableList<SequencedMessage> messages =
         ImmutableList.of(
             SequencedMessage.of(Message.builder().build(), Timestamps.EPOCH, Offset.of(0), 0));
     leakedResponseObserver.onNext(Response.ofMessages(messages));
     leakedResponseObserver.onNext(Response.ofMessages(messages));
-    assertThrows(IllegalStateException.class, subscriber::awaitTerminated);
+    failed.get();
     verify(permanentErrorHandler)
         .failed(any(), argThat(new StatusExceptionMatcher(Code.FAILED_PRECONDITION)));
   }

@@ -16,6 +16,8 @@
 
 package com.google.cloud.pubsublite.cloudpubsub;
 
+import static com.google.cloud.pubsublite.ProjectLookupUtils.toCanonical;
+
 import com.google.auto.value.AutoValue;
 import com.google.cloud.pubsub.v1.MessageReceiver;
 import com.google.cloud.pubsublite.MessageTransformer;
@@ -142,13 +144,15 @@ public abstract class SubscriberSettings {
 
   @SuppressWarnings("CheckReturnValue")
   Subscriber instantiate() throws StatusException {
+    SubscriptionPath canonicalPath = toCanonical(subscriptionPath());
+
     SubscriberBuilder.Builder wireSubscriberBuilder = SubscriberBuilder.newBuilder();
-    wireSubscriberBuilder.setSubscriptionPath(subscriptionPath());
+    wireSubscriberBuilder.setSubscriptionPath(canonicalPath);
     subscriberServiceStub().ifPresent(wireSubscriberBuilder::setSubscriberServiceStub);
     wireSubscriberBuilder.setContext(PubsubContext.of(FRAMEWORK));
 
     CommitterBuilder.Builder wireCommitterBuilder = CommitterBuilder.newBuilder();
-    wireCommitterBuilder.setSubscriptionPath(subscriptionPath());
+    wireCommitterBuilder.setSubscriptionPath(canonicalPath);
     cursorServiceStub().ifPresent(wireCommitterBuilder::setCursorStub);
 
     PartitionSubscriberFactory partitionSubscriberFactory =
@@ -166,7 +170,7 @@ public abstract class SubscriberSettings {
 
     if (!partitions().isPresent()) {
       AssignerBuilder.Builder assignerBuilder = AssignerBuilder.newBuilder();
-      assignerBuilder.setSubscriptionPath(subscriptionPath());
+      assignerBuilder.setSubscriptionPath(canonicalPath);
       assignmentServiceStub().ifPresent(assignerBuilder::setAssignmentStub);
       AssignerFactory assignerFactory =
           receiver -> {

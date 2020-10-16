@@ -53,7 +53,7 @@ public final class PubsubLiteToPubsub {
           .apply(MapElements.into(new TypeDescriptor<Message>() {}).via(SequencedMessage::message))
           .apply(CloudPubsubTransforms.toCpsPublishTransform())
           .apply(FakePubsubIO.writeRawPubsubProtos(options.getPubsubWriteTopic().get()));
-    } catch (StatusException e) {
+    } catch (CheckedApiException e) {
       throw e.getStatus().asRuntimeException();
     }
 

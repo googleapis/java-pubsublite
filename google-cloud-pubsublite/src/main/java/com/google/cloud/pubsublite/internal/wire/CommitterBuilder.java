@@ -16,15 +16,17 @@
 
 package com.google.cloud.pubsublite.internal.wire;
 
+import static com.google.cloud.pubsublite.internal.ExtractStatus.toCanonical;
+import static com.google.cloud.pubsublite.internal.ServiceClients.addDefaultSettings;
+
+import com.google.api.gax.rpc.ApiException;
 import com.google.auto.value.AutoValue;
 import com.google.cloud.pubsublite.Partition;
 import com.google.cloud.pubsublite.ProjectLookupUtils;
-import com.google.cloud.pubsublite.Stubs;
 import com.google.cloud.pubsublite.SubscriptionPath;
-import com.google.cloud.pubsublite.proto.CursorServiceGrpc;
-import com.google.cloud.pubsublite.proto.CursorServiceGrpc.CursorServiceStub;
 import com.google.cloud.pubsublite.proto.InitialCommitCursorRequest;
-import io.grpc.StatusException;
+import com.google.cloud.pubsublite.v1.CursorServiceClient;
+import com.google.cloud.pubsublite.v1.CursorServiceSettings;
 import java.util.Optional;
 
 @AutoValue
@@ -35,7 +37,7 @@ public abstract class CommitterBuilder {
   abstract Partition partition();
 
   // Optional parameters.
-  abstract Optional<CursorServiceStub> cursorStub();
+  abstract Optional<CursorServiceClient> serviceClient();
 
   public static Builder newBuilder() {
     return new AutoValue_CommitterBuilder.Builder();
@@ -49,21 +51,27 @@ public abstract class CommitterBuilder {
     public abstract Builder setPartition(Partition partition);
 
     // Optional parameters.
-    public abstract Builder setCursorStub(CursorServiceStub stub);
+    public abstract Builder setServiceClient(CursorServiceClient client);
 
     abstract CommitterBuilder autoBuild();
 
     @SuppressWarnings("CheckReturnValue")
-    public Committer build() throws StatusException {
+    public Committer build() throws ApiException {
       CommitterBuilder builder = autoBuild();
 
-      CursorServiceStub cursorStub;
-      if (builder.cursorStub().isPresent()) {
-        cursorStub = builder.cursorStub().get();
+      CursorServiceClient serviceClient;
+      if (builder.serviceClient().isPresent()) {
+        serviceClient = builder.serviceClient().get();
       } else {
-        cursorStub =
-            Stubs.defaultStub(
-                builder.subscriptionPath().location().region(), CursorServiceGrpc::newStub);
+        try {
+          serviceClient =
+              CursorServiceClient.create(
+                  addDefaultSettings(
+                      builder.subscriptionPath().location().region(),
+                      CursorServiceSettings.newBuilder()));
+        } catch (Throwable t) {
+          throw toCanonical(t).underlying;
+        }
       }
 
       InitialCommitCursorRequest initialCommitCursorRequest =
@@ -72,7 +80,8 @@ public abstract class CommitterBuilder {
                   ProjectLookupUtils.toCanonical(builder.subscriptionPath()).toString())
               .setPartition(builder.partition().value())
               .build();
-      return new CommitterImpl(cursorStub, initialCommitCursorRequest);
+      return new ApiExceptionCommitter(
+          new CommitterImpl(serviceClient, initialCommitCursorRequest));
     }
   }
 }

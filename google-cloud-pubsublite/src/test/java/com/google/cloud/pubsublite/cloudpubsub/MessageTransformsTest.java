@@ -19,17 +19,17 @@ package com.google.cloud.pubsublite.cloudpubsub;
 import static com.google.common.truth.Truth.assertThat;
 import static org.junit.Assert.assertThrows;
 
+import com.google.api.gax.rpc.ApiException;
+import com.google.api.gax.rpc.StatusCode.Code;
 import com.google.cloud.pubsublite.Message;
 import com.google.cloud.pubsublite.MessageTransformer;
 import com.google.cloud.pubsublite.Offset;
 import com.google.cloud.pubsublite.SequencedMessage;
+import com.google.cloud.pubsublite.internal.CheckedApiException;
 import com.google.common.collect.ImmutableListMultimap;
 import com.google.protobuf.ByteString;
 import com.google.protobuf.util.Timestamps;
 import com.google.pubsub.v1.PubsubMessage;
-import io.grpc.Status;
-import io.grpc.Status.Code;
-import io.grpc.StatusException;
 import java.util.Base64;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -45,9 +45,9 @@ public class MessageTransformsTest {
 
   @Test
   public void subscribeTransformInvalidKey() {
-    StatusException e =
+    ApiException e =
         assertThrows(
-            StatusException.class,
+            ApiException.class,
             () ->
                 subscribeTransformer.transform(
                     SequencedMessage.of(
@@ -55,14 +55,14 @@ public class MessageTransformsTest {
                         Timestamps.fromNanos(0),
                         Offset.of(10),
                         10)));
-    assertThat(e.getStatus().getCode()).isEqualTo(Code.INVALID_ARGUMENT);
+    assertThat(e.getStatusCode().getCode()).isEqualTo(Code.INVALID_ARGUMENT);
   }
 
   @Test
   public void subscribeTransformContainsMagicAttribute() {
-    StatusException e =
+    ApiException e =
         assertThrows(
-            StatusException.class,
+            ApiException.class,
             () ->
                 subscribeTransformer.transform(
                     SequencedMessage.of(
@@ -77,14 +77,14 @@ public class MessageTransformsTest {
                         Timestamps.fromNanos(0),
                         Offset.of(10),
                         10)));
-    assertThat(e.getStatus().getCode()).isEqualTo(Code.INVALID_ARGUMENT);
+    assertThat(e.getStatusCode().getCode()).isEqualTo(Code.INVALID_ARGUMENT);
   }
 
   @Test
   public void subscribeTransformContainsMultipleAttributes() {
-    StatusException e =
+    ApiException e =
         assertThrows(
-            StatusException.class,
+            ApiException.class,
             () ->
                 subscribeTransformer.transform(
                     SequencedMessage.of(
@@ -98,14 +98,14 @@ public class MessageTransformsTest {
                         Timestamps.fromNanos(0),
                         Offset.of(10),
                         10)));
-    assertThat(e.getStatus().getCode()).isEqualTo(Code.INVALID_ARGUMENT);
+    assertThat(e.getStatusCode().getCode()).isEqualTo(Code.INVALID_ARGUMENT);
   }
 
   @Test
   public void subscribeTransformContainsNonUtf8Attributes() {
-    StatusException e =
+    ApiException e =
         assertThrows(
-            StatusException.class,
+            ApiException.class,
             () ->
                 subscribeTransformer.transform(
                     SequencedMessage.of(
@@ -118,11 +118,11 @@ public class MessageTransformsTest {
                         Timestamps.fromNanos(0),
                         Offset.of(10),
                         10)));
-    assertThat(e.getStatus().getCode()).isEqualTo(Code.INVALID_ARGUMENT);
+    assertThat(e.getStatusCode().getCode()).isEqualTo(Code.INVALID_ARGUMENT);
   }
 
   @Test
-  public void subscribeTransformCorrect() throws StatusException {
+  public void subscribeTransformCorrect() throws ApiException {
     SequencedMessage message =
         SequencedMessage.of(
             Message.builder()
@@ -158,19 +158,19 @@ public class MessageTransformsTest {
     MessageTransformer<PubsubMessage, Message> transformer =
         MessageTransforms.fromCpsPublishTransformer(
             message -> {
-              throw Status.INTERNAL.asException();
+              throw new CheckedApiException(Code.INTERNAL).underlying;
             });
-    StatusException e =
+    ApiException e =
         assertThrows(
-            StatusException.class, () -> transformer.transform(PubsubMessage.getDefaultInstance()));
-    assertThat(e.getStatus().getCode()).isEqualTo(Code.INTERNAL);
+            ApiException.class, () -> transformer.transform(PubsubMessage.getDefaultInstance()));
+    assertThat(e.getStatusCode().getCode()).isEqualTo(Code.INTERNAL);
   }
 
   @Test
   public void publishTransformInvalidEventTime() {
-    StatusException e =
+    ApiException e =
         assertThrows(
-            StatusException.class,
+            ApiException.class,
             () ->
                 publishTransformer.transform(
                     PubsubMessage.newBuilder()
@@ -178,14 +178,14 @@ public class MessageTransformsTest {
                             MessageTransforms.PUBSUB_LITE_EVENT_TIME_TIMESTAMP_PROTO,
                             "Unlikely to be an encoded timestamp proto.")
                         .build()));
-    assertThat(e.getStatus().getCode()).isEqualTo(Code.INVALID_ARGUMENT);
+    assertThat(e.getStatusCode().getCode()).isEqualTo(Code.INVALID_ARGUMENT);
   }
 
   @Test
   public void publishTransformValidBase64InvalidEventTime() {
-    StatusException e =
+    ApiException e =
         assertThrows(
-            StatusException.class,
+            ApiException.class,
             () ->
                 publishTransformer.transform(
                     PubsubMessage.newBuilder()
@@ -195,11 +195,11 @@ public class MessageTransformsTest {
                                 .encodeToString(
                                     ("Unlikely to be an encoded timestamp proto.".getBytes())))
                         .build()));
-    assertThat(e.getStatus().getCode()).isEqualTo(Code.INVALID_ARGUMENT);
+    assertThat(e.getStatusCode().getCode()).isEqualTo(Code.INVALID_ARGUMENT);
   }
 
   @Test
-  public void publishTransformCorrect() throws StatusException {
+  public void publishTransformCorrect() throws ApiException {
     PubsubMessage message =
         PubsubMessage.newBuilder()
             .setData(ByteString.copyFrom(notUtf8Array))

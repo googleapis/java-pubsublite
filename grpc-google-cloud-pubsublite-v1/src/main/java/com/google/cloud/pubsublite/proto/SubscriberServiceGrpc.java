@@ -146,8 +146,8 @@ public final class SubscriberServiceGrpc {
     public io.grpc.stub.StreamObserver<com.google.cloud.pubsublite.proto.SubscribeRequest>
         subscribe(
             io.grpc.stub.StreamObserver<com.google.cloud.pubsublite.proto.SubscribeResponse>
-                responseObserver) {
-      return asyncUnimplementedStreamingCall(getSubscribeMethod(), responseObserver);
+                ResponseObserver) {
+      return asyncUnimplementedStreamingCall(getSubscribeMethod(), ResponseObserver);
     }
 
     @java.lang.Override
@@ -194,9 +194,9 @@ public final class SubscriberServiceGrpc {
     public io.grpc.stub.StreamObserver<com.google.cloud.pubsublite.proto.SubscribeRequest>
         subscribe(
             io.grpc.stub.StreamObserver<com.google.cloud.pubsublite.proto.SubscribeResponse>
-                responseObserver) {
+                ResponseObserver) {
       return asyncBidiStreamingCall(
-          getChannel().newCall(getSubscribeMethod(), getCallOptions()), responseObserver);
+          getChannel().newCall(getSubscribeMethod(), getCallOptions()), ResponseObserver);
     }
   }
 
@@ -260,7 +260,7 @@ public final class SubscriberServiceGrpc {
 
     @java.lang.Override
     @java.lang.SuppressWarnings("unchecked")
-    public void invoke(Req request, io.grpc.stub.StreamObserver<Resp> responseObserver) {
+    public void invoke(Req request, io.grpc.stub.StreamObserver<Resp> ResponseObserver) {
       switch (methodId) {
         default:
           throw new AssertionError();
@@ -270,13 +270,13 @@ public final class SubscriberServiceGrpc {
     @java.lang.Override
     @java.lang.SuppressWarnings("unchecked")
     public io.grpc.stub.StreamObserver<Req> invoke(
-        io.grpc.stub.StreamObserver<Resp> responseObserver) {
+        io.grpc.stub.StreamObserver<Resp> ResponseObserver) {
       switch (methodId) {
         case METHODID_SUBSCRIBE:
           return (io.grpc.stub.StreamObserver<Req>)
               serviceImpl.subscribe(
                   (io.grpc.stub.StreamObserver<com.google.cloud.pubsublite.proto.SubscribeResponse>)
-                      responseObserver);
+                      ResponseObserver);
         default:
           throw new AssertionError();
       }

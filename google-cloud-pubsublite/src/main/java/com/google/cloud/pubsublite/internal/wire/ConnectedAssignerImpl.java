@@ -16,15 +16,15 @@
 
 package com.google.cloud.pubsublite.internal.wire;
 
-import static com.google.cloud.pubsublite.internal.Preconditions.checkState;
+import static com.google.cloud.pubsublite.internal.CheckedApiPreconditions.checkState;
 
+import com.google.api.gax.rpc.ResponseObserver;
+import com.google.cloud.pubsublite.internal.CheckedApiException;
 import com.google.cloud.pubsublite.internal.CloseableMonitor;
 import com.google.cloud.pubsublite.proto.PartitionAssignment;
 import com.google.cloud.pubsublite.proto.PartitionAssignmentAck;
 import com.google.cloud.pubsublite.proto.PartitionAssignmentRequest;
 import com.google.errorprone.annotations.concurrent.GuardedBy;
-import io.grpc.StatusException;
-import io.grpc.stub.StreamObserver;
 
 public class ConnectedAssignerImpl
     extends SingleConnection<PartitionAssignmentRequest, PartitionAssignment, PartitionAssignment>
@@ -36,7 +36,7 @@ public class ConnectedAssignerImpl
 
   private ConnectedAssignerImpl(
       StreamFactory<PartitionAssignmentRequest, PartitionAssignment> streamFactory,
-      StreamObserver<PartitionAssignment> clientStream,
+      ResponseObserver<PartitionAssignment> clientStream,
       PartitionAssignmentRequest initialRequest) {
     super(streamFactory, clientStream);
     initialize(initialRequest);
@@ -46,7 +46,7 @@ public class ConnectedAssignerImpl
     @Override
     public ConnectedAssigner New(
         StreamFactory<PartitionAssignmentRequest, PartitionAssignment> streamFactory,
-        StreamObserver<PartitionAssignment> clientStream,
+        ResponseObserver<PartitionAssignment> clientStream,
         PartitionAssignmentRequest initialRequest) {
       return new ConnectedAssignerImpl(streamFactory, clientStream, initialRequest);
     }
@@ -54,14 +54,14 @@ public class ConnectedAssignerImpl
 
   // SingleConnection implementation.
   @Override
-  protected void handleInitialResponse(PartitionAssignment response) throws StatusException {
+  protected void handleInitialResponse(PartitionAssignment response) throws CheckedApiException {
     // The assignment stream is server-initiated by sending a PartitionAssignment. The
     // initial response from the server is handled identically to other responses.
     handleStreamResponse(response);
   }
 
   @Override
-  protected void handleStreamResponse(PartitionAssignment response) throws StatusException {
+  protected void handleStreamResponse(PartitionAssignment response) throws CheckedApiException {
     try (CloseableMonitor.Hold h = monitor.enter()) {
       checkState(
           !outstanding,
@@ -77,8 +77,9 @@ public class ConnectedAssignerImpl
     try (CloseableMonitor.Hold h = monitor.enter()) {
       checkState(outstanding, "Client acknowledged when there was no request outstanding.");
       outstanding = false;
-    } catch (StatusException e) {
+    } catch (CheckedApiException e) {
       setError(e);
+      throw e.underlying;
     }
     sendToStream(
         PartitionAssignmentRequest.newBuilder()

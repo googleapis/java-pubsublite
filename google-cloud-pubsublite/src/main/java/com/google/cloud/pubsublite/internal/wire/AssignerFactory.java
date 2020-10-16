@@ -16,8 +16,8 @@
 
 package com.google.cloud.pubsublite.internal.wire;
 
-import io.grpc.StatusException;
+import com.google.api.gax.rpc.ApiException;
 
 public interface AssignerFactory {
-  Assigner New(PartitionAssignmentReceiver receiver) throws StatusException;
+  Assigner New(PartitionAssignmentReceiver receiver) throws ApiException;
 }

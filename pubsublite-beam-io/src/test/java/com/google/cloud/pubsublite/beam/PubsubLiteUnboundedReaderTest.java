@@ -25,11 +25,13 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
 import com.google.api.core.ApiFutures;
+import com.google.api.gax.rpc.StatusCode.Code;
 import com.google.cloud.pubsublite.Message;
 import com.google.cloud.pubsublite.Offset;
 import com.google.cloud.pubsublite.Partition;
 import com.google.cloud.pubsublite.SequencedMessage;
 import com.google.cloud.pubsublite.beam.PubsubLiteUnboundedReader.SubscriberState;
+import com.google.cloud.pubsublite.internal.CheckedApiException;
 import com.google.cloud.pubsublite.internal.PullSubscriber;
 import com.google.cloud.pubsublite.internal.testing.FakeApiService;
 import com.google.cloud.pubsublite.internal.wire.Committer;
@@ -41,8 +43,6 @@ import com.google.protobuf.Duration;
 import com.google.protobuf.Timestamp;
 import com.google.protobuf.util.Durations;
 import com.google.protobuf.util.Timestamps;
-import io.grpc.Status;
-import io.grpc.StatusException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -109,7 +109,7 @@ public class PubsubLiteUnboundedReaderTest {
     return new Instant(Timestamps.toMillis(timestamp));
   }
 
-  public PubsubLiteUnboundedReaderTest() throws StatusException {
+  public PubsubLiteUnboundedReaderTest() throws CheckedApiException {
     MockitoAnnotations.initMocks(this);
     SubscriberState state5 = new SubscriberState();
     state5.subscriber = subscriber5;
@@ -249,7 +249,8 @@ public class PubsubLiteUnboundedReaderTest {
   @Test
   public void splitBacklogBytes_returnsUnknownBacklogOnError() throws Exception {
     when(backlogReader.computeMessageStats(ImmutableMap.of()))
-        .thenReturn(ApiFutures.immediateFailedFuture(new StatusException(Status.UNAVAILABLE)));
+        .thenReturn(
+            ApiFutures.immediateFailedFuture(new CheckedApiException(Code.UNAVAILABLE).underlying));
     Assert.assertEquals(PubsubLiteUnboundedReader.BACKLOG_UNKNOWN, reader.getSplitBacklogBytes());
   }
 
@@ -287,7 +288,7 @@ public class PubsubLiteUnboundedReaderTest {
     when(backlogReader.computeMessageStats(ImmutableMap.of()))
         .thenReturn(
             ApiFutures.immediateFuture(response),
-            ApiFutures.immediateFailedFuture(new StatusException(Status.UNAVAILABLE)));
+            ApiFutures.immediateFailedFuture(new CheckedApiException(Code.UNAVAILABLE).underlying));
 
     Assert.assertEquals(response.getMessageBytes(), reader.getSplitBacklogBytes());
     ticker.advance(Durations.fromSeconds(30));

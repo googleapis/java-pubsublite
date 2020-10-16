@@ -17,14 +17,14 @@
 package com.google.cloud.pubsublite.internal;
 
 import com.google.api.gax.core.BackgroundResource;
-import io.grpc.StatusException;
+import com.google.api.gax.rpc.ApiException;
 
 public interface ApiBackgroundResource extends BackgroundResource {
   /**
    * Tear down this resource.
    *
-   * @throws StatusException on a failure to properly terminate.
+   * @throws ApiException on a failure to properly terminate.
    */
   @Override
-  void close() throws StatusException;
+  void close() throws ApiException;
 }

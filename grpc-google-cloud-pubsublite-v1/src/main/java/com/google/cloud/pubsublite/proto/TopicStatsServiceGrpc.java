@@ -150,8 +150,8 @@ public final class TopicStatsServiceGrpc {
     public void computeMessageStats(
         com.google.cloud.pubsublite.proto.ComputeMessageStatsRequest request,
         io.grpc.stub.StreamObserver<com.google.cloud.pubsublite.proto.ComputeMessageStatsResponse>
-            responseObserver) {
-      asyncUnimplementedUnaryCall(getComputeMessageStatsMethod(), responseObserver);
+            ResponseObserver) {
+      asyncUnimplementedUnaryCall(getComputeMessageStatsMethod(), ResponseObserver);
     }
 
     @java.lang.Override
@@ -198,11 +198,11 @@ public final class TopicStatsServiceGrpc {
     public void computeMessageStats(
         com.google.cloud.pubsublite.proto.ComputeMessageStatsRequest request,
         io.grpc.stub.StreamObserver<com.google.cloud.pubsublite.proto.ComputeMessageStatsResponse>
-            responseObserver) {
+            ResponseObserver) {
       asyncUnaryCall(
           getChannel().newCall(getComputeMessageStatsMethod(), getCallOptions()),
           request,
-          responseObserver);
+          ResponseObserver);
     }
   }
 
@@ -293,14 +293,14 @@ public final class TopicStatsServiceGrpc {
 
     @java.lang.Override
     @java.lang.SuppressWarnings("unchecked")
-    public void invoke(Req request, io.grpc.stub.StreamObserver<Resp> responseObserver) {
+    public void invoke(Req request, io.grpc.stub.StreamObserver<Resp> ResponseObserver) {
       switch (methodId) {
         case METHODID_COMPUTE_MESSAGE_STATS:
           serviceImpl.computeMessageStats(
               (com.google.cloud.pubsublite.proto.ComputeMessageStatsRequest) request,
               (io.grpc.stub.StreamObserver<
                       com.google.cloud.pubsublite.proto.ComputeMessageStatsResponse>)
-                  responseObserver);
+                  ResponseObserver);
           break;
         default:
           throw new AssertionError();
@@ -310,7 +310,7 @@ public final class TopicStatsServiceGrpc {
     @java.lang.Override
     @java.lang.SuppressWarnings("unchecked")
     public io.grpc.stub.StreamObserver<Req> invoke(
-        io.grpc.stub.StreamObserver<Resp> responseObserver) {
+        io.grpc.stub.StreamObserver<Resp> ResponseObserver) {
       switch (methodId) {
         default:
           throw new AssertionError();

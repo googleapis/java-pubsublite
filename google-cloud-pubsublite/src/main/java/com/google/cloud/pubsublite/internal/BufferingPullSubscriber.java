@@ -30,7 +30,6 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 import com.google.common.util.concurrent.MoreExecutors;
 import com.google.errorprone.annotations.concurrent.GuardedBy;
-import io.grpc.StatusException;
 import java.util.ArrayDeque;
 import java.util.Collection;
 import java.util.Deque;
@@ -42,7 +41,7 @@ public class BufferingPullSubscriber implements PullSubscriber<SequencedMessage>
   private final Subscriber underlying;
 
   @GuardedBy("this")
-  private Optional<StatusException> error = Optional.empty();
+  private Optional<CheckedApiException> error = Optional.empty();
 
   @GuardedBy("this")
   private Deque<SequencedMessage> messages = new ArrayDeque<>();
@@ -51,7 +50,7 @@ public class BufferingPullSubscriber implements PullSubscriber<SequencedMessage>
   private Optional<Offset> lastDelivered = Optional.empty();
 
   public BufferingPullSubscriber(SubscriberFactory factory, FlowControlSettings settings)
-      throws StatusException {
+      throws CheckedApiException {
     this(
         factory,
         settings,
@@ -60,8 +59,8 @@ public class BufferingPullSubscriber implements PullSubscriber<SequencedMessage>
 
   public BufferingPullSubscriber(
       SubscriberFactory factory, FlowControlSettings settings, SeekRequest initialSeek)
-      throws StatusException {
-    underlying = factory.New(this::addMessages);
+      throws CheckedApiException {
+    underlying = factory.newSubscriber(this::addMessages);
     underlying.addListener(
         new Listener() {
           @Override
@@ -85,7 +84,7 @@ public class BufferingPullSubscriber implements PullSubscriber<SequencedMessage>
             .build());
   }
 
-  private synchronized void fail(StatusException e) {
+  private synchronized void fail(CheckedApiException e) {
     error = Optional.of(e);
   }
 
@@ -94,7 +93,7 @@ public class BufferingPullSubscriber implements PullSubscriber<SequencedMessage>
   }
 
   @Override
-  public synchronized List<SequencedMessage> pull() throws StatusException {
+  public synchronized List<SequencedMessage> pull() throws CheckedApiException {
     if (error.isPresent()) {
       throw error.get();
     }

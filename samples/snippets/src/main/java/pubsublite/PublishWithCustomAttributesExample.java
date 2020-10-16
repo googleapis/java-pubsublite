@@ -29,7 +29,7 @@ import com.google.cloud.pubsublite.cloudpubsub.PublisherSettings;
 import com.google.common.collect.ImmutableMap;
 import com.google.protobuf.ByteString;
 import com.google.pubsub.v1.PubsubMessage;
-import io.grpc.StatusException;
+import io.grpc.CheckedApiException;
 import java.util.concurrent.ExecutionException;
 
 public class PublishWithCustomAttributesExample {
@@ -47,7 +47,7 @@ public class PublishWithCustomAttributesExample {
   // Publish messages to a topic with custom attributes.
   public static void publishWithCustomAttributesExample(
       String cloudRegion, char zoneId, long projectNumber, String topicId)
-      throws StatusException, ExecutionException, InterruptedException {
+      throws CheckedApiException, ExecutionException, InterruptedException {
 
     TopicPath topicPath =
         TopicPath.newBuilder()

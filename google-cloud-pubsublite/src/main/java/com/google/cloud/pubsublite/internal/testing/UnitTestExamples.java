@@ -18,6 +18,7 @@ package com.google.cloud.pubsublite.internal.testing;
 
 import com.google.cloud.pubsublite.CloudRegion;
 import com.google.cloud.pubsublite.CloudZone;
+import com.google.cloud.pubsublite.LocationPath;
 import com.google.cloud.pubsublite.Offset;
 import com.google.cloud.pubsublite.Partition;
 import com.google.cloud.pubsublite.ProjectNumber;
@@ -27,7 +28,6 @@ import com.google.cloud.pubsublite.TopicName;
 import com.google.cloud.pubsublite.TopicPath;
 import com.google.common.base.Preconditions;
 import com.google.common.reflect.ImmutableTypeToInstanceMap;
-import io.grpc.StatusException;
 
 public final class UnitTestExamples {
   private UnitTestExamples() {}
@@ -42,6 +42,7 @@ public final class UnitTestExamples {
           .put(TopicPath.class, exampleTopicPath())
           .put(SubscriptionName.class, exampleSubscriptionName())
           .put(SubscriptionPath.class, exampleSubscriptionPath())
+          .put(LocationPath.class, exampleLocationPath())
           .put(Offset.class, exampleOffset())
           .build();
 
@@ -52,11 +53,7 @@ public final class UnitTestExamples {
   }
 
   public static Partition examplePartition() {
-    try {
-      return Partition.of(33);
-    } catch (StatusException e) {
-      throw e.getStatus().asRuntimeException();
-    }
+    return Partition.of(33);
   }
 
   public static CloudRegion exampleRegion() {
@@ -68,19 +65,11 @@ public final class UnitTestExamples {
   }
 
   public static ProjectNumber exampleProjectNumber() {
-    try {
-      return ProjectNumber.of(3298749273L);
-    } catch (StatusException e) {
-      throw e.getStatus().asRuntimeException();
-    }
+    return ProjectNumber.of(3298749273L);
   }
 
   public static TopicName exampleTopicName() {
-    try {
-      return TopicName.of("example-topic");
-    } catch (StatusException e) {
-      throw e.getStatus().asRuntimeException();
-    }
+    return TopicName.of("example-topic");
   }
 
   public static TopicPath exampleTopicPath() {
@@ -92,11 +81,7 @@ public final class UnitTestExamples {
   }
 
   public static SubscriptionName exampleSubscriptionName() {
-    try {
-      return SubscriptionName.of("example-subscription");
-    } catch (StatusException e) {
-      throw e.getStatus().asRuntimeException();
-    }
+    return SubscriptionName.of("example-subscription");
   }
 
   public static SubscriptionPath exampleSubscriptionPath() {
@@ -104,6 +89,13 @@ public final class UnitTestExamples {
         .setProject(exampleProjectNumber())
         .setLocation(exampleZone())
         .setName(exampleSubscriptionName())
+        .build();
+  }
+
+  public static LocationPath exampleLocationPath() {
+    return LocationPath.newBuilder()
+        .setProject(exampleProjectNumber())
+        .setLocation(exampleZone())
         .build();
   }
 

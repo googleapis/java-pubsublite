@@ -16,15 +16,15 @@
 
 package com.google.cloud.pubsublite.internal.wire;
 
-import static com.google.cloud.pubsublite.internal.StatusExceptionMatcher.assertFutureThrowsCode;
+import static com.google.cloud.pubsublite.internal.ApiExceptionMatcher.assertFutureThrowsCode;
 import static com.google.common.truth.Truth.assertThat;
 import static com.google.common.truth.Truth8.assertThat;
 import static org.junit.Assert.assertThrows;
 
 import com.google.api.core.ApiFuture;
+import com.google.api.gax.rpc.StatusCode.Code;
 import com.google.cloud.pubsublite.Offset;
-import io.grpc.Status.Code;
-import io.grpc.StatusException;
+import com.google.cloud.pubsublite.internal.CheckedApiException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -34,7 +34,7 @@ public class CommitStateTest {
   private final CommitState state = new CommitState();
 
   @Test
-  public void multipleSentCompletedInOrder() throws Exception {
+  public void multipleSentCompletedInOrder() throws CheckedApiException {
     ApiFuture<Void> future1 = state.addCommit(Offset.of(10));
     ApiFuture<Void> future2 = state.addCommit(Offset.of(1));
     ApiFuture<Void> future3 = state.addCommit(Offset.of(87));
@@ -61,14 +61,14 @@ public class CommitStateTest {
 
     assertThat(future.isDone()).isFalse();
 
-    StatusException e = assertThrows(StatusException.class, () -> state.complete(2));
-    assertThat(e.getStatus().getCode()).isEqualTo(Code.FAILED_PRECONDITION);
+    CheckedApiException e = assertThrows(CheckedApiException.class, () -> state.complete(2));
+    assertThat(e.code()).isEqualTo(Code.FAILED_PRECONDITION);
 
     assertFutureThrowsCode(future, Code.FAILED_PRECONDITION);
   }
 
   @Test
-  public void reinitializeCompletesAllAfterSingleCompletion() throws Exception {
+  public void reinitializeCompletesAllAfterSingleCompletion() throws CheckedApiException {
     ApiFuture<Void> future1 = state.addCommit(Offset.of(10));
     ApiFuture<Void> future2 = state.addCommit(Offset.of(99));
 
@@ -87,7 +87,7 @@ public class CommitStateTest {
   }
 
   @Test
-  public void reinitializeFailsAllAfterExcessCompletion() throws Exception {
+  public void reinitializeFailsAllAfterExcessCompletion() {
     ApiFuture<Void> future1 = state.addCommit(Offset.of(10));
     ApiFuture<Void> future2 = state.addCommit(Offset.of(99));
 
@@ -99,8 +99,8 @@ public class CommitStateTest {
     assertThat(future1.isDone()).isFalse();
     assertThat(future2.isDone()).isFalse();
 
-    StatusException e = assertThrows(StatusException.class, () -> state.complete(2));
-    assertThat(e.getStatus().getCode()).isEqualTo(Code.FAILED_PRECONDITION);
+    CheckedApiException e = assertThrows(CheckedApiException.class, () -> state.complete(2));
+    assertThat(e.code()).isEqualTo(Code.FAILED_PRECONDITION);
 
     assertFutureThrowsCode(future1, Code.FAILED_PRECONDITION);
     assertFutureThrowsCode(future2, Code.FAILED_PRECONDITION);

@@ -19,6 +19,7 @@ package com.google.cloud.pubsublite.cloudpubsub;
 import static com.google.cloud.pubsublite.ProjectLookupUtils.toCanonical;
 
 import com.google.api.gax.batching.BatchingSettings;
+import com.google.api.gax.rpc.ApiException;
 import com.google.auto.value.AutoValue;
 import com.google.cloud.pubsublite.Constants;
 import com.google.cloud.pubsublite.Message;
@@ -29,10 +30,10 @@ import com.google.cloud.pubsublite.internal.wire.PubsubContext;
 import com.google.cloud.pubsublite.internal.wire.PubsubContext.Framework;
 import com.google.cloud.pubsublite.internal.wire.RoutingPublisherBuilder;
 import com.google.cloud.pubsublite.internal.wire.SinglePartitionPublisherBuilder;
-import com.google.cloud.pubsublite.proto.PublisherServiceGrpc.PublisherServiceStub;
+import com.google.cloud.pubsublite.v1.PublisherServiceClient;
 import com.google.pubsub.v1.PubsubMessage;
-import io.grpc.StatusException;
 import java.util.Optional;
+import java.util.function.Supplier;
 import org.threeten.bp.Duration;
 
 /**
@@ -64,8 +65,8 @@ public abstract class PublisherSettings {
   /** Batching settings for this publisher to use. Apply per-partition. */
   abstract Optional<BatchingSettings> batchingSettings();
 
-  /** A stub to connect to the Pub/Sub Lite service. */
-  abstract Optional<PublisherServiceStub> stub();
+  /** A supplier for new PublisherServiceClients. Should return a new client each time. */
+  abstract Optional<Supplier<PublisherServiceClient>> serviceClientSupplier();
 
   // For testing.
   abstract SinglePartitionPublisherBuilder.Builder underlyingBuilder();
@@ -97,8 +98,8 @@ public abstract class PublisherSettings {
     /** Batching settings for this publisher to use. Apply per-partition. */
     public abstract Builder setBatchingSettings(BatchingSettings batchingSettings);
 
-    /** A stub to connect to the Pub/Sub Lite service. */
-    public abstract Builder setStub(PublisherServiceStub stub);
+    /** A supplier for new PublisherServiceClients. Should return a new client each time. */
+    public abstract Builder setServiceClientSupplier(Supplier<PublisherServiceClient> supplier);
 
     // For testing.
     abstract Builder setUnderlyingBuilder(
@@ -111,23 +112,27 @@ public abstract class PublisherSettings {
   }
 
   @SuppressWarnings("CheckReturnValue")
-  Publisher instantiate() throws StatusException {
+  Publisher instantiate() throws ApiException {
     BatchingSettings batchingSettings = batchingSettings().orElse(DEFAULT_BATCHING_SETTINGS);
     KeyExtractor keyExtractor = keyExtractor().orElse(KeyExtractor.DEFAULT);
     MessageTransformer<PubsubMessage, Message> messageTransformer =
         messageTransformer()
             .orElseGet(() -> MessageTransforms.fromCpsPublishTransformer(keyExtractor));
 
-    SinglePartitionPublisherBuilder.Builder singlePartitionPublisherBuilder =
-        underlyingBuilder()
-            .setBatchingSettings(Optional.of(batchingSettings))
-            .setStub(stub())
-            .setContext(PubsubContext.of(FRAMEWORK));
-
     RoutingPublisherBuilder.Builder wireBuilder =
         RoutingPublisherBuilder.newBuilder()
             .setTopic(toCanonical(topicPath()))
-            .setPublisherBuilder(singlePartitionPublisherBuilder);
+            .setPublisherFactory(
+                (topic, partition) -> {
+                  SinglePartitionPublisherBuilder.Builder singlePartitionBuilder =
+                      underlyingBuilder()
+                          .setBatchingSettings(batchingSettings)
+                          .setContext(PubsubContext.of(FRAMEWORK));
+                  serviceClientSupplier()
+                      .ifPresent(
+                          supplier -> singlePartitionBuilder.setServiceClient(supplier.get()));
+                  return singlePartitionBuilder.build();
+                });
 
     numPartitions().ifPresent(wireBuilder::setNumPartitions);
 

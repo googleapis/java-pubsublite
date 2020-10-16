@@ -20,9 +20,9 @@ import static com.google.common.truth.Truth.assertThat;
 import static com.google.common.truth.Truth8.assertThat;
 import static org.junit.Assert.assertThrows;
 
+import com.google.api.gax.rpc.StatusCode.Code;
+import com.google.cloud.pubsublite.internal.CheckedApiException;
 import com.google.cloud.pubsublite.internal.ExtractStatus;
-import io.grpc.Status;
-import io.grpc.Status.Code;
 import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
@@ -32,8 +32,8 @@ public class StatusTestHelpers {
 
   public static void assertFutureThrowsCode(Future<?> f, Code code) {
     ExecutionException exception = assertThrows(ExecutionException.class, f::get);
-    Optional<Status> statusOr = ExtractStatus.extract(exception.getCause());
+    Optional<CheckedApiException> statusOr = ExtractStatus.extract(exception.getCause());
     assertThat(statusOr).isPresent();
-    assertThat(statusOr.get().getCode()).isEqualTo(code);
+    assertThat(statusOr.get().code()).isEqualTo(code);
   }
 }

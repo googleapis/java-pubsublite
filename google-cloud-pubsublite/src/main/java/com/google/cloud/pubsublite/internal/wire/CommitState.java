@@ -18,9 +18,9 @@ package com.google.cloud.pubsublite.internal.wire;
 
 import com.google.api.core.ApiFuture;
 import com.google.api.core.SettableApiFuture;
+import com.google.api.gax.rpc.StatusCode.Code;
 import com.google.cloud.pubsublite.Offset;
-import io.grpc.Status;
-import io.grpc.StatusException;
+import com.google.cloud.pubsublite.internal.CheckedApiException;
 import java.util.ArrayDeque;
 import java.util.Optional;
 import java.util.Queue;
@@ -57,16 +57,15 @@ class CommitState {
     return futureWithOffset.future;
   }
 
-  void complete(long numComplete) throws StatusException {
+  void complete(long numComplete) throws CheckedApiException {
     if (numComplete > currentConnectionFutures.size()) {
-      StatusException error =
-          Status.FAILED_PRECONDITION
-              .withDescription(
-                  String.format(
-                      "Received %s completions, which is more than the commits outstanding for this"
-                          + " stream.",
-                      numComplete))
-              .asException();
+      CheckedApiException error =
+          new CheckedApiException(
+              String.format(
+                  "Received %s completions, which is more than the commits outstanding for this"
+                      + " stream.",
+                  numComplete),
+              Code.FAILED_PRECONDITION);
       abort(error);
       throw error;
     }
@@ -80,7 +79,7 @@ class CommitState {
     }
   }
 
-  void abort(Throwable error) {
+  void abort(CheckedApiException error) {
     while (!pastConnectionFutures.isEmpty()) {
       pastConnectionFutures.remove().future.setException(error);
     }

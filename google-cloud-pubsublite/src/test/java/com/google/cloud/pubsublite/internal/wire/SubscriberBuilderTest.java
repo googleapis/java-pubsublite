@@ -26,9 +26,8 @@ import com.google.cloud.pubsublite.ProjectNumber;
 import com.google.cloud.pubsublite.SequencedMessage;
 import com.google.cloud.pubsublite.SubscriptionName;
 import com.google.cloud.pubsublite.SubscriptionPath;
-import com.google.cloud.pubsublite.proto.SubscriberServiceGrpc;
+import com.google.cloud.pubsublite.v1.SubscriberServiceClient;
 import com.google.common.collect.ImmutableList;
-import io.grpc.Channel;
 import java.util.function.Consumer;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -40,7 +39,7 @@ public class SubscriberBuilderTest {
   @Mock public Consumer<ImmutableList<SequencedMessage>> mockConsumer;
 
   @Test
-  public void testBuilder() throws Exception {
+  public void testBuilder() {
     initMocks(this);
     Subscriber unusedSubscriber =
         SubscriberBuilder.newBuilder()
@@ -52,7 +51,7 @@ public class SubscriberBuilderTest {
                     .build())
             .setMessageConsumer(mockConsumer)
             .setPartition(Partition.of(3))
-            .setSubscriberServiceStub(SubscriberServiceGrpc.newStub(mock(Channel.class)))
+            .setServiceClient(mock(SubscriberServiceClient.class))
             .build();
   }
 }

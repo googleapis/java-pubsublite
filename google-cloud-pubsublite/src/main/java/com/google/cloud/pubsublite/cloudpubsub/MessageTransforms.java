@@ -16,17 +16,18 @@
 
 package com.google.cloud.pubsublite.cloudpubsub;
 
-import static com.google.cloud.pubsublite.internal.Preconditions.checkArgument;
+import static com.google.cloud.pubsublite.internal.UncheckedApiPreconditions.checkArgument;
 
+import com.google.api.gax.rpc.ApiException;
+import com.google.api.gax.rpc.StatusCode.Code;
 import com.google.cloud.pubsublite.Message;
 import com.google.cloud.pubsublite.MessageTransformer;
 import com.google.cloud.pubsublite.SequencedMessage;
+import com.google.cloud.pubsublite.internal.CheckedApiException;
 import com.google.common.collect.ImmutableListMultimap;
 import com.google.protobuf.ByteString;
 import com.google.protobuf.Timestamp;
 import com.google.pubsub.v1.PubsubMessage;
-import io.grpc.Status;
-import io.grpc.StatusException;
 import java.util.Base64;
 import java.util.Collection;
 
@@ -52,11 +53,11 @@ public class MessageTransforms {
   }
 
   /** Decode a timestamp encoded with encodeAttributeEventTime. */
-  public static Timestamp decodeAttributeEventTime(String encoded) throws StatusException {
+  public static Timestamp decodeAttributeEventTime(String encoded) throws ApiException {
     try {
       return Timestamp.parseFrom(Base64.getDecoder().decode(encoded));
     } catch (Exception e) {
-      throw Status.INVALID_ARGUMENT.withCause(e).asException();
+      throw new CheckedApiException(e, Code.INVALID_ARGUMENT).underlying;
     }
   }
 
@@ -65,7 +66,7 @@ public class MessageTransforms {
    * the Cloud Pub/Sub client library shim. This means it requires that all of them are single entry
    * representations of UTF-8 encoded strings.
    */
-  private static String parseAttributes(Collection<ByteString> values) throws StatusException {
+  private static String parseAttributes(Collection<ByteString> values) throws ApiException {
     checkArgument(
         values.size() == 1,
         "Received an unparseable message with multiple values for an attribute.");

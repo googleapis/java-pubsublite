@@ -16,22 +16,25 @@
 
 package com.google.cloud.pubsublite.internal.wire;
 
+import static com.google.cloud.pubsublite.internal.ExtractStatus.toCanonical;
+import static com.google.cloud.pubsublite.internal.ServiceClients.addDefaultSettings;
+
 import com.google.api.gax.batching.BatchingSettings;
 import com.google.api.gax.batching.FlowController.LimitExceededBehavior;
+import com.google.api.gax.rpc.ApiException;
 import com.google.auto.value.AutoValue;
 import com.google.cloud.pubsublite.Constants;
 import com.google.cloud.pubsublite.Offset;
 import com.google.cloud.pubsublite.Partition;
 import com.google.cloud.pubsublite.ProjectLookupUtils;
-import com.google.cloud.pubsublite.Stubs;
 import com.google.cloud.pubsublite.TopicPath;
 import com.google.cloud.pubsublite.internal.Publisher;
 import com.google.cloud.pubsublite.proto.InitialPublishRequest;
-import com.google.cloud.pubsublite.proto.PublisherServiceGrpc;
+import com.google.cloud.pubsublite.v1.PublisherServiceClient;
+import com.google.cloud.pubsublite.v1.PublisherServiceSettings;
 import com.google.common.base.Preconditions;
-import io.grpc.Metadata;
-import io.grpc.StatusException;
-import io.grpc.stub.MetadataUtils;
+import com.google.common.collect.ImmutableMap;
+import java.util.Map;
 import java.util.Optional;
 import org.threeten.bp.Duration;
 
@@ -76,7 +79,7 @@ public abstract class PublisherBuilder {
   // Optional parameters.
   abstract BatchingSettings batching();
 
-  abstract Optional<PublisherServiceGrpc.PublisherServiceStub> stub();
+  abstract Optional<PublisherServiceClient> serviceClient();
 
   abstract PubsubContext context();
 
@@ -95,25 +98,38 @@ public abstract class PublisherBuilder {
     // Optional parameters.
     public abstract Builder setBatching(BatchingSettings batching);
 
-    public abstract Builder setStub(PublisherServiceGrpc.PublisherServiceStub stub);
+    public abstract Builder setServiceClient(PublisherServiceClient client);
 
     public abstract Builder setContext(PubsubContext context);
 
     abstract PublisherBuilder autoBuild();
 
-    public Publisher<Offset> build() throws StatusException {
+    public Publisher<Offset> build() throws ApiException {
       PublisherBuilder autoBuilt = autoBuild();
-      PublisherServiceGrpc.PublisherServiceStub actualStub;
-      actualStub =
-          autoBuilt.stub().isPresent()
-              ? autoBuilt.stub().get()
-              : Stubs.defaultStub(
-                  autoBuilt.topic().location().region(), PublisherServiceGrpc::newStub);
-      Metadata metadata = autoBuilt.context().getMetadata();
-      metadata.merge(RoutingMetadata.of(autoBuilt.topic(), autoBuilt.partition()));
-      actualStub = MetadataUtils.attachHeaders(actualStub, metadata);
+      PublisherServiceClient serviceClient;
+      if (autoBuilt.serviceClient().isPresent()) {
+        serviceClient = autoBuilt.serviceClient().get();
+      } else {
+        try {
+          Map<String, String> metadata = autoBuilt.context().getMetadata();
+          Map<String, String> routingMetadata =
+              RoutingMetadata.of(autoBuilt.topic(), autoBuilt.partition());
+          Map<String, String> allMetadata =
+              ImmutableMap.<String, String>builder()
+                  .putAll(metadata)
+                  .putAll(routingMetadata)
+                  .build();
+          serviceClient =
+              PublisherServiceClient.create(
+                  addDefaultSettings(
+                      autoBuilt.topic().location().region(),
+                      PublisherServiceSettings.newBuilder().setHeaderProvider(() -> allMetadata)));
+        } catch (Throwable t) {
+          throw toCanonical(t).underlying;
+        }
+      }
       return new PublisherImpl(
-          actualStub,
+          serviceClient,
           InitialPublishRequest.newBuilder()
               .setTopic(ProjectLookupUtils.toCanonical(autoBuilt.topic()).toString())
               .setPartition(autoBuilt.partition().value())

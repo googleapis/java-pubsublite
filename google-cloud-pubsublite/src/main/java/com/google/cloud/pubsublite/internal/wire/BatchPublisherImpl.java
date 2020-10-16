@@ -16,18 +16,18 @@
 
 package com.google.cloud.pubsublite.internal.wire;
 
-import static com.google.cloud.pubsublite.internal.Preconditions.checkState;
+import static com.google.cloud.pubsublite.internal.CheckedApiPreconditions.checkState;
 
+import com.google.api.gax.rpc.ResponseObserver;
+import com.google.api.gax.rpc.StatusCode.Code;
 import com.google.cloud.pubsublite.Offset;
+import com.google.cloud.pubsublite.internal.CheckedApiException;
 import com.google.cloud.pubsublite.internal.CloseableMonitor;
 import com.google.cloud.pubsublite.proto.MessagePublishResponse;
 import com.google.cloud.pubsublite.proto.PubSubMessage;
 import com.google.cloud.pubsublite.proto.PublishRequest;
 import com.google.cloud.pubsublite.proto.PublishResponse;
 import com.google.errorprone.annotations.concurrent.GuardedBy;
-import io.grpc.Status;
-import io.grpc.StatusException;
-import io.grpc.stub.StreamObserver;
 import java.util.Collection;
 import java.util.Optional;
 
@@ -42,7 +42,7 @@ class BatchPublisherImpl extends SingleConnection<PublishRequest, PublishRespons
     @Override
     public BatchPublisherImpl New(
         StreamFactory<PublishRequest, PublishResponse> streamFactory,
-        StreamObserver<Offset> clientStream,
+        ResponseObserver<Offset> clientStream,
         PublishRequest initialRequest) {
       return new BatchPublisherImpl(streamFactory, clientStream, initialRequest);
     }
@@ -50,7 +50,7 @@ class BatchPublisherImpl extends SingleConnection<PublishRequest, PublishRespons
 
   private BatchPublisherImpl(
       StreamFactory<PublishRequest, PublishResponse> streamFactory,
-      StreamObserver<Offset> publishCompleteStream,
+      ResponseObserver<Offset> publishCompleteStream,
       PublishRequest initialRequest) {
     super(streamFactory, publishCompleteStream);
     initialize(initialRequest);
@@ -64,14 +64,14 @@ class BatchPublisherImpl extends SingleConnection<PublishRequest, PublishRespons
   }
 
   @Override
-  protected void handleInitialResponse(PublishResponse response) throws StatusException {
+  protected void handleInitialResponse(PublishResponse response) throws CheckedApiException {
     checkState(
         response.hasInitialResponse(),
         "First stream response is not an initial response: " + response);
   }
 
   @Override
-  protected void handleStreamResponse(PublishResponse response) throws StatusException {
+  protected void handleStreamResponse(PublishResponse response) throws CheckedApiException {
     checkState(!response.hasInitialResponse(), "Received duplicate initial response.");
     checkState(
         response.hasMessageResponse(),
@@ -79,13 +79,12 @@ class BatchPublisherImpl extends SingleConnection<PublishRequest, PublishRespons
     onMessageResponse(response.getMessageResponse());
   }
 
-  private void onMessageResponse(MessagePublishResponse response) throws StatusException {
+  private void onMessageResponse(MessagePublishResponse response) throws CheckedApiException {
     Offset offset = Offset.of(response.getStartCursor().getOffset());
     try (CloseableMonitor.Hold h = monitor.enter()) {
       if (lastOffset.isPresent() && offset.value() <= lastOffset.get().value()) {
-        throw Status.FAILED_PRECONDITION
-            .withDescription("Received out of order offsets on stream.")
-            .asException();
+        throw new CheckedApiException(
+            "Received out of order offsets on stream.", Code.FAILED_PRECONDITION);
       }
       lastOffset = Optional.of(offset);
     }

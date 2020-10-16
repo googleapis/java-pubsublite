@@ -20,8 +20,8 @@ import static com.google.cloud.pubsublite.internal.ExtractStatus.toCanonical;
 
 import com.google.api.gax.core.BackgroundResource;
 import com.google.api.gax.core.BackgroundResourceAggregation;
+import com.google.api.gax.rpc.ApiException;
 import com.google.common.collect.ImmutableList;
-import io.grpc.StatusException;
 import java.util.concurrent.TimeUnit;
 
 public class ApiResourceAggregation implements ApiBackgroundResource {
@@ -32,17 +32,17 @@ public class ApiResourceAggregation implements ApiBackgroundResource {
   }
 
   @Override
-  public void close() throws StatusException {
+  public void close() throws ApiException {
     try {
       resources.close();
     } catch (Throwable t) {
-      throw toCanonical(t);
+      throw toCanonical(t).underlying;
     }
   }
 
   @Override
   public void shutdown() {
-    resources.shutdown();
+    close();
   }
 
   @Override

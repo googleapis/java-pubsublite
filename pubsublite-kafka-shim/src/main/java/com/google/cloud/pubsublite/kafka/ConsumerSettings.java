@@ -16,6 +16,7 @@
 
 package com.google.cloud.pubsublite.kafka;
 
+import com.google.api.gax.rpc.ApiException;
 import com.google.auto.value.AutoValue;
 import com.google.cloud.pubsublite.AdminClient;
 import com.google.cloud.pubsublite.AdminClientSettings;
@@ -35,7 +36,6 @@ import com.google.cloud.pubsublite.internal.wire.PubsubContext;
 import com.google.cloud.pubsublite.internal.wire.PubsubContext.Framework;
 import com.google.cloud.pubsublite.internal.wire.SubscriberBuilder;
 import com.google.cloud.pubsublite.proto.Subscription;
-import io.grpc.StatusException;
 import org.apache.kafka.clients.consumer.Consumer;
 
 @AutoValue
@@ -67,7 +67,7 @@ public abstract class ConsumerSettings {
     public abstract ConsumerSettings build();
   }
 
-  public Consumer<byte[], byte[]> instantiate() throws StatusException {
+  public Consumer<byte[], byte[]> instantiate() throws ApiException {
     CloudZone zone = subscriptionPath().location();
     try (AdminClient adminClient =
         AdminClient.create(AdminClientSettings.newBuilder().setRegion(zone.region()).build())) {
@@ -119,7 +119,7 @@ public abstract class ConsumerSettings {
           assignerFactory,
           cursorClient);
     } catch (Exception e) {
-      throw ExtractStatus.toCanonical(e);
+      throw ExtractStatus.toCanonical(e).underlying;
     }
   }
 }

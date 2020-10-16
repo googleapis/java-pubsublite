@@ -16,11 +16,14 @@
 
 package com.google.cloud.pubsublite.cloudpubsub.internal;
 
+import static com.google.cloud.pubsublite.internal.CheckedApiPreconditions.checkState;
 import static com.google.cloud.pubsublite.internal.ExtractStatus.toCanonical;
-import static com.google.cloud.pubsublite.internal.Preconditions.checkState;
 
+import com.google.api.core.ApiService;
+import com.google.api.gax.rpc.ApiException;
 import com.google.cloud.pubsublite.Partition;
 import com.google.cloud.pubsublite.cloudpubsub.Subscriber;
+import com.google.cloud.pubsublite.internal.CheckedApiException;
 import com.google.cloud.pubsublite.internal.CloseableMonitor;
 import com.google.cloud.pubsublite.internal.ProxyService;
 import com.google.cloud.pubsublite.internal.wire.Assigner;
@@ -28,7 +31,6 @@ import com.google.cloud.pubsublite.internal.wire.AssignerFactory;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.util.concurrent.MoreExecutors;
 import com.google.errorprone.annotations.concurrent.GuardedBy;
-import io.grpc.StatusException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -51,7 +53,7 @@ public class AssigningSubscriber extends ProxyService implements Subscriber {
 
   public AssigningSubscriber(
       PartitionSubscriberFactory subscriberFactory, AssignerFactory assignerFactory)
-      throws StatusException {
+      throws ApiException {
     this.subscriberFactory = subscriberFactory;
     Assigner assigner = assignerFactory.New(this::handleAssignment);
     addServices(assigner);
@@ -64,14 +66,15 @@ public class AssigningSubscriber extends ProxyService implements Subscriber {
   protected void stop() {
     try (CloseableMonitor.Hold h = monitor.enter()) {
       shutdown = true;
-      liveSubscriberMap.values().forEach(subscriber -> subscriber.stopAsync().awaitTerminated());
+      liveSubscriberMap.values().forEach(ApiService::stopAsync);
+      liveSubscriberMap.values().forEach(ApiService::awaitTerminated);
       liveSubscriberMap.clear();
       stoppingSubscribers.forEach(Subscriber::awaitTerminated);
     }
   }
 
   @Override
-  protected void handlePermanentError(StatusException error) {
+  protected void handlePermanentError(CheckedApiException error) {
     stop();
   }
 
@@ -89,15 +92,15 @@ public class AssigningSubscriber extends ProxyService implements Subscriber {
           if (!liveSubscriberMap.containsKey(partition)) startSubscriber(partition);
         }
       }
-    } catch (StatusException e) {
+    } catch (CheckedApiException e) {
       onPermanentError(e);
     }
   }
 
   @GuardedBy("monitor.monitor")
-  private void startSubscriber(Partition partition) throws StatusException {
+  private void startSubscriber(Partition partition) throws CheckedApiException {
     checkState(!liveSubscriberMap.containsKey(partition));
-    Subscriber subscriber = subscriberFactory.New(partition);
+    Subscriber subscriber = subscriberFactory.newSubscriber(partition);
     subscriber.addListener(
         new Listener() {
           @Override

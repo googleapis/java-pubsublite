@@ -16,10 +16,10 @@
 
 package com.google.cloud.pubsublite;
 
-import static com.google.cloud.pubsublite.internal.Preconditions.checkArgument;
+import static com.google.cloud.pubsublite.internal.UncheckedApiPreconditions.checkArgument;
 
+import com.google.api.gax.rpc.ApiException;
 import com.google.auto.value.AutoValue;
-import io.grpc.StatusException;
 import java.io.Serializable;
 import java.util.Arrays;
 
@@ -62,7 +62,7 @@ public abstract class TopicPath implements Serializable {
     public abstract TopicPath build();
   }
 
-  public static TopicPath parse(String path) throws StatusException {
+  public static TopicPath parse(String path) throws ApiException {
     String[] splits = path.split("/");
     checkArgument(splits.length == 6);
     checkArgument(splits[4].equals("topics"));

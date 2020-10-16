@@ -16,9 +16,10 @@
 
 package com.google.cloud.pubsublite;
 
+import com.google.api.gax.rpc.ApiException;
+import com.google.api.gax.rpc.StatusCode.Code;
 import com.google.auto.value.AutoValue;
-import io.grpc.Status;
-import io.grpc.StatusException;
+import com.google.cloud.pubsublite.internal.CheckedApiException;
 import java.io.Serializable;
 
 /** A representation of a Google Cloud zone. */
@@ -34,13 +35,13 @@ public abstract class CloudZone implements Serializable {
    * Construct a CloudZone from a valid zone string. `zone` must be formatted as:
    * &lt;location&gt;-&lt;direction&gt;&lt;number&gt;-&lt;letter&gt;
    */
-  public static CloudZone parse(String zone) throws StatusException {
+  public static CloudZone parse(String zone) throws ApiException {
     String[] splits = zone.split("-", -1);
     if (splits.length != 3) {
-      throw Status.INVALID_ARGUMENT.withDescription("Invalid zone name: " + zone).asException();
+      throw new CheckedApiException("Invalid zone name: " + zone, Code.INVALID_ARGUMENT).underlying;
     }
     if (splits[2].length() != 1) {
-      throw Status.INVALID_ARGUMENT.withDescription("Invalid zone name: " + zone).asException();
+      throw new CheckedApiException("Invalid zone name: " + zone, Code.INVALID_ARGUMENT).underlying;
     }
     CloudRegion region = CloudRegion.of(splits[0] + "-" + splits[1]);
     return of(region, splits[2].charAt(0));

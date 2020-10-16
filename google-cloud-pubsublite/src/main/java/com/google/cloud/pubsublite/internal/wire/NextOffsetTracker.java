@@ -16,16 +16,16 @@
 
 package com.google.cloud.pubsublite.internal.wire;
 
-import static com.google.cloud.pubsublite.internal.Preconditions.checkArgument;
-import static com.google.cloud.pubsublite.internal.Preconditions.checkState;
+import static com.google.cloud.pubsublite.internal.CheckedApiPreconditions.checkArgument;
+import static com.google.cloud.pubsublite.internal.CheckedApiPreconditions.checkState;
 import static com.google.cloud.pubsublite.internal.wire.Predicates.isOrdered;
 
 import com.google.cloud.pubsublite.Offset;
 import com.google.cloud.pubsublite.SequencedMessage;
+import com.google.cloud.pubsublite.internal.CheckedApiException;
 import com.google.cloud.pubsublite.proto.Cursor;
 import com.google.cloud.pubsublite.proto.SeekRequest;
 import com.google.common.collect.Iterables;
-import io.grpc.StatusException;
 import java.util.Collection;
 import java.util.Optional;
 
@@ -38,7 +38,7 @@ public class NextOffsetTracker {
     nextOffset = Optional.of(clientSeekOffset);
   }
 
-  void onMessages(Collection<SequencedMessage> messages) throws StatusException {
+  void onMessages(Collection<SequencedMessage> messages) throws CheckedApiException {
     checkArgument(!messages.isEmpty());
     checkArgument(isOrdered(messages));
     Offset firstMessageOffset = messages.iterator().next().offset();

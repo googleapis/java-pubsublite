@@ -119,7 +119,7 @@ class SingleSubscriptionConsumerImpl implements SingleSubscriptionConsumer {
                     partitions.put(partition, s);
                   }));
     } catch (Throwable t) {
-      throw ExtractStatus.toCanonical(t).getStatus().asRuntimeException();
+      throw ExtractStatus.toCanonical(t).underlying;
     }
   }
 

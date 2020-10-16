@@ -16,10 +16,10 @@
 
 package com.google.cloud.pubsublite;
 
-import static com.google.cloud.pubsublite.internal.Preconditions.checkArgument;
+import static com.google.cloud.pubsublite.internal.UncheckedApiPreconditions.checkArgument;
 
+import com.google.api.gax.rpc.ApiException;
 import com.google.auto.value.AutoValue;
-import io.grpc.StatusException;
 import java.io.Serializable;
 
 /**
@@ -38,7 +38,7 @@ public abstract class ProjectNumber implements Serializable {
   }
 
   /** Construct a ProjectNumber from its long value. */
-  public static ProjectNumber of(long value) throws StatusException {
+  public static ProjectNumber of(long value) throws ApiException {
     checkArgument(value > 0);
     return new AutoValue_ProjectNumber(value);
   }

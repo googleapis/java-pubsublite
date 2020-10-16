@@ -23,6 +23,8 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 import static org.junit.Assume.assumeTrue;
 
+import com.google.api.gax.rpc.ApiException;
+import com.google.api.gax.rpc.StatusCode.Code;
 import com.google.cloud.pubsub.v1.MessageReceiver;
 import com.google.cloud.pubsublite.AdminClient;
 import com.google.cloud.pubsublite.AdminClientSettings;
@@ -40,6 +42,7 @@ import com.google.cloud.pubsublite.cloudpubsub.Publisher;
 import com.google.cloud.pubsublite.cloudpubsub.PublisherSettings;
 import com.google.cloud.pubsublite.cloudpubsub.Subscriber;
 import com.google.cloud.pubsublite.cloudpubsub.SubscriberSettings;
+import com.google.cloud.pubsublite.internal.CheckedApiException;
 import com.google.cloud.pubsublite.proto.Subscription;
 import com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig;
 import com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig.DeliveryRequirement;
@@ -48,10 +51,6 @@ import com.google.cloud.pubsublite.proto.Topic.PartitionConfig;
 import com.google.cloud.pubsublite.proto.Topic.RetentionConfig;
 import com.google.protobuf.FieldMask;
 import com.google.protobuf.util.Durations;
-import io.grpc.Status;
-import io.grpc.Status.Code;
-import io.grpc.StatusException;
-import io.grpc.StatusRuntimeException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -154,16 +153,9 @@ public class ITVPCNegativeTest {
     adminClient.close();
   }
 
-  private static void checkExceptionForVPCError(StatusRuntimeException e) {
-    assertEquals(Code.PERMISSION_DENIED, e.getStatus().getCode());
-    assertThat(e.getStatus().getDescription())
-        .contains("Request is prohibited by organization's policy");
-  }
-
-  private static void checkExceptionForVPCError(StatusException e) {
-    assertEquals(Status.Code.PERMISSION_DENIED, e.getStatus().getCode());
-    assertThat(e.getStatus().getDescription())
-        .contains("Request is prohibited by organization's policy");
+  private static void checkExceptionForVPCError(CheckedApiException e) {
+    assertEquals(Code.PERMISSION_DENIED, e.code());
+    assertThat(e.getMessage()).contains("Request is prohibited by organization's policy");
   }
 
   @Test
@@ -328,9 +320,9 @@ public class ITVPCNegativeTest {
           PublisherSettings.newBuilder().setTopicPath(topicPath).build();
 
       Publisher publisher = Publisher.create(publisherSettings);
-      fail("Expected PERMISSION_DENIED StatusException");
-    } catch (StatusException e) {
-      checkExceptionForVPCError(e);
+      fail("Expected PERMISSION_DENIED CheckedApiException");
+    } catch (ApiException e) {
+      checkExceptionForVPCError(new CheckedApiException(e));
     }
   }
 
@@ -347,7 +339,7 @@ public class ITVPCNegativeTest {
       partitions.add(Partition.of(0));
 
       MessageReceiver receiver =
-          (message, consumer) -> fail("Expected PERMISSION_DENIED StatusException");
+          (message, consumer) -> fail("Expected PERMISSION_DENIED CheckedApiException");
 
       SubscriberSettings subscriberSettings =
           SubscriberSettings.newBuilder()
@@ -361,11 +353,11 @@ public class ITVPCNegativeTest {
 
       subscriber.startAsync().awaitRunning();
       subscriber.awaitTerminated(30, TimeUnit.SECONDS);
-      fail("Expected PERMISSION_DENIED StatusException");
-    } catch (StatusException e) {
-      checkExceptionForVPCError(e);
+      fail("Expected PERMISSION_DENIED CheckedApiException");
+    } catch (ApiException e) {
+      checkExceptionForVPCError(new CheckedApiException(e));
     } catch (TimeoutException t) {
-      fail("Expected PERMISSION_DENIED StatusException but got: " + t.toString());
+      fail("Expected PERMISSION_DENIED CheckedApiException but got: " + t.toString());
     } catch (IllegalStateException e) {
       checkExceptionForVPCError(toCanonical(e.getCause()));
     }

@@ -26,8 +26,7 @@ import com.google.cloud.pubsublite.ProjectNumber;
 import com.google.cloud.pubsublite.TopicName;
 import com.google.cloud.pubsublite.TopicPath;
 import com.google.cloud.pubsublite.internal.Publisher;
-import com.google.cloud.pubsublite.proto.PublisherServiceGrpc;
-import io.grpc.Channel;
+import com.google.cloud.pubsublite.v1.PublisherServiceClient;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -35,7 +34,7 @@ import org.junit.runners.JUnit4;
 @RunWith(JUnit4.class)
 public class PublisherBuilderTest {
   @Test
-  public void testBuilder() throws Exception {
+  public void testBuilder() {
     Publisher<Offset> unusedPublisher =
         PublisherBuilder.builder()
             .setBatching(PublisherBuilder.DEFAULT_BATCHING_SETTINGS)
@@ -46,7 +45,7 @@ public class PublisherBuilderTest {
                     .setName(TopicName.of("abc"))
                     .build())
             .setPartition(Partition.of(85))
-            .setStub(PublisherServiceGrpc.newStub(mock(Channel.class)))
+            .setServiceClient(mock(PublisherServiceClient.class))
             .build();
   }
 }

@@ -15,8 +15,8 @@
  */
 package com.google.cloud.pubsublite.internal;
 
+import com.google.api.gax.rpc.ResponseObserver;
 import io.grpc.Status;
-import io.grpc.stub.StreamObserver;
 import java.util.concurrent.atomic.AtomicInteger;
 import org.mockito.stubbing.Answer;
 
@@ -24,17 +24,17 @@ public class TestUtil {
 
   public static <T> Answer<Void> answerWith(T response) {
     return invocation -> {
-      StreamObserver<T> responseObserver = invocation.getArgument(1);
-      responseObserver.onNext(response);
-      responseObserver.onCompleted();
+      ResponseObserver<T> ResponseObserver = invocation.getArgument(1);
+      ResponseObserver.onResponse(response);
+      ResponseObserver.onComplete();
       return null;
     };
   }
 
   public static Answer<Void> answerWith(Status status) {
     return invocation -> {
-      StreamObserver<?> responseObserver = invocation.getArgument(1);
-      responseObserver.onError(status.asRuntimeException());
+      ResponseObserver<?> ResponseObserver = invocation.getArgument(1);
+      ResponseObserver.onError(status.asRuntimeException());
       return null;
     };
   }

@@ -28,7 +28,7 @@ import com.google.cloud.pubsublite.cloudpubsub.FlowControlSettings;
 import com.google.cloud.pubsublite.cloudpubsub.Subscriber;
 import com.google.cloud.pubsublite.cloudpubsub.SubscriberSettings;
 import com.google.pubsub.v1.PubsubMessage;
-import io.grpc.StatusException;
+import io.grpc.CheckedApiException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
@@ -47,7 +47,7 @@ public class SubscriberExample {
 
   public static void subscriberExample(
       String cloudRegion, char zoneId, long projectNumber, String subscriptionId)
-      throws StatusException {
+      throws CheckedApiException {
 
     SubscriptionPath subscriptionPath =
         SubscriptionPath.newBuilder()

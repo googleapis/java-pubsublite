@@ -16,12 +16,12 @@
 
 package com.google.cloud.pubsublite.internal.wire;
 
-import static com.google.cloud.pubsublite.internal.Preconditions.checkArgument;
-import static com.google.cloud.pubsublite.internal.Preconditions.checkState;
+import static com.google.cloud.pubsublite.internal.CheckedApiPreconditions.checkArgument;
+import static com.google.cloud.pubsublite.internal.CheckedApiPreconditions.checkState;
 
+import com.google.cloud.pubsublite.internal.CheckedApiException;
 import com.google.cloud.pubsublite.proto.FlowControlRequest;
 import com.google.common.math.LongMath;
-import io.grpc.StatusException;
 import java.util.Optional;
 
 // A TokenCounter stores the amount of outstanding byte and message flow control tokens that the
@@ -30,7 +30,7 @@ class TokenCounter {
   private long bytes = 0;
   private long messages = 0;
 
-  void add(long deltaBytes, long deltaMessages) throws StatusException {
+  void add(long deltaBytes, long deltaMessages) throws CheckedApiException {
     checkArgument(deltaBytes >= 0);
     checkArgument(deltaMessages >= 0);
 
@@ -38,7 +38,7 @@ class TokenCounter {
     messages = LongMath.saturatedAdd(messages, deltaMessages);
   }
 
-  void sub(long deltaBytes, long deltaMessages) throws StatusException {
+  void sub(long deltaBytes, long deltaMessages) throws CheckedApiException {
     checkArgument(deltaBytes >= 0);
     checkArgument(deltaMessages >= 0);
     checkState(

@@ -17,10 +17,11 @@
 package com.google.cloud.pubsublite.internal.wire;
 
 import com.google.auto.value.AutoValue;
+import com.google.common.collect.ImmutableMap;
 import com.google.common.io.BaseEncoding;
 import com.google.protobuf.Struct;
 import com.google.protobuf.util.Values;
-import io.grpc.Metadata;
+import java.util.Map;
 import java.util.Optional;
 
 /** A context for identifying clients based on basic properties. */
@@ -69,10 +70,7 @@ public abstract class PubsubContext {
     return builder.build();
   }
 
-  Metadata getMetadata() {
-    Metadata metadata = new Metadata();
-    Metadata.Key<String> key = Metadata.Key.of(HEADER_NAME, Metadata.ASCII_STRING_MARSHALLER);
-    metadata.put(key, BaseEncoding.base64().encode(getStruct().toByteArray()));
-    return metadata;
+  Map<String, String> getMetadata() {
+    return ImmutableMap.of(HEADER_NAME, BaseEncoding.base64().encode(getStruct().toByteArray()));
   }
 }

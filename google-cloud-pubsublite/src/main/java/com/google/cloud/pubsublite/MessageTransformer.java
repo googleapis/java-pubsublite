@@ -16,7 +16,7 @@
 
 package com.google.cloud.pubsublite;
 
-import io.grpc.StatusException;
+import com.google.api.gax.rpc.ApiException;
 
 /**
  * A MessageTransformer details how to transform a message of one type to another. It is likely that
@@ -24,5 +24,5 @@ import io.grpc.StatusException;
  */
 public interface MessageTransformer<FromT, ToT> {
   /** Transform one message type to another. */
-  ToT transform(FromT from) throws StatusException;
+  ToT transform(FromT from) throws ApiException;
 }

@@ -24,8 +24,7 @@ import com.google.cloud.pubsublite.Partition;
 import com.google.cloud.pubsublite.ProjectNumber;
 import com.google.cloud.pubsublite.SubscriptionName;
 import com.google.cloud.pubsublite.SubscriptionPath;
-import com.google.cloud.pubsublite.proto.CursorServiceGrpc;
-import io.grpc.Channel;
+import com.google.cloud.pubsublite.v1.CursorServiceClient;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -33,7 +32,7 @@ import org.junit.runners.JUnit4;
 @RunWith(JUnit4.class)
 public class CommitterBuilderTest {
   @Test
-  public void testBuilder() throws Exception {
+  public void testBuilder() {
     Committer unusedCommitter =
         CommitterBuilder.newBuilder()
             .setSubscriptionPath(
@@ -43,7 +42,7 @@ public class CommitterBuilderTest {
                     .setName(SubscriptionName.of("abc"))
                     .build())
             .setPartition(Partition.of(987))
-            .setCursorStub(CursorServiceGrpc.newStub(mock(Channel.class)))
+            .setServiceClient(mock(CursorServiceClient.class))
             .build();
   }
 }

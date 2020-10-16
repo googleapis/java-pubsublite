@@ -16,10 +16,12 @@
 
 package com.google.cloud.pubsublite;
 
+import static com.google.cloud.pubsublite.internal.UncheckedApiPreconditions.checkArgument;
+
+import com.google.api.gax.rpc.ApiException;
+import com.google.api.gax.rpc.StatusCode.Code;
 import com.google.auto.value.AutoValue;
-import com.google.cloud.pubsublite.internal.Preconditions;
-import io.grpc.Status;
-import io.grpc.StatusException;
+import com.google.cloud.pubsublite.internal.CheckedApiException;
 
 /**
  * Information about a successful publish operation. Can be encoded in the string returned by the
@@ -39,18 +41,16 @@ public abstract class PublishMetadata {
   }
 
   /** Decode a PublishMetadata from the Cloud Pub/Sub ack id. */
-  public static PublishMetadata decode(String encoded) throws StatusException {
+  public static PublishMetadata decode(String encoded) throws ApiException {
     String[] split = encoded.split(":");
-    Preconditions.checkArgument(split.length == 2, "Invalid encoded PublishMetadata.");
+    checkArgument(split.length == 2, "Invalid encoded PublishMetadata.");
     try {
       Partition partition = Partition.of(Long.parseLong(split[0]));
       Offset offset = Offset.of(Long.parseLong(split[1]));
       return of(partition, offset);
     } catch (NumberFormatException e) {
-      throw Status.INVALID_ARGUMENT
-          .withCause(e)
-          .withDescription("Invalid encoded PublishMetadata.")
-          .asException();
+      throw new CheckedApiException("Invalid encoded PublishMetadata.", e, Code.INVALID_ARGUMENT)
+          .underlying;
     }
   }
 

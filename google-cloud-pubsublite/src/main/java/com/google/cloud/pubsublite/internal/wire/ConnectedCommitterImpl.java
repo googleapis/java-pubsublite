@@ -16,16 +16,16 @@
 
 package com.google.cloud.pubsublite.internal.wire;
 
-import static com.google.cloud.pubsublite.internal.Preconditions.checkState;
+import static com.google.cloud.pubsublite.internal.CheckedApiPreconditions.checkState;
 
+import com.google.api.gax.rpc.ResponseObserver;
 import com.google.cloud.pubsublite.Offset;
+import com.google.cloud.pubsublite.internal.CheckedApiException;
 import com.google.cloud.pubsublite.proto.Cursor;
 import com.google.cloud.pubsublite.proto.SequencedCommitCursorRequest;
 import com.google.cloud.pubsublite.proto.SequencedCommitCursorResponse;
 import com.google.cloud.pubsublite.proto.StreamingCommitCursorRequest;
 import com.google.cloud.pubsublite.proto.StreamingCommitCursorResponse;
-import io.grpc.StatusException;
-import io.grpc.stub.StreamObserver;
 
 public class ConnectedCommitterImpl
     extends SingleConnection<
@@ -35,7 +35,7 @@ public class ConnectedCommitterImpl
 
   private ConnectedCommitterImpl(
       StreamFactory<StreamingCommitCursorRequest, StreamingCommitCursorResponse> streamFactory,
-      StreamObserver<SequencedCommitCursorResponse> clientStream,
+      ResponseObserver<SequencedCommitCursorResponse> clientStream,
       StreamingCommitCursorRequest initialRequest) {
     super(streamFactory, clientStream);
     this.initialRequest = initialRequest;
@@ -46,7 +46,7 @@ public class ConnectedCommitterImpl
     @Override
     public ConnectedCommitter New(
         StreamFactory<StreamingCommitCursorRequest, StreamingCommitCursorResponse> streamFactory,
-        StreamObserver<SequencedCommitCursorResponse> clientStream,
+        ResponseObserver<SequencedCommitCursorResponse> clientStream,
         StreamingCommitCursorRequest initialRequest) {
       return new ConnectedCommitterImpl(streamFactory, clientStream, initialRequest);
     }
@@ -55,7 +55,7 @@ public class ConnectedCommitterImpl
   // SingleConnection implementation.
   @Override
   protected void handleInitialResponse(StreamingCommitCursorResponse response)
-      throws StatusException {
+      throws CheckedApiException {
     checkState(
         response.hasInitial(),
         String.format(
@@ -65,7 +65,7 @@ public class ConnectedCommitterImpl
 
   @Override
   protected void handleStreamResponse(StreamingCommitCursorResponse response)
-      throws StatusException {
+      throws CheckedApiException {
     checkState(
         response.hasCommit(),
         String.format(

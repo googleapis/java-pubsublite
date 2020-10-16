@@ -16,16 +16,17 @@
 
 package com.google.cloud.pubsublite.beam;
 
-import static com.google.cloud.pubsublite.internal.Preconditions.checkArgument;
+import static com.google.cloud.pubsublite.internal.CheckedApiPreconditions.checkArgument;
+import static com.google.cloud.pubsublite.internal.ExtractStatus.toCanonical;
 
 import com.google.api.core.ApiService.Listener;
 import com.google.api.core.ApiService.State;
 import com.google.cloud.pubsublite.PublishMetadata;
+import com.google.cloud.pubsublite.internal.CheckedApiException;
 import com.google.cloud.pubsublite.internal.CloseableMonitor;
 import com.google.cloud.pubsublite.internal.Publisher;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.errorprone.annotations.concurrent.GuardedBy;
-import io.grpc.StatusException;
 import java.util.HashMap;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
@@ -39,7 +40,7 @@ class PublisherCache {
   private final HashMap<PublisherOptions, Publisher<PublishMetadata>> livePublishers =
       new HashMap<>();
 
-  Publisher<PublishMetadata> get(PublisherOptions options) throws StatusException {
+  Publisher<PublishMetadata> get(PublisherOptions options) throws CheckedApiException {
     checkArgument(options.usesCache());
     try (CloseableMonitor.Hold h = monitor.enter()) {
       Publisher<PublishMetadata> publisher = livePublishers.get(options);
@@ -58,6 +59,8 @@ class PublisherCache {
           listenerExecutor);
       publisher.startAsync();
       return publisher;
+    } catch (Throwable t) {
+      throw toCanonical(t);
     }
   }
 

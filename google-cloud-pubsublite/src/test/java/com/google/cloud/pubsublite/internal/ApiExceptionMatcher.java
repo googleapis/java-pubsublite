@@ -20,48 +20,47 @@ import static com.google.common.truth.Truth.assertThat;
 import static com.google.common.truth.Truth8.assertThat;
 import static org.junit.Assert.assertThrows;
 
-import io.grpc.Status;
-import io.grpc.Status.Code;
+import com.google.api.gax.rpc.StatusCode.Code;
 import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import org.mockito.ArgumentMatcher;
 
-public class StatusExceptionMatcher implements ArgumentMatcher<Throwable> {
+public class ApiExceptionMatcher implements ArgumentMatcher<Throwable> {
   private final Optional<Code> code;
   private final Optional<String> message;
 
-  public StatusExceptionMatcher(Code code, String message) {
+  public ApiExceptionMatcher(Code code, String message) {
     this.code = Optional.of(code);
     this.message = Optional.of(message);
   }
 
-  public StatusExceptionMatcher(Code code) {
+  public ApiExceptionMatcher(Code code) {
     this.code = Optional.of(code);
     this.message = Optional.empty();
   }
 
-  public StatusExceptionMatcher() {
+  public ApiExceptionMatcher() {
     this.code = Optional.empty();
     this.message = Optional.empty();
   }
 
-  private boolean matches(Status status) {
-    return (!code.isPresent() || code.get() == status.getCode())
-        && (!message.isPresent() || message.get().equals(status.getDescription()));
+  private boolean matches(CheckedApiException e) {
+    return (!code.isPresent() || code.get() == e.code())
+        && (!message.isPresent() || message.get().equals(e.getMessage()));
   }
 
   @Override
   public boolean matches(Throwable argument) {
-    Optional<Status> statusOr = ExtractStatus.extract(argument);
+    Optional<CheckedApiException> statusOr = ExtractStatus.extract(argument);
     if (!statusOr.isPresent()) return false;
     return matches(statusOr.get());
   }
 
   public static void assertFutureThrowsCode(Future<?> f, Code code) {
     ExecutionException exception = assertThrows(ExecutionException.class, f::get);
-    Optional<Status> statusOr = ExtractStatus.extract(exception.getCause());
+    Optional<CheckedApiException> statusOr = ExtractStatus.extract(exception.getCause());
     assertThat(statusOr).isPresent();
-    assertThat(statusOr.get().getCode()).isEqualTo(code);
+    assertThat(statusOr.get().code()).isEqualTo(code);
   }
 }

@@ -27,16 +27,16 @@ import static org.mockito.MockitoAnnotations.initMocks;
 
 import com.google.api.core.ApiService.Listener;
 import com.google.api.core.SettableApiFuture;
+import com.google.api.gax.rpc.ApiException;
+import com.google.api.gax.rpc.StatusCode.Code;
 import com.google.cloud.pubsublite.Offset;
 import com.google.cloud.pubsublite.SequencedMessage;
-import com.google.cloud.pubsublite.internal.StatusExceptionMatcher;
+import com.google.cloud.pubsublite.internal.ApiExceptionMatcher;
+import com.google.cloud.pubsublite.internal.CheckedApiException;
 import com.google.cloud.pubsublite.internal.testing.FakeApiService;
 import com.google.cloud.pubsublite.internal.wire.Committer;
 import com.google.cloud.pubsublite.proto.Cursor;
 import com.google.common.util.concurrent.MoreExecutors;
-import io.grpc.Status.Code;
-import io.grpc.StatusException;
-import io.grpc.StatusRuntimeException;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -63,7 +63,7 @@ public class AckSetTrackerImplTest {
   }
 
   @Before
-  public void setUp() throws StatusException {
+  public void setUp() throws ApiException {
     initMocks(this);
     tracker = new AckSetTrackerImpl(committer);
     tracker.startAsync().awaitRunning();
@@ -80,7 +80,7 @@ public class AckSetTrackerImplTest {
   }
 
   @Test
-  public void trackAndAggregateAcks() throws StatusException {
+  public void trackAndAggregateAcks() throws CheckedApiException {
     Runnable ack1 = tracker.track(messageForOffset(1));
     Runnable ack3 = tracker.track(messageForOffset(3));
     Runnable ack5 = tracker.track(messageForOffset(5));
@@ -103,7 +103,7 @@ public class AckSetTrackerImplTest {
   }
 
   @Test
-  public void duplicateAckFails() throws StatusException {
+  public void duplicateAckFails() throws CheckedApiException {
     Runnable ack1 = tracker.track(messageForOffset(1));
 
     SettableApiFuture<Void> commitFuture = SettableApiFuture.create();
@@ -117,8 +117,8 @@ public class AckSetTrackerImplTest {
     commitFuture.set(null);
     assertThat(tracker.isRunning()).isTrue();
 
-    assertThrows(StatusRuntimeException.class, ack1::run);
+    assertThrows(ApiException.class, ack1::run);
     verify(permanentErrorHandler)
-        .failed(any(), argThat(new StatusExceptionMatcher(Code.FAILED_PRECONDITION)));
+        .failed(any(), argThat(new ApiExceptionMatcher(Code.FAILED_PRECONDITION)));
   }
 }

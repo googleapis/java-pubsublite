@@ -16,7 +16,7 @@
 
 package com.google.cloud.pubsublite.beam;
 
-import static com.google.cloud.pubsublite.internal.Preconditions.checkArgument;
+import static com.google.cloud.pubsublite.internal.UncheckedApiPreconditions.checkArgument;
 
 import com.google.auto.value.AutoValue;
 import com.google.cloud.pubsublite.SequencedMessage;

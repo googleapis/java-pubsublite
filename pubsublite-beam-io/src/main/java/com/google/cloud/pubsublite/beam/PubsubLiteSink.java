@@ -24,14 +24,13 @@ import com.google.api.core.ApiService.State;
 import com.google.cloud.pubsublite.Message;
 import com.google.cloud.pubsublite.PublishMetadata;
 import com.google.cloud.pubsublite.beam.PublisherOrError.Kind;
+import com.google.cloud.pubsublite.internal.CheckedApiException;
 import com.google.cloud.pubsublite.internal.CloseableMonitor;
 import com.google.cloud.pubsublite.internal.ExtractStatus;
 import com.google.cloud.pubsublite.internal.Publisher;
 import com.google.common.util.concurrent.Monitor.Guard;
 import com.google.common.util.concurrent.MoreExecutors;
 import com.google.errorprone.annotations.concurrent.GuardedBy;
-import io.grpc.StatusException;
-import java.io.IOException;
 import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.concurrent.Executor;
@@ -50,7 +49,7 @@ class PubsubLiteSink extends DoFn<Message, Void> {
   private transient int outstanding;
 
   @GuardedBy("monitor.monitor")
-  private transient Deque<StatusException> errorsSinceLastFinish;
+  private transient Deque<CheckedApiException> errorsSinceLastFinish;
 
   private static final Executor executor = Executors.newCachedThreadPool();
 
@@ -59,7 +58,7 @@ class PubsubLiteSink extends DoFn<Message, Void> {
   }
 
   @Setup
-  public void setup() throws StatusException {
+  public void setup() throws CheckedApiException {
     Publisher<PublishMetadata> publisher;
     if (options.usesCache()) {
       publisher = PerServerPublisherCache.cache.get(options);
@@ -88,7 +87,7 @@ class PubsubLiteSink extends DoFn<Message, Void> {
   }
 
   @ProcessElement
-  public void processElement(@Element Message message) throws StatusException {
+  public void processElement(@Element Message message) throws CheckedApiException {
     ApiFuture<PublishMetadata> future;
     try (CloseableMonitor.Hold h = monitor.enter()) {
       ++outstanding;
@@ -121,7 +120,7 @@ class PubsubLiteSink extends DoFn<Message, Void> {
 
   // Intentionally don't flush on bundle finish to allow multi-sink client reuse.
   @FinishBundle
-  public void finishBundle() throws StatusException, IOException {
+  public void finishBundle() throws CheckedApiException {
     try (CloseableMonitor.Hold h =
         monitor.enterWhenUninterruptibly(
             new Guard(monitor.monitor) {
@@ -131,7 +130,7 @@ class PubsubLiteSink extends DoFn<Message, Void> {
               }
             })) {
       if (!errorsSinceLastFinish.isEmpty()) {
-        StatusException canonical = errorsSinceLastFinish.pop();
+        CheckedApiException canonical = errorsSinceLastFinish.pop();
         while (!errorsSinceLastFinish.isEmpty()) {
           canonical.addSuppressed(errorsSinceLastFinish.pop());
         }

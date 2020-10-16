@@ -35,6 +35,7 @@ import com.google.cloud.pubsublite.Offset;
 import com.google.cloud.pubsublite.Partition;
 import com.google.cloud.pubsublite.SequencedMessage;
 import com.google.cloud.pubsublite.TopicPath;
+import com.google.cloud.pubsublite.internal.CheckedApiException;
 import com.google.cloud.pubsublite.internal.PullSubscriber;
 import com.google.cloud.pubsublite.internal.testing.FakeApiService;
 import com.google.cloud.pubsublite.internal.wire.Committer;
@@ -47,7 +48,6 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.ListMultimap;
 import com.google.protobuf.Timestamp;
-import io.grpc.StatusException;
 import java.time.Duration;
 import java.util.Map;
 import java.util.Optional;
@@ -85,7 +85,7 @@ public class SingleSubscriptionConsumerImplTest {
   private SingleSubscriptionConsumer consumer;
 
   @Before
-  public void setUp() throws StatusException {
+  public void setUp() throws CheckedApiException {
     initMocks(this);
     consumer =
         new SingleSubscriptionConsumerImpl(
@@ -103,8 +103,7 @@ public class SingleSubscriptionConsumerImplTest {
   }
 
   private static void assertConsumerRecordsEqual(
-      ConsumerRecords<byte[], byte[]> records, ListMultimap<Partition, Offset> target)
-      throws StatusException {
+      ConsumerRecords<byte[], byte[]> records, ListMultimap<Partition, Offset> target) {
     ImmutableListMultimap.Builder<Partition, Offset> builder = ImmutableListMultimap.builder();
     for (ConsumerRecord<byte[], byte[]> record : records) {
       builder.put(Partition.of(record.partition()), Offset.of(record.offset()));

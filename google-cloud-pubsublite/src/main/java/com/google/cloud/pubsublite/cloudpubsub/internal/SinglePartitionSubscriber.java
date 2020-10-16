@@ -19,6 +19,7 @@ package com.google.cloud.pubsublite.cloudpubsub.internal;
 import com.google.api.core.ApiFuture;
 import com.google.api.core.ApiFutureCallback;
 import com.google.api.core.ApiFutures;
+import com.google.api.gax.rpc.ApiException;
 import com.google.cloud.pubsub.v1.AckReplyConsumer;
 import com.google.cloud.pubsub.v1.MessageReceiver;
 import com.google.cloud.pubsublite.MessageTransformer;
@@ -26,6 +27,7 @@ import com.google.cloud.pubsublite.SequencedMessage;
 import com.google.cloud.pubsublite.cloudpubsub.FlowControlSettings;
 import com.google.cloud.pubsublite.cloudpubsub.NackHandler;
 import com.google.cloud.pubsublite.cloudpubsub.Subscriber;
+import com.google.cloud.pubsublite.internal.CheckedApiException;
 import com.google.cloud.pubsublite.internal.ExtractStatus;
 import com.google.cloud.pubsublite.internal.ProxyService;
 import com.google.cloud.pubsublite.internal.wire.SubscriberFactory;
@@ -34,7 +36,6 @@ import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.ImmutableList;
 import com.google.common.util.concurrent.MoreExecutors;
 import com.google.pubsub.v1.PubsubMessage;
-import io.grpc.StatusException;
 
 public class SinglePartitionSubscriber extends ProxyService implements Subscriber {
   private final MessageReceiver receiver;
@@ -51,31 +52,27 @@ public class SinglePartitionSubscriber extends ProxyService implements Subscribe
       NackHandler nackHandler,
       SubscriberFactory wireSubscriberFactory,
       FlowControlSettings flowControlSettings)
-      throws StatusException {
+      throws ApiException {
     this.receiver = receiver;
     this.transformer = transformer;
     this.ackSetTracker = ackSetTracker;
     this.nackHandler = nackHandler;
     this.flowControlSettings = flowControlSettings;
-    this.wireSubscriber = wireSubscriberFactory.New(this::onMessages);
+    this.wireSubscriber = wireSubscriberFactory.newSubscriber(this::onMessages);
     addServices(ackSetTracker, wireSubscriber);
   }
 
   // ProxyService implementation.
   @Override
-  protected void handlePermanentError(StatusException error) {}
+  protected void handlePermanentError(CheckedApiException error) {}
 
   @Override
-  protected void start() {
-    try {
-      wireSubscriber.allowFlow(
-          FlowControlRequest.newBuilder()
-              .setAllowedMessages(flowControlSettings.messagesOutstanding())
-              .setAllowedBytes(flowControlSettings.bytesOutstanding())
-              .build());
-    } catch (StatusException e) {
-      onPermanentError(e);
-    }
+  protected void start() throws CheckedApiException {
+    wireSubscriber.allowFlow(
+        FlowControlRequest.newBuilder()
+            .setAllowedMessages(flowControlSettings.messagesOutstanding())
+            .setAllowedBytes(flowControlSettings.bytesOutstanding())
+            .build());
   }
 
   @Override
@@ -99,7 +96,7 @@ public class SinglePartitionSubscriber extends ProxyService implements Subscribe
                           .setAllowedMessages(1)
                           .setAllowedBytes(bytes)
                           .build());
-                } catch (StatusException e) {
+                } catch (CheckedApiException e) {
                   onPermanentError(e);
                 }
               }

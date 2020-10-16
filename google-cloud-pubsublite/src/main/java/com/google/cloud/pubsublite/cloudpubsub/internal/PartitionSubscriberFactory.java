@@ -18,8 +18,12 @@ package com.google.cloud.pubsublite.cloudpubsub.internal;
 
 import com.google.cloud.pubsublite.Partition;
 import com.google.cloud.pubsublite.cloudpubsub.Subscriber;
-import io.grpc.StatusException;
+import com.google.cloud.pubsublite.internal.CheckedApiException;
 
+/**
+ * PartitionSubscriberFactories are used dynamically in a context where there is no client downcall.
+ * Therefore, their factory method throws a checked exception.
+ */
 public interface PartitionSubscriberFactory {
-  Subscriber New(Partition partition) throws StatusException;
+  Subscriber newSubscriber(Partition partition) throws CheckedApiException;
 }

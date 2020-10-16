@@ -17,10 +17,10 @@
 package com.google.cloud.pubsublite.kafka;
 
 import com.google.cloud.pubsublite.Partition;
+import com.google.cloud.pubsublite.internal.CheckedApiException;
 import com.google.cloud.pubsublite.internal.wire.Committer;
-import io.grpc.StatusException;
 
 /** A factory for making new PullSubscribers for a given partition of a subscription. */
 interface CommitterFactory {
-  Committer newCommitter(Partition partition) throws StatusException;
+  Committer newCommitter(Partition partition) throws CheckedApiException;
 }

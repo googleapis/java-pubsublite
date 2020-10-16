@@ -16,6 +16,7 @@
 
 package com.google.cloud.pubsublite.internal.wire;
 
+import com.google.api.gax.rpc.ApiException;
 import com.google.auto.value.AutoValue;
 import com.google.cloud.pubsublite.Partition;
 import com.google.cloud.pubsublite.PartitionLookupUtils;
@@ -24,7 +25,6 @@ import com.google.cloud.pubsublite.TopicPath;
 import com.google.cloud.pubsublite.internal.DefaultRoutingPolicy;
 import com.google.cloud.pubsublite.internal.Publisher;
 import com.google.common.collect.ImmutableMap;
-import io.grpc.StatusException;
 import java.util.Optional;
 
 @AutoValue
@@ -32,7 +32,7 @@ public abstract class RoutingPublisherBuilder {
   // Required parameters.
   abstract TopicPath topic();
 
-  abstract SinglePartitionPublisherBuilder.Builder publisherBuilder();
+  abstract PartitionPublisherFactory publisherFactory();
 
   // Optional parameters.
   abstract Optional<Integer> numPartitions();
@@ -46,16 +46,14 @@ public abstract class RoutingPublisherBuilder {
     // Required parameters.
     public abstract Builder setTopic(TopicPath path);
 
-    // If a topic is specified in the underlying SinglePartitionPublisherBuilder, the value will be
-    // overwritten by the topic provided to the RoutingPublisherBuilder.
-    public abstract Builder setPublisherBuilder(SinglePartitionPublisherBuilder.Builder builder);
+    public abstract Builder setPublisherFactory(PartitionPublisherFactory factory);
 
     // Optional parameters.
     public abstract Builder setNumPartitions(Integer numPartitions);
 
     abstract RoutingPublisherBuilder autoBuild();
 
-    public Publisher<PublishMetadata> build() throws StatusException {
+    public Publisher<PublishMetadata> build() throws ApiException {
       RoutingPublisherBuilder builder = autoBuild();
       int numPartitions;
       if (builder.numPartitions().isPresent()) {
@@ -69,11 +67,7 @@ public abstract class RoutingPublisherBuilder {
       for (int i = 0; i < numPartitions; i++) {
         publisherMapBuilder.put(
             Partition.of(i),
-            builder
-                .publisherBuilder()
-                .setTopic(builder.topic())
-                .setPartition(Partition.of(i))
-                .build());
+            builder.publisherFactory().newPublisher(builder.topic(), Partition.of(i)));
       }
 
       return new RoutingPublisher(

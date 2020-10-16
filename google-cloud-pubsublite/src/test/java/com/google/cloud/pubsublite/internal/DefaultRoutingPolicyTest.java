@@ -22,11 +22,9 @@ import com.google.cloud.pubsublite.Partition;
 import com.google.common.collect.ImmutableMap;
 import com.google.gson.Gson;
 import com.google.protobuf.ByteString;
-import io.grpc.StatusException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Map;
-import java.util.function.Supplier;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -34,16 +32,7 @@ import org.junit.runners.JUnit4;
 @RunWith(JUnit4.class)
 public class DefaultRoutingPolicyTest {
   private static final int NUM_PARTITIONS = 29;
-  private static final RoutingPolicy policy =
-      ((Supplier<RoutingPolicy>)
-              () -> {
-                try {
-                  return new DefaultRoutingPolicy(NUM_PARTITIONS);
-                } catch (StatusException e) {
-                  throw e.getStatus().asRuntimeException();
-                }
-              })
-          .get();
+  private static final RoutingPolicy policy = new DefaultRoutingPolicy(NUM_PARTITIONS);
 
   private static Map<ByteString, Partition> loadTestCases() throws Exception {
     Gson gson = new Gson();

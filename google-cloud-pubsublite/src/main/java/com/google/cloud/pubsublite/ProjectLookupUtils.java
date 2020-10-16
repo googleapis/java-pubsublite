@@ -16,12 +16,12 @@
 
 package com.google.cloud.pubsublite;
 
+import com.google.api.gax.rpc.ApiException;
 import com.google.cloud.pubsublite.ProjectIdOrNumber.Kind;
 import com.google.cloud.pubsublite.internal.ExtractStatus;
 import com.google.cloud.resourcemanager.Project;
 import com.google.cloud.resourcemanager.ResourceManager;
 import com.google.cloud.resourcemanager.ResourceManagerOptions;
-import io.grpc.StatusException;
 
 public final class ProjectLookupUtils {
   private ProjectLookupUtils() {}
@@ -35,33 +35,33 @@ public final class ProjectLookupUtils {
     return resourceManager;
   }
 
-  private static ProjectNumber getProjectNumber(ProjectId id) throws StatusException {
+  private static ProjectNumber getProjectNumber(ProjectId id) throws ApiException {
     try {
       Project project = getResourceManager().get(id.toString());
       return ProjectNumber.of(project.getProjectNumber());
     } catch (Throwable t) {
-      throw ExtractStatus.toCanonical(t);
+      throw ExtractStatus.toCanonical(t).underlying;
     }
   }
 
-  static ProjectNumber toCanonical(ProjectIdOrNumber project) throws StatusException {
+  static ProjectNumber toCanonical(ProjectIdOrNumber project) throws ApiException {
     if (project.getKind() == Kind.NUMBER) return project.number();
     return getProjectNumber(project.name());
   }
 
-  public static ProjectPath toCanonical(ProjectPath path) throws StatusException {
+  public static ProjectPath toCanonical(ProjectPath path) throws ApiException {
     return path.toBuilder().setProject(toCanonical(path.project())).build();
   }
 
-  public static LocationPath toCanonical(LocationPath path) throws StatusException {
+  public static LocationPath toCanonical(LocationPath path) throws ApiException {
     return path.toBuilder().setProject(toCanonical(path.project())).build();
   }
 
-  public static SubscriptionPath toCanonical(SubscriptionPath path) throws StatusException {
+  public static SubscriptionPath toCanonical(SubscriptionPath path) throws ApiException {
     return path.toBuilder().setProject(toCanonical(path.project())).build();
   }
 
-  public static TopicPath toCanonical(TopicPath path) throws StatusException {
+  public static TopicPath toCanonical(TopicPath path) throws ApiException {
     return path.toBuilder().setProject(toCanonical(path.project())).build();
   }
 }

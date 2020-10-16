@@ -16,6 +16,7 @@
 
 package com.google.cloud.pubsublite.kafka;
 
+import com.google.api.gax.rpc.ApiException;
 import com.google.auto.value.AutoValue;
 import com.google.cloud.pubsublite.PartitionLookupUtils;
 import com.google.cloud.pubsublite.TopicPath;
@@ -23,7 +24,6 @@ import com.google.cloud.pubsublite.internal.wire.PubsubContext;
 import com.google.cloud.pubsublite.internal.wire.PubsubContext.Framework;
 import com.google.cloud.pubsublite.internal.wire.RoutingPublisherBuilder;
 import com.google.cloud.pubsublite.internal.wire.SinglePartitionPublisherBuilder;
-import io.grpc.StatusException;
 import org.apache.kafka.clients.producer.Producer;
 
 @AutoValue
@@ -45,13 +45,17 @@ public abstract class ProducerSettings {
     public abstract ProducerSettings build();
   }
 
-  public Producer<byte[], byte[]> instantiate() throws StatusException {
-    SinglePartitionPublisherBuilder.Builder builder =
-        SinglePartitionPublisherBuilder.newBuilder()
-            .setContext(PubsubContext.of(FRAMEWORK))
-            .setTopic(topicPath());
+  public Producer<byte[], byte[]> instantiate() throws ApiException {
     RoutingPublisherBuilder.Builder routingBuilder =
-        RoutingPublisherBuilder.newBuilder().setTopic(topicPath()).setPublisherBuilder(builder);
+        RoutingPublisherBuilder.newBuilder()
+            .setTopic(topicPath())
+            .setPublisherFactory(
+                (topic, partition) ->
+                    SinglePartitionPublisherBuilder.newBuilder()
+                        .setContext(PubsubContext.of(FRAMEWORK))
+                        .setTopic(topicPath())
+                        .setPartition(partition)
+                        .build());
     return new PubsubLiteProducer(
         routingBuilder.build(), PartitionLookupUtils.numPartitions(topicPath()), topicPath());
   }

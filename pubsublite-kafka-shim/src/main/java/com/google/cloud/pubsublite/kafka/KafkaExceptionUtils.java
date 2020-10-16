@@ -16,8 +16,8 @@
 
 package com.google.cloud.pubsublite.kafka;
 
+import com.google.cloud.pubsublite.internal.CheckedApiException;
 import com.google.cloud.pubsublite.internal.ExtractStatus;
-import io.grpc.StatusException;
 import java.util.concurrent.TimeoutException;
 import org.apache.kafka.common.KafkaException;
 import org.apache.kafka.common.errors.AuthenticationException;
@@ -29,10 +29,8 @@ import org.apache.kafka.common.errors.InvalidRequestException;
 class KafkaExceptionUtils {
   private KafkaExceptionUtils() {}
 
-  static KafkaException toKafkaException(StatusException source) {
-    switch (source.getStatus().getCode()) {
-      case OK:
-        throw source.getStatus().asRuntimeException();
+  static KafkaException toKafkaException(CheckedApiException source) {
+    switch (source.code()) {
       case ABORTED:
         return new BrokerNotAvailableException("Aborted.", source);
       case ALREADY_EXISTS:

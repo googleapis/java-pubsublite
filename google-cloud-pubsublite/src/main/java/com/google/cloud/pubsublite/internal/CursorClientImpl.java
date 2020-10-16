@@ -16,51 +16,28 @@
 package com.google.cloud.pubsublite.internal;
 
 import com.google.api.core.ApiFuture;
-import com.google.api.gax.core.ExecutorAsBackgroundResource;
-import com.google.api.gax.retrying.RetrySettings;
-import com.google.api.gax.retrying.RetryingExecutor;
+import com.google.api.core.ApiFutures;
 import com.google.cloud.pubsublite.CloudRegion;
 import com.google.cloud.pubsublite.Offset;
 import com.google.cloud.pubsublite.Partition;
 import com.google.cloud.pubsublite.SubscriptionPath;
 import com.google.cloud.pubsublite.proto.CommitCursorRequest;
-import com.google.cloud.pubsublite.proto.CommitCursorResponse;
 import com.google.cloud.pubsublite.proto.Cursor;
-import com.google.cloud.pubsublite.proto.CursorServiceGrpc.CursorServiceBlockingStub;
 import com.google.cloud.pubsublite.proto.ListPartitionCursorsRequest;
-import com.google.cloud.pubsublite.proto.ListPartitionCursorsResponse;
 import com.google.cloud.pubsublite.proto.PartitionCursor;
+import com.google.cloud.pubsublite.v1.CursorServiceClient;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.util.concurrent.MoreExecutors;
 import java.util.Map;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
 
 public class CursorClientImpl extends ApiResourceAggregation implements CursorClient {
   private final CloudRegion region;
-  private final CursorServiceBlockingStub stub;
-  private final RetryingExecutor<Map<Partition, Offset>> listRetryingExecutor;
-  private final RetryingExecutor<Void> voidRetryingExecutor;
+  private final CursorServiceClient serviceClient;
 
-  public CursorClientImpl(
-      CloudRegion region, CursorServiceBlockingStub stub, RetrySettings retrySettings) {
-    this(
-        region,
-        stub,
-        retrySettings,
-        // TODO: Consider allowing tuning in the future.
-        Executors.newScheduledThreadPool(6));
-  }
-
-  private CursorClientImpl(
-      CloudRegion region,
-      CursorServiceBlockingStub stub,
-      RetrySettings retrySettings,
-      ScheduledExecutorService executor) {
-    super(new ExecutorAsBackgroundResource(executor));
+  public CursorClientImpl(CloudRegion region, CursorServiceClient serviceClient) {
+    super(serviceClient);
     this.region = region;
-    this.stub = stub;
-    this.listRetryingExecutor = RetryingExecutorUtil.retryingExecutor(retrySettings, executor);
-    this.voidRetryingExecutor = RetryingExecutorUtil.retryingExecutor(retrySettings, executor);
+    this.serviceClient = serviceClient;
   }
 
   @Override
@@ -68,14 +45,14 @@ public class CursorClientImpl extends ApiResourceAggregation implements CursorCl
     return region;
   }
 
-  // CursorClient Implementation
   @Override
   public ApiFuture<Map<Partition, Offset>> listPartitionCursors(SubscriptionPath path) {
-    return RetryingExecutorUtil.runWithRetries(
-        () -> {
-          ListPartitionCursorsResponse response =
-              stub.listPartitionCursors(
-                  ListPartitionCursorsRequest.newBuilder().setParent(path.toString()).build());
+    return ApiFutures.transform(
+        serviceClient
+            .listPartitionCursorsCallable()
+            .futureCall(
+                ListPartitionCursorsRequest.newBuilder().setParent(path.toString()).build()),
+        response -> {
           ImmutableMap.Builder<Partition, Offset> resultBuilder = ImmutableMap.builder();
           for (PartitionCursor partitionCursor : response.getPartitionCursorsList()) {
             resultBuilder.put(
@@ -84,22 +61,21 @@ public class CursorClientImpl extends ApiResourceAggregation implements CursorCl
           }
           return resultBuilder.build();
         },
-        listRetryingExecutor);
+        MoreExecutors.directExecutor());
   }
 
   @Override
   public ApiFuture<Void> commitCursor(SubscriptionPath path, Partition partition, Offset offset) {
-    return RetryingExecutorUtil.runWithRetries(
-        () -> {
-          CommitCursorResponse unusedResponse =
-              stub.commitCursor(
-                  CommitCursorRequest.newBuilder()
-                      .setSubscription(path.toString())
-                      .setPartition(partition.value())
-                      .setCursor(Cursor.newBuilder().setOffset(offset.value()))
-                      .build());
-          return null;
-        },
-        voidRetryingExecutor);
+    return ApiFutures.transform(
+        serviceClient
+            .commitCursorCallable()
+            .futureCall(
+                CommitCursorRequest.newBuilder()
+                    .setSubscription(path.toString())
+                    .setPartition(partition.value())
+                    .setCursor(Cursor.newBuilder().setOffset(offset.value()))
+                    .build()),
+        x -> null,
+        MoreExecutors.directExecutor());
   }
 }

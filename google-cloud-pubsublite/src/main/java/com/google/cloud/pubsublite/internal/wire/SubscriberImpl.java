@@ -117,7 +117,6 @@ public class SubscriberImpl extends ProxyService
       shutdown = true;
       inFlightSeek.ifPresent(inFlight -> inFlight.seekFuture.setException(error));
       inFlightSeek = Optional.empty();
-      onPermanentError(error);
     }
   }
 
@@ -183,18 +182,17 @@ public class SubscriberImpl extends ProxyService
   }
 
   @Override
-  public void allowFlow(FlowControlRequest clientRequest) {
+  public void allowFlow(FlowControlRequest clientRequest) throws StatusException {
     try (CloseableMonitor.Hold h = monitor.enter()) {
       if (shutdown) return;
       flowControlBatcher.onClientFlowRequest(clientRequest);
       if (flowControlBatcher.shouldExpediteBatchRequest()) {
         connection.modifyConnection(
-            connectedSubscriber ->
-                connectedSubscriber.ifPresent(subscriber -> flushBatchFlowRequest(subscriber)));
+            connectedSubscriber -> connectedSubscriber.ifPresent(this::flushBatchFlowRequest));
       }
     } catch (StatusException e) {
       onPermanentError(e);
-      throw e.getStatus().asRuntimeException();
+      throw e;
     }
   }
 
@@ -229,49 +227,41 @@ public class SubscriberImpl extends ProxyService
   }
 
   @Override
-  public Status onClientResponse(Response value) {
+  public void onClientResponse(Response value) throws StatusException {
     switch (value.getKind()) {
       case MESSAGES:
-        return onMessageResponse(value.messages());
+        onMessageResponse(value.messages());
+        return;
       case SEEK_OFFSET:
-        return onSeekResponse(value.seekOffset());
+        onSeekResponse(value.seekOffset());
+        return;
+      default:
+        throw Status.FAILED_PRECONDITION
+            .withDescription("Invalid switch case: " + value.getKind())
+            .asException();
     }
-    return Status.FAILED_PRECONDITION.withDescription("Invalid switch case: " + value.getKind());
   }
 
-  private Status onMessageResponse(ImmutableList<SequencedMessage> messages) {
+  private void onMessageResponse(ImmutableList<SequencedMessage> messages) throws StatusException {
     try (CloseableMonitor.Hold h = monitor.enter()) {
-      if (shutdown) {
-        return Status.OK;
-      }
+      if (shutdown) return;
       nextOffsetTracker.onMessages(messages);
       flowControlBatcher.onMessages(messages);
-    } catch (StatusException e) {
-
-      onPermanentError(e);
-      return e.getStatus();
     }
     messageConsumer.accept(messages);
-    return Status.OK;
   }
 
-  private Status onSeekResponse(Offset seekOffset) {
+  private void onSeekResponse(Offset seekOffset) throws StatusException {
     try (CloseableMonitor.Hold h = monitor.enter()) {
-      if (shutdown) {
-        return Status.OK;
-      }
+      if (shutdown) return;
       if (internalSeekInFlight) {
         internalSeekInFlight = false;
-        return Status.OK;
+        return;
       }
       checkState(inFlightSeek.isPresent(), "No in flight seek, but received a seek response.");
       nextOffsetTracker.onClientSeek(seekOffset);
       inFlightSeek.get().seekFuture.set(seekOffset);
       inFlightSeek = Optional.empty();
-      return Status.OK;
-    } catch (StatusException e) {
-      onPermanentError(e);
-      return e.getStatus();
     }
   }
 
@@ -280,8 +270,7 @@ public class SubscriberImpl extends ProxyService
     try (CloseableMonitor.Hold h = monitor.enter()) {
       if (shutdown) return;
       connection.modifyConnection(
-          connectedSubscriber ->
-              connectedSubscriber.ifPresent(subscriber -> flushBatchFlowRequest(subscriber)));
+          connectedSubscriber -> connectedSubscriber.ifPresent(this::flushBatchFlowRequest));
     } catch (StatusException e) {
       onPermanentError(e);
     }
@@ -289,9 +278,7 @@ public class SubscriberImpl extends ProxyService
 
   private void flushBatchFlowRequest(ConnectedSubscriber subscriber) {
     try (CloseableMonitor.Hold h = monitor.enter()) {
-      flowControlBatcher
-          .releasePendingRequest()
-          .ifPresent(request -> subscriber.allowFlow(request));
+      flowControlBatcher.releasePendingRequest().ifPresent(subscriber::allowFlow);
     }
   }
 }

@@ -196,18 +196,20 @@ public final class PublisherImpl extends ProxyService
   public ApiFuture<Offset> publish(Message message) {
     PubSubMessage proto = message.toProto();
     if (proto.getSerializedSize() > Constants.MAX_PUBLISH_MESSAGE_BYTES) {
-      Status error =
-          Status.FAILED_PRECONDITION.withDescription(
-              String.format(
-                  "Tried to send message with serialized size %s larger than limit %s on the"
-                      + " stream.",
-                  proto.getSerializedSize(), Constants.MAX_PUBLISH_MESSAGE_BYTES));
+      StatusException error =
+          Status.FAILED_PRECONDITION
+              .withDescription(
+                  String.format(
+                      "Tried to send message with serialized size %s larger than limit %s on the"
+                          + " stream.",
+                      proto.getSerializedSize(), Constants.MAX_PUBLISH_MESSAGE_BYTES))
+              .asException();
       try (CloseableMonitor.Hold h = monitor.enter()) {
         if (!shutdown) {
-          onPermanentError(error.asException());
+          onPermanentError(error);
         }
       }
-      return ApiFutures.immediateFailedFuture(error.asException());
+      return ApiFutures.immediateFailedFuture(error);
     }
     try (CloseableMonitor.Hold h = monitor.enter()) {
       ApiService.State currentState = state();
@@ -244,21 +246,18 @@ public final class PublisherImpl extends ProxyService
   }
 
   @Override
-  public Status onClientResponse(Offset value) {
+  public void onClientResponse(Offset value) throws StatusException {
     try (CloseableMonitor.Hold h = monitor.enter()) {
-      if (batchesInFlight.isEmpty()) {
-        return Status.FAILED_PRECONDITION.withDescription(
-            "Received publish response with no batches in flight.");
-      }
+      checkState(
+          !batchesInFlight.isEmpty(), "Received publish response with no batches in flight.");
       if (lastSentOffset.isPresent() && lastSentOffset.get().value() >= value.value()) {
-        return Status.FAILED_PRECONDITION.withDescription(
-            String.format(
-                "Received publish response with offset %s that is inconsistent with previous"
-                    + " responses max %s",
-                value, lastSentOffset.get()));
-      }
-      if (batchesInFlight.isEmpty()) {
-        return Status.FAILED_PRECONDITION.withDescription("Received empty batch on stream.");
+        throw Status.FAILED_PRECONDITION
+            .withDescription(
+                String.format(
+                    "Received publish response with offset %s that is inconsistent with previous"
+                        + " responses max %s",
+                    value, lastSentOffset.get()))
+            .asException();
       }
       InFlightBatch batch = batchesInFlight.remove();
       lastSentOffset = Optional.of(Offset.of(value.value() + batch.messages.size() - 1));
@@ -266,7 +265,6 @@ public final class PublisherImpl extends ProxyService
         Offset offset = Offset.of(value.value() + i);
         batch.messageFutures.get(i).set(offset);
       }
-      return Status.OK;
     }
   }
 }

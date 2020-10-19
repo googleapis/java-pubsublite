@@ -20,6 +20,7 @@ import com.google.api.core.ApiFuture;
 import com.google.api.core.SettableApiFuture;
 import com.google.cloud.pubsublite.Offset;
 import io.grpc.Status;
+import io.grpc.StatusException;
 import java.util.ArrayDeque;
 import java.util.Optional;
 import java.util.Queue;
@@ -56,16 +57,18 @@ class CommitState {
     return futureWithOffset.future;
   }
 
-  Status complete(long numComplete) {
+  void complete(long numComplete) throws StatusException {
     if (numComplete > currentConnectionFutures.size()) {
-      Status error =
-          Status.FAILED_PRECONDITION.withDescription(
-              String.format(
-                  "Received %s completions, which is more than the commits outstanding for this"
-                      + " stream.",
-                  numComplete));
-      abort(error.asException());
-      return error;
+      StatusException error =
+          Status.FAILED_PRECONDITION
+              .withDescription(
+                  String.format(
+                      "Received %s completions, which is more than the commits outstanding for this"
+                          + " stream.",
+                      numComplete))
+              .asException();
+      abort(error);
+      throw error;
     }
     while (!pastConnectionFutures.isEmpty()) {
       // Past futures refer to commits sent chronologically before the current stream, and thus they
@@ -75,7 +78,6 @@ class CommitState {
     for (int i = 0; i < numComplete; i++) {
       currentConnectionFutures.remove().future.set(null);
     }
-    return Status.OK;
   }
 
   void abort(Throwable error) {

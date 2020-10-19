@@ -203,6 +203,7 @@ public class SubscriberImplTest {
 
   @Test
   public void messagesUnordered_IsError() throws Exception {
+    Future<Void> failed = whenFailed(permanentErrorHandler);
     subscriber.allowFlow(bigFlowControlRequest());
     leakedResponseObserver.onNext(
         Response.ofMessages(
@@ -211,6 +212,7 @@ public class SubscriberImplTest {
                 SequencedMessage.of(
                     Message.builder().build(), Timestamps.EPOCH, Offset.of(0), 10))));
     assertThrows(IllegalStateException.class, subscriber::awaitTerminated);
+    failed.get();
     verify(permanentErrorHandler)
         .failed(any(), argThat(new StatusExceptionMatcher(Code.INVALID_ARGUMENT)));
   }
@@ -244,6 +246,7 @@ public class SubscriberImplTest {
 
   @Test
   public void messageResponseSubtracts() throws Exception {
+    Future<Void> failed = whenFailed(permanentErrorHandler);
     FlowControlRequest request =
         FlowControlRequest.newBuilder().setAllowedBytes(100).setAllowedMessages(100).build();
     subscriber.allowFlow(request);
@@ -259,6 +262,7 @@ public class SubscriberImplTest {
     verify(mockMessageConsumer).accept(messages1);
     verify(permanentErrorHandler, times(0)).failed(any(), any());
     leakedResponseObserver.onNext(Response.ofMessages(messages2));
+    failed.get();
     verify(permanentErrorHandler)
         .failed(any(), argThat(new StatusExceptionMatcher(Code.FAILED_PRECONDITION)));
   }

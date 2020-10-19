@@ -23,7 +23,7 @@ import com.google.cloud.pubsublite.Offset;
 import com.google.cloud.pubsublite.SequencedMessage;
 import com.google.cloud.pubsublite.internal.CloseableMonitor;
 import com.google.cloud.pubsublite.internal.ExtractStatus;
-import com.google.cloud.pubsublite.internal.ProxyService;
+import com.google.cloud.pubsublite.internal.TrivialProxyService;
 import com.google.cloud.pubsublite.internal.wire.Committer;
 import com.google.errorprone.annotations.concurrent.GuardedBy;
 import io.grpc.Status;
@@ -34,7 +34,7 @@ import java.util.Optional;
 import java.util.PriorityQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public class AckSetTrackerImpl extends ProxyService implements AckSetTracker {
+public class AckSetTrackerImpl extends TrivialProxyService implements AckSetTracker {
   private final CloseableMonitor monitor = new CloseableMonitor();
 
   @GuardedBy("monitor.monitor")
@@ -47,19 +47,9 @@ public class AckSetTrackerImpl extends ProxyService implements AckSetTracker {
   private final PriorityQueue<Offset> acks = new PriorityQueue<>();
 
   public AckSetTrackerImpl(Committer committer) throws StatusException {
-    addServices(committer);
+    super(committer);
     this.committer = committer;
   }
-
-  // ProxyService implementation. Noop as this is a thin wrapper around committer.
-  @Override
-  protected void start() {}
-
-  @Override
-  protected void stop() {}
-
-  @Override
-  protected void handlePermanentError(StatusException error) {}
 
   // AckSetTracker implementation.
   @Override

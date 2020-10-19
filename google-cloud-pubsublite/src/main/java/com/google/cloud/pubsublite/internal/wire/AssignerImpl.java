@@ -18,7 +18,7 @@ package com.google.cloud.pubsublite.internal.wire;
 
 import com.google.cloud.pubsublite.Partition;
 import com.google.cloud.pubsublite.internal.CloseableMonitor;
-import com.google.cloud.pubsublite.internal.ProxyService;
+import com.google.cloud.pubsublite.internal.TrivialProxyService;
 import com.google.cloud.pubsublite.proto.InitialPartitionAssignmentRequest;
 import com.google.cloud.pubsublite.proto.PartitionAssignment;
 import com.google.cloud.pubsublite.proto.PartitionAssignmentRequest;
@@ -29,7 +29,7 @@ import io.grpc.StatusException;
 import java.util.HashSet;
 import java.util.Set;
 
-public class AssignerImpl extends ProxyService
+public class AssignerImpl extends TrivialProxyService
     implements Assigner, RetryingConnectionObserver<PartitionAssignment> {
   @GuardedBy("monitor.monitor")
   private final RetryingConnection<ConnectedAssigner> connection;
@@ -55,15 +55,6 @@ public class AssignerImpl extends ProxyService
             this);
     addServices(this.connection);
   }
-
-  @Override
-  protected void start() {}
-
-  @Override
-  protected void stop() {}
-
-  @Override
-  protected void handlePermanentError(StatusException error) {}
 
   @Override
   public void triggerReinitialize() {

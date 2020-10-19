@@ -137,14 +137,14 @@ class RetryingConnectionImpl<
   // StreamObserver implementation
   @Override
   public final void onNext(ClientResponseT value) {
-    Status status;
     try (CloseableMonitor.Hold h = connectionMonitor.enter()) {
       if (completed) return;
       nextRetryBackoffDuration = INITIAL_RECONNECT_BACKOFF_TIME.toMillis();
     }
-    status = observer.onClientResponse(value);
-    if (!status.isOk()) {
-      setPermanentError(status.asRuntimeException());
+    try {
+      observer.onClientResponse(value);
+    } catch (StatusException e) {
+      setPermanentError(e);
     }
   }
 

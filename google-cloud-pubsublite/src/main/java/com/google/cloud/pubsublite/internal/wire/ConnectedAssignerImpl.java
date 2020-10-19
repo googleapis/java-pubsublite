@@ -23,7 +23,6 @@ import com.google.cloud.pubsublite.proto.PartitionAssignment;
 import com.google.cloud.pubsublite.proto.PartitionAssignmentAck;
 import com.google.cloud.pubsublite.proto.PartitionAssignmentRequest;
 import com.google.errorprone.annotations.concurrent.GuardedBy;
-import io.grpc.Status;
 import io.grpc.StatusException;
 import io.grpc.stub.StreamObserver;
 
@@ -55,24 +54,21 @@ public class ConnectedAssignerImpl
 
   // SingleConnection implementation.
   @Override
-  protected Status handleInitialResponse(PartitionAssignment response) {
+  protected void handleInitialResponse(PartitionAssignment response) throws StatusException {
     // The assignment stream is server-initiated by sending a PartitionAssignment. The
     // initial response from the server is handled identically to other responses.
-    return handleStreamResponse(response);
+    handleStreamResponse(response);
   }
 
   @Override
-  protected Status handleStreamResponse(PartitionAssignment response) {
+  protected void handleStreamResponse(PartitionAssignment response) throws StatusException {
     try (CloseableMonitor.Hold h = monitor.enter()) {
       checkState(
           !outstanding,
           "Received assignment from the server while there was an assignment outstanding.");
       outstanding = true;
-    } catch (StatusException e) {
-      return e.getStatus();
     }
     sendToClient(response);
-    return Status.OK;
   }
 
   // ConnectedAssigner implementation.
@@ -82,7 +78,7 @@ public class ConnectedAssignerImpl
       checkState(outstanding, "Client acknowledged when there was no request outstanding.");
       outstanding = false;
     } catch (StatusException e) {
-      setError(e.getStatus());
+      setError(e);
     }
     sendToStream(
         PartitionAssignmentRequest.newBuilder()

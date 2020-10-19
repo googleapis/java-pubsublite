@@ -31,7 +31,6 @@ import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Preconditions;
 import com.google.common.util.concurrent.Monitor.Guard;
 import com.google.errorprone.annotations.concurrent.GuardedBy;
-import io.grpc.Status;
 import io.grpc.StatusException;
 import java.util.Optional;
 
@@ -133,10 +132,10 @@ public class CommitterImpl extends ProxyService
   }
 
   @Override
-  public Status onClientResponse(SequencedCommitCursorResponse value) {
+  public void onClientResponse(SequencedCommitCursorResponse value) throws StatusException {
     Preconditions.checkArgument(value.getAcknowledgedCommits() > 0);
     try (CloseableMonitor.Hold h = monitor.enter()) {
-      return state.complete(value.getAcknowledgedCommits());
+      state.complete(value.getAcknowledgedCommits());
     }
   }
 }

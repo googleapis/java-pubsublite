@@ -25,7 +25,6 @@ import com.google.cloud.pubsublite.proto.PartitionAssignmentRequest;
 import com.google.cloud.pubsublite.proto.PartitionAssignmentServiceGrpc.PartitionAssignmentServiceStub;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.errorprone.annotations.concurrent.GuardedBy;
-import io.grpc.Status;
 import io.grpc.StatusException;
 import java.util.HashSet;
 import java.util.Set;
@@ -82,13 +81,10 @@ public class AssignerImpl extends ProxyService
   }
 
   @Override
-  public Status onClientResponse(PartitionAssignment value) {
+  public void onClientResponse(PartitionAssignment value) throws StatusException {
     try (CloseableMonitor.Hold h = monitor.enter()) {
       receiver.handleAssignment(toSet(value));
       connection.modifyConnection(connectionOr -> connectionOr.ifPresent(ConnectedAssigner::ack));
-    } catch (StatusException e) {
-      return e.getStatus();
     }
-    return Status.OK;
   }
 }

@@ -20,7 +20,7 @@ package com.google.cloud.pubsublite;
 public final class Endpoints {
   /** Construct a regional endpoint from a CloudRegion. */
   public static String regionalEndpoint(CloudRegion region) {
-    return region.value() + "-pubsublite.googleapis.com";
+    return region.value() + "-pubsublite.googleapis.com:443";
   }
 
   private Endpoints() {}

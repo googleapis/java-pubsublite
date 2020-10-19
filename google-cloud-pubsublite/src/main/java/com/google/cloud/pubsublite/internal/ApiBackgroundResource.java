@@ -14,17 +14,17 @@
  * limitations under the License.
  */
 
-package com.google.cloud.pubsublite.internal.wire;
+package com.google.cloud.pubsublite.internal;
 
+import com.google.api.gax.core.BackgroundResource;
 import io.grpc.StatusException;
 
-public interface RetryingConnectionObserver<ClientResponseT> {
-  // Trigger reinitialization. This cannot be an upcall. It needs to be atomic so there is no
-  // possibility for other client messages to be sent on the stream between the new stream being
-  // created and the client initialization occurring. It cannot be called with connectionMonitor
-  // held since all locks need to be acquired in concrete then abstract class order to avoid
-  // deadlocks.
-  void triggerReinitialize();
-
-  void onClientResponse(ClientResponseT value) throws StatusException;
+public interface ApiBackgroundResource extends BackgroundResource {
+  /**
+   * Tear down this resource.
+   *
+   * @throws StatusException on a failure to properly terminate.
+   */
+  @Override
+  void close() throws StatusException;
 }

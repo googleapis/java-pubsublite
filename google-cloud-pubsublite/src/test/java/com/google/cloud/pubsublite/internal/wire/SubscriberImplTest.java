@@ -57,7 +57,6 @@ import com.google.protobuf.util.Timestamps;
 import io.grpc.ManagedChannel;
 import io.grpc.Status.Code;
 import io.grpc.StatusException;
-import io.grpc.StatusRuntimeException;
 import io.grpc.inprocess.InProcessChannelBuilder;
 import io.grpc.stub.StreamObserver;
 import io.grpc.testing.GrpcCleanupRule;
@@ -108,7 +107,7 @@ public class SubscriberImplTest {
   private StreamObserver<Response> leakedResponseObserver;
 
   @Before
-  public void setUp() throws StatusException {
+  public void setUp() throws Exception {
     doAnswer(
             args -> {
               leakedResponseObserver = args.getArgument(1);
@@ -144,7 +143,7 @@ public class SubscriberImplTest {
   @Test
   public void invalidFlowThrows() {
     assertThrows(
-        StatusRuntimeException.class,
+        StatusException.class,
         () -> subscriber.allowFlow(FlowControlRequest.newBuilder().setAllowedBytes(-1).build()));
   }
 
@@ -156,7 +155,7 @@ public class SubscriberImplTest {
   }
 
   @Test
-  public void anyFlowAllowedAndProxies() {
+  public void anyFlowAllowedAndProxies() throws Exception {
     subscriber.allowFlow(bigFlowControlRequest());
     verify(mockConnectedSubscriber).allowFlow(bigFlowControlRequest());
   }
@@ -194,7 +193,7 @@ public class SubscriberImplTest {
   }
 
   @Test
-  public void messagesEmpty_IsError() {
+  public void messagesEmpty_IsError() throws Exception {
     subscriber.allowFlow(bigFlowControlRequest());
     leakedResponseObserver.onNext(Response.ofMessages(ImmutableList.of()));
     assertThrows(IllegalStateException.class, subscriber::awaitTerminated);
@@ -233,7 +232,7 @@ public class SubscriberImplTest {
   }
 
   @Test
-  public void messagesOrdered_Ok() {
+  public void messagesOrdered_Ok() throws Exception {
     subscriber.allowFlow(bigFlowControlRequest());
     ImmutableList<SequencedMessage> messages =
         ImmutableList.of(
@@ -285,7 +284,7 @@ public class SubscriberImplTest {
   }
 
   @Test
-  public void reinitialize_sendsNextOffsetSeek() {
+  public void reinitialize_sendsNextOffsetSeek() throws Exception {
     subscriber.allowFlow(bigFlowControlRequest());
     ImmutableList<SequencedMessage> messages =
         ImmutableList.of(

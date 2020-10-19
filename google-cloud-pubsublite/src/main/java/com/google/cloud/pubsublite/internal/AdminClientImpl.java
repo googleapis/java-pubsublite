@@ -17,7 +17,6 @@
 package com.google.cloud.pubsublite.internal;
 
 import com.google.api.core.ApiFuture;
-import com.google.api.gax.core.BackgroundResourceAggregation;
 import com.google.api.gax.core.ExecutorAsBackgroundResource;
 import com.google.api.gax.retrying.RetrySettings;
 import com.google.api.gax.retrying.RetryingExecutor;
@@ -48,7 +47,7 @@ import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 
-public class AdminClientImpl extends BackgroundResourceAggregation implements AdminClient {
+public class AdminClientImpl extends ApiResourceAggregation implements AdminClient {
   private final CloudRegion region;
   private final AdminServiceGrpc.AdminServiceBlockingStub stub;
   private final RetryingExecutor<Void> voidRetryingExecutor;
@@ -76,7 +75,7 @@ public class AdminClientImpl extends BackgroundResourceAggregation implements Ad
       AdminServiceGrpc.AdminServiceBlockingStub stub,
       RetrySettings retrySettings,
       ScheduledExecutorService executor) {
-    super(ImmutableList.of(new ExecutorAsBackgroundResource(executor)));
+    super(new ExecutorAsBackgroundResource(executor));
     this.region = region;
     this.stub = stub;
     this.voidRetryingExecutor = RetryingExecutorUtil.retryingExecutor(retrySettings, executor);

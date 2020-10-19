@@ -16,13 +16,15 @@
 
 package com.google.cloud.pubsublite.internal.wire;
 
+import static com.google.cloud.pubsublite.internal.Preconditions.checkState;
+
 import com.google.cloud.pubsublite.Offset;
 import com.google.cloud.pubsublite.proto.Cursor;
 import com.google.cloud.pubsublite.proto.SequencedCommitCursorRequest;
 import com.google.cloud.pubsublite.proto.SequencedCommitCursorResponse;
 import com.google.cloud.pubsublite.proto.StreamingCommitCursorRequest;
 import com.google.cloud.pubsublite.proto.StreamingCommitCursorResponse;
-import io.grpc.Status;
+import io.grpc.StatusException;
 import io.grpc.stub.StreamObserver;
 
 public class ConnectedCommitterImpl
@@ -52,32 +54,29 @@ public class ConnectedCommitterImpl
 
   // SingleConnection implementation.
   @Override
-  protected Status handleInitialResponse(StreamingCommitCursorResponse response) {
-    if (!response.hasInitial()) {
-      return Status.FAILED_PRECONDITION.withDescription(
-          String.format(
-              "Received non-initial first response %s on stream with initial request %s.",
-              response, initialRequest));
-    }
-    return Status.OK;
+  protected void handleInitialResponse(StreamingCommitCursorResponse response)
+      throws StatusException {
+    checkState(
+        response.hasInitial(),
+        String.format(
+            "Received non-initial first response %s on stream with initial request %s.",
+            response, initialRequest));
   }
 
   @Override
-  protected Status handleStreamResponse(StreamingCommitCursorResponse response) {
-    if (!response.hasCommit()) {
-      return Status.FAILED_PRECONDITION.withDescription(
-          String.format(
-              "Received non-commit subsequent response %s on stream with initial request %s.",
-              response, initialRequest));
-    }
-    if (response.getCommit().getAcknowledgedCommits() <= 0) {
-      return Status.FAILED_PRECONDITION.withDescription(
-          String.format(
-              "Received non-positive commit count response %s on stream with initial request %s.",
-              response, initialRequest));
-    }
+  protected void handleStreamResponse(StreamingCommitCursorResponse response)
+      throws StatusException {
+    checkState(
+        response.hasCommit(),
+        String.format(
+            "Received non-commit subsequent response %s on stream with initial request %s.",
+            response, initialRequest));
+    checkState(
+        response.getCommit().getAcknowledgedCommits() > 0,
+        String.format(
+            "Received non-positive commit count response %s on stream with initial request %s.",
+            response, initialRequest));
     sendToClient(response.getCommit());
-    return Status.OK;
   }
 
   // ConnectedCommitter implementation.

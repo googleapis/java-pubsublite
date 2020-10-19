@@ -22,32 +22,23 @@ import com.google.cloud.pubsublite.Message;
 import com.google.cloud.pubsublite.Offset;
 import com.google.cloud.pubsublite.Partition;
 import com.google.cloud.pubsublite.PublishMetadata;
-import com.google.cloud.pubsublite.internal.ProxyService;
 import com.google.cloud.pubsublite.internal.Publisher;
+import com.google.cloud.pubsublite.internal.TrivialProxyService;
 import com.google.common.util.concurrent.MoreExecutors;
 import io.grpc.StatusException;
 import java.io.IOException;
 
-public class SinglePartitionPublisher extends ProxyService implements Publisher<PublishMetadata> {
+public class SinglePartitionPublisher extends TrivialProxyService
+    implements Publisher<PublishMetadata> {
   private final Publisher<Offset> publisher;
   private final Partition partition;
 
   SinglePartitionPublisher(Publisher<Offset> publisher, Partition partition)
       throws StatusException {
+    super(publisher);
     this.publisher = publisher;
     this.partition = partition;
-    addServices(publisher);
   }
-
-  // ProxyService implementation
-  @Override
-  protected void start() {}
-
-  @Override
-  protected void stop() {}
-
-  @Override
-  protected void handlePermanentError(StatusException error) {}
 
   // Publisher implementation.
   @Override

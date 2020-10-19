@@ -3,6 +3,11 @@
 <differences>
   <!-- Blanket ignored files -->
   <difference>
+    <differenceType>5001</differenceType>
+    <className>com/google/cloud/pubsublite/internal/**</className>
+    <to>**</to>
+  </difference>
+  <difference>
     <differenceType>6000</differenceType>
     <className>com/google/cloud/pubsublite/internal/**</className>
     <method>*</method>

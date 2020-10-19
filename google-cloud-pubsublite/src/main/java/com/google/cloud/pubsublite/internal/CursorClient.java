@@ -16,7 +16,6 @@
 package com.google.cloud.pubsublite.internal;
 
 import com.google.api.core.ApiFuture;
-import com.google.api.gax.core.BackgroundResource;
 import com.google.cloud.pubsublite.CloudRegion;
 import com.google.cloud.pubsublite.Offset;
 import com.google.cloud.pubsublite.Partition;
@@ -24,8 +23,7 @@ import com.google.cloud.pubsublite.SubscriptionPath;
 import io.grpc.StatusException;
 import java.util.Map;
 
-public interface CursorClient extends BackgroundResource {
-
+public interface CursorClient extends ApiBackgroundResource {
   static CursorClient create(CursorClientSettings settings) throws StatusException {
     return settings.instantiate();
   }
@@ -50,12 +48,4 @@ public interface CursorClient extends BackgroundResource {
    * @return A future for the operation's completion.
    */
   ApiFuture<Void> commitCursor(SubscriptionPath path, Partition partition, Offset offset);
-
-  /**
-   * Tear down this admin client.
-   *
-   * @throws StatusException on a failure to properly terminate.
-   */
-  @Override
-  void close() throws StatusException;
 }

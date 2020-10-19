@@ -17,6 +17,7 @@
 package pubsublite;
 
 // [START pubsublite_quickstart_subscriber]
+import com.google.api.gax.rpc.ApiException;
 import com.google.cloud.pubsub.v1.AckReplyConsumer;
 import com.google.cloud.pubsub.v1.MessageReceiver;
 import com.google.cloud.pubsublite.CloudRegion;
@@ -28,7 +29,6 @@ import com.google.cloud.pubsublite.cloudpubsub.FlowControlSettings;
 import com.google.cloud.pubsublite.cloudpubsub.Subscriber;
 import com.google.cloud.pubsublite.cloudpubsub.SubscriberSettings;
 import com.google.pubsub.v1.PubsubMessage;
-import io.grpc.CheckedApiException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
@@ -47,7 +47,7 @@ public class SubscriberExample {
 
   public static void subscriberExample(
       String cloudRegion, char zoneId, long projectNumber, String subscriptionId)
-      throws CheckedApiException {
+      throws ApiException {
 
     SubscriptionPath subscriptionPath =
         SubscriptionPath.newBuilder()

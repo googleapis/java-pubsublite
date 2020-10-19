@@ -19,6 +19,7 @@ package pubsublite;
 // [START pubsublite_quickstart_publisher]
 import com.google.api.core.ApiFuture;
 import com.google.api.core.ApiFutures;
+import com.google.api.gax.rpc.ApiException;
 import com.google.cloud.pubsublite.CloudRegion;
 import com.google.cloud.pubsublite.CloudZone;
 import com.google.cloud.pubsublite.ProjectNumber;
@@ -29,7 +30,6 @@ import com.google.cloud.pubsublite.cloudpubsub.Publisher;
 import com.google.cloud.pubsublite.cloudpubsub.PublisherSettings;
 import com.google.protobuf.ByteString;
 import com.google.pubsub.v1.PubsubMessage;
-import io.grpc.CheckedApiException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
@@ -51,7 +51,7 @@ public class PublisherExample {
   // Publish messages to a topic.
   public static void publisherExample(
       String cloudRegion, char zoneId, long projectNumber, String topicId, int messageCount)
-      throws CheckedApiException, ExecutionException, InterruptedException {
+      throws ApiException, ExecutionException, InterruptedException {
 
     TopicPath topicPath =
         TopicPath.newBuilder()

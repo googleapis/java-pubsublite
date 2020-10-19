@@ -18,6 +18,7 @@ package pubsublite;
 
 // [START pubsublite_publish_custom_attributes]
 import com.google.api.core.ApiFuture;
+import com.google.api.gax.rpc.ApiException;
 import com.google.cloud.pubsublite.CloudRegion;
 import com.google.cloud.pubsublite.CloudZone;
 import com.google.cloud.pubsublite.ProjectNumber;
@@ -29,7 +30,6 @@ import com.google.cloud.pubsublite.cloudpubsub.PublisherSettings;
 import com.google.common.collect.ImmutableMap;
 import com.google.protobuf.ByteString;
 import com.google.pubsub.v1.PubsubMessage;
-import io.grpc.CheckedApiException;
 import java.util.concurrent.ExecutionException;
 
 public class PublishWithCustomAttributesExample {
@@ -47,7 +47,7 @@ public class PublishWithCustomAttributesExample {
   // Publish messages to a topic with custom attributes.
   public static void publishWithCustomAttributesExample(
       String cloudRegion, char zoneId, long projectNumber, String topicId)
-      throws CheckedApiException, ExecutionException, InterruptedException {
+      throws ApiException, ExecutionException, InterruptedException {
 
     TopicPath topicPath =
         TopicPath.newBuilder()

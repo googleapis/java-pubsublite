@@ -192,6 +192,7 @@ public class SubscriberImplTest {
 
   @Test
   public void messagesUnordered_IsError() throws Exception {
+    Future<Void> failed = whenFailed(permanentErrorHandler);
     subscriber.allowFlow(bigFlowControlRequest());
     leakedResponseObserver.onResponse(
         Response.ofMessages(
@@ -200,6 +201,7 @@ public class SubscriberImplTest {
                 SequencedMessage.of(
                     Message.builder().build(), Timestamps.EPOCH, Offset.of(0), 10))));
     assertThrows(IllegalStateException.class, subscriber::awaitTerminated);
+    failed.get();
     verify(permanentErrorHandler)
         .failed(any(), argThat(new ApiExceptionMatcher(Code.INVALID_ARGUMENT)));
   }

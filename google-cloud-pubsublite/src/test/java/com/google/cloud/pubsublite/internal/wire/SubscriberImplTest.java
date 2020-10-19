@@ -235,6 +235,7 @@ public class SubscriberImplTest {
 
   @Test
   public void messageResponseSubtracts() throws Exception {
+    Future<Void> failed = whenFailed(permanentErrorHandler);
     FlowControlRequest request =
         FlowControlRequest.newBuilder().setAllowedBytes(100).setAllowedMessages(100).build();
     subscriber.allowFlow(request);
@@ -250,6 +251,7 @@ public class SubscriberImplTest {
     verify(mockMessageConsumer).accept(messages1);
     verify(permanentErrorHandler, times(0)).failed(any(), any());
     leakedResponseObserver.onResponse(Response.ofMessages(messages2));
+    failed.get();
     verify(permanentErrorHandler)
         .failed(any(), argThat(new ApiExceptionMatcher(Code.FAILED_PRECONDITION)));
   }

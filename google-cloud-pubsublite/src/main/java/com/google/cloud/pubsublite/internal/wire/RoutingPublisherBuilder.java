@@ -67,7 +67,7 @@ public abstract class RoutingPublisherBuilder {
       for (int i = 0; i < numPartitions; i++) {
         publisherMapBuilder.put(
             Partition.of(i),
-            builder.publisherFactory().newPublisher(builder.topic(), Partition.of(i)));
+            builder.publisherFactory().newPublisher(Partition.of(i)));
       }
 
       return new RoutingPublisher(

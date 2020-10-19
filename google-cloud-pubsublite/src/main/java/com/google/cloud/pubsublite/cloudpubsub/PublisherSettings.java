@@ -119,16 +119,17 @@ public abstract class PublisherSettings {
         messageTransformer()
             .orElseGet(() -> MessageTransforms.fromCpsPublishTransformer(keyExtractor));
 
+    TopicPath canonicalTopic = toCanonical(topicPath());
     RoutingPublisherBuilder.Builder wireBuilder =
         RoutingPublisherBuilder.newBuilder()
-            .setTopic(toCanonical(topicPath()))
+            .setTopic(canonicalTopic)
             .setPublisherFactory(
-                (topic, partition) -> {
+                partition -> {
                   SinglePartitionPublisherBuilder.Builder singlePartitionBuilder =
                       underlyingBuilder()
                           .setBatchingSettings(batchingSettings)
                           .setContext(PubsubContext.of(FRAMEWORK))
-                          .setTopic(topic)
+                          .setTopic(canonicalTopic)
                           .setPartition(partition);
                   serviceClientSupplier()
                       .ifPresent(

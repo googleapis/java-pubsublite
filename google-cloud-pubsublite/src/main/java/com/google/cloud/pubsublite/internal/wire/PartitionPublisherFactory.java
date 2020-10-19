@@ -23,5 +23,5 @@ import com.google.cloud.pubsublite.TopicPath;
 import com.google.cloud.pubsublite.internal.Publisher;
 
 public interface PartitionPublisherFactory {
-  Publisher<PublishMetadata> newPublisher(TopicPath topic, Partition partition) throws ApiException;
+  Publisher<PublishMetadata> newPublisher(Partition partition) throws ApiException;
 }

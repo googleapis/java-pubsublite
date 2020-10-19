@@ -19,7 +19,6 @@ package com.google.cloud.pubsublite.internal.wire;
 import com.google.api.gax.rpc.ApiException;
 import com.google.cloud.pubsublite.Partition;
 import com.google.cloud.pubsublite.PublishMetadata;
-import com.google.cloud.pubsublite.TopicPath;
 import com.google.cloud.pubsublite.internal.Publisher;
 
 public interface PartitionPublisherFactory {

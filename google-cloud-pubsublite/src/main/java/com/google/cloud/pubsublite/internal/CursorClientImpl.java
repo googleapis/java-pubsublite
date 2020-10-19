@@ -16,7 +16,6 @@
 package com.google.cloud.pubsublite.internal;
 
 import com.google.api.core.ApiFuture;
-import com.google.api.gax.core.BackgroundResource;
 import com.google.api.gax.core.ExecutorAsBackgroundResource;
 import com.google.api.gax.retrying.RetrySettings;
 import com.google.api.gax.retrying.RetryingExecutor;
@@ -32,14 +31,11 @@ import com.google.cloud.pubsublite.proto.ListPartitionCursorsRequest;
 import com.google.cloud.pubsublite.proto.ListPartitionCursorsResponse;
 import com.google.cloud.pubsublite.proto.PartitionCursor;
 import com.google.common.collect.ImmutableMap;
-import io.grpc.StatusException;
 import java.util.Map;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
-public class CursorClientImpl implements BackgroundResource, CursorClient {
-  private final ExecutorAsBackgroundResource executorResource;
+public class CursorClientImpl extends ApiResourceAggregation implements CursorClient {
   private final CloudRegion region;
   private final CursorServiceBlockingStub stub;
   private final RetryingExecutor<Map<Partition, Offset>> listRetryingExecutor;
@@ -60,7 +56,7 @@ public class CursorClientImpl implements BackgroundResource, CursorClient {
       CursorServiceBlockingStub stub,
       RetrySettings retrySettings,
       ScheduledExecutorService executor) {
-    this.executorResource = new ExecutorAsBackgroundResource(executor);
+    super(new ExecutorAsBackgroundResource(executor));
     this.region = region;
     this.stub = stub;
     this.listRetryingExecutor = RetryingExecutorUtil.retryingExecutor(retrySettings, executor);
@@ -70,41 +66,6 @@ public class CursorClientImpl implements BackgroundResource, CursorClient {
   @Override
   public CloudRegion region() {
     return region;
-  }
-
-  // BackgroundResource implementation.
-  @Override
-  public void shutdown() {
-    executorResource.shutdown();
-  }
-
-  @Override
-  public boolean isShutdown() {
-    return executorResource.isShutdown();
-  }
-
-  @Override
-  public boolean isTerminated() {
-    return executorResource.isTerminated();
-  }
-
-  @Override
-  public void shutdownNow() {
-    executorResource.shutdownNow();
-  }
-
-  @Override
-  public boolean awaitTermination(long duration, TimeUnit unit) throws InterruptedException {
-    return executorResource.awaitTermination(duration, unit);
-  }
-
-  @Override
-  public void close() throws StatusException {
-    try {
-      executorResource.close();
-    } catch (Exception e) {
-      throw ExtractStatus.toCanonical(e);
-    }
   }
 
   // CursorClient Implementation

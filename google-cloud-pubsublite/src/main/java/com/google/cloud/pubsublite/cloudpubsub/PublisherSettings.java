@@ -127,7 +127,9 @@ public abstract class PublisherSettings {
                   SinglePartitionPublisherBuilder.Builder singlePartitionBuilder =
                       underlyingBuilder()
                           .setBatchingSettings(batchingSettings)
-                          .setContext(PubsubContext.of(FRAMEWORK));
+                          .setContext(PubsubContext.of(FRAMEWORK))
+                          .setTopic(topic)
+                          .setPartition(partition);
                   serviceClientSupplier()
                       .ifPresent(
                           supplier -> singlePartitionBuilder.setServiceClient(supplier.get()));

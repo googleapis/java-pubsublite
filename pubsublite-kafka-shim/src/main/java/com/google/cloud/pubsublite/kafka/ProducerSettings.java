@@ -16,6 +16,8 @@
 
 package com.google.cloud.pubsublite.kafka;
 
+import static com.google.cloud.pubsublite.ProjectLookupUtils.toCanonical;
+
 import com.google.api.gax.rpc.ApiException;
 import com.google.auto.value.AutoValue;
 import com.google.cloud.pubsublite.PartitionLookupUtils;
@@ -46,17 +48,18 @@ public abstract class ProducerSettings {
   }
 
   public Producer<byte[], byte[]> instantiate() throws ApiException {
+    TopicPath canonicalTopic = toCanonical(topicPath());
     RoutingPublisherBuilder.Builder routingBuilder =
         RoutingPublisherBuilder.newBuilder()
-            .setTopic(topicPath())
+            .setTopic(canonicalTopic)
             .setPublisherFactory(
-                (topic, partition) ->
+                partition ->
                     SinglePartitionPublisherBuilder.newBuilder()
                         .setContext(PubsubContext.of(FRAMEWORK))
-                        .setTopic(topicPath())
+                        .setTopic(canonicalTopic)
                         .setPartition(partition)
                         .build());
     return new PubsubLiteProducer(
-        routingBuilder.build(), PartitionLookupUtils.numPartitions(topicPath()), topicPath());
+        routingBuilder.build(), PartitionLookupUtils.numPartitions(canonicalTopic), canonicalTopic);
   }
 }

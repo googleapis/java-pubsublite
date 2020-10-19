@@ -67,11 +67,15 @@ public class SinglePartitionSubscriber extends ProxyService implements Subscribe
 
   @Override
   protected void start() {
-    wireSubscriber.allowFlow(
-        FlowControlRequest.newBuilder()
-            .setAllowedMessages(flowControlSettings.messagesOutstanding())
-            .setAllowedBytes(flowControlSettings.bytesOutstanding())
-            .build());
+    try {
+      wireSubscriber.allowFlow(
+          FlowControlRequest.newBuilder()
+              .setAllowedMessages(flowControlSettings.messagesOutstanding())
+              .setAllowedBytes(flowControlSettings.bytesOutstanding())
+              .build());
+    } catch (StatusException e) {
+      onPermanentError(e);
+    }
   }
 
   @Override
@@ -89,11 +93,15 @@ public class SinglePartitionSubscriber extends ProxyService implements Subscribe
               @Override
               public void ack() {
                 trackerConsumer.run();
-                wireSubscriber.allowFlow(
-                    FlowControlRequest.newBuilder()
-                        .setAllowedMessages(1)
-                        .setAllowedBytes(bytes)
-                        .build());
+                try {
+                  wireSubscriber.allowFlow(
+                      FlowControlRequest.newBuilder()
+                          .setAllowedMessages(1)
+                          .setAllowedBytes(bytes)
+                          .build());
+                } catch (StatusException e) {
+                  onPermanentError(e);
+                }
               }
 
               @Override

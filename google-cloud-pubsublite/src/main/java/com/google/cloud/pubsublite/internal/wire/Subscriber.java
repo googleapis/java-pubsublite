@@ -21,6 +21,7 @@ import com.google.api.core.ApiService;
 import com.google.cloud.pubsublite.Offset;
 import com.google.cloud.pubsublite.proto.FlowControlRequest;
 import com.google.cloud.pubsublite.proto.SeekRequest;
+import io.grpc.StatusException;
 
 /**
  * A generic PubSub Lite subscriber. Errors are handled out of band. Messages are sent out of band.
@@ -35,5 +36,5 @@ public interface Subscriber extends ApiService {
   boolean seekInFlight();
 
   // Allow the provided amount of messages and bytes to be sent by the server.
-  void allowFlow(FlowControlRequest request);
+  void allowFlow(FlowControlRequest request) throws StatusException;
 }

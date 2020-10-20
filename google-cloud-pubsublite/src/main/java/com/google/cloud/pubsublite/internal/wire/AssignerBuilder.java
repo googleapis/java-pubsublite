@@ -23,7 +23,6 @@ import com.google.api.gax.rpc.ApiException;
 import com.google.auto.value.AutoValue;
 import com.google.cloud.pubsublite.ProjectLookupUtils;
 import com.google.cloud.pubsublite.SubscriptionPath;
-import com.google.cloud.pubsublite.internal.CheckedApiException;
 import com.google.cloud.pubsublite.proto.InitialPartitionAssignmentRequest;
 import com.google.cloud.pubsublite.v1.PartitionAssignmentServiceClient;
 import com.google.cloud.pubsublite.v1.PartitionAssignmentServiceSettings;
@@ -92,11 +91,7 @@ public abstract class AssignerBuilder {
                   ProjectLookupUtils.toCanonical(builder.subscriptionPath()).toString())
               .setClientId(ByteString.copyFrom(uuidBuffer.array()))
               .build();
-      try {
-        return new AssignerImpl(serviceClient, initial, builder.receiver());
-      } catch (CheckedApiException e) {
-        throw e.underlying;
-      }
+      return new AssignerImpl(serviceClient, initial, builder.receiver());
     }
   }
 }

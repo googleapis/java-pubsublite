@@ -18,10 +18,11 @@ package com.google.cloud.pubsublite.internal.wire;
 
 import static com.google.cloud.pubsublite.internal.wire.ApiServiceUtils.backgroundResourceAsApiService;
 
+import com.google.api.gax.rpc.ApiException;
 import com.google.cloud.pubsublite.Partition;
 import com.google.cloud.pubsublite.internal.CheckedApiException;
 import com.google.cloud.pubsublite.internal.CloseableMonitor;
-import com.google.cloud.pubsublite.internal.ProxyService;
+import com.google.cloud.pubsublite.internal.TrivialProxyService;
 import com.google.cloud.pubsublite.proto.InitialPartitionAssignmentRequest;
 import com.google.cloud.pubsublite.proto.PartitionAssignment;
 import com.google.cloud.pubsublite.proto.PartitionAssignmentRequest;
@@ -31,7 +32,7 @@ import com.google.errorprone.annotations.concurrent.GuardedBy;
 import java.util.HashSet;
 import java.util.Set;
 
-public class AssignerImpl extends ProxyService
+public class AssignerImpl extends TrivialProxyService
     implements Assigner, RetryingConnectionObserver<PartitionAssignment> {
   @GuardedBy("monitor.monitor")
   private final RetryingConnection<ConnectedAssigner> connection;
@@ -47,7 +48,7 @@ public class AssignerImpl extends ProxyService
       ConnectedAssignerFactory factory,
       InitialPartitionAssignmentRequest initialRequest,
       PartitionAssignmentReceiver receiver)
-      throws CheckedApiException {
+      throws ApiException {
     this.receiver = receiver;
     this.connection =
         new RetryingConnectionImpl<>(
@@ -62,7 +63,7 @@ public class AssignerImpl extends ProxyService
       PartitionAssignmentServiceClient client,
       InitialPartitionAssignmentRequest initialRequest,
       PartitionAssignmentReceiver receiver)
-      throws CheckedApiException {
+      throws ApiException {
     this(
         stream -> client.assignPartitionsCallable().splitCall(stream),
         new ConnectedAssignerImpl.Factory(),
@@ -70,15 +71,6 @@ public class AssignerImpl extends ProxyService
         receiver);
     addServices(backgroundResourceAsApiService(client));
   }
-
-  @Override
-  protected void start() {}
-
-  @Override
-  protected void stop() {}
-
-  @Override
-  protected void handlePermanentError(CheckedApiException error) {}
 
   @Override
   public void triggerReinitialize() {

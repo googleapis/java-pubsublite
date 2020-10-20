@@ -20,6 +20,11 @@ import com.google.api.gax.rpc.ApiException;
 import com.google.api.gax.rpc.StatusCode;
 import javax.annotation.Nullable;
 
+/**
+ * A wrapper around an ApiException that is a checked exception to help ensure correctness of
+ * internal classes as well as ease construction of ApiExceptions. Should not be exposed in end-user
+ * interfaces.
+ */
 public class CheckedApiException extends Exception {
   public final ApiException underlying;
 

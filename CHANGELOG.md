@@ -1,5 +1,46 @@
 # Changelog
 
+## [0.5.0](https://www.github.com/googleapis/java-pubsublite/compare/v0.4.1...v0.5.0) (2020-10-21)
+
+
+### Features
+
+* Add nextOffset method to BufferingPullSubscriber ([#272](https://www.github.com/googleapis/java-pubsublite/issues/272)) ([5c0e7cc](https://www.github.com/googleapis/java-pubsublite/commit/5c0e7ccad577e06459d01b16e3e936baf86f7a90))
+* Add pubsublite-kafka-shim directory and disable deployment ([#273](https://www.github.com/googleapis/java-pubsublite/issues/273)) ([8bf29f8](https://www.github.com/googleapis/java-pubsublite/commit/8bf29f8db1fea7fbcd15571ade985d901b2ad16b))
+* Add SharedBehavior class which handles the PartitionsFor method on consumers and producers ([#278](https://www.github.com/googleapis/java-pubsublite/issues/278)) ([b42da5f](https://www.github.com/googleapis/java-pubsublite/commit/b42da5fbcfe4e727265b4d604da8e771e493667f))
+* Implement interfaces and utilities needed for Pub/Sub Lite Kafka shim ([#276](https://www.github.com/googleapis/java-pubsublite/issues/276)) ([3c43ef3](https://www.github.com/googleapis/java-pubsublite/commit/3c43ef38870f06f6e04aaa39df717e248cdd7008))
+* Implement PubsubLiteConsumer. ([#287](https://www.github.com/googleapis/java-pubsublite/issues/287)) ([eed9656](https://www.github.com/googleapis/java-pubsublite/commit/eed9656f6add63a82598e1c64c8e8631b3ccb108))
+* Implement PubsubLiteProducer ([#280](https://www.github.com/googleapis/java-pubsublite/issues/280)) ([1879470](https://www.github.com/googleapis/java-pubsublite/commit/187947033fadc6e624552fa1857137408047bd0f))
+* Implement SingleSubscriptionConsumerImpl ([#281](https://www.github.com/googleapis/java-pubsublite/issues/281)) ([0e409c2](https://www.github.com/googleapis/java-pubsublite/commit/0e409c213c19c3ef715d569ac7f811ec638e743b))
+
+
+### Bug Fixes
+
+* Change internals to throw StatusException instead of return Status ([#300](https://www.github.com/googleapis/java-pubsublite/issues/300)) ([96ad02c](https://www.github.com/googleapis/java-pubsublite/commit/96ad02ccdfc076bc548cfc74aca4479499b6afb8))
+* Fix PubsubLiteUnboundedSource to create n partitions not partitions of n size ([#313](https://www.github.com/googleapis/java-pubsublite/issues/313)) ([dbebc4b](https://www.github.com/googleapis/java-pubsublite/commit/dbebc4ba4fc718d2f2fcfeea17787dcf2bae9662))
+* Implement ApiResourceAggregation to deduplicate logic for BackgroundResources. ([#301](https://www.github.com/googleapis/java-pubsublite/issues/301)) ([09578b5](https://www.github.com/googleapis/java-pubsublite/commit/09578b58c6051a4f4d5cd65df366ba939ff45b3b))
+* Implement TrivialProxyService to remove duplicate ProxyService logic for the trivial case. ([#302](https://www.github.com/googleapis/java-pubsublite/issues/302)) ([ed74c6f](https://www.github.com/googleapis/java-pubsublite/commit/ed74c6fa37e64656e0c08d294873bf46818d19f1))
+* Make connections start up asynchronously ([#289](https://www.github.com/googleapis/java-pubsublite/issues/289)) ([27b1fec](https://www.github.com/googleapis/java-pubsublite/commit/27b1fecfde7a323f5b1f7f86874d0ee1f33d24a6))
+
+
+### Dependencies
+
+* Move common dependencies into parent dependency management section ([#275](https://www.github.com/googleapis/java-pubsublite/issues/275)) ([d72bea8](https://www.github.com/googleapis/java-pubsublite/commit/d72bea8f85367a59d3b228ca795bef83a5a154da))
+* update dependency com.google.cloud:google-cloud-pubsub to v1.108.3 ([#282](https://www.github.com/googleapis/java-pubsublite/issues/282)) ([cd9d943](https://www.github.com/googleapis/java-pubsublite/commit/cd9d9435a7450c39ded1dd35144d5829e931a7e7))
+* update dependency com.google.cloud:google-cloud-pubsub to v1.108.4 ([#291](https://www.github.com/googleapis/java-pubsublite/issues/291)) ([b18ba85](https://www.github.com/googleapis/java-pubsublite/commit/b18ba856b17ebc225963ac4ba76f5fcdcbfc8521))
+* update dependency com.google.cloud:google-cloud-pubsub to v1.108.5 ([#303](https://www.github.com/googleapis/java-pubsublite/issues/303)) ([50857a0](https://www.github.com/googleapis/java-pubsublite/commit/50857a0184188a12e9b59dbaabc233cc982fa8b9))
+* update dependency com.google.cloud:google-cloud-pubsub-bom to v1.108.3 ([#283](https://www.github.com/googleapis/java-pubsublite/issues/283)) ([e98aa25](https://www.github.com/googleapis/java-pubsublite/commit/e98aa256f38063465a04addfd48acf30b2120cc4))
+* update dependency com.google.cloud:google-cloud-pubsub-bom to v1.108.4 ([#292](https://www.github.com/googleapis/java-pubsublite/issues/292)) ([ed876b7](https://www.github.com/googleapis/java-pubsublite/commit/ed876b7f53997192b2120101d07f7e550e66f589))
+* update dependency com.google.cloud:google-cloud-pubsub-bom to v1.108.5 ([#304](https://www.github.com/googleapis/java-pubsublite/issues/304)) ([58e55da](https://www.github.com/googleapis/java-pubsublite/commit/58e55da1f0e0f0d46da1e12747f5851f4cc47718))
+* update dependency com.google.cloud:google-cloud-shared-dependencies to v0.10.1 ([#284](https://www.github.com/googleapis/java-pubsublite/issues/284)) ([d4be4a3](https://www.github.com/googleapis/java-pubsublite/commit/d4be4a3e0900f6f6fd634999ddb9f1c5803ea118))
+* update dependency com.google.cloud:google-cloud-shared-dependencies to v0.10.2 ([#285](https://www.github.com/googleapis/java-pubsublite/issues/285)) ([30c6f83](https://www.github.com/googleapis/java-pubsublite/commit/30c6f839fcce589d6c2293aa48e24029b3c97ba3))
+* update dependency com.google.cloud:google-cloud-shared-dependencies to v0.12.1 ([#296](https://www.github.com/googleapis/java-pubsublite/issues/296)) ([273a07a](https://www.github.com/googleapis/java-pubsublite/commit/273a07a98f900e29829ada73d84dd227b156c0ab))
+* update dependency com.google.cloud:google-cloud-shared-dependencies to v0.13.0 ([#308](https://www.github.com/googleapis/java-pubsublite/issues/308)) ([ed9d961](https://www.github.com/googleapis/java-pubsublite/commit/ed9d961aa7b79c18eb877a69203b042b0cebae86))
+* update dependency joda-time:joda-time to v2.10.7 ([#310](https://www.github.com/googleapis/java-pubsublite/issues/310)) ([d8e319c](https://www.github.com/googleapis/java-pubsublite/commit/d8e319ca3f8e53f961eb19af204a032e79bd87bf))
+* update dependency junit:junit to v4.13.1 ([#290](https://www.github.com/googleapis/java-pubsublite/issues/290)) ([578bc73](https://www.github.com/googleapis/java-pubsublite/commit/578bc73dd8f7971d8691ca9fcf5803a8a133d3fe))
+* update dependency org.apache.kafka:kafka-clients to v2.6.0 ([#279](https://www.github.com/googleapis/java-pubsublite/issues/279)) ([1985946](https://www.github.com/googleapis/java-pubsublite/commit/1985946348a02fd84476b762631ec6b6c5ab970a))
+* update dependency org.mockito:mockito-core to v3.5.15 ([#299](https://www.github.com/googleapis/java-pubsublite/issues/299)) ([a9baa99](https://www.github.com/googleapis/java-pubsublite/commit/a9baa99cc9ce7584decb6ec2678e98c77effce7d))
+
 ### [0.4.1](https://www.github.com/googleapis/java-pubsublite/compare/v0.4.0...v0.4.1) (2020-09-28)
 
 

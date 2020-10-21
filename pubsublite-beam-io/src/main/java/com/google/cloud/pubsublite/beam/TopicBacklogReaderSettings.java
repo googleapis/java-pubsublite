@@ -32,6 +32,8 @@ import java.util.concurrent.ExecutionException;
 
 @AutoValue
 public abstract class TopicBacklogReaderSettings implements Serializable {
+  private static final long serialVersionUID = 7340202671356358277L;
+
   /**
    * The topic path for this backlog reader. Either topicPath or subscriptionPath must be set. If
    * both are set, subscriptionPath will be ignored.

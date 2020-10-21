@@ -177,7 +177,11 @@ public class TopicStatsServiceStubSettings extends StubSettings<TopicStatsServic
           "retry_policy_1_codes",
           ImmutableSet.copyOf(
               Lists.<StatusCode.Code>newArrayList(
-                  StatusCode.Code.DEADLINE_EXCEEDED, StatusCode.Code.UNAVAILABLE)));
+                  StatusCode.Code.DEADLINE_EXCEEDED,
+                  StatusCode.Code.UNAVAILABLE,
+                  StatusCode.Code.ABORTED,
+                  StatusCode.Code.INTERNAL,
+                  StatusCode.Code.UNKNOWN)));
       definitions.put("no_retry_codes", ImmutableSet.copyOf(Lists.<StatusCode.Code>newArrayList()));
       RETRYABLE_CODE_DEFINITIONS = definitions.build();
     }

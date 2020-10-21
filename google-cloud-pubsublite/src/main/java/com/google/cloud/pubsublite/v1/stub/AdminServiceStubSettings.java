@@ -501,7 +501,11 @@ public class AdminServiceStubSettings extends StubSettings<AdminServiceStubSetti
           "retry_policy_1_codes",
           ImmutableSet.copyOf(
               Lists.<StatusCode.Code>newArrayList(
-                  StatusCode.Code.DEADLINE_EXCEEDED, StatusCode.Code.UNAVAILABLE)));
+                  StatusCode.Code.DEADLINE_EXCEEDED,
+                  StatusCode.Code.UNAVAILABLE,
+                  StatusCode.Code.ABORTED,
+                  StatusCode.Code.INTERNAL,
+                  StatusCode.Code.UNKNOWN)));
       definitions.put("no_retry_codes", ImmutableSet.copyOf(Lists.<StatusCode.Code>newArrayList()));
       RETRYABLE_CODE_DEFINITIONS = definitions.build();
     }
@@ -590,63 +594,63 @@ public class AdminServiceStubSettings extends StubSettings<AdminServiceStubSetti
 
       builder
           .createTopicSettings()
-          .setRetryableCodes(RETRYABLE_CODE_DEFINITIONS.get("no_retry_codes"))
-          .setRetrySettings(RETRY_PARAM_DEFINITIONS.get("no_retry_params"));
+          .setRetryableCodes(RETRYABLE_CODE_DEFINITIONS.get("retry_policy_1_codes"))
+          .setRetrySettings(RETRY_PARAM_DEFINITIONS.get("retry_policy_1_params"));
 
       builder
           .getTopicSettings()
-          .setRetryableCodes(RETRYABLE_CODE_DEFINITIONS.get("no_retry_codes"))
-          .setRetrySettings(RETRY_PARAM_DEFINITIONS.get("no_retry_params"));
+          .setRetryableCodes(RETRYABLE_CODE_DEFINITIONS.get("retry_policy_1_codes"))
+          .setRetrySettings(RETRY_PARAM_DEFINITIONS.get("retry_policy_1_params"));
 
       builder
           .getTopicPartitionsSettings()
-          .setRetryableCodes(RETRYABLE_CODE_DEFINITIONS.get("no_retry_codes"))
-          .setRetrySettings(RETRY_PARAM_DEFINITIONS.get("no_retry_params"));
+          .setRetryableCodes(RETRYABLE_CODE_DEFINITIONS.get("retry_policy_1_codes"))
+          .setRetrySettings(RETRY_PARAM_DEFINITIONS.get("retry_policy_1_params"));
 
       builder
           .listTopicsSettings()
-          .setRetryableCodes(RETRYABLE_CODE_DEFINITIONS.get("no_retry_codes"))
-          .setRetrySettings(RETRY_PARAM_DEFINITIONS.get("no_retry_params"));
+          .setRetryableCodes(RETRYABLE_CODE_DEFINITIONS.get("retry_policy_1_codes"))
+          .setRetrySettings(RETRY_PARAM_DEFINITIONS.get("retry_policy_1_params"));
 
       builder
           .updateTopicSettings()
-          .setRetryableCodes(RETRYABLE_CODE_DEFINITIONS.get("no_retry_codes"))
-          .setRetrySettings(RETRY_PARAM_DEFINITIONS.get("no_retry_params"));
+          .setRetryableCodes(RETRYABLE_CODE_DEFINITIONS.get("retry_policy_1_codes"))
+          .setRetrySettings(RETRY_PARAM_DEFINITIONS.get("retry_policy_1_params"));
 
       builder
           .deleteTopicSettings()
-          .setRetryableCodes(RETRYABLE_CODE_DEFINITIONS.get("no_retry_codes"))
-          .setRetrySettings(RETRY_PARAM_DEFINITIONS.get("no_retry_params"));
+          .setRetryableCodes(RETRYABLE_CODE_DEFINITIONS.get("retry_policy_1_codes"))
+          .setRetrySettings(RETRY_PARAM_DEFINITIONS.get("retry_policy_1_params"));
 
       builder
           .listTopicSubscriptionsSettings()
-          .setRetryableCodes(RETRYABLE_CODE_DEFINITIONS.get("no_retry_codes"))
-          .setRetrySettings(RETRY_PARAM_DEFINITIONS.get("no_retry_params"));
+          .setRetryableCodes(RETRYABLE_CODE_DEFINITIONS.get("retry_policy_1_codes"))
+          .setRetrySettings(RETRY_PARAM_DEFINITIONS.get("retry_policy_1_params"));
 
       builder
           .createSubscriptionSettings()
-          .setRetryableCodes(RETRYABLE_CODE_DEFINITIONS.get("no_retry_codes"))
-          .setRetrySettings(RETRY_PARAM_DEFINITIONS.get("no_retry_params"));
+          .setRetryableCodes(RETRYABLE_CODE_DEFINITIONS.get("retry_policy_1_codes"))
+          .setRetrySettings(RETRY_PARAM_DEFINITIONS.get("retry_policy_1_params"));
 
       builder
           .getSubscriptionSettings()
-          .setRetryableCodes(RETRYABLE_CODE_DEFINITIONS.get("no_retry_codes"))
-          .setRetrySettings(RETRY_PARAM_DEFINITIONS.get("no_retry_params"));
+          .setRetryableCodes(RETRYABLE_CODE_DEFINITIONS.get("retry_policy_1_codes"))
+          .setRetrySettings(RETRY_PARAM_DEFINITIONS.get("retry_policy_1_params"));
 
       builder
           .listSubscriptionsSettings()
-          .setRetryableCodes(RETRYABLE_CODE_DEFINITIONS.get("no_retry_codes"))
-          .setRetrySettings(RETRY_PARAM_DEFINITIONS.get("no_retry_params"));
+          .setRetryableCodes(RETRYABLE_CODE_DEFINITIONS.get("retry_policy_1_codes"))
+          .setRetrySettings(RETRY_PARAM_DEFINITIONS.get("retry_policy_1_params"));
 
       builder
           .updateSubscriptionSettings()
-          .setRetryableCodes(RETRYABLE_CODE_DEFINITIONS.get("no_retry_codes"))
-          .setRetrySettings(RETRY_PARAM_DEFINITIONS.get("no_retry_params"));
+          .setRetryableCodes(RETRYABLE_CODE_DEFINITIONS.get("retry_policy_1_codes"))
+          .setRetrySettings(RETRY_PARAM_DEFINITIONS.get("retry_policy_1_params"));
 
       builder
           .deleteSubscriptionSettings()
-          .setRetryableCodes(RETRYABLE_CODE_DEFINITIONS.get("no_retry_codes"))
-          .setRetrySettings(RETRY_PARAM_DEFINITIONS.get("no_retry_params"));
+          .setRetryableCodes(RETRYABLE_CODE_DEFINITIONS.get("retry_policy_1_codes"))
+          .setRetrySettings(RETRY_PARAM_DEFINITIONS.get("retry_policy_1_params"));
 
       return builder;
     }

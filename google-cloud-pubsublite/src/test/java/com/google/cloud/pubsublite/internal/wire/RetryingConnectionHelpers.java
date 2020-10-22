@@ -16,15 +16,23 @@
 
 package com.google.cloud.pubsublite.internal.wire;
 
-import io.grpc.StatusException;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doAnswer;
 
-public interface RetryingConnectionObserver<ClientResponseT> {
-  // Trigger reinitialization. This cannot be an upcall. It needs to be atomic so there is no
-  // possibility for other client messages to be sent on the stream between the new stream being
-  // created and the client initialization occurring. It cannot be called with connectionMonitor
-  // held since all locks need to be acquired in concrete then abstract class order to avoid
-  // deadlocks.
-  void triggerReinitialize();
+import com.google.api.core.ApiService.Listener;
+import com.google.api.core.SettableApiFuture;
+import java.util.concurrent.Future;
 
-  void onClientResponse(ClientResponseT value) throws StatusException;
+class RetryingConnectionHelpers {
+  static Future<Void> whenFailed(Listener mockListener) {
+    SettableApiFuture<Void> future = SettableApiFuture.create();
+    doAnswer(
+            args -> {
+              future.set(null);
+              return null;
+            })
+        .when(mockListener)
+        .failed(any(), any());
+    return future;
+  }
 }

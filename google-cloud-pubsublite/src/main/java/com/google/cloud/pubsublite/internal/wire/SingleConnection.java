@@ -21,7 +21,7 @@ import com.google.common.base.Preconditions;
 import com.google.common.flogger.GoogleLogger;
 import com.google.common.util.concurrent.Monitor.Guard;
 import com.google.errorprone.annotations.concurrent.GuardedBy;
-import io.grpc.Status;
+import io.grpc.StatusException;
 import io.grpc.stub.StreamObserver;
 
 /**
@@ -47,9 +47,9 @@ public abstract class SingleConnection<StreamRequestT, StreamResponseT, ClientRe
   @GuardedBy("connectionMonitor.monitor")
   private boolean completed = false;
 
-  protected abstract Status handleInitialResponse(StreamResponseT response);
+  protected abstract void handleInitialResponse(StreamResponseT response) throws StatusException;
 
-  protected abstract Status handleStreamResponse(StreamResponseT response);
+  protected abstract void handleStreamResponse(StreamResponseT response) throws StatusException;
 
   protected SingleConnection(
       StreamFactory<StreamRequestT, StreamResponseT> streamFactory,
@@ -97,8 +97,7 @@ public abstract class SingleConnection<StreamRequestT, StreamResponseT, ClientRe
     clientStream.onNext(response);
   }
 
-  protected void setError(Status error) {
-    Preconditions.checkArgument(!error.isOk());
+  protected void setError(StatusException error) {
     abort(error);
   }
 
@@ -118,14 +117,13 @@ public abstract class SingleConnection<StreamRequestT, StreamResponseT, ClientRe
     clientStream.onCompleted();
   }
 
-  private void abort(Status error) {
-    Preconditions.checkArgument(!error.isOk());
+  private void abort(StatusException error) {
     try (CloseableMonitor.Hold h = connectionMonitor.enter()) {
       if (completed) return;
       completed = true;
     }
-    requestStream.onError(error.asRuntimeException());
-    clientStream.onError(error.asRuntimeException());
+    requestStream.onError(error);
+    clientStream.onError(error);
   }
 
   // StreamObserver implementation
@@ -140,14 +138,14 @@ public abstract class SingleConnection<StreamRequestT, StreamResponseT, ClientRe
       isFirst = !receivedInitial;
       receivedInitial = true;
     }
-    Status responseStatus;
-    if (isFirst) {
-      responseStatus = handleInitialResponse(response);
-    } else {
-      responseStatus = handleStreamResponse(response);
-    }
-    if (!responseStatus.isOk()) {
-      abort(responseStatus);
+    try {
+      if (isFirst) {
+        handleInitialResponse(response);
+      } else {
+        handleStreamResponse(response);
+      }
+    } catch (StatusException e) {
+      abort(e);
     }
   }
 

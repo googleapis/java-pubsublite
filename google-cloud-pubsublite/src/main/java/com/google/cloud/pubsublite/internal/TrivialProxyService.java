@@ -14,17 +14,28 @@
  * limitations under the License.
  */
 
-package com.google.cloud.pubsublite.internal.wire;
+package com.google.cloud.pubsublite.internal;
 
+import com.google.api.core.ApiService;
 import io.grpc.StatusException;
+import java.util.Arrays;
+import java.util.Collection;
 
-public interface RetryingConnectionObserver<ClientResponseT> {
-  // Trigger reinitialization. This cannot be an upcall. It needs to be atomic so there is no
-  // possibility for other client messages to be sent on the stream between the new stream being
-  // created and the client initialization occurring. It cannot be called with connectionMonitor
-  // held since all locks need to be acquired in concrete then abstract class order to avoid
-  // deadlocks.
-  void triggerReinitialize();
+public class TrivialProxyService extends ProxyService {
+  public TrivialProxyService(ApiService... services) throws StatusException {
+    this(Arrays.asList(services));
+  }
 
-  void onClientResponse(ClientResponseT value) throws StatusException;
+  public <T extends ApiService> TrivialProxyService(Collection<T> services) throws StatusException {
+    addServices(services);
+  }
+
+  @Override
+  protected final void start() {}
+
+  @Override
+  protected final void stop() {}
+
+  @Override
+  protected final void handlePermanentError(StatusException error) {}
 }

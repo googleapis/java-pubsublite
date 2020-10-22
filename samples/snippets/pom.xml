@@ -46,12 +46,12 @@
     <dependency>
       <groupId>com.google.cloud</groupId>
       <artifactId>google-cloud-pubsublite</artifactId>
-      <version>0.4.1</version>
+      <version>0.5.0</version>
     </dependency>
     <dependency>
       <groupId>com.google.cloud</groupId>
       <artifactId>google-cloud-pubsub</artifactId>
-      <version>1.108.3</version>
+      <version>1.108.5</version>
     </dependency>
     <!-- [END pubsublite_java_dependencies] -->
     <!-- [END pubsublite_install_without_bom] -->
@@ -59,7 +59,7 @@
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
-      <version>4.13</version>
+      <version>4.13.1</version>
       <scope>test</scope>
     </dependency>
     <dependency>

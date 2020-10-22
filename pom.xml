@@ -3,12 +3,12 @@
   <parent>
     <groupId>com.google.cloud</groupId>
     <artifactId>google-cloud-shared-config</artifactId>
-    <version>0.9.2</version>
+    <version>0.9.3</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.google.cloud</groupId>
   <artifactId>google-cloud-pubsublite-parent</artifactId>
-  <version>0.4.2-SNAPSHOT</version><!-- {x-version-update:google-cloud-pubsublite:current} -->
+  <version>0.5.1-SNAPSHOT</version><!-- {x-version-update:google-cloud-pubsublite:current} -->
   <packaging>pom</packaging>
   <name>Google Cloud Pub/Sub Lite Parent</name>
   <url>https://github.com/googleapis/java-pubsublite</url>
@@ -18,14 +18,14 @@
       <dependency>
         <groupId>com.google.cloud</groupId>
         <artifactId>google-cloud-shared-dependencies</artifactId>
-        <version>0.10.2</version>
+        <version>0.13.0</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
       <dependency>
         <groupId>com.google.cloud</groupId>
         <artifactId>google-cloud-pubsub-bom</artifactId>
-        <version>1.108.3</version>
+        <version>1.108.5</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
@@ -54,13 +54,13 @@
       <dependency>
         <groupId>org.mockito</groupId>
         <artifactId>mockito-core</artifactId>
-        <version>3.5.13</version>
+        <version>3.5.15</version>
         <scope>test</scope>
       </dependency>
       <dependency>
         <groupId>junit</groupId>
         <artifactId>junit</artifactId>
-        <version>4.13</version>
+        <version>4.13.1</version>
         <scope>test</scope>
       </dependency>
     </dependencies>

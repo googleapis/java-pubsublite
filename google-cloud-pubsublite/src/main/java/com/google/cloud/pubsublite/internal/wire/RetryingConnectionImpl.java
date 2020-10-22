@@ -85,8 +85,11 @@ class RetryingConnectionImpl<
 
   @Override
   protected void doStart() {
-    reinitialize();
-    notifyStarted();
+    this.systemExecutor.execute(
+        () -> {
+          reinitialize();
+          notifyStarted();
+        });
   }
 
   // Reinitialize the stream. Must be called in a downcall to prevent deadlock.
@@ -134,14 +137,14 @@ class RetryingConnectionImpl<
   // StreamObserver implementation
   @Override
   public final void onNext(ClientResponseT value) {
-    Status status;
     try (CloseableMonitor.Hold h = connectionMonitor.enter()) {
       if (completed) return;
       nextRetryBackoffDuration = INITIAL_RECONNECT_BACKOFF_TIME.toMillis();
     }
-    status = observer.onClientResponse(value);
-    if (!status.isOk()) {
-      setPermanentError(status.asRuntimeException());
+    try {
+      observer.onClientResponse(value);
+    } catch (StatusException e) {
+      setPermanentError(e);
     }
   }
 

@@ -16,6 +16,8 @@
 
 package com.google.cloud.pubsublite.internal.wire;
 
+import static com.google.cloud.pubsublite.internal.Preconditions.checkState;
+
 import com.google.cloud.pubsublite.Offset;
 import com.google.cloud.pubsublite.SequencedMessage;
 import com.google.cloud.pubsublite.internal.CloseableMonitor;
@@ -30,6 +32,7 @@ import com.google.common.base.Preconditions;
 import com.google.common.flogger.GoogleLogger;
 import com.google.errorprone.annotations.concurrent.GuardedBy;
 import io.grpc.Status;
+import io.grpc.StatusException;
 import io.grpc.stub.StreamObserver;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -69,12 +72,10 @@ class ConnectedSubscriberImpl
   @Override
   public void seek(SeekRequest request) {
     Preconditions.checkArgument(Predicates.isValidSeekRequest(request));
-    Status seekStatus;
     try (CloseableMonitor.Hold h = monitor.enter()) {
-      seekStatus = seekLockHeld(request);
-    }
-    if (!seekStatus.isOk()) {
-      setError(seekStatus);
+      seekLockHeld(request);
+    } catch (StatusException e) {
+      setError(e);
     }
   }
 
@@ -88,89 +89,84 @@ class ConnectedSubscriberImpl
   }
 
   @GuardedBy("monitor.monitor")
-  private Status seekLockHeld(SeekRequest request) {
-    if (seekInFlight) {
-      return Status.FAILED_PRECONDITION.withDescription(
-          String.format(
-              "Sent second seek while seek in flight on stream with initial request %s.",
-              initialRequest));
-    }
+  private void seekLockHeld(SeekRequest request) throws StatusException {
+    checkState(
+        !seekInFlight,
+        String.format(
+            "Sent second seek while seek in flight on stream with initial request %s.",
+            initialRequest));
     seekInFlight = true;
     sendToStream(SubscribeRequest.newBuilder().setSeek(request).build());
-    return Status.OK;
   }
 
   @Override
-  protected Status handleInitialResponse(SubscribeResponse response) {
-    if (!response.hasInitial()) {
-      return Status.FAILED_PRECONDITION.withDescription(
-          String.format(
-              "Received non-initial first response %s on stream with initial request %s.",
-              response, initialRequest));
-    }
-    return Status.OK;
+  protected void handleInitialResponse(SubscribeResponse response) throws StatusException {
+    checkState(
+        response.hasInitial(),
+        String.format(
+            "Received non-initial first response %s on stream with initial request %s.",
+            response, initialRequest));
   }
 
   @Override
-  protected Status handleStreamResponse(SubscribeResponse response) {
+  protected void handleStreamResponse(SubscribeResponse response) throws StatusException {
     switch (response.getResponseCase()) {
       case INITIAL:
-        return Status.FAILED_PRECONDITION.withDescription(
-            String.format(
-                "Received duplicate initial response on stream with initial request %s.",
-                initialRequest));
+        throw Status.FAILED_PRECONDITION
+            .withDescription(
+                String.format(
+                    "Received duplicate initial response on stream with initial request %s.",
+                    initialRequest))
+            .asException();
       case MESSAGES:
-        return onMessages(response.getMessages());
+        onMessages(response.getMessages());
+        return;
       case SEEK:
-        return onSeekResponse(response.getSeek());
+        onSeekResponse(response.getSeek());
+        return;
       default:
-        return Status.FAILED_PRECONDITION.withDescription(
-            "Received a message on the stream with no case set.");
+        throw Status.FAILED_PRECONDITION
+            .withDescription("Received a message on the stream with no case set.")
+            .asException();
     }
   }
 
-  private Status onMessages(MessageResponse response) {
+  private void onMessages(MessageResponse response) throws StatusException {
     List<SequencedMessage> messages;
     try (CloseableMonitor.Hold h = monitor.enter()) {
       if (seekInFlight) {
         log.atInfo().log(
             "Dropping %s messages due to outstanding seek on stream with initial request %s.",
             response.getMessagesCount(), initialRequest);
-        return Status.OK;
+        return;
       }
-      if (response.getMessagesCount() == 0) {
-        return Status.FAILED_PRECONDITION.withDescription(
-            String.format(
-                "Received an empty PullResponse on stream with initial request %s.",
-                initialRequest));
-      }
+      checkState(
+          response.getMessagesCount() > 0,
+          String.format(
+              "Received an empty PullResponse on stream with initial request %s.", initialRequest));
       messages =
           response.getMessagesList().stream()
               .map(SequencedMessage::fromProto)
               .collect(Collectors.toList());
-      if (!Predicates.isOrdered(messages)) {
-        return Status.FAILED_PRECONDITION.withDescription(
-            String.format(
-                "Received out of order messages on the stream with initial request %s.",
-                initialRequest));
-      }
+      checkState(
+          Predicates.isOrdered(messages),
+          String.format(
+              "Received out of order messages on the stream with initial request %s.",
+              initialRequest));
     }
     sendToClient(Response.ofMessages(messages));
-    return Status.OK;
   }
 
-  private Status onSeekResponse(SeekResponse response) {
+  private void onSeekResponse(SeekResponse response) throws StatusException {
     try (CloseableMonitor.Hold h = monitor.enter()) {
-      if (!seekInFlight) {
-        return Status.FAILED_PRECONDITION.withDescription(
-            String.format(
-                "Received a SeekResponse when no seeks were in flight on stream with initial"
-                    + " request %s.",
-                initialRequest));
-      }
+      checkState(
+          seekInFlight,
+          String.format(
+              "Received a SeekResponse when no seeks were in flight on stream with initial"
+                  + " request %s.",
+              initialRequest));
       seekInFlight = false;
     }
     sendToClient(Response.ofSeekOffset(Offset.of(response.getCursor().getOffset())));
-    return Status.OK;
   }
 }

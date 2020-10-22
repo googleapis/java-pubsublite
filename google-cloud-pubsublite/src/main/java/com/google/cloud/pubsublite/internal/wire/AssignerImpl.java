@@ -18,19 +18,18 @@ package com.google.cloud.pubsublite.internal.wire;
 
 import com.google.cloud.pubsublite.Partition;
 import com.google.cloud.pubsublite.internal.CloseableMonitor;
-import com.google.cloud.pubsublite.internal.ProxyService;
+import com.google.cloud.pubsublite.internal.TrivialProxyService;
 import com.google.cloud.pubsublite.proto.InitialPartitionAssignmentRequest;
 import com.google.cloud.pubsublite.proto.PartitionAssignment;
 import com.google.cloud.pubsublite.proto.PartitionAssignmentRequest;
 import com.google.cloud.pubsublite.proto.PartitionAssignmentServiceGrpc.PartitionAssignmentServiceStub;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.errorprone.annotations.concurrent.GuardedBy;
-import io.grpc.Status;
 import io.grpc.StatusException;
 import java.util.HashSet;
 import java.util.Set;
 
-public class AssignerImpl extends ProxyService
+public class AssignerImpl extends TrivialProxyService
     implements Assigner, RetryingConnectionObserver<PartitionAssignment> {
   @GuardedBy("monitor.monitor")
   private final RetryingConnection<ConnectedAssigner> connection;
@@ -58,15 +57,6 @@ public class AssignerImpl extends ProxyService
   }
 
   @Override
-  protected void start() {}
-
-  @Override
-  protected void stop() {}
-
-  @Override
-  protected void handlePermanentError(StatusException error) {}
-
-  @Override
   public void triggerReinitialize() {
     try (CloseableMonitor.Hold h = monitor.enter()) {
       connection.reinitialize();
@@ -82,13 +72,10 @@ public class AssignerImpl extends ProxyService
   }
 
   @Override
-  public Status onClientResponse(PartitionAssignment value) {
+  public void onClientResponse(PartitionAssignment value) throws StatusException {
     try (CloseableMonitor.Hold h = monitor.enter()) {
       receiver.handleAssignment(toSet(value));
       connection.modifyConnection(connectionOr -> connectionOr.ifPresent(ConnectedAssigner::ack));
-    } catch (StatusException e) {
-      return e.getStatus();
     }
-    return Status.OK;
   }
 }

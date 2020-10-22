@@ -17,6 +17,7 @@
 package com.google.cloud.pubsublite.internal.wire;
 
 import static com.google.cloud.pubsublite.internal.StatusExceptionMatcher.assertFutureThrowsCode;
+import static com.google.cloud.pubsublite.internal.wire.RetryingConnectionHelpers.whenFailed;
 import static com.google.common.truth.Truth.assertThat;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static org.junit.Assert.assertThrows;
@@ -56,11 +57,11 @@ import com.google.protobuf.util.Timestamps;
 import io.grpc.ManagedChannel;
 import io.grpc.Status.Code;
 import io.grpc.StatusException;
-import io.grpc.StatusRuntimeException;
 import io.grpc.inprocess.InProcessChannelBuilder;
 import io.grpc.stub.StreamObserver;
 import io.grpc.testing.GrpcCleanupRule;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.Future;
 import java.util.function.Consumer;
 import org.junit.Before;
 import org.junit.Rule;
@@ -106,7 +107,7 @@ public class SubscriberImplTest {
   private StreamObserver<Response> leakedResponseObserver;
 
   @Before
-  public void setUp() throws StatusException {
+  public void setUp() throws Exception {
     doAnswer(
             args -> {
               leakedResponseObserver = args.getArgument(1);
@@ -142,7 +143,7 @@ public class SubscriberImplTest {
   @Test
   public void invalidFlowThrows() {
     assertThrows(
-        StatusRuntimeException.class,
+        StatusException.class,
         () -> subscriber.allowFlow(FlowControlRequest.newBuilder().setAllowedBytes(-1).build()));
   }
 
@@ -154,7 +155,7 @@ public class SubscriberImplTest {
   }
 
   @Test
-  public void anyFlowAllowedAndProxies() {
+  public void anyFlowAllowedAndProxies() throws Exception {
     subscriber.allowFlow(bigFlowControlRequest());
     verify(mockConnectedSubscriber).allowFlow(bigFlowControlRequest());
   }
@@ -192,7 +193,7 @@ public class SubscriberImplTest {
   }
 
   @Test
-  public void messagesEmpty_IsError() {
+  public void messagesEmpty_IsError() throws Exception {
     subscriber.allowFlow(bigFlowControlRequest());
     leakedResponseObserver.onNext(Response.ofMessages(ImmutableList.of()));
     assertThrows(IllegalStateException.class, subscriber::awaitTerminated);
@@ -201,7 +202,8 @@ public class SubscriberImplTest {
   }
 
   @Test
-  public void messagesUnordered_IsError() {
+  public void messagesUnordered_IsError() throws Exception {
+    Future<Void> failed = whenFailed(permanentErrorHandler);
     subscriber.allowFlow(bigFlowControlRequest());
     leakedResponseObserver.onNext(
         Response.ofMessages(
@@ -210,25 +212,27 @@ public class SubscriberImplTest {
                 SequencedMessage.of(
                     Message.builder().build(), Timestamps.EPOCH, Offset.of(0), 10))));
     assertThrows(IllegalStateException.class, subscriber::awaitTerminated);
+    failed.get();
     verify(permanentErrorHandler)
         .failed(any(), argThat(new StatusExceptionMatcher(Code.INVALID_ARGUMENT)));
   }
 
   @Test
-  public void messageBatchesOutOfOrder_IsError() {
+  public void messageBatchesOutOfOrder_IsError() throws Exception {
+    Future<Void> failed = whenFailed(permanentErrorHandler);
     subscriber.allowFlow(bigFlowControlRequest());
     ImmutableList<SequencedMessage> messages =
         ImmutableList.of(
             SequencedMessage.of(Message.builder().build(), Timestamps.EPOCH, Offset.of(0), 0));
     leakedResponseObserver.onNext(Response.ofMessages(messages));
     leakedResponseObserver.onNext(Response.ofMessages(messages));
-    assertThrows(IllegalStateException.class, subscriber::awaitTerminated);
+    failed.get();
     verify(permanentErrorHandler)
         .failed(any(), argThat(new StatusExceptionMatcher(Code.FAILED_PRECONDITION)));
   }
 
   @Test
-  public void messagesOrdered_Ok() {
+  public void messagesOrdered_Ok() throws Exception {
     subscriber.allowFlow(bigFlowControlRequest());
     ImmutableList<SequencedMessage> messages =
         ImmutableList.of(
@@ -241,7 +245,8 @@ public class SubscriberImplTest {
   }
 
   @Test
-  public void messageResponseSubtracts() {
+  public void messageResponseSubtracts() throws Exception {
+    Future<Void> failed = whenFailed(permanentErrorHandler);
     FlowControlRequest request =
         FlowControlRequest.newBuilder().setAllowedBytes(100).setAllowedMessages(100).build();
     subscriber.allowFlow(request);
@@ -257,6 +262,7 @@ public class SubscriberImplTest {
     verify(mockMessageConsumer).accept(messages1);
     verify(permanentErrorHandler, times(0)).failed(any(), any());
     leakedResponseObserver.onNext(Response.ofMessages(messages2));
+    failed.get();
     verify(permanentErrorHandler)
         .failed(any(), argThat(new StatusExceptionMatcher(Code.FAILED_PRECONDITION)));
   }
@@ -278,7 +284,7 @@ public class SubscriberImplTest {
   }
 
   @Test
-  public void reinitialize_sendsNextOffsetSeek() {
+  public void reinitialize_sendsNextOffsetSeek() throws Exception {
     subscriber.allowFlow(bigFlowControlRequest());
     ImmutableList<SequencedMessage> messages =
         ImmutableList.of(

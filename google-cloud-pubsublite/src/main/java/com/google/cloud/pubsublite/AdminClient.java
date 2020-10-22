@@ -17,7 +17,7 @@
 package com.google.cloud.pubsublite;
 
 import com.google.api.core.ApiFuture;
-import com.google.api.gax.core.BackgroundResource;
+import com.google.cloud.pubsublite.internal.ApiBackgroundResource;
 import com.google.cloud.pubsublite.proto.Subscription;
 import com.google.cloud.pubsublite.proto.Topic;
 import com.google.protobuf.FieldMask;
@@ -25,7 +25,7 @@ import io.grpc.StatusException;
 import java.util.List;
 
 /** A client for performing Pub/Sub Lite admin operations. */
-public interface AdminClient extends BackgroundResource {
+public interface AdminClient extends ApiBackgroundResource {
   static AdminClient create(AdminClientSettings settings) throws StatusException {
     return settings.instantiate();
   }

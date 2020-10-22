@@ -16,6 +16,8 @@
 
 package com.google.cloud.pubsublite.cloudpubsub;
 
+import static com.google.cloud.pubsublite.ProjectLookupUtils.toCanonical;
+
 import com.google.api.gax.batching.BatchingSettings;
 import com.google.auto.value.AutoValue;
 import com.google.cloud.pubsublite.Constants;
@@ -124,7 +126,7 @@ public abstract class PublisherSettings {
 
     RoutingPublisherBuilder.Builder wireBuilder =
         RoutingPublisherBuilder.newBuilder()
-            .setTopic(topicPath())
+            .setTopic(toCanonical(topicPath()))
             .setPublisherBuilder(singlePartitionPublisherBuilder);
 
     numPartitions().ifPresent(wireBuilder::setNumPartitions);

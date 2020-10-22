@@ -17,6 +17,7 @@
 package com.google.cloud.pubsublite.internal.wire;
 
 import static com.google.cloud.pubsublite.internal.StatusExceptionMatcher.assertFutureThrowsCode;
+import static com.google.cloud.pubsublite.internal.wire.RetryingConnectionHelpers.whenFailed;
 import static com.google.common.truth.Truth.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.argThat;
@@ -36,7 +37,6 @@ import com.google.cloud.pubsublite.Offset;
 import com.google.cloud.pubsublite.ProjectNumber;
 import com.google.cloud.pubsublite.SubscriptionName;
 import com.google.cloud.pubsublite.SubscriptionPath;
-import com.google.cloud.pubsublite.internal.ExtractStatus;
 import com.google.cloud.pubsublite.internal.StatusExceptionMatcher;
 import com.google.cloud.pubsublite.proto.CursorServiceGrpc;
 import com.google.cloud.pubsublite.proto.CursorServiceGrpc.CursorServiceStub;
@@ -149,9 +149,11 @@ public class CommitterImplTest {
   }
 
   @Test
-  public void responseMoreThanSentError() {
+  public void responseMoreThanSentError() throws Exception {
+    Future<Void> failed = whenFailed(permanentErrorHandler);
     ApiFuture<Void> future = committer.commitOffset(Offset.of(10));
     leakedResponseObserver.onNext(ResponseWithCount(2));
+    failed.get();
     verify(permanentErrorHandler)
         .failed(any(), argThat(new StatusExceptionMatcher(Code.FAILED_PRECONDITION)));
     assertFutureThrowsCode(future, Code.FAILED_PRECONDITION);
@@ -184,16 +186,10 @@ public class CommitterImplTest {
   @Test
   public void stopInCommitCallback() throws Exception {
     ApiFuture<Void> future = committer.commitOffset(Offset.of(10));
-    CountDownLatch latch = new CountDownLatch(1);
-    ExtractStatus.addFailureHandler(
-        future,
-        (error) -> {
-          committer.stopAsync();
-          latch.countDown();
-        });
+    Future<Void> failed = whenFailed(permanentErrorHandler);
     leakedResponseObserver.onError(Status.FAILED_PRECONDITION.asException());
-    latch.await();
     assertFutureThrowsCode(future, Code.FAILED_PRECONDITION);
+    failed.get();
     verify(permanentErrorHandler)
         .failed(any(), argThat(new StatusExceptionMatcher(Code.FAILED_PRECONDITION)));
   }

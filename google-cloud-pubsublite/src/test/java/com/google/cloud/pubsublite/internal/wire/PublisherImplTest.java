@@ -16,6 +16,7 @@
 
 package com.google.cloud.pubsublite.internal.wire;
 
+import static com.google.cloud.pubsublite.internal.wire.RetryingConnectionHelpers.whenFailed;
 import static com.google.common.truth.Truth.assertThat;
 import static org.hamcrest.CoreMatchers.hasItems;
 import static org.junit.Assert.assertThrows;
@@ -52,7 +53,6 @@ import io.grpc.stub.StreamObserver;
 import io.grpc.testing.GrpcCleanupRule;
 import java.util.Collection;
 import java.util.Optional;
-import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import org.junit.Before;
@@ -83,7 +83,7 @@ public class PublisherImplTest {
   private final BatchPublisher mockBatchPublisher = mock(BatchPublisher.class);
   private final BatchPublisherFactory mockPublisherFactory = mock(BatchPublisherFactory.class);
   private final Listener permanentErrorHandler = mock(Listener.class);
-  private final CountDownLatch errorOccurredLatch = new CountDownLatch(1);
+  private Future<Void> errorOccurredFuture;
 
   private PublisherImpl publisher;
   private StreamObserver<Offset> leakedOffsetStream;
@@ -97,14 +97,7 @@ public class PublisherImplTest {
             })
         .when(mockPublisherFactory)
         .New(any(), any(), eq(INITIAL_PUBLISH_REQUEST));
-    doAnswer(
-            (Answer<Void>)
-                args -> {
-                  errorOccurredLatch.countDown();
-                  return null;
-                })
-        .when(permanentErrorHandler)
-        .failed(any(), any());
+    errorOccurredFuture = whenFailed(permanentErrorHandler);
     ManagedChannel channel =
         grpcCleanup.register(
             InProcessChannelBuilder.forName("localhost:12345").directExecutor().build());
@@ -191,7 +184,7 @@ public class PublisherImplTest {
     startPublisher();
     leakedOffsetStream.onError(Status.PERMISSION_DENIED.asRuntimeException());
     assertThrows(IllegalStateException.class, publisher::awaitTerminated);
-    errorOccurredLatch.await();
+    errorOccurredFuture.get();
     verify(permanentErrorHandler).failed(any(), ArgumentMatchers.<StatusRuntimeException>any());
     Message message = Message.builder().build();
     Future<Offset> future = publisher.publish(message);
@@ -320,7 +313,7 @@ public class PublisherImplTest {
     assertThrows(IllegalStateException.class, publisher::awaitTerminated);
     assertThat(future3.isDone()).isTrue();
     assertThrows(Exception.class, future3::get);
-    errorOccurredLatch.await();
+    errorOccurredFuture.get();
     verify(permanentErrorHandler).failed(any(), any());
 
     verifyNoMoreInteractions(mockBatchPublisher);

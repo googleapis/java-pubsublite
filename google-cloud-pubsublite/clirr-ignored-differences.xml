@@ -1,22 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- see http://www.mojohaus.org/clirr-maven-plugin/examples/ignored-differences.html -->
 <differences>
-  <!-- ProjectLookupUtils functions renamed: remove on next release. -->
-  <difference>
-    <differenceType>7002</differenceType>
-    <className>com/google/cloud/pubsublite/ProjectLookupUtils</className>
-    <method>*</method>
-  </difference>
-  <difference>
-    <differenceType>3003</differenceType>
-    <className>com/google/cloud/pubsublite/ProjectLookupUtils</className>
-  </difference>
-  <difference>
-    <differenceType>7009</differenceType>
-    <className>com/google/cloud/pubsublite/ProjectLookupUtils</className>
-    <method>*</method>
-  </difference>
   <!-- Blanket ignored files -->
+  <difference>
+    <differenceType>5001</differenceType>
+    <className>com/google/cloud/pubsublite/internal/**</className>
+    <to>**</to>
+  </difference>
   <difference>
     <differenceType>6000</differenceType>
     <className>com/google/cloud/pubsublite/internal/**</className>
@@ -36,6 +26,12 @@
     <differenceType>7002</differenceType>
     <className>com/google/cloud/pubsublite/internal/**</className>
     <method>*</method>
+  </difference>
+  <difference>
+    <differenceType>7005</differenceType>
+    <className>com/google/cloud/pubsublite/internal/**</className>
+    <method>*</method>
+    <to>*</to>
   </difference>
   <difference>
     <differenceType>7006</differenceType>

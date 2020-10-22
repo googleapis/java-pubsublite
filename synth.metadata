@@ -19,7 +19,7 @@
       "git": {
         "name": "synthtool",
         "remote": "https://github.com/googleapis/synthtool.git",
-        "sha": "0762e8ee2ec21cdfc4d82020b985a104feb0453b"
+        "sha": "6abb59097be84599a1d6091fe534a49e5c5cf948"
       }
     }
   ],
@@ -42,9 +42,12 @@
     ".github/PULL_REQUEST_TEMPLATE.md",
     ".github/readme/synth.py",
     ".github/release-please.yml",
+    ".github/snippet-bot.yml",
     ".github/trusted-contribution.yml",
+    ".github/workflows/approve-readme.yaml",
     ".github/workflows/auto-release.yaml",
     ".github/workflows/ci.yaml",
+    ".github/workflows/formatting.yaml",
     ".github/workflows/samples.yaml",
     ".kokoro/build.bat",
     ".kokoro/build.sh",

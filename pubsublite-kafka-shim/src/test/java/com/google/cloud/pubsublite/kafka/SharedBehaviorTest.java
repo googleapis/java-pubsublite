@@ -18,37 +18,19 @@ package com.google.cloud.pubsublite.kafka;
 
 import static com.google.cloud.pubsublite.internal.testing.UnitTestExamples.example;
 import static com.google.common.truth.Truth.assertThat;
-import static org.mockito.Mockito.when;
-import static org.mockito.MockitoAnnotations.initMocks;
 
-import com.google.api.core.ApiFuture;
-import com.google.api.core.ApiFutures;
-import com.google.cloud.pubsublite.AdminClient;
 import com.google.cloud.pubsublite.TopicPath;
-import java.time.Duration;
 import java.util.List;
 import org.apache.kafka.common.PartitionInfo;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
-import org.mockito.Mock;
 
 @RunWith(JUnit4.class)
 public class SharedBehaviorTest {
-  @Mock AdminClient admin;
-
-  @Before
-  public void setUp() {
-    initMocks(this);
-  }
-
   @Test
-  public void partitionsForSuccess() throws Exception {
-    ApiFuture<Long> future = ApiFutures.immediateFuture(2L);
-    when(admin.getTopicPartitionCount(example(TopicPath.class))).thenReturn(future);
-    List<PartitionInfo> result =
-        SharedBehavior.partitionsFor(admin, example(TopicPath.class), Duration.ofDays(1));
+  public void partitionsForSuccess() {
+    List<PartitionInfo> result = SharedBehavior.partitionsFor(2, example(TopicPath.class));
     assertThat(result.size()).isEqualTo(2);
     assertThat(result.get(0).topic()).isEqualTo(example(TopicPath.class).toString());
     assertThat(result.get(0).partition()).isEqualTo(0);

@@ -20,6 +20,7 @@ import com.google.auto.value.AutoValue;
 import com.google.cloud.pubsublite.AdminClient;
 import com.google.cloud.pubsublite.AdminClientSettings;
 import com.google.cloud.pubsublite.CloudZone;
+import com.google.cloud.pubsublite.PartitionLookupUtils;
 import com.google.cloud.pubsublite.SubscriptionPath;
 import com.google.cloud.pubsublite.TopicPath;
 import com.google.cloud.pubsublite.cloudpubsub.FlowControlSettings;
@@ -67,12 +68,12 @@ public abstract class ConsumerSettings {
   }
 
   public Consumer<byte[], byte[]> instantiate() throws StatusException {
-    try {
-      CloudZone zone = subscriptionPath().location();
-      AdminClient adminClient =
-          AdminClient.create(AdminClientSettings.newBuilder().setRegion(zone.region()).build());
+    CloudZone zone = subscriptionPath().location();
+    try (AdminClient adminClient =
+        AdminClient.create(AdminClientSettings.newBuilder().setRegion(zone.region()).build())) {
       Subscription subscription = adminClient.getSubscription(subscriptionPath()).get();
       TopicPath topic = TopicPath.parse(subscription.getTopic());
+      long partitionCount = PartitionLookupUtils.numPartitions(topic);
       AssignerFactory assignerFactory =
           receiver -> {
             AssignerBuilder.Builder builder = AssignerBuilder.newBuilder();
@@ -111,7 +112,12 @@ public abstract class ConsumerSettings {
           CursorClient.create(CursorClientSettings.newBuilder().setRegion(zone.region()).build());
 
       return new PubsubLiteConsumer(
-          subscriptionPath(), topic, consumerFactory, assignerFactory, adminClient, cursorClient);
+          subscriptionPath(),
+          topic,
+          partitionCount,
+          consumerFactory,
+          assignerFactory,
+          cursorClient);
     } catch (Exception e) {
       throw ExtractStatus.toCanonical(e);
     }

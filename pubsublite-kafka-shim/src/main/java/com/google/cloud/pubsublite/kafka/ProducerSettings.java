@@ -17,9 +17,7 @@
 package com.google.cloud.pubsublite.kafka;
 
 import com.google.auto.value.AutoValue;
-import com.google.cloud.pubsublite.AdminClient;
-import com.google.cloud.pubsublite.AdminClientSettings;
-import com.google.cloud.pubsublite.CloudZone;
+import com.google.cloud.pubsublite.PartitionLookupUtils;
 import com.google.cloud.pubsublite.TopicPath;
 import com.google.cloud.pubsublite.internal.wire.PubsubContext;
 import com.google.cloud.pubsublite.internal.wire.PubsubContext.Framework;
@@ -54,9 +52,7 @@ public abstract class ProducerSettings {
             .setTopic(topicPath());
     RoutingPublisherBuilder.Builder routingBuilder =
         RoutingPublisherBuilder.newBuilder().setTopic(topicPath()).setPublisherBuilder(builder);
-    CloudZone zone = topicPath().location();
-    AdminClient adminClient =
-        AdminClient.create(AdminClientSettings.newBuilder().setRegion(zone.region()).build());
-    return new PubsubLiteProducer(routingBuilder.build(), adminClient, topicPath());
+    return new PubsubLiteProducer(
+        routingBuilder.build(), PartitionLookupUtils.numPartitions(topicPath()), topicPath());
   }
 }

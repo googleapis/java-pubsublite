@@ -24,7 +24,6 @@ import com.google.api.core.ApiFutureCallback;
 import com.google.api.core.ApiFutures;
 import com.google.api.core.ApiService.Listener;
 import com.google.api.core.ApiService.State;
-import com.google.cloud.pubsublite.AdminClient;
 import com.google.cloud.pubsublite.PublishMetadata;
 import com.google.cloud.pubsublite.TopicPath;
 import com.google.cloud.pubsublite.internal.ExtractStatus;
@@ -52,21 +51,20 @@ import org.apache.kafka.common.TopicPartition;
 import org.apache.kafka.common.errors.UnsupportedVersionException;
 
 class PubsubLiteProducer implements Producer<byte[], byte[]> {
-  private static Duration INFINITE_DURATION = Duration.ofMillis(Long.MAX_VALUE);
   private static final UnsupportedVersionException NO_TRANSACTIONS_EXCEPTION =
       new UnsupportedVersionException(
           "Pub/Sub Lite is a non-transactional system and does not support producer transactions.");
   private static final GoogleLogger logger = GoogleLogger.forEnclosingClass();
 
   private final Publisher<PublishMetadata> publisher;
-  private final AdminClient adminClient;
   private final TopicPath topicPath;
+  private final long partitionCount;
 
   PubsubLiteProducer(
-      Publisher<PublishMetadata> publisher, AdminClient adminClient, TopicPath topicPath) {
+      Publisher<PublishMetadata> publisher, long partitionCount, TopicPath topicPath) {
     this.publisher = publisher;
-    this.adminClient = adminClient;
     this.topicPath = topicPath;
+    this.partitionCount = partitionCount;
     this.publisher.addListener(
         new Listener() {
           @Override
@@ -177,7 +175,7 @@ class PubsubLiteProducer implements Producer<byte[], byte[]> {
   @Override
   public List<PartitionInfo> partitionsFor(String s) {
     checkTopic(s);
-    return SharedBehavior.partitionsFor(adminClient, topicPath, INFINITE_DURATION);
+    return SharedBehavior.partitionsFor(partitionCount, topicPath);
   }
 
   @Override
@@ -192,11 +190,6 @@ class PubsubLiteProducer implements Producer<byte[], byte[]> {
 
   @Override
   public void close(Duration duration) {
-    try {
-      adminClient.close();
-    } catch (Exception e) {
-      logger.atWarning().withCause(e).log("Failed to close admin client.");
-    }
     try {
       publisher.stopAsync().awaitTerminated(duration.toMillis(), MILLISECONDS);
     } catch (TimeoutException e) {

@@ -1,5 +1,24 @@
 # Changelog
 
+### [0.5.1](https://www.github.com/googleapis/java-pubsublite/compare/v0.5.0...v0.5.1) (2020-10-23)
+
+
+### Bug Fixes
+
+* Change Kafka{Producer/Consumer} to fix the number of partitions instead of looking it up. ([#322](https://www.github.com/googleapis/java-pubsublite/issues/322)) ([3f27c86](https://www.github.com/googleapis/java-pubsublite/commit/3f27c86003d7662a2c040f9637a0302743b36552))
+
+
+### Documentation
+
+* Add a basic readme for kafka client ([#320](https://www.github.com/googleapis/java-pubsublite/issues/320)) ([6073810](https://www.github.com/googleapis/java-pubsublite/commit/607381044ca8542e73aebb4ce9c6d4d57030ed6a))
+
+
+### Dependencies
+
+* Increment beam version on pubsublite-io ([#317](https://www.github.com/googleapis/java-pubsublite/issues/317)) ([d0db6c2](https://www.github.com/googleapis/java-pubsublite/commit/d0db6c2d5dd94679d6fb32655c26794af24b6be5))
+* update dependency com.google.truth:truth to v1.1 ([#307](https://www.github.com/googleapis/java-pubsublite/issues/307)) ([1a556ef](https://www.github.com/googleapis/java-pubsublite/commit/1a556efbda5d911d18f10e2784fcd8f2b1ca1d51))
+* update dependency com.google.truth.extensions:truth-java8-extension to v1.1 ([#306](https://www.github.com/googleapis/java-pubsublite/issues/306)) ([21cf834](https://www.github.com/googleapis/java-pubsublite/commit/21cf8346967744aa2978ceffe130f87c28dedcf6))
+
 ## [0.5.0](https://www.github.com/googleapis/java-pubsublite/compare/v0.4.1...v0.5.0) (2020-10-21)
 
 

@@ -24,7 +24,6 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.google.api.core.SettableApiFuture;
-import com.google.cloud.pubsublite.AdminClient;
 import com.google.cloud.pubsublite.Message;
 import com.google.cloud.pubsublite.Offset;
 import com.google.cloud.pubsublite.Partition;
@@ -49,7 +48,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
-import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.Spy;
 
@@ -68,14 +66,12 @@ public class PubsubLiteProducerTest {
 
   @Spy FakePublisher underlying;
 
-  @Mock AdminClient adminClient;
-
   Producer<byte[], byte[]> producer;
 
   @Before
   public void setUp() {
     MockitoAnnotations.initMocks(this);
-    producer = new PubsubLiteProducer(underlying, adminClient, example(TopicPath.class));
+    producer = new PubsubLiteProducer(underlying, 3, example(TopicPath.class));
     verify(underlying).startAsync();
     verify(underlying).awaitRunning();
   }
@@ -212,7 +208,6 @@ public class PubsubLiteProducerTest {
   @Test
   public void close() throws Exception {
     producer.close();
-    verify(adminClient).close();
     verify(underlying).stopAsync();
     verify(underlying).awaitTerminated(Long.MAX_VALUE, TimeUnit.MILLISECONDS);
   }

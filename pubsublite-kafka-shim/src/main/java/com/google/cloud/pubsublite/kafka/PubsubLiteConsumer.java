@@ -20,7 +20,6 @@ import static com.google.cloud.pubsublite.kafka.KafkaExceptionUtils.toKafka;
 
 import com.google.api.core.ApiFutureCallback;
 import com.google.api.core.ApiFutures;
-import com.google.cloud.pubsublite.AdminClient;
 import com.google.cloud.pubsublite.Offset;
 import com.google.cloud.pubsublite.Partition;
 import com.google.cloud.pubsublite.SubscriptionPath;
@@ -68,13 +67,13 @@ import org.apache.kafka.common.errors.UnsupportedVersionException;
  * <p>This also filters methods that Pub/Sub Lite will not implement.
  */
 class PubsubLiteConsumer implements Consumer<byte[], byte[]> {
-  private static Duration INFINITE_DURATION = Duration.ofMillis(Long.MAX_VALUE);
-  private static GoogleLogger logger = GoogleLogger.forEnclosingClass();
+  private static final Duration INFINITE_DURATION = Duration.ofMillis(Long.MAX_VALUE);
+  private static final GoogleLogger logger = GoogleLogger.forEnclosingClass();
   private final SubscriptionPath subscriptionPath;
   private final TopicPath topicPath;
+  private final long partitionCount;
   private final ConsumerFactory consumerFactory;
   private final AssignerFactory assignerFactory;
-  private final AdminClient adminClient;
   private final CursorClient cursorClient;
   private Optional<Assigner> assigner = Optional.empty();
   private Optional<SingleSubscriptionConsumer> consumer = Optional.empty();
@@ -82,15 +81,15 @@ class PubsubLiteConsumer implements Consumer<byte[], byte[]> {
   PubsubLiteConsumer(
       SubscriptionPath subscriptionPath,
       TopicPath topicPath,
+      long partitionCount,
       ConsumerFactory consumerFactory,
       AssignerFactory assignerFactory,
-      AdminClient adminClient,
       CursorClient cursorClient) {
     this.subscriptionPath = subscriptionPath;
     this.topicPath = topicPath;
+    this.partitionCount = partitionCount;
     this.consumerFactory = consumerFactory;
     this.assignerFactory = assignerFactory;
-    this.adminClient = adminClient;
     this.cursorClient = cursorClient;
   }
 
@@ -443,7 +442,7 @@ class PubsubLiteConsumer implements Consumer<byte[], byte[]> {
   @Override
   public List<PartitionInfo> partitionsFor(String topic, Duration timeout) {
     checkTopic(topic);
-    return SharedBehavior.partitionsFor(adminClient, topicPath, timeout);
+    return SharedBehavior.partitionsFor(partitionCount, topicPath);
   }
 
   @Override
@@ -509,11 +508,6 @@ class PubsubLiteConsumer implements Consumer<byte[], byte[]> {
 
   @Override
   public void close(Duration timeout) {
-    try {
-      adminClient.close();
-    } catch (Exception e) {
-      logger.atSevere().withCause(e).log("Error closing admin client during Consumer shutdown.");
-    }
     try {
       cursorClient.close();
     } catch (Exception e) {

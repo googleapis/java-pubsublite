@@ -30,7 +30,6 @@ import static org.mockito.MockitoAnnotations.initMocks;
 
 import com.google.api.core.ApiFutures;
 import com.google.api.core.SettableApiFuture;
-import com.google.cloud.pubsublite.AdminClient;
 import com.google.cloud.pubsublite.CloudZone;
 import com.google.cloud.pubsublite.Offset;
 import com.google.cloud.pubsublite.Partition;
@@ -98,7 +97,6 @@ public class PubsubLiteConsumerTest {
 
   @Mock ConsumerFactory consumerFactory;
   @Mock AssignerFactory assignerFactory;
-  @Mock AdminClient adminClient;
   @Mock CursorClient cursorClient;
 
   @Mock Assigner assigner;
@@ -113,9 +111,9 @@ public class PubsubLiteConsumerTest {
         new PubsubLiteConsumer(
             example(SubscriptionPath.class),
             example(TopicPath.class),
+            3,
             consumerFactory,
             assignerFactory,
-            adminClient,
             cursorClient);
     when(consumerFactory.newConsumer()).thenReturn(underlying);
   }

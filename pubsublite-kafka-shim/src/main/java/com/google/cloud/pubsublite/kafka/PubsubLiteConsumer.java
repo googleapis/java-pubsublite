@@ -21,7 +21,6 @@ import static com.google.cloud.pubsublite.kafka.KafkaExceptionUtils.toKafka;
 import com.google.api.core.ApiFutureCallback;
 import com.google.api.core.ApiFutures;
 import com.google.api.gax.rpc.ApiException;
-import com.google.cloud.pubsublite.AdminClient;
 import com.google.cloud.pubsublite.Offset;
 import com.google.cloud.pubsublite.Partition;
 import com.google.cloud.pubsublite.SubscriptionPath;

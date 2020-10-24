@@ -19,6 +19,7 @@ package com.google.cloud.pubsublite.cloudpubsub;
 import com.google.api.gax.rpc.ApiException;
 import com.google.cloud.pubsub.v1.SubscriberInterface;
 
+/** A sub-interface of {@link com.google.cloud.pubsub.v1.SubscriberInterface}. */
 public interface Subscriber extends SubscriberInterface {
   /** Create a new Pub/Sub Lite subscriber using the provided settings. */
   static Subscriber create(SubscriberSettings settings) throws ApiException {

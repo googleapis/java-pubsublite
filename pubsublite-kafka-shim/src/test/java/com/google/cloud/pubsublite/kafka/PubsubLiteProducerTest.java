@@ -25,7 +25,6 @@ import static org.mockito.Mockito.when;
 
 import com.google.api.core.SettableApiFuture;
 import com.google.api.gax.rpc.StatusCode.Code;
-import com.google.cloud.pubsublite.AdminClient;
 import com.google.cloud.pubsublite.Message;
 import com.google.cloud.pubsublite.Offset;
 import com.google.cloud.pubsublite.Partition;

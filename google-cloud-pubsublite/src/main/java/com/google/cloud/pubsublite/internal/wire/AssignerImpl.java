@@ -79,7 +79,7 @@ public class AssignerImpl extends TrivialProxyService
     }
   }
 
-  private static Set<Partition> toSet(PartitionAssignment assignment) {
+  private static Set<Partition> toSet(PartitionAssignment assignment) throws ApiException {
     Set<Partition> partitions = new HashSet<>();
     for (long partition : assignment.getPartitionsList()) {
       partitions.add(Partition.of(partition));

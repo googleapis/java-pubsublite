@@ -53,7 +53,7 @@ import org.threeten.bp.Duration;
  *  .build();
  * }</pre>
  *
- * <p>Custom batching settings and a custom GRPC stub can also be set.
+ * <p>A custom service client can also be set.
  */
 @AutoValue
 public abstract class PublisherBuilder {

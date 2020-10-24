@@ -92,6 +92,11 @@
     <to>*</to>
   </difference>
   <difference>
+    <differenceType>7009</differenceType>
+    <className>com/google/cloud/pubsublite/internal/**</className>
+    <method>*</method>
+  </difference>
+  <difference>
     <differenceType>7011</differenceType>
     <className>com/google/cloud/pubsublite/internal/*</className>
     <method>*</method>
@@ -163,6 +168,11 @@
     <className>com/google/cloud/pubsublite/cloudpubsub/internal/**</className>
     <method>*</method>
     <to>*</to>
+  </difference>
+  <difference>
+    <differenceType>7009</differenceType>
+    <className>com/google/cloud/pubsublite/cloudpubsub/internal/**</className>
+    <method>*</method>
   </difference>
   <difference>
     <differenceType>7011</differenceType>

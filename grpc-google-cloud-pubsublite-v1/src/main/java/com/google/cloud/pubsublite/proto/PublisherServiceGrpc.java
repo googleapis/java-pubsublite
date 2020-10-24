@@ -154,8 +154,8 @@ public final class PublisherServiceGrpc {
      */
     public io.grpc.stub.StreamObserver<com.google.cloud.pubsublite.proto.PublishRequest> publish(
         io.grpc.stub.StreamObserver<com.google.cloud.pubsublite.proto.PublishResponse>
-            ResponseObserver) {
-      return asyncUnimplementedStreamingCall(getPublishMethod(), ResponseObserver);
+            responseObserver) {
+      return asyncUnimplementedStreamingCall(getPublishMethod(), responseObserver);
     }
 
     @java.lang.Override
@@ -207,9 +207,9 @@ public final class PublisherServiceGrpc {
      */
     public io.grpc.stub.StreamObserver<com.google.cloud.pubsublite.proto.PublishRequest> publish(
         io.grpc.stub.StreamObserver<com.google.cloud.pubsublite.proto.PublishResponse>
-            ResponseObserver) {
+            responseObserver) {
       return asyncBidiStreamingCall(
-          getChannel().newCall(getPublishMethod(), getCallOptions()), ResponseObserver);
+          getChannel().newCall(getPublishMethod(), getCallOptions()), responseObserver);
     }
   }
 
@@ -276,7 +276,7 @@ public final class PublisherServiceGrpc {
 
     @java.lang.Override
     @java.lang.SuppressWarnings("unchecked")
-    public void invoke(Req request, io.grpc.stub.StreamObserver<Resp> ResponseObserver) {
+    public void invoke(Req request, io.grpc.stub.StreamObserver<Resp> responseObserver) {
       switch (methodId) {
         default:
           throw new AssertionError();
@@ -286,13 +286,13 @@ public final class PublisherServiceGrpc {
     @java.lang.Override
     @java.lang.SuppressWarnings("unchecked")
     public io.grpc.stub.StreamObserver<Req> invoke(
-        io.grpc.stub.StreamObserver<Resp> ResponseObserver) {
+        io.grpc.stub.StreamObserver<Resp> responseObserver) {
       switch (methodId) {
         case METHODID_PUBLISH:
           return (io.grpc.stub.StreamObserver<Req>)
               serviceImpl.publish(
                   (io.grpc.stub.StreamObserver<com.google.cloud.pubsublite.proto.PublishResponse>)
-                      ResponseObserver);
+                      responseObserver);
         default:
           throw new AssertionError();
       }

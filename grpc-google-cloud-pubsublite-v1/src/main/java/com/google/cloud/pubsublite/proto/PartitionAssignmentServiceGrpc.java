@@ -155,8 +155,8 @@ public final class PartitionAssignmentServiceGrpc {
     public io.grpc.stub.StreamObserver<com.google.cloud.pubsublite.proto.PartitionAssignmentRequest>
         assignPartitions(
             io.grpc.stub.StreamObserver<com.google.cloud.pubsublite.proto.PartitionAssignment>
-                ResponseObserver) {
-      return asyncUnimplementedStreamingCall(getAssignPartitionsMethod(), ResponseObserver);
+                responseObserver) {
+      return asyncUnimplementedStreamingCall(getAssignPartitionsMethod(), responseObserver);
     }
 
     @java.lang.Override
@@ -209,9 +209,9 @@ public final class PartitionAssignmentServiceGrpc {
     public io.grpc.stub.StreamObserver<com.google.cloud.pubsublite.proto.PartitionAssignmentRequest>
         assignPartitions(
             io.grpc.stub.StreamObserver<com.google.cloud.pubsublite.proto.PartitionAssignment>
-                ResponseObserver) {
+                responseObserver) {
       return asyncBidiStreamingCall(
-          getChannel().newCall(getAssignPartitionsMethod(), getCallOptions()), ResponseObserver);
+          getChannel().newCall(getAssignPartitionsMethod(), getCallOptions()), responseObserver);
     }
   }
 
@@ -276,7 +276,7 @@ public final class PartitionAssignmentServiceGrpc {
 
     @java.lang.Override
     @java.lang.SuppressWarnings("unchecked")
-    public void invoke(Req request, io.grpc.stub.StreamObserver<Resp> ResponseObserver) {
+    public void invoke(Req request, io.grpc.stub.StreamObserver<Resp> responseObserver) {
       switch (methodId) {
         default:
           throw new AssertionError();
@@ -286,14 +286,14 @@ public final class PartitionAssignmentServiceGrpc {
     @java.lang.Override
     @java.lang.SuppressWarnings("unchecked")
     public io.grpc.stub.StreamObserver<Req> invoke(
-        io.grpc.stub.StreamObserver<Resp> ResponseObserver) {
+        io.grpc.stub.StreamObserver<Resp> responseObserver) {
       switch (methodId) {
         case METHODID_ASSIGN_PARTITIONS:
           return (io.grpc.stub.StreamObserver<Req>)
               serviceImpl.assignPartitions(
                   (io.grpc.stub.StreamObserver<
                           com.google.cloud.pubsublite.proto.PartitionAssignment>)
-                      ResponseObserver);
+                      responseObserver);
         default:
           throw new AssertionError();
       }

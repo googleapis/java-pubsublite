@@ -254,8 +254,8 @@ public final class CursorServiceGrpc {
         streamingCommitCursor(
             io.grpc.stub.StreamObserver<
                     com.google.cloud.pubsublite.proto.StreamingCommitCursorResponse>
-                ResponseObserver) {
-      return asyncUnimplementedStreamingCall(getStreamingCommitCursorMethod(), ResponseObserver);
+                responseObserver) {
+      return asyncUnimplementedStreamingCall(getStreamingCommitCursorMethod(), responseObserver);
     }
 
     /**
@@ -268,8 +268,8 @@ public final class CursorServiceGrpc {
     public void commitCursor(
         com.google.cloud.pubsublite.proto.CommitCursorRequest request,
         io.grpc.stub.StreamObserver<com.google.cloud.pubsublite.proto.CommitCursorResponse>
-            ResponseObserver) {
-      asyncUnimplementedUnaryCall(getCommitCursorMethod(), ResponseObserver);
+            responseObserver) {
+      asyncUnimplementedUnaryCall(getCommitCursorMethod(), responseObserver);
     }
 
     /**
@@ -282,8 +282,8 @@ public final class CursorServiceGrpc {
     public void listPartitionCursors(
         com.google.cloud.pubsublite.proto.ListPartitionCursorsRequest request,
         io.grpc.stub.StreamObserver<com.google.cloud.pubsublite.proto.ListPartitionCursorsResponse>
-            ResponseObserver) {
-      asyncUnimplementedUnaryCall(getListPartitionCursorsMethod(), ResponseObserver);
+            responseObserver) {
+      asyncUnimplementedUnaryCall(getListPartitionCursorsMethod(), responseObserver);
     }
 
     @java.lang.Override
@@ -346,10 +346,10 @@ public final class CursorServiceGrpc {
         streamingCommitCursor(
             io.grpc.stub.StreamObserver<
                     com.google.cloud.pubsublite.proto.StreamingCommitCursorResponse>
-                ResponseObserver) {
+                responseObserver) {
       return asyncBidiStreamingCall(
           getChannel().newCall(getStreamingCommitCursorMethod(), getCallOptions()),
-          ResponseObserver);
+          responseObserver);
     }
 
     /**
@@ -362,11 +362,11 @@ public final class CursorServiceGrpc {
     public void commitCursor(
         com.google.cloud.pubsublite.proto.CommitCursorRequest request,
         io.grpc.stub.StreamObserver<com.google.cloud.pubsublite.proto.CommitCursorResponse>
-            ResponseObserver) {
+            responseObserver) {
       asyncUnaryCall(
           getChannel().newCall(getCommitCursorMethod(), getCallOptions()),
           request,
-          ResponseObserver);
+          responseObserver);
     }
 
     /**
@@ -379,11 +379,11 @@ public final class CursorServiceGrpc {
     public void listPartitionCursors(
         com.google.cloud.pubsublite.proto.ListPartitionCursorsRequest request,
         io.grpc.stub.StreamObserver<com.google.cloud.pubsublite.proto.ListPartitionCursorsResponse>
-            ResponseObserver) {
+            responseObserver) {
       asyncUnaryCall(
           getChannel().newCall(getListPartitionCursorsMethod(), getCallOptions()),
           request,
-          ResponseObserver);
+          responseObserver);
     }
   }
 
@@ -504,20 +504,20 @@ public final class CursorServiceGrpc {
 
     @java.lang.Override
     @java.lang.SuppressWarnings("unchecked")
-    public void invoke(Req request, io.grpc.stub.StreamObserver<Resp> ResponseObserver) {
+    public void invoke(Req request, io.grpc.stub.StreamObserver<Resp> responseObserver) {
       switch (methodId) {
         case METHODID_COMMIT_CURSOR:
           serviceImpl.commitCursor(
               (com.google.cloud.pubsublite.proto.CommitCursorRequest) request,
               (io.grpc.stub.StreamObserver<com.google.cloud.pubsublite.proto.CommitCursorResponse>)
-                  ResponseObserver);
+                  responseObserver);
           break;
         case METHODID_LIST_PARTITION_CURSORS:
           serviceImpl.listPartitionCursors(
               (com.google.cloud.pubsublite.proto.ListPartitionCursorsRequest) request,
               (io.grpc.stub.StreamObserver<
                       com.google.cloud.pubsublite.proto.ListPartitionCursorsResponse>)
-                  ResponseObserver);
+                  responseObserver);
           break;
         default:
           throw new AssertionError();
@@ -527,14 +527,14 @@ public final class CursorServiceGrpc {
     @java.lang.Override
     @java.lang.SuppressWarnings("unchecked")
     public io.grpc.stub.StreamObserver<Req> invoke(
-        io.grpc.stub.StreamObserver<Resp> ResponseObserver) {
+        io.grpc.stub.StreamObserver<Resp> responseObserver) {
       switch (methodId) {
         case METHODID_STREAMING_COMMIT_CURSOR:
           return (io.grpc.stub.StreamObserver<Req>)
               serviceImpl.streamingCommitCursor(
                   (io.grpc.stub.StreamObserver<
                           com.google.cloud.pubsublite.proto.StreamingCommitCursorResponse>)
-                      ResponseObserver);
+                      responseObserver);
         default:
           throw new AssertionError();
       }

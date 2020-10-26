@@ -16,27 +16,27 @@
 
 package com.google.cloud.pubsublite.internal;
 
+import static com.google.api.core.ApiFutures.immediateFuture;
+import static com.google.cloud.pubsublite.internal.ApiExceptionMatcher.assertFutureThrowsCode;
+import static com.google.cloud.pubsublite.internal.testing.UnitTestExamples.example;
 import static com.google.common.truth.Truth.assertThat;
 import static com.google.common.truth.Truth8.assertThat;
-import static java.util.concurrent.TimeUnit.SECONDS;
-import static org.junit.Assert.assertThrows;
-import static org.mockito.AdditionalAnswers.delegatesTo;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.doAnswer;
-import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.mockito.MockitoAnnotations.initMocks;
 
 import com.google.api.core.ApiFuture;
+import com.google.api.core.ApiFutures;
+import com.google.api.gax.rpc.StatusCode.Code;
+import com.google.api.gax.rpc.UnaryCallable;
 import com.google.cloud.pubsublite.CloudRegion;
 import com.google.cloud.pubsublite.CloudZone;
-import com.google.cloud.pubsublite.Constants;
-import com.google.cloud.pubsublite.ErrorCodes;
+import com.google.cloud.pubsublite.LocationPath;
 import com.google.cloud.pubsublite.ProjectNumber;
 import com.google.cloud.pubsublite.SubscriptionName;
 import com.google.cloud.pubsublite.SubscriptionPath;
 import com.google.cloud.pubsublite.TopicName;
 import com.google.cloud.pubsublite.TopicPath;
-import com.google.cloud.pubsublite.proto.AdminServiceGrpc;
 import com.google.cloud.pubsublite.proto.CreateSubscriptionRequest;
 import com.google.cloud.pubsublite.proto.CreateTopicRequest;
 import com.google.cloud.pubsublite.proto.DeleteSubscriptionRequest;
@@ -44,8 +44,12 @@ import com.google.cloud.pubsublite.proto.DeleteTopicRequest;
 import com.google.cloud.pubsublite.proto.GetSubscriptionRequest;
 import com.google.cloud.pubsublite.proto.GetTopicPartitionsRequest;
 import com.google.cloud.pubsublite.proto.GetTopicRequest;
+import com.google.cloud.pubsublite.proto.ListSubscriptionsRequest;
+import com.google.cloud.pubsublite.proto.ListSubscriptionsResponse;
 import com.google.cloud.pubsublite.proto.ListTopicSubscriptionsRequest;
 import com.google.cloud.pubsublite.proto.ListTopicSubscriptionsResponse;
+import com.google.cloud.pubsublite.proto.ListTopicsRequest;
+import com.google.cloud.pubsublite.proto.ListTopicsResponse;
 import com.google.cloud.pubsublite.proto.Subscription;
 import com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig;
 import com.google.cloud.pubsublite.proto.Topic;
@@ -54,50 +58,32 @@ import com.google.cloud.pubsublite.proto.Topic.RetentionConfig;
 import com.google.cloud.pubsublite.proto.TopicPartitions;
 import com.google.cloud.pubsublite.proto.UpdateSubscriptionRequest;
 import com.google.cloud.pubsublite.proto.UpdateTopicRequest;
+import com.google.cloud.pubsublite.v1.AdminServiceClient;
+import com.google.cloud.pubsublite.v1.stub.AdminServiceStub;
+import com.google.common.collect.ImmutableList;
 import com.google.protobuf.Empty;
 import com.google.protobuf.FieldMask;
 import com.google.protobuf.util.Durations;
-import io.grpc.ManagedChannel;
-import io.grpc.Status;
-import io.grpc.Status.Code;
-import io.grpc.StatusException;
-import io.grpc.inprocess.InProcessChannelBuilder;
-import io.grpc.inprocess.InProcessServerBuilder;
-import io.grpc.testing.GrpcCleanupRule;
 import java.io.IOException;
-import java.util.List;
-import java.util.Optional;
-import java.util.concurrent.ExecutionException;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
-import org.mockito.stubbing.Answer;
+import org.mockito.Mock;
 
 @RunWith(JUnit4.class)
 public class AdminClientImplTest {
-  @Rule public final GrpcCleanupRule grpcCleanup = new GrpcCleanupRule();
-
   private static final CloudRegion REGION = CloudRegion.of("us-east1");
   private static final CloudZone ZONE = CloudZone.of(REGION, 'x');
   private static final FieldMask MASK = FieldMask.newBuilder().addPaths("config").build();
 
   private static ProjectNumber projectNumber() {
-    try {
-      return ProjectNumber.of(123);
-    } catch (StatusException e) {
-      throw e.getStatus().asRuntimeException();
-    }
+    return ProjectNumber.of(123);
   }
 
   private static TopicName topicName() {
-    try {
-      return TopicName.of("abc");
-    } catch (StatusException e) {
-      throw e.getStatus().asRuntimeException();
-    }
+    return TopicName.of("abc");
   }
 
   private static TopicPath topicPath() {
@@ -118,11 +104,7 @@ public class AdminClientImplTest {
       TOPIC.toBuilder().setPartitionConfig(PartitionConfig.newBuilder().setCount(88)).build();
 
   private static SubscriptionName subscriptionName() {
-    try {
-      return SubscriptionName.of("abc");
-    } catch (StatusException e) {
-      throw e.getStatus().asRuntimeException();
-    }
+    return SubscriptionName.of("abc");
   }
 
   private static SubscriptionPath subscriptionPath() {
@@ -149,44 +131,60 @@ public class AdminClientImplTest {
                   .setDeliveryRequirement(DeliveryConfig.DeliveryRequirement.DELIVER_IMMEDIATELY))
           .build();
 
-  private final AdminServiceGrpc.AdminServiceImplBase serviceImpl =
-      mock(
-          AdminServiceGrpc.AdminServiceImplBase.class,
-          delegatesTo(new AdminServiceGrpc.AdminServiceImplBase() {}));
+  private static final <T> ApiFuture<T> failedPreconditionFuture() {
+    return ApiFutures.immediateFailedFuture(
+        new CheckedApiException(Code.FAILED_PRECONDITION).underlying);
+  }
+
+  @Mock UnaryCallable<CreateTopicRequest, Topic> createTopicCallable;
+  @Mock UnaryCallable<GetTopicRequest, Topic> getTopicCallable;
+  @Mock UnaryCallable<GetTopicPartitionsRequest, TopicPartitions> getTopicPartitionsCallable;
+  @Mock UnaryCallable<ListTopicsRequest, ListTopicsResponse> listTopicsCallable;
+  @Mock UnaryCallable<UpdateTopicRequest, Topic> updateTopicCallable;
+  @Mock UnaryCallable<DeleteTopicRequest, Empty> deleteTopicCallable;
+
+  @Mock
+  UnaryCallable<ListTopicSubscriptionsRequest, ListTopicSubscriptionsResponse>
+      listTopicSubscriptionsCallable;
+
+  @Mock UnaryCallable<CreateSubscriptionRequest, Subscription> createSubscriptionCallable;
+  @Mock UnaryCallable<GetSubscriptionRequest, Subscription> getSubscriptionCallable;
+
+  @Mock
+  UnaryCallable<ListSubscriptionsRequest, ListSubscriptionsResponse> listSubscriptionsCallable;
+
+  @Mock UnaryCallable<UpdateSubscriptionRequest, Subscription> updateSubscriptionCallable;
+  @Mock UnaryCallable<DeleteSubscriptionRequest, Empty> deleteSubscriptionCallable;
+
+  @Mock AdminServiceStub stub;
 
   private AdminClientImpl client;
 
   @Before
   public void setUp() throws IOException {
-    String serverName = InProcessServerBuilder.generateName();
-    grpcCleanup.register(
-        InProcessServerBuilder.forName(serverName)
-            .directExecutor()
-            .addService(serviceImpl)
-            .build()
-            .start());
-    ManagedChannel channel =
-        grpcCleanup.register(InProcessChannelBuilder.forName(serverName).directExecutor().build());
-    AdminServiceGrpc.AdminServiceBlockingStub stub = AdminServiceGrpc.newBlockingStub(channel);
-    client = new AdminClientImpl(REGION, stub, Constants.DEFAULT_RETRY_SETTINGS);
-  }
+    initMocks(this);
 
-  private static <T> Answer<Void> answerWith(T response) {
-    return TestUtil.answerWith(response);
-  }
+    when(stub.createTopicCallable()).thenReturn(createTopicCallable);
+    when(stub.getTopicCallable()).thenReturn(getTopicCallable);
+    when(stub.getTopicPartitionsCallable()).thenReturn(getTopicPartitionsCallable);
+    when(stub.listTopicsCallable()).thenReturn(listTopicsCallable);
+    when(stub.updateTopicCallable()).thenReturn(updateTopicCallable);
+    when(stub.deleteTopicCallable()).thenReturn(deleteTopicCallable);
+    when(stub.listTopicSubscriptionsCallable()).thenReturn(listTopicSubscriptionsCallable);
 
-  private static Answer<Void> answerWith(Status status) {
-    return TestUtil.answerWith(status);
-  }
+    when(stub.createSubscriptionCallable()).thenReturn(createSubscriptionCallable);
+    when(stub.getSubscriptionCallable()).thenReturn(getSubscriptionCallable);
+    when(stub.listSubscriptionsCallable()).thenReturn(listSubscriptionsCallable);
+    when(stub.updateSubscriptionCallable()).thenReturn(updateSubscriptionCallable);
+    when(stub.deleteSubscriptionCallable()).thenReturn(deleteSubscriptionCallable);
 
-  private static Answer<Void> inOrder(Answer<Void>... answers) {
-    return TestUtil.inOrder(answers);
+    client = new AdminClientImpl(REGION, AdminServiceClient.create(stub));
   }
 
   @After
   public void tearDown() throws Exception {
     client.shutdownNow();
-    Preconditions.checkArgument(client.awaitTermination(10, SECONDS));
+    verify(stub).shutdownNow();
   }
 
   @Test
@@ -203,14 +201,13 @@ public class AdminClientImplTest {
             .setTopicId(topicName().value())
             .build();
 
-    doAnswer(answerWith(TOPIC_2)).when(serviceImpl).createTopic(eq(request), any());
+    when(createTopicCallable.futureCall(request)).thenReturn(immediateFuture(TOPIC_2));
 
     assertThat(client.createTopic(TOPIC).get()).isEqualTo(TOPIC_2);
   }
 
   @Test
-  public void createTopic_NonRetryableError() {
-    assertThat(ErrorCodes.IsRetryable(Code.FAILED_PRECONDITION)).isFalse();
+  public void createTopic_Error() {
     CreateTopicRequest request =
         CreateTopicRequest.newBuilder()
             .setParent(topicPath().locationPath().toString())
@@ -218,55 +215,9 @@ public class AdminClientImplTest {
             .setTopicId(topicName().value())
             .build();
 
-    doAnswer(answerWith(Status.FAILED_PRECONDITION))
-        .when(serviceImpl)
-        .createTopic(eq(request), any());
+    when(createTopicCallable.futureCall(request)).thenReturn(failedPreconditionFuture());
 
-    ApiFuture<Topic> future = client.createTopic(TOPIC);
-    ExecutionException exception = assertThrows(ExecutionException.class, future::get);
-    Optional<Status> statusOr = ExtractStatus.extract(exception.getCause());
-    assertThat(statusOr).isPresent();
-    assertThat(statusOr.get().getCode()).isEqualTo(Code.FAILED_PRECONDITION);
-  }
-
-  @Test
-  public void createTopic_RetryableError() throws Exception {
-    for (Code code : ErrorCodes.RETRYABLE_CODES) {
-      assertThat(ErrorCodes.IsRetryable(code)).isTrue();
-      CreateTopicRequest request =
-          CreateTopicRequest.newBuilder()
-              .setParent(topicPath().locationPath().toString())
-              .setTopic(TOPIC)
-              .setTopicId(topicName().value())
-              .build();
-
-      doAnswer(inOrder(answerWith(Status.fromCode(code)), answerWith(TOPIC_2)))
-          .when(serviceImpl)
-          .createTopic(eq(request), any());
-
-      assertThat(client.createTopic(TOPIC).get()).isEqualTo(TOPIC_2);
-    }
-  }
-
-  @Test
-  public void createTopic_MultipleRetryableErrors() throws Exception {
-    assertThat(ErrorCodes.IsRetryable(Code.DEADLINE_EXCEEDED)).isTrue();
-    CreateTopicRequest request =
-        CreateTopicRequest.newBuilder()
-            .setParent(topicPath().locationPath().toString())
-            .setTopic(TOPIC)
-            .setTopicId(topicName().value())
-            .build();
-
-    doAnswer(
-            inOrder(
-                answerWith(Status.DEADLINE_EXCEEDED),
-                answerWith(Status.DEADLINE_EXCEEDED),
-                answerWith(TOPIC_2)))
-        .when(serviceImpl)
-        .createTopic(eq(request), any());
-
-    assertThat(client.createTopic(TOPIC).get()).isEqualTo(TOPIC_2);
+    assertFutureThrowsCode(client.createTopic(TOPIC), Code.FAILED_PRECONDITION);
   }
 
   @Test
@@ -274,58 +225,19 @@ public class AdminClientImplTest {
     UpdateTopicRequest request =
         UpdateTopicRequest.newBuilder().setTopic(TOPIC).setUpdateMask(MASK).build();
 
-    doAnswer(answerWith(TOPIC_2)).when(serviceImpl).updateTopic(eq(request), any());
+    when(updateTopicCallable.futureCall(request)).thenReturn(immediateFuture(TOPIC_2));
 
     assertThat(client.updateTopic(TOPIC, MASK).get()).isEqualTo(TOPIC_2);
   }
 
   @Test
   public void updateTopic_NonRetryableError() {
-    assertThat(ErrorCodes.IsRetryable(Code.FAILED_PRECONDITION)).isFalse();
     UpdateTopicRequest request =
         UpdateTopicRequest.newBuilder().setTopic(TOPIC).setUpdateMask(MASK).build();
 
-    doAnswer(answerWith(Status.FAILED_PRECONDITION))
-        .when(serviceImpl)
-        .updateTopic(eq(request), any());
+    when(updateTopicCallable.futureCall(request)).thenReturn(failedPreconditionFuture());
 
-    ApiFuture<Topic> future = client.updateTopic(TOPIC, MASK);
-    ExecutionException exception = assertThrows(ExecutionException.class, future::get);
-    Optional<Status> statusOr = ExtractStatus.extract(exception.getCause());
-    assertThat(statusOr).isPresent();
-    assertThat(statusOr.get().getCode()).isEqualTo(Code.FAILED_PRECONDITION);
-  }
-
-  @Test
-  public void updateTopic_RetryableError() throws Exception {
-    for (Code code : ErrorCodes.RETRYABLE_CODES) {
-      assertThat(ErrorCodes.IsRetryable(code)).isTrue();
-      UpdateTopicRequest request =
-          UpdateTopicRequest.newBuilder().setTopic(TOPIC).setUpdateMask(MASK).build();
-
-      doAnswer(inOrder(answerWith(Status.fromCode(code)), answerWith(TOPIC_2)))
-          .when(serviceImpl)
-          .updateTopic(eq(request), any());
-
-      assertThat(client.updateTopic(TOPIC, MASK).get()).isEqualTo(TOPIC_2);
-    }
-  }
-
-  @Test
-  public void updateTopic_MultipleRetryableErrors() throws Exception {
-    assertThat(ErrorCodes.IsRetryable(Code.DEADLINE_EXCEEDED)).isTrue();
-    UpdateTopicRequest request =
-        UpdateTopicRequest.newBuilder().setTopic(TOPIC).setUpdateMask(MASK).build();
-
-    doAnswer(
-            inOrder(
-                answerWith(Status.DEADLINE_EXCEEDED),
-                answerWith(Status.DEADLINE_EXCEEDED),
-                answerWith(TOPIC_2)))
-        .when(serviceImpl)
-        .updateTopic(eq(request), any());
-
-    assertThat(client.updateTopic(TOPIC, MASK).get()).isEqualTo(TOPIC_2);
+    assertFutureThrowsCode(client.updateTopic(TOPIC, MASK), Code.FAILED_PRECONDITION);
   }
 
   @Test
@@ -333,114 +245,38 @@ public class AdminClientImplTest {
     DeleteTopicRequest request =
         DeleteTopicRequest.newBuilder().setName(topicPath().toString()).build();
 
-    doAnswer(answerWith(Empty.getDefaultInstance()))
-        .when(serviceImpl)
-        .deleteTopic(eq(request), any());
+    when(deleteTopicCallable.futureCall(request))
+        .thenReturn(immediateFuture(Empty.getDefaultInstance()));
 
     client.deleteTopic(topicPath()).get();
   }
 
   @Test
-  public void deleteTopic_NonRetryableError() {
-    assertThat(ErrorCodes.IsRetryable(Code.FAILED_PRECONDITION)).isFalse();
+  public void deleteTopic_Error() {
     DeleteTopicRequest request =
         DeleteTopicRequest.newBuilder().setName(topicPath().toString()).build();
 
-    doAnswer(answerWith(Status.FAILED_PRECONDITION))
-        .when(serviceImpl)
-        .deleteTopic(eq(request), any());
+    when(deleteTopicCallable.futureCall(request)).thenReturn(failedPreconditionFuture());
 
-    ApiFuture<Void> future = client.deleteTopic(topicPath());
-    ExecutionException exception = assertThrows(ExecutionException.class, future::get);
-    Optional<Status> statusOr = ExtractStatus.extract(exception.getCause());
-    assertThat(statusOr).isPresent();
-    assertThat(statusOr.get().getCode()).isEqualTo(Code.FAILED_PRECONDITION);
-  }
-
-  @Test
-  public void deleteTopic_RetryableError() throws Exception {
-    for (Code code : ErrorCodes.RETRYABLE_CODES) {
-      assertThat(ErrorCodes.IsRetryable(code)).isTrue();
-      DeleteTopicRequest request =
-          DeleteTopicRequest.newBuilder().setName(topicPath().toString()).build();
-
-      doAnswer(inOrder(answerWith(Status.fromCode(code)), answerWith(Empty.getDefaultInstance())))
-          .when(serviceImpl)
-          .deleteTopic(eq(request), any());
-
-      client.deleteTopic(topicPath()).get();
-    }
-  }
-
-  @Test
-  public void deleteTopic_MultipleRetryableErrors() throws Exception {
-    assertThat(ErrorCodes.IsRetryable(Code.DEADLINE_EXCEEDED)).isTrue();
-    DeleteTopicRequest request =
-        DeleteTopicRequest.newBuilder().setName(topicPath().toString()).build();
-
-    doAnswer(
-            inOrder(
-                answerWith(Status.DEADLINE_EXCEEDED),
-                answerWith(Status.DEADLINE_EXCEEDED),
-                answerWith(Empty.getDefaultInstance())))
-        .when(serviceImpl)
-        .deleteTopic(eq(request), any());
-
-    client.deleteTopic(topicPath()).get();
+    assertFutureThrowsCode(client.deleteTopic(topicPath()), Code.FAILED_PRECONDITION);
   }
 
   @Test
   public void getTopic_Ok() throws Exception {
     GetTopicRequest request = GetTopicRequest.newBuilder().setName(topicPath().toString()).build();
 
-    doAnswer(answerWith(TOPIC)).when(serviceImpl).getTopic(eq(request), any());
+    when(getTopicCallable.futureCall(request)).thenReturn(immediateFuture(TOPIC));
 
     assertThat(client.getTopic(topicPath()).get()).isEqualTo(TOPIC);
   }
 
   @Test
-  public void getTopic_NonRetryableError() {
-    assertThat(ErrorCodes.IsRetryable(Code.FAILED_PRECONDITION)).isFalse();
+  public void getTopic_Error() {
     GetTopicRequest request = GetTopicRequest.newBuilder().setName(topicPath().toString()).build();
 
-    doAnswer(answerWith(Status.FAILED_PRECONDITION)).when(serviceImpl).getTopic(eq(request), any());
+    when(getTopicCallable.futureCall(request)).thenReturn(failedPreconditionFuture());
 
-    ApiFuture<Topic> future = client.getTopic(topicPath());
-    ExecutionException exception = assertThrows(ExecutionException.class, future::get);
-    Optional<Status> statusOr = ExtractStatus.extract(exception.getCause());
-    assertThat(statusOr).isPresent();
-    assertThat(statusOr.get().getCode()).isEqualTo(Code.FAILED_PRECONDITION);
-  }
-
-  @Test
-  public void getTopic_RetryableError() throws Exception {
-    for (Code code : ErrorCodes.RETRYABLE_CODES) {
-      assertThat(ErrorCodes.IsRetryable(code)).isTrue();
-      GetTopicRequest request =
-          GetTopicRequest.newBuilder().setName(topicPath().toString()).build();
-
-      doAnswer(inOrder(answerWith(Status.fromCode(code)), answerWith(Topic.getDefaultInstance())))
-          .when(serviceImpl)
-          .getTopic(eq(request), any());
-
-      client.getTopic(topicPath()).get();
-    }
-  }
-
-  @Test
-  public void getTopic_MultipleRetryableErrors() throws Exception {
-    assertThat(ErrorCodes.IsRetryable(Code.DEADLINE_EXCEEDED)).isTrue();
-    GetTopicRequest request = GetTopicRequest.newBuilder().setName(topicPath().toString()).build();
-
-    doAnswer(
-            inOrder(
-                answerWith(Status.DEADLINE_EXCEEDED),
-                answerWith(Status.DEADLINE_EXCEEDED),
-                answerWith(Topic.getDefaultInstance())))
-        .when(serviceImpl)
-        .getTopic(eq(request), any());
-
-    client.getTopic(topicPath()).get();
+    assertFutureThrowsCode(client.getTopic(topicPath()), Code.FAILED_PRECONDITION);
   }
 
   @Test
@@ -448,63 +284,20 @@ public class AdminClientImplTest {
     GetTopicPartitionsRequest request =
         GetTopicPartitionsRequest.newBuilder().setName(topicPath().toString()).build();
 
-    doAnswer(answerWith(TopicPartitions.newBuilder().setPartitionCount(10).build()))
-        .when(serviceImpl)
-        .getTopicPartitions(eq(request), any());
+    when(getTopicPartitionsCallable.futureCall(request))
+        .thenReturn(immediateFuture(TopicPartitions.newBuilder().setPartitionCount(10).build()));
 
     assertThat(client.getTopicPartitionCount(topicPath()).get()).isEqualTo(10);
   }
 
   @Test
   public void getTopicPartitionCount_NonRetryableError() {
-    assertThat(ErrorCodes.IsRetryable(Code.FAILED_PRECONDITION)).isFalse();
     GetTopicPartitionsRequest request =
         GetTopicPartitionsRequest.newBuilder().setName(topicPath().toString()).build();
 
-    doAnswer(answerWith(Status.FAILED_PRECONDITION))
-        .when(serviceImpl)
-        .getTopicPartitions(eq(request), any());
+    when(getTopicPartitionsCallable.futureCall(request)).thenReturn(failedPreconditionFuture());
 
-    ApiFuture<Long> future = client.getTopicPartitionCount(topicPath());
-    ExecutionException exception = assertThrows(ExecutionException.class, future::get);
-    Optional<Status> statusOr = ExtractStatus.extract(exception.getCause());
-    assertThat(statusOr).isPresent();
-    assertThat(statusOr.get().getCode()).isEqualTo(Code.FAILED_PRECONDITION);
-  }
-
-  @Test
-  public void getTopicPartitionCount_RetryableError() throws Exception {
-    for (Code code : ErrorCodes.RETRYABLE_CODES) {
-      assertThat(ErrorCodes.IsRetryable(code)).isTrue();
-      GetTopicPartitionsRequest request =
-          GetTopicPartitionsRequest.newBuilder().setName(topicPath().toString()).build();
-
-      doAnswer(
-              inOrder(
-                  answerWith(Status.fromCode(code)),
-                  answerWith(TopicPartitions.getDefaultInstance())))
-          .when(serviceImpl)
-          .getTopicPartitions(eq(request), any());
-
-      client.getTopicPartitionCount(topicPath()).get();
-    }
-  }
-
-  @Test
-  public void getTopicPartitionCount_MultipleRetryableErrors() throws Exception {
-    assertThat(ErrorCodes.IsRetryable(Code.DEADLINE_EXCEEDED)).isTrue();
-    GetTopicPartitionsRequest request =
-        GetTopicPartitionsRequest.newBuilder().setName(topicPath().toString()).build();
-
-    doAnswer(
-            inOrder(
-                answerWith(Status.DEADLINE_EXCEEDED),
-                answerWith(Status.DEADLINE_EXCEEDED),
-                answerWith(TopicPartitions.getDefaultInstance())))
-        .when(serviceImpl)
-        .getTopicPartitions(eq(request), any());
-
-    client.getTopicPartitionCount(topicPath()).get();
+    assertFutureThrowsCode(client.getTopicPartitionCount(topicPath()), Code.FAILED_PRECONDITION);
   }
 
   @Test
@@ -530,61 +323,46 @@ public class AdminClientImplTest {
             .addSubscriptions(path2.toString())
             .build();
 
-    doAnswer(answerWith(response)).when(serviceImpl).listTopicSubscriptions(eq(request), any());
+    when(listTopicSubscriptionsCallable.futureCall(request)).thenReturn(immediateFuture(response));
 
     assertThat(client.listTopicSubscriptions(topicPath()).get()).containsExactly(path1, path2);
   }
 
   @Test
-  public void listTopicSubscriptions_NonRetryableError() {
-    assertThat(ErrorCodes.IsRetryable(Code.FAILED_PRECONDITION)).isFalse();
+  public void listTopicSubscriptions_Error() {
     ListTopicSubscriptionsRequest request =
         ListTopicSubscriptionsRequest.newBuilder().setName(topicPath().toString()).build();
 
-    doAnswer(answerWith(Status.FAILED_PRECONDITION))
-        .when(serviceImpl)
-        .listTopicSubscriptions(eq(request), any());
+    when(listTopicSubscriptionsCallable.futureCall(request)).thenReturn(failedPreconditionFuture());
 
-    ApiFuture<List<SubscriptionPath>> future = client.listTopicSubscriptions(topicPath());
-    ExecutionException exception = assertThrows(ExecutionException.class, future::get);
-    Optional<Status> statusOr = ExtractStatus.extract(exception.getCause());
-    assertThat(statusOr).isPresent();
-    assertThat(statusOr.get().getCode()).isEqualTo(Code.FAILED_PRECONDITION);
+    assertFutureThrowsCode(client.listTopicSubscriptions(topicPath()), Code.FAILED_PRECONDITION);
   }
 
   @Test
-  public void listTopicSubscriptions_RetryableError() throws Exception {
-    for (Code code : ErrorCodes.RETRYABLE_CODES) {
-      assertThat(ErrorCodes.IsRetryable(code)).isTrue();
-      ListTopicSubscriptionsRequest request =
-          ListTopicSubscriptionsRequest.newBuilder().setName(topicPath().toString()).build();
+  public void listTopics_Ok() throws Exception {
+    ListTopicsRequest request =
+        ListTopicsRequest.newBuilder().setParent(example(LocationPath.class).toString()).build();
 
-      doAnswer(
-              inOrder(
-                  answerWith(Status.fromCode(code)),
-                  answerWith(ListTopicSubscriptionsResponse.getDefaultInstance())))
-          .when(serviceImpl)
-          .listTopicSubscriptions(eq(request), any());
+    when(listTopicsCallable.futureCall(request))
+        .thenReturn(
+            immediateFuture(
+                ListTopicsResponse.newBuilder()
+                    .addAllTopics(ImmutableList.of(TOPIC_2, TOPIC))
+                    .build()));
 
-      client.listTopicSubscriptions(topicPath()).get();
-    }
+    assertThat(client.listTopics(example(LocationPath.class)).get())
+        .containsExactly(TOPIC_2, TOPIC);
   }
 
   @Test
-  public void listTopicSubscriptions_MultipleRetryableErrors() throws Exception {
-    assertThat(ErrorCodes.IsRetryable(Code.DEADLINE_EXCEEDED)).isTrue();
-    ListTopicSubscriptionsRequest request =
-        ListTopicSubscriptionsRequest.newBuilder().setName(topicPath().toString()).build();
+  public void listTopics_Error() {
+    ListTopicsRequest request =
+        ListTopicsRequest.newBuilder().setParent(example(LocationPath.class).toString()).build();
 
-    doAnswer(
-            inOrder(
-                answerWith(Status.DEADLINE_EXCEEDED),
-                answerWith(Status.DEADLINE_EXCEEDED),
-                answerWith(ListTopicSubscriptionsResponse.getDefaultInstance())))
-        .when(serviceImpl)
-        .listTopicSubscriptions(eq(request), any());
+    when(listTopicsCallable.futureCall(request)).thenReturn(failedPreconditionFuture());
 
-    client.listTopicSubscriptions(topicPath()).get();
+    assertFutureThrowsCode(
+        client.listTopics(example(LocationPath.class)), Code.FAILED_PRECONDITION);
   }
 
   @Test
@@ -596,14 +374,14 @@ public class AdminClientImplTest {
             .setSubscriptionId(subscriptionName().value())
             .build();
 
-    doAnswer(answerWith(SUBSCRIPTION_2)).when(serviceImpl).createSubscription(eq(request), any());
+    when(createSubscriptionCallable.futureCall(request))
+        .thenReturn(immediateFuture(SUBSCRIPTION_2));
 
     assertThat(client.createSubscription(SUBSCRIPTION).get()).isEqualTo(SUBSCRIPTION_2);
   }
 
   @Test
-  public void createSubscription_NonRetryableError() {
-    assertThat(ErrorCodes.IsRetryable(Code.FAILED_PRECONDITION)).isFalse();
+  public void createSubscription_Error() {
     CreateSubscriptionRequest request =
         CreateSubscriptionRequest.newBuilder()
             .setParent(subscriptionPath().locationPath().toString())
@@ -611,55 +389,9 @@ public class AdminClientImplTest {
             .setSubscriptionId(subscriptionName().value())
             .build();
 
-    doAnswer(answerWith(Status.FAILED_PRECONDITION))
-        .when(serviceImpl)
-        .createSubscription(eq(request), any());
+    when(createSubscriptionCallable.futureCall(request)).thenReturn(failedPreconditionFuture());
 
-    ApiFuture<Subscription> future = client.createSubscription(SUBSCRIPTION);
-    ExecutionException exception = assertThrows(ExecutionException.class, future::get);
-    Optional<Status> statusOr = ExtractStatus.extract(exception.getCause());
-    assertThat(statusOr).isPresent();
-    assertThat(statusOr.get().getCode()).isEqualTo(Code.FAILED_PRECONDITION);
-  }
-
-  @Test
-  public void createSubscription_RetryableError() throws Exception {
-    for (Code code : ErrorCodes.RETRYABLE_CODES) {
-      assertThat(ErrorCodes.IsRetryable(code)).isTrue();
-      CreateSubscriptionRequest request =
-          CreateSubscriptionRequest.newBuilder()
-              .setParent(subscriptionPath().locationPath().toString())
-              .setSubscription(SUBSCRIPTION)
-              .setSubscriptionId(subscriptionName().value())
-              .build();
-
-      doAnswer(inOrder(answerWith(Status.fromCode(code)), answerWith(SUBSCRIPTION_2)))
-          .when(serviceImpl)
-          .createSubscription(eq(request), any());
-
-      assertThat(client.createSubscription(SUBSCRIPTION).get()).isEqualTo(SUBSCRIPTION_2);
-    }
-  }
-
-  @Test
-  public void createSubscription_MultipleRetryableErrors() throws Exception {
-    assertThat(ErrorCodes.IsRetryable(Code.DEADLINE_EXCEEDED)).isTrue();
-    CreateSubscriptionRequest request =
-        CreateSubscriptionRequest.newBuilder()
-            .setParent(subscriptionPath().locationPath().toString())
-            .setSubscription(SUBSCRIPTION)
-            .setSubscriptionId(subscriptionName().value())
-            .build();
-
-    doAnswer(
-            inOrder(
-                answerWith(Status.DEADLINE_EXCEEDED),
-                answerWith(Status.DEADLINE_EXCEEDED),
-                answerWith(SUBSCRIPTION_2)))
-        .when(serviceImpl)
-        .createSubscription(eq(request), any());
-
-    assertThat(client.createSubscription(SUBSCRIPTION).get()).isEqualTo(SUBSCRIPTION_2);
+    assertFutureThrowsCode(client.createSubscription(SUBSCRIPTION), Code.FAILED_PRECONDITION);
   }
 
   @Test
@@ -670,67 +402,23 @@ public class AdminClientImplTest {
             .setUpdateMask(MASK)
             .build();
 
-    doAnswer(answerWith(SUBSCRIPTION_2)).when(serviceImpl).updateSubscription(eq(request), any());
+    when(updateSubscriptionCallable.futureCall(request))
+        .thenReturn(immediateFuture(SUBSCRIPTION_2));
 
     assertThat(client.updateSubscription(SUBSCRIPTION, MASK).get()).isEqualTo(SUBSCRIPTION_2);
   }
 
   @Test
-  public void updateSubscription_NonRetryableError() {
-    assertThat(ErrorCodes.IsRetryable(Code.FAILED_PRECONDITION)).isFalse();
+  public void updateSubscription_Error() {
     UpdateSubscriptionRequest request =
         UpdateSubscriptionRequest.newBuilder()
             .setSubscription(SUBSCRIPTION)
             .setUpdateMask(MASK)
             .build();
 
-    doAnswer(answerWith(Status.FAILED_PRECONDITION))
-        .when(serviceImpl)
-        .updateSubscription(eq(request), any());
+    when(updateSubscriptionCallable.futureCall(request)).thenReturn(failedPreconditionFuture());
 
-    ApiFuture<Subscription> future = client.updateSubscription(SUBSCRIPTION, MASK);
-    ExecutionException exception = assertThrows(ExecutionException.class, future::get);
-    Optional<Status> statusOr = ExtractStatus.extract(exception.getCause());
-    assertThat(statusOr).isPresent();
-    assertThat(statusOr.get().getCode()).isEqualTo(Code.FAILED_PRECONDITION);
-  }
-
-  @Test
-  public void updateSubscription_RetryableError() throws Exception {
-    for (Code code : ErrorCodes.RETRYABLE_CODES) {
-      assertThat(ErrorCodes.IsRetryable(code)).isTrue();
-      UpdateSubscriptionRequest request =
-          UpdateSubscriptionRequest.newBuilder()
-              .setSubscription(SUBSCRIPTION)
-              .setUpdateMask(MASK)
-              .build();
-
-      doAnswer(inOrder(answerWith(Status.fromCode(code)), answerWith(SUBSCRIPTION_2)))
-          .when(serviceImpl)
-          .updateSubscription(eq(request), any());
-
-      assertThat(client.updateSubscription(SUBSCRIPTION, MASK).get()).isEqualTo(SUBSCRIPTION_2);
-    }
-  }
-
-  @Test
-  public void updateSubscription_MultipleRetryableErrors() throws Exception {
-    assertThat(ErrorCodes.IsRetryable(Code.DEADLINE_EXCEEDED)).isTrue();
-    UpdateSubscriptionRequest request =
-        UpdateSubscriptionRequest.newBuilder()
-            .setSubscription(SUBSCRIPTION)
-            .setUpdateMask(MASK)
-            .build();
-
-    doAnswer(
-            inOrder(
-                answerWith(Status.DEADLINE_EXCEEDED),
-                answerWith(Status.DEADLINE_EXCEEDED),
-                answerWith(SUBSCRIPTION_2)))
-        .when(serviceImpl)
-        .updateSubscription(eq(request), any());
-
-    assertThat(client.updateSubscription(SUBSCRIPTION, MASK).get()).isEqualTo(SUBSCRIPTION_2);
+    assertFutureThrowsCode(client.updateSubscription(SUBSCRIPTION, MASK), Code.FAILED_PRECONDITION);
   }
 
   @Test
@@ -738,60 +426,20 @@ public class AdminClientImplTest {
     DeleteSubscriptionRequest request =
         DeleteSubscriptionRequest.newBuilder().setName(subscriptionPath().toString()).build();
 
-    doAnswer(answerWith(Empty.getDefaultInstance()))
-        .when(serviceImpl)
-        .deleteSubscription(eq(request), any());
+    when(deleteSubscriptionCallable.futureCall(request))
+        .thenReturn(immediateFuture(Empty.getDefaultInstance()));
 
     client.deleteSubscription(subscriptionPath()).get();
   }
 
   @Test
-  public void deleteSubscription_NonRetryableError() {
-    assertThat(ErrorCodes.IsRetryable(Code.FAILED_PRECONDITION)).isFalse();
+  public void deleteSubscription_Error() {
     DeleteSubscriptionRequest request =
         DeleteSubscriptionRequest.newBuilder().setName(subscriptionPath().toString()).build();
 
-    doAnswer(answerWith(Status.FAILED_PRECONDITION))
-        .when(serviceImpl)
-        .deleteSubscription(eq(request), any());
+    when(deleteSubscriptionCallable.futureCall(request)).thenReturn(failedPreconditionFuture());
 
-    ApiFuture<Void> future = client.deleteSubscription(subscriptionPath());
-    ExecutionException exception = assertThrows(ExecutionException.class, future::get);
-    Optional<Status> statusOr = ExtractStatus.extract(exception.getCause());
-    assertThat(statusOr).isPresent();
-    assertThat(statusOr.get().getCode()).isEqualTo(Code.FAILED_PRECONDITION);
-  }
-
-  @Test
-  public void deleteSubscription_RetryableError() throws Exception {
-    for (Code code : ErrorCodes.RETRYABLE_CODES) {
-      assertThat(ErrorCodes.IsRetryable(code)).isTrue();
-      DeleteSubscriptionRequest request =
-          DeleteSubscriptionRequest.newBuilder().setName(subscriptionPath().toString()).build();
-
-      doAnswer(inOrder(answerWith(Status.fromCode(code)), answerWith(Empty.getDefaultInstance())))
-          .when(serviceImpl)
-          .deleteSubscription(eq(request), any());
-
-      client.deleteSubscription(subscriptionPath()).get();
-    }
-  }
-
-  @Test
-  public void deleteSubscription_MultipleRetryableErrors() throws Exception {
-    assertThat(ErrorCodes.IsRetryable(Code.DEADLINE_EXCEEDED)).isTrue();
-    DeleteSubscriptionRequest request =
-        DeleteSubscriptionRequest.newBuilder().setName(subscriptionPath().toString()).build();
-
-    doAnswer(
-            inOrder(
-                answerWith(Status.DEADLINE_EXCEEDED),
-                answerWith(Status.DEADLINE_EXCEEDED),
-                answerWith(Empty.getDefaultInstance())))
-        .when(serviceImpl)
-        .deleteSubscription(eq(request), any());
-
-    client.deleteSubscription(subscriptionPath()).get();
+    assertFutureThrowsCode(client.deleteSubscription(subscriptionPath()), Code.FAILED_PRECONDITION);
   }
 
   @Test
@@ -799,59 +447,49 @@ public class AdminClientImplTest {
     GetSubscriptionRequest request =
         GetSubscriptionRequest.newBuilder().setName(subscriptionPath().toString()).build();
 
-    doAnswer(answerWith(SUBSCRIPTION)).when(serviceImpl).getSubscription(eq(request), any());
+    when(getSubscriptionCallable.futureCall(request)).thenReturn(immediateFuture(SUBSCRIPTION));
 
     assertThat(client.getSubscription(subscriptionPath()).get()).isEqualTo(SUBSCRIPTION);
   }
 
   @Test
-  public void getSubscription_NonRetryableError() {
-    assertThat(ErrorCodes.IsRetryable(Code.FAILED_PRECONDITION)).isFalse();
+  public void getSubscription_Error() {
     GetSubscriptionRequest request =
         GetSubscriptionRequest.newBuilder().setName(subscriptionPath().toString()).build();
 
-    doAnswer(answerWith(Status.FAILED_PRECONDITION))
-        .when(serviceImpl)
-        .getSubscription(eq(request), any());
+    when(getSubscriptionCallable.futureCall(request)).thenReturn(failedPreconditionFuture());
 
-    ApiFuture<Subscription> future = client.getSubscription(subscriptionPath());
-    ExecutionException exception = assertThrows(ExecutionException.class, future::get);
-    Optional<Status> statusOr = ExtractStatus.extract(exception.getCause());
-    assertThat(statusOr).isPresent();
-    assertThat(statusOr.get().getCode()).isEqualTo(Code.FAILED_PRECONDITION);
+    assertFutureThrowsCode(client.getSubscription(subscriptionPath()), Code.FAILED_PRECONDITION);
   }
 
   @Test
-  public void getSubscription_RetryableError() throws Exception {
-    for (Code code : ErrorCodes.RETRYABLE_CODES) {
-      assertThat(ErrorCodes.IsRetryable(code)).isTrue();
-      GetSubscriptionRequest request =
-          GetSubscriptionRequest.newBuilder().setName(subscriptionPath().toString()).build();
+  public void listSubscriptions_Ok() throws Exception {
+    ListSubscriptionsRequest request =
+        ListSubscriptionsRequest.newBuilder()
+            .setParent(example(LocationPath.class).toString())
+            .build();
 
-      doAnswer(
-              inOrder(
-                  answerWith(Status.fromCode(code)), answerWith(Subscription.getDefaultInstance())))
-          .when(serviceImpl)
-          .getSubscription(eq(request), any());
+    when(listSubscriptionsCallable.futureCall(request))
+        .thenReturn(
+            immediateFuture(
+                ListSubscriptionsResponse.newBuilder()
+                    .addAllSubscriptions(ImmutableList.of(SUBSCRIPTION_2, SUBSCRIPTION))
+                    .build()));
 
-      client.getSubscription(subscriptionPath()).get();
-    }
+    assertThat(client.listSubscriptions(example(LocationPath.class)).get())
+        .containsExactly(SUBSCRIPTION_2, SUBSCRIPTION);
   }
 
   @Test
-  public void getSubscription_MultipleRetryableErrors() throws Exception {
-    assertThat(ErrorCodes.IsRetryable(Code.DEADLINE_EXCEEDED)).isTrue();
-    GetSubscriptionRequest request =
-        GetSubscriptionRequest.newBuilder().setName(subscriptionPath().toString()).build();
+  public void listSubscriptions_Error() {
+    ListSubscriptionsRequest request =
+        ListSubscriptionsRequest.newBuilder()
+            .setParent(example(LocationPath.class).toString())
+            .build();
 
-    doAnswer(
-            inOrder(
-                answerWith(Status.DEADLINE_EXCEEDED),
-                answerWith(Status.DEADLINE_EXCEEDED),
-                answerWith(Subscription.getDefaultInstance())))
-        .when(serviceImpl)
-        .getSubscription(eq(request), any());
+    when(listSubscriptionsCallable.futureCall(request)).thenReturn(failedPreconditionFuture());
 
-    client.getSubscription(subscriptionPath()).get();
+    assertFutureThrowsCode(
+        client.listSubscriptions(example(LocationPath.class)), Code.FAILED_PRECONDITION);
   }
 }

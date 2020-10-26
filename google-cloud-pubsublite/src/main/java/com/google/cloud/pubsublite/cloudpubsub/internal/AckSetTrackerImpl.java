@@ -16,18 +16,19 @@
 
 package com.google.cloud.pubsublite.cloudpubsub.internal;
 
-import static com.google.cloud.pubsublite.internal.Preconditions.checkArgument;
+import static com.google.cloud.pubsublite.internal.CheckedApiPreconditions.checkArgument;
 
 import com.google.api.core.ApiFuture;
+import com.google.api.gax.rpc.ApiException;
+import com.google.api.gax.rpc.StatusCode.Code;
 import com.google.cloud.pubsublite.Offset;
 import com.google.cloud.pubsublite.SequencedMessage;
+import com.google.cloud.pubsublite.internal.CheckedApiException;
 import com.google.cloud.pubsublite.internal.CloseableMonitor;
 import com.google.cloud.pubsublite.internal.ExtractStatus;
 import com.google.cloud.pubsublite.internal.TrivialProxyService;
 import com.google.cloud.pubsublite.internal.wire.Committer;
 import com.google.errorprone.annotations.concurrent.GuardedBy;
-import io.grpc.Status;
-import io.grpc.StatusException;
 import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.Optional;
@@ -46,14 +47,14 @@ public class AckSetTrackerImpl extends TrivialProxyService implements AckSetTrac
   @GuardedBy("monitor.monitor")
   private final PriorityQueue<Offset> acks = new PriorityQueue<>();
 
-  public AckSetTrackerImpl(Committer committer) throws StatusException {
+  public AckSetTrackerImpl(Committer committer) throws ApiException {
     super(committer);
     this.committer = committer;
   }
 
   // AckSetTracker implementation.
   @Override
-  public Runnable track(SequencedMessage message) throws StatusException {
+  public Runnable track(SequencedMessage message) throws CheckedApiException {
     final Offset messageOffset = message.offset();
     try (CloseableMonitor.Hold h = monitor.enter()) {
       checkArgument(receipts.isEmpty() || receipts.peekLast().value() < messageOffset.value());
@@ -65,9 +66,10 @@ public class AckSetTrackerImpl extends TrivialProxyService implements AckSetTrac
       @Override
       public void run() {
         if (wasAcked.getAndSet(true)) {
-          Status s = Status.FAILED_PRECONDITION.withDescription("Duplicate acks are not allowed.");
-          onPermanentError(s.asException());
-          throw s.asRuntimeException();
+          CheckedApiException e =
+              new CheckedApiException("Duplicate acks are not allowed.", Code.FAILED_PRECONDITION);
+          onPermanentError(e);
+          throw e.underlying;
         }
         onAck(messageOffset);
       }

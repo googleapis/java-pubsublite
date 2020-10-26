@@ -17,7 +17,10 @@
 package com.google.cloud.pubsublite.cloudpubsub;
 
 import static com.google.cloud.pubsublite.ProjectLookupUtils.toCanonical;
+import static com.google.cloud.pubsublite.internal.ExtractStatus.toCanonical;
+import static com.google.cloud.pubsublite.internal.UncheckedApiPreconditions.checkArgument;
 
+import com.google.api.gax.rpc.ApiException;
 import com.google.auto.value.AutoValue;
 import com.google.cloud.pubsub.v1.MessageReceiver;
 import com.google.cloud.pubsublite.MessageTransformer;
@@ -29,21 +32,21 @@ import com.google.cloud.pubsublite.cloudpubsub.internal.AssigningSubscriber;
 import com.google.cloud.pubsublite.cloudpubsub.internal.MultiPartitionSubscriber;
 import com.google.cloud.pubsublite.cloudpubsub.internal.PartitionSubscriberFactory;
 import com.google.cloud.pubsublite.cloudpubsub.internal.SinglePartitionSubscriber;
-import com.google.cloud.pubsublite.internal.Preconditions;
+import com.google.cloud.pubsublite.internal.CheckedApiException;
 import com.google.cloud.pubsublite.internal.wire.AssignerBuilder;
 import com.google.cloud.pubsublite.internal.wire.AssignerFactory;
 import com.google.cloud.pubsublite.internal.wire.CommitterBuilder;
 import com.google.cloud.pubsublite.internal.wire.PubsubContext;
 import com.google.cloud.pubsublite.internal.wire.PubsubContext.Framework;
 import com.google.cloud.pubsublite.internal.wire.SubscriberBuilder;
-import com.google.cloud.pubsublite.proto.CursorServiceGrpc;
-import com.google.cloud.pubsublite.proto.PartitionAssignmentServiceGrpc.PartitionAssignmentServiceStub;
-import com.google.cloud.pubsublite.proto.SubscriberServiceGrpc;
+import com.google.cloud.pubsublite.v1.CursorServiceClient;
+import com.google.cloud.pubsublite.v1.PartitionAssignmentServiceClient;
+import com.google.cloud.pubsublite.v1.SubscriberServiceClient;
 import com.google.pubsub.v1.PubsubMessage;
-import io.grpc.StatusException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Supplier;
 
 /**
  * Settings for instantiating a Pub/Sub Lite subscriber emulating the Cloud Pub/Sub Subscriber API.
@@ -67,11 +70,11 @@ public abstract class SubscriberSettings {
 
   abstract Optional<MessageTransformer<SequencedMessage, PubsubMessage>> transformer();
 
-  abstract Optional<SubscriberServiceGrpc.SubscriberServiceStub> subscriberServiceStub();
+  abstract Optional<Supplier<SubscriberServiceClient>> subscriberServiceClientSupplier();
 
-  abstract Optional<CursorServiceGrpc.CursorServiceStub> cursorServiceStub();
+  abstract Optional<Supplier<CursorServiceClient>> cursorServiceClientSupplier();
 
-  abstract Optional<PartitionAssignmentServiceStub> assignmentServiceStub();
+  abstract Optional<PartitionAssignmentServiceClient> assignmentServiceClient();
 
   abstract Optional<NackHandler> nackHandler();
 
@@ -112,15 +115,15 @@ public abstract class SubscriberSettings {
     public abstract Builder setTransformer(
         MessageTransformer<SequencedMessage, PubsubMessage> transformer);
 
-    /** A stub to connect to the Pub/Sub lite subscriber service. */
-    public abstract Builder setSubscriberServiceStub(
-        SubscriberServiceGrpc.SubscriberServiceStub stub);
+    /** A supplier for new SubscriberServiceClients. Should return a new client each time. */
+    public abstract Builder setSubscriberServiceClientSupplier(
+        Supplier<SubscriberServiceClient> supplier);
 
-    /** A stub to connect to the Pub/Sub lite cursor service. */
-    public abstract Builder setCursorServiceStub(CursorServiceGrpc.CursorServiceStub stub);
+    /** A supplier for new CursorServiceClients. Should return a new client each time. */
+    public abstract Builder setCursorServiceClientSupplier(Supplier<CursorServiceClient> supplier);
 
-    /** A stub to connect to the Pub/Sub lite assignment service. */
-    public abstract Builder setAssignmentServiceStub(PartitionAssignmentServiceStub stub);
+    /** A client to connect to the Pub/Sub lite assignment service. */
+    public abstract Builder setAssignmentServiceClient(PartitionAssignmentServiceClient client);
 
     /**
      * A handler for the action to take when {@link
@@ -133,45 +136,55 @@ public abstract class SubscriberSettings {
     abstract SubscriberSettings autoBuild();
 
     /** Build the SubscriberSettings instance. */
-    public SubscriberSettings build() throws StatusException {
+    public SubscriberSettings build() throws ApiException {
       SubscriberSettings settings = autoBuild();
-      Preconditions.checkArgument(
+      checkArgument(
           !settings.partitions().isPresent() || !settings.partitions().get().isEmpty(),
           "Must provide at least one partition if setting partitions explicitly.");
       return settings;
     }
   }
 
+  PartitionSubscriberFactory makePartitionSubscriberFactory(SubscriptionPath canonicalPath)
+      throws ApiException {
+    return partition -> {
+      try {
+        SubscriberBuilder.Builder wireSubscriberBuilder = SubscriberBuilder.newBuilder();
+        wireSubscriberBuilder.setSubscriptionPath(canonicalPath);
+        subscriberServiceClientSupplier()
+            .ifPresent(supplier -> wireSubscriberBuilder.setServiceClient(supplier.get()));
+        wireSubscriberBuilder.setContext(PubsubContext.of(FRAMEWORK));
+        wireSubscriberBuilder.setPartition(partition);
+
+        CommitterBuilder.Builder wireCommitterBuilder = CommitterBuilder.newBuilder();
+        wireCommitterBuilder.setSubscriptionPath(canonicalPath);
+        cursorServiceClientSupplier()
+            .ifPresent(supplier -> wireCommitterBuilder.setServiceClient(supplier.get()));
+        wireCommitterBuilder.setPartition(partition);
+
+        return new SinglePartitionSubscriber(
+            receiver(),
+            transformer().orElse(MessageTransforms.toCpsSubscribeTransformer()),
+            new AckSetTrackerImpl(wireCommitterBuilder.build()),
+            nackHandler().orElse(new NackHandler() {}),
+            messageConsumer -> wireSubscriberBuilder.setMessageConsumer(messageConsumer).build(),
+            perPartitionFlowControlSettings());
+      } catch (Throwable t) {
+        throw toCanonical(t);
+      }
+    };
+  }
+
   @SuppressWarnings("CheckReturnValue")
-  Subscriber instantiate() throws StatusException {
+  Subscriber instantiate() throws ApiException {
     SubscriptionPath canonicalPath = toCanonical(subscriptionPath());
-
-    SubscriberBuilder.Builder wireSubscriberBuilder = SubscriberBuilder.newBuilder();
-    wireSubscriberBuilder.setSubscriptionPath(canonicalPath);
-    subscriberServiceStub().ifPresent(wireSubscriberBuilder::setSubscriberServiceStub);
-    wireSubscriberBuilder.setContext(PubsubContext.of(FRAMEWORK));
-
-    CommitterBuilder.Builder wireCommitterBuilder = CommitterBuilder.newBuilder();
-    wireCommitterBuilder.setSubscriptionPath(canonicalPath);
-    cursorServiceStub().ifPresent(wireCommitterBuilder::setCursorStub);
-
     PartitionSubscriberFactory partitionSubscriberFactory =
-        partition -> {
-          wireSubscriberBuilder.setPartition(partition);
-          wireCommitterBuilder.setPartition(partition);
-          return new SinglePartitionSubscriber(
-              receiver(),
-              transformer().orElse(MessageTransforms.toCpsSubscribeTransformer()),
-              new AckSetTrackerImpl(wireCommitterBuilder.build()),
-              nackHandler().orElse(new NackHandler() {}),
-              messageConsumer -> wireSubscriberBuilder.setMessageConsumer(messageConsumer).build(),
-              perPartitionFlowControlSettings());
-        };
+        makePartitionSubscriberFactory(canonicalPath);
 
     if (!partitions().isPresent()) {
       AssignerBuilder.Builder assignerBuilder = AssignerBuilder.newBuilder();
       assignerBuilder.setSubscriptionPath(canonicalPath);
-      assignmentServiceStub().ifPresent(assignerBuilder::setAssignmentStub);
+      assignmentServiceClient().ifPresent(assignerBuilder::setServiceClient);
       AssignerFactory assignerFactory =
           receiver -> {
             assignerBuilder.setReceiver(receiver);
@@ -182,9 +195,11 @@ public abstract class SubscriberSettings {
 
     List<Subscriber> perPartitionSubscribers = new ArrayList<>();
     for (Partition partition : partitions().get()) {
-      wireSubscriberBuilder.setPartition(partition);
-      wireCommitterBuilder.setPartition(partition);
-      perPartitionSubscribers.add(partitionSubscriberFactory.New(partition));
+      try {
+        perPartitionSubscribers.add(partitionSubscriberFactory.newSubscriber(partition));
+      } catch (CheckedApiException e) {
+        throw e.underlying;
+      }
     }
     return MultiPartitionSubscriber.of(perPartitionSubscribers);
   }

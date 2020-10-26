@@ -17,10 +17,12 @@
 package com.google.cloud.pubsublite.beam;
 
 import com.google.api.core.ApiFuture;
+import com.google.api.gax.rpc.StatusCode.Code;
 import com.google.auto.value.AutoValue;
 import com.google.cloud.pubsublite.Offset;
 import com.google.cloud.pubsublite.Partition;
 import com.google.cloud.pubsublite.SequencedMessage;
+import com.google.cloud.pubsublite.internal.CheckedApiException;
 import com.google.cloud.pubsublite.internal.CloseableMonitor;
 import com.google.cloud.pubsublite.internal.ExtractStatus;
 import com.google.cloud.pubsublite.internal.ProxyService;
@@ -36,8 +38,6 @@ import com.google.common.flogger.GoogleLogger;
 import com.google.errorprone.annotations.concurrent.GuardedBy;
 import com.google.protobuf.Timestamp;
 import com.google.protobuf.util.Timestamps;
-import io.grpc.Status;
-import io.grpc.StatusException;
 import java.io.IOException;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
@@ -74,14 +74,14 @@ class PubsubLiteUnboundedReader extends UnboundedReader<SequencedMessage>
   private final Queue<PartitionedSequencedMessage> messages = new ArrayDeque<>();
 
   @GuardedBy("monitor.monitor")
-  private Optional<StatusException> permanentError = Optional.empty();
+  private Optional<CheckedApiException> permanentError = Optional.empty();
 
   private static class CommitterProxy extends ProxyService {
-    private final Consumer<StatusException> permanentErrorSetter;
+    private final Consumer<CheckedApiException> permanentErrorSetter;
 
     CommitterProxy(
-        Collection<SubscriberState> states, Consumer<StatusException> permanentErrorSetter)
-        throws StatusException {
+        Collection<SubscriberState> states, Consumer<CheckedApiException> permanentErrorSetter)
+        throws CheckedApiException {
       this.permanentErrorSetter = permanentErrorSetter;
       addServices(states.stream().map(state -> state.committer).collect(Collectors.toList()));
     }
@@ -93,7 +93,7 @@ class PubsubLiteUnboundedReader extends UnboundedReader<SequencedMessage>
     protected void stop() {}
 
     @Override
-    protected void handlePermanentError(StatusException error) {
+    protected void handlePermanentError(CheckedApiException error) {
       permanentErrorSetter.accept(error);
     }
   }
@@ -103,7 +103,7 @@ class PubsubLiteUnboundedReader extends UnboundedReader<SequencedMessage>
       ImmutableMap<Partition, SubscriberState> subscriberMap,
       TopicBacklogReader backlogReader,
       Ticker ticker)
-      throws StatusException {
+      throws CheckedApiException {
     this.source = source;
     this.subscriberMap = subscriberMap;
     this.committerProxy =
@@ -141,18 +141,17 @@ class PubsubLiteUnboundedReader extends UnboundedReader<SequencedMessage>
   }
 
   @Override
-  public void finalizeOffsets(Map<Partition, Offset> offsets) throws StatusException {
+  public void finalizeOffsets(Map<Partition, Offset> offsets) throws CheckedApiException {
     List<ApiFuture<Void>> commitFutures = new ArrayList<>();
     try (CloseableMonitor.Hold h = monitor.enter()) {
       for (Partition partition : offsets.keySet()) {
         if (!subscriberMap.containsKey(partition)) {
-          throw Status.INVALID_ARGUMENT
-              .withDescription(
-                  String.format(
-                      "Asked to finalize an offset for partition %s which was not managed by this"
-                          + " reader.",
-                      partition))
-              .asException();
+          throw new CheckedApiException(
+              String.format(
+                  "Asked to finalize an offset for partition %s which was not managed by this"
+                      + " reader.",
+                  partition),
+              Code.INVALID_ARGUMENT);
         }
         commitFutures.add(
             subscriberMap.get(partition).committer.commitOffset(offsets.get(partition)));
@@ -217,7 +216,7 @@ class PubsubLiteUnboundedReader extends UnboundedReader<SequencedMessage>
         return true;
       }
       return false;
-    } catch (StatusException e) {
+    } catch (CheckedApiException e) {
       throw new IOException(e);
     }
   }
@@ -231,7 +230,7 @@ class PubsubLiteUnboundedReader extends UnboundedReader<SequencedMessage>
   }
 
   @GuardedBy("monitor.monitor")
-  private void pullFromSubscribers() throws StatusException {
+  private void pullFromSubscribers() throws CheckedApiException {
     for (Map.Entry<Partition, SubscriberState> entry : subscriberMap.entrySet()) {
       for (SequencedMessage message : entry.getValue().subscriber.pull()) {
         messages.add(PartitionedSequencedMessage.of(entry.getKey(), message));

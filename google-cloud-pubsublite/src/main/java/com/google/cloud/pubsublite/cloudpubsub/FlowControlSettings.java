@@ -16,10 +16,10 @@
 
 package com.google.cloud.pubsublite.cloudpubsub;
 
-import static com.google.cloud.pubsublite.internal.Preconditions.checkState;
+import static com.google.cloud.pubsublite.internal.UncheckedApiPreconditions.checkState;
 
+import com.google.api.gax.rpc.ApiException;
 import com.google.auto.value.AutoValue;
-import io.grpc.StatusException;
 import java.io.Serializable;
 
 /**
@@ -45,7 +45,7 @@ public abstract class FlowControlSettings implements Serializable {
 
     abstract FlowControlSettings autoBuild();
 
-    public FlowControlSettings build() throws StatusException {
+    public FlowControlSettings build() throws ApiException {
       FlowControlSettings settings = autoBuild();
       checkState(settings.bytesOutstanding() > 0, "Cannot have 0 or less bytes outstanding.");
       checkState(settings.messagesOutstanding() > 0, "Cannot have 0 or less messages outstanding.");

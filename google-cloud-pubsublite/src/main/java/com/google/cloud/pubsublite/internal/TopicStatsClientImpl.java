@@ -16,9 +16,6 @@
 package com.google.cloud.pubsublite.internal;
 
 import com.google.api.core.ApiFuture;
-import com.google.api.gax.core.ExecutorAsBackgroundResource;
-import com.google.api.gax.retrying.RetrySettings;
-import com.google.api.gax.retrying.RetryingExecutor;
 import com.google.cloud.pubsublite.CloudRegion;
 import com.google.cloud.pubsublite.Offset;
 import com.google.cloud.pubsublite.Partition;
@@ -27,36 +24,16 @@ import com.google.cloud.pubsublite.TopicPath;
 import com.google.cloud.pubsublite.proto.ComputeMessageStatsRequest;
 import com.google.cloud.pubsublite.proto.ComputeMessageStatsResponse;
 import com.google.cloud.pubsublite.proto.Cursor;
-import com.google.cloud.pubsublite.proto.TopicStatsServiceGrpc;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
+import com.google.cloud.pubsublite.v1.TopicStatsServiceClient;
 
 public class TopicStatsClientImpl extends ApiResourceAggregation implements TopicStatsClient {
   private final CloudRegion region;
-  private final TopicStatsServiceGrpc.TopicStatsServiceBlockingStub stub;
-  private final RetryingExecutor<ComputeMessageStatsResponse> retryingExecutor;
+  private final TopicStatsServiceClient serviceClient;
 
-  public TopicStatsClientImpl(
-      CloudRegion region,
-      TopicStatsServiceGrpc.TopicStatsServiceBlockingStub stub,
-      RetrySettings retrySettings) {
-    this(
-        region,
-        stub,
-        retrySettings,
-        // TODO: Consider allowing tuning in the future.
-        Executors.newScheduledThreadPool(6));
-  }
-
-  private TopicStatsClientImpl(
-      CloudRegion region,
-      TopicStatsServiceGrpc.TopicStatsServiceBlockingStub stub,
-      RetrySettings retrySettings,
-      ScheduledExecutorService executor) {
-    super(new ExecutorAsBackgroundResource(executor));
+  public TopicStatsClientImpl(CloudRegion region, TopicStatsServiceClient serviceClient) {
+    super(serviceClient);
     this.region = region;
-    this.stub = stub;
-    this.retryingExecutor = RetryingExecutorUtil.retryingExecutor(retrySettings, executor);
+    this.serviceClient = serviceClient;
   }
 
   @Override
@@ -64,19 +41,17 @@ public class TopicStatsClientImpl extends ApiResourceAggregation implements Topi
     return region;
   }
 
-  // TopicStatsClient Implementation
   @Override
   public ApiFuture<ComputeMessageStatsResponse> computeMessageStats(
       TopicPath path, Partition partition, Offset start, Offset end) {
-    return RetryingExecutorUtil.runWithRetries(
-        () ->
-            stub.computeMessageStats(
-                ComputeMessageStatsRequest.newBuilder()
-                    .setTopic(ProjectLookupUtils.toCanonical(path).toString())
-                    .setPartition(partition.value())
-                    .setStartCursor(Cursor.newBuilder().setOffset(start.value()).build())
-                    .setEndCursor(Cursor.newBuilder().setOffset(end.value()).build())
-                    .build()),
-        retryingExecutor);
+    return serviceClient
+        .computeMessageStatsCallable()
+        .futureCall(
+            ComputeMessageStatsRequest.newBuilder()
+                .setTopic(ProjectLookupUtils.toCanonical(path).toString())
+                .setPartition(partition.value())
+                .setStartCursor(Cursor.newBuilder().setOffset(start.value()).build())
+                .setEndCursor(Cursor.newBuilder().setOffset(end.value()).build())
+                .build());
   }
 }

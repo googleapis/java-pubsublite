@@ -16,20 +16,21 @@
 
 package com.google.cloud.pubsublite;
 
+import static com.google.cloud.pubsublite.internal.ServiceClients.addDefaultSettings;
+
 import com.google.api.gax.retrying.RetrySettings;
+import com.google.api.gax.rpc.ApiException;
 import com.google.auto.value.AutoValue;
 import com.google.cloud.pubsublite.internal.AdminClientImpl;
-import com.google.cloud.pubsublite.proto.AdminServiceGrpc;
-import com.google.cloud.pubsublite.proto.AdminServiceGrpc.AdminServiceBlockingStub;
-import io.grpc.StatusException;
+import com.google.cloud.pubsublite.internal.ExtractStatus;
+import com.google.cloud.pubsublite.v1.AdminServiceClient;
+import com.google.cloud.pubsublite.v1.AdminServiceSettings;
 import java.util.Optional;
 
 /** Settings for construction a Pub/Sub Lite AdminClient. */
 @AutoValue
 public abstract class AdminClientSettings {
-
   // Required parameters.
-
   /**
    * The <a href="https://cloud.google.com/pubsub/lite/docs/locations">cloud region</a> to perform
    * admin operations for.
@@ -37,12 +38,11 @@ public abstract class AdminClientSettings {
   abstract CloudRegion region();
 
   // Optional parameters.
-
   /** The retry settings for this client. */
-  abstract RetrySettings retrySettings();
+  abstract Optional<RetrySettings> retrySettings();
 
   /** A stub to use to connect. */
-  abstract Optional<AdminServiceBlockingStub> stub();
+  abstract Optional<AdminServiceClient> serviceClient();
 
   public static Builder newBuilder() {
     return new AutoValue_AdminClientSettings.Builder()
@@ -61,20 +61,33 @@ public abstract class AdminClientSettings {
     /** The retry settings for this client. */
     public abstract Builder setRetrySettings(RetrySettings retrySettings);
 
-    /** A stub to use to connect. */
-    public abstract Builder setStub(AdminServiceBlockingStub stub);
+    /** A service client to use to connect. */
+    public abstract Builder setServiceClient(AdminServiceClient serviceClient);
 
     /** Build the settings object. */
     public abstract AdminClientSettings build();
   }
 
-  AdminClient instantiate() throws StatusException {
-    AdminServiceBlockingStub stub;
-    if (stub().isPresent()) {
-      stub = stub().get();
+  AdminClient instantiate() throws ApiException {
+    AdminServiceClient serviceClient;
+    if (serviceClient().isPresent()) {
+      serviceClient = serviceClient().get();
     } else {
-      stub = Stubs.defaultStub(region(), AdminServiceGrpc::newBlockingStub);
+      try {
+        AdminServiceSettings.Builder builder =
+            addDefaultSettings(region(), AdminServiceSettings.newBuilder()).toBuilder();
+        if (retrySettings().isPresent()) {
+          builder.applyToAllUnaryMethods(
+              callBuilder -> {
+                callBuilder.setRetrySettings(retrySettings().get());
+                return null;
+              });
+        }
+        serviceClient = AdminServiceClient.create(builder.build());
+      } catch (Throwable t) {
+        throw ExtractStatus.toCanonical(t).underlying;
+      }
     }
-    return new AdminClientImpl(region(), stub, retrySettings());
+    return new AdminClientImpl(region(), serviceClient);
   }
 }

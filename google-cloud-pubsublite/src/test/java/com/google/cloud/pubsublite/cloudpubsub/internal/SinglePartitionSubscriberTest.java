@@ -25,6 +25,7 @@ import static org.mockito.Mockito.when;
 
 import com.google.api.core.ApiFutures;
 import com.google.api.core.ApiService.Listener;
+import com.google.api.gax.rpc.StatusCode.Code;
 import com.google.cloud.pubsub.v1.AckReplyConsumer;
 import com.google.cloud.pubsub.v1.MessageReceiver;
 import com.google.cloud.pubsublite.Message;
@@ -34,7 +35,8 @@ import com.google.cloud.pubsublite.SequencedMessage;
 import com.google.cloud.pubsublite.cloudpubsub.FlowControlSettings;
 import com.google.cloud.pubsublite.cloudpubsub.MessageTransforms;
 import com.google.cloud.pubsublite.cloudpubsub.NackHandler;
-import com.google.cloud.pubsublite.internal.StatusExceptionMatcher;
+import com.google.cloud.pubsublite.internal.ApiExceptionMatcher;
+import com.google.cloud.pubsublite.internal.CheckedApiException;
 import com.google.cloud.pubsublite.internal.testing.FakeApiService;
 import com.google.cloud.pubsublite.internal.wire.Subscriber;
 import com.google.cloud.pubsublite.internal.wire.SubscriberFactory;
@@ -45,9 +47,6 @@ import com.google.common.util.concurrent.MoreExecutors;
 import com.google.protobuf.ByteString;
 import com.google.protobuf.util.Timestamps;
 import com.google.pubsub.v1.PubsubMessage;
-import io.grpc.Status;
-import io.grpc.Status.Code;
-import io.grpc.StatusException;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -89,7 +88,7 @@ public class SinglePartitionSubscriberTest {
   @Before
   public void setUp() throws Exception {
     MockitoAnnotations.initMocks(this);
-    when(subscriberFactory.New(any())).thenReturn(wireSubscriber);
+    when(subscriberFactory.newSubscriber(any())).thenReturn(wireSubscriber);
     subscriber =
         new SinglePartitionSubscriber(
             receiver,
@@ -102,32 +101,32 @@ public class SinglePartitionSubscriberTest {
                 .setBytesOutstanding(1000000)
                 .build());
     subscriber.startAsync().awaitRunning();
-    verify(subscriberFactory).New(any());
+    verify(subscriberFactory).newSubscriber(any());
     verify(ackSetTracker).startAsync();
     verify(wireSubscriber).startAsync();
     subscriber.addListener(permanentErrorHandler, MoreExecutors.directExecutor());
   }
 
   @Test
-  public void ackSetTrackerFailure() throws StatusException {
-    ackSetTracker.fail(Status.INVALID_ARGUMENT.asException());
+  public void ackSetTrackerFailure() {
+    ackSetTracker.fail(new CheckedApiException(Code.INVALID_ARGUMENT));
     verify(ackSetTracker).stopAsync();
     verify(wireSubscriber).stopAsync();
     verify(permanentErrorHandler)
-        .failed(any(), argThat(new StatusExceptionMatcher(Code.INVALID_ARGUMENT)));
+        .failed(any(), argThat(new ApiExceptionMatcher(Code.INVALID_ARGUMENT)));
   }
 
   @Test
-  public void wireSubscriberFailure() throws StatusException {
-    wireSubscriber.fail(Status.INVALID_ARGUMENT.asException());
+  public void wireSubscriberFailure() {
+    wireSubscriber.fail(new CheckedApiException(Code.INVALID_ARGUMENT));
     verify(ackSetTracker).stopAsync();
     verify(wireSubscriber).stopAsync();
     verify(permanentErrorHandler)
-        .failed(any(), argThat(new StatusExceptionMatcher(Code.INVALID_ARGUMENT)));
+        .failed(any(), argThat(new ApiExceptionMatcher(Code.INVALID_ARGUMENT)));
   }
 
   @Test
-  public void singleMessageAck() throws StatusException {
+  public void singleMessageAck() throws CheckedApiException {
     Runnable ack = mock(Runnable.class);
     when(ackSetTracker.track(MESSAGE)).thenReturn(ack);
     subscriber.onMessages(ImmutableList.of(MESSAGE));
@@ -145,7 +144,7 @@ public class SinglePartitionSubscriberTest {
   }
 
   @Test
-  public void multiMessageAck() throws StatusException {
+  public void multiMessageAck() throws CheckedApiException {
     Runnable ack1 = mock(Runnable.class);
     Runnable ack2 = mock(Runnable.class);
     long bytes2 = 111;
@@ -185,7 +184,7 @@ public class SinglePartitionSubscriberTest {
   }
 
   @Test
-  public void singleMessageNackHandlerSuccessFuture() throws StatusException {
+  public void singleMessageNackHandlerSuccessFuture() throws CheckedApiException {
     Runnable ack = mock(Runnable.class);
     when(ackSetTracker.track(MESSAGE)).thenReturn(ack);
     subscriber.onMessages(ImmutableList.of(MESSAGE));
@@ -205,7 +204,7 @@ public class SinglePartitionSubscriberTest {
   }
 
   @Test
-  public void singleMessageNackHandlerFailedFuture() throws StatusException {
+  public void singleMessageNackHandlerFailedFuture() throws CheckedApiException {
 
     Runnable ack = mock(Runnable.class);
     when(ackSetTracker.track(MESSAGE)).thenReturn(ack);
@@ -214,11 +213,12 @@ public class SinglePartitionSubscriberTest {
     verify(receiver)
         .receiveMessage(eq(transformer.transform(MESSAGE)), ackConsumerCaptor.capture());
     when(nackHandler.nack(transformer.transform(MESSAGE)))
-        .thenReturn(ApiFutures.immediateFailedFuture(Status.INVALID_ARGUMENT.asException()));
+        .thenReturn(
+            ApiFutures.immediateFailedFuture(new CheckedApiException(Code.INVALID_ARGUMENT)));
     ackConsumerCaptor.getValue().nack();
     verify(ackSetTracker).stopAsync();
     verify(wireSubscriber).stopAsync();
     verify(permanentErrorHandler)
-        .failed(any(), argThat(new StatusExceptionMatcher(Code.INVALID_ARGUMENT)));
+        .failed(any(), argThat(new ApiExceptionMatcher(Code.INVALID_ARGUMENT)));
   }
 }

@@ -16,9 +16,9 @@
 
 package com.google.cloud.pubsublite.beam;
 
-import io.grpc.StatusException;
+import com.google.api.gax.rpc.ApiException;
 import java.io.Serializable;
 
 public interface SerializableStatusFunction<InT, OutT> extends Serializable {
-  OutT apply(InT input) throws StatusException;
+  OutT apply(InT input) throws ApiException;
 }

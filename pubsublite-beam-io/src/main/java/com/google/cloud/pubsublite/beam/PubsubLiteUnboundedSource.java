@@ -16,12 +16,13 @@
 
 package com.google.cloud.pubsublite.beam;
 
-import static com.google.cloud.pubsublite.internal.Preconditions.checkState;
+import static com.google.cloud.pubsublite.internal.CheckedApiPreconditions.checkState;
 
 import com.google.cloud.pubsublite.Offset;
 import com.google.cloud.pubsublite.Partition;
 import com.google.cloud.pubsublite.SequencedMessage;
 import com.google.cloud.pubsublite.internal.BufferingPullSubscriber;
+import com.google.cloud.pubsublite.internal.CheckedApiException;
 import com.google.cloud.pubsublite.internal.wire.Committer;
 import com.google.cloud.pubsublite.internal.wire.SubscriberFactory;
 import com.google.cloud.pubsublite.proto.Cursor;
@@ -30,7 +31,6 @@ import com.google.common.base.Ticker;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
-import io.grpc.StatusException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -62,16 +62,12 @@ class PubsubLiteUnboundedSource extends UnboundedSource<SequencedMessage, Offset
     ImmutableList.Builder<PubsubLiteUnboundedSource> builder = ImmutableList.builder();
     for (List<Partition> partitionSubset : partitionPartitions) {
       if (partitionSubset.isEmpty()) continue;
-      try {
-        builder.add(
-            new PubsubLiteUnboundedSource(
-                subscriberOptions
-                    .toBuilder()
-                    .setPartitions(ImmutableSet.copyOf(partitionSubset))
-                    .build()));
-      } catch (StatusException e) {
-        throw e.getStatus().asRuntimeException();
-      }
+      builder.add(
+          new PubsubLiteUnboundedSource(
+              subscriberOptions
+                  .toBuilder()
+                  .setPartitions(ImmutableSet.copyOf(partitionSubset))
+                  .build()));
     }
     return builder.build();
   }
@@ -112,7 +108,7 @@ class PubsubLiteUnboundedSource extends UnboundedSource<SequencedMessage, Offset
           statesBuilder.build(),
           TopicBacklogReader.create(subscriberOptions.topicBacklogReaderSettings()),
           Ticker.systemTicker());
-    } catch (StatusException e) {
+    } catch (CheckedApiException e) {
       throw new IOException(e);
     }
   }

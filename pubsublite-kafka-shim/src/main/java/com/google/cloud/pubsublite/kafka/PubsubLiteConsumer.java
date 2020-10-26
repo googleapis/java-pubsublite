@@ -20,12 +20,12 @@ import static com.google.cloud.pubsublite.kafka.KafkaExceptionUtils.toKafka;
 
 import com.google.api.core.ApiFutureCallback;
 import com.google.api.core.ApiFutures;
+import com.google.api.gax.rpc.ApiException;
 import com.google.cloud.pubsublite.Offset;
 import com.google.cloud.pubsublite.Partition;
 import com.google.cloud.pubsublite.SubscriptionPath;
 import com.google.cloud.pubsublite.TopicPath;
 import com.google.cloud.pubsublite.internal.CursorClient;
-import com.google.cloud.pubsublite.internal.ExtractStatus;
 import com.google.cloud.pubsublite.internal.wire.Assigner;
 import com.google.cloud.pubsublite.internal.wire.AssignerFactory;
 import com.google.cloud.pubsublite.internal.wire.PartitionAssignmentReceiver;
@@ -35,7 +35,6 @@ import com.google.cloud.pubsublite.proto.SeekRequest.NamedTarget;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.flogger.GoogleLogger;
-import io.grpc.StatusException;
 import java.time.Duration;
 import java.util.Collection;
 import java.util.HashSet;
@@ -145,7 +144,7 @@ class PubsubLiteConsumer implements Consumer<byte[], byte[]> {
         throw new UnsupportedOperationException(
             "Pub/Sub Lite consumers may only interact with the one topic they are configured for.");
       }
-    } catch (StatusException e) {
+    } catch (ApiException e) {
       throw toKafka(e);
     }
   }
@@ -154,7 +153,7 @@ class PubsubLiteConsumer implements Consumer<byte[], byte[]> {
     checkTopic(topicPartition.topic());
     try {
       return Partition.of(topicPartition.partition());
-    } catch (StatusException e) {
+    } catch (ApiException e) {
       throw toKafka(e);
     }
   }
@@ -203,7 +202,7 @@ class PubsubLiteConsumer implements Consumer<byte[], byte[]> {
     consumer = Optional.of(consumerFactory.newConsumer());
     try {
       assigner = Optional.of(assignerFactory.New(newAssignmentReceiver(consumerRebalanceListener)));
-    } catch (StatusException e) {
+    } catch (ApiException e) {
       throw toKafka(e);
     }
   }
@@ -251,11 +250,10 @@ class PubsubLiteConsumer implements Consumer<byte[], byte[]> {
     ImmutableMap.Builder<Partition, Offset> output = ImmutableMap.builder();
     try {
       map.forEach(
-          ExtractStatus.rethrowAsRuntime(
-              (topicPartition, offsetAndMetadata) -> {
-                output.put(
-                    checkTopicGetPartition(topicPartition), Offset.of(offsetAndMetadata.offset()));
-              }));
+          (topicPartition, offsetAndMetadata) -> {
+            output.put(
+                checkTopicGetPartition(topicPartition), Offset.of(offsetAndMetadata.offset()));
+          });
     } catch (Throwable t) {
       throw toKafka(t);
     }
@@ -417,12 +415,11 @@ class PubsubLiteConsumer implements Consumer<byte[], byte[]> {
               .get(timeout.toMillis(), TimeUnit.MILLISECONDS);
       ImmutableMap.Builder<TopicPartition, OffsetAndMetadata> output = ImmutableMap.builder();
       targets.forEach(
-          ExtractStatus.rethrowAsRuntime(
-              partition -> {
-                output.put(
-                    toTopicPartition(partition),
-                    new OffsetAndMetadata(full_map.getOrDefault(partition, Offset.of(0)).value()));
-              }));
+          partition -> {
+            output.put(
+                toTopicPartition(partition),
+                new OffsetAndMetadata(full_map.getOrDefault(partition, Offset.of(0)).value()));
+          });
       return output.build();
     } catch (Throwable t) {
       throw toKafka(t);

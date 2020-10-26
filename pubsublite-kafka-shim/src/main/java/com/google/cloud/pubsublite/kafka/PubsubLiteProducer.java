@@ -24,6 +24,7 @@ import com.google.api.core.ApiFutureCallback;
 import com.google.api.core.ApiFutures;
 import com.google.api.core.ApiService.Listener;
 import com.google.api.core.ApiService.State;
+import com.google.api.gax.rpc.ApiException;
 import com.google.cloud.pubsublite.PublishMetadata;
 import com.google.cloud.pubsublite.TopicPath;
 import com.google.cloud.pubsublite.internal.ExtractStatus;
@@ -31,7 +32,6 @@ import com.google.cloud.pubsublite.internal.Publisher;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.flogger.GoogleLogger;
 import com.google.common.util.concurrent.MoreExecutors;
-import io.grpc.StatusException;
 import java.io.IOException;
 import java.time.Duration;
 import java.util.List;
@@ -114,7 +114,7 @@ class PubsubLiteProducer implements Producer<byte[], byte[]> {
         throw new UnsupportedOperationException(
             "Pub/Sub Lite producers may only interact with the one topic they are configured for.");
       }
-    } catch (StatusException e) {
+    } catch (ApiException e) {
       throw toKafka(e);
     }
   }
@@ -168,7 +168,7 @@ class PubsubLiteProducer implements Producer<byte[], byte[]> {
     try {
       publisher.flush();
     } catch (IOException e) {
-      throw ExtractStatus.toCanonical(e).getStatus().asRuntimeException();
+      throw toKafka(e);
     }
   }
 

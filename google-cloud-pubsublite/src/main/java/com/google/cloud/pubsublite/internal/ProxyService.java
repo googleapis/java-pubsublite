@@ -16,19 +16,18 @@
 
 package com.google.cloud.pubsublite.internal;
 
-import static com.google.cloud.pubsublite.internal.Preconditions.checkArgument;
-import static com.google.cloud.pubsublite.internal.Preconditions.checkState;
+import static com.google.cloud.pubsublite.internal.ExtractStatus.toCanonical;
+import static com.google.cloud.pubsublite.internal.UncheckedApiPreconditions.checkArgument;
+import static com.google.cloud.pubsublite.internal.UncheckedApiPreconditions.checkState;
 
 import com.google.api.core.AbstractApiService;
 import com.google.api.core.ApiService;
+import com.google.api.gax.rpc.ApiException;
 import com.google.common.collect.ImmutableList;
 import com.google.common.util.concurrent.MoreExecutors;
-import io.grpc.Status;
-import io.grpc.StatusException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -44,7 +43,7 @@ public abstract class ProxyService extends AbstractApiService {
   // Add a new ApiServices to this. Requires that all of them are in state NEW and this is in state
   // NEW.
   protected final <T extends ApiService> void addServices(Collection<T> services)
-      throws StatusException {
+      throws ApiException {
     checkState(state() == State.NEW);
     for (ApiService service : services) {
       checkArgument(service.state() == State.NEW, "All services must not be started.");
@@ -52,27 +51,28 @@ public abstract class ProxyService extends AbstractApiService {
     }
   }
 
-  protected final void addServices(ApiService... services) throws StatusException {
+  protected final void addServices(ApiService... services) throws ApiException {
     addServices(ImmutableList.copyOf(services));
   }
 
   // Method to be called on service start after dependent services start.
-  protected abstract void start() throws StatusException;
+  protected abstract void start() throws CheckedApiException;
   // Method to be called on service stop before dependent services stop.
-  protected abstract void stop() throws StatusException;
+  protected abstract void stop() throws CheckedApiException;
 
   // Method to be called for class-specific permanent error handling after trying to stop all other
   // services. May not throw.
-  protected abstract void handlePermanentError(StatusException error);
+  protected abstract void handlePermanentError(CheckedApiException error);
 
   // Tries to stop all dependent services and sets this service into the FAILED state.
-  protected final void onPermanentError(StatusException error) {
+  protected final void onPermanentError(CheckedApiException error) {
     if (stoppedOrFailed.getAndSet(true)) return;
     for (ApiService service : services) {
       service.stopAsync();
     }
     handlePermanentError(error);
-    notifyFailed(error);
+    // Failures are sent to the client and should always be ApiExceptions.
+    notifyFailed(error.underlying);
   }
 
   // AbstractApiService implementation.
@@ -87,7 +87,7 @@ public abstract class ProxyService extends AbstractApiService {
             if (leftToStart.decrementAndGet() == 0) {
               try {
                 start();
-              } catch (StatusException e) {
+              } catch (CheckedApiException e) {
                 onPermanentError(e);
                 return;
               }
@@ -97,8 +97,7 @@ public abstract class ProxyService extends AbstractApiService {
 
           @Override
           public void failed(State state, Throwable throwable) {
-            Optional<Status> statusOr = ExtractStatus.extract(throwable);
-            onPermanentError(statusOr.orElse(Status.INTERNAL.withCause(throwable)).asException());
+            onPermanentError(toCanonical(throwable));
           }
         };
     for (ApiService service : services) {
@@ -124,7 +123,7 @@ public abstract class ProxyService extends AbstractApiService {
         };
     try {
       stop();
-    } catch (StatusException e) {
+    } catch (CheckedApiException e) {
       onPermanentError(e);
       return;
     }

@@ -24,18 +24,18 @@ import static org.mockito.MockitoAnnotations.initMocks;
 
 import com.google.api.core.ApiFuture;
 import com.google.api.core.ApiFutures;
+import com.google.api.gax.rpc.StatusCode.Code;
 import com.google.cloud.pubsublite.Message;
 import com.google.cloud.pubsublite.Offset;
 import com.google.cloud.pubsublite.Partition;
 import com.google.cloud.pubsublite.PublishMetadata;
+import com.google.cloud.pubsublite.internal.ApiExceptionMatcher;
+import com.google.cloud.pubsublite.internal.CheckedApiException;
 import com.google.cloud.pubsublite.internal.Publisher;
 import com.google.cloud.pubsublite.internal.RoutingPolicy;
-import com.google.cloud.pubsublite.internal.StatusExceptionMatcher;
 import com.google.cloud.pubsublite.internal.testing.FakeApiService;
 import com.google.common.collect.ImmutableMap;
 import com.google.protobuf.ByteString;
-import io.grpc.Status.Code;
-import io.grpc.StatusException;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -55,7 +55,7 @@ public class RoutingPublisherTest {
   private RoutingPublisher routing;
 
   @Before
-  public void setUp() throws StatusException {
+  public void setUp() throws CheckedApiException {
     initMocks(this);
     this.routing =
         new RoutingPublisher(
@@ -89,6 +89,6 @@ public class RoutingPublisherTest {
     Message message = Message.builder().setKey(ByteString.copyFromUtf8("abc")).build();
     when(routingPolicy.route(message.key())).thenReturn(Partition.of(77));
     ApiFuture<PublishMetadata> fut = routing.publish(message);
-    StatusExceptionMatcher.assertFutureThrowsCode(fut, Code.FAILED_PRECONDITION);
+    ApiExceptionMatcher.assertFutureThrowsCode(fut, Code.FAILED_PRECONDITION);
   }
 }

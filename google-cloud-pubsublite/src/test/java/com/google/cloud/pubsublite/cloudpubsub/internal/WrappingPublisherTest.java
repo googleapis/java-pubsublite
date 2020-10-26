@@ -25,19 +25,19 @@ import static org.mockito.MockitoAnnotations.initMocks;
 
 import com.google.api.core.ApiFuture;
 import com.google.api.core.SettableApiFuture;
+import com.google.api.gax.rpc.StatusCode.Code;
 import com.google.cloud.pubsublite.Message;
 import com.google.cloud.pubsublite.Offset;
 import com.google.cloud.pubsublite.Partition;
 import com.google.cloud.pubsublite.PublishMetadata;
 import com.google.cloud.pubsublite.cloudpubsub.KeyExtractor;
 import com.google.cloud.pubsublite.cloudpubsub.MessageTransforms;
+import com.google.cloud.pubsublite.internal.ApiExceptionMatcher;
+import com.google.cloud.pubsublite.internal.CheckedApiException;
 import com.google.cloud.pubsublite.internal.Publisher;
-import com.google.cloud.pubsublite.internal.StatusExceptionMatcher;
 import com.google.cloud.pubsublite.internal.testing.FakeApiService;
 import com.google.protobuf.ByteString;
 import com.google.pubsub.v1.PubsubMessage;
-import io.grpc.Status.Code;
-import io.grpc.StatusException;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -55,7 +55,7 @@ public class WrappingPublisherTest {
   private WrappingPublisher publisher;
 
   @Before
-  public void setUp() throws StatusException {
+  public void setUp() throws CheckedApiException {
     initMocks(this);
     publisher =
         new WrappingPublisher(
@@ -99,7 +99,7 @@ public class WrappingPublisherTest {
 
     ApiFuture<String> published = publisher.publish(message);
     verify(underlying, times(0)).publish(any());
-    StatusExceptionMatcher.assertFutureThrowsCode(published, Code.INVALID_ARGUMENT);
+    ApiExceptionMatcher.assertFutureThrowsCode(published, Code.INVALID_ARGUMENT);
     assertThat(publisher.isRunning()).isFalse();
   }
 }

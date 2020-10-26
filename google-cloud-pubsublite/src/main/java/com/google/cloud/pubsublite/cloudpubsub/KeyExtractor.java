@@ -16,9 +16,9 @@
 
 package com.google.cloud.pubsublite.cloudpubsub;
 
+import com.google.api.gax.rpc.ApiException;
 import com.google.protobuf.ByteString;
 import com.google.pubsub.v1.PubsubMessage;
-import io.grpc.StatusException;
 
 /**
  * A KeyExtractor can extract the Pub/Sub Lite 'key' field used for message routing from a
@@ -31,5 +31,5 @@ public interface KeyExtractor {
   KeyExtractor DEFAULT = PubsubMessage::getOrderingKeyBytes;
 
   /** Extract the ByteString routing key from a PubsubMessage. */
-  ByteString extractKey(PubsubMessage message) throws StatusException;
+  ByteString extractKey(PubsubMessage message) throws ApiException;
 }

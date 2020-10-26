@@ -23,8 +23,7 @@ import com.google.cloud.pubsublite.CloudZone;
 import com.google.cloud.pubsublite.ProjectNumber;
 import com.google.cloud.pubsublite.SubscriptionName;
 import com.google.cloud.pubsublite.SubscriptionPath;
-import com.google.cloud.pubsublite.proto.PartitionAssignmentServiceGrpc;
-import io.grpc.Channel;
+import com.google.cloud.pubsublite.v1.PartitionAssignmentServiceClient;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -32,7 +31,7 @@ import org.junit.runners.JUnit4;
 @RunWith(JUnit4.class)
 public class AssignerBuilderTest {
   @Test
-  public void testBuilder() throws Exception {
+  public void testBuilder() {
     AssignerBuilder.newBuilder()
         .setSubscriptionPath(
             SubscriptionPath.newBuilder()
@@ -41,7 +40,7 @@ public class AssignerBuilderTest {
                 .setName(SubscriptionName.of("abc"))
                 .build())
         .setReceiver(mock(PartitionAssignmentReceiver.class))
-        .setAssignmentStub(PartitionAssignmentServiceGrpc.newStub(mock(Channel.class)))
+        .setServiceClient(mock(PartitionAssignmentServiceClient.class))
         .build();
   }
 }

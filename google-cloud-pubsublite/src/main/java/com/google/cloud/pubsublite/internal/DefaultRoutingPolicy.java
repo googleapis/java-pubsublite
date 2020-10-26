@@ -16,14 +16,14 @@
 
 package com.google.cloud.pubsublite.internal;
 
-import static com.google.cloud.pubsublite.internal.Preconditions.checkArgument;
+import static com.google.cloud.pubsublite.internal.UncheckedApiPreconditions.checkArgument;
 
+import com.google.api.gax.rpc.ApiException;
 import com.google.cloud.pubsublite.Partition;
 import com.google.common.hash.HashCode;
 import com.google.common.hash.Hashing;
 import com.google.errorprone.annotations.concurrent.GuardedBy;
 import com.google.protobuf.ByteString;
-import io.grpc.StatusException;
 import java.math.BigInteger;
 import java.util.Random;
 
@@ -34,14 +34,14 @@ public class DefaultRoutingPolicy implements RoutingPolicy {
   @GuardedBy("monitor.monitor")
   private int nextWithoutKeyPartition;
 
-  public DefaultRoutingPolicy(int numPartitions) throws StatusException {
+  public DefaultRoutingPolicy(int numPartitions) throws ApiException {
     checkArgument(numPartitions > 0, "Must have a positive number of partitions.");
     this.numPartitions = numPartitions;
     this.nextWithoutKeyPartition = new Random().nextInt(this.numPartitions);
   }
 
   @Override
-  public Partition routeWithoutKey() throws StatusException {
+  public Partition routeWithoutKey() throws ApiException {
     try (CloseableMonitor.Hold h = monitor.enter()) {
       Partition toReturn = Partition.of(nextWithoutKeyPartition);
       int next = nextWithoutKeyPartition + 1;
@@ -52,7 +52,7 @@ public class DefaultRoutingPolicy implements RoutingPolicy {
   }
 
   @Override
-  public Partition route(ByteString messageKey) throws StatusException {
+  public Partition route(ByteString messageKey) throws ApiException {
     HashCode code = Hashing.sha256().hashBytes(messageKey.asReadOnlyByteBuffer());
     checkArgument(code.bits() == 256); // sanity check.
     BigInteger bigEndianValue = new BigInteger(/*signum=*/ 1, code.asBytes());

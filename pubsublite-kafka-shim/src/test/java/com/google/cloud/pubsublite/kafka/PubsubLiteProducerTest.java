@@ -24,18 +24,17 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.google.api.core.SettableApiFuture;
+import com.google.api.gax.rpc.StatusCode.Code;
 import com.google.cloud.pubsublite.Message;
 import com.google.cloud.pubsublite.Offset;
 import com.google.cloud.pubsublite.Partition;
 import com.google.cloud.pubsublite.PublishMetadata;
 import com.google.cloud.pubsublite.TopicName;
 import com.google.cloud.pubsublite.TopicPath;
+import com.google.cloud.pubsublite.internal.CheckedApiException;
 import com.google.cloud.pubsublite.internal.Publisher;
 import com.google.cloud.pubsublite.internal.testing.FakeApiService;
 import com.google.common.collect.ImmutableMap;
-import io.grpc.Status;
-import io.grpc.Status.Code;
-import io.grpc.StatusException;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import org.apache.kafka.clients.consumer.ConsumerGroupMetadata;
@@ -91,7 +90,7 @@ public class PubsubLiteProducerTest {
   }
 
   @Test
-  public void badRecordThrows() throws StatusException {
+  public void badRecordThrows() {
     TopicPath other =
         example(TopicPath.class).toBuilder().setName(TopicName.of("not-example")).build();
     ProducerRecord<byte[], byte[]> badTopicRecord =
@@ -110,7 +109,7 @@ public class PubsubLiteProducerTest {
   }
 
   @Test
-  public void badTopicThrows() throws StatusException {
+  public void badTopicThrows() {
     TopicPath other =
         example(TopicPath.class).toBuilder().setName(TopicName.of("not-example")).build();
     ProducerRecord<byte[], byte[]> record =
@@ -174,7 +173,7 @@ public class PubsubLiteProducerTest {
     when(underlying.publish(MESSAGE)).thenReturn(response);
     Future<RecordMetadata> future = producer.send(RECORD);
     verify(underlying).publish(MESSAGE);
-    response.setException(Status.FAILED_PRECONDITION.asException());
+    response.setException(new CheckedApiException(Code.FAILED_PRECONDITION).underlying);
     assertFutureThrowsCode(future, Code.FAILED_PRECONDITION);
   }
 
@@ -194,7 +193,7 @@ public class PubsubLiteProducerTest {
               }
             });
     verify(underlying).publish(MESSAGE);
-    response.setException(Status.FAILED_PRECONDITION.asException());
+    response.setException(new CheckedApiException(Code.FAILED_PRECONDITION).underlying);
     assertFutureThrowsCode(future, Code.FAILED_PRECONDITION);
     assertFutureThrowsCode(leaked, Code.FAILED_PRECONDITION);
   }

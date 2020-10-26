@@ -16,11 +16,12 @@
 
 package com.google.cloud.pubsublite.internal.wire;
 
+import com.google.api.gax.rpc.ApiException;
 import com.google.cloud.pubsublite.SequencedMessage;
 import com.google.common.collect.ImmutableList;
-import io.grpc.StatusException;
 import java.util.function.Consumer;
 
 public interface SubscriberFactory {
-  Subscriber New(Consumer<ImmutableList<SequencedMessage>> message_consumer) throws StatusException;
+  Subscriber newSubscriber(Consumer<ImmutableList<SequencedMessage>> message_consumer)
+      throws ApiException;
 }

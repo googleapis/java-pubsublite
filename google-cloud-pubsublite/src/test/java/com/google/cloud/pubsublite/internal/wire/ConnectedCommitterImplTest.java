@@ -16,90 +16,70 @@
 
 package com.google.cloud.pubsublite.internal.wire;
 
-import static org.mockito.AdditionalAnswers.delegatesTo;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.doAnswer;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.MockitoAnnotations.initMocks;
 
+import com.google.api.gax.rpc.ClientStream;
+import com.google.api.gax.rpc.ResponseObserver;
+import com.google.api.gax.rpc.StatusCode.Code;
 import com.google.cloud.pubsublite.CloudRegion;
 import com.google.cloud.pubsublite.CloudZone;
 import com.google.cloud.pubsublite.Offset;
 import com.google.cloud.pubsublite.ProjectNumber;
 import com.google.cloud.pubsublite.SubscriptionName;
 import com.google.cloud.pubsublite.SubscriptionPath;
-import com.google.cloud.pubsublite.internal.StatusExceptionMatcher;
+import com.google.cloud.pubsublite.internal.ApiExceptionMatcher;
+import com.google.cloud.pubsublite.internal.CheckedApiException;
 import com.google.cloud.pubsublite.proto.Cursor;
-import com.google.cloud.pubsublite.proto.CursorServiceGrpc;
 import com.google.cloud.pubsublite.proto.InitialCommitCursorRequest;
 import com.google.cloud.pubsublite.proto.InitialCommitCursorResponse;
 import com.google.cloud.pubsublite.proto.SequencedCommitCursorResponse;
 import com.google.cloud.pubsublite.proto.StreamingCommitCursorRequest;
 import com.google.cloud.pubsublite.proto.StreamingCommitCursorResponse;
 import com.google.common.base.Preconditions;
-import io.grpc.ManagedChannel;
-import io.grpc.Status;
-import io.grpc.Status.Code;
-import io.grpc.StatusException;
-import io.grpc.inprocess.InProcessChannelBuilder;
-import io.grpc.inprocess.InProcessServerBuilder;
-import io.grpc.stub.StreamObserver;
-import io.grpc.testing.GrpcCleanupRule;
 import java.io.IOException;
 import java.util.Optional;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
+import org.mockito.Mock;
 import org.mockito.stubbing.Answer;
 
 @RunWith(JUnit4.class)
 public class ConnectedCommitterImplTest {
-  @Rule public final GrpcCleanupRule grpcCleanup = new GrpcCleanupRule();
-
   private static StreamingCommitCursorRequest initialRequest() {
-    try {
-      return StreamingCommitCursorRequest.newBuilder()
-          .setInitial(
-              InitialCommitCursorRequest.newBuilder()
-                  .setSubscription(
-                      SubscriptionPath.newBuilder()
-                          .setProject(ProjectNumber.of(12345))
-                          .setLocation(CloudZone.of(CloudRegion.of("us-east1"), 'a'))
-                          .setName(SubscriptionName.of("some_subscription"))
-                          .build()
-                          .toString())
-                  .setPartition(1024))
-          .build();
-    } catch (StatusException e) {
-      throw e.getStatus().asRuntimeException();
-    }
+    return StreamingCommitCursorRequest.newBuilder()
+        .setInitial(
+            InitialCommitCursorRequest.newBuilder()
+                .setSubscription(
+                    SubscriptionPath.newBuilder()
+                        .setProject(ProjectNumber.of(12345))
+                        .setLocation(CloudZone.of(CloudRegion.of("us-east1"), 'a'))
+                        .setName(SubscriptionName.of("some_subscription"))
+                        .build()
+                        .toString())
+                .setPartition(1024))
+        .build();
   }
 
   private static final ConnectedCommitterImpl.Factory FACTORY =
       new ConnectedCommitterImpl.Factory();
 
-  private CursorServiceGrpc.CursorServiceStub stub;
+  @Mock
+  private StreamFactory<StreamingCommitCursorRequest, StreamingCommitCursorResponse> streamFactory;
 
-  @SuppressWarnings("unchecked")
-  private final StreamObserver<StreamingCommitCursorRequest> mockRequestStream =
-      mock(StreamObserver.class);
+  @Mock private ClientStream<StreamingCommitCursorRequest> mockRequestStream;
 
-  @SuppressWarnings("unchecked")
-  private final StreamObserver<SequencedCommitCursorResponse> mockOutputStream =
-      mock(StreamObserver.class);
+  @Mock private ResponseObserver<SequencedCommitCursorResponse> mockOutputStream;
 
-  private final CursorServiceGrpc.CursorServiceImplBase serviceImpl =
-      mock(
-          CursorServiceGrpc.CursorServiceImplBase.class,
-          delegatesTo(new CursorServiceGrpc.CursorServiceImplBase() {}));
-
-  private Optional<StreamObserver<StreamingCommitCursorResponse>> leakedResponseStream =
+  private Optional<ResponseObserver<StreamingCommitCursorResponse>> leakedResponseStream =
       Optional.empty();
 
   private ConnectedCommitter committer;
@@ -108,39 +88,29 @@ public class ConnectedCommitterImplTest {
 
   @Before
   public void setUp() throws IOException {
-    String serverName = InProcessServerBuilder.generateName();
-    grpcCleanup.register(
-        InProcessServerBuilder.forName(serverName)
-            .directExecutor()
-            .addService(serviceImpl)
-            .build()
-            .start());
-    ManagedChannel channel =
-        grpcCleanup.register(InProcessChannelBuilder.forName(serverName).directExecutor().build());
-    stub = CursorServiceGrpc.newStub(channel);
-
+    initMocks(this);
     doAnswer(
-            (Answer<StreamObserver<StreamingCommitCursorRequest>>)
+            (Answer<ClientStream<StreamingCommitCursorRequest>>)
                 args -> {
                   Preconditions.checkArgument(!leakedResponseStream.isPresent());
-                  StreamObserver<StreamingCommitCursorResponse> responseObserver =
+                  ResponseObserver<StreamingCommitCursorResponse> ResponseObserver =
                       args.getArgument(0);
-                  leakedResponseStream = Optional.of(responseObserver);
+                  leakedResponseStream = Optional.of(ResponseObserver);
                   return mockRequestStream;
                 })
-        .when(serviceImpl)
-        .streamingCommitCursor(any());
+        .when(streamFactory)
+        .New(any());
   }
 
   @After
   public void tearDown() {
-    leakedResponseStream.ifPresent(StreamObserver::onCompleted);
+    leakedResponseStream.ifPresent(ResponseObserver::onComplete);
   }
 
   private Answer<Void> AnswerWith(StreamingCommitCursorResponse response) {
     return invocation -> {
       Preconditions.checkArgument(leakedResponseStream.isPresent());
-      leakedResponseStream.get().onNext(response);
+      leakedResponseStream.get().onResponse(response);
       return null;
     };
   }
@@ -149,13 +119,13 @@ public class ConnectedCommitterImplTest {
     return AnswerWith(response.build());
   }
 
-  private Answer<Void> AnswerWith(Status error) {
-    Preconditions.checkArgument(!error.isOk());
+  private Answer<Void> AnswerWith(Code error) {
     return invocation -> {
       Preconditions.checkArgument(leakedResponseStream.isPresent());
-      leakedResponseStream.get().onError(error.asRuntimeException());
+      leakedResponseStream.get().onError(new CheckedApiException(error).underlying);
       leakedResponseStream = Optional.empty();
-      verify(mockRequestStream).onError(argThat(new StatusExceptionMatcher(error.getCode())));
+      verify(mockRequestStream).closeSendWithError(argThat(new ApiExceptionMatcher(error)));
+      verify(mockOutputStream).onError(argThat(new ApiExceptionMatcher(error)));
       verifyNoMoreInteractions(mockOutputStream);
       return null;
     };
@@ -163,62 +133,57 @@ public class ConnectedCommitterImplTest {
 
   @Test
   public void construct_SendsInitialThenResponse() throws Exception {
-    Preconditions.checkNotNull(serviceImpl);
     doAnswer(
             AnswerWith(
                 StreamingCommitCursorResponse.newBuilder()
                     .setInitial(InitialCommitCursorResponse.getDefaultInstance())))
         .when(mockRequestStream)
-        .onNext(initialRequest());
+        .send(initialRequest());
     try (ConnectedCommitter committer =
-        FACTORY.New(stub::streamingCommitCursor, mockOutputStream, initialRequest())) {}
+        FACTORY.New(streamFactory, mockOutputStream, initialRequest())) {}
   }
 
   @Test
   public void construct_SendsInitialThenError() throws Exception {
-    Preconditions.checkNotNull(serviceImpl);
-    doAnswer(AnswerWith(Status.INTERNAL)).when(mockRequestStream).onNext(initialRequest());
+    doAnswer(AnswerWith(Code.INTERNAL)).when(mockRequestStream).send(initialRequest());
     try (ConnectedCommitter committer =
-        FACTORY.New(stub::streamingCommitCursor, mockOutputStream, initialRequest())) {}
+        FACTORY.New(streamFactory, mockOutputStream, initialRequest())) {}
   }
 
   @Test
   public void construct_SendsCommitResponseError() throws Exception {
-    Preconditions.checkNotNull(serviceImpl);
     doAnswer(
             AnswerWith(
                 StreamingCommitCursorResponse.newBuilder()
                     .setCommit(SequencedCommitCursorResponse.getDefaultInstance())))
         .when(mockRequestStream)
-        .onNext(initialRequest());
+        .send(initialRequest());
     try (ConnectedCommitter committer =
-        FACTORY.New(stub::streamingCommitCursor, mockOutputStream, initialRequest())) {
-      verify(mockOutputStream)
-          .onError(argThat(new StatusExceptionMatcher(Code.FAILED_PRECONDITION)));
+        FACTORY.New(streamFactory, mockOutputStream, initialRequest())) {
+      verify(mockOutputStream).onError(argThat(new ApiExceptionMatcher(Code.FAILED_PRECONDITION)));
       verifyNoMoreInteractions(mockOutputStream);
     }
     leakedResponseStream = Optional.empty();
   }
 
   private void initialize() {
-    Preconditions.checkNotNull(serviceImpl);
     doAnswer(
             AnswerWith(
                 StreamingCommitCursorResponse.newBuilder()
                     .setInitial(InitialCommitCursorResponse.getDefaultInstance())))
         .when(mockRequestStream)
-        .onNext(initialRequest());
-    committer = FACTORY.New(stub::streamingCommitCursor, mockOutputStream, initialRequest());
-    verify(mockRequestStream).onNext(initialRequest());
+        .send(initialRequest());
+    committer = FACTORY.New(streamFactory, mockOutputStream, initialRequest());
+    verify(mockRequestStream).send(initialRequest());
   }
 
   @Test
   public void responseAfterClose_Dropped() throws Exception {
     initialize();
     committer.close();
-    verify(mockRequestStream).onCompleted();
+    verify(mockRequestStream).closeSend();
     committer.commit(Offset.of(10));
-    verify(mockOutputStream, never()).onNext(any());
+    verify(mockOutputStream, never()).onResponse(any());
   }
 
   @Test
@@ -226,8 +191,8 @@ public class ConnectedCommitterImplTest {
     initialize();
     StreamingCommitCursorResponse.Builder builder = StreamingCommitCursorResponse.newBuilder();
     builder.getInitialBuilder();
-    leakedResponseStream.get().onNext(builder.build());
-    verify(mockOutputStream).onError(argThat(new StatusExceptionMatcher(Code.FAILED_PRECONDITION)));
+    leakedResponseStream.get().onResponse(builder.build());
+    verify(mockOutputStream).onError(argThat(new ApiExceptionMatcher(Code.FAILED_PRECONDITION)));
     leakedResponseStream = Optional.empty();
   }
 
@@ -237,7 +202,7 @@ public class ConnectedCommitterImplTest {
     StreamingCommitCursorRequest.Builder builder = StreamingCommitCursorRequest.newBuilder();
     builder.getCommitBuilder().setCursor(Cursor.newBuilder().setOffset(154));
     committer.commit(Offset.of(154));
-    verify(mockRequestStream).onNext(builder.build());
+    verify(mockRequestStream).send(builder.build());
   }
 
   @Test
@@ -245,11 +210,11 @@ public class ConnectedCommitterImplTest {
     initialize();
     leakedResponseStream
         .get()
-        .onNext(
+        .onResponse(
             StreamingCommitCursorResponse.newBuilder()
                 .setCommit(SequencedCommitCursorResponse.newBuilder().setAcknowledgedCommits(10))
                 .build());
     verify(mockOutputStream)
-        .onNext(SequencedCommitCursorResponse.newBuilder().setAcknowledgedCommits(10).build());
+        .onResponse(SequencedCommitCursorResponse.newBuilder().setAcknowledgedCommits(10).build());
   }
 }

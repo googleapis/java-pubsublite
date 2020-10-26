@@ -16,10 +16,10 @@
 
 package com.google.cloud.pubsublite;
 
-import static com.google.cloud.pubsublite.internal.Preconditions.checkArgument;
+import static com.google.cloud.pubsublite.internal.UncheckedApiPreconditions.checkArgument;
 
+import com.google.api.gax.rpc.ApiException;
 import com.google.auto.value.AutoValue;
-import io.grpc.StatusException;
 import java.io.Serializable;
 import java.util.Arrays;
 
@@ -58,7 +58,7 @@ public abstract class LocationPath implements Serializable {
    *
    * <p>projects/&lt;project number&gt;/locations/&lt;cloud zone&gt;
    */
-  public static LocationPath parse(String path) throws StatusException {
+  public static LocationPath parse(String path) throws ApiException {
     String[] splits = path.split("/");
     checkArgument(splits.length == 4);
     checkArgument(splits[2].equals("locations"));

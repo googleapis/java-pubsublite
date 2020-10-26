@@ -16,16 +16,18 @@
 
 package com.google.cloud.pubsublite.internal.wire;
 
+import static com.google.cloud.pubsublite.internal.ExtractStatus.toCanonical;
+import static com.google.cloud.pubsublite.internal.ServiceClients.addDefaultSettings;
+
+import com.google.api.gax.rpc.ApiException;
 import com.google.auto.value.AutoValue;
 import com.google.cloud.pubsublite.ProjectLookupUtils;
-import com.google.cloud.pubsublite.Stubs;
 import com.google.cloud.pubsublite.SubscriptionPath;
 import com.google.cloud.pubsublite.proto.InitialPartitionAssignmentRequest;
-import com.google.cloud.pubsublite.proto.PartitionAssignmentServiceGrpc;
-import com.google.cloud.pubsublite.proto.PartitionAssignmentServiceGrpc.PartitionAssignmentServiceStub;
+import com.google.cloud.pubsublite.v1.PartitionAssignmentServiceClient;
+import com.google.cloud.pubsublite.v1.PartitionAssignmentServiceSettings;
 import com.google.common.flogger.GoogleLogger;
 import com.google.protobuf.ByteString;
-import io.grpc.StatusException;
 import java.nio.ByteBuffer;
 import java.util.Optional;
 import java.util.UUID;
@@ -39,7 +41,7 @@ public abstract class AssignerBuilder {
   abstract PartitionAssignmentReceiver receiver();
 
   // Optional parameters.
-  abstract Optional<PartitionAssignmentServiceStub> assignmentStub();
+  abstract Optional<PartitionAssignmentServiceClient> serviceClient();
 
   public static Builder newBuilder() {
     return new AutoValue_AssignerBuilder.Builder();
@@ -53,22 +55,27 @@ public abstract class AssignerBuilder {
     public abstract Builder setReceiver(PartitionAssignmentReceiver receiver);
 
     // Optional parameters.
-    public abstract Builder setAssignmentStub(PartitionAssignmentServiceStub stub);
+    public abstract Builder setServiceClient(PartitionAssignmentServiceClient serviceClient);
 
     abstract AssignerBuilder autoBuild();
 
     @SuppressWarnings("CheckReturnValue")
-    public Assigner build() throws StatusException {
+    public Assigner build() throws ApiException {
       AssignerBuilder builder = autoBuild();
 
-      PartitionAssignmentServiceStub stub;
-      if (builder.assignmentStub().isPresent()) {
-        stub = builder.assignmentStub().get();
+      PartitionAssignmentServiceClient serviceClient;
+      if (builder.serviceClient().isPresent()) {
+        serviceClient = builder.serviceClient().get();
       } else {
-        stub =
-            Stubs.defaultStub(
-                builder.subscriptionPath().location().region(),
-                PartitionAssignmentServiceGrpc::newStub);
+        try {
+          serviceClient =
+              PartitionAssignmentServiceClient.create(
+                  addDefaultSettings(
+                      builder.subscriptionPath().location().region(),
+                      PartitionAssignmentServiceSettings.newBuilder()));
+        } catch (Throwable t) {
+          throw toCanonical(t).underlying;
+        }
       }
 
       UUID uuid = UUID.randomUUID();
@@ -84,8 +91,7 @@ public abstract class AssignerBuilder {
                   ProjectLookupUtils.toCanonical(builder.subscriptionPath()).toString())
               .setClientId(ByteString.copyFrom(uuidBuffer.array()))
               .build();
-      return new AssignerImpl(
-          stub, new ConnectedAssignerImpl.Factory(), initial, builder.receiver());
+      return new AssignerImpl(serviceClient, initial, builder.receiver());
     }
   }
 }

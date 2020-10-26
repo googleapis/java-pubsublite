@@ -16,6 +16,7 @@
 
 package com.google.cloud.pubsublite.beam;
 
+import com.google.api.gax.rpc.ApiException;
 import com.google.auto.value.AutoValue;
 import com.google.cloud.pubsublite.AdminClient;
 import com.google.cloud.pubsublite.AdminClientSettings;
@@ -24,9 +25,8 @@ import com.google.cloud.pubsublite.TopicPath;
 import com.google.cloud.pubsublite.internal.ExtractStatus;
 import com.google.cloud.pubsublite.internal.TopicStatsClient;
 import com.google.cloud.pubsublite.internal.TopicStatsClientSettings;
-import com.google.cloud.pubsublite.proto.TopicStatsServiceGrpc.TopicStatsServiceBlockingStub;
+import com.google.cloud.pubsublite.v1.TopicStatsServiceClient;
 import com.google.common.base.Optional;
-import io.grpc.StatusException;
 import java.io.Serializable;
 import java.util.concurrent.ExecutionException;
 
@@ -41,7 +41,7 @@ public abstract class TopicBacklogReaderSettings implements Serializable {
   abstract TopicPath topicPath();
 
   // Optional parameters
-  abstract Optional<SerializableSupplier<TopicStatsServiceBlockingStub>> stub();
+  abstract Optional<SerializableSupplier<TopicStatsServiceClient>> serviceClient();
 
   public static Builder newBuilder() {
     return new AutoValue_TopicBacklogReaderSettings.Builder();
@@ -53,7 +53,7 @@ public abstract class TopicBacklogReaderSettings implements Serializable {
     public abstract Builder setTopicPath(TopicPath topicPath);
 
     public Builder setTopicPathFromSubscriptionPath(SubscriptionPath subscriptionPath)
-        throws StatusException {
+        throws ApiException {
       try (AdminClient adminClient =
           AdminClient.create(
               AdminClientSettings.newBuilder()
@@ -63,21 +63,21 @@ public abstract class TopicBacklogReaderSettings implements Serializable {
             TopicPath.parse(adminClient.getSubscription(subscriptionPath).get().getTopic()));
         return this;
       } catch (ExecutionException e) {
-        throw ExtractStatus.toCanonical(e.getCause());
+        throw ExtractStatus.toCanonical(e.getCause()).underlying;
       } catch (Throwable t) {
-        throw ExtractStatus.toCanonical(t);
+        throw ExtractStatus.toCanonical(t).underlying;
       }
     }
 
-    public abstract Builder setStub(SerializableSupplier<TopicStatsServiceBlockingStub> stub);
+    public abstract Builder setServiceClient(SerializableSupplier<TopicStatsServiceClient> client);
 
     public abstract TopicBacklogReaderSettings build();
   }
 
-  TopicBacklogReader instantiate() throws StatusException {
+  TopicBacklogReader instantiate() throws ApiException {
     TopicStatsClientSettings.Builder builder = TopicStatsClientSettings.newBuilder();
-    if (stub().isPresent()) {
-      builder.setStub(stub().get().get());
+    if (serviceClient().isPresent()) {
+      builder.setServiceClient(serviceClient().get().get());
     }
     builder.setRegion(topicPath().location().region());
     return new TopicBacklogReaderImpl(TopicStatsClient.create(builder.build()), topicPath());

@@ -22,10 +22,10 @@ import static com.google.common.truth.Truth8.assertThat;
 import com.google.cloud.pubsublite.Message;
 import com.google.cloud.pubsublite.Offset;
 import com.google.cloud.pubsublite.SequencedMessage;
+import com.google.cloud.pubsublite.internal.CheckedApiException;
 import com.google.cloud.pubsublite.proto.FlowControlRequest;
 import com.google.common.collect.ImmutableList;
 import com.google.protobuf.util.Timestamps;
-import io.grpc.StatusException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -36,7 +36,7 @@ public class FlowControlBatcherTest {
   private final FlowControlBatcher batcher = new FlowControlBatcher();
 
   @Test
-  public void onClientFlowRequestIncrementsTokens() throws StatusException {
+  public void onClientFlowRequestIncrementsTokens() throws CheckedApiException {
     FlowControlRequest clientFlowRequest =
         FlowControlRequest.newBuilder().setAllowedBytes(500).setAllowedMessages(10).build();
     batcher.onClientFlowRequest(clientFlowRequest);
@@ -48,7 +48,7 @@ public class FlowControlBatcherTest {
   }
 
   @Test
-  public void onMessagesDecrementsClientTokens() throws StatusException {
+  public void onMessagesDecrementsClientTokens() throws CheckedApiException {
     FlowControlRequest clientFlowRequest =
         FlowControlRequest.newBuilder().setAllowedBytes(500).setAllowedMessages(10).build();
     batcher.onClientFlowRequest(clientFlowRequest);
@@ -65,7 +65,7 @@ public class FlowControlBatcherTest {
   }
 
   @Test
-  public void shouldExpediteBatchRequestChecksByteRatio() throws StatusException {
+  public void shouldExpediteBatchRequestChecksByteRatio() throws CheckedApiException {
     FlowControlRequest request =
         FlowControlRequest.newBuilder().setAllowedBytes(100).setAllowedMessages(100).build();
     batcher.onClientFlowRequest(request);
@@ -79,7 +79,7 @@ public class FlowControlBatcherTest {
   }
 
   @Test
-  public void shouldExpediteBatchRequestChecksMessageRatio() throws StatusException {
+  public void shouldExpediteBatchRequestChecksMessageRatio() throws CheckedApiException {
     FlowControlRequest request =
         FlowControlRequest.newBuilder().setAllowedBytes(100).setAllowedMessages(100).build();
     batcher.onClientFlowRequest(request);

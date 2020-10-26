@@ -16,10 +16,10 @@
 
 package com.google.cloud.pubsublite;
 
-import static com.google.cloud.pubsublite.internal.Preconditions.checkArgument;
+import static com.google.cloud.pubsublite.internal.UncheckedApiPreconditions.checkArgument;
 
+import com.google.api.gax.rpc.ApiException;
 import com.google.auto.value.AutoValue;
-import io.grpc.StatusException;
 import java.io.Serializable;
 
 /** A string wrapper representing a project. */
@@ -49,7 +49,7 @@ public abstract class ProjectPath implements Serializable {
    *
    * <p>projects/&lt;project number&gt;
    */
-  public static ProjectPath parse(String path) throws StatusException {
+  public static ProjectPath parse(String path) throws ApiException {
     String[] splits = path.split("/");
     checkArgument(splits.length == 2);
     checkArgument(splits[0].equals("projects"));

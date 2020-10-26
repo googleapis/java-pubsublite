@@ -29,45 +29,39 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.verifyZeroInteractions;
+import static org.mockito.MockitoAnnotations.initMocks;
 import static org.mockito.hamcrest.MockitoHamcrest.argThat;
 
 import com.google.api.core.ApiService.Listener;
 import com.google.api.gax.batching.BatchingSettings;
+import com.google.api.gax.rpc.ApiException;
+import com.google.api.gax.rpc.ResponseObserver;
+import com.google.api.gax.rpc.StatusCode.Code;
 import com.google.cloud.pubsublite.Message;
 import com.google.cloud.pubsublite.Offset;
+import com.google.cloud.pubsublite.internal.CheckedApiException;
 import com.google.cloud.pubsublite.internal.ExtractStatus;
 import com.google.cloud.pubsublite.proto.InitialPublishRequest;
 import com.google.cloud.pubsublite.proto.PubSubMessage;
 import com.google.cloud.pubsublite.proto.PublishRequest;
-import com.google.cloud.pubsublite.proto.PublisherServiceGrpc;
-import com.google.cloud.pubsublite.proto.PublisherServiceGrpc.PublisherServiceStub;
+import com.google.cloud.pubsublite.proto.PublishResponse;
 import com.google.common.util.concurrent.MoreExecutors;
 import com.google.protobuf.ByteString;
-import io.grpc.ManagedChannel;
-import io.grpc.Status;
-import io.grpc.Status.Code;
-import io.grpc.StatusException;
-import io.grpc.StatusRuntimeException;
-import io.grpc.inprocess.InProcessChannelBuilder;
-import io.grpc.stub.StreamObserver;
-import io.grpc.testing.GrpcCleanupRule;
 import java.util.Collection;
 import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 import org.mockito.ArgumentMatchers;
+import org.mockito.Mock;
 import org.mockito.stubbing.Answer;
 import org.threeten.bp.Duration;
 
 @RunWith(JUnit4.class)
 public class PublisherImplTest {
-  @Rule public final GrpcCleanupRule grpcCleanup = new GrpcCleanupRule();
-
   private static final PublishRequest INITIAL_PUBLISH_REQUEST =
       PublishRequest.newBuilder()
           .setInitialRequest(InitialPublishRequest.newBuilder().setPartition(7).build())
@@ -80,16 +74,18 @@ public class PublisherImplTest {
           .setElementCountThreshold(1000000L)
           .build();
 
-  private final BatchPublisher mockBatchPublisher = mock(BatchPublisher.class);
-  private final BatchPublisherFactory mockPublisherFactory = mock(BatchPublisherFactory.class);
-  private final Listener permanentErrorHandler = mock(Listener.class);
+  @Mock private StreamFactory<PublishRequest, PublishResponse> unusedStreamFactory;
+  @Mock private BatchPublisher mockBatchPublisher;
+  @Mock private BatchPublisherFactory mockPublisherFactory;
+  @Mock private Listener permanentErrorHandler;
   private Future<Void> errorOccurredFuture;
 
   private PublisherImpl publisher;
-  private StreamObserver<Offset> leakedOffsetStream;
+  private ResponseObserver<Offset> leakedOffsetStream;
 
   @Before
-  public void setUp() throws StatusException {
+  public void setUp() throws CheckedApiException {
+    initMocks(this);
     doAnswer(
             args -> {
               leakedOffsetStream = args.getArgument(1);
@@ -98,13 +94,9 @@ public class PublisherImplTest {
         .when(mockPublisherFactory)
         .New(any(), any(), eq(INITIAL_PUBLISH_REQUEST));
     errorOccurredFuture = whenFailed(permanentErrorHandler);
-    ManagedChannel channel =
-        grpcCleanup.register(
-            InProcessChannelBuilder.forName("localhost:12345").directExecutor().build());
-    PublisherServiceStub unusedStub = PublisherServiceGrpc.newStub(channel);
     publisher =
         new PublisherImpl(
-            unusedStub,
+            unusedStreamFactory,
             mockPublisherFactory,
             INITIAL_PUBLISH_REQUEST.getInitialRequest(),
             BATCHING_SETTINGS_THAT_NEVER_FIRE);
@@ -134,7 +126,7 @@ public class PublisherImplTest {
     doAnswer(
             (Answer<Void>)
                 args -> {
-                  leakedOffsetStream.onNext(Offset.of(10));
+                  leakedOffsetStream.onResponse(Offset.of(10));
                   return null;
                 })
         .when(mockBatchPublisher)
@@ -156,7 +148,7 @@ public class PublisherImplTest {
     doAnswer(
             (Answer<Void>)
                 args -> {
-                  leakedOffsetStream.onNext(Offset.of(10));
+                  leakedOffsetStream.onResponse(Offset.of(10));
                   return null;
                 })
         .when(mockBatchPublisher)
@@ -182,16 +174,16 @@ public class PublisherImplTest {
   @Test
   public void publishAfterError_IsError() throws Exception {
     startPublisher();
-    leakedOffsetStream.onError(Status.PERMISSION_DENIED.asRuntimeException());
+    leakedOffsetStream.onError(new CheckedApiException(Code.FAILED_PRECONDITION).underlying);
     assertThrows(IllegalStateException.class, publisher::awaitTerminated);
     errorOccurredFuture.get();
-    verify(permanentErrorHandler).failed(any(), ArgumentMatchers.<StatusRuntimeException>any());
+    verify(permanentErrorHandler).failed(any(), ArgumentMatchers.<ApiException>any());
     Message message = Message.builder().build();
     Future<Offset> future = publisher.publish(message);
     ExecutionException e = assertThrows(ExecutionException.class, future::get);
-    Optional<Status> statusOr = ExtractStatus.extract(e.getCause());
+    Optional<CheckedApiException> statusOr = ExtractStatus.extract(e.getCause());
     assertThat(statusOr.isPresent()).isTrue();
-    assertThat(statusOr.get().getCode()).isEqualTo(Code.FAILED_PRECONDITION);
+    assertThat(statusOr.get().code()).isEqualTo(Code.FAILED_PRECONDITION);
 
     verifyNoMoreInteractions(mockBatchPublisher);
   }
@@ -217,14 +209,14 @@ public class PublisherImplTest {
     assertThat(future2.isDone()).isFalse();
     assertThat(future3.isDone()).isFalse();
 
-    leakedOffsetStream.onNext(Offset.of(10));
+    leakedOffsetStream.onResponse(Offset.of(10));
     assertThat(future1.isDone()).isTrue();
     assertThat(future1.get()).isEqualTo(Offset.of(10));
     assertThat(future2.isDone()).isTrue();
     assertThat(future2.get()).isEqualTo(Offset.of(11));
     assertThat(future3.isDone()).isFalse();
 
-    leakedOffsetStream.onNext(Offset.of(12));
+    leakedOffsetStream.onResponse(Offset.of(12));
     assertThat(future3.isDone()).isTrue();
     assertThat(future3.get()).isEqualTo(Offset.of(12));
 
@@ -253,7 +245,7 @@ public class PublisherImplTest {
     doReturn(mockBatchPublisher2)
         .when(mockPublisherFactory)
         .New(any(), any(), eq(INITIAL_PUBLISH_REQUEST));
-    leakedOffsetStream.onError(Status.UNKNOWN.asRuntimeException());
+    leakedOffsetStream.onError(new CheckedApiException(Code.UNKNOWN));
 
     // wait for retry to complete
     Thread.sleep(500);
@@ -269,12 +261,12 @@ public class PublisherImplTest {
     assertThat(future1.isDone()).isFalse();
     assertThat(future2.isDone()).isFalse();
 
-    leakedOffsetStream.onNext(Offset.of(10));
+    leakedOffsetStream.onResponse(Offset.of(10));
     assertThat(future1.isDone()).isTrue();
     assertThat(future1.get()).isEqualTo(Offset.of(10));
     assertThat(future2.isDone()).isFalse();
 
-    leakedOffsetStream.onNext(Offset.of(50));
+    leakedOffsetStream.onResponse(Offset.of(50));
     assertThat(future2.isDone()).isTrue();
     assertThat(future2.get()).isEqualTo(Offset.of(50));
 
@@ -302,14 +294,14 @@ public class PublisherImplTest {
     assertThat(future2.isDone()).isFalse();
     assertThat(future3.isDone()).isFalse();
 
-    leakedOffsetStream.onNext(Offset.of(10));
+    leakedOffsetStream.onResponse(Offset.of(10));
     assertThat(future1.isDone()).isTrue();
     assertThat(future1.get()).isEqualTo(Offset.of(10));
     assertThat(future2.isDone()).isTrue();
     assertThat(future2.get()).isEqualTo(Offset.of(11));
     assertThat(future3.isDone()).isFalse();
 
-    leakedOffsetStream.onNext(Offset.of(11));
+    leakedOffsetStream.onResponse(Offset.of(11));
     assertThrows(IllegalStateException.class, publisher::awaitTerminated);
     assertThat(future3.isDone()).isTrue();
     assertThrows(Exception.class, future3::get);

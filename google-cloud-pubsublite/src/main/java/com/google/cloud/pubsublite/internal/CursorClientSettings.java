@@ -15,14 +15,14 @@
  */
 package com.google.cloud.pubsublite.internal;
 
-import com.google.api.gax.retrying.RetrySettings;
+import static com.google.cloud.pubsublite.internal.ExtractStatus.toCanonical;
+import static com.google.cloud.pubsublite.internal.ServiceClients.addDefaultSettings;
+
+import com.google.api.gax.rpc.ApiException;
 import com.google.auto.value.AutoValue;
 import com.google.cloud.pubsublite.CloudRegion;
-import com.google.cloud.pubsublite.Constants;
-import com.google.cloud.pubsublite.Stubs;
-import com.google.cloud.pubsublite.proto.CursorServiceGrpc;
-import com.google.cloud.pubsublite.proto.CursorServiceGrpc.CursorServiceBlockingStub;
-import io.grpc.StatusException;
+import com.google.cloud.pubsublite.v1.CursorServiceClient;
+import com.google.cloud.pubsublite.v1.CursorServiceSettings;
 import java.util.Optional;
 
 @AutoValue
@@ -32,13 +32,10 @@ public abstract class CursorClientSettings {
   abstract CloudRegion region();
 
   // Optional parameters.
-  abstract RetrySettings retrySettings();
-
-  abstract Optional<CursorServiceBlockingStub> stub();
+  abstract Optional<CursorServiceClient> serviceClient();
 
   public static Builder newBuilder() {
-    return new AutoValue_CursorClientSettings.Builder()
-        .setRetrySettings(Constants.DEFAULT_RETRY_SETTINGS);
+    return new AutoValue_CursorClientSettings.Builder();
   }
 
   @AutoValue.Builder
@@ -47,21 +44,25 @@ public abstract class CursorClientSettings {
     // Required parameters.
     public abstract Builder setRegion(CloudRegion region);
 
-    public abstract Builder setRetrySettings(RetrySettings retrySettings);
-
     // Optional parameters.
-    public abstract Builder setStub(CursorServiceBlockingStub stub);
+    public abstract Builder setServiceClient(CursorServiceClient serviceClient);
 
     public abstract CursorClientSettings build();
   }
 
-  CursorClient instantiate() throws StatusException {
-    CursorServiceBlockingStub stub;
-    if (stub().isPresent()) {
-      stub = stub().get();
+  CursorClient instantiate() throws ApiException {
+    CursorServiceClient serviceClient;
+    if (serviceClient().isPresent()) {
+      serviceClient = serviceClient().get();
     } else {
-      stub = Stubs.defaultStub(region(), CursorServiceGrpc::newBlockingStub);
+      try {
+        serviceClient =
+            CursorServiceClient.create(
+                addDefaultSettings(region(), CursorServiceSettings.newBuilder()));
+      } catch (Throwable t) {
+        throw toCanonical(t).underlying;
+      }
     }
-    return new CursorClientImpl(region(), stub, retrySettings());
+    return new CursorClientImpl(region(), serviceClient);
   }
 }

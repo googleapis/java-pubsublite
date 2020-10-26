@@ -16,10 +16,10 @@
 
 package com.google.cloud.pubsublite;
 
-import static com.google.cloud.pubsublite.internal.Preconditions.checkArgument;
+import static com.google.cloud.pubsublite.internal.UncheckedApiPreconditions.checkArgument;
 
+import com.google.api.gax.rpc.ApiException;
 import com.google.auto.value.AutoValue;
-import io.grpc.StatusException;
 import java.io.Serializable;
 
 @AutoValue
@@ -31,7 +31,7 @@ public abstract class ProjectId implements Serializable {
     return value();
   }
 
-  public static ProjectId of(String value) throws StatusException {
+  public static ProjectId of(String value) throws ApiException {
     checkArgument(!value.isEmpty());
     return new AutoValue_ProjectId(value);
   }

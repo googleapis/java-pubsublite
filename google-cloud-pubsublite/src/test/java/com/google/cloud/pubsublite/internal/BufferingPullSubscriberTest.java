@@ -28,6 +28,7 @@ import static org.mockito.Mockito.when;
 
 import com.google.api.core.ApiFutures;
 import com.google.api.core.ApiService.Listener;
+import com.google.api.gax.rpc.StatusCode.Code;
 import com.google.cloud.pubsublite.Message;
 import com.google.cloud.pubsublite.Offset;
 import com.google.cloud.pubsublite.SequencedMessage;
@@ -39,11 +40,7 @@ import com.google.cloud.pubsublite.proto.FlowControlRequest;
 import com.google.cloud.pubsublite.proto.SeekRequest;
 import com.google.common.collect.ImmutableList;
 import com.google.protobuf.util.Timestamps;
-import io.grpc.Status;
-import io.grpc.Status.Code;
-import io.grpc.StatusException;
 import java.util.function.Consumer;
-import java.util.function.Supplier;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -61,18 +58,7 @@ public class BufferingPullSubscriberTest {
           .setCursor(Cursor.newBuilder().setOffset(initialOffset.value()))
           .build();
   private final FlowControlSettings flowControlSettings =
-      ((Supplier<FlowControlSettings>)
-              () -> {
-                try {
-                  return FlowControlSettings.builder()
-                      .setBytesOutstanding(10)
-                      .setMessagesOutstanding(20)
-                      .build();
-                } catch (StatusException e) {
-                  throw e.getStatus().asRuntimeException();
-                }
-              })
-          .get();
+      FlowControlSettings.builder().setBytesOutstanding(10).setMessagesOutstanding(20).build();
   // Initialized in setUp.
   private PullSubscriber<SequencedMessage> subscriber;
   private Consumer<ImmutableList<SequencedMessage>> messageConsumer;
@@ -91,7 +77,7 @@ public class BufferingPullSubscriberTest {
             .setAllowedBytes(flowControlSettings.bytesOutstanding())
             .setAllowedMessages(flowControlSettings.messagesOutstanding())
             .build();
-    when(underlyingFactory.New(any()))
+    when(underlyingFactory.newSubscriber(any()))
         .thenAnswer(
             args -> {
               messageConsumer = args.getArgument(0);
@@ -109,7 +95,7 @@ public class BufferingPullSubscriberTest {
     subscriber = new BufferingPullSubscriber(underlyingFactory, flowControlSettings, initialSeek);
 
     InOrder inOrder = inOrder(underlyingFactory, underlying);
-    inOrder.verify(underlyingFactory).New(any());
+    inOrder.verify(underlyingFactory).newSubscriber(any());
     inOrder.verify(underlying).addListener(any(), any());
     inOrder.verify(underlying).startAsync();
     inOrder.verify(underlying).awaitRunning();
@@ -125,18 +111,18 @@ public class BufferingPullSubscriberTest {
 
   @Test
   public void pullAfterErrorThrows() {
-    errorListener.failed(null, Status.INTERNAL.asException());
-    StatusException e = assertThrows(StatusException.class, subscriber::pull);
-    assertThat(e.getStatus().getCode()).isEqualTo(Code.INTERNAL);
+    errorListener.failed(null, new CheckedApiException(Code.INTERNAL));
+    CheckedApiException e = assertThrows(CheckedApiException.class, subscriber::pull);
+    assertThat(e.code()).isEqualTo(Code.INTERNAL);
   }
 
   @Test
-  public void emptyPull() throws StatusException {
+  public void emptyPull() throws CheckedApiException {
     assertThat(subscriber.pull()).isEmpty();
   }
 
   @Test
-  public void pullEmptiesForNext() throws StatusException {
+  public void pullEmptiesForNext() throws CheckedApiException {
     SequencedMessage message1 =
         SequencedMessage.of(Message.builder().build(), Timestamps.EPOCH, Offset.of(10), 10);
     SequencedMessage message2 =
@@ -147,7 +133,7 @@ public class BufferingPullSubscriberTest {
   }
 
   @Test
-  public void multipleBatchesAggregatedReturnsTokens() throws StatusException {
+  public void multipleBatchesAggregatedReturnsTokens() throws CheckedApiException {
     SequencedMessage message1 =
         SequencedMessage.of(Message.builder().build(), Timestamps.EPOCH, Offset.of(10), 10);
     SequencedMessage message2 =

@@ -16,8 +16,9 @@
 
 package com.google.cloud.pubsublite.internal.wire;
 
-import io.grpc.stub.StreamObserver;
+import com.google.api.gax.rpc.ClientStream;
+import com.google.api.gax.rpc.ResponseObserver;
 
 public interface StreamFactory<RequestT, ResponseT> {
-  StreamObserver<RequestT> New(StreamObserver<ResponseT> responseStream);
+  ClientStream<RequestT> New(ResponseObserver<ResponseT> responseStream);
 }

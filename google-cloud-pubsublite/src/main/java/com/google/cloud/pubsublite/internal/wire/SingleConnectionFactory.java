@@ -16,12 +16,12 @@
 
 package com.google.cloud.pubsublite.internal.wire;
 
-import io.grpc.stub.StreamObserver;
+import com.google.api.gax.rpc.ResponseObserver;
 
 public interface SingleConnectionFactory<
     StreamRequestT, StreamResponseT, ClientResponseT, ConnectionT extends AutoCloseable> {
   ConnectionT New(
       StreamFactory<StreamRequestT, StreamResponseT> streamFactory,
-      StreamObserver<ClientResponseT> clientStream,
+      ResponseObserver<ClientResponseT> clientStream,
       StreamRequestT initialRequest);
 }

@@ -19,7 +19,7 @@ package com.google.cloud.pubsublite;
 import static com.google.common.truth.Truth.assertThat;
 import static org.junit.Assert.assertThrows;
 
-import io.grpc.StatusException;
+import com.google.api.gax.rpc.ApiException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -27,7 +27,7 @@ import org.junit.runners.JUnit4;
 @RunWith(JUnit4.class)
 public final class PublishMetadataTest {
   @Test
-  public void roundTripThroughString() throws Exception {
+  public void roundTripThroughString() {
     PublishMetadata metadata = PublishMetadata.of(Partition.of(10), Offset.of(20));
     PublishMetadata metadata2 = PublishMetadata.decode(metadata.encode());
     assertThat(metadata2).isEqualTo(metadata);
@@ -35,16 +35,16 @@ public final class PublishMetadataTest {
 
   @Test
   public void invalidString() {
-    assertThrows(StatusException.class, () -> PublishMetadata.decode("999"));
+    assertThrows(ApiException.class, () -> PublishMetadata.decode("999"));
   }
 
   @Test
   public void invalidPartition() {
-    assertThrows(StatusException.class, () -> PublishMetadata.decode("abc:999"));
+    assertThrows(ApiException.class, () -> PublishMetadata.decode("abc:999"));
   }
 
   @Test
   public void invalidOffset() {
-    assertThrows(StatusException.class, () -> PublishMetadata.decode("999:abc"));
+    assertThrows(ApiException.class, () -> PublishMetadata.decode("999:abc"));
   }
 }

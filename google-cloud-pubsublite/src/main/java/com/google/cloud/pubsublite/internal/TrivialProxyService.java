@@ -17,17 +17,19 @@
 package com.google.cloud.pubsublite.internal;
 
 import com.google.api.core.ApiService;
-import io.grpc.StatusException;
+import com.google.api.gax.rpc.ApiException;
 import java.util.Arrays;
 import java.util.Collection;
 
+/** A ProxyService that just wraps all ApiService methods. */
 public class TrivialProxyService extends ProxyService {
-  public TrivialProxyService(ApiService... services) throws StatusException {
-    this(Arrays.asList(services));
+  protected <T extends ApiService> TrivialProxyService(Collection<T> services) throws ApiException {
+    super();
+    addServices(services);
   }
 
-  public <T extends ApiService> TrivialProxyService(Collection<T> services) throws StatusException {
-    addServices(services);
+  protected TrivialProxyService(ApiService... services) throws ApiException {
+    this(Arrays.asList(services));
   }
 
   @Override
@@ -37,5 +39,5 @@ public class TrivialProxyService extends ProxyService {
   protected final void stop() {}
 
   @Override
-  protected final void handlePermanentError(StatusException error) {}
+  protected final void handlePermanentError(CheckedApiException error) {}
 }

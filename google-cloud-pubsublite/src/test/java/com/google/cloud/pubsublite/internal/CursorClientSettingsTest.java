@@ -19,9 +19,7 @@ package com.google.cloud.pubsublite.internal;
 import static org.mockito.Mockito.mock;
 
 import com.google.cloud.pubsublite.CloudRegion;
-import com.google.cloud.pubsublite.proto.CursorServiceGrpc;
-import io.grpc.Channel;
-import io.grpc.StatusException;
+import com.google.cloud.pubsublite.v1.CursorServiceClient;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -29,11 +27,11 @@ import org.junit.runners.JUnit4;
 @RunWith(JUnit4.class)
 public class CursorClientSettingsTest {
   @Test
-  public void testSettings() throws StatusException {
+  public void testSettings() {
     CursorClient unusedClient =
         CursorClientSettings.newBuilder()
             .setRegion(CloudRegion.of("us-central1"))
-            .setStub(CursorServiceGrpc.newBlockingStub(mock(Channel.class)))
+            .setServiceClient(mock(CursorServiceClient.class))
             .build()
             .instantiate();
   }

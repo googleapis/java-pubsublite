@@ -18,12 +18,11 @@ package com.google.cloud.pubsublite.internal;
 
 import com.google.cloud.pubsublite.Partition;
 import com.google.protobuf.ByteString;
-import io.grpc.StatusException;
 
 // Route the user message key to a given partition.
 public interface RoutingPolicy {
   // Route a message without a key to a partition.
-  Partition routeWithoutKey() throws StatusException;
+  Partition routeWithoutKey() throws CheckedApiException;
   // Route a message with a key to a partition.
-  Partition route(ByteString messageKey) throws StatusException;
+  Partition route(ByteString messageKey) throws CheckedApiException;
 }

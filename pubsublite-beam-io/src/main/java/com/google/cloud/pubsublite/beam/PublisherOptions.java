@@ -16,6 +16,8 @@
 
 package com.google.cloud.pubsublite.beam;
 
+import static com.google.cloud.pubsublite.ProjectLookupUtils.toCanonical;
+
 import com.google.auto.value.AutoValue;
 import com.google.cloud.pubsublite.PublishMetadata;
 import com.google.cloud.pubsublite.TopicPath;
@@ -24,10 +26,8 @@ import com.google.cloud.pubsublite.internal.wire.PubsubContext;
 import com.google.cloud.pubsublite.internal.wire.PubsubContext.Framework;
 import com.google.cloud.pubsublite.internal.wire.RoutingPublisherBuilder;
 import com.google.cloud.pubsublite.internal.wire.SinglePartitionPublisherBuilder;
-import com.google.cloud.pubsublite.proto.PublisherServiceGrpc.PublisherServiceStub;
-import io.grpc.StatusException;
+import com.google.cloud.pubsublite.v1.PublisherServiceClient;
 import java.io.Serializable;
-import java.util.Optional;
 import javax.annotation.Nullable;
 
 @AutoValue
@@ -42,7 +42,7 @@ public abstract class PublisherOptions implements Serializable {
   // Optional parameters.
   /** A supplier for the stub to be used. If enabled, does not use the publisher cache. */
   @Nullable
-  public abstract SerializableSupplier<PublisherServiceStub> stubSupplier();
+  public abstract SerializableSupplier<PublisherServiceClient> clientSupplier();
 
   @Override
   public abstract int hashCode();
@@ -52,19 +52,25 @@ public abstract class PublisherOptions implements Serializable {
   }
 
   public boolean usesCache() {
-    return stubSupplier() == null;
+    return clientSupplier() == null;
   }
 
   @SuppressWarnings("CheckReturnValue")
-  Publisher<PublishMetadata> getPublisher() throws StatusException {
+  Publisher<PublishMetadata> getPublisher() {
     SinglePartitionPublisherBuilder.Builder singlePartitionPublisherBuilder =
         SinglePartitionPublisherBuilder.newBuilder().setContext(PubsubContext.of(FRAMEWORK));
-    if (stubSupplier() != null) {
-      singlePartitionPublisherBuilder.setStub(Optional.of(stubSupplier().get()));
+    if (clientSupplier() != null) {
+      singlePartitionPublisherBuilder.setServiceClient(clientSupplier().get());
     }
+    TopicPath canonicalTopic = toCanonical(topicPath());
     return RoutingPublisherBuilder.newBuilder()
-        .setTopic(topicPath())
-        .setPublisherBuilder(singlePartitionPublisherBuilder)
+        .setTopic(canonicalTopic)
+        .setPublisherFactory(
+            partition ->
+                singlePartitionPublisherBuilder
+                    .setTopic(canonicalTopic)
+                    .setPartition(partition)
+                    .build())
         .build();
   }
 
@@ -74,8 +80,8 @@ public abstract class PublisherOptions implements Serializable {
     public abstract Builder setTopicPath(TopicPath path);
 
     // Optional parameters.
-    public abstract Builder setStubSupplier(
-        SerializableSupplier<PublisherServiceStub> stubSupplier);
+    public abstract Builder setClientSupplier(
+        SerializableSupplier<PublisherServiceClient> supplier);
 
     public abstract PublisherOptions build();
   }

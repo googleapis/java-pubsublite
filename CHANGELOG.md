@@ -1,5 +1,12 @@
 # Changelog
 
+### [0.6.1](https://www.github.com/googleapis/java-pubsublite/compare/v0.6.0...v0.6.1) (2020-10-27)
+
+
+### Dependencies
+
+* update dependency joda-time:joda-time to v2.10.8 ([#327](https://www.github.com/googleapis/java-pubsublite/issues/327)) ([0d0a47f](https://www.github.com/googleapis/java-pubsublite/commit/0d0a47f862f4fb15540e852a8526a57556b23386))
+
 ## [0.6.0](https://www.github.com/googleapis/java-pubsublite/compare/v0.5.0...v0.6.0) (2020-10-26)
 
 

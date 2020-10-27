@@ -1,5 +1,33 @@
 # Changelog
 
+## [0.6.0](https://www.github.com/googleapis/java-pubsublite/compare/v0.5.0...v0.6.0) (2020-10-26)
+
+
+### Features
+
+* All changes required to change library to use ApiException and gapic internals ([#295](https://www.github.com/googleapis/java-pubsublite/issues/295)) ([313bfc6](https://www.github.com/googleapis/java-pubsublite/commit/313bfc63bdaf33f3f3a68bde1c1685cc037a42c7))
+
+
+### Bug Fixes
+
+* Change Kafka{Producer/Consumer} to fix the number of partitions instead of looking it up. ([#322](https://www.github.com/googleapis/java-pubsublite/issues/322)) ([3f27c86](https://www.github.com/googleapis/java-pubsublite/commit/3f27c86003d7662a2c040f9637a0302743b36552))
+
+
+### Documentation
+
+* Add a basic readme for kafka client ([#320](https://www.github.com/googleapis/java-pubsublite/issues/320)) ([6073810](https://www.github.com/googleapis/java-pubsublite/commit/607381044ca8542e73aebb4ce9c6d4d57030ed6a))
+
+
+### Dependencies
+
+* Increment beam version on pubsublite-io ([#317](https://www.github.com/googleapis/java-pubsublite/issues/317)) ([d0db6c2](https://www.github.com/googleapis/java-pubsublite/commit/d0db6c2d5dd94679d6fb32655c26794af24b6be5))
+* update dependency com.google.cloud:google-cloud-pubsub to v1.108.6 ([#324](https://www.github.com/googleapis/java-pubsublite/issues/324)) ([4e318bb](https://www.github.com/googleapis/java-pubsublite/commit/4e318bbafcde6c30ad0b764b4701078809826b3e))
+* update dependency com.google.cloud:google-cloud-pubsub-bom to v1.108.6 ([#325](https://www.github.com/googleapis/java-pubsublite/issues/325)) ([b7ef47d](https://www.github.com/googleapis/java-pubsublite/commit/b7ef47d8bd5b85e18d5497066f22a3a6768738e0))
+* update dependency com.google.truth:truth to v1.1 ([#307](https://www.github.com/googleapis/java-pubsublite/issues/307)) ([1a556ef](https://www.github.com/googleapis/java-pubsublite/commit/1a556efbda5d911d18f10e2784fcd8f2b1ca1d51))
+* update dependency com.google.truth.extensions:truth-java8-extension to v1.1 ([#306](https://www.github.com/googleapis/java-pubsublite/issues/306)) ([21cf834](https://www.github.com/googleapis/java-pubsublite/commit/21cf8346967744aa2978ceffe130f87c28dedcf6))
+* update dependency org.apache.beam:beam-runners-direct-java to v2.25.0 ([#328](https://www.github.com/googleapis/java-pubsublite/issues/328)) ([675cd60](https://www.github.com/googleapis/java-pubsublite/commit/675cd60efb3a790f35aec05f4e18fb2cda6960b4))
+* update dependency org.apache.beam:beam-sdks-java-core to v2.25.0 ([#329](https://www.github.com/googleapis/java-pubsublite/issues/329)) ([03b09ff](https://www.github.com/googleapis/java-pubsublite/commit/03b09ff034ff1b0fa10ee354e250446e18144806))
+
 ## [0.5.0](https://www.github.com/googleapis/java-pubsublite/compare/v0.4.1...v0.5.0) (2020-10-21)
 
 

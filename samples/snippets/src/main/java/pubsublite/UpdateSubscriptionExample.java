@@ -57,7 +57,7 @@ public class UpdateSubscriptionExample {
     Subscription subscription =
         Subscription.newBuilder()
             .setDeliveryConfig(
-                // Possible values for delivery_requirement:
+                // Possible values for DeliveryRequirement:
                 // - `DELIVER_IMMEDIATELY`
                 // - `DELIVER_AFTER_STORED`
                 // `DELIVER_AFTER_STORED` requires a published message to be successfully written

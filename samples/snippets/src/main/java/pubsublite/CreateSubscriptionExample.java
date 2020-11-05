@@ -64,7 +64,7 @@ public class CreateSubscriptionExample {
     Subscription subscription =
         Subscription.newBuilder()
             .setDeliveryConfig(
-                // Possible values for delivery_requirement:
+                // Possible values for DeliveryRequirement:
                 // - `DELIVER_IMMEDIATELY`
                 // - `DELIVER_AFTER_STORED`
                 // You may choose whether to wait for a published message to be successfully written

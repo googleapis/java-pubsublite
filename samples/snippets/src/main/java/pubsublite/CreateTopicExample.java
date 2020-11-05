@@ -57,10 +57,14 @@ public class CreateTopicExample {
         Topic.newBuilder()
             .setPartitionConfig(
                 PartitionConfig.newBuilder()
-                    // Set publishing throughput to 1 times the standard partition
-                    // throughput of 4 MiB per sec. This must be in the range [1,4]. A
-                    // topic with `scale` of 2 and count of 10 is charged for 20 partitions.
-                    .setScale(1)
+                    // Set throughput capacity per partition in MiB/s.
+                    .setCapacity(
+                        PartitionConfig.Capacity.newBuilder()
+                            // Must be 4-16 MiB/s.
+                            .setPublishMibPerSec(4)
+                            // Must be 4-32 MiB/s.
+                            .setSubscribeMibPerSec(8)
+                            .build())
                     .setCount(partitions))
             .setRetentionConfig(
                 RetentionConfig.newBuilder()

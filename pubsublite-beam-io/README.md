@@ -58,8 +58,12 @@
                 .setName(SubscriptionName.of("my-sub"))
                 .build())
             .setFlowControlSettings(FlowControlSettings.builder()
-                .setBytesOutstanding(100_000_000)  // 100 MB
+                .setBytesOutstanding(50_000_000)  // 50 MB
                 .setMessagesOutstanding(Long.MAX_VALUE)
                 .build())
             .build()));
     ```
+
+1. If operating in a memory-constrained environment, making your pipeline
+options inherit from `PubsubLitePipelineOptions` will put a 1GiB per
+machine limit on the accounted memory size of messages.

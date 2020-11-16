@@ -42,8 +42,10 @@ public abstract class SubscriberOptions implements Serializable {
   private static final Framework FRAMEWORK = Framework.of("BEAM");
 
   // Required parameters.
+  /** The full subscription path to subscribe to. */
   public abstract SubscriptionPath subscriptionPath();
 
+  /** Per-partition flow control settings for the subscriber. */
   public abstract FlowControlSettings flowControlSettings();
 
   // Optional parameters.
@@ -124,13 +126,15 @@ public abstract class SubscriberOptions implements Serializable {
   @AutoValue.Builder
   public abstract static class Builder {
     // Required parameters.
+    /** The full subscription path to subscribe to. */
     public abstract Builder setSubscriptionPath(SubscriptionPath path);
 
-    public abstract Builder setPartitions(ImmutableSet<Partition> partitions);
-
+    /** Per-partition flow control settings for the subscriber. */
     public abstract Builder setFlowControlSettings(FlowControlSettings flowControlSettings);
 
     // Optional parameters.
+    public abstract Builder setPartitions(ImmutableSet<Partition> partitions);
+
     public abstract Builder setSubscriberClientSupplier(
         SerializableSupplier<SubscriberServiceClient> supplier);
 

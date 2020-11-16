@@ -33,7 +33,6 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import javax.annotation.Nullable;
@@ -48,27 +47,22 @@ class PubsubLiteUnboundedSource extends UnboundedSource<SequencedMessage, Offset
     this.subscriberOptions = options;
   }
 
+  /**
+   * Splits the source into its constituent partitions. It is fine for split to return more splits
+   * than desired.
+   *
+   * <p>This splitting is performed so that all readers are created and destroyed independently,
+   * which enables the memory limiter logic to approach an even distribution when the number of
+   * workers is stable.
+   */
   @Override
   public List<? extends UnboundedSource<SequencedMessage, OffsetCheckpointMark>> split(
       int desiredNumSplits, PipelineOptions options) {
-    ArrayList<ArrayList<Partition>> partitionPartitions = new ArrayList<>(desiredNumSplits);
-    for (int i = 0; i < desiredNumSplits; i++) {
-      partitionPartitions.add(new ArrayList<>());
-    }
-    int counter = 0;
-    for (Partition partition : subscriberOptions.partitions()) {
-      partitionPartitions.get(counter % desiredNumSplits).add(partition);
-      ++counter;
-    }
     ImmutableList.Builder<PubsubLiteUnboundedSource> builder = ImmutableList.builder();
-    for (List<Partition> partitionSubset : partitionPartitions) {
-      if (partitionSubset.isEmpty()) continue;
+    for (Partition partition : subscriberOptions.partitions()) {
       builder.add(
           new PubsubLiteUnboundedSource(
-              subscriberOptions
-                  .toBuilder()
-                  .setPartitions(ImmutableSet.copyOf(partitionSubset))
-                  .build()));
+              subscriberOptions.toBuilder().setPartitions(ImmutableSet.of(partition)).build()));
     }
     return builder.build();
   }

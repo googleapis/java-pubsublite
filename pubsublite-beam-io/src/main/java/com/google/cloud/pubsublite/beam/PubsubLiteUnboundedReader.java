@@ -16,7 +16,10 @@
 
 package com.google.cloud.pubsublite.beam;
 
+import static com.google.cloud.pubsublite.internal.ExtractStatus.toCanonical;
+
 import com.google.api.core.ApiFuture;
+import com.google.api.gax.rpc.ApiException;
 import com.google.api.gax.rpc.StatusCode.Code;
 import com.google.auto.value.AutoValue;
 import com.google.cloud.pubsublite.Offset;
@@ -176,6 +179,7 @@ class PubsubLiteUnboundedReader extends UnboundedReader<SequencedMessage>
     Optional<Offset> lastDelivered = Optional.empty();
     PullSubscriber<SequencedMessage> subscriber;
     Committer committer;
+    MemoryLease lease;
   }
 
   @AutoValue
@@ -260,16 +264,19 @@ class PubsubLiteUnboundedReader extends UnboundedReader<SequencedMessage>
 
   @Override
   public void close() {
+    Optional<ApiException> error = Optional.empty();
     try (CloseableMonitor.Hold h = monitor.enter()) {
       for (SubscriberState state : subscriberMap.values()) {
+        state.lease.close();
         try {
           state.subscriber.close();
-        } catch (Exception e) {
-          throw new IllegalStateException(e);
+        } catch (Throwable t) {
+          error = Optional.of(toCanonical(t).underlying);
         }
       }
     }
     committerProxy.stopAsync().awaitTerminated();
+    if (error.isPresent()) throw error.get();
   }
 
   @Override

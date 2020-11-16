@@ -16,6 +16,11 @@
   <description>Beam IO for Google Cloud Pub/Sub Lite</description>
   <dependencies>
     <dependency>
+      <groupId>com.google.api.grpc</groupId>
+      <artifactId>proto-google-cloud-pubsublite-v1</artifactId>
+      <version>0.6.6-SNAPSHOT</version><!-- {x-version-update:google-cloud-pubsublite:current} -->
+    </dependency>
+    <dependency>
       <groupId>com.google.cloud</groupId>
       <artifactId>google-cloud-pubsublite</artifactId>
       <version>0.6.6-SNAPSHOT</version><!-- {x-version-update:google-cloud-pubsublite:current} -->
@@ -65,7 +70,7 @@
     <dependency>
       <groupId>com.google.api.grpc</groupId>
       <artifactId>proto-google-cloud-pubsublite-v1</artifactId>
-      <version>0.6.6-SNAPSHOT</version><!-- {x-version-update:google-cloud-pubsublite:current} -->
+      <version>0.6.5-SNAPSHOT</version><!-- {x-version-update:google-cloud-pubsublite:current} -->
     </dependency>
     <dependency>
       <groupId>com.google.api.grpc</groupId>

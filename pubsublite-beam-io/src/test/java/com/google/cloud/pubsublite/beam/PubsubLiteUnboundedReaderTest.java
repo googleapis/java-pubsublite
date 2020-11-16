@@ -56,16 +56,17 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
+import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.Spy;
 
 @RunWith(JUnit4.class)
 public class PubsubLiteUnboundedReaderTest {
-  @SuppressWarnings("unchecked")
-  private final PullSubscriber<SequencedMessage> subscriber5 = mock(PullSubscriber.class);
+  @Mock private PullSubscriber<SequencedMessage> subscriber5;
+  @Mock private PullSubscriber<SequencedMessage> subscriber8;
 
-  @SuppressWarnings("unchecked")
-  private final PullSubscriber<SequencedMessage> subscriber8 = mock(PullSubscriber.class);
+  @Mock private MemoryLease lease5;
+  @Mock private MemoryLease lease8;
 
   abstract static class CommitterFakeService extends FakeApiService implements Committer {}
 
@@ -112,9 +113,11 @@ public class PubsubLiteUnboundedReaderTest {
   public PubsubLiteUnboundedReaderTest() throws CheckedApiException {
     MockitoAnnotations.initMocks(this);
     SubscriberState state5 = new SubscriberState();
+    state5.lease = lease5;
     state5.subscriber = subscriber5;
     state5.committer = committer5;
     SubscriberState state8 = new SubscriberState();
+    state8.lease = lease8;
     state8.subscriber = subscriber8;
     state8.committer = committer8;
     reader =

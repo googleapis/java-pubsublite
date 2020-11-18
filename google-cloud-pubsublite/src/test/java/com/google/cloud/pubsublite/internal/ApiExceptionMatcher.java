@@ -59,7 +59,11 @@ public class ApiExceptionMatcher implements ArgumentMatcher<Throwable> {
 
   public static void assertFutureThrowsCode(Future<?> f, Code code) {
     ExecutionException exception = assertThrows(ExecutionException.class, f::get);
-    Optional<CheckedApiException> statusOr = ExtractStatus.extract(exception.getCause());
+    assertThrowableMatches(exception.getCause(), code);
+  }
+
+  public static void assertThrowableMatches(Throwable t, Code code) {
+    Optional<CheckedApiException> statusOr = ExtractStatus.extract(t);
     assertThat(statusOr).isPresent();
     assertThat(statusOr.get().code()).isEqualTo(code);
   }

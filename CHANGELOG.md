@@ -1,5 +1,14 @@
 # Changelog
 
+### [0.6.5](https://www.github.com/googleapis/java-pubsublite/compare/v0.6.4...v0.6.5) (2020-11-19)
+
+
+### Dependencies
+
+* update dependency com.google.cloud:google-cloud-pubsub to v1.109.0 ([#374](https://www.github.com/googleapis/java-pubsublite/issues/374)) ([2361b30](https://www.github.com/googleapis/java-pubsublite/commit/2361b300a3a3b7c196a5f78fb2ff2cb487b9cd02))
+* update dependency com.google.cloud:google-cloud-pubsub-bom to v1.109.0 ([#375](https://www.github.com/googleapis/java-pubsublite/issues/375)) ([79ffdab](https://www.github.com/googleapis/java-pubsublite/commit/79ffdab751e778e5a42108e4e8a88aa1e3144cfc))
+* update dependency com.google.cloud:google-cloud-resourcemanager to v0.118.4-alpha ([#373](https://www.github.com/googleapis/java-pubsublite/issues/373)) ([3e8c459](https://www.github.com/googleapis/java-pubsublite/commit/3e8c459603ab064d635c940c745f63a53ffa2137))
+
 ### [0.6.4](https://www.github.com/googleapis/java-pubsublite/compare/v0.6.3...v0.6.4) (2020-11-11)
 
 

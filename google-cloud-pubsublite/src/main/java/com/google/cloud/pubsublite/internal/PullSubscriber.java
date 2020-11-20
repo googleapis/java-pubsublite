@@ -25,6 +25,12 @@ public interface PullSubscriber<T> extends AutoCloseable {
   // Pull currently available messages from this subscriber. Does not block.
   List<T> pull() throws CheckedApiException;
 
+  // Pull one available message from this subscriber. Does not block.
+  Optional<T> pullOne() throws CheckedApiException;
+
+  // If there are available messages to pull.
+  boolean hasNext() throws CheckedApiException;
+
   // The next offset expected to be returned by this PullSubscriber, or empty if unknown.
   // Subsequent messages are guaranteed to have offsets of at least this value.
   Optional<Offset> nextOffset();

@@ -119,6 +119,16 @@ public class BufferingPullSubscriberTest {
   @Test
   public void emptyPull() throws CheckedApiException {
     assertThat(subscriber.pull()).isEmpty();
+    assertThat(subscriber.hasNext()).isFalse();
+  }
+
+  @Test
+  public void pullOne() throws CheckedApiException {
+    SequencedMessage message1 =
+        SequencedMessage.of(Message.builder().build(), Timestamps.EPOCH, Offset.of(10), 10);
+    messageConsumer.accept(ImmutableList.of(message1));
+    assertThat(subscriber.pullOne()).hasValue(message1);
+    assertThat(subscriber.pullOne()).isEmpty();
   }
 
   @Test

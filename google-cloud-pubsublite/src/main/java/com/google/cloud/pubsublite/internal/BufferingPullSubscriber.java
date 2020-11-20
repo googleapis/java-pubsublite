@@ -113,6 +113,29 @@ public class BufferingPullSubscriber implements PullSubscriber<SequencedMessage>
   }
 
   @Override
+  public synchronized Optional<SequencedMessage> pullOne() throws CheckedApiException {
+    if (error.isPresent()) {
+      throw error.get();
+    }
+    if (messages.isEmpty()) {
+      return Optional.empty();
+    }
+    SequencedMessage message = messages.pop();
+    underlying.allowFlow(
+        FlowControlRequest.newBuilder()
+            .setAllowedBytes(message.byteSize())
+            .setAllowedMessages(1)
+            .build());
+    lastDelivered = Optional.of(message.offset());
+    return Optional.of(message);
+  }
+
+  @Override
+  public synchronized boolean hasNext() {
+    return !messages.isEmpty();
+  }
+
+  @Override
   public synchronized Optional<Offset> nextOffset() {
     return lastDelivered.map(offset -> Offset.of(offset.value() + 1));
   }

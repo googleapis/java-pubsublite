@@ -21,6 +21,12 @@ import org.apache.beam.sdk.options.Description;
 import org.apache.beam.sdk.options.PipelineOptions;
 
 public interface PubsubLitePipelineOptions extends PipelineOptions {
+  @Description("Whether per-worker memory limiting is enabled.")
+  @Default.Boolean(true)
+  Boolean getPubsubLiteSubscriberWorkerMemoryLimiterEnabled();
+
+  void setPubsubLiteSubscriberWorkerMemoryLimiterEnabled(Boolean val);
+
   @Description("A soft memory limit on messages outstanding to all subscribers on a given worker.")
   @Default.Long(1L << 30) // Default limit is 1GiB.
   Long getPubsubLiteSubscribeWorkerMemoryLimit();

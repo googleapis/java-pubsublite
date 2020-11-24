@@ -69,9 +69,10 @@ class PubsubLiteUnboundedSource extends UnboundedSource<SequencedMessage, Offset
   private MemoryLimiter getMemoryLimiter(PipelineOptions options) {
     Optional<Long> limit = Optional.empty();
     if (options instanceof PubsubLitePipelineOptions) {
-      limit =
-          Optional.of(
-              ((PubsubLitePipelineOptions) options).getPubsubLiteSubscribeWorkerMemoryLimit());
+      PubsubLitePipelineOptions psOptions = (PubsubLitePipelineOptions) options;
+      if (psOptions.getPubsubLiteSubscriberWorkerMemoryLimiterEnabled()) {
+        limit = Optional.of(psOptions.getPubsubLiteSubscribeWorkerMemoryLimit());
+      }
     }
     return PerServerMemoryLimiter.getLimiter(limit);
   }

@@ -65,5 +65,5 @@
     ```
 
 1. If operating in a memory-constrained environment, making your pipeline
-options inherit from `PubsubLitePipelineOptions` will put a 1GiB per
-machine limit on the accounted memory size of messages.
+options inherit from `PubsubLitePipelineOptions` will put a customizable (1GiB
+per machine by default) limit on the accounted memory size of messages.

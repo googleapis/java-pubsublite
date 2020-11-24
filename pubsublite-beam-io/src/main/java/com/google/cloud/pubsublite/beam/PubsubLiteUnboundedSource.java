@@ -21,7 +21,6 @@ import static com.google.cloud.pubsublite.internal.CheckedApiPreconditions.check
 import com.google.cloud.pubsublite.Offset;
 import com.google.cloud.pubsublite.Partition;
 import com.google.cloud.pubsublite.SequencedMessage;
-import com.google.cloud.pubsublite.cloudpubsub.FlowControlSettings;
 import com.google.cloud.pubsublite.internal.BufferingPullSubscriber;
 import com.google.cloud.pubsublite.internal.CheckedApiException;
 import com.google.cloud.pubsublite.internal.wire.Committer;
@@ -67,18 +66,6 @@ class PubsubLiteUnboundedSource extends UnboundedSource<SequencedMessage, Offset
     return builder.build();
   }
 
-  private FlowControlSettings getFlowControlSettings(long limiterByteCount) {
-    // Must allow at least 1 MiB to allow all potential messages.
-    long bytesAllowed =
-        Math.max(
-            1 << 20,
-            Math.min(limiterByteCount, subscriberOptions.flowControlSettings().bytesOutstanding()));
-    return FlowControlSettings.builder()
-        .setMessagesOutstanding(subscriberOptions.flowControlSettings().messagesOutstanding())
-        .setBytesOutstanding(bytesAllowed)
-        .build();
-  }
-
   private MemoryLimiter getMemoryLimiter(PipelineOptions options) {
     Optional<Long> limit = Optional.empty();
     if (options instanceof PubsubLitePipelineOptions) {
@@ -104,24 +91,28 @@ class PubsubLiteUnboundedSource extends UnboundedSource<SequencedMessage, Offset
         PubsubLiteUnboundedReader.SubscriberState state =
             new PubsubLiteUnboundedReader.SubscriberState();
         state.committer = committers.get(partition);
-        state.lease =
-            limiter.acquireMemory(subscriberOptions.flowControlSettings().bytesOutstanding());
+        SeekRequest initialSeek;
         if (checkpointMark != null && checkpointMark.partitionOffsetMap.containsKey(partition)) {
           Offset checkpointed = checkpointMark.partitionOffsetMap.get(partition);
           state.lastDelivered = Optional.of(checkpointed);
-          state.subscriber =
-              new BufferingPullSubscriber(
-                  subscriberFactories.get(partition),
-                  getFlowControlSettings(state.lease.byteCount()),
-                  SeekRequest.newBuilder()
-                      .setCursor(Cursor.newBuilder().setOffset(checkpointed.value()))
-                      .build());
+          initialSeek =
+              SeekRequest.newBuilder()
+                  .setCursor(Cursor.newBuilder().setOffset(checkpointed.value()))
+                  .build();
         } else {
-          state.subscriber =
-              new BufferingPullSubscriber(
-                  subscriberFactories.get(partition),
-                  getFlowControlSettings(state.lease.byteCount()));
+          initialSeek =
+              SeekRequest.newBuilder()
+                  .setNamedTarget(SeekRequest.NamedTarget.COMMITTED_CURSOR)
+                  .build();
         }
+        state.subscriber =
+            new MemoryLimitingPullSubscriber(
+                (seek, settings) ->
+                    new BufferingPullSubscriber(subscriberFactories.get(partition), settings, seek),
+                limiter,
+                subscriberOptions.flowControlSettings(),
+                initialSeek,
+                PerServerAlarmFactory.getInstance());
         statesBuilder.put(partition, state);
       }
       return new PubsubLiteUnboundedReader(

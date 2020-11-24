@@ -179,7 +179,6 @@ class PubsubLiteUnboundedReader extends UnboundedReader<SequencedMessage>
     Optional<Offset> lastDelivered = Optional.empty();
     PullSubscriber<SequencedMessage> subscriber;
     Committer committer;
-    MemoryLease lease;
   }
 
   @AutoValue
@@ -267,7 +266,6 @@ class PubsubLiteUnboundedReader extends UnboundedReader<SequencedMessage>
     Optional<ApiException> error = Optional.empty();
     try (CloseableMonitor.Hold h = monitor.enter()) {
       for (SubscriberState state : subscriberMap.values()) {
-        state.lease.close();
         try {
           state.subscriber.close();
         } catch (Throwable t) {

@@ -35,6 +35,8 @@ public abstract class FlowControlSettings implements Serializable {
     return new AutoValue_FlowControlSettings.Builder();
   }
 
+  public abstract Builder toBuilder();
+
   @AutoValue.Builder
   public abstract static class Builder {
     /** The number of quota bytes that may be outstanding to the client. */

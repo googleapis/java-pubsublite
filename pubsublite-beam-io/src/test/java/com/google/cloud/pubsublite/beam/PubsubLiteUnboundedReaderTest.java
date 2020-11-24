@@ -65,9 +65,6 @@ public class PubsubLiteUnboundedReaderTest {
   @Mock private PullSubscriber<SequencedMessage> subscriber5;
   @Mock private PullSubscriber<SequencedMessage> subscriber8;
 
-  @Mock private MemoryLease lease5;
-  @Mock private MemoryLease lease8;
-
   abstract static class CommitterFakeService extends FakeApiService implements Committer {}
 
   private static class FakeTicker extends Ticker {
@@ -113,11 +110,9 @@ public class PubsubLiteUnboundedReaderTest {
   public PubsubLiteUnboundedReaderTest() throws CheckedApiException {
     MockitoAnnotations.initMocks(this);
     SubscriberState state5 = new SubscriberState();
-    state5.lease = lease5;
     state5.subscriber = subscriber5;
     state5.committer = committer5;
     SubscriberState state8 = new SubscriberState();
-    state8.lease = lease8;
     state8.subscriber = subscriber8;
     state8.committer = committer8;
     reader =

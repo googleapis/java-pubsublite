@@ -73,11 +73,6 @@
     </dependency>
     <dependency>
       <groupId>com.google.api.grpc</groupId>
-      <artifactId>proto-google-cloud-pubsublite-v1</artifactId>
-      <version>0.6.5-SNAPSHOT</version><!-- {x-version-update:google-cloud-pubsublite:current} -->
-    </dependency>
-    <dependency>
-      <groupId>com.google.api.grpc</groupId>
       <artifactId>proto-google-cloud-pubsub-v1</artifactId>
     </dependency>
     <dependency>

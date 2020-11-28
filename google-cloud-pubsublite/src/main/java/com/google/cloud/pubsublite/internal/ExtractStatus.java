@@ -35,6 +35,8 @@ public final class ExtractStatus {
       return Optional.of(new CheckedApiException(e));
     } catch (CheckedApiException e) {
       return Optional.of(e);
+    } catch (ExecutionException e) {
+      return extract(e.getCause());
     } catch (Throwable e) {
       return Optional.empty();
     }

@@ -18,12 +18,25 @@ package com.google.cloud.pubsublite.beam;
 
 import com.google.common.base.Preconditions;
 import java.util.Optional;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 
 final class PerServerMemoryLimiter {
   private PerServerMemoryLimiter() {}
 
   private static MemoryLimiter limiter;
-  private static Optional<Long> totalBytes = Optional.empty();
+  private static Optional<Long> totalBytes;
+
+  private static Future<?> alarm =
+      Executors.newSingleThreadScheduledExecutor()
+          .scheduleAtFixedRate(PerServerMemoryLimiter::printDebug, 15, 15, TimeUnit.SECONDS);
+
+  private static synchronized void printDebug() {
+    if (limiter != null) {
+      System.err.println(limiter.toString());
+    }
+  }
 
   private static synchronized void init() {
     if (totalBytes.isPresent()) {
@@ -37,12 +50,12 @@ final class PerServerMemoryLimiter {
     if (totalBytesSetting.isPresent()) {
       Preconditions.checkArgument(totalBytesSetting.get() > 0);
     }
-    if (limiter != null) {
+    if (limiter == null) {
       totalBytes = totalBytesSetting;
       init();
     }
     Preconditions.checkArgument(
-        totalBytes == totalBytesSetting,
+        totalBytes.equals(totalBytesSetting),
         "getLimiter can only be called with one setting per-server for the total byte count.");
     return limiter;
   }

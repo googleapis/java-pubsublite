@@ -27,7 +27,7 @@ import java.util.Map;
  * aggregate the backlog, or the distance between the current cursor and HEAD across multiple
  * partitions within a subscription.
  */
-public interface TopicBacklogReader {
+public interface TopicBacklogReader extends AutoCloseable {
   /** Create a TopicBacklogReader from settings. */
   static TopicBacklogReader create(TopicBacklogReaderSettings settings) throws ApiException {
     return settings.instantiate();

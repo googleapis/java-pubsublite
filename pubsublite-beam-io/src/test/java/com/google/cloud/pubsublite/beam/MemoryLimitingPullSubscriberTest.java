@@ -81,8 +81,7 @@ public class MemoryLimitingPullSubscriberTest {
               return alarm;
             });
     subscriber =
-        new MemoryLimitingPullSubscriber(
-            subscriberFactory, limiter, BASE_FLOW_CONTROL, INITIAL, alarmFactory);
+        new MemoryLimitingPullSubscriber(subscriberFactory, limiter, BASE_FLOW_CONTROL, INITIAL);
     verify(limiter).acquireMemory(BASE_FLOW_CONTROL.bytesOutstanding());
     verify(subscriberFactory).newPullSubscriber(INITIAL, SMALLER_FLOW_CONTROL);
     assertThat(alarmRunnable).isNotNull();

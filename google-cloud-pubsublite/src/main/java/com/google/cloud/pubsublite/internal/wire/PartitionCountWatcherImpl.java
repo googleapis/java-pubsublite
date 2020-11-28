@@ -53,7 +53,7 @@ public class PartitionCountWatcherImpl extends AbstractApiService implements Par
     }
   }
 
-  private PartitionCountWatcherImpl(
+  public PartitionCountWatcherImpl(
       TopicPath topicPath, AdminClient adminClient, Consumer<Long> receiver, Duration period) {
     this.period = period;
     this.topicPath = topicPath;

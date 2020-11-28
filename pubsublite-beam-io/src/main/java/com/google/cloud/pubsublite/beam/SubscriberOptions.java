@@ -82,43 +82,48 @@ public abstract class SubscriberOptions implements Serializable {
   public abstract Builder toBuilder();
 
   @SuppressWarnings("CheckReturnValue")
-  public ImmutableMap<Partition, SubscriberFactory> getSubscriberFactories() {
+  SubscriberFactory getPartitionSubscriberFactory(Partition partition) {
+    return subscriberFactory()
+        .or(
+            consumer -> {
+              SubscriberBuilder.Builder builder = SubscriberBuilder.newBuilder();
+              builder.setMessageConsumer(consumer);
+              builder.setSubscriptionPath(subscriptionPath());
+              builder.setPartition(partition);
+              builder.setContext(PubsubContext.of(FRAMEWORK));
+              if (subscriberClientSupplier().isPresent()) {
+                builder.setServiceClient(subscriberClientSupplier().get().get());
+              }
+              return builder.build();
+            });
+  }
+
+  @SuppressWarnings("CheckReturnValue")
+  ImmutableMap<Partition, SubscriberFactory> getSubscriberFactories() {
     ImmutableMap.Builder<Partition, SubscriberFactory> factories = ImmutableMap.builder();
     for (Partition partition : partitions()) {
-      factories.put(
-          partition,
-          subscriberFactory()
-              .or(
-                  consumer -> {
-                    SubscriberBuilder.Builder builder = SubscriberBuilder.newBuilder();
-                    builder.setMessageConsumer(consumer);
-                    builder.setSubscriptionPath(subscriptionPath());
-                    builder.setPartition(partition);
-                    builder.setContext(PubsubContext.of(FRAMEWORK));
-                    if (subscriberClientSupplier().isPresent()) {
-                      builder.setServiceClient(subscriberClientSupplier().get().get());
-                    }
-                    return builder.build();
-                  }));
+      factories.put(partition, getPartitionSubscriberFactory(partition));
     }
     return factories.build();
+  }
+
+  Committer getPartitionCommitter(Partition partition) {
+    if (committerSupplier().isPresent()) return committerSupplier().get().get();
+    CommitterBuilder.Builder builder =
+        CommitterBuilder.newBuilder()
+            .setSubscriptionPath(subscriptionPath())
+            .setPartition(partition);
+    if (committerClientSupplier().isPresent()) {
+      builder.setServiceClient(committerClientSupplier().get().get());
+    }
+    return builder.build();
   }
 
   @SuppressWarnings("CheckReturnValue")
   public ImmutableMap<Partition, Committer> getCommitters() throws ApiException {
     ImmutableMap.Builder<Partition, Committer> committers = ImmutableMap.builder();
     for (Partition partition : partitions()) {
-      if (committerSupplier().isPresent()) {
-        committers.put(partition, committerSupplier().get().get());
-      } else {
-        CommitterBuilder.Builder builder = CommitterBuilder.newBuilder();
-        builder.setSubscriptionPath(subscriptionPath());
-        builder.setPartition(partition);
-        if (committerClientSupplier().isPresent()) {
-          builder.setServiceClient(committerClientSupplier().get().get());
-        }
-        committers.put(partition, builder.build());
-      }
+      committers.put(partition, getPartitionCommitter(partition));
     }
     return committers.build();
   }

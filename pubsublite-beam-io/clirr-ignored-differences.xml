@@ -2,6 +2,17 @@
 <!-- see http://www.mojohaus.org/clirr-maven-plugin/examples/ignored-differences.html -->
 <differences>
   <difference>
+    <differenceType>7006</differenceType>
+    <className>com/google/cloud/pubsublite/**</className>
+    <method>*</method>
+    <to>*</to>
+  </difference>
+  <difference>
+    <differenceType>7009</differenceType>
+    <className>com/google/cloud/pubsublite/**</className>
+    <method>*</method>
+  </difference>
+  <difference>
     <differenceType>6000</differenceType>
     <className>com/google/cloud/pubsublite/beam/*</className>
     <method>*</method>

@@ -84,6 +84,7 @@ public class AssignerImpl extends TrivialProxyService
     for (long partition : assignment.getPartitionsList()) {
       partitions.add(Partition.of(partition));
     }
+    System.err.println("Partitions assigned: " + partitions);
     return partitions;
   }
 

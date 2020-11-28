@@ -17,11 +17,13 @@ package com.google.cloud.pubsublite.beam;
 
 import com.google.api.core.ApiFuture;
 import com.google.api.core.ApiFutures;
+import com.google.api.gax.core.BackgroundResourceAggregation;
 import com.google.cloud.pubsublite.Offset;
 import com.google.cloud.pubsublite.Partition;
 import com.google.cloud.pubsublite.TopicPath;
 import com.google.cloud.pubsublite.internal.TopicStatsClient;
 import com.google.cloud.pubsublite.proto.ComputeMessageStatsResponse;
+import com.google.common.collect.ImmutableList;
 import com.google.common.util.concurrent.MoreExecutors;
 import com.google.protobuf.Timestamp;
 import com.google.protobuf.util.Timestamps;
@@ -30,11 +32,13 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-public final class TopicBacklogReaderImpl implements TopicBacklogReader {
+public final class TopicBacklogReaderImpl extends BackgroundResourceAggregation
+    implements TopicBacklogReader {
   private final TopicStatsClient client;
   private final TopicPath topicPath;
 
   public TopicBacklogReaderImpl(TopicStatsClient client, TopicPath topicPath) {
+    super(ImmutableList.of(client));
     this.client = client;
     this.topicPath = topicPath;
   }

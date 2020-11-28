@@ -112,8 +112,7 @@ class PubsubLiteUnboundedSource extends UnboundedSource<SequencedMessage, Offset
                     new BufferingPullSubscriber(subscriberFactories.get(partition), settings, seek),
                 limiter,
                 subscriberOptions.flowControlSettings(),
-                initialSeek,
-                PerServerAlarmFactory.getInstance());
+                initialSeek);
         statesBuilder.put(partition, state);
       }
       return new PubsubLiteUnboundedReader(

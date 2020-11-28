@@ -57,7 +57,7 @@ class MemoryLimiterImpl implements MemoryLimiter {
    * <p>This is a trade off between usage of the total capacity and availability of resources for
    * future tasks. Assuming that readers are recreated with some frequency (say, every 5 minutes as
    * a strawman) This should eventually trend towards an even distribution with each worker having
-   * 1/21 of the total memory capacity assuming that the number of workers per job stabilizes, as
+   * 1/(n+1) of the total memory capacity assuming that the number of workers per job stabilizes, as
    * 1/(n+1) is smaller than (2/(n+1)) * (3/4) = 3/(2(n+1)) and we take the minimum of the two
    * values.
    */
@@ -66,11 +66,17 @@ class MemoryLimiterImpl implements MemoryLimiter {
     ++tasks;
     long acquired = Math.min(desired, Math.min(totalMemory / (tasks + 1), currentMemory * 3 / 4));
     currentMemory -= acquired;
+    System.err.println("Acquired " + desired + " bytes.");
     return new LimiterLease(acquired);
   }
 
   private synchronized void release(long amount) {
     currentMemory += amount;
     tasks -= 1;
+  }
+
+  @Override
+  public synchronized String toString() {
+    return "Tasks: " + tasks + " memory: " + currentMemory + "/" + totalMemory;
   }
 }

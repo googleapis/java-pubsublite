@@ -16,12 +16,37 @@
 
 package com.google.cloud.pubsublite.beam;
 
+import static com.google.cloud.pubsublite.internal.ExtractStatus.toCanonical;
+
+import com.google.cloud.pubsublite.AdminClient;
+import com.google.cloud.pubsublite.AdminClientSettings;
 import com.google.cloud.pubsublite.Message;
+import com.google.cloud.pubsublite.Offset;
+import com.google.cloud.pubsublite.Partition;
 import com.google.cloud.pubsublite.SequencedMessage;
-import org.apache.beam.sdk.io.Read;
+import com.google.cloud.pubsublite.TopicPath;
+import com.google.cloud.pubsublite.internal.BufferingPullSubscriber;
+import com.google.cloud.pubsublite.internal.CursorClient;
+import com.google.cloud.pubsublite.internal.CursorClientSettings;
+import com.google.cloud.pubsublite.internal.PullSubscriber;
+import com.google.cloud.pubsublite.internal.wire.PartitionCountWatcher;
+import com.google.cloud.pubsublite.internal.wire.PartitionCountWatcherImpl;
+import com.google.cloud.pubsublite.proto.Cursor;
+import com.google.cloud.pubsublite.proto.SeekRequest;
+import com.google.common.base.Ticker;
+import java.time.Duration;
+import java.util.Optional;
+import java.util.function.Consumer;
+import javax.annotation.Nullable;
+import org.apache.beam.sdk.options.PipelineOptions;
+import org.apache.beam.sdk.transforms.Create;
 import org.apache.beam.sdk.transforms.PTransform;
 import org.apache.beam.sdk.transforms.ParDo;
+import org.apache.beam.sdk.transforms.Reshuffle;
+import org.apache.beam.sdk.transforms.SerializableBiFunction;
 import org.apache.beam.sdk.transforms.SerializableFunction;
+import org.apache.beam.sdk.util.Sleeper;
+import org.apache.beam.sdk.values.PBegin;
 import org.apache.beam.sdk.values.PCollection;
 import org.apache.beam.sdk.values.PDone;
 import org.apache.beam.sdk.values.PInput;
@@ -40,11 +65,98 @@ public final class PubsubLiteIO {
     };
   }
 
+  private static @Nullable Long getMaxMem(PipelineOptions options) {
+    if (!(options instanceof PubsubLitePipelineOptions)) return null;
+    PubsubLitePipelineOptions psOptions = (PubsubLitePipelineOptions) options;
+    if (!psOptions.getPubsubLiteSubscriberWorkerMemoryLimiterEnabled()) return null;
+    return psOptions.getPubsubLiteSubscribeWorkerMemoryLimit();
+  }
+
   // Read messages from Pub/Sub Lite. These messages may contain duplicates if the publisher
   // retried, which the PubsubLiteIO write method will do. Use the dedupe transform to remove these
   // duplicates.
-  public static Read.Unbounded<SequencedMessage> read(SubscriberOptions options) {
-    return Read.from(new PubsubLiteUnboundedSource(options));
+  public static PTransform<PBegin, PCollection<SequencedMessage>> read(SubscriberOptions options) {
+    TopicPath topic;
+    try (AdminClient client =
+        AdminClient.create(
+            AdminClientSettings.newBuilder()
+                .setRegion(options.subscriptionPath().location().region())
+                .build())) {
+      topic = TopicPath.parse(client.getSubscription(options.subscriptionPath()).get().getTopic());
+    } catch (Throwable t) {
+      throw toCanonical(t).underlying;
+    }
+    PTransform<PBegin, PCollection<TopicPath>> fixedTopic =
+        toTransform(begin -> begin.apply(Create.of(topic)), "Topic");
+    SerializableBiFunction<TopicPath, Consumer<Long>, PartitionCountWatcher>
+        partitionCountWatcherFactory =
+            (path, consumer) ->
+                new PartitionCountWatcherImpl(
+                    path,
+                    AdminClient.create(
+                        AdminClientSettings.newBuilder()
+                            .setRegion(path.location().region())
+                            .build()),
+                    consumer,
+                    Duration.ofMinutes(1));
+    PTransform<PCollection<TopicPath>, PCollection<Partition>> loadPartitions =
+        toTransform(
+            topics -> topics.apply(ParDo.of(new PubsubLiteTopicSdf(partitionCountWatcherFactory))),
+            "LoadPartitions");
+    SerializableFunction<
+            Long, SerializableBiFunction<Partition, Offset, PullSubscriber<SequencedMessage>>>
+        subscriberFactoryFactory =
+            (@Nullable Long maxMem) ->
+                (partition, offset) ->
+                    new MemoryLimitingPullSubscriber(
+                        (newSeek, flow) -> {
+                          System.err.println("New subscriber for: " + partition);
+                          return new BufferingPullSubscriber(
+                              options.getPartitionSubscriberFactory(partition), flow, newSeek);
+                        },
+                        PerServerMemoryLimiter.getLimiter(Optional.ofNullable(maxMem)),
+                        options.flowControlSettings(),
+                        SeekRequest.newBuilder()
+                            .setCursor(Cursor.newBuilder().setOffset(offset.value()))
+                            .build());
+    PTransform<PCollection<Partition>, PCollection<SequencedMessage>> loadMessages =
+        toTransform(
+            partitions ->
+                partitions.apply(
+                    ParDo.of(
+                        new PubsubLitePartitionSdf(
+                            org.joda.time.Duration.standardMinutes(2),
+                            subscriberFactoryFactory.apply(
+                                getMaxMem(partitions.getPipeline().getOptions())),
+                            options::getPartitionCommitter,
+                            () -> Sleeper.DEFAULT,
+                            partition ->
+                                new InitialOffsetReaderImpl(
+                                    CursorClient.create(
+                                        CursorClientSettings.newBuilder()
+                                            .setRegion(topic.location().region())
+                                            .build()),
+                                    options.subscriptionPath(),
+                                    partition),
+                            (partition, range) ->
+                                new PubsubLiteOffsetRangeTracker(
+                                    range,
+                                    new RateLimitedSimpleTopicBacklogReader(
+                                        new SimpleTopicBacklogReaderImpl(
+                                            options.topicBacklogReaderSettings().instantiate(),
+                                            partition),
+                                        Ticker.systemTicker()),
+                                    partition)))),
+            "LoadMessages");
+    return toTransform(
+        begin ->
+            begin
+                .apply(fixedTopic)
+                .apply(loadPartitions)
+                // Prevent fusion of partitions, ensuring they can be spread to different machines.
+                .apply(Reshuffle.viaRandomKey())
+                .apply(loadMessages),
+        "read");
   }
 
   // Remove duplicates from the PTransform from a read. Assumes by default that the uuids were

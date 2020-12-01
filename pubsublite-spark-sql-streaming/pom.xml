@@ -22,11 +22,6 @@
     </dependency>
     <dependency>
       <groupId>org.apache.spark</groupId>
-      <artifactId>spark-core_2.12</artifactId>
-      <version>2.4.7</version>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.spark</groupId>
       <artifactId>spark-catalyst_2.12</artifactId>
       <version>2.4.7</version>
     </dependency>
@@ -34,10 +29,6 @@
       <groupId>com.google.cloud</groupId>
       <artifactId>google-cloud-pubsublite</artifactId>
       <version>0.6.6-SNAPSHOT</version><!-- {x-version-update:google-cloud-pubsublite:current} -->
-    </dependency>
-    <dependency>
-      <groupId>com.google.api</groupId>
-      <artifactId>api-common</artifactId>
     </dependency>
     <dependency>
       <groupId>com.google.guava</groupId>
@@ -48,43 +39,8 @@
       <artifactId>gax</artifactId>
     </dependency>
     <dependency>
-      <groupId>com.google.protobuf</groupId>
-      <artifactId>protobuf-java</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>com.google.protobuf</groupId>
-      <artifactId>protobuf-java-util</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>com.google.errorprone</groupId>
-      <artifactId>error_prone_annotations</artifactId>
-    </dependency>
-    <dependency>
       <groupId>com.google.auto.value</groupId>
       <artifactId>auto-value-annotations</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>com.google.api.grpc</groupId>
-      <artifactId>proto-google-cloud-pubsublite-v1</artifactId>
-      <version>0.6.6-SNAPSHOT</version><!-- {x-version-update:google-cloud-pubsublite:current} -->
-    </dependency>
-    <dependency>
-      <groupId>com.google.api.grpc</groupId>
-      <artifactId>proto-google-cloud-pubsub-v1</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>com.google.flogger</groupId>
-      <artifactId>google-extensions</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.slf4j</groupId>
-      <artifactId>slf4j-api</artifactId>
-      <version>1.7.30</version>
-    </dependency>
-    <dependency>
-      <groupId>commons-codec</groupId>
-      <artifactId>commons-codec</artifactId>
-      <version>1.11</version>
     </dependency>
     <dependency>
       <groupId>org.scala-lang</groupId>
@@ -103,53 +59,6 @@
       <groupId>com.google.truth</groupId>
       <artifactId>truth</artifactId>
       <version>1.1</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>com.google.truth.extensions</groupId>
-      <artifactId>truth-java8-extension</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.spark</groupId>
-      <artifactId>spark-core_2.12</artifactId>
-      <version>2.4.7</version>
-      <type>test-jar</type>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.spark</groupId>
-      <artifactId>spark-sql_2.12</artifactId>
-      <version>2.4.7</version>
-      <type>test-jar</type>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.spark</groupId>
-      <artifactId>spark-catalyst_2.12</artifactId>
-      <version>2.4.7</version>
-      <type>test-jar</type>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.spark</groupId>
-      <artifactId>spark-tags_2.12</artifactId>
-      <version>2.4.7</version>
-    </dependency>
-    <dependency>
-      <groupId>org.mockito</groupId>
-      <artifactId>mockito-core</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>io.grpc</groupId>
-      <artifactId>grpc-testing</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.hamcrest</groupId>
-      <artifactId>hamcrest</artifactId>
-      <version>2.2</version>
       <scope>test</scope>
     </dependency>
   </dependencies>

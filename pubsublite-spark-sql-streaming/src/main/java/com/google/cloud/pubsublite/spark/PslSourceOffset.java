@@ -25,15 +25,12 @@ import com.google.cloud.pubsublite.Partition;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import java.io.IOException;
-import java.io.Serializable;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public final class PslSourceOffset extends org.apache.spark.sql.sources.v2.reader.streaming.Offset
-    implements Serializable {
-
+public final class PslSourceOffset extends org.apache.spark.sql.sources.v2.reader.streaming.Offset {
   private static final ObjectMapper objectMapper = new ObjectMapper();
 
   static {

@@ -19,10 +19,8 @@ package com.google.cloud.pubsublite.spark;
 import com.google.api.client.util.Base64;
 import com.google.api.gax.core.CredentialsProvider;
 import com.google.auth.Credentials;
-import com.google.auth.oauth2.AccessToken;
 import com.google.auth.oauth2.GoogleCredentials;
 import java.io.ByteArrayInputStream;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 
@@ -31,19 +29,11 @@ public class PslCredentialsProvider implements CredentialsProvider {
   private final Credentials credentials;
 
   public PslCredentialsProvider(PslDataSourceOptions options) {
-    if (options.credentialsAccessToken() != null) {
-      this.credentials = createCredentialsFromAccessToken(options.credentialsAccessToken());
-    } else if (options.credentialsKey() != null) {
+    if (options.credentialsKey() != null) {
       this.credentials = createCredentialsFromKey(options.credentialsKey());
-    } else if (options.credentialsFile() != null) {
-      this.credentials = createCredentialsFromFile(options.credentialsFile());
     } else {
       this.credentials = createDefaultCredentials();
     }
-  }
-
-  private static Credentials createCredentialsFromAccessToken(String accessToken) {
-    return GoogleCredentials.create(new AccessToken(accessToken, null));
   }
 
   private static Credentials createCredentialsFromKey(String key) {
@@ -51,14 +41,6 @@ public class PslCredentialsProvider implements CredentialsProvider {
       return GoogleCredentials.fromStream(new ByteArrayInputStream(Base64.decodeBase64(key)));
     } catch (IOException e) {
       throw new UncheckedIOException("Failed to create Credentials from key", e);
-    }
-  }
-
-  private static Credentials createCredentialsFromFile(String file) {
-    try {
-      return GoogleCredentials.fromStream(new FileInputStream(file));
-    } catch (IOException e) {
-      throw new UncheckedIOException("Failed to create Credentials from file", e);
     }
   }
 

@@ -20,27 +20,18 @@ import static com.google.common.truth.Truth.assertThat;
 import static org.junit.Assert.fail;
 
 import com.google.cloud.pubsublite.*;
+import com.google.cloud.pubsublite.internal.testing.UnitTestExamples;
 import com.google.common.collect.ImmutableMap;
 import org.junit.Test;
 
 public class PslSourceOffsetTest {
-
-  private static final SubscriptionPath TEST_SUB;
-
-  static {
-    TEST_SUB =
-        SubscriptionPath.newBuilder()
-            .setProject(ProjectId.of("test-project"))
-            .setLocation(CloudZone.of(CloudRegion.of("us-central1"), 'a'))
-            .setName(SubscriptionName.of("test-sub"))
-            .build();
-  }
 
   @Test
   public void roundTrip() {
     PslSourceOffset offset =
         new PslSourceOffset(
             ImmutableMap.of(
+                // Intentionally unsorted, the serialization should make it sorted.
                 Partition.of(3L), Offset.of(10L),
                 Partition.of(1L), Offset.of(5L),
                 Partition.of(2L), Offset.of(8L)));
@@ -76,17 +67,17 @@ public class PslSourceOffsetTest {
   public void mergePslPartitionOffsetsDuplicatePartition() {
     PslPartitionOffset[] offsets = {
       PslPartitionOffset.builder()
-          .subscriptionPath(TEST_SUB)
+          .subscriptionPath(UnitTestExamples.exampleSubscriptionPath())
           .partition(Partition.of(3L))
           .offset(Offset.of(10L))
           .build(),
       PslPartitionOffset.builder()
-          .subscriptionPath(TEST_SUB)
+          .subscriptionPath(UnitTestExamples.exampleSubscriptionPath())
           .partition(Partition.of(1L))
           .offset(Offset.of(5L))
           .build(),
       PslPartitionOffset.builder()
-          .subscriptionPath(TEST_SUB)
+          .subscriptionPath(UnitTestExamples.exampleSubscriptionPath())
           .partition(Partition.of(1L))
           .offset(Offset.of(4L))
           .build()
@@ -103,17 +94,17 @@ public class PslSourceOffsetTest {
   public void mergePslPartitionOffsets() {
     PslPartitionOffset[] offsets = {
       PslPartitionOffset.builder()
-          .subscriptionPath(TEST_SUB)
+          .subscriptionPath(UnitTestExamples.exampleSubscriptionPath())
           .partition(Partition.of(3L))
           .offset(Offset.of(10L))
           .build(),
       PslPartitionOffset.builder()
-          .subscriptionPath(TEST_SUB)
+          .subscriptionPath(UnitTestExamples.exampleSubscriptionPath())
           .partition(Partition.of(1L))
           .offset(Offset.of(5L))
           .build(),
       PslPartitionOffset.builder()
-          .subscriptionPath(TEST_SUB)
+          .subscriptionPath(UnitTestExamples.exampleSubscriptionPath())
           .partition(Partition.of(2L))
           .offset(Offset.of(4L))
           .build()

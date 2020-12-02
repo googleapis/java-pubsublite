@@ -116,8 +116,8 @@
     <module>google-cloud-pubsublite</module>
     <module>grpc-google-cloud-pubsublite-v1</module>
     <module>proto-google-cloud-pubsublite-v1</module>
-    <module>pubsublite-beam-io</module>
     <module>pubsublite-spark-sql-streaming</module>
+    <module>pubsublite-beam-io</module>
   </modules>
 
   <profiles>

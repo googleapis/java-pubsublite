@@ -16,8 +16,13 @@
 
 package com.google.cloud.pubsublite.spark;
 
+import static com.google.cloud.pubsublite.internal.ServiceClients.addDefaultSettings;
+
 import com.google.auto.value.AutoValue;
 import com.google.cloud.pubsublite.SubscriptionPath;
+import com.google.cloud.pubsublite.v1.CursorServiceClient;
+import com.google.cloud.pubsublite.v1.CursorServiceSettings;
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.Optional;
 import javax.annotation.Nullable;
@@ -25,6 +30,7 @@ import org.apache.spark.sql.sources.v2.DataSourceOptions;
 
 @AutoValue
 public abstract class PslDataSourceOptions implements Serializable {
+  private static final long serialVersionUID = 2680059304693561607L;
 
   @Nullable
   public abstract String credentialsAccessToken();
@@ -104,5 +110,17 @@ public abstract class PslDataSourceOptions implements Serializable {
     public abstract Builder maxBatchOffsetRange(long maxBatchOffsetRange);
 
     public abstract PslDataSourceOptions build();
+  }
+
+  CursorServiceClient newCursorClient() {
+    try {
+      return CursorServiceClient.create(
+          addDefaultSettings(
+              this.subscriptionPath().location().region(),
+              CursorServiceSettings.newBuilder()
+                  .setCredentialsProvider(new PslCredentialsProvider(this))));
+    } catch (IOException e) {
+      throw new IllegalStateException("Unable to create CursorServiceClient.");
+    }
   }
 }

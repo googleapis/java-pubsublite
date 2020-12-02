@@ -123,6 +123,14 @@
         </executions>
       </plugin>
       <plugin>
+        <groupId>org.sonatype.plugins</groupId>
+        <artifactId>nexus-staging-maven-plugin</artifactId>
+        <configuration>
+          <!-- TODO(jiangmichael): Remote this to deploy.-->
+          <skipNexusStagingDeployMojo>true</skipNexusStagingDeployMojo>
+        </configuration>
+      </plugin>
+      <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-enforcer-plugin</artifactId>
         <version>3.0.0-M3</version>
@@ -137,16 +145,6 @@
                     <exclude>org.checkerframework:checker-compat-qual</exclude>
                   </excludes>
                 </requireUpperBoundDeps>
-                <banDuplicateClasses>
-                  <ignoreClasses>
-                    <ignoreClass>org.apache.commons.logging.*</ignoreClass>
-                    <ignoreClass>org.apache.commons.collections.*</ignoreClass>
-                    <ignoreClass>org.apache.spark.unused.*</ignoreClass>
-                    <ignoreClass>org.apache.hadoop.yarn.*</ignoreClass>
-                    <ignoreClass>javax.ws.rs.*</ignoreClass>
-                  </ignoreClasses>
-                  <ignoreWhenIdentical>true</ignoreWhenIdentical>
-                </banDuplicateClasses>
               </rules>
             </configuration>
             <goals>

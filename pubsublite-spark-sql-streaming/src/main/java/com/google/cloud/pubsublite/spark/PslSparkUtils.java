@@ -16,17 +16,11 @@
 
 package com.google.cloud.pubsublite.spark;
 
-import static com.google.cloud.pubsublite.internal.ServiceClients.addDefaultSettings;
-
 import com.google.cloud.pubsublite.Offset;
 import com.google.cloud.pubsublite.Partition;
 import com.google.cloud.pubsublite.SequencedMessage;
 import com.google.cloud.pubsublite.SubscriptionPath;
-import com.google.cloud.pubsublite.v1.CursorServiceClient;
-import com.google.cloud.pubsublite.v1.CursorServiceSettings;
 import com.google.common.collect.ImmutableList;
-import java.io.IOException;
-import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 import org.apache.spark.sql.catalyst.InternalRow;
@@ -45,24 +39,6 @@ public class PslSparkUtils {
                 msg.publishTime(),
                 msg.message().eventTime(),
                 msg.message().attributes())));
-  }
-
-  public interface CursorClientFactory extends Serializable {
-    CursorServiceClient newClient(PslDataSourceOptions options);
-  }
-
-  public static CursorClientFactory getCursorClientFactory() {
-    return (options) -> {
-      try {
-        return CursorServiceClient.create(
-            addDefaultSettings(
-                options.subscriptionPath().location().region(),
-                CursorServiceSettings.newBuilder()
-                    .setCredentialsProvider(new PslCredentialsProvider(options))));
-      } catch (IOException e) {
-        throw new IllegalStateException("Unable to create CursorServiceClient.");
-      }
-    };
   }
 
   public static PslSourceOffset addOne(PslSourceOffset offset) {

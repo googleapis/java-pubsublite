@@ -87,7 +87,7 @@ public class PartitionCountWatchingPublisherTest {
               return null;
             })
         .when(fakeConfigWatcher)
-        .doStart();
+        .startAsync();
     publisher =
         new PartitionCountWatchingPublisher(
             PartitionCountWatchingPublisherSettings.newBuilder()

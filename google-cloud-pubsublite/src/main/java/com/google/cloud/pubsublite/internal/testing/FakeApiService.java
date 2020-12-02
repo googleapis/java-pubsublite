@@ -32,12 +32,12 @@ public abstract class FakeApiService extends AbstractApiService {
   }
 
   @Override
-  public void doStart() {
+  protected void doStart() {
     notifyStarted();
   }
 
   @Override
-  public void doStop() {
+  protected void doStop() {
     notifyStopped();
   }
 }

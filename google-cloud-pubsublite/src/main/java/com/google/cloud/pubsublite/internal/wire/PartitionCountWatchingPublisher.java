@@ -22,12 +22,10 @@ import static com.google.cloud.pubsublite.internal.ExtractStatus.toCanonical;
 import com.google.api.core.ApiFuture;
 import com.google.api.core.ApiFutures;
 import com.google.api.core.ApiService;
-import com.google.api.gax.rpc.StatusCode;
 import com.google.cloud.pubsublite.Message;
 import com.google.cloud.pubsublite.Partition;
 import com.google.cloud.pubsublite.PublishMetadata;
 import com.google.cloud.pubsublite.internal.*;
-import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.flogger.GoogleLogger;
 import com.google.common.util.concurrent.MoreExecutors;
@@ -90,13 +88,11 @@ public class PartitionCountWatchingPublisher extends ProxyService
   @GuardedBy("monitor.monitor")
   private Optional<PartitionsWithRouting> partitionsWithRouting = Optional.empty();
 
-  public PartitionCountWatchingPublisher(
-      PartitionCountWatcher.Factory watcherFactory,
-      PartitionPublisherFactory publisherFactory,
-      RoutingPolicy.Factory policyFactory) {
-    this.publisherFactory = publisherFactory;
-    this.policyFactory = policyFactory;
-    PartitionCountWatcher configWatcher = watcherFactory.newWatcher(this::handleConfig);
+  public PartitionCountWatchingPublisher(PartitionCountWatchingPublisherSettings settings) {
+    this.publisherFactory = settings.publisherFactory();
+    this.policyFactory = settings.routingPolicyFactory();
+    PartitionCountWatcher configWatcher =
+        settings.configWatcherFactory().newWatcher(this::handleConfig);
     addServices(configWatcher);
   }
 
@@ -129,10 +125,10 @@ public class PartitionCountWatchingPublisher extends ProxyService
     partitions.get().flush();
   }
 
-  private ImmutableMap<Partition, Publisher<PublishMetadata>> addNewPartitions(
-      LongStream partitionRange) {
+  private ImmutableMap<Partition, Publisher<PublishMetadata>> getNewPartitionPublishers(
+      LongStream newPartitions) {
     ImmutableMap.Builder<Partition, Publisher<PublishMetadata>> mapBuilder = ImmutableMap.builder();
-    partitionRange.forEach(
+    newPartitions.forEach(
         i -> {
           Publisher<PublishMetadata> p = publisherFactory.newPublisher(Partition.of(i));
           p.addListener(
@@ -146,9 +142,9 @@ public class PartitionCountWatchingPublisher extends ProxyService
           mapBuilder.put(Partition.of(i), p);
           p.startAsync();
         });
-    ImmutableMap<Partition, Publisher<PublishMetadata>> newPartitions = mapBuilder.build();
-    newPartitions.values().forEach(ApiService::awaitRunning);
-    return newPartitions;
+    ImmutableMap<Partition, Publisher<PublishMetadata>> partitions = mapBuilder.build();
+    partitions.values().forEach(ApiService::awaitRunning);
+    return partitions;
   }
 
   private void handleConfig(long partitionCount) {
@@ -162,19 +158,17 @@ public class PartitionCountWatchingPublisher extends ProxyService
         return;
       }
       if (partitionCount < currentSize) {
-        onPermanentError(
-            new CheckedApiException(
-                Strings.lenientFormat(
-                    "Unexpected decrease in partition count. Previous partition count {}, new count {}",
-                    currentSize,
-                    partitionCount),
-                StatusCode.Code.FAILED_PRECONDITION));
+        log.atWarning().log(
+            "Received an unexpected decrease in partition count. Previous partition count {}, new count {}",
+            currentSize,
+            partitionCount);
         return;
       }
       ImmutableMap.Builder<Partition, Publisher<PublishMetadata>> mapBuilder =
           ImmutableMap.builder();
       current.ifPresent(p -> p.publishers.forEach(mapBuilder::put));
-      addNewPartitions(LongStream.range(currentSize, partitionCount)).forEach(mapBuilder::put);
+      getNewPartitionPublishers(LongStream.range(currentSize, partitionCount))
+          .forEach(mapBuilder::put);
       ImmutableMap<Partition, Publisher<PublishMetadata>> newMap = mapBuilder.build();
 
       partitionsWithRouting =

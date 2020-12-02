@@ -15,6 +15,7 @@
  */
 package com.google.cloud.pubsublite.internal.wire;
 
+import static com.google.cloud.pubsublite.internal.testing.UnitTestExamples.example;
 import static org.junit.Assert.assertThrows;
 import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.initMocks;
@@ -44,14 +45,10 @@ public class PartitionCountWatchingPublisherTest {
   abstract static class FakeConfigWatcher extends FakeApiService implements PartitionCountWatcher {}
 
   private static final Duration PERIOD = Duration.ofMinutes(1);
-  private static final CloudRegion REGION = CloudRegion.of("us-east1");
+  private static final CloudRegion REGION = example(CloudRegion.class);
 
   private static TopicPath path() {
-    return TopicPath.newBuilder()
-        .setName(TopicName.of("a"))
-        .setProject(ProjectNumber.of(4))
-        .setLocation(CloudZone.of(REGION, 'a'))
-        .build();
+    return example(TopicPath.class);
   }
 
   @Mock PartitionPublisherFactory mockPublisherFactory;
@@ -92,17 +89,18 @@ public class PartitionCountWatchingPublisherTest {
         .when(fakeConfigWatcher)
         .doStart();
     publisher =
-        PartitionCountWatchingPublisherSettings.newBuilder()
-            .setConfigWatcherFactory(
-                c -> {
-                  leakedConsumer = c;
-                  return fakeConfigWatcher;
-                })
-            .setTopic(path())
-            .setConfigPollPeriod(PERIOD)
-            .setPublisherFactory(mockPublisherFactory)
-            .setRoutingPolicyFactory(mockRoutingPolicyFactory)
-            .instantiate();
+        new PartitionCountWatchingPublisher(
+            PartitionCountWatchingPublisherSettings.newBuilder()
+                .setConfigWatcherFactory(
+                    c -> {
+                      leakedConsumer = c;
+                      return fakeConfigWatcher;
+                    })
+                .setTopic(path())
+                .setConfigPollPeriod(PERIOD)
+                .setPublisherFactory(mockPublisherFactory)
+                .setRoutingPolicyFactory(mockRoutingPolicyFactory)
+                .build());
     publisher.startAsync();
     publisher.awaitRunning();
 
@@ -191,12 +189,19 @@ public class PartitionCountWatchingPublisherTest {
   }
 
   @Test
-  public void testDecreaseFailsPublisher() {
+  public void testDecreaseIgnored() throws Exception {
     leakedConsumer.accept(1L);
-    ApiExceptionMatcher.assertThrowableMatches(
-        publisher.failureCause(), StatusCode.Code.FAILED_PRECONDITION);
-    assertThrows(IllegalStateException.class, publisher::flush);
-    assertThrows(IllegalStateException.class, () -> publisher.publish(Message.builder().build()));
+
+    Message message0 = Message.builder().setKey(ByteString.copyFromUtf8("0")).build();
+    Message message1 = Message.builder().setKey(ByteString.copyFromUtf8("1")).build();
+    when(mockRoutingPolicy.route(message0.key())).thenReturn(Partition.of(0));
+    when(mockRoutingPolicy.route(message1.key())).thenReturn(Partition.of(1));
+
+    publisher.publish(message0);
+    publisher.publish(message1);
+
+    verify(publisher0).publish(message0);
+    verify(publisher1).publish(message1);
   }
 
   @Test
@@ -222,6 +227,20 @@ public class PartitionCountWatchingPublisherTest {
     publisher.awaitTerminated();
 
     leakedConsumer.accept(3L);
+
+    assertThrows(IllegalStateException.class, publisher::flush);
+    assertThrows(IllegalStateException.class, () -> publisher.publish(Message.builder().build()));
+  }
+
+  @Test
+  public void testStopAfterIncrease() throws Exception {
+    leakedConsumer.accept(3L);
+    verify(mockRoutingPolicyFactory).newPolicy(3L);
+
+    publisher.stopAsync();
+    publisher.awaitTerminated();
+
+    leakedConsumer.accept(4L);
 
     assertThrows(IllegalStateException.class, publisher::flush);
     assertThrows(IllegalStateException.class, () -> publisher.publish(Message.builder().build()));

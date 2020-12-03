@@ -20,9 +20,9 @@ import static com.google.cloud.pubsublite.internal.ServiceClients.addDefaultSett
 
 import com.google.auto.value.AutoValue;
 import com.google.cloud.pubsublite.SubscriptionPath;
+import com.google.cloud.pubsublite.cloudpubsub.FlowControlSettings;
 import com.google.cloud.pubsublite.v1.AdminServiceClient;
 import com.google.cloud.pubsublite.v1.AdminServiceSettings;
-import com.google.cloud.pubsublite.cloudpubsub.FlowControlSettings;
 import com.google.cloud.pubsublite.v1.CursorServiceClient;
 import com.google.cloud.pubsublite.v1.CursorServiceSettings;
 import java.io.IOException;
@@ -40,6 +40,7 @@ public abstract class PslDataSourceOptions implements Serializable {
 
   public abstract SubscriptionPath subscriptionPath();
 
+  @Nullable
   public abstract FlowControlSettings flowControlSettings();
 
   public abstract long maxBatchOffsetRange();
@@ -63,19 +64,21 @@ public abstract class PslDataSourceOptions implements Serializable {
     if ((value = options.get(Constants.CREDENTIALS_KEY_CONFIG_KEY)).isPresent()) {
       builder.credentialsKey(value.get());
     }
-    builder.subscriptionPath(
-        SubscriptionPath.parse(options.get(Constants.SUBSCRIPTION_CONFIG_KEY).get()));
-    builder.flowControlSettings(
-        FlowControlSettings.builder()
-            .setMessagesOutstanding(
-                options.getLong(
-                    Constants.MESSAGES_OUTSTANDING_CONFIG_KEY,
-                    Constants.DEFAULT_MESSAGES_OUTSTANDING))
-            .setBytesOutstanding(
-                options.getLong(
-                    Constants.BYTES_OUTSTANDING_CONFIG_KEY, Constants.DEFAULT_BYTES_OUTSTANDING))
-            .build());
-    return builder.build();
+    return builder
+        .subscriptionPath(
+            SubscriptionPath.parse(options.get(Constants.SUBSCRIPTION_CONFIG_KEY).get()))
+        .flowControlSettings(
+            FlowControlSettings.builder()
+                .setMessagesOutstanding(
+                    options.getLong(
+                        Constants.MESSAGES_OUTSTANDING_CONFIG_KEY,
+                        Constants.DEFAULT_MESSAGES_OUTSTANDING))
+                .setBytesOutstanding(
+                    options.getLong(
+                        Constants.BYTES_OUTSTANDING_CONFIG_KEY,
+                        Constants.DEFAULT_BYTES_OUTSTANDING))
+                .build())
+        .build();
   }
 
   @AutoValue.Builder

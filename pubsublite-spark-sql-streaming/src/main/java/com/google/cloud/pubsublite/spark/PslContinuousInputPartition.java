@@ -18,7 +18,7 @@ package com.google.cloud.pubsublite.spark;
 
 import com.google.cloud.pubsublite.Offset;
 import com.google.cloud.pubsublite.SequencedMessage;
-import com.google.cloud.pubsublite.cloudpubsub.FlowControlSettings;
+import com.google.cloud.pubsublite.SubscriptionPath;
 import com.google.cloud.pubsublite.internal.BufferingPullSubscriber;
 import com.google.cloud.pubsublite.internal.CheckedApiException;
 import com.google.cloud.pubsublite.internal.PullSubscriber;
@@ -50,10 +50,12 @@ public class PslContinuousInputPartition
 
   @VisibleForTesting
   public static ContinuousInputPartitionReader<InternalRow> createPartitionReader(
+      SubscriptionPath subscriptionPath,
       PslPartitionOffset currentOffset,
       PullSubscriber<SequencedMessage> subscriber,
       ScheduledExecutorService pullExecutorService) {
-    return new PslContinuousInputPartitionReader(currentOffset, subscriber, pullExecutorService);
+    return new PslContinuousInputPartitionReader(
+        subscriptionPath, currentOffset, subscriber, pullExecutorService);
   }
 
   @Override
@@ -64,7 +66,6 @@ public class PslContinuousInputPartition
     PslPartitionOffset pslOffset = (PslPartitionOffset) offset;
     PslPartitionOffset currentOffset =
         PslPartitionOffset.builder()
-            .subscriptionPath(pslOffset.subscriptionPath())
             .partition(pslOffset.partition())
             // The first message to read is startOffset + 1
             .offset(Offset.of(pslOffset.offset().value() + 1))
@@ -77,15 +78,12 @@ public class PslContinuousInputPartition
               // TODO(jiangmichael): Pass credentials settings here.
               (consumer) ->
                   SubscriberBuilder.newBuilder()
-                      .setSubscriptionPath(startOffset.subscriptionPath())
-                      .setPartition(startOffset.partition())
+                      .setSubscriptionPath(options.subscriptionPath())
+                      .setPartition(pslOffset.partition())
                       .setContext(PubsubContext.of(Constants.FRAMEWORK))
                       .setMessageConsumer(consumer)
                       .build(),
-              FlowControlSettings.builder()
-                  .setBytesOutstanding(options.maxBytesOutstanding())
-                  .setMessagesOutstanding(options.maxMessagesOutstanding())
-                  .build(),
+              options.flowControlSettings(),
               SeekRequest.newBuilder()
                   .setCursor(Cursor.newBuilder().setOffset(currentOffset.offset().value()).build())
                   .build());
@@ -94,7 +92,10 @@ public class PslContinuousInputPartition
           "Unable to create PSL subscriber for " + startOffset.toString(), e);
     }
     return createPartitionReader(
-        (PslPartitionOffset) offset, subscriber, Executors.newSingleThreadScheduledExecutor());
+        options.subscriptionPath(),
+        currentOffset,
+        subscriber,
+        Executors.newSingleThreadScheduledExecutor());
   }
 
   @Override
@@ -105,15 +106,18 @@ public class PslContinuousInputPartition
   private static class PslContinuousInputPartitionReader
       implements ContinuousInputPartitionReader<InternalRow> {
 
+    private final SubscriptionPath subscriptionPath;
     private final PullSubscriber<SequencedMessage> subscriber;
     private final BlockingDeque<SequencedMessage> messages = new LinkedBlockingDeque<>();
     private PslPartitionOffset currentOffset;
     private SequencedMessage currentMsg;
 
     private PslContinuousInputPartitionReader(
+        SubscriptionPath subscriptionPath,
         PslPartitionOffset currentOffset,
         PullSubscriber<SequencedMessage> subscriber,
         ScheduledExecutorService pullExecutorService) {
+      this.subscriptionPath = subscriptionPath;
       this.currentOffset = currentOffset;
       this.subscriber = subscriber;
       this.currentMsg = null;
@@ -141,7 +145,6 @@ public class PslContinuousInputPartition
         currentMsg = messages.takeFirst();
         currentOffset =
             PslPartitionOffset.builder()
-                .subscriptionPath(currentOffset.subscriptionPath())
                 .partition(currentOffset.partition())
                 .offset(currentMsg.offset())
                 .build();
@@ -154,8 +157,7 @@ public class PslContinuousInputPartition
     @Override
     public InternalRow get() {
       assert currentMsg != null;
-      return PslSparkUtils.toInternalRow(
-          currentMsg, currentOffset.subscriptionPath(), currentOffset.partition());
+      return PslSparkUtils.toInternalRow(currentMsg, subscriptionPath, currentOffset.partition());
     }
 
     @Override

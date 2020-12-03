@@ -25,14 +25,11 @@ import com.google.cloud.pubsublite.internal.wire.CommitterBuilder;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.flogger.GoogleLogger;
 import com.google.common.util.concurrent.MoreExecutors;
-import com.google.errorprone.annotations.concurrent.GuardedBy;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
+import java.util.concurrent.locks.ReentrantLock;
 
 public class MultiPartitionCommitter implements Serializable {
   private static final GoogleLogger log = GoogleLogger.forEnclosingClass();
@@ -43,22 +40,9 @@ public class MultiPartitionCommitter implements Serializable {
 
   private final PslDataSourceOptions options;
   private final CommitterFactory committerFactory;
-
+  private final ReentrantLock lock = new ReentrantLock();
   private boolean initialized = false;
   private final Map<Partition, Committer> committerMap = new HashMap<>(); // lazily constructed
-
-  private static class CommitState {
-    com.google.cloud.pubsublite.Offset offset;
-    ApiFuture<Void> future;
-
-    public CommitState(com.google.cloud.pubsublite.Offset offset, ApiFuture<Void> future) {
-      this.offset = offset;
-      this.future = future;
-    }
-  }
-
-  @GuardedBy("commitLock")
-  private final Map<Partition, CommitState> commitStates = new HashMap<>();
 
   public MultiPartitionCommitter(PslDataSourceOptions options) {
     this(
@@ -77,7 +61,8 @@ public class MultiPartitionCommitter implements Serializable {
     this.committerFactory = committerFactory;
   }
 
-  private synchronized void init(Set<Partition> partitions) {
+  private void init(Set<Partition> partitions) {
+    assert lock.isLocked();
     partitions.forEach(
         p -> {
           Committer committer = committerFactory.newCommitter(options, p);
@@ -86,60 +71,50 @@ public class MultiPartitionCommitter implements Serializable {
         });
   }
 
-  private synchronized void tryCleanCommitStates(Partition partition) {
-    if (!commitStates.containsKey(partition)) {
-      return;
-    }
-    if (commitStates.get(partition).future.isDone()) {
-      commitStates.remove(partition);
+  public void close() {
+    lock.lock();
+    try {
+      committerMap.values().forEach(c -> c.stopAsync().awaitTerminated());
+    } finally {
+      lock.unlock();
     }
   }
 
-  public synchronized void close() {
-    commitStates.forEach(
-        (k, v) -> {
-          try {
-            v.future.get(200, TimeUnit.MILLISECONDS);
-          } catch (InterruptedException | ExecutionException | TimeoutException ex) {
-            log.atWarning().log("Failed to commit %s,%s.", k.value(), v.offset.value(), ex);
-          }
-        });
-    committerMap.values().forEach(c -> c.stopAsync().awaitTerminated());
-  }
+  public void commit(PslSourceOffset offset) {
+    lock.lock();
+    try {
+      if (!initialized) {
+        init(offset.getPartitionOffsetMap().keySet());
+        initialized = true;
+      }
 
-  public synchronized void commit(PslSourceOffset offset) {
-    if (!initialized) {
-      init(offset.getPartitionOffsetMap().keySet());
-      initialized = true;
-    }
-
-    offset
-        .getPartitionOffsetMap()
-        .forEach(
-            (p, o) -> {
-              if (commitStates.containsKey(p)) {
-                commitStates.get(p).future.cancel(true);
-              }
-              ApiFuture<Void> future = committerMap.get(p).commitOffset(o);
-              ApiFutures.addCallback(
-                  future,
-                  new ApiFutureCallback<Void>() {
-                    @Override
-                    public void onFailure(Throwable t) {
-                      if (!future.isCancelled()) {
-                        log.atWarning().log("Failed to commit %s,%s.", p.value(), o.value(), t);
+      offset
+          .getPartitionOffsetMap()
+          .forEach(
+              (p, o) -> {
+                // Note we don't need to worry about commit offset disorder here since Committer
+                // guarantees the ordering. Once commitOffset() returns, it's either already
+                // sent to stream, or waiting for next connection to open to be sent in order.
+                ApiFuture<Void> future = committerMap.get(p).commitOffset(o);
+                ApiFutures.addCallback(
+                    future,
+                    new ApiFutureCallback<Void>() {
+                      @Override
+                      public void onFailure(Throwable t) {
+                        if (!future.isCancelled()) {
+                          log.atWarning().log("Failed to commit %s,%s.", p.value(), o.value(), t);
+                        }
                       }
-                      tryCleanCommitStates(p);
-                    }
 
-                    @Override
-                    public void onSuccess(Void result) {
-                      log.atInfo().log("Committed %s,%s.", p.value(), o.value());
-                      tryCleanCommitStates(p);
-                    }
-                  },
-                  MoreExecutors.directExecutor());
-              commitStates.put(p, new CommitState(o, future));
-            });
+                      @Override
+                      public void onSuccess(Void result) {
+                        log.atInfo().log("Committed %s,%s.", p.value(), o.value());
+                      }
+                    },
+                    MoreExecutors.directExecutor());
+              });
+    } finally {
+      lock.unlock();
+    }
   }
 }

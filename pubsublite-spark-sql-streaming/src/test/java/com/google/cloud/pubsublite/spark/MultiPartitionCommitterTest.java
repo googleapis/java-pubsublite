@@ -16,7 +16,6 @@
 
 package com.google.cloud.pubsublite.spark;
 
-import static com.google.common.truth.Truth.assertThat;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 
@@ -25,7 +24,6 @@ import com.google.cloud.pubsublite.*;
 import com.google.cloud.pubsublite.internal.testing.UnitTestExamples;
 import com.google.cloud.pubsublite.internal.wire.Committer;
 import com.google.common.collect.ImmutableMap;
-import java.util.concurrent.ExecutionException;
 import org.junit.Test;
 
 public class MultiPartitionCommitterTest {
@@ -33,7 +31,6 @@ public class MultiPartitionCommitterTest {
   private static final PslDataSourceOptions OPTIONS =
       PslDataSourceOptions.builder()
           .subscriptionPath(UnitTestExamples.exampleSubscriptionPath())
-          .credentialsAccessToken("abc")
           .build();
 
   @Test
@@ -69,21 +66,8 @@ public class MultiPartitionCommitterTest {
     multiCommitter.commit(offset);
     verify(committer1, times(1)).startAsync();
     verify(committer2, times(1)).startAsync();
-    future1.set(null);
-
-    offset =
-        new PslSourceOffset(
-            ImmutableMap.of(
-                Partition.of(1), Offset.of(12L),
-                Partition.of(2), Offset.of(13L)));
-    SettableApiFuture<Void> future3 = SettableApiFuture.create();
-    SettableApiFuture<Void> future4 = SettableApiFuture.create();
-    when(committer1.commitOffset(eq(Offset.of(12L)))).thenReturn(future3);
-    when(committer2.commitOffset(eq(Offset.of(13L)))).thenReturn(future4);
-    multiCommitter.commit(offset);
-    assertThat(future2.isCancelled()).isTrue();
-    future3.setException(new ExecutionException(new InternalError("failed")));
-    future4.set(null);
+    verify(committer1, times(1)).commitOffset(eq(Offset.of(10L)));
+    verify(committer2, times(1)).commitOffset(eq(Offset.of(8L)));
   }
 
   @Test

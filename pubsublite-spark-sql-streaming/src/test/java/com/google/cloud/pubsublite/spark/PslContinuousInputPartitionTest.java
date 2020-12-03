@@ -56,8 +56,8 @@ public class PslContinuousInputPartitionTest {
     ArgumentCaptor<Runnable> captor = ArgumentCaptor.forClass(Runnable.class);
     reader =
         PslContinuousInputPartition.createPartitionReader(
+            UnitTestExamples.exampleSubscriptionPath(),
             PslPartitionOffset.builder()
-                .subscriptionPath(UnitTestExamples.exampleSubscriptionPath())
                 .partition(UnitTestExamples.examplePartition())
                 .offset(UnitTestExamples.exampleOffset())
                 .build(),

@@ -38,7 +38,6 @@ public class PslContinuousReaderTest {
   private static final PslDataSourceOptions OPTIONS =
       PslDataSourceOptions.builder()
           .subscriptionPath(UnitTestExamples.exampleSubscriptionPath())
-          .credentialsAccessToken("abc")
           .build();
   private final CursorServiceClient cursorClient = mock(CursorServiceClient.class);
   private final AdminServiceClient adminClient = mock(AdminServiceClient.class);
@@ -87,17 +86,9 @@ public class PslContinuousReaderTest {
   @Test
   public void testMergeOffsets() {
     PslPartitionOffset po1 =
-        PslPartitionOffset.builder()
-            .subscriptionPath(UnitTestExamples.exampleSubscriptionPath())
-            .partition(Partition.of(1))
-            .offset(Offset.of(10))
-            .build();
+        PslPartitionOffset.builder().partition(Partition.of(1)).offset(Offset.of(10)).build();
     PslPartitionOffset po2 =
-        PslPartitionOffset.builder()
-            .subscriptionPath(UnitTestExamples.exampleSubscriptionPath())
-            .partition(Partition.of(2))
-            .offset(Offset.of(5))
-            .build();
+        PslPartitionOffset.builder().partition(Partition.of(2)).offset(Offset.of(5)).build();
     assertThat(reader.mergeOffsets(new PslPartitionOffset[] {po1, po2}))
         .isEqualTo(PslSourceOffset.merge(new PslPartitionOffset[] {po1, po2}));
   }

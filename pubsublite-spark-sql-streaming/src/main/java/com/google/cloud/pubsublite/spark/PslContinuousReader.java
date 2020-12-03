@@ -116,7 +116,10 @@ public class PslContinuousReader implements ContinuousReader, Serializable {
   public void commit(Offset end) {
     assert PslSourceOffset.class.isAssignableFrom(end.getClass())
         : "end offset is not assignable to PslSourceOffset.";
-    committer.commit(PslSparkUtils.addOne((PslSourceOffset) end));
+    Map<Partition, com.google.cloud.pubsublite.Offset> map =
+        new HashMap<>(((PslSourceOffset) end).getPartitionOffsetMap());
+    map.replaceAll((k, v) -> com.google.cloud.pubsublite.Offset.of(v.value() + 1));
+    committer.commit(new PslSourceOffset(map));
   }
 
   @Override
@@ -137,11 +140,7 @@ public class PslContinuousReader implements ContinuousReader, Serializable {
         .map(
             e ->
                 new PslContinuousInputPartition(
-                    PslPartitionOffset.builder()
-                        .subscriptionPath(subscriptionPath)
-                        .partition(e.getKey())
-                        .offset(e.getValue())
-                        .build(),
+                    PslPartitionOffset.builder().partition(e.getKey()).offset(e.getValue()).build(),
                     options))
         .collect(Collectors.toList());
   }

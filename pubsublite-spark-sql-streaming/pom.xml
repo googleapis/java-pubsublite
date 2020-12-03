@@ -69,6 +69,11 @@
       <version>2.12.0</version>
     </dependency>
     <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-annotations</artifactId>
+      <version>2.12.0</version>
+    </dependency>
+    <dependency>
       <groupId>org.scala-lang</groupId>
       <artifactId>scala-library</artifactId>
       <version>2.12.12</version>
@@ -173,6 +178,7 @@
                 </requireUpperBoundDeps>
                 <banDuplicateClasses>
                   <ignoreClasses>
+                    <!-- Ignore duplicate classes due to diamond dependencies-->
                     <ignoreClass>org.apache.commons.logging.*</ignoreClass>
                     <ignoreClass>org.apache.commons.collections.*</ignoreClass>
                     <ignoreClass>org.apache.spark.unused.*</ignoreClass>

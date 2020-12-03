@@ -19,15 +19,12 @@ package com.google.cloud.pubsublite.spark;
 import com.google.auto.value.AutoValue;
 import com.google.cloud.pubsublite.Offset;
 import com.google.cloud.pubsublite.Partition;
-import com.google.cloud.pubsublite.SubscriptionPath;
 import java.io.Serializable;
 import org.apache.spark.sql.sources.v2.reader.streaming.PartitionOffset;
 
 @AutoValue
 public abstract class PslPartitionOffset implements PartitionOffset, Serializable {
   private static final long serialVersionUID = -3398208694782540866L;
-
-  public abstract SubscriptionPath subscriptionPath();
 
   public abstract Partition partition();
 
@@ -39,7 +36,6 @@ public abstract class PslPartitionOffset implements PartitionOffset, Serializabl
 
   @AutoValue.Builder
   public abstract static class Builder {
-    public abstract Builder subscriptionPath(SubscriptionPath subscriptionPath);
 
     public abstract Builder partition(Partition partition);
 

@@ -33,13 +33,7 @@ public abstract class PslDataSourceOptions implements Serializable {
   private static final long serialVersionUID = 2680059304693561607L;
 
   @Nullable
-  public abstract String credentialsAccessToken();
-
-  @Nullable
   public abstract String credentialsKey();
-
-  @Nullable
-  public abstract String credentialsFile();
 
   public abstract SubscriptionPath subscriptionPath();
 
@@ -47,19 +41,14 @@ public abstract class PslDataSourceOptions implements Serializable {
 
   public abstract long maxMessagesOutstanding();
 
-  public abstract boolean consumeFromHead();
-
   public abstract long maxBatchOffsetRange();
 
   public static Builder builder() {
     return new AutoValue_PslDataSourceOptions.Builder()
-        .credentialsAccessToken(null)
         .credentialsKey(null)
-        .credentialsFile(null)
         .maxBytesOutstanding(Constants.DEFAULT_BYTES_OUTSTANDING)
         .maxMessagesOutstanding(Constants.DEFAULT_MESSAGES_OUTSTANDING)
-        .maxBatchOffsetRange(Constants.DEFAULT_BATCH_OFFSET_RANGE)
-        .consumeFromHead(true);
+        .maxBatchOffsetRange(Constants.DEFAULT_BATCH_OFFSET_RANGE);
   }
 
   public static PslDataSourceOptions fromSparkDataSourceOptions(DataSourceOptions options) {
@@ -69,12 +58,8 @@ public abstract class PslDataSourceOptions implements Serializable {
 
     Builder builder = builder();
     Optional<String> value;
-    if ((value = options.get(Constants.CREDENTIALS_ACCESS_TOKEN_CONFIG_KEY)).isPresent()) {
-      builder.credentialsAccessToken(value.get());
-    } else if ((value = options.get(Constants.CREDENTIALS_KEY_CONFIG_KEY)).isPresent()) {
+    if ((value = options.get(Constants.CREDENTIALS_KEY_CONFIG_KEY)).isPresent()) {
       builder.credentialsKey(value.get());
-    } else if ((value = options.get(Constants.CREDENTIALS_FILE_CONFIG_KEY)).isPresent()) {
-      builder.credentialsFile(value.get());
     }
     builder.subscriptionPath(
         SubscriptionPath.parse(options.get(Constants.SUBSCRIPTION_CONFIG_KEY).get()));
@@ -84,28 +69,23 @@ public abstract class PslDataSourceOptions implements Serializable {
     builder.maxMessagesOutstanding(
         options.getLong(
             Constants.MESSAGES_OUTSTANDING_CONFIG_KEY, Constants.DEFAULT_MESSAGES_OUTSTANDING));
-    builder.consumeFromHead(options.getBoolean(Constants.CONSUME_FROM_HEAD_CONFIG_KEY, true));
-    builder.maxBatchOffsetRange(
-        options.getLong(
-            Constants.BATCH_OFFSET_RANGE_CONFIG_KEY, Constants.DEFAULT_BATCH_OFFSET_RANGE));
+    // TODO(jiangmichael): Revisit this later about if we need to expose this as a user configurable
+    // option. Ideally we should expose bytes range/# msgs range not offsets range since PSL doesn't
+    // guarantee offset = msg.
+    builder.maxBatchOffsetRange(Constants.DEFAULT_BATCH_OFFSET_RANGE);
     return builder.build();
   }
 
   @AutoValue.Builder
   public abstract static class Builder {
-    public abstract Builder credentialsAccessToken(String credentialsAccessToken);
 
     public abstract Builder credentialsKey(String credentialsKey);
-
-    public abstract Builder credentialsFile(String credentialsFile);
 
     public abstract Builder subscriptionPath(SubscriptionPath subscriptionPath);
 
     public abstract Builder maxBytesOutstanding(long maxBytesOutstanding);
 
     public abstract Builder maxMessagesOutstanding(long maxMessagesOutstanding);
-
-    public abstract Builder consumeFromHead(boolean consumeFromHead);
 
     public abstract Builder maxBatchOffsetRange(long maxBatchOffsetRange);
 

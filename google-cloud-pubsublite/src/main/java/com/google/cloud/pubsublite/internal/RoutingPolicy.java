@@ -21,6 +21,9 @@ import com.google.protobuf.ByteString;
 
 // Route the user message key to a given partition.
 public interface RoutingPolicy {
+  interface Factory {
+    RoutingPolicy newPolicy(long numPartitions);
+  }
   // Route a message without a key to a partition.
   Partition routeWithoutKey() throws CheckedApiException;
   // Route a message with a key to a partition.

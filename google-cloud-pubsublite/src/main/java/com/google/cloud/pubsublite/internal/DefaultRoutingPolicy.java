@@ -26,25 +26,27 @@ import com.google.errorprone.annotations.concurrent.GuardedBy;
 import com.google.protobuf.ByteString;
 import java.math.BigInteger;
 import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class DefaultRoutingPolicy implements RoutingPolicy {
-  private final int numPartitions;
+  private final long numPartitions;
   private final CloseableMonitor monitor = new CloseableMonitor();
 
   @GuardedBy("monitor.monitor")
-  private int nextWithoutKeyPartition;
+  private long nextWithoutKeyPartition;
 
-  public DefaultRoutingPolicy(int numPartitions) throws ApiException {
+  public DefaultRoutingPolicy(long numPartitions) throws ApiException {
     checkArgument(numPartitions > 0, "Must have a positive number of partitions.");
     this.numPartitions = numPartitions;
-    this.nextWithoutKeyPartition = new Random().nextInt(this.numPartitions);
+    this.nextWithoutKeyPartition = ThreadLocalRandom.current().nextLong(numPartitions);
+    this.nextWithoutKeyPartition = new Random().longs(1, 0, numPartitions).findFirst().getAsLong();
   }
 
   @Override
   public Partition routeWithoutKey() throws ApiException {
     try (CloseableMonitor.Hold h = monitor.enter()) {
       Partition toReturn = Partition.of(nextWithoutKeyPartition);
-      int next = nextWithoutKeyPartition + 1;
+      long next = nextWithoutKeyPartition + 1;
       next = next % numPartitions;
       nextWithoutKeyPartition = next;
       return toReturn;

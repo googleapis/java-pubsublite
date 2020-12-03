@@ -91,8 +91,6 @@ public class PslContinuousReader implements ContinuousReader, Serializable {
       return;
     }
 
-    // TODO(jiangmichael): respects startConsumeFromHead so it could start from head instead
-    //  of always cursor.
     Subscription sub = adminServiceClient.getSubscription(subscriptionPath.toString());
     TopicPartitions topicPartitions = adminServiceClient.getTopicPartitions(sub.getTopic());
 

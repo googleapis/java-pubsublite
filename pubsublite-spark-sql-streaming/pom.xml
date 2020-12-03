@@ -59,14 +59,6 @@
       <artifactId>google-http-client</artifactId>
     </dependency>
     <dependency>
-      <groupId>com.google.api</groupId>
-      <artifactId>api-common</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>com.google.flogger</groupId>
-      <artifactId>google-extensions</artifactId>
-    </dependency>
-    <dependency>
       <groupId>com.fasterxml.jackson.core</groupId>
       <artifactId>jackson-core</artifactId>
       <version>2.12.0</version>
@@ -101,6 +93,22 @@
       <scope>test</scope>
     </dependency>
   </dependencies>
+
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>org.slf4j</groupId>
+        <artifactId>slf4j-api</artifactId>
+        <version>1.7.16</version>
+      </dependency>
+      <dependency>
+        <groupId>commons-codec</groupId>
+        <artifactId>commons-codec</artifactId>
+        <version>1.10</version>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+
   <build>
     <sourceDirectory>src/main/java</sourceDirectory>
     <testSourceDirectory>src/test/java</testSourceDirectory>

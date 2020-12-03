@@ -31,11 +31,8 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 public final class PslSourceOffset extends org.apache.spark.sql.sources.v2.reader.streaming.Offset {
-  private static final ObjectMapper objectMapper = new ObjectMapper();
-
-  static {
-    objectMapper.configure(SerializationFeature.ORDER_MAP_ENTRIES_BY_KEYS, true);
-  }
+  private static final ObjectMapper objectMapper =
+      new ObjectMapper().configure(SerializationFeature.ORDER_MAP_ENTRIES_BY_KEYS, true);
 
   private final ImmutableMap<Partition, Offset> partitionOffsetMap;
 

@@ -51,9 +51,5 @@ public class Constants {
   public static String MESSAGES_OUTSTANDING_CONFIG_KEY =
       "pubsublite.flowcontrol.messageoutstandingperparition";
   public static String SUBSCRIPTION_CONFIG_KEY = "pubsublite.subscription";
-  public static String CONSUME_FROM_HEAD_CONFIG_KEY = "pubsublite.startconsumefromhead";
-  public static String BATCH_OFFSET_RANGE_CONFIG_KEY = "pubsublite.maxbatchoffsetrange";
   public static String CREDENTIALS_KEY_CONFIG_KEY = "gcp.credentials.key";
-  public static String CREDENTIALS_FILE_CONFIG_KEY = "gcp.credentials.file";
-  public static String CREDENTIALS_ACCESS_TOKEN_CONFIG_KEY = "gcp.credentials.accesstoken";
 }

@@ -20,7 +20,6 @@ import static com.google.common.truth.Truth.assertThat;
 import static org.junit.Assert.fail;
 
 import com.google.cloud.pubsublite.*;
-import com.google.cloud.pubsublite.internal.testing.UnitTestExamples;
 import com.google.common.collect.ImmutableMap;
 import org.junit.Test;
 
@@ -44,21 +43,21 @@ public class PslSourceOffsetTest {
     PslSourceOffset o1 =
         new PslSourceOffset(
             ImmutableMap.of(
-                Partition.of(3L), Offset.of(10L),
-                Partition.of(1L), Offset.of(5L),
-                Partition.of(2L), Offset.of(8L)));
+                Partition.of(1L), Offset.of(10L),
+                Partition.of(2L), Offset.of(5L),
+                Partition.of(3L), Offset.of(8L)));
     PslSourceOffset o2 =
         new PslSourceOffset(
             ImmutableMap.of(
-                Partition.of(3L), Offset.of(8L),
-                Partition.of(2L), Offset.of(11L),
+                Partition.of(2L), Offset.of(8L),
+                Partition.of(3L), Offset.of(11L),
                 Partition.of(4L), Offset.of(1L)));
     PslSourceOffset expected =
         new PslSourceOffset(
             ImmutableMap.of(
-                Partition.of(1L), Offset.of(5L),
-                Partition.of(2L), Offset.of(11L),
-                Partition.of(3L), Offset.of(10L),
+                Partition.of(1L), Offset.of(10L),
+                Partition.of(2L), Offset.of(8L),
+                Partition.of(3L), Offset.of(11L),
                 Partition.of(4L), Offset.of(1L)));
     assertThat(PslSourceOffset.merge(o1, o2)).isEqualTo(expected);
   }
@@ -66,21 +65,9 @@ public class PslSourceOffsetTest {
   @Test
   public void mergePslPartitionOffsetsDuplicatePartition() {
     PslPartitionOffset[] offsets = {
-      PslPartitionOffset.builder()
-          .subscriptionPath(UnitTestExamples.exampleSubscriptionPath())
-          .partition(Partition.of(3L))
-          .offset(Offset.of(10L))
-          .build(),
-      PslPartitionOffset.builder()
-          .subscriptionPath(UnitTestExamples.exampleSubscriptionPath())
-          .partition(Partition.of(1L))
-          .offset(Offset.of(5L))
-          .build(),
-      PslPartitionOffset.builder()
-          .subscriptionPath(UnitTestExamples.exampleSubscriptionPath())
-          .partition(Partition.of(1L))
-          .offset(Offset.of(4L))
-          .build()
+      PslPartitionOffset.builder().partition(Partition.of(1L)).offset(Offset.of(5L)).build(),
+      PslPartitionOffset.builder().partition(Partition.of(1L)).offset(Offset.of(4L)).build(),
+      PslPartitionOffset.builder().partition(Partition.of(3L)).offset(Offset.of(10L)).build()
     };
     try {
       PslSourceOffset.merge(offsets);
@@ -93,28 +80,16 @@ public class PslSourceOffsetTest {
   @Test
   public void mergePslPartitionOffsets() {
     PslPartitionOffset[] offsets = {
-      PslPartitionOffset.builder()
-          .subscriptionPath(UnitTestExamples.exampleSubscriptionPath())
-          .partition(Partition.of(3L))
-          .offset(Offset.of(10L))
-          .build(),
-      PslPartitionOffset.builder()
-          .subscriptionPath(UnitTestExamples.exampleSubscriptionPath())
-          .partition(Partition.of(1L))
-          .offset(Offset.of(5L))
-          .build(),
-      PslPartitionOffset.builder()
-          .subscriptionPath(UnitTestExamples.exampleSubscriptionPath())
-          .partition(Partition.of(2L))
-          .offset(Offset.of(4L))
-          .build()
+      PslPartitionOffset.builder().partition(Partition.of(3L)).offset(Offset.of(10L)).build(),
+      PslPartitionOffset.builder().partition(Partition.of(1L)).offset(Offset.of(5L)).build(),
+      PslPartitionOffset.builder().partition(Partition.of(2L)).offset(Offset.of(4L)).build()
     };
     PslSourceOffset expected =
         new PslSourceOffset(
             ImmutableMap.of(
-                Partition.of(3L), Offset.of(10L),
                 Partition.of(1L), Offset.of(5L),
-                Partition.of(2L), Offset.of(4L)));
+                Partition.of(2L), Offset.of(4L),
+                Partition.of(3L), Offset.of(10L)));
     assertThat(PslSourceOffset.merge(offsets)).isEqualTo(expected);
   }
 }

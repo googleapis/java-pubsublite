@@ -184,6 +184,7 @@
                 </requireUpperBoundDeps>
                 <banDuplicateClasses>
                   <ignoreClasses>
+                    <!-- Ignore duplicate classes due to diamond dependencies-->
                     <ignoreClass>org.apache.commons.logging.*</ignoreClass>
                     <ignoreClass>org.apache.commons.collections.*</ignoreClass>
                     <ignoreClass>org.apache.spark.unused.*</ignoreClass>

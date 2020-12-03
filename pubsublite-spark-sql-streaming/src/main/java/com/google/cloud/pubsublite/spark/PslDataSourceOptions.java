@@ -20,6 +20,7 @@ import static com.google.cloud.pubsublite.internal.ServiceClients.addDefaultSett
 
 import com.google.auto.value.AutoValue;
 import com.google.cloud.pubsublite.SubscriptionPath;
+import com.google.cloud.pubsublite.cloudpubsub.FlowControlSettings;
 import com.google.cloud.pubsublite.v1.CursorServiceClient;
 import com.google.cloud.pubsublite.v1.CursorServiceSettings;
 import java.io.IOException;
@@ -37,17 +38,16 @@ public abstract class PslDataSourceOptions implements Serializable {
 
   public abstract SubscriptionPath subscriptionPath();
 
-  public abstract long maxBytesOutstanding();
-
-  public abstract long maxMessagesOutstanding();
+  public abstract FlowControlSettings flowControlSettings();
 
   public abstract long maxBatchOffsetRange();
 
   public static Builder builder() {
     return new AutoValue_PslDataSourceOptions.Builder()
         .credentialsKey(null)
-        .maxBytesOutstanding(Constants.DEFAULT_BYTES_OUTSTANDING)
-        .maxMessagesOutstanding(Constants.DEFAULT_MESSAGES_OUTSTANDING)
+        // TODO(jiangmichael): Revisit this later about if we need to expose this as a user
+        // configurable option. Ideally we should expose bytes range/# msgs range not
+        // offsets range since PSL doesn't guarantee offset = msg.
         .maxBatchOffsetRange(Constants.DEFAULT_BATCH_OFFSET_RANGE);
   }
 
@@ -63,16 +63,16 @@ public abstract class PslDataSourceOptions implements Serializable {
     }
     builder.subscriptionPath(
         SubscriptionPath.parse(options.get(Constants.SUBSCRIPTION_CONFIG_KEY).get()));
-    builder.maxBytesOutstanding(
-        options.getLong(
-            Constants.BYTES_OUTSTANDING_CONFIG_KEY, Constants.DEFAULT_BYTES_OUTSTANDING));
-    builder.maxMessagesOutstanding(
-        options.getLong(
-            Constants.MESSAGES_OUTSTANDING_CONFIG_KEY, Constants.DEFAULT_MESSAGES_OUTSTANDING));
-    // TODO(jiangmichael): Revisit this later about if we need to expose this as a user configurable
-    // option. Ideally we should expose bytes range/# msgs range not offsets range since PSL doesn't
-    // guarantee offset = msg.
-    builder.maxBatchOffsetRange(Constants.DEFAULT_BATCH_OFFSET_RANGE);
+    builder.flowControlSettings(
+        FlowControlSettings.builder()
+            .setMessagesOutstanding(
+                options.getLong(
+                    Constants.MESSAGES_OUTSTANDING_CONFIG_KEY,
+                    Constants.DEFAULT_MESSAGES_OUTSTANDING))
+            .setBytesOutstanding(
+                options.getLong(
+                    Constants.BYTES_OUTSTANDING_CONFIG_KEY, Constants.DEFAULT_BYTES_OUTSTANDING))
+            .build());
     return builder.build();
   }
 
@@ -83,11 +83,9 @@ public abstract class PslDataSourceOptions implements Serializable {
 
     public abstract Builder subscriptionPath(SubscriptionPath subscriptionPath);
 
-    public abstract Builder maxBytesOutstanding(long maxBytesOutstanding);
-
-    public abstract Builder maxMessagesOutstanding(long maxMessagesOutstanding);
-
     public abstract Builder maxBatchOffsetRange(long maxBatchOffsetRange);
+
+    public abstract Builder flowControlSettings(FlowControlSettings flowControlSettings);
 
     public abstract PslDataSourceOptions build();
   }

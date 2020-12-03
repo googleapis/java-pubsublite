@@ -1,47 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- see http://www.mojohaus.org/clirr-maven-plugin/examples/ignored-differences.html -->
 <differences>
-  <!-- GAPIC conversion: remove on next release. -->
-  <difference>
-    <differenceType>6001</differenceType>
-    <className>com/google/cloud/pubsublite/ErrorCodes</className>
-    <field>*</field>
-  </difference>
-  <difference>
-    <differenceType>7002</differenceType>
-    <className>com/google/cloud/pubsublite/ErrorCodes</className>
-    <method>*</method>
-  </difference>
-  <difference>
-    <differenceType>7005</differenceType>
-    <className>com/google/cloud/pubsublite/ErrorCodes</className>
-    <method>*</method>
-    <to>*</to>
-  </difference>
+  <!-- Removed not needed API -->
   <difference>
     <differenceType>8001</differenceType>
-    <className>com/google/cloud/pubsublite/Stubs</className>
-    <method>*</method>
-  </difference>
-  <difference>
-    <differenceType>7002</differenceType>
-    <className>com/google/cloud/pubsublite/*Settings*</className>
-    <method>*</method>
-  </difference>
-  <difference>
-    <differenceType>7013</differenceType>
-    <className>com/google/cloud/pubsublite/*Settings*</className>
-    <method>*</method>
-  </difference>
-  <difference>
-    <differenceType>7002</differenceType>
-    <className>com/google/cloud/pubsublite/cloudpubsub/*Settings*</className>
-    <method>*</method>
-  </difference>
-  <difference>
-    <differenceType>7013</differenceType>
-    <className>com/google/cloud/pubsublite/cloudpubsub/*Settings*</className>
-    <method>*</method>
+    <className>com.google.cloud.pubsublite.ProjectLookupUtils</className>
   </difference>
   <!-- Blanket ignored files -->
   <difference>

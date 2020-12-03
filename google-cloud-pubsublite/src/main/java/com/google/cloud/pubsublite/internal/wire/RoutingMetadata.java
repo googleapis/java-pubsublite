@@ -20,7 +20,6 @@ import static com.google.cloud.pubsublite.internal.ExtractStatus.toCanonical;
 
 import com.google.api.gax.rpc.ApiException;
 import com.google.cloud.pubsublite.Partition;
-import com.google.cloud.pubsublite.ProjectLookupUtils;
 import com.google.cloud.pubsublite.SubscriptionPath;
 import com.google.cloud.pubsublite.TopicPath;
 import com.google.common.collect.ImmutableMap;
@@ -36,9 +35,7 @@ final class RoutingMetadata {
 
   static Map<String, String> of(TopicPath topic, Partition partition) throws ApiException {
     try {
-      String topic_value =
-          URLEncoder.encode(
-              ProjectLookupUtils.toCanonical(topic).toString(), StandardCharsets.UTF_8.toString());
+      String topic_value = URLEncoder.encode(topic.toString(), StandardCharsets.UTF_8.toString());
       String params = String.format("partition=%s&topic=%s", partition.value(), topic_value);
       return ImmutableMap.of(PARAMS_HEADER, params);
     } catch (UnsupportedEncodingException e) {
@@ -50,9 +47,7 @@ final class RoutingMetadata {
       throws ApiException {
     try {
       String subscription_value =
-          URLEncoder.encode(
-              ProjectLookupUtils.toCanonical(subscription).toString(),
-              StandardCharsets.UTF_8.toString());
+          URLEncoder.encode(subscription.toString(), StandardCharsets.UTF_8.toString());
       String params =
           String.format("partition=%s&subscription=%s", partition.value(), subscription_value);
       return ImmutableMap.of(PARAMS_HEADER, params);

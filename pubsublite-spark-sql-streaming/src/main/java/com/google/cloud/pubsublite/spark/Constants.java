@@ -46,7 +46,8 @@ public class Constants {
 
   public static final PubsubContext.Framework FRAMEWORK = PubsubContext.Framework.of("SPARK");
 
-  public static String BYTES_OUTSTANDING_CONFIG_KEY = "pubsublite.flowcontrol.byteoutstandingperpartition";
+  public static String BYTES_OUTSTANDING_CONFIG_KEY =
+      "pubsublite.flowcontrol.byteoutstandingperpartition";
   public static String MESSAGES_OUTSTANDING_CONFIG_KEY =
       "pubsublite.flowcontrol.messageoutstandingperparition";
   public static String SUBSCRIPTION_CONFIG_KEY = "pubsublite.subscription";

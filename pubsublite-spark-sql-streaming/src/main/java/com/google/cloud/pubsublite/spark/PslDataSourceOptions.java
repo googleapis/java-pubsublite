@@ -20,6 +20,8 @@ import static com.google.cloud.pubsublite.internal.ServiceClients.addDefaultSett
 
 import com.google.auto.value.AutoValue;
 import com.google.cloud.pubsublite.SubscriptionPath;
+import com.google.cloud.pubsublite.v1.AdminServiceClient;
+import com.google.cloud.pubsublite.v1.AdminServiceSettings;
 import com.google.cloud.pubsublite.v1.CursorServiceClient;
 import com.google.cloud.pubsublite.v1.CursorServiceSettings;
 import java.io.IOException;
@@ -121,6 +123,18 @@ public abstract class PslDataSourceOptions implements Serializable {
                   .setCredentialsProvider(new PslCredentialsProvider(this))));
     } catch (IOException e) {
       throw new IllegalStateException("Unable to create CursorServiceClient.");
+    }
+  }
+
+  AdminServiceClient newAdminClient() {
+    try {
+      return AdminServiceClient.create(
+          addDefaultSettings(
+              this.subscriptionPath().location().region(),
+              AdminServiceSettings.newBuilder()
+                  .setCredentialsProvider(new PslCredentialsProvider(this))));
+    } catch (IOException e) {
+      throw new IllegalStateException("Unable to create AdminServiceClient.");
     }
   }
 }

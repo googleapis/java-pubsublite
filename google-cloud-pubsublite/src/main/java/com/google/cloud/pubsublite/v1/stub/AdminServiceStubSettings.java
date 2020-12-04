@@ -67,7 +67,6 @@ import com.google.common.collect.Lists;
 import com.google.protobuf.Empty;
 import java.io.IOException;
 import java.util.List;
-import java.util.Objects;
 import javax.annotation.Generated;
 import org.threeten.bp.Duration;
 
@@ -163,7 +162,7 @@ public class AdminServiceStubSettings extends StubSettings<AdminServiceStubSetti
 
             @Override
             public Iterable<Topic> extractResources(ListTopicsResponse payload) {
-              return Objects.isNull(payload.getTopicsList())
+              return payload.getTopicsList() == null
                   ? ImmutableList.<Topic>of()
                   : payload.getTopicsList();
             }
@@ -205,7 +204,7 @@ public class AdminServiceStubSettings extends StubSettings<AdminServiceStubSetti
 
             @Override
             public Iterable<String> extractResources(ListTopicSubscriptionsResponse payload) {
-              return Objects.isNull(payload.getSubscriptionsList())
+              return payload.getSubscriptionsList() == null
                   ? ImmutableList.<String>of()
                   : payload.getSubscriptionsList();
             }
@@ -245,7 +244,7 @@ public class AdminServiceStubSettings extends StubSettings<AdminServiceStubSetti
 
             @Override
             public Iterable<Subscription> extractResources(ListSubscriptionsResponse payload) {
-              return Objects.isNull(payload.getSubscriptionsList())
+              return payload.getSubscriptionsList() == null
                   ? ImmutableList.<Subscription>of()
                   : payload.getSubscriptionsList();
             }

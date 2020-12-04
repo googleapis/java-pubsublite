@@ -54,7 +54,6 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import java.io.IOException;
 import java.util.List;
-import java.util.Objects;
 import javax.annotation.Generated;
 import org.threeten.bp.Duration;
 
@@ -141,7 +140,7 @@ public class CursorServiceStubSettings extends StubSettings<CursorServiceStubSet
             @Override
             public Iterable<PartitionCursor> extractResources(
                 ListPartitionCursorsResponse payload) {
-              return Objects.isNull(payload.getPartitionCursorsList())
+              return payload.getPartitionCursorsList() == null
                   ? ImmutableList.<PartitionCursor>of()
                   : payload.getPartitionCursorsList();
             }

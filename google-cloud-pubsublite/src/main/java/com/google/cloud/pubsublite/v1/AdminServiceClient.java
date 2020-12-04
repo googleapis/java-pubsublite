@@ -54,7 +54,6 @@ import com.google.protobuf.Empty;
 import com.google.protobuf.FieldMask;
 import java.io.IOException;
 import java.util.List;
-import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 import javax.annotation.Generated;
 
@@ -180,7 +179,7 @@ public class AdminServiceClient implements BackgroundResource {
   public final Topic createTopic(LocationName parent, Topic topic, String topicId) {
     CreateTopicRequest request =
         CreateTopicRequest.newBuilder()
-            .setParent(Objects.isNull(parent) ? null : parent.toString())
+            .setParent(parent == null ? null : parent.toString())
             .setTopic(topic)
             .setTopicId(topicId)
             .build();
@@ -239,7 +238,7 @@ public class AdminServiceClient implements BackgroundResource {
    */
   public final Topic getTopic(TopicName name) {
     GetTopicRequest request =
-        GetTopicRequest.newBuilder().setName(Objects.isNull(name) ? null : name.toString()).build();
+        GetTopicRequest.newBuilder().setName(name == null ? null : name.toString()).build();
     return getTopic(request);
   }
 
@@ -286,7 +285,7 @@ public class AdminServiceClient implements BackgroundResource {
   public final TopicPartitions getTopicPartitions(TopicName name) {
     GetTopicPartitionsRequest request =
         GetTopicPartitionsRequest.newBuilder()
-            .setName(Objects.isNull(name) ? null : name.toString())
+            .setName(name == null ? null : name.toString())
             .build();
     return getTopicPartitions(request);
   }
@@ -336,9 +335,7 @@ public class AdminServiceClient implements BackgroundResource {
    */
   public final ListTopicsPagedResponse listTopics(LocationName parent) {
     ListTopicsRequest request =
-        ListTopicsRequest.newBuilder()
-            .setParent(Objects.isNull(parent) ? null : parent.toString())
-            .build();
+        ListTopicsRequest.newBuilder().setParent(parent == null ? null : parent.toString()).build();
     return listTopics(request);
   }
 
@@ -430,9 +427,7 @@ public class AdminServiceClient implements BackgroundResource {
    */
   public final void deleteTopic(TopicName name) {
     DeleteTopicRequest request =
-        DeleteTopicRequest.newBuilder()
-            .setName(Objects.isNull(name) ? null : name.toString())
-            .build();
+        DeleteTopicRequest.newBuilder().setName(name == null ? null : name.toString()).build();
     deleteTopic(request);
   }
 
@@ -479,7 +474,7 @@ public class AdminServiceClient implements BackgroundResource {
   public final ListTopicSubscriptionsPagedResponse listTopicSubscriptions(TopicName name) {
     ListTopicSubscriptionsRequest request =
         ListTopicSubscriptionsRequest.newBuilder()
-            .setName(Objects.isNull(name) ? null : name.toString())
+            .setName(name == null ? null : name.toString())
             .build();
     return listTopicSubscriptions(request);
   }
@@ -548,7 +543,7 @@ public class AdminServiceClient implements BackgroundResource {
       LocationName parent, Subscription subscription, String subscriptionId) {
     CreateSubscriptionRequest request =
         CreateSubscriptionRequest.newBuilder()
-            .setParent(Objects.isNull(parent) ? null : parent.toString())
+            .setParent(parent == null ? null : parent.toString())
             .setSubscription(subscription)
             .setSubscriptionId(subscriptionId)
             .build();
@@ -609,9 +604,7 @@ public class AdminServiceClient implements BackgroundResource {
    */
   public final Subscription getSubscription(SubscriptionName name) {
     GetSubscriptionRequest request =
-        GetSubscriptionRequest.newBuilder()
-            .setName(Objects.isNull(name) ? null : name.toString())
-            .build();
+        GetSubscriptionRequest.newBuilder().setName(name == null ? null : name.toString()).build();
     return getSubscription(request);
   }
 
@@ -659,7 +652,7 @@ public class AdminServiceClient implements BackgroundResource {
   public final ListSubscriptionsPagedResponse listSubscriptions(LocationName parent) {
     ListSubscriptionsRequest request =
         ListSubscriptionsRequest.newBuilder()
-            .setParent(Objects.isNull(parent) ? null : parent.toString())
+            .setParent(parent == null ? null : parent.toString())
             .build();
     return listSubscriptions(request);
   }
@@ -760,7 +753,7 @@ public class AdminServiceClient implements BackgroundResource {
   public final void deleteSubscription(SubscriptionName name) {
     DeleteSubscriptionRequest request =
         DeleteSubscriptionRequest.newBuilder()
-            .setName(Objects.isNull(name) ? null : name.toString())
+            .setName(name == null ? null : name.toString())
             .build();
     deleteSubscription(request);
   }

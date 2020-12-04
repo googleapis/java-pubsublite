@@ -40,7 +40,6 @@ import com.google.cloud.pubsublite.v1.stub.CursorServiceStubSettings;
 import com.google.common.util.concurrent.MoreExecutors;
 import java.io.IOException;
 import java.util.List;
-import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 import javax.annotation.Generated;
 
@@ -196,7 +195,7 @@ public class CursorServiceClient implements BackgroundResource {
   public final ListPartitionCursorsPagedResponse listPartitionCursors(SubscriptionName parent) {
     ListPartitionCursorsRequest request =
         ListPartitionCursorsRequest.newBuilder()
-            .setParent(Objects.isNull(parent) ? null : parent.toString())
+            .setParent(parent == null ? null : parent.toString())
             .build();
     return listPartitionCursors(request);
   }

@@ -24,9 +24,9 @@ import java.io.Serializable;
 @AutoValue
 public abstract class PslPartitionOffset implements Serializable {
 
-  public abstract long partition();
+  public abstract Partition partition();
 
-  public abstract long offset();
+  public abstract Offset offset();
 
   public static Builder builder() {
     return new AutoValue_PslPartitionOffset.Builder();

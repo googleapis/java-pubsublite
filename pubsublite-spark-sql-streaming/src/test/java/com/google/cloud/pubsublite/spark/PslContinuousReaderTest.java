@@ -60,7 +60,7 @@ public class PslContinuousReaderTest {
         .thenReturn(
             ImmutableList.of(
                 PartitionCursor.newBuilder()
-                    .setPartition(1)
+                    .setPartition(1L)
                     .setCursor(
                         Cursor.newBuilder()
                             .setOffset(UnitTestExamples.exampleOffset().value())
@@ -69,49 +69,68 @@ public class PslContinuousReaderTest {
     doReturn(resp).when(cursorClient).listPartitionCursors(anyString());
 
     reader.setStartOffset(Optional.empty());
-    assertThat(((PslSourceOffset) reader.getStartOffset()).getPartitionOffsetMap())
+    assertThat(((SparkSourceOffset) reader.getStartOffset()).getPartitionOffsetMap())
         .containsExactly(
-            Partition.of(0), Offset.of(-1),
-            Partition.of(1), Offset.of(UnitTestExamples.exampleOffset().value() - 1));
+            Partition.of(0L),
+                SparkPartitionOffset.builder().partition(Partition.of(0L)).offset(-1L).build(),
+            Partition.of(1L),
+                SparkPartitionOffset.builder()
+                    .partition(Partition.of(1L))
+                    .offset(UnitTestExamples.exampleOffset().value() - 1)
+                    .build());
   }
 
   @Test
   public void testValidStartOffset() {
-    PslSourceOffset offset =
-        new PslSourceOffset(ImmutableMap.of(Partition.of(1), UnitTestExamples.exampleOffset()));
+    SparkSourceOffset offset =
+        new SparkSourceOffset(
+            ImmutableMap.of(
+                Partition.of(1),
+                SparkPartitionOffset.builder()
+                    .partition(Partition.of(1))
+                    .offset(UnitTestExamples.exampleOffset().value())
+                    .build()));
     reader.setStartOffset(Optional.of(offset));
     assertThat(reader.getStartOffset()).isEqualTo(offset);
   }
 
   @Test
   public void testMergeOffsets() {
-    PslPartitionOffset po1 =
-        PslPartitionOffset.builder().partition(Partition.of(1)).offset(Offset.of(10)).build();
-    PslPartitionOffset po2 =
-        PslPartitionOffset.builder().partition(Partition.of(2)).offset(Offset.of(5)).build();
-    assertThat(reader.mergeOffsets(new PslPartitionOffset[] {po1, po2}))
-        .isEqualTo(PslSourceOffset.merge(new PslPartitionOffset[] {po1, po2}));
+    SparkPartitionOffset po1 =
+        SparkPartitionOffset.builder().partition(Partition.of(1L)).offset(10L).build();
+    SparkPartitionOffset po2 =
+        SparkPartitionOffset.builder().partition(Partition.of(2L)).offset(5L).build();
+    assertThat(reader.mergeOffsets(new SparkPartitionOffset[] {po1, po2}))
+        .isEqualTo(SparkSourceOffset.merge(new SparkPartitionOffset[] {po1, po2}));
   }
 
   @Test
   public void testDeserializeOffset() {
-    PslSourceOffset offset =
-        new PslSourceOffset(ImmutableMap.of(Partition.of(1), UnitTestExamples.exampleOffset()));
+    SparkSourceOffset offset =
+        new SparkSourceOffset(
+            ImmutableMap.of(
+                Partition.of(1L),
+                SparkPartitionOffset.builder().partition(Partition.of(1L)).offset(10L).build()));
     assertThat(reader.deserializeOffset(offset.json())).isEqualTo(offset);
   }
 
   @Test
   public void testCommit() {
-    PslSourceOffset offset =
-        new PslSourceOffset(
+    SparkSourceOffset offset =
+        new SparkSourceOffset(
             ImmutableMap.of(
-                Partition.of(1), Offset.of(10L),
-                Partition.of(2), Offset.of(8L)));
+                Partition.of(0L),
+                    SparkPartitionOffset.builder().partition(Partition.of(0L)).offset(10L).build(),
+                Partition.of(1L),
+                    SparkPartitionOffset.builder()
+                        .partition(Partition.of(1L))
+                        .offset(50L)
+                        .build()));
     PslSourceOffset expectedCommitOffset =
         new PslSourceOffset(
             ImmutableMap.of(
-                Partition.of(1), Offset.of(11L),
-                Partition.of(2), Offset.of(9L)));
+                Partition.of(0L), Offset.of(11L),
+                Partition.of(1L), Offset.of(51L)));
     reader.commit(offset);
     verify(committer, times(1)).commit(eq(expectedCommitOffset));
   }

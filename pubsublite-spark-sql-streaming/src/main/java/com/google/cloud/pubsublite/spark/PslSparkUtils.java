@@ -56,14 +56,14 @@ public class PslSparkUtils {
 
   public static PslSourceOffset toPslSourceOffset(SparkSourceOffset sparkSourceOffset) {
     long partitionCount = sparkSourceOffset.getPartitionOffsetMap().size();
-    PslSourceOffset pslSourceOffset = new PslSourceOffset(partitionCount);
+    PslSourceOffset.Builder pslSourceOffsetBuilder = PslSourceOffset.newBuilder(partitionCount);
     for (long i = 0; i < partitionCount; i++) {
       Partition p = Partition.of(i);
       assert sparkSourceOffset.getPartitionOffsetMap().containsKey(p);
-      pslSourceOffset.set(
+      pslSourceOffsetBuilder.set(
           p, Offset.of(sparkSourceOffset.getPartitionOffsetMap().get(p).offset() + 1));
     }
-    return pslSourceOffset;
+    return pslSourceOffsetBuilder.build();
   }
 
   public static PslPartitionOffset toPslPartitionOffset(SparkPartitionOffset sparkPartitionOffset) {

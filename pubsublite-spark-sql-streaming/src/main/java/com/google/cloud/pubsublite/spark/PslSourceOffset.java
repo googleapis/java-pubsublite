@@ -25,20 +25,38 @@ import java.util.Map;
 
 public class PslSourceOffset {
 
-  private final Map<Partition, Offset> partitionOffsetMap = new HashMap<>();
+  private final Map<Partition, Offset> partitionOffsetMap;
 
-  public PslSourceOffset(long partitionCount) {
-    for (long i = 0; i < partitionCount; i++) {
-      partitionOffsetMap.put(Partition.of(i), Offset.of(0));
-    }
-  }
-
-  public void set(Partition partition, Offset offset) {
-    partitionOffsetMap.replace(partition, offset);
+  public PslSourceOffset(Map<Partition, Offset> partitionOffsetMap) {
+    this.partitionOffsetMap = partitionOffsetMap;
   }
 
   public Map<Partition, Offset> getPartitionOffsetMap() {
     return ImmutableMap.copyOf(partitionOffsetMap);
+  }
+
+  public static Builder newBuilder(long partitionCount) {
+    return new Builder(partitionCount);
+  }
+
+  public static class Builder {
+
+    private final Map<Partition, Offset> partitionOffsetMap = new HashMap<>();
+
+    private Builder(long partitionCount) {
+      for (long i = 0; i < partitionCount; i++) {
+        partitionOffsetMap.put(Partition.of(i), Offset.of(0));
+      }
+    }
+
+    public Builder set(Partition partition, Offset offset) {
+      partitionOffsetMap.replace(partition, offset);
+      return this;
+    }
+
+    public PslSourceOffset build() {
+      return new PslSourceOffset(partitionOffsetMap);
+    }
   }
 
   @Override

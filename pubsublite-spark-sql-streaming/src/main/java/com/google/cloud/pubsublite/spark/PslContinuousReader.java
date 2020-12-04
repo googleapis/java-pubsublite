@@ -25,8 +25,9 @@ import com.google.cloud.pubsublite.proto.TopicPartitions;
 import com.google.cloud.pubsublite.v1.AdminServiceClient;
 import com.google.cloud.pubsublite.v1.CursorServiceClient;
 import com.google.common.annotations.VisibleForTesting;
-import java.io.Serializable;
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import org.apache.spark.sql.catalyst.InternalRow;
 import org.apache.spark.sql.sources.v2.reader.InputPartition;
@@ -35,7 +36,7 @@ import org.apache.spark.sql.sources.v2.reader.streaming.Offset;
 import org.apache.spark.sql.sources.v2.reader.streaming.PartitionOffset;
 import org.apache.spark.sql.types.StructType;
 
-public class PslContinuousReader implements ContinuousReader, Serializable {
+public class PslContinuousReader implements ContinuousReader {
 
   private final PslDataSourceOptions options;
   private final SubscriptionPath subscriptionPath;
@@ -101,15 +102,16 @@ public class PslContinuousReader implements ContinuousReader, Serializable {
     Subscription sub = adminServiceClient.getSubscription(subscriptionPath.toString());
     TopicPartitions topicPartitions = adminServiceClient.getTopicPartitions(sub.getTopic());
 
-    PslSourceOffset pslSourceOffset = new PslSourceOffset(topicPartitions.getPartitionCount());
+    PslSourceOffset.Builder pslSourceOffsetBuilder =
+        PslSourceOffset.newBuilder(topicPartitions.getPartitionCount());
     CursorServiceClient.ListPartitionCursorsPagedResponse resp =
         cursorServiceClient.listPartitionCursors(subscriptionPath.toString());
     for (PartitionCursor p : resp.iterateAll()) {
-      pslSourceOffset.set(
+      pslSourceOffsetBuilder.set(
           Partition.of(p.getPartition()),
           com.google.cloud.pubsublite.Offset.of(p.getCursor().getOffset()));
     }
-    startOffset = PslSparkUtils.toSparkSourceOffset(pslSourceOffset);
+    startOffset = PslSparkUtils.toSparkSourceOffset(pslSourceOffsetBuilder.build());
   }
 
   @Override
@@ -137,7 +139,10 @@ public class PslContinuousReader implements ContinuousReader, Serializable {
         .map(
             e ->
                 new PslContinuousInputPartition(
-                    PslPartitionOffset.builder().partition(e.getKey()).offset(e.getValue()).build(),
+                    SparkPartitionOffset.builder()
+                        .partition(e.getKey())
+                        .offset(e.getValue().offset())
+                        .build(),
                     options))
         .collect(Collectors.toList());
   }

@@ -33,7 +33,7 @@ import org.apache.spark.sql.sources.v2.reader.streaming.ContinuousInputPartition
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 
-public class PslContinuousInputPartitionTest {
+public class PslContinuousInputPartitionReaderTest {
 
   @SuppressWarnings("unchecked")
   private final PullSubscriber<SequencedMessage> subscriber =
@@ -55,11 +55,11 @@ public class PslContinuousInputPartitionTest {
   private void createReader() {
     ArgumentCaptor<Runnable> captor = ArgumentCaptor.forClass(Runnable.class);
     reader =
-        PslContinuousInputPartition.createPartitionReader(
+        new PslContinuousInputPartitionReader(
             UnitTestExamples.exampleSubscriptionPath(),
-            PslPartitionOffset.builder()
+            SparkPartitionOffset.builder()
                 .partition(UnitTestExamples.examplePartition())
-                .offset(UnitTestExamples.exampleOffset())
+                .offset(UnitTestExamples.exampleOffset().value())
                 .build(),
             subscriber,
             pullExecutorService);

@@ -16,24 +16,18 @@
 
 package com.google.cloud.pubsublite.spark;
 
-import com.google.cloud.pubsublite.Offset;
-import com.google.cloud.pubsublite.SequencedMessage;
-import com.google.cloud.pubsublite.SubscriptionPath;
 import com.google.cloud.pubsublite.internal.BufferingPullSubscriber;
 import com.google.cloud.pubsublite.internal.CheckedApiException;
-import com.google.cloud.pubsublite.internal.PullSubscriber;
 import com.google.cloud.pubsublite.internal.wire.PubsubContext;
 import com.google.cloud.pubsublite.internal.wire.SubscriberBuilder;
 import com.google.cloud.pubsublite.proto.Cursor;
 import com.google.cloud.pubsublite.proto.SeekRequest;
-import com.google.common.annotations.VisibleForTesting;
 import java.io.Serializable;
-import java.util.concurrent.ScheduledExecutorService;
-
+import java.util.Objects;
+import java.util.concurrent.Executors;
 import org.apache.spark.sql.catalyst.InternalRow;
 import org.apache.spark.sql.sources.v2.reader.ContinuousInputPartition;
 import org.apache.spark.sql.sources.v2.reader.InputPartitionReader;
-import org.apache.spark.sql.sources.v2.reader.streaming.ContinuousInputPartitionReader;
 import org.apache.spark.sql.sources.v2.reader.streaming.PartitionOffset;
 
 public class PslContinuousInputPartition
@@ -42,33 +36,20 @@ public class PslContinuousInputPartition
   private final SparkPartitionOffset startOffset;
   private final PslDataSourceOptions options;
 
-  public PslContinuousInputPartition(SparkPartitionOffset startOffset, PslDataSourceOptions options) {
+  public PslContinuousInputPartition(
+      SparkPartitionOffset startOffset, PslDataSourceOptions options) {
     this.startOffset = startOffset;
     this.options = options;
   }
 
-  @VisibleForTesting
-  public static ContinuousInputPartitionReader<InternalRow> createPartitionReader(
-      SubscriptionPath subscriptionPath,
-      SparkPartitionOffset startOffset,
-      PullSubscriber<SequencedMessage> subscriber,
-      ScheduledExecutorService pullExecutorService) {
-    return new PslContinuousInputPartitionReader(
-        subscriptionPath, startOffset, subscriber, pullExecutorService);
-  }
-
   @Override
   public InputPartitionReader<InternalRow> createContinuousReader(PartitionOffset offset) {
-    assert PslPartitionOffset.class.isAssignableFrom(offset.getClass())
-        : "offset is not assignable to PslPartitionOffset";
+    assert SparkPartitionOffset.class.isAssignableFrom(offset.getClass())
+        : "offset is not assignable to SparkPartitionOffset";
 
-    PslPartitionOffset pslOffset = (PslPartitionOffset) offset;
-    PslPartitionOffset currentOffset =
-        PslPartitionOffset.builder()
-            .partition(pslOffset.partition())
-            // The first message to read is startOffset + 1
-            .offset(Offset.of(pslOffset.offset().value() + 1))
-            .build();
+    SparkPartitionOffset sparkPartitionOffset = (SparkPartitionOffset) offset;
+    PslPartitionOffset pslPartitionOffset =
+        PslSparkUtils.toPslPartitionOffset(sparkPartitionOffset);
 
     BufferingPullSubscriber subscriber;
     try {
@@ -78,21 +59,22 @@ public class PslContinuousInputPartition
               (consumer) ->
                   SubscriberBuilder.newBuilder()
                       .setSubscriptionPath(options.subscriptionPath())
-                      .setPartition(pslOffset.partition())
+                      .setPartition(pslPartitionOffset.partition())
                       .setContext(PubsubContext.of(Constants.FRAMEWORK))
                       .setMessageConsumer(consumer)
                       .build(),
-              options.flowControlSettings(),
+              Objects.requireNonNull(options.flowControlSettings()),
               SeekRequest.newBuilder()
-                  .setCursor(Cursor.newBuilder().setOffset(currentOffset.offset().value()).build())
+                  .setCursor(
+                      Cursor.newBuilder().setOffset(pslPartitionOffset.offset().value()).build())
                   .build());
     } catch (CheckedApiException e) {
       throw new IllegalStateException(
           "Unable to create PSL subscriber for " + startOffset.toString(), e);
     }
-    return createPartitionReader(
+    return new PslContinuousInputPartitionReader(
         options.subscriptionPath(),
-        currentOffset,
+        sparkPartitionOffset,
         subscriber,
         Executors.newSingleThreadScheduledExecutor());
   }
@@ -101,6 +83,4 @@ public class PslContinuousInputPartition
   public InputPartitionReader<InternalRow> createPartitionReader() {
     return createContinuousReader(startOffset);
   }
-
-
 }

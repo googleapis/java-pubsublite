@@ -20,7 +20,14 @@ import static io.grpc.stub.ClientCalls.asyncBidiStreamingCall;
 import static io.grpc.stub.ServerCalls.asyncBidiStreamingCall;
 import static io.grpc.stub.ServerCalls.asyncUnimplementedStreamingCall;
 
-/** */
+/**
+ *
+ *
+ * <pre>
+ * The service that a subscriber client application uses to determine which
+ * partitions it should connect to.
+ * </pre>
+ */
 @javax.annotation.Generated(
     value = "by gRPC proto compiler",
     comments = "Source: google/cloud/pubsublite/v1/subscriber.proto")
@@ -122,11 +129,29 @@ public final class PartitionAssignmentServiceGrpc {
     return PartitionAssignmentServiceFutureStub.newStub(factory, channel);
   }
 
-  /** */
+  /**
+   *
+   *
+   * <pre>
+   * The service that a subscriber client application uses to determine which
+   * partitions it should connect to.
+   * </pre>
+   */
   public abstract static class PartitionAssignmentServiceImplBase
       implements io.grpc.BindableService {
 
-    /** */
+    /**
+     *
+     *
+     * <pre>
+     * Assign partitions for this client to handle for the specified subscription.
+     * The client must send an InitialPartitionAssignmentRequest first.
+     * The server will then send at most one unacknowledged PartitionAssignment
+     * outstanding on the stream at a time.
+     * The client should send a PartitionAssignmentAck after updating the
+     * partitions it is connected to to reflect the new assignment.
+     * </pre>
+     */
     public io.grpc.stub.StreamObserver<com.google.cloud.pubsublite.proto.PartitionAssignmentRequest>
         assignPartitions(
             io.grpc.stub.StreamObserver<com.google.cloud.pubsublite.proto.PartitionAssignment>
@@ -148,7 +173,14 @@ public final class PartitionAssignmentServiceGrpc {
     }
   }
 
-  /** */
+  /**
+   *
+   *
+   * <pre>
+   * The service that a subscriber client application uses to determine which
+   * partitions it should connect to.
+   * </pre>
+   */
   public static final class PartitionAssignmentServiceStub
       extends io.grpc.stub.AbstractAsyncStub<PartitionAssignmentServiceStub> {
     private PartitionAssignmentServiceStub(
@@ -162,7 +194,18 @@ public final class PartitionAssignmentServiceGrpc {
       return new PartitionAssignmentServiceStub(channel, callOptions);
     }
 
-    /** */
+    /**
+     *
+     *
+     * <pre>
+     * Assign partitions for this client to handle for the specified subscription.
+     * The client must send an InitialPartitionAssignmentRequest first.
+     * The server will then send at most one unacknowledged PartitionAssignment
+     * outstanding on the stream at a time.
+     * The client should send a PartitionAssignmentAck after updating the
+     * partitions it is connected to to reflect the new assignment.
+     * </pre>
+     */
     public io.grpc.stub.StreamObserver<com.google.cloud.pubsublite.proto.PartitionAssignmentRequest>
         assignPartitions(
             io.grpc.stub.StreamObserver<com.google.cloud.pubsublite.proto.PartitionAssignment>
@@ -172,7 +215,14 @@ public final class PartitionAssignmentServiceGrpc {
     }
   }
 
-  /** */
+  /**
+   *
+   *
+   * <pre>
+   * The service that a subscriber client application uses to determine which
+   * partitions it should connect to.
+   * </pre>
+   */
   public static final class PartitionAssignmentServiceBlockingStub
       extends io.grpc.stub.AbstractBlockingStub<PartitionAssignmentServiceBlockingStub> {
     private PartitionAssignmentServiceBlockingStub(
@@ -187,7 +237,14 @@ public final class PartitionAssignmentServiceGrpc {
     }
   }
 
-  /** */
+  /**
+   *
+   *
+   * <pre>
+   * The service that a subscriber client application uses to determine which
+   * partitions it should connect to.
+   * </pre>
+   */
   public static final class PartitionAssignmentServiceFutureStub
       extends io.grpc.stub.AbstractFutureStub<PartitionAssignmentServiceFutureStub> {
     private PartitionAssignmentServiceFutureStub(

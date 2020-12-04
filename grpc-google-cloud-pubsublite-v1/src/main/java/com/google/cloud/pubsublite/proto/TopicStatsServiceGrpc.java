@@ -22,7 +22,13 @@ import static io.grpc.stub.ClientCalls.futureUnaryCall;
 import static io.grpc.stub.ServerCalls.asyncUnaryCall;
 import static io.grpc.stub.ServerCalls.asyncUnimplementedUnaryCall;
 
-/** */
+/**
+ *
+ *
+ * <pre>
+ * This service allows users to get stats about messages in their topic.
+ * </pre>
+ */
 @javax.annotation.Generated(
     value = "by gRPC proto compiler",
     comments = "Source: google/cloud/pubsublite/v1/topic_stats.proto")
@@ -124,10 +130,23 @@ public final class TopicStatsServiceGrpc {
     return TopicStatsServiceFutureStub.newStub(factory, channel);
   }
 
-  /** */
+  /**
+   *
+   *
+   * <pre>
+   * This service allows users to get stats about messages in their topic.
+   * </pre>
+   */
   public abstract static class TopicStatsServiceImplBase implements io.grpc.BindableService {
 
-    /** */
+    /**
+     *
+     *
+     * <pre>
+     * Compute statistics about a range of messages in a given topic and
+     * partition.
+     * </pre>
+     */
     public void computeMessageStats(
         com.google.cloud.pubsublite.proto.ComputeMessageStatsRequest request,
         io.grpc.stub.StreamObserver<com.google.cloud.pubsublite.proto.ComputeMessageStatsResponse>
@@ -149,7 +168,13 @@ public final class TopicStatsServiceGrpc {
     }
   }
 
-  /** */
+  /**
+   *
+   *
+   * <pre>
+   * This service allows users to get stats about messages in their topic.
+   * </pre>
+   */
   public static final class TopicStatsServiceStub
       extends io.grpc.stub.AbstractAsyncStub<TopicStatsServiceStub> {
     private TopicStatsServiceStub(io.grpc.Channel channel, io.grpc.CallOptions callOptions) {
@@ -162,7 +187,14 @@ public final class TopicStatsServiceGrpc {
       return new TopicStatsServiceStub(channel, callOptions);
     }
 
-    /** */
+    /**
+     *
+     *
+     * <pre>
+     * Compute statistics about a range of messages in a given topic and
+     * partition.
+     * </pre>
+     */
     public void computeMessageStats(
         com.google.cloud.pubsublite.proto.ComputeMessageStatsRequest request,
         io.grpc.stub.StreamObserver<com.google.cloud.pubsublite.proto.ComputeMessageStatsResponse>
@@ -174,7 +206,13 @@ public final class TopicStatsServiceGrpc {
     }
   }
 
-  /** */
+  /**
+   *
+   *
+   * <pre>
+   * This service allows users to get stats about messages in their topic.
+   * </pre>
+   */
   public static final class TopicStatsServiceBlockingStub
       extends io.grpc.stub.AbstractBlockingStub<TopicStatsServiceBlockingStub> {
     private TopicStatsServiceBlockingStub(
@@ -188,7 +226,14 @@ public final class TopicStatsServiceGrpc {
       return new TopicStatsServiceBlockingStub(channel, callOptions);
     }
 
-    /** */
+    /**
+     *
+     *
+     * <pre>
+     * Compute statistics about a range of messages in a given topic and
+     * partition.
+     * </pre>
+     */
     public com.google.cloud.pubsublite.proto.ComputeMessageStatsResponse computeMessageStats(
         com.google.cloud.pubsublite.proto.ComputeMessageStatsRequest request) {
       return blockingUnaryCall(
@@ -196,7 +241,13 @@ public final class TopicStatsServiceGrpc {
     }
   }
 
-  /** */
+  /**
+   *
+   *
+   * <pre>
+   * This service allows users to get stats about messages in their topic.
+   * </pre>
+   */
   public static final class TopicStatsServiceFutureStub
       extends io.grpc.stub.AbstractFutureStub<TopicStatsServiceFutureStub> {
     private TopicStatsServiceFutureStub(io.grpc.Channel channel, io.grpc.CallOptions callOptions) {
@@ -209,7 +260,14 @@ public final class TopicStatsServiceGrpc {
       return new TopicStatsServiceFutureStub(channel, callOptions);
     }
 
-    /** */
+    /**
+     *
+     *
+     * <pre>
+     * Compute statistics about a range of messages in a given topic and
+     * partition.
+     * </pre>
+     */
     public com.google.common.util.concurrent.ListenableFuture<
             com.google.cloud.pubsublite.proto.ComputeMessageStatsResponse>
         computeMessageStats(com.google.cloud.pubsublite.proto.ComputeMessageStatsRequest request) {

@@ -20,7 +20,14 @@ import static io.grpc.stub.ClientCalls.asyncBidiStreamingCall;
 import static io.grpc.stub.ServerCalls.asyncBidiStreamingCall;
 import static io.grpc.stub.ServerCalls.asyncUnimplementedStreamingCall;
 
-/** */
+/**
+ *
+ *
+ * <pre>
+ * The service that a subscriber client application uses to receive messages
+ * from subscriptions.
+ * </pre>
+ */
 @javax.annotation.Generated(
     value = "by gRPC proto compiler",
     comments = "Source: google/cloud/pubsublite/v1/subscriber.proto")
@@ -119,10 +126,23 @@ public final class SubscriberServiceGrpc {
     return SubscriberServiceFutureStub.newStub(factory, channel);
   }
 
-  /** */
+  /**
+   *
+   *
+   * <pre>
+   * The service that a subscriber client application uses to receive messages
+   * from subscriptions.
+   * </pre>
+   */
   public abstract static class SubscriberServiceImplBase implements io.grpc.BindableService {
 
-    /** */
+    /**
+     *
+     *
+     * <pre>
+     * Establishes a stream with the server for receiving messages.
+     * </pre>
+     */
     public io.grpc.stub.StreamObserver<com.google.cloud.pubsublite.proto.SubscribeRequest>
         subscribe(
             io.grpc.stub.StreamObserver<com.google.cloud.pubsublite.proto.SubscribeResponse>
@@ -144,7 +164,14 @@ public final class SubscriberServiceGrpc {
     }
   }
 
-  /** */
+  /**
+   *
+   *
+   * <pre>
+   * The service that a subscriber client application uses to receive messages
+   * from subscriptions.
+   * </pre>
+   */
   public static final class SubscriberServiceStub
       extends io.grpc.stub.AbstractAsyncStub<SubscriberServiceStub> {
     private SubscriberServiceStub(io.grpc.Channel channel, io.grpc.CallOptions callOptions) {
@@ -157,7 +184,13 @@ public final class SubscriberServiceGrpc {
       return new SubscriberServiceStub(channel, callOptions);
     }
 
-    /** */
+    /**
+     *
+     *
+     * <pre>
+     * Establishes a stream with the server for receiving messages.
+     * </pre>
+     */
     public io.grpc.stub.StreamObserver<com.google.cloud.pubsublite.proto.SubscribeRequest>
         subscribe(
             io.grpc.stub.StreamObserver<com.google.cloud.pubsublite.proto.SubscribeResponse>
@@ -167,7 +200,14 @@ public final class SubscriberServiceGrpc {
     }
   }
 
-  /** */
+  /**
+   *
+   *
+   * <pre>
+   * The service that a subscriber client application uses to receive messages
+   * from subscriptions.
+   * </pre>
+   */
   public static final class SubscriberServiceBlockingStub
       extends io.grpc.stub.AbstractBlockingStub<SubscriberServiceBlockingStub> {
     private SubscriberServiceBlockingStub(
@@ -182,7 +222,14 @@ public final class SubscriberServiceGrpc {
     }
   }
 
-  /** */
+  /**
+   *
+   *
+   * <pre>
+   * The service that a subscriber client application uses to receive messages
+   * from subscriptions.
+   * </pre>
+   */
   public static final class SubscriberServiceFutureStub
       extends io.grpc.stub.AbstractFutureStub<SubscriberServiceFutureStub> {
     private SubscriberServiceFutureStub(io.grpc.Channel channel, io.grpc.CallOptions callOptions) {

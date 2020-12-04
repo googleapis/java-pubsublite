@@ -26,9 +26,11 @@ public class PslSparkUtilsTest {
 
   @Test
   public void testSourceOffsetConversion() {
-    PslSourceOffset pslSourceOffset = new PslSourceOffset(2);
-    pslSourceOffset.set(Partition.of(0L), Offset.of(10));
-    pslSourceOffset.set(Partition.of(1L), Offset.of(50));
+    PslSourceOffset pslSourceOffset =
+        PslSourceOffset.newBuilder(2)
+            .set(Partition.of(0L), Offset.of(10))
+            .set(Partition.of(1L), Offset.of(50))
+            .build();
 
     SparkSourceOffset sparkSourceOffset = PslSparkUtils.toSparkSourceOffset(pslSourceOffset);
     assertThat(sparkSourceOffset.getPartitionOffsetMap().get(Partition.of(0L)).offset())

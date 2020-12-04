@@ -16,7 +16,10 @@
 
 package com.google.cloud.pubsublite.spark;
 
-import com.google.cloud.pubsublite.*;
+import com.google.cloud.pubsublite.Offset;
+import com.google.cloud.pubsublite.Partition;
+import com.google.cloud.pubsublite.SequencedMessage;
+import com.google.cloud.pubsublite.SubscriptionPath;
 import com.google.common.collect.ImmutableList;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -53,14 +56,14 @@ public class PslSparkUtils {
 
   public static PslSourceOffset toPslSourceOffset(SparkSourceOffset sparkSourceOffset) {
     long partitionCount = sparkSourceOffset.getPartitionOffsetMap().size();
-    PslSourceOffset pslSourceOffset = new PslSourceOffset(partitionCount);
+    PslSourceOffset.Builder pslSourceOffsetBuilder = PslSourceOffset.newBuilder(partitionCount);
     for (long i = 0; i < partitionCount; i++) {
       Partition p = Partition.of(i);
       assert sparkSourceOffset.getPartitionOffsetMap().containsKey(p);
-      pslSourceOffset.set(
+      pslSourceOffsetBuilder.set(
           p, Offset.of(sparkSourceOffset.getPartitionOffsetMap().get(p).offset() + 1));
     }
-    return pslSourceOffset;
+    return pslSourceOffsetBuilder.build();
   }
 
   public static PslPartitionOffset toPslPartitionOffset(SparkPartitionOffset sparkPartitionOffset) {

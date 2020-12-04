@@ -25,10 +25,10 @@ import java.util.Map;
 
 public class PslSourceOffset {
 
-  private final Map<Partition, Offset> partitionOffsetMap;
+  private final ImmutableMap<Partition, Offset> partitionOffsetMap;
 
-  public PslSourceOffset(Map<Partition, Offset> partitionOffsetMap) {
-    this.partitionOffsetMap = partitionOffsetMap;
+  public PslSourceOffset(Map<Partition, Offset> map) {
+    this.partitionOffsetMap = ImmutableMap.copyOf(map);
   }
 
   public Map<Partition, Offset> getPartitionOffsetMap() {

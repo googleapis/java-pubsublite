@@ -23,6 +23,7 @@ import java.io.Serializable;
 
 @AutoValue
 public abstract class PslPartitionOffset implements Serializable {
+  private static final long serialVersionUID = -5446439851334065339L;
 
   public abstract Partition partition();
 
@@ -34,6 +35,7 @@ public abstract class PslPartitionOffset implements Serializable {
 
   @AutoValue.Builder
   public abstract static class Builder {
+
     public abstract Builder partition(Partition partition);
 
     public abstract Builder offset(Offset offset);

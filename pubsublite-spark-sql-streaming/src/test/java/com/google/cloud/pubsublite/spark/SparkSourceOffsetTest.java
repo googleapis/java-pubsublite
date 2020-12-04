@@ -19,7 +19,7 @@ package com.google.cloud.pubsublite.spark;
 import static com.google.common.truth.Truth.assertThat;
 import static org.junit.Assert.fail;
 
-import com.google.cloud.pubsublite.*;
+import com.google.cloud.pubsublite.Partition;
 import com.google.common.collect.ImmutableMap;
 import org.junit.Test;
 

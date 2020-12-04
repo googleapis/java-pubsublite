@@ -19,8 +19,12 @@ package com.google.cloud.pubsublite.spark;
 import static com.google.cloud.pubsublite.internal.ServiceClients.addDefaultSettings;
 
 import com.google.auto.value.AutoValue;
+import com.google.cloud.pubsublite.AdminClient;
+import com.google.cloud.pubsublite.AdminClientSettings;
 import com.google.cloud.pubsublite.SubscriptionPath;
 import com.google.cloud.pubsublite.cloudpubsub.FlowControlSettings;
+import com.google.cloud.pubsublite.internal.CursorClient;
+import com.google.cloud.pubsublite.internal.CursorClientSettings;
 import com.google.cloud.pubsublite.v1.AdminServiceClient;
 import com.google.cloud.pubsublite.v1.AdminServiceSettings;
 import com.google.cloud.pubsublite.v1.CursorServiceClient;
@@ -95,7 +99,8 @@ public abstract class PslDataSourceOptions implements Serializable {
     public abstract PslDataSourceOptions build();
   }
 
-  CursorServiceClient newCursorClient() {
+  // TODO(b/jiangmichael): Make XXXClientSettings accept creds so we could simplify below methods.
+  CursorServiceClient newCursorServiceClient() {
     try {
       return CursorServiceClient.create(
           addDefaultSettings(
@@ -107,7 +112,15 @@ public abstract class PslDataSourceOptions implements Serializable {
     }
   }
 
-  AdminServiceClient newAdminClient() {
+  CursorClient newCursorClient() {
+    return CursorClient.create(
+        CursorClientSettings.newBuilder()
+            .setRegion(this.subscriptionPath().location().region())
+            .setServiceClient(newCursorServiceClient())
+            .build());
+  }
+
+  AdminServiceClient newAdminServiceClient() {
     try {
       return AdminServiceClient.create(
           addDefaultSettings(
@@ -117,5 +130,13 @@ public abstract class PslDataSourceOptions implements Serializable {
     } catch (IOException e) {
       throw new IllegalStateException("Unable to create AdminServiceClient.");
     }
+  }
+
+  AdminClient newAdminClient() {
+    return AdminClient.create(
+        AdminClientSettings.newBuilder()
+            .setRegion(this.subscriptionPath().location().region())
+            .setServiceClient(newAdminServiceClient())
+            .build());
   }
 }

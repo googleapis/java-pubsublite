@@ -20,15 +20,11 @@ import static com.google.common.truth.Truth.assertThat;
 import static org.mockito.Mockito.*;
 import static org.mockito.Mockito.mock;
 
+import com.google.api.core.ApiFutures;
 import com.google.cloud.pubsublite.*;
+import com.google.cloud.pubsublite.internal.CursorClient;
 import com.google.cloud.pubsublite.internal.testing.UnitTestExamples;
-import com.google.cloud.pubsublite.proto.Cursor;
-import com.google.cloud.pubsublite.proto.PartitionCursor;
 import com.google.cloud.pubsublite.proto.Subscription;
-import com.google.cloud.pubsublite.proto.TopicPartitions;
-import com.google.cloud.pubsublite.v1.AdminServiceClient;
-import com.google.cloud.pubsublite.v1.CursorServiceClient;
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import java.util.Optional;
 import org.junit.Test;
@@ -39,34 +35,26 @@ public class PslContinuousReaderTest {
       PslDataSourceOptions.builder()
           .subscriptionPath(UnitTestExamples.exampleSubscriptionPath())
           .build();
-  private final CursorServiceClient cursorClient = mock(CursorServiceClient.class);
-  private final AdminServiceClient adminClient = mock(AdminServiceClient.class);
+  private final CursorClient cursorClient = mock(CursorClient.class);
+  private final AdminClient adminClient = mock(AdminClient.class);
   private final MultiPartitionCommitter committer = mock(MultiPartitionCommitter.class);
   private final PslContinuousReader reader =
       new PslContinuousReader(OPTIONS, adminClient, cursorClient, committer);
 
   @Test
   public void testEmptyStartOffset() {
-    CursorServiceClient.ListPartitionCursorsPagedResponse resp =
-        mock(CursorServiceClient.ListPartitionCursorsPagedResponse.class);
-    when(adminClient.getSubscription(eq(UnitTestExamples.exampleSubscriptionPath().toString())))
+    when(adminClient.getSubscription(eq(UnitTestExamples.exampleSubscriptionPath())))
         .thenReturn(
-            Subscription.newBuilder()
-                .setTopic(UnitTestExamples.exampleTopicPath().toString())
-                .build());
-    when(adminClient.getTopicPartitions(eq(UnitTestExamples.exampleTopicPath().toString())))
-        .thenReturn(TopicPartitions.newBuilder().setPartitionCount(2).build());
-    when(resp.iterateAll())
-        .thenReturn(
-            ImmutableList.of(
-                PartitionCursor.newBuilder()
-                    .setPartition(1L)
-                    .setCursor(
-                        Cursor.newBuilder()
-                            .setOffset(UnitTestExamples.exampleOffset().value())
-                            .build())
+            ApiFutures.immediateFuture(
+                Subscription.newBuilder()
+                    .setTopic(UnitTestExamples.exampleTopicPath().toString())
                     .build()));
-    doReturn(resp).when(cursorClient).listPartitionCursors(anyString());
+    when(adminClient.getTopicPartitionCount(eq(UnitTestExamples.exampleTopicPath())))
+        .thenReturn(ApiFutures.immediateFuture(2L));
+    when(cursorClient.listPartitionCursors(UnitTestExamples.exampleSubscriptionPath()))
+        .thenReturn(
+            ApiFutures.immediateFuture(
+                ImmutableMap.of(Partition.of(1L), UnitTestExamples.exampleOffset())));
 
     reader.setStartOffset(Optional.empty());
     assertThat(((SparkSourceOffset) reader.getStartOffset()).getPartitionOffsetMap())
@@ -127,10 +115,12 @@ public class PslContinuousReaderTest {
                         .offset(50L)
                         .build()));
     PslSourceOffset expectedCommitOffset =
-        new PslSourceOffset(
-            ImmutableMap.of(
-                Partition.of(0L), Offset.of(11L),
-                Partition.of(1L), Offset.of(51L)));
+        PslSourceOffset.builder()
+            .partitionOffsetMap(
+                ImmutableMap.of(
+                    Partition.of(0L), Offset.of(11L),
+                    Partition.of(1L), Offset.of(51L)))
+            .build();
     reader.commit(offset);
     verify(committer, times(1)).commit(eq(expectedCommitOffset));
   }

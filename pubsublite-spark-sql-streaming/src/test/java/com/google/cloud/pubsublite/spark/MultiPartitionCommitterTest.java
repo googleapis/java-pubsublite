@@ -42,10 +42,12 @@ public class MultiPartitionCommitterTest {
             });
 
     PslSourceOffset offset =
-        new PslSourceOffset(
-            ImmutableMap.of(
-                Partition.of(1), Offset.of(10L),
-                Partition.of(2), Offset.of(8L)));
+        PslSourceOffset.builder()
+            .partitionOffsetMap(
+                ImmutableMap.of(
+                    Partition.of(1), Offset.of(10L),
+                    Partition.of(2), Offset.of(8L)))
+            .build();
     SettableApiFuture<Void> future1 = SettableApiFuture.create();
     SettableApiFuture<Void> future2 = SettableApiFuture.create();
     when(committer1.commitOffset(eq(Offset.of(10L)))).thenReturn(future1);
@@ -68,7 +70,10 @@ public class MultiPartitionCommitterTest {
     Committer committer = mock(Committer.class);
     MultiPartitionCommitter multiCommitter = new MultiPartitionCommitter((p) -> committer);
 
-    PslSourceOffset offset = new PslSourceOffset(ImmutableMap.of(Partition.of(1), Offset.of(10L)));
+    PslSourceOffset offset =
+        PslSourceOffset.builder()
+            .partitionOffsetMap(ImmutableMap.of(Partition.of(1), Offset.of(10L)))
+            .build();
     SettableApiFuture<Void> future1 = SettableApiFuture.create();
     when(committer.commitOffset(eq(Offset.of(10L)))).thenReturn(future1);
     when(committer.startAsync())

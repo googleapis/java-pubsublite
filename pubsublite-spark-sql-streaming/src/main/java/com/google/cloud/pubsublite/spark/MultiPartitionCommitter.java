@@ -60,12 +60,12 @@ public class MultiPartitionCommitter implements Serializable {
 
   synchronized void commit(PslSourceOffset offset) {
     if (!initialized) {
-      init(offset.getPartitionOffsetMap().keySet());
+      init(offset.partitionOffsetMap().keySet());
       initialized = true;
     }
 
     offset
-        .getPartitionOffsetMap()
+        .partitionOffsetMap()
         .forEach(
             (p, o) -> {
               // Note we don't need to worry about commit offset disorder here since Committer

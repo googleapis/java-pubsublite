@@ -90,7 +90,7 @@ public class PslContinuousInputPartitionReaderTest {
     assertThat(reader.next()).isTrue();
     assertThat(reader.get()).isEqualTo(expectedRow1);
     assertThat(reader.get()).isEqualTo(expectedRow1);
-    assertThat(((PslPartitionOffset) reader.getOffset()).offset()).isEqualTo(Offset.of(10));
+    assertThat(((SparkPartitionOffset) reader.getOffset()).offset()).isEqualTo(10L);
 
     // next() blocks when no new messages.
     Thread thread =
@@ -114,6 +114,6 @@ public class PslContinuousInputPartitionReaderTest {
 
     // Next will advance to next msg.
     assertThat(reader.get()).isEqualTo(expectedRow2);
-    assertThat(((PslPartitionOffset) reader.getOffset()).offset()).isEqualTo(Offset.of(13));
+    assertThat(((SparkPartitionOffset) reader.getOffset()).offset()).isEqualTo(13L);
   }
 }

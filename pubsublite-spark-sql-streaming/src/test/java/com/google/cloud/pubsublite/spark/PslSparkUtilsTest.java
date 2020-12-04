@@ -20,6 +20,7 @@ import static com.google.common.truth.Truth.assertThat;
 
 import com.google.cloud.pubsublite.Offset;
 import com.google.cloud.pubsublite.Partition;
+import com.google.common.collect.ImmutableMap;
 import org.junit.Test;
 
 public class PslSparkUtilsTest {
@@ -27,9 +28,9 @@ public class PslSparkUtilsTest {
   @Test
   public void testSourceOffsetConversion() {
     PslSourceOffset pslSourceOffset =
-        PslSourceOffset.newBuilder(2)
-            .set(Partition.of(0L), Offset.of(10))
-            .set(Partition.of(1L), Offset.of(50))
+        PslSourceOffset.builder()
+            .partitionOffsetMap(
+                ImmutableMap.of(Partition.of(0L), Offset.of(10), Partition.of(1L), Offset.of(50)))
             .build();
 
     SparkSourceOffset sparkSourceOffset = PslSparkUtils.toSparkSourceOffset(pslSourceOffset);

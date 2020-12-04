@@ -16,59 +16,25 @@
 
 package com.google.cloud.pubsublite.spark;
 
+import com.google.auto.value.AutoValue;
 import com.google.cloud.pubsublite.Offset;
 import com.google.cloud.pubsublite.Partition;
-import com.google.common.base.Objects;
-import com.google.common.collect.ImmutableMap;
-import java.util.HashMap;
 import java.util.Map;
 
-public class PslSourceOffset {
+@AutoValue
+public abstract class PslSourceOffset {
 
-  private final Map<Partition, Offset> partitionOffsetMap;
+  public abstract Map<Partition, Offset> partitionOffsetMap();
 
-  public PslSourceOffset(Map<Partition, Offset> partitionOffsetMap) {
-    this.partitionOffsetMap = partitionOffsetMap;
+  public static Builder builder() {
+    return new AutoValue_PslSourceOffset.Builder();
   }
 
-  public Map<Partition, Offset> getPartitionOffsetMap() {
-    return ImmutableMap.copyOf(partitionOffsetMap);
-  }
+  @AutoValue.Builder
+  public abstract static class Builder {
 
-  public static Builder newBuilder(long partitionCount) {
-    return new Builder(partitionCount);
-  }
+    public abstract Builder partitionOffsetMap(Map<Partition, Offset> partitionOffsetMap);
 
-  public static class Builder {
-
-    private final Map<Partition, Offset> partitionOffsetMap = new HashMap<>();
-
-    private Builder(long partitionCount) {
-      for (long i = 0; i < partitionCount; i++) {
-        partitionOffsetMap.put(Partition.of(i), Offset.of(0));
-      }
-    }
-
-    public Builder set(Partition partition, Offset offset) {
-      partitionOffsetMap.replace(partition, offset);
-      return this;
-    }
-
-    public PslSourceOffset build() {
-      return new PslSourceOffset(partitionOffsetMap);
-    }
-  }
-
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) return true;
-    if (o == null || getClass() != o.getClass()) return false;
-    PslSourceOffset that = (PslSourceOffset) o;
-    return Objects.equal(partitionOffsetMap, that.partitionOffsetMap);
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hashCode(partitionOffsetMap);
+    public abstract PslSourceOffset build();
   }
 }

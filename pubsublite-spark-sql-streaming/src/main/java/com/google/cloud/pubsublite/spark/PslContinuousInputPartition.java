@@ -16,6 +16,8 @@
 
 package com.google.cloud.pubsublite.spark;
 
+import com.google.cloud.pubsublite.SubscriptionPath;
+import com.google.cloud.pubsublite.cloudpubsub.FlowControlSettings;
 import com.google.cloud.pubsublite.internal.BufferingPullSubscriber;
 import com.google.cloud.pubsublite.internal.CheckedApiException;
 import com.google.cloud.pubsublite.internal.wire.PubsubContext;
@@ -23,7 +25,6 @@ import com.google.cloud.pubsublite.internal.wire.SubscriberBuilder;
 import com.google.cloud.pubsublite.proto.Cursor;
 import com.google.cloud.pubsublite.proto.SeekRequest;
 import java.io.Serializable;
-import java.util.Objects;
 import java.util.concurrent.Executors;
 import org.apache.spark.sql.catalyst.InternalRow;
 import org.apache.spark.sql.sources.v2.reader.ContinuousInputPartition;
@@ -34,12 +35,16 @@ public class PslContinuousInputPartition
     implements ContinuousInputPartition<InternalRow>, Serializable {
 
   private final SparkPartitionOffset startOffset;
-  private final PslDataSourceOptions options;
+  private final SubscriptionPath subscriptionPath;
+  private final FlowControlSettings flowControlSettings;
 
   public PslContinuousInputPartition(
-      SparkPartitionOffset startOffset, PslDataSourceOptions options) {
+      SparkPartitionOffset startOffset,
+      SubscriptionPath subscriptionPath,
+      FlowControlSettings flowControlSettings) {
     this.startOffset = startOffset;
-    this.options = options;
+    this.subscriptionPath = subscriptionPath;
+    this.flowControlSettings = flowControlSettings;
   }
 
   @Override
@@ -58,12 +63,12 @@ public class PslContinuousInputPartition
               // TODO(jiangmichael): Pass credentials settings here.
               (consumer) ->
                   SubscriberBuilder.newBuilder()
-                      .setSubscriptionPath(options.subscriptionPath())
+                      .setSubscriptionPath(subscriptionPath)
                       .setPartition(pslPartitionOffset.partition())
                       .setContext(PubsubContext.of(Constants.FRAMEWORK))
                       .setMessageConsumer(consumer)
                       .build(),
-              Objects.requireNonNull(options.flowControlSettings()),
+              flowControlSettings,
               SeekRequest.newBuilder()
                   .setCursor(
                       Cursor.newBuilder().setOffset(pslPartitionOffset.offset().value()).build())
@@ -73,7 +78,7 @@ public class PslContinuousInputPartition
           "Unable to create PSL subscriber for " + startOffset.toString(), e);
     }
     return new PslContinuousInputPartitionReader(
-        options.subscriptionPath(),
+        subscriptionPath,
         sparkPartitionOffset,
         subscriber,
         Executors.newSingleThreadScheduledExecutor());

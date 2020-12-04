@@ -21,6 +21,7 @@ import com.google.cloud.pubsublite.Partition;
 import com.google.cloud.pubsublite.SequencedMessage;
 import com.google.cloud.pubsublite.SubscriptionPath;
 import com.google.common.collect.ImmutableList;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 import org.apache.spark.sql.catalyst.InternalRow;
@@ -43,7 +44,7 @@ public class PslSparkUtils {
 
   public static SparkSourceOffset toSparkSourceOffset(PslSourceOffset pslSourceOffset) {
     return new SparkSourceOffset(
-        pslSourceOffset.getPartitionOffsetMap().entrySet().stream()
+        pslSourceOffset.partitionOffsetMap().entrySet().stream()
             .collect(
                 Collectors.toMap(
                     Map.Entry::getKey,
@@ -56,14 +57,14 @@ public class PslSparkUtils {
 
   public static PslSourceOffset toPslSourceOffset(SparkSourceOffset sparkSourceOffset) {
     long partitionCount = sparkSourceOffset.getPartitionOffsetMap().size();
-    PslSourceOffset.Builder pslSourceOffsetBuilder = PslSourceOffset.newBuilder(partitionCount);
+    Map<Partition, Offset> pslSourceOffsetMap = new HashMap<>();
     for (long i = 0; i < partitionCount; i++) {
       Partition p = Partition.of(i);
       assert sparkSourceOffset.getPartitionOffsetMap().containsKey(p);
-      pslSourceOffsetBuilder.set(
+      pslSourceOffsetMap.put(
           p, Offset.of(sparkSourceOffset.getPartitionOffsetMap().get(p).offset() + 1));
     }
-    return pslSourceOffsetBuilder.build();
+    return PslSourceOffset.builder().partitionOffsetMap(pslSourceOffsetMap).build();
   }
 
   public static PslPartitionOffset toPslPartitionOffset(SparkPartitionOffset sparkPartitionOffset) {

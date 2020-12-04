@@ -16,8 +16,6 @@
 
 package com.google.cloud.pubsublite.cloudpubsub;
 
-import static com.google.cloud.pubsublite.ProjectLookupUtils.toCanonical;
-
 import com.google.api.gax.batching.BatchingSettings;
 import com.google.api.gax.rpc.ApiException;
 import com.google.auto.value.AutoValue;
@@ -119,17 +117,16 @@ public abstract class PublisherSettings {
         messageTransformer()
             .orElseGet(() -> MessageTransforms.fromCpsPublishTransformer(keyExtractor));
 
-    TopicPath canonicalTopic = toCanonical(topicPath());
     RoutingPublisherBuilder.Builder wireBuilder =
         RoutingPublisherBuilder.newBuilder()
-            .setTopic(canonicalTopic)
+            .setTopic(topicPath())
             .setPublisherFactory(
                 partition -> {
                   SinglePartitionPublisherBuilder.Builder singlePartitionBuilder =
                       underlyingBuilder()
                           .setBatchingSettings(batchingSettings)
                           .setContext(PubsubContext.of(FRAMEWORK))
-                          .setTopic(canonicalTopic)
+                          .setTopic(topicPath())
                           .setPartition(partition);
                   serviceClientSupplier()
                       .ifPresent(

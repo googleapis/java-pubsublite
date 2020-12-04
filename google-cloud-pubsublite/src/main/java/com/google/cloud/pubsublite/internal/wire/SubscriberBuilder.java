@@ -22,7 +22,6 @@ import static com.google.cloud.pubsublite.internal.ServiceClients.addDefaultSett
 import com.google.api.gax.rpc.ApiException;
 import com.google.auto.value.AutoValue;
 import com.google.cloud.pubsublite.Partition;
-import com.google.cloud.pubsublite.ProjectLookupUtils;
 import com.google.cloud.pubsublite.SequencedMessage;
 import com.google.cloud.pubsublite.SubscriptionPath;
 import com.google.cloud.pubsublite.proto.InitialSubscribeRequest;
@@ -98,8 +97,7 @@ public abstract class SubscriberBuilder {
 
       InitialSubscribeRequest initialSubscribeRequest =
           InitialSubscribeRequest.newBuilder()
-              .setSubscription(
-                  ProjectLookupUtils.toCanonical(autoBuilt.subscriptionPath()).toString())
+              .setSubscription(autoBuilt.subscriptionPath().toString())
               .setPartition(autoBuilt.partition().value())
               .build();
       return new ApiExceptionSubscriber(

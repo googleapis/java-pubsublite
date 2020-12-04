@@ -21,7 +21,6 @@ import com.google.api.core.ApiFutures;
 import com.google.cloud.pubsublite.AdminClient;
 import com.google.cloud.pubsublite.CloudRegion;
 import com.google.cloud.pubsublite.LocationPath;
-import com.google.cloud.pubsublite.ProjectLookupUtils;
 import com.google.cloud.pubsublite.SubscriptionPath;
 import com.google.cloud.pubsublite.TopicPath;
 import com.google.cloud.pubsublite.proto.CreateSubscriptionRequest;
@@ -64,7 +63,7 @@ public class AdminClientImpl extends ApiResourceAggregation implements AdminClie
 
   @Override
   public ApiFuture<Topic> createTopic(Topic topic) {
-    TopicPath path = ProjectLookupUtils.toCanonical(TopicPath.parse(topic.getName()));
+    TopicPath path = TopicPath.parse(topic.getName());
     return serviceClient
         .createTopicCallable()
         .futureCall(
@@ -79,10 +78,7 @@ public class AdminClientImpl extends ApiResourceAggregation implements AdminClie
   public ApiFuture<Topic> getTopic(TopicPath path) {
     return serviceClient
         .getTopicCallable()
-        .futureCall(
-            GetTopicRequest.newBuilder()
-                .setName(ProjectLookupUtils.toCanonical(path).toString())
-                .build());
+        .futureCall(GetTopicRequest.newBuilder().setName(path.toString()).build());
   }
 
   @Override
@@ -90,10 +86,7 @@ public class AdminClientImpl extends ApiResourceAggregation implements AdminClie
     return ApiFutures.transform(
         serviceClient
             .getTopicPartitionsCallable()
-            .futureCall(
-                GetTopicPartitionsRequest.newBuilder()
-                    .setName(ProjectLookupUtils.toCanonical(path).toString())
-                    .build()),
+            .futureCall(GetTopicPartitionsRequest.newBuilder().setName(path.toString()).build()),
         TopicPartitions::getPartitionCount,
         MoreExecutors.directExecutor());
   }
@@ -103,25 +96,16 @@ public class AdminClientImpl extends ApiResourceAggregation implements AdminClie
     return ApiFutures.transform(
         serviceClient
             .listTopicsCallable()
-            .futureCall(
-                ListTopicsRequest.newBuilder()
-                    .setParent(ProjectLookupUtils.toCanonical(path).toString())
-                    .build()),
+            .futureCall(ListTopicsRequest.newBuilder().setParent(path.toString()).build()),
         ListTopicsResponse::getTopicsList,
         MoreExecutors.directExecutor());
   }
 
   @Override
   public ApiFuture<Topic> updateTopic(Topic topic, FieldMask mask) {
-    Topic canonical =
-        topic
-            .toBuilder()
-            .setName(ProjectLookupUtils.toCanonical(TopicPath.parse(topic.getName())).toString())
-            .build();
     return serviceClient
         .updateTopicCallable()
-        .futureCall(
-            UpdateTopicRequest.newBuilder().setTopic(canonical).setUpdateMask(mask).build());
+        .futureCall(UpdateTopicRequest.newBuilder().setTopic(topic).setUpdateMask(mask).build());
   }
 
   @Override
@@ -129,10 +113,7 @@ public class AdminClientImpl extends ApiResourceAggregation implements AdminClie
     return ApiFutures.transform(
         serviceClient
             .deleteTopicCallable()
-            .futureCall(
-                DeleteTopicRequest.newBuilder()
-                    .setName(ProjectLookupUtils.toCanonical(path).toString())
-                    .build()),
+            .futureCall(DeleteTopicRequest.newBuilder().setName(path.toString()).build()),
         x -> null,
         MoreExecutors.directExecutor());
   }
@@ -143,14 +124,11 @@ public class AdminClientImpl extends ApiResourceAggregation implements AdminClie
         serviceClient
             .listTopicSubscriptionsCallable()
             .futureCall(
-                ListTopicSubscriptionsRequest.newBuilder()
-                    .setName(ProjectLookupUtils.toCanonical(path).toString())
-                    .build()),
+                ListTopicSubscriptionsRequest.newBuilder().setName(path.toString()).build()),
         result -> {
           ImmutableList.Builder<SubscriptionPath> builder = ImmutableList.builder();
           for (String subscription : result.getSubscriptionsList()) {
-            SubscriptionPath subscription_path = SubscriptionPath.parse(subscription);
-            builder.add(subscription_path);
+            builder.add(SubscriptionPath.parse(subscription));
           }
           return builder.build();
         },
@@ -159,8 +137,7 @@ public class AdminClientImpl extends ApiResourceAggregation implements AdminClie
 
   @Override
   public ApiFuture<Subscription> createSubscription(Subscription subscription) {
-    SubscriptionPath path =
-        ProjectLookupUtils.toCanonical(SubscriptionPath.parse(subscription.getName()));
+    SubscriptionPath path = SubscriptionPath.parse(subscription.getName());
     return serviceClient
         .createSubscriptionCallable()
         .futureCall(
@@ -175,10 +152,7 @@ public class AdminClientImpl extends ApiResourceAggregation implements AdminClie
   public ApiFuture<Subscription> getSubscription(SubscriptionPath path) {
     return serviceClient
         .getSubscriptionCallable()
-        .futureCall(
-            GetSubscriptionRequest.newBuilder()
-                .setName(ProjectLookupUtils.toCanonical(path).toString())
-                .build());
+        .futureCall(GetSubscriptionRequest.newBuilder().setName(path.toString()).build());
   }
 
   @Override
@@ -186,28 +160,18 @@ public class AdminClientImpl extends ApiResourceAggregation implements AdminClie
     return ApiFutures.transform(
         serviceClient
             .listSubscriptionsCallable()
-            .futureCall(
-                ListSubscriptionsRequest.newBuilder()
-                    .setParent(ProjectLookupUtils.toCanonical(path).toString())
-                    .build()),
+            .futureCall(ListSubscriptionsRequest.newBuilder().setParent(path.toString()).build()),
         ListSubscriptionsResponse::getSubscriptionsList,
         MoreExecutors.directExecutor());
   }
 
   @Override
   public ApiFuture<Subscription> updateSubscription(Subscription subscription, FieldMask mask) {
-    Subscription canonical =
-        subscription
-            .toBuilder()
-            .setName(
-                ProjectLookupUtils.toCanonical(SubscriptionPath.parse(subscription.getName()))
-                    .toString())
-            .build();
     return serviceClient
         .updateSubscriptionCallable()
         .futureCall(
             UpdateSubscriptionRequest.newBuilder()
-                .setSubscription(canonical)
+                .setSubscription(subscription)
                 .setUpdateMask(mask)
                 .build());
   }
@@ -217,10 +181,7 @@ public class AdminClientImpl extends ApiResourceAggregation implements AdminClie
     return ApiFutures.transform(
         serviceClient
             .deleteSubscriptionCallable()
-            .futureCall(
-                DeleteSubscriptionRequest.newBuilder()
-                    .setName(ProjectLookupUtils.toCanonical(path).toString())
-                    .build()),
+            .futureCall(DeleteSubscriptionRequest.newBuilder().setName(path.toString()).build()),
         x -> null,
         MoreExecutors.directExecutor());
   }

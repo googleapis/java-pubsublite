@@ -17,27 +17,28 @@
 package com.google.cloud.pubsublite.spark;
 
 import com.google.auto.value.AutoValue;
-import com.google.cloud.pubsublite.Offset;
 import com.google.cloud.pubsublite.Partition;
 import java.io.Serializable;
+import org.apache.spark.sql.sources.v2.reader.streaming.PartitionOffset;
 
 @AutoValue
-public abstract class PslPartitionOffset implements Serializable {
+abstract class SparkPartitionOffset implements PartitionOffset, Serializable {
+  private static final long serialVersionUID = -3398208694782540866L;
 
-  public abstract Partition partition();
+  abstract Partition partition();
 
-  public abstract Offset offset();
+  abstract long offset();
 
   public static Builder builder() {
-    return new AutoValue_PslPartitionOffset.Builder();
+    return new AutoValue_SparkPartitionOffset.Builder();
   }
 
   @AutoValue.Builder
   public abstract static class Builder {
     public abstract Builder partition(Partition partition);
 
-    public abstract Builder offset(Offset offset);
+    public abstract Builder offset(long offset);
 
-    public abstract PslPartitionOffset build();
+    public abstract SparkPartitionOffset build();
   }
 }

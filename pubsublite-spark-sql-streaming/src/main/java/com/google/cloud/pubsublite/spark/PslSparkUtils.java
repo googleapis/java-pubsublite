@@ -17,6 +17,7 @@
 package com.google.cloud.pubsublite.spark;
 
 import com.google.cloud.pubsublite.Partition;
+import com.google.cloud.pubsublite.PartitionOffset;
 import com.google.cloud.pubsublite.SequencedMessage;
 import com.google.cloud.pubsublite.SubscriptionPath;
 import com.google.common.collect.ImmutableList;
@@ -37,4 +38,6 @@ public class PslSparkUtils {
                 msg.message().eventTime(),
                 msg.message().attributes())));
   }
+
+  public static PartitionOffset to
 }

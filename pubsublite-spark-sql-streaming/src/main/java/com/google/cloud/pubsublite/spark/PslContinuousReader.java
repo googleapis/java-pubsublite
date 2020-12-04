@@ -18,6 +18,7 @@ package com.google.cloud.pubsublite.spark;
 
 import com.google.cloud.pubsublite.Partition;
 import com.google.cloud.pubsublite.SubscriptionPath;
+import com.google.cloud.pubsublite.internal.wire.CommitterBuilder;
 import com.google.cloud.pubsublite.proto.PartitionCursor;
 import com.google.cloud.pubsublite.proto.Subscription;
 import com.google.cloud.pubsublite.proto.TopicPartitions;
@@ -48,7 +49,13 @@ public class PslContinuousReader implements ContinuousReader, Serializable {
         options,
         options.newAdminClient(),
         options.newCursorClient(),
-        new MultiPartitionCommitter(options));
+        new MultiPartitionCommitter(
+            (partition) ->
+                CommitterBuilder.newBuilder()
+                    .setSubscriptionPath(options.subscriptionPath())
+                    .setPartition(partition)
+                    .setServiceClient(options.newCursorClient())
+                    .build()));
   }
 
   @VisibleForTesting

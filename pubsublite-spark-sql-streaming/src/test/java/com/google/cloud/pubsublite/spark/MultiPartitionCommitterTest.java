@@ -21,17 +21,11 @@ import static org.mockito.Mockito.*;
 
 import com.google.api.core.SettableApiFuture;
 import com.google.cloud.pubsublite.*;
-import com.google.cloud.pubsublite.internal.testing.UnitTestExamples;
 import com.google.cloud.pubsublite.internal.wire.Committer;
 import com.google.common.collect.ImmutableMap;
 import org.junit.Test;
 
 public class MultiPartitionCommitterTest {
-
-  private static final PslDataSourceOptions OPTIONS =
-      PslDataSourceOptions.builder()
-          .subscriptionPath(UnitTestExamples.exampleSubscriptionPath())
-          .build();
 
   @Test
   public void testCommit() {
@@ -39,8 +33,7 @@ public class MultiPartitionCommitterTest {
     Committer committer2 = mock(Committer.class);
     MultiPartitionCommitter multiCommitter =
         new MultiPartitionCommitter(
-            OPTIONS,
-            (o, p) -> {
+            (p) -> {
               if (p.value() == 1L) {
                 return committer1;
               } else {
@@ -73,8 +66,7 @@ public class MultiPartitionCommitterTest {
   @Test
   public void testClose() {
     Committer committer = mock(Committer.class);
-    MultiPartitionCommitter multiCommitter =
-        new MultiPartitionCommitter(OPTIONS, (o, p) -> committer);
+    MultiPartitionCommitter multiCommitter = new MultiPartitionCommitter((p) -> committer);
 
     PslSourceOffset offset = new PslSourceOffset(ImmutableMap.of(Partition.of(1), Offset.of(10L)));
     SettableApiFuture<Void> future1 = SettableApiFuture.create();

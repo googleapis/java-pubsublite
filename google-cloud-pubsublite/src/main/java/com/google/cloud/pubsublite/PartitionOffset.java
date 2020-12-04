@@ -14,30 +14,29 @@
  * limitations under the License.
  */
 
-package com.google.cloud.pubsublite.spark;
+package com.google.cloud.pubsublite;
 
 import com.google.auto.value.AutoValue;
 import java.io.Serializable;
-import org.apache.spark.sql.sources.v2.reader.streaming.PartitionOffset;
 
 @AutoValue
-public abstract class PslPartitionOffset implements PartitionOffset, Serializable {
-  private static final long serialVersionUID = -3398208694782540866L;
+public abstract class PartitionOffset implements Serializable {
+  private static final long serialVersionUID = 771082451165552118L;
 
-  public abstract long partition();
+  public abstract Partition partition();
 
-  public abstract long offset();
+  public abstract Offset offset();
 
   public static Builder builder() {
-    return new AutoValue_PslPartitionOffset.Builder();
+    return new AutoValue_PartitionOffset.Builder();
   }
 
   @AutoValue.Builder
   public abstract static class Builder {
-    public abstract Builder partition(long partition);
+    public abstract Builder partition(Partition partition);
 
-    public abstract Builder offset(long offset);
+    public abstract Builder offset(Offset offset);
 
-    public abstract PslPartitionOffset build();
+    public abstract PartitionOffset build();
   }
 }

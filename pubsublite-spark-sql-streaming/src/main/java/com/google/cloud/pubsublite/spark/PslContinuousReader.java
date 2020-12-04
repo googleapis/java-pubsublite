@@ -42,7 +42,7 @@ public class PslContinuousReader implements ContinuousReader, Serializable {
   private final AdminServiceClient adminServiceClient;
   private final CursorServiceClient cursorServiceClient;
   private final MultiPartitionCommitter committer;
-  private PslSourceOffset startOffset;
+  private SparkSourceOffset startOffset;
 
   public PslContinuousReader(PslDataSourceOptions options) {
     this(
@@ -73,15 +73,15 @@ public class PslContinuousReader implements ContinuousReader, Serializable {
 
   @Override
   public Offset mergeOffsets(PartitionOffset[] offsets) {
-    assert PslPartitionOffset.class.isAssignableFrom(offsets.getClass().getComponentType())
-        : "PartitionOffset object is not assignable to PslPartitionOffsets.";
-    return PslSourceOffset.merge(
-        Arrays.copyOf(offsets, offsets.length, PslPartitionOffset[].class));
+    assert SparkPartitionOffset.class.isAssignableFrom(offsets.getClass().getComponentType())
+        : "PartitionOffset object is not assignable to SparkPartitionOffset.";
+    return SparkSourceOffset.merge(
+        Arrays.copyOf(offsets, offsets.length, SparkPartitionOffset[].class));
   }
 
   @Override
   public Offset deserializeOffset(String json) {
-    return PslSourceOffset.fromJson(json);
+    return SparkSourceOffset.fromJson(json);
   }
 
   @Override
@@ -92,39 +92,31 @@ public class PslContinuousReader implements ContinuousReader, Serializable {
   @Override
   public void setStartOffset(Optional<Offset> start) {
     if (start.isPresent()) {
-      assert PslSourceOffset.class.isAssignableFrom(start.get().getClass())
+      assert SparkSourceOffset.class.isAssignableFrom(start.get().getClass())
           : "start offset is not assignable to PslSourceOffset.";
-      startOffset = (PslSourceOffset) start.get();
+      startOffset = (SparkSourceOffset) start.get();
       return;
     }
 
     Subscription sub = adminServiceClient.getSubscription(subscriptionPath.toString());
     TopicPartitions topicPartitions = adminServiceClient.getTopicPartitions(sub.getTopic());
 
-    Map<Partition, com.google.cloud.pubsublite.Offset> map = new HashMap<>();
-    for (int i = 0; i < topicPartitions.getPartitionCount(); i++) {
-      map.put(Partition.of(i), com.google.cloud.pubsublite.Offset.of(-1));
-    }
+    PslSourceOffset pslSourceOffset = new PslSourceOffset(topicPartitions.getPartitionCount());
     CursorServiceClient.ListPartitionCursorsPagedResponse resp =
         cursorServiceClient.listPartitionCursors(subscriptionPath.toString());
     for (PartitionCursor p : resp.iterateAll()) {
-      map.replace(
+      pslSourceOffset.set(
           Partition.of(p.getPartition()),
-          // Note that startOffset in Spark is the latest committed while offset/cursor
-          // in PSL is next to-be-delivered.
-          com.google.cloud.pubsublite.Offset.of(p.getCursor().getOffset() - 1));
+          com.google.cloud.pubsublite.Offset.of(p.getCursor().getOffset()));
     }
-    startOffset = new PslSourceOffset(map);
+    startOffset = PslSparkUtils.toSparkSourceOffset(pslSourceOffset);
   }
 
   @Override
   public void commit(Offset end) {
-    assert PslSourceOffset.class.isAssignableFrom(end.getClass())
-        : "end offset is not assignable to PslSourceOffset.";
-    Map<Partition, com.google.cloud.pubsublite.Offset> map =
-        new HashMap<>(((PslSourceOffset) end).getPartitionOffsetMap());
-    map.replaceAll((k, v) -> com.google.cloud.pubsublite.Offset.of(v.value() + 1));
-    committer.commit(new PslSourceOffset(map));
+    assert SparkSourceOffset.class.isAssignableFrom(end.getClass())
+        : "end offset is not assignable to SparkSourceOffset.";
+    committer.commit(PslSparkUtils.toPslSourceOffset((SparkSourceOffset) end));
   }
 
   @Override

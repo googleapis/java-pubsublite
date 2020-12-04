@@ -27,9 +27,9 @@ import com.google.cloud.pubsublite.internal.wire.SubscriberBuilder;
 import com.google.cloud.pubsublite.proto.Cursor;
 import com.google.cloud.pubsublite.proto.SeekRequest;
 import com.google.common.annotations.VisibleForTesting;
-import com.google.common.flogger.GoogleLogger;
 import java.io.Serializable;
-import java.util.concurrent.*;
+import java.util.concurrent.ScheduledExecutorService;
+
 import org.apache.spark.sql.catalyst.InternalRow;
 import org.apache.spark.sql.sources.v2.reader.ContinuousInputPartition;
 import org.apache.spark.sql.sources.v2.reader.InputPartitionReader;
@@ -38,12 +38,11 @@ import org.apache.spark.sql.sources.v2.reader.streaming.PartitionOffset;
 
 public class PslContinuousInputPartition
     implements ContinuousInputPartition<InternalRow>, Serializable {
-  private static final GoogleLogger log = GoogleLogger.forEnclosingClass();
 
-  private final PslPartitionOffset startOffset;
+  private final SparkPartitionOffset startOffset;
   private final PslDataSourceOptions options;
 
-  public PslContinuousInputPartition(PslPartitionOffset startOffset, PslDataSourceOptions options) {
+  public PslContinuousInputPartition(SparkPartitionOffset startOffset, PslDataSourceOptions options) {
     this.startOffset = startOffset;
     this.options = options;
   }
@@ -51,11 +50,11 @@ public class PslContinuousInputPartition
   @VisibleForTesting
   public static ContinuousInputPartitionReader<InternalRow> createPartitionReader(
       SubscriptionPath subscriptionPath,
-      PslPartitionOffset currentOffset,
+      SparkPartitionOffset startOffset,
       PullSubscriber<SequencedMessage> subscriber,
       ScheduledExecutorService pullExecutorService) {
     return new PslContinuousInputPartitionReader(
-        subscriptionPath, currentOffset, subscriber, pullExecutorService);
+        subscriptionPath, startOffset, subscriber, pullExecutorService);
   }
 
   @Override
@@ -103,70 +102,5 @@ public class PslContinuousInputPartition
     return createContinuousReader(startOffset);
   }
 
-  private static class PslContinuousInputPartitionReader
-      implements ContinuousInputPartitionReader<InternalRow> {
 
-    private final SubscriptionPath subscriptionPath;
-    private final PullSubscriber<SequencedMessage> subscriber;
-    private final BlockingDeque<SequencedMessage> messages = new LinkedBlockingDeque<>();
-    private PslPartitionOffset currentOffset;
-    private SequencedMessage currentMsg;
-
-    private PslContinuousInputPartitionReader(
-        SubscriptionPath subscriptionPath,
-        PslPartitionOffset currentOffset,
-        PullSubscriber<SequencedMessage> subscriber,
-        ScheduledExecutorService pullExecutorService) {
-      this.subscriptionPath = subscriptionPath;
-      this.currentOffset = currentOffset;
-      this.subscriber = subscriber;
-      this.currentMsg = null;
-      pullExecutorService.scheduleAtFixedRate(
-          () -> {
-            try {
-              messages.addAll(subscriber.pull());
-            } catch (CheckedApiException e) {
-              log.atWarning().log("Unable to pull from subscriber.", e);
-            }
-          },
-          0,
-          50,
-          TimeUnit.MILLISECONDS);
-    }
-
-    @Override
-    public PartitionOffset getOffset() {
-      return currentOffset;
-    }
-
-    @Override
-    public boolean next() {
-      try {
-        currentMsg = messages.takeFirst();
-        currentOffset =
-            PslPartitionOffset.builder()
-                .partition(currentOffset.partition())
-                .offset(currentMsg.offset())
-                .build();
-        return true;
-      } catch (InterruptedException e) {
-        throw new IllegalStateException("Retrieving messages interrupted.", e);
-      }
-    }
-
-    @Override
-    public InternalRow get() {
-      assert currentMsg != null;
-      return PslSparkUtils.toInternalRow(currentMsg, subscriptionPath, currentOffset.partition());
-    }
-
-    @Override
-    public void close() {
-      try {
-        subscriber.close();
-      } catch (Exception e) {
-        log.atWarning().log("Subscriber failed to close.");
-      }
-    }
-  }
 }

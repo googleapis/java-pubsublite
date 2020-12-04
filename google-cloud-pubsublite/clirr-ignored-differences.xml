@@ -4,7 +4,7 @@
   <!-- Removed not needed API -->
   <difference>
     <differenceType>8001</differenceType>
-    <className>com.google.cloud.pubsublite.ProjectLookupUtils</className>
+    <className>com/google/cloud/pubsublite/ProjectLookupUtils</className>
   </difference>
   <!-- Blanket ignored files -->
   <difference>

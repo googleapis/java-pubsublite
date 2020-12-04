@@ -124,11 +124,13 @@ public final class CommonProto {
           + "R_IMMEDIATELY\020\001\022\030\n\024DELIVER_AFTER_STORED\020"
           + "\002:q\352An\n&pubsublite.googleapis.com/Subscr"
           + "iption\022Dprojects/{project}/locations/{lo"
-          + "cation}/subscriptions/{subscription}B{\n!"
-          + "com.google.cloud.pubsublite.protoB\013Commo"
-          + "nProtoP\001ZDgoogle.golang.org/genproto/goo"
-          + "gleapis/cloud/pubsublite/v1;pubsublite\370\001"
-          + "\001b\006proto3"
+          + "cation}/subscriptions/{subscription}B\325\001\n"
+          + "!com.google.cloud.pubsublite.protoB\013Comm"
+          + "onProtoP\001ZDgoogle.golang.org/genproto/go"
+          + "ogleapis/cloud/pubsublite/v1;pubsublite\370"
+          + "\001\001\252\002\032Google.Cloud.PubSubLite.V1\312\002\032Google"
+          + "\\Cloud\\PubSubLite\\V1\352\002\035Google::Cloud::Pu"
+          + "bSubLite::V1b\006proto3"
     };
     descriptor =
         com.google.protobuf.Descriptors.FileDescriptor.internalBuildGeneratedFileFrom(

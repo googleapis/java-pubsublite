@@ -22,14 +22,7 @@ import static io.grpc.stub.ClientCalls.futureUnaryCall;
 import static io.grpc.stub.ServerCalls.asyncUnaryCall;
 import static io.grpc.stub.ServerCalls.asyncUnimplementedUnaryCall;
 
-/**
- *
- *
- * <pre>
- * The service that a client application uses to manage topics and
- * subscriptions, such creating, listing, and deleting topics and subscriptions.
- * </pre>
- */
+/** */
 @javax.annotation.Generated(
     value = "by gRPC proto compiler",
     comments = "Source: google/cloud/pubsublite/v1/admin.proto")
@@ -629,49 +622,24 @@ public final class AdminServiceGrpc {
     return AdminServiceFutureStub.newStub(factory, channel);
   }
 
-  /**
-   *
-   *
-   * <pre>
-   * The service that a client application uses to manage topics and
-   * subscriptions, such creating, listing, and deleting topics and subscriptions.
-   * </pre>
-   */
+  /** */
   public abstract static class AdminServiceImplBase implements io.grpc.BindableService {
 
-    /**
-     *
-     *
-     * <pre>
-     * Creates a new topic.
-     * </pre>
-     */
+    /** */
     public void createTopic(
         com.google.cloud.pubsublite.proto.CreateTopicRequest request,
         io.grpc.stub.StreamObserver<com.google.cloud.pubsublite.proto.Topic> responseObserver) {
       asyncUnimplementedUnaryCall(getCreateTopicMethod(), responseObserver);
     }
 
-    /**
-     *
-     *
-     * <pre>
-     * Returns the topic configuration.
-     * </pre>
-     */
+    /** */
     public void getTopic(
         com.google.cloud.pubsublite.proto.GetTopicRequest request,
         io.grpc.stub.StreamObserver<com.google.cloud.pubsublite.proto.Topic> responseObserver) {
       asyncUnimplementedUnaryCall(getGetTopicMethod(), responseObserver);
     }
 
-    /**
-     *
-     *
-     * <pre>
-     * Returns the partition information for the requested topic.
-     * </pre>
-     */
+    /** */
     public void getTopicPartitions(
         com.google.cloud.pubsublite.proto.GetTopicPartitionsRequest request,
         io.grpc.stub.StreamObserver<com.google.cloud.pubsublite.proto.TopicPartitions>
@@ -679,13 +647,7 @@ public final class AdminServiceGrpc {
       asyncUnimplementedUnaryCall(getGetTopicPartitionsMethod(), responseObserver);
     }
 
-    /**
-     *
-     *
-     * <pre>
-     * Returns the list of topics for the given project.
-     * </pre>
-     */
+    /** */
     public void listTopics(
         com.google.cloud.pubsublite.proto.ListTopicsRequest request,
         io.grpc.stub.StreamObserver<com.google.cloud.pubsublite.proto.ListTopicsResponse>
@@ -693,39 +655,21 @@ public final class AdminServiceGrpc {
       asyncUnimplementedUnaryCall(getListTopicsMethod(), responseObserver);
     }
 
-    /**
-     *
-     *
-     * <pre>
-     * Updates properties of the specified topic.
-     * </pre>
-     */
+    /** */
     public void updateTopic(
         com.google.cloud.pubsublite.proto.UpdateTopicRequest request,
         io.grpc.stub.StreamObserver<com.google.cloud.pubsublite.proto.Topic> responseObserver) {
       asyncUnimplementedUnaryCall(getUpdateTopicMethod(), responseObserver);
     }
 
-    /**
-     *
-     *
-     * <pre>
-     * Deletes the specified topic.
-     * </pre>
-     */
+    /** */
     public void deleteTopic(
         com.google.cloud.pubsublite.proto.DeleteTopicRequest request,
         io.grpc.stub.StreamObserver<com.google.protobuf.Empty> responseObserver) {
       asyncUnimplementedUnaryCall(getDeleteTopicMethod(), responseObserver);
     }
 
-    /**
-     *
-     *
-     * <pre>
-     * Lists the subscriptions attached to the specified topic.
-     * </pre>
-     */
+    /** */
     public void listTopicSubscriptions(
         com.google.cloud.pubsublite.proto.ListTopicSubscriptionsRequest request,
         io.grpc.stub.StreamObserver<
@@ -734,13 +678,7 @@ public final class AdminServiceGrpc {
       asyncUnimplementedUnaryCall(getListTopicSubscriptionsMethod(), responseObserver);
     }
 
-    /**
-     *
-     *
-     * <pre>
-     * Creates a new subscription.
-     * </pre>
-     */
+    /** */
     public void createSubscription(
         com.google.cloud.pubsublite.proto.CreateSubscriptionRequest request,
         io.grpc.stub.StreamObserver<com.google.cloud.pubsublite.proto.Subscription>
@@ -748,13 +686,7 @@ public final class AdminServiceGrpc {
       asyncUnimplementedUnaryCall(getCreateSubscriptionMethod(), responseObserver);
     }
 
-    /**
-     *
-     *
-     * <pre>
-     * Returns the subscription configuration.
-     * </pre>
-     */
+    /** */
     public void getSubscription(
         com.google.cloud.pubsublite.proto.GetSubscriptionRequest request,
         io.grpc.stub.StreamObserver<com.google.cloud.pubsublite.proto.Subscription>
@@ -762,13 +694,7 @@ public final class AdminServiceGrpc {
       asyncUnimplementedUnaryCall(getGetSubscriptionMethod(), responseObserver);
     }
 
-    /**
-     *
-     *
-     * <pre>
-     * Returns the list of subscriptions for the given project.
-     * </pre>
-     */
+    /** */
     public void listSubscriptions(
         com.google.cloud.pubsublite.proto.ListSubscriptionsRequest request,
         io.grpc.stub.StreamObserver<com.google.cloud.pubsublite.proto.ListSubscriptionsResponse>
@@ -776,13 +702,7 @@ public final class AdminServiceGrpc {
       asyncUnimplementedUnaryCall(getListSubscriptionsMethod(), responseObserver);
     }
 
-    /**
-     *
-     *
-     * <pre>
-     * Updates properties of the specified subscription.
-     * </pre>
-     */
+    /** */
     public void updateSubscription(
         com.google.cloud.pubsublite.proto.UpdateSubscriptionRequest request,
         io.grpc.stub.StreamObserver<com.google.cloud.pubsublite.proto.Subscription>
@@ -790,13 +710,7 @@ public final class AdminServiceGrpc {
       asyncUnimplementedUnaryCall(getUpdateSubscriptionMethod(), responseObserver);
     }
 
-    /**
-     *
-     *
-     * <pre>
-     * Deletes the specified subscription.
-     * </pre>
-     */
+    /** */
     public void deleteSubscription(
         com.google.cloud.pubsublite.proto.DeleteSubscriptionRequest request,
         io.grpc.stub.StreamObserver<com.google.protobuf.Empty> responseObserver) {
@@ -889,14 +803,7 @@ public final class AdminServiceGrpc {
     }
   }
 
-  /**
-   *
-   *
-   * <pre>
-   * The service that a client application uses to manage topics and
-   * subscriptions, such creating, listing, and deleting topics and subscriptions.
-   * </pre>
-   */
+  /** */
   public static final class AdminServiceStub
       extends io.grpc.stub.AbstractAsyncStub<AdminServiceStub> {
     private AdminServiceStub(io.grpc.Channel channel, io.grpc.CallOptions callOptions) {
@@ -908,13 +815,7 @@ public final class AdminServiceGrpc {
       return new AdminServiceStub(channel, callOptions);
     }
 
-    /**
-     *
-     *
-     * <pre>
-     * Creates a new topic.
-     * </pre>
-     */
+    /** */
     public void createTopic(
         com.google.cloud.pubsublite.proto.CreateTopicRequest request,
         io.grpc.stub.StreamObserver<com.google.cloud.pubsublite.proto.Topic> responseObserver) {
@@ -924,13 +825,7 @@ public final class AdminServiceGrpc {
           responseObserver);
     }
 
-    /**
-     *
-     *
-     * <pre>
-     * Returns the topic configuration.
-     * </pre>
-     */
+    /** */
     public void getTopic(
         com.google.cloud.pubsublite.proto.GetTopicRequest request,
         io.grpc.stub.StreamObserver<com.google.cloud.pubsublite.proto.Topic> responseObserver) {
@@ -938,13 +833,7 @@ public final class AdminServiceGrpc {
           getChannel().newCall(getGetTopicMethod(), getCallOptions()), request, responseObserver);
     }
 
-    /**
-     *
-     *
-     * <pre>
-     * Returns the partition information for the requested topic.
-     * </pre>
-     */
+    /** */
     public void getTopicPartitions(
         com.google.cloud.pubsublite.proto.GetTopicPartitionsRequest request,
         io.grpc.stub.StreamObserver<com.google.cloud.pubsublite.proto.TopicPartitions>
@@ -955,13 +844,7 @@ public final class AdminServiceGrpc {
           responseObserver);
     }
 
-    /**
-     *
-     *
-     * <pre>
-     * Returns the list of topics for the given project.
-     * </pre>
-     */
+    /** */
     public void listTopics(
         com.google.cloud.pubsublite.proto.ListTopicsRequest request,
         io.grpc.stub.StreamObserver<com.google.cloud.pubsublite.proto.ListTopicsResponse>
@@ -970,13 +853,7 @@ public final class AdminServiceGrpc {
           getChannel().newCall(getListTopicsMethod(), getCallOptions()), request, responseObserver);
     }
 
-    /**
-     *
-     *
-     * <pre>
-     * Updates properties of the specified topic.
-     * </pre>
-     */
+    /** */
     public void updateTopic(
         com.google.cloud.pubsublite.proto.UpdateTopicRequest request,
         io.grpc.stub.StreamObserver<com.google.cloud.pubsublite.proto.Topic> responseObserver) {
@@ -986,13 +863,7 @@ public final class AdminServiceGrpc {
           responseObserver);
     }
 
-    /**
-     *
-     *
-     * <pre>
-     * Deletes the specified topic.
-     * </pre>
-     */
+    /** */
     public void deleteTopic(
         com.google.cloud.pubsublite.proto.DeleteTopicRequest request,
         io.grpc.stub.StreamObserver<com.google.protobuf.Empty> responseObserver) {
@@ -1002,13 +873,7 @@ public final class AdminServiceGrpc {
           responseObserver);
     }
 
-    /**
-     *
-     *
-     * <pre>
-     * Lists the subscriptions attached to the specified topic.
-     * </pre>
-     */
+    /** */
     public void listTopicSubscriptions(
         com.google.cloud.pubsublite.proto.ListTopicSubscriptionsRequest request,
         io.grpc.stub.StreamObserver<
@@ -1020,13 +885,7 @@ public final class AdminServiceGrpc {
           responseObserver);
     }
 
-    /**
-     *
-     *
-     * <pre>
-     * Creates a new subscription.
-     * </pre>
-     */
+    /** */
     public void createSubscription(
         com.google.cloud.pubsublite.proto.CreateSubscriptionRequest request,
         io.grpc.stub.StreamObserver<com.google.cloud.pubsublite.proto.Subscription>
@@ -1037,13 +896,7 @@ public final class AdminServiceGrpc {
           responseObserver);
     }
 
-    /**
-     *
-     *
-     * <pre>
-     * Returns the subscription configuration.
-     * </pre>
-     */
+    /** */
     public void getSubscription(
         com.google.cloud.pubsublite.proto.GetSubscriptionRequest request,
         io.grpc.stub.StreamObserver<com.google.cloud.pubsublite.proto.Subscription>
@@ -1054,13 +907,7 @@ public final class AdminServiceGrpc {
           responseObserver);
     }
 
-    /**
-     *
-     *
-     * <pre>
-     * Returns the list of subscriptions for the given project.
-     * </pre>
-     */
+    /** */
     public void listSubscriptions(
         com.google.cloud.pubsublite.proto.ListSubscriptionsRequest request,
         io.grpc.stub.StreamObserver<com.google.cloud.pubsublite.proto.ListSubscriptionsResponse>
@@ -1071,13 +918,7 @@ public final class AdminServiceGrpc {
           responseObserver);
     }
 
-    /**
-     *
-     *
-     * <pre>
-     * Updates properties of the specified subscription.
-     * </pre>
-     */
+    /** */
     public void updateSubscription(
         com.google.cloud.pubsublite.proto.UpdateSubscriptionRequest request,
         io.grpc.stub.StreamObserver<com.google.cloud.pubsublite.proto.Subscription>
@@ -1088,13 +929,7 @@ public final class AdminServiceGrpc {
           responseObserver);
     }
 
-    /**
-     *
-     *
-     * <pre>
-     * Deletes the specified subscription.
-     * </pre>
-     */
+    /** */
     public void deleteSubscription(
         com.google.cloud.pubsublite.proto.DeleteSubscriptionRequest request,
         io.grpc.stub.StreamObserver<com.google.protobuf.Empty> responseObserver) {
@@ -1105,14 +940,7 @@ public final class AdminServiceGrpc {
     }
   }
 
-  /**
-   *
-   *
-   * <pre>
-   * The service that a client application uses to manage topics and
-   * subscriptions, such creating, listing, and deleting topics and subscriptions.
-   * </pre>
-   */
+  /** */
   public static final class AdminServiceBlockingStub
       extends io.grpc.stub.AbstractBlockingStub<AdminServiceBlockingStub> {
     private AdminServiceBlockingStub(io.grpc.Channel channel, io.grpc.CallOptions callOptions) {
@@ -1125,150 +953,78 @@ public final class AdminServiceGrpc {
       return new AdminServiceBlockingStub(channel, callOptions);
     }
 
-    /**
-     *
-     *
-     * <pre>
-     * Creates a new topic.
-     * </pre>
-     */
+    /** */
     public com.google.cloud.pubsublite.proto.Topic createTopic(
         com.google.cloud.pubsublite.proto.CreateTopicRequest request) {
       return blockingUnaryCall(getChannel(), getCreateTopicMethod(), getCallOptions(), request);
     }
 
-    /**
-     *
-     *
-     * <pre>
-     * Returns the topic configuration.
-     * </pre>
-     */
+    /** */
     public com.google.cloud.pubsublite.proto.Topic getTopic(
         com.google.cloud.pubsublite.proto.GetTopicRequest request) {
       return blockingUnaryCall(getChannel(), getGetTopicMethod(), getCallOptions(), request);
     }
 
-    /**
-     *
-     *
-     * <pre>
-     * Returns the partition information for the requested topic.
-     * </pre>
-     */
+    /** */
     public com.google.cloud.pubsublite.proto.TopicPartitions getTopicPartitions(
         com.google.cloud.pubsublite.proto.GetTopicPartitionsRequest request) {
       return blockingUnaryCall(
           getChannel(), getGetTopicPartitionsMethod(), getCallOptions(), request);
     }
 
-    /**
-     *
-     *
-     * <pre>
-     * Returns the list of topics for the given project.
-     * </pre>
-     */
+    /** */
     public com.google.cloud.pubsublite.proto.ListTopicsResponse listTopics(
         com.google.cloud.pubsublite.proto.ListTopicsRequest request) {
       return blockingUnaryCall(getChannel(), getListTopicsMethod(), getCallOptions(), request);
     }
 
-    /**
-     *
-     *
-     * <pre>
-     * Updates properties of the specified topic.
-     * </pre>
-     */
+    /** */
     public com.google.cloud.pubsublite.proto.Topic updateTopic(
         com.google.cloud.pubsublite.proto.UpdateTopicRequest request) {
       return blockingUnaryCall(getChannel(), getUpdateTopicMethod(), getCallOptions(), request);
     }
 
-    /**
-     *
-     *
-     * <pre>
-     * Deletes the specified topic.
-     * </pre>
-     */
+    /** */
     public com.google.protobuf.Empty deleteTopic(
         com.google.cloud.pubsublite.proto.DeleteTopicRequest request) {
       return blockingUnaryCall(getChannel(), getDeleteTopicMethod(), getCallOptions(), request);
     }
 
-    /**
-     *
-     *
-     * <pre>
-     * Lists the subscriptions attached to the specified topic.
-     * </pre>
-     */
+    /** */
     public com.google.cloud.pubsublite.proto.ListTopicSubscriptionsResponse listTopicSubscriptions(
         com.google.cloud.pubsublite.proto.ListTopicSubscriptionsRequest request) {
       return blockingUnaryCall(
           getChannel(), getListTopicSubscriptionsMethod(), getCallOptions(), request);
     }
 
-    /**
-     *
-     *
-     * <pre>
-     * Creates a new subscription.
-     * </pre>
-     */
+    /** */
     public com.google.cloud.pubsublite.proto.Subscription createSubscription(
         com.google.cloud.pubsublite.proto.CreateSubscriptionRequest request) {
       return blockingUnaryCall(
           getChannel(), getCreateSubscriptionMethod(), getCallOptions(), request);
     }
 
-    /**
-     *
-     *
-     * <pre>
-     * Returns the subscription configuration.
-     * </pre>
-     */
+    /** */
     public com.google.cloud.pubsublite.proto.Subscription getSubscription(
         com.google.cloud.pubsublite.proto.GetSubscriptionRequest request) {
       return blockingUnaryCall(getChannel(), getGetSubscriptionMethod(), getCallOptions(), request);
     }
 
-    /**
-     *
-     *
-     * <pre>
-     * Returns the list of subscriptions for the given project.
-     * </pre>
-     */
+    /** */
     public com.google.cloud.pubsublite.proto.ListSubscriptionsResponse listSubscriptions(
         com.google.cloud.pubsublite.proto.ListSubscriptionsRequest request) {
       return blockingUnaryCall(
           getChannel(), getListSubscriptionsMethod(), getCallOptions(), request);
     }
 
-    /**
-     *
-     *
-     * <pre>
-     * Updates properties of the specified subscription.
-     * </pre>
-     */
+    /** */
     public com.google.cloud.pubsublite.proto.Subscription updateSubscription(
         com.google.cloud.pubsublite.proto.UpdateSubscriptionRequest request) {
       return blockingUnaryCall(
           getChannel(), getUpdateSubscriptionMethod(), getCallOptions(), request);
     }
 
-    /**
-     *
-     *
-     * <pre>
-     * Deletes the specified subscription.
-     * </pre>
-     */
+    /** */
     public com.google.protobuf.Empty deleteSubscription(
         com.google.cloud.pubsublite.proto.DeleteSubscriptionRequest request) {
       return blockingUnaryCall(
@@ -1276,14 +1032,7 @@ public final class AdminServiceGrpc {
     }
   }
 
-  /**
-   *
-   *
-   * <pre>
-   * The service that a client application uses to manage topics and
-   * subscriptions, such creating, listing, and deleting topics and subscriptions.
-   * </pre>
-   */
+  /** */
   public static final class AdminServiceFutureStub
       extends io.grpc.stub.AbstractFutureStub<AdminServiceFutureStub> {
     private AdminServiceFutureStub(io.grpc.Channel channel, io.grpc.CallOptions callOptions) {
@@ -1296,13 +1045,7 @@ public final class AdminServiceGrpc {
       return new AdminServiceFutureStub(channel, callOptions);
     }
 
-    /**
-     *
-     *
-     * <pre>
-     * Creates a new topic.
-     * </pre>
-     */
+    /** */
     public com.google.common.util.concurrent.ListenableFuture<
             com.google.cloud.pubsublite.proto.Topic>
         createTopic(com.google.cloud.pubsublite.proto.CreateTopicRequest request) {
@@ -1310,26 +1053,14 @@ public final class AdminServiceGrpc {
           getChannel().newCall(getCreateTopicMethod(), getCallOptions()), request);
     }
 
-    /**
-     *
-     *
-     * <pre>
-     * Returns the topic configuration.
-     * </pre>
-     */
+    /** */
     public com.google.common.util.concurrent.ListenableFuture<
             com.google.cloud.pubsublite.proto.Topic>
         getTopic(com.google.cloud.pubsublite.proto.GetTopicRequest request) {
       return futureUnaryCall(getChannel().newCall(getGetTopicMethod(), getCallOptions()), request);
     }
 
-    /**
-     *
-     *
-     * <pre>
-     * Returns the partition information for the requested topic.
-     * </pre>
-     */
+    /** */
     public com.google.common.util.concurrent.ListenableFuture<
             com.google.cloud.pubsublite.proto.TopicPartitions>
         getTopicPartitions(com.google.cloud.pubsublite.proto.GetTopicPartitionsRequest request) {
@@ -1337,13 +1068,7 @@ public final class AdminServiceGrpc {
           getChannel().newCall(getGetTopicPartitionsMethod(), getCallOptions()), request);
     }
 
-    /**
-     *
-     *
-     * <pre>
-     * Returns the list of topics for the given project.
-     * </pre>
-     */
+    /** */
     public com.google.common.util.concurrent.ListenableFuture<
             com.google.cloud.pubsublite.proto.ListTopicsResponse>
         listTopics(com.google.cloud.pubsublite.proto.ListTopicsRequest request) {
@@ -1351,13 +1076,7 @@ public final class AdminServiceGrpc {
           getChannel().newCall(getListTopicsMethod(), getCallOptions()), request);
     }
 
-    /**
-     *
-     *
-     * <pre>
-     * Updates properties of the specified topic.
-     * </pre>
-     */
+    /** */
     public com.google.common.util.concurrent.ListenableFuture<
             com.google.cloud.pubsublite.proto.Topic>
         updateTopic(com.google.cloud.pubsublite.proto.UpdateTopicRequest request) {
@@ -1365,26 +1084,14 @@ public final class AdminServiceGrpc {
           getChannel().newCall(getUpdateTopicMethod(), getCallOptions()), request);
     }
 
-    /**
-     *
-     *
-     * <pre>
-     * Deletes the specified topic.
-     * </pre>
-     */
+    /** */
     public com.google.common.util.concurrent.ListenableFuture<com.google.protobuf.Empty>
         deleteTopic(com.google.cloud.pubsublite.proto.DeleteTopicRequest request) {
       return futureUnaryCall(
           getChannel().newCall(getDeleteTopicMethod(), getCallOptions()), request);
     }
 
-    /**
-     *
-     *
-     * <pre>
-     * Lists the subscriptions attached to the specified topic.
-     * </pre>
-     */
+    /** */
     public com.google.common.util.concurrent.ListenableFuture<
             com.google.cloud.pubsublite.proto.ListTopicSubscriptionsResponse>
         listTopicSubscriptions(
@@ -1393,13 +1100,7 @@ public final class AdminServiceGrpc {
           getChannel().newCall(getListTopicSubscriptionsMethod(), getCallOptions()), request);
     }
 
-    /**
-     *
-     *
-     * <pre>
-     * Creates a new subscription.
-     * </pre>
-     */
+    /** */
     public com.google.common.util.concurrent.ListenableFuture<
             com.google.cloud.pubsublite.proto.Subscription>
         createSubscription(com.google.cloud.pubsublite.proto.CreateSubscriptionRequest request) {
@@ -1407,13 +1108,7 @@ public final class AdminServiceGrpc {
           getChannel().newCall(getCreateSubscriptionMethod(), getCallOptions()), request);
     }
 
-    /**
-     *
-     *
-     * <pre>
-     * Returns the subscription configuration.
-     * </pre>
-     */
+    /** */
     public com.google.common.util.concurrent.ListenableFuture<
             com.google.cloud.pubsublite.proto.Subscription>
         getSubscription(com.google.cloud.pubsublite.proto.GetSubscriptionRequest request) {
@@ -1421,13 +1116,7 @@ public final class AdminServiceGrpc {
           getChannel().newCall(getGetSubscriptionMethod(), getCallOptions()), request);
     }
 
-    /**
-     *
-     *
-     * <pre>
-     * Returns the list of subscriptions for the given project.
-     * </pre>
-     */
+    /** */
     public com.google.common.util.concurrent.ListenableFuture<
             com.google.cloud.pubsublite.proto.ListSubscriptionsResponse>
         listSubscriptions(com.google.cloud.pubsublite.proto.ListSubscriptionsRequest request) {
@@ -1435,13 +1124,7 @@ public final class AdminServiceGrpc {
           getChannel().newCall(getListSubscriptionsMethod(), getCallOptions()), request);
     }
 
-    /**
-     *
-     *
-     * <pre>
-     * Updates properties of the specified subscription.
-     * </pre>
-     */
+    /** */
     public com.google.common.util.concurrent.ListenableFuture<
             com.google.cloud.pubsublite.proto.Subscription>
         updateSubscription(com.google.cloud.pubsublite.proto.UpdateSubscriptionRequest request) {
@@ -1449,13 +1132,7 @@ public final class AdminServiceGrpc {
           getChannel().newCall(getUpdateSubscriptionMethod(), getCallOptions()), request);
     }
 
-    /**
-     *
-     *
-     * <pre>
-     * Deletes the specified subscription.
-     * </pre>
-     */
+    /** */
     public com.google.common.util.concurrent.ListenableFuture<com.google.protobuf.Empty>
         deleteSubscription(com.google.cloud.pubsublite.proto.DeleteSubscriptionRequest request) {
       return futureUnaryCall(

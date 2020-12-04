@@ -20,16 +20,7 @@ import static io.grpc.stub.ClientCalls.asyncBidiStreamingCall;
 import static io.grpc.stub.ServerCalls.asyncBidiStreamingCall;
 import static io.grpc.stub.ServerCalls.asyncUnimplementedStreamingCall;
 
-/**
- *
- *
- * <pre>
- * The service that a publisher client application uses to publish messages to
- * topics. Published messages are retained by the service for the duration of
- * the retention period configured for the respective topic, and are delivered
- * to subscriber clients upon request (via the `SubscriberService`).
- * </pre>
- */
+/** */
 @javax.annotation.Generated(
     value = "by gRPC proto compiler",
     comments = "Source: google/cloud/pubsublite/v1/publisher.proto")
@@ -127,31 +118,10 @@ public final class PublisherServiceGrpc {
     return PublisherServiceFutureStub.newStub(factory, channel);
   }
 
-  /**
-   *
-   *
-   * <pre>
-   * The service that a publisher client application uses to publish messages to
-   * topics. Published messages are retained by the service for the duration of
-   * the retention period configured for the respective topic, and are delivered
-   * to subscriber clients upon request (via the `SubscriberService`).
-   * </pre>
-   */
+  /** */
   public abstract static class PublisherServiceImplBase implements io.grpc.BindableService {
 
-    /**
-     *
-     *
-     * <pre>
-     * Establishes a stream with the server for publishing messages. Once the
-     * stream is initialized, the client publishes messages by sending publish
-     * requests on the stream. The server responds with a PublishResponse for each
-     * PublishRequest sent by the client, in the same order that the requests
-     * were sent. Note that multiple PublishRequests can be in flight
-     * simultaneously, but they will be processed by the server in the order that
-     * they are sent by the client on a given stream.
-     * </pre>
-     */
+    /** */
     public io.grpc.stub.StreamObserver<com.google.cloud.pubsublite.proto.PublishRequest> publish(
         io.grpc.stub.StreamObserver<com.google.cloud.pubsublite.proto.PublishResponse>
             responseObserver) {
@@ -171,16 +141,7 @@ public final class PublisherServiceGrpc {
     }
   }
 
-  /**
-   *
-   *
-   * <pre>
-   * The service that a publisher client application uses to publish messages to
-   * topics. Published messages are retained by the service for the duration of
-   * the retention period configured for the respective topic, and are delivered
-   * to subscriber clients upon request (via the `SubscriberService`).
-   * </pre>
-   */
+  /** */
   public static final class PublisherServiceStub
       extends io.grpc.stub.AbstractAsyncStub<PublisherServiceStub> {
     private PublisherServiceStub(io.grpc.Channel channel, io.grpc.CallOptions callOptions) {
@@ -192,19 +153,7 @@ public final class PublisherServiceGrpc {
       return new PublisherServiceStub(channel, callOptions);
     }
 
-    /**
-     *
-     *
-     * <pre>
-     * Establishes a stream with the server for publishing messages. Once the
-     * stream is initialized, the client publishes messages by sending publish
-     * requests on the stream. The server responds with a PublishResponse for each
-     * PublishRequest sent by the client, in the same order that the requests
-     * were sent. Note that multiple PublishRequests can be in flight
-     * simultaneously, but they will be processed by the server in the order that
-     * they are sent by the client on a given stream.
-     * </pre>
-     */
+    /** */
     public io.grpc.stub.StreamObserver<com.google.cloud.pubsublite.proto.PublishRequest> publish(
         io.grpc.stub.StreamObserver<com.google.cloud.pubsublite.proto.PublishResponse>
             responseObserver) {
@@ -213,16 +162,7 @@ public final class PublisherServiceGrpc {
     }
   }
 
-  /**
-   *
-   *
-   * <pre>
-   * The service that a publisher client application uses to publish messages to
-   * topics. Published messages are retained by the service for the duration of
-   * the retention period configured for the respective topic, and are delivered
-   * to subscriber clients upon request (via the `SubscriberService`).
-   * </pre>
-   */
+  /** */
   public static final class PublisherServiceBlockingStub
       extends io.grpc.stub.AbstractBlockingStub<PublisherServiceBlockingStub> {
     private PublisherServiceBlockingStub(io.grpc.Channel channel, io.grpc.CallOptions callOptions) {
@@ -236,16 +176,7 @@ public final class PublisherServiceGrpc {
     }
   }
 
-  /**
-   *
-   *
-   * <pre>
-   * The service that a publisher client application uses to publish messages to
-   * topics. Published messages are retained by the service for the duration of
-   * the retention period configured for the respective topic, and are delivered
-   * to subscriber clients upon request (via the `SubscriberService`).
-   * </pre>
-   */
+  /** */
   public static final class PublisherServiceFutureStub
       extends io.grpc.stub.AbstractFutureStub<PublisherServiceFutureStub> {
     private PublisherServiceFutureStub(io.grpc.Channel channel, io.grpc.CallOptions callOptions) {

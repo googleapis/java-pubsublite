@@ -25,15 +25,7 @@ import static io.grpc.stub.ServerCalls.asyncUnaryCall;
 import static io.grpc.stub.ServerCalls.asyncUnimplementedStreamingCall;
 import static io.grpc.stub.ServerCalls.asyncUnimplementedUnaryCall;
 
-/**
- *
- *
- * <pre>
- * The service that a subscriber client application uses to manage committed
- * cursors while receiving messsages. A cursor represents a subscriber's
- * progress within a topic partition for a given subscription.
- * </pre>
- */
+/** */
 @javax.annotation.Generated(
     value = "by gRPC proto compiler",
     comments = "Source: google/cloud/pubsublite/v1/cursor.proto")
@@ -231,24 +223,10 @@ public final class CursorServiceGrpc {
     return CursorServiceFutureStub.newStub(factory, channel);
   }
 
-  /**
-   *
-   *
-   * <pre>
-   * The service that a subscriber client application uses to manage committed
-   * cursors while receiving messsages. A cursor represents a subscriber's
-   * progress within a topic partition for a given subscription.
-   * </pre>
-   */
+  /** */
   public abstract static class CursorServiceImplBase implements io.grpc.BindableService {
 
-    /**
-     *
-     *
-     * <pre>
-     * Establishes a stream with the server for managing committed cursors.
-     * </pre>
-     */
+    /** */
     public io.grpc.stub.StreamObserver<
             com.google.cloud.pubsublite.proto.StreamingCommitCursorRequest>
         streamingCommitCursor(
@@ -258,13 +236,7 @@ public final class CursorServiceGrpc {
       return asyncUnimplementedStreamingCall(getStreamingCommitCursorMethod(), responseObserver);
     }
 
-    /**
-     *
-     *
-     * <pre>
-     * Updates the committed cursor.
-     * </pre>
-     */
+    /** */
     public void commitCursor(
         com.google.cloud.pubsublite.proto.CommitCursorRequest request,
         io.grpc.stub.StreamObserver<com.google.cloud.pubsublite.proto.CommitCursorResponse>
@@ -272,13 +244,7 @@ public final class CursorServiceGrpc {
       asyncUnimplementedUnaryCall(getCommitCursorMethod(), responseObserver);
     }
 
-    /**
-     *
-     *
-     * <pre>
-     * Returns all committed cursor information for a subscription.
-     * </pre>
-     */
+    /** */
     public void listPartitionCursors(
         com.google.cloud.pubsublite.proto.ListPartitionCursorsRequest request,
         io.grpc.stub.StreamObserver<com.google.cloud.pubsublite.proto.ListPartitionCursorsResponse>
@@ -314,15 +280,7 @@ public final class CursorServiceGrpc {
     }
   }
 
-  /**
-   *
-   *
-   * <pre>
-   * The service that a subscriber client application uses to manage committed
-   * cursors while receiving messsages. A cursor represents a subscriber's
-   * progress within a topic partition for a given subscription.
-   * </pre>
-   */
+  /** */
   public static final class CursorServiceStub
       extends io.grpc.stub.AbstractAsyncStub<CursorServiceStub> {
     private CursorServiceStub(io.grpc.Channel channel, io.grpc.CallOptions callOptions) {
@@ -334,13 +292,7 @@ public final class CursorServiceGrpc {
       return new CursorServiceStub(channel, callOptions);
     }
 
-    /**
-     *
-     *
-     * <pre>
-     * Establishes a stream with the server for managing committed cursors.
-     * </pre>
-     */
+    /** */
     public io.grpc.stub.StreamObserver<
             com.google.cloud.pubsublite.proto.StreamingCommitCursorRequest>
         streamingCommitCursor(
@@ -352,13 +304,7 @@ public final class CursorServiceGrpc {
           responseObserver);
     }
 
-    /**
-     *
-     *
-     * <pre>
-     * Updates the committed cursor.
-     * </pre>
-     */
+    /** */
     public void commitCursor(
         com.google.cloud.pubsublite.proto.CommitCursorRequest request,
         io.grpc.stub.StreamObserver<com.google.cloud.pubsublite.proto.CommitCursorResponse>
@@ -369,13 +315,7 @@ public final class CursorServiceGrpc {
           responseObserver);
     }
 
-    /**
-     *
-     *
-     * <pre>
-     * Returns all committed cursor information for a subscription.
-     * </pre>
-     */
+    /** */
     public void listPartitionCursors(
         com.google.cloud.pubsublite.proto.ListPartitionCursorsRequest request,
         io.grpc.stub.StreamObserver<com.google.cloud.pubsublite.proto.ListPartitionCursorsResponse>
@@ -387,15 +327,7 @@ public final class CursorServiceGrpc {
     }
   }
 
-  /**
-   *
-   *
-   * <pre>
-   * The service that a subscriber client application uses to manage committed
-   * cursors while receiving messsages. A cursor represents a subscriber's
-   * progress within a topic partition for a given subscription.
-   * </pre>
-   */
+  /** */
   public static final class CursorServiceBlockingStub
       extends io.grpc.stub.AbstractBlockingStub<CursorServiceBlockingStub> {
     private CursorServiceBlockingStub(io.grpc.Channel channel, io.grpc.CallOptions callOptions) {
@@ -408,25 +340,13 @@ public final class CursorServiceGrpc {
       return new CursorServiceBlockingStub(channel, callOptions);
     }
 
-    /**
-     *
-     *
-     * <pre>
-     * Updates the committed cursor.
-     * </pre>
-     */
+    /** */
     public com.google.cloud.pubsublite.proto.CommitCursorResponse commitCursor(
         com.google.cloud.pubsublite.proto.CommitCursorRequest request) {
       return blockingUnaryCall(getChannel(), getCommitCursorMethod(), getCallOptions(), request);
     }
 
-    /**
-     *
-     *
-     * <pre>
-     * Returns all committed cursor information for a subscription.
-     * </pre>
-     */
+    /** */
     public com.google.cloud.pubsublite.proto.ListPartitionCursorsResponse listPartitionCursors(
         com.google.cloud.pubsublite.proto.ListPartitionCursorsRequest request) {
       return blockingUnaryCall(
@@ -434,15 +354,7 @@ public final class CursorServiceGrpc {
     }
   }
 
-  /**
-   *
-   *
-   * <pre>
-   * The service that a subscriber client application uses to manage committed
-   * cursors while receiving messsages. A cursor represents a subscriber's
-   * progress within a topic partition for a given subscription.
-   * </pre>
-   */
+  /** */
   public static final class CursorServiceFutureStub
       extends io.grpc.stub.AbstractFutureStub<CursorServiceFutureStub> {
     private CursorServiceFutureStub(io.grpc.Channel channel, io.grpc.CallOptions callOptions) {
@@ -455,13 +367,7 @@ public final class CursorServiceGrpc {
       return new CursorServiceFutureStub(channel, callOptions);
     }
 
-    /**
-     *
-     *
-     * <pre>
-     * Updates the committed cursor.
-     * </pre>
-     */
+    /** */
     public com.google.common.util.concurrent.ListenableFuture<
             com.google.cloud.pubsublite.proto.CommitCursorResponse>
         commitCursor(com.google.cloud.pubsublite.proto.CommitCursorRequest request) {
@@ -469,13 +375,7 @@ public final class CursorServiceGrpc {
           getChannel().newCall(getCommitCursorMethod(), getCallOptions()), request);
     }
 
-    /**
-     *
-     *
-     * <pre>
-     * Returns all committed cursor information for a subscription.
-     * </pre>
-     */
+    /** */
     public com.google.common.util.concurrent.ListenableFuture<
             com.google.cloud.pubsublite.proto.ListPartitionCursorsResponse>
         listPartitionCursors(

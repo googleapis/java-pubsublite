@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     https://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package com.google.cloud.pubsublite.v1;
 
 import com.google.api.core.ApiFunction;
@@ -39,10 +40,11 @@ import com.google.cloud.pubsublite.v1.stub.CursorServiceStubSettings;
 import com.google.common.util.concurrent.MoreExecutors;
 import java.io.IOException;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 import javax.annotation.Generated;
 
-// AUTO-GENERATED DOCUMENTATION AND SERVICE
+// AUTO-GENERATED DOCUMENTATION AND CLASS.
 /**
  * Service Description: The service that a subscriber client application uses to manage committed
  * cursors while receiving messsages. A cursor represents a subscriber's progress within a topic
@@ -51,18 +53,7 @@ import javax.annotation.Generated;
  * <p>This class provides the ability to make remote calls to the backing service through method
  * calls that map to API methods. Sample code to get started:
  *
- * <pre>
- * <code>
- * try (CursorServiceClient cursorServiceClient = CursorServiceClient.create()) {
- *   SubscriptionName parent = SubscriptionName.of("[PROJECT]", "[LOCATION]", "[SUBSCRIPTION]");
- *   for (PartitionCursor element : cursorServiceClient.listPartitionCursors(parent).iterateAll()) {
- *     // doThingsWith(element);
- *   }
- * }
- * </code>
- * </pre>
- *
- * <p>Note: close() needs to be called on the cursorServiceClient object to clean up resources such
+ * <p>Note: close() needs to be called on the CursorServiceClient object to clean up resources such
  * as threads. In the example above, try-with-resources is used, which automatically calls close().
  *
  * <p>The surface of this class includes several types of Java methods for each of the API's
@@ -90,30 +81,26 @@ import javax.annotation.Generated;
  *
  * <p>To customize credentials:
  *
- * <pre>
- * <code>
+ * <pre>{@code
  * CursorServiceSettings cursorServiceSettings =
  *     CursorServiceSettings.newBuilder()
  *         .setCredentialsProvider(FixedCredentialsProvider.create(myCredentials))
  *         .build();
- * CursorServiceClient cursorServiceClient =
- *     CursorServiceClient.create(cursorServiceSettings);
- * </code>
- * </pre>
+ * CursorServiceClient cursorServiceClient = CursorServiceClient.create(cursorServiceSettings);
+ * }</pre>
  *
- * To customize the endpoint:
+ * <p>To customize the endpoint:
  *
- * <pre>
- * <code>
+ * <pre>{@code
  * CursorServiceSettings cursorServiceSettings =
  *     CursorServiceSettings.newBuilder().setEndpoint(myEndpoint).build();
- * CursorServiceClient cursorServiceClient =
- *     CursorServiceClient.create(cursorServiceSettings);
- * </code>
- * </pre>
+ * CursorServiceClient cursorServiceClient = CursorServiceClient.create(cursorServiceSettings);
+ * }</pre>
+ *
+ * <p>Please refer to the GitHub repository's samples for more quickstart code snippets.
  */
-@Generated("by gapic-generator")
 @BetaApi
+@Generated("by gapic-generator")
 public class CursorServiceClient implements BackgroundResource {
   private final CursorServiceSettings settings;
   private final CursorServiceStub stub;
@@ -134,7 +121,7 @@ public class CursorServiceClient implements BackgroundResource {
 
   /**
    * Constructs an instance of CursorServiceClient, using the given stub for making calls. This is
-   * for advanced usage - prefer to use CursorServiceSettings}.
+   * for advanced usage - prefer using create(CursorServiceSettings).
    */
   @BetaApi("A restructuring of stub classes is planned, so this may break in the future")
   public static final CursorServiceClient create(CursorServiceStub stub) {
@@ -166,42 +153,20 @@ public class CursorServiceClient implements BackgroundResource {
     return stub;
   }
 
-  // AUTO-GENERATED DOCUMENTATION AND METHOD
+  // AUTO-GENERATED DOCUMENTATION AND METHOD.
   /**
    * Establishes a stream with the server for managing committed cursors.
    *
    * <p>Sample code:
-   *
-   * <pre><code>
-   * try (CursorServiceClient cursorServiceClient = CursorServiceClient.create()) {
-   *   BidiStream&lt;StreamingCommitCursorRequest, StreamingCommitCursorResponse&gt; bidiStream =
-   *       cursorServiceClient.streamingCommitCursorCallable().call();
-   *
-   *   StreamingCommitCursorRequest request = StreamingCommitCursorRequest.newBuilder().build();
-   *   bidiStream.send(request);
-   *   for (StreamingCommitCursorResponse response : bidiStream) {
-   *     // Do something when receive a response
-   *   }
-   * }
-   * </code></pre>
    */
   public final BidiStreamingCallable<StreamingCommitCursorRequest, StreamingCommitCursorResponse>
       streamingCommitCursorCallable() {
     return stub.streamingCommitCursorCallable();
   }
 
-  // AUTO-GENERATED DOCUMENTATION AND METHOD
+  // AUTO-GENERATED DOCUMENTATION AND METHOD.
   /**
    * Updates the committed cursor.
-   *
-   * <p>Sample code:
-   *
-   * <pre><code>
-   * try (CursorServiceClient cursorServiceClient = CursorServiceClient.create()) {
-   *   CommitCursorRequest request = CommitCursorRequest.newBuilder().build();
-   *   CommitCursorResponse response = cursorServiceClient.commitCursor(request);
-   * }
-   * </code></pre>
    *
    * @param request The request object containing all of the parameters for the API call.
    * @throws com.google.api.gax.rpc.ApiException if the remote call fails
@@ -210,39 +175,19 @@ public class CursorServiceClient implements BackgroundResource {
     return commitCursorCallable().call(request);
   }
 
-  // AUTO-GENERATED DOCUMENTATION AND METHOD
+  // AUTO-GENERATED DOCUMENTATION AND METHOD.
   /**
    * Updates the committed cursor.
    *
    * <p>Sample code:
-   *
-   * <pre><code>
-   * try (CursorServiceClient cursorServiceClient = CursorServiceClient.create()) {
-   *   CommitCursorRequest request = CommitCursorRequest.newBuilder().build();
-   *   ApiFuture&lt;CommitCursorResponse&gt; future = cursorServiceClient.commitCursorCallable().futureCall(request);
-   *   // Do something
-   *   CommitCursorResponse response = future.get();
-   * }
-   * </code></pre>
    */
   public final UnaryCallable<CommitCursorRequest, CommitCursorResponse> commitCursorCallable() {
     return stub.commitCursorCallable();
   }
 
-  // AUTO-GENERATED DOCUMENTATION AND METHOD
+  // AUTO-GENERATED DOCUMENTATION AND METHOD.
   /**
    * Returns all committed cursor information for a subscription.
-   *
-   * <p>Sample code:
-   *
-   * <pre><code>
-   * try (CursorServiceClient cursorServiceClient = CursorServiceClient.create()) {
-   *   SubscriptionName parent = SubscriptionName.of("[PROJECT]", "[LOCATION]", "[SUBSCRIPTION]");
-   *   for (PartitionCursor element : cursorServiceClient.listPartitionCursors(parent).iterateAll()) {
-   *     // doThingsWith(element);
-   *   }
-   * }
-   * </code></pre>
    *
    * @param parent Required. The subscription for which to retrieve cursors. Structured like
    *     `projects/{project_number}/locations/{location}/subscriptions/{subscription_id}`.
@@ -251,25 +196,14 @@ public class CursorServiceClient implements BackgroundResource {
   public final ListPartitionCursorsPagedResponse listPartitionCursors(SubscriptionName parent) {
     ListPartitionCursorsRequest request =
         ListPartitionCursorsRequest.newBuilder()
-            .setParent(parent == null ? null : parent.toString())
+            .setParent(Objects.isNull(parent) ? null : parent.toString())
             .build();
     return listPartitionCursors(request);
   }
 
-  // AUTO-GENERATED DOCUMENTATION AND METHOD
+  // AUTO-GENERATED DOCUMENTATION AND METHOD.
   /**
    * Returns all committed cursor information for a subscription.
-   *
-   * <p>Sample code:
-   *
-   * <pre><code>
-   * try (CursorServiceClient cursorServiceClient = CursorServiceClient.create()) {
-   *   SubscriptionName parent = SubscriptionName.of("[PROJECT]", "[LOCATION]", "[SUBSCRIPTION]");
-   *   for (PartitionCursor element : cursorServiceClient.listPartitionCursors(parent.toString()).iterateAll()) {
-   *     // doThingsWith(element);
-   *   }
-   * }
-   * </code></pre>
    *
    * @param parent Required. The subscription for which to retrieve cursors. Structured like
    *     `projects/{project_number}/locations/{location}/subscriptions/{subscription_id}`.
@@ -281,23 +215,9 @@ public class CursorServiceClient implements BackgroundResource {
     return listPartitionCursors(request);
   }
 
-  // AUTO-GENERATED DOCUMENTATION AND METHOD
+  // AUTO-GENERATED DOCUMENTATION AND METHOD.
   /**
    * Returns all committed cursor information for a subscription.
-   *
-   * <p>Sample code:
-   *
-   * <pre><code>
-   * try (CursorServiceClient cursorServiceClient = CursorServiceClient.create()) {
-   *   SubscriptionName parent = SubscriptionName.of("[PROJECT]", "[LOCATION]", "[SUBSCRIPTION]");
-   *   ListPartitionCursorsRequest request = ListPartitionCursorsRequest.newBuilder()
-   *     .setParent(parent.toString())
-   *     .build();
-   *   for (PartitionCursor element : cursorServiceClient.listPartitionCursors(request).iterateAll()) {
-   *     // doThingsWith(element);
-   *   }
-   * }
-   * </code></pre>
    *
    * @param request The request object containing all of the parameters for the API call.
    * @throws com.google.api.gax.rpc.ApiException if the remote call fails
@@ -307,57 +227,22 @@ public class CursorServiceClient implements BackgroundResource {
     return listPartitionCursorsPagedCallable().call(request);
   }
 
-  // AUTO-GENERATED DOCUMENTATION AND METHOD
+  // AUTO-GENERATED DOCUMENTATION AND METHOD.
   /**
    * Returns all committed cursor information for a subscription.
    *
    * <p>Sample code:
-   *
-   * <pre><code>
-   * try (CursorServiceClient cursorServiceClient = CursorServiceClient.create()) {
-   *   SubscriptionName parent = SubscriptionName.of("[PROJECT]", "[LOCATION]", "[SUBSCRIPTION]");
-   *   ListPartitionCursorsRequest request = ListPartitionCursorsRequest.newBuilder()
-   *     .setParent(parent.toString())
-   *     .build();
-   *   ApiFuture&lt;ListPartitionCursorsPagedResponse&gt; future = cursorServiceClient.listPartitionCursorsPagedCallable().futureCall(request);
-   *   // Do something
-   *   for (PartitionCursor element : future.get().iterateAll()) {
-   *     // doThingsWith(element);
-   *   }
-   * }
-   * </code></pre>
    */
   public final UnaryCallable<ListPartitionCursorsRequest, ListPartitionCursorsPagedResponse>
       listPartitionCursorsPagedCallable() {
     return stub.listPartitionCursorsPagedCallable();
   }
 
-  // AUTO-GENERATED DOCUMENTATION AND METHOD
+  // AUTO-GENERATED DOCUMENTATION AND METHOD.
   /**
    * Returns all committed cursor information for a subscription.
    *
    * <p>Sample code:
-   *
-   * <pre><code>
-   * try (CursorServiceClient cursorServiceClient = CursorServiceClient.create()) {
-   *   SubscriptionName parent = SubscriptionName.of("[PROJECT]", "[LOCATION]", "[SUBSCRIPTION]");
-   *   ListPartitionCursorsRequest request = ListPartitionCursorsRequest.newBuilder()
-   *     .setParent(parent.toString())
-   *     .build();
-   *   while (true) {
-   *     ListPartitionCursorsResponse response = cursorServiceClient.listPartitionCursorsCallable().call(request);
-   *     for (PartitionCursor element : response.getPartitionCursorsList()) {
-   *       // doThingsWith(element);
-   *     }
-   *     String nextPageToken = response.getNextPageToken();
-   *     if (!Strings.isNullOrEmpty(nextPageToken)) {
-   *       request = request.toBuilder().setPageToken(nextPageToken).build();
-   *     } else {
-   *       break;
-   *     }
-   *   }
-   * }
-   * </code></pre>
    */
   public final UnaryCallable<ListPartitionCursorsRequest, ListPartitionCursorsResponse>
       listPartitionCursorsCallable() {

@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     https://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package com.google.cloud.pubsublite.v1;
 
 import com.google.api.core.BetaApi;
@@ -29,9 +30,10 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
+import javax.annotation.Generated;
 
-@javax.annotation.Generated("by GAPIC")
 @BetaApi
+@Generated("by gapic-generator-java")
 public class MockCursorServiceImpl extends CursorServiceImplBase {
   private List<AbstractMessage> requests;
   private Queue<Object> responses;
@@ -72,9 +74,9 @@ public class MockCursorServiceImpl extends CursorServiceImplBase {
             requests.add(value);
             final Object response = responses.remove();
             if (response instanceof StreamingCommitCursorResponse) {
-              responseObserver.onNext((StreamingCommitCursorResponse) response);
+              responseObserver.onNext(((StreamingCommitCursorResponse) response));
             } else if (response instanceof Exception) {
-              responseObserver.onError((Exception) response);
+              responseObserver.onError(((Exception) response));
             } else {
               responseObserver.onError(new IllegalArgumentException("Unrecognized response type"));
             }
@@ -99,10 +101,10 @@ public class MockCursorServiceImpl extends CursorServiceImplBase {
     Object response = responses.remove();
     if (response instanceof CommitCursorResponse) {
       requests.add(request);
-      responseObserver.onNext((CommitCursorResponse) response);
+      responseObserver.onNext(((CommitCursorResponse) response));
       responseObserver.onCompleted();
     } else if (response instanceof Exception) {
-      responseObserver.onError((Exception) response);
+      responseObserver.onError(((Exception) response));
     } else {
       responseObserver.onError(new IllegalArgumentException("Unrecognized response type"));
     }
@@ -115,10 +117,10 @@ public class MockCursorServiceImpl extends CursorServiceImplBase {
     Object response = responses.remove();
     if (response instanceof ListPartitionCursorsResponse) {
       requests.add(request);
-      responseObserver.onNext((ListPartitionCursorsResponse) response);
+      responseObserver.onNext(((ListPartitionCursorsResponse) response));
       responseObserver.onCompleted();
     } else if (response instanceof Exception) {
-      responseObserver.onError((Exception) response);
+      responseObserver.onError(((Exception) response));
     } else {
       responseObserver.onError(new IllegalArgumentException("Unrecognized response type"));
     }

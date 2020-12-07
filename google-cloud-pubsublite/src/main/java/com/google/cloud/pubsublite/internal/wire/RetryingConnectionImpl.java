@@ -27,12 +27,12 @@ import com.google.cloud.pubsublite.internal.CheckedApiException;
 import com.google.cloud.pubsublite.internal.CloseableMonitor;
 import com.google.cloud.pubsublite.internal.ExtractStatus;
 import com.google.common.flogger.GoogleLogger;
+import java.time.Duration;
 import java.util.Optional;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import javax.annotation.concurrent.GuardedBy;
-import org.threeten.bp.Duration;
 
 /**
  * A connection which recreates an underlying stream on retryable errors.
@@ -105,12 +105,22 @@ class RetryingConnectionImpl<
   @Override
   protected void doStop() {
     try (CloseableMonitor.Hold h = connectionMonitor.enter()) {
+      if (completed) return;
       completed = true;
+    }
+    try {
+      logger.atFine().log(
+          String.format("Terminating connection with initial request %s.", initialRequest));
       currentConnection.close();
-    } catch (Exception e) {
-      notifyFailed(e);
+    } catch (Throwable t) {
+      logger.atWarning().withCause(t).log(
+          String.format(
+              "Failed while terminating connection with initial request %s.", initialRequest));
+      notifyFailed(t);
       return;
     }
+    logger.atFine().log(
+        String.format("Terminated connection with initial request %s.", initialRequest));
     systemExecutor.shutdownNow();
     notifyStopped();
   }
@@ -150,8 +160,8 @@ class RetryingConnectionImpl<
     }
     try {
       observer.onClientResponse(value);
-    } catch (CheckedApiException e) {
-      setPermanentError(e);
+    } catch (Throwable t) {
+      setPermanentError(t);
     }
   }
 
@@ -173,8 +183,8 @@ class RetryingConnectionImpl<
       currentConnection.close();
       backoffTime = nextRetryBackoffDuration;
       nextRetryBackoffDuration = Math.min(backoffTime * 2, MAX_RECONNECT_BACKOFF_TIME.toMillis());
-    } catch (Exception e) {
-      throwable = Optional.of(e);
+    } catch (Throwable t2) {
+      throwable = Optional.of(t2);
     }
     if (throwable.isPresent()) {
       setPermanentError(
@@ -187,7 +197,17 @@ class RetryingConnectionImpl<
     logger.atFine().withCause(t).log(
         "Stream disconnected attempting retry, after %s milliseconds", backoffTime);
     ScheduledFuture<?> retry =
-        systemExecutor.schedule(observer::triggerReinitialize, backoffTime, MILLISECONDS);
+        systemExecutor.schedule(
+            () -> {
+              try {
+                observer.triggerReinitialize();
+              } catch (Throwable t2) {
+                logger.atWarning().withCause(t2).log("Error occurred in triggerReinitialize.");
+                onError(t2);
+              }
+            },
+            backoffTime,
+            MILLISECONDS);
   }
 
   @Override

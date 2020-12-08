@@ -18,14 +18,12 @@ package com.google.cloud.pubsublite.spark;
 
 import com.google.cloud.pubsublite.SubscriptionPath;
 import com.google.cloud.pubsublite.cloudpubsub.FlowControlSettings;
-import com.google.cloud.pubsublite.internal.BufferingPullSubscriber;
 import com.google.cloud.pubsublite.internal.CheckedApiException;
 import com.google.cloud.pubsublite.internal.wire.PubsubContext;
 import com.google.cloud.pubsublite.internal.wire.SubscriberBuilder;
 import com.google.cloud.pubsublite.proto.Cursor;
 import com.google.cloud.pubsublite.proto.SeekRequest;
 import java.io.Serializable;
-import java.util.concurrent.Executors;
 import org.apache.spark.sql.catalyst.InternalRow;
 import org.apache.spark.sql.sources.v2.reader.ContinuousInputPartition;
 import org.apache.spark.sql.sources.v2.reader.InputPartitionReader;
@@ -56,10 +54,10 @@ public class PslContinuousInputPartition
     PslPartitionOffset pslPartitionOffset =
         PslSparkUtils.toPslPartitionOffset(sparkPartitionOffset);
 
-    BufferingPullSubscriber subscriber;
+    BlockingPullSubscriber subscriber;
     try {
       subscriber =
-          new BufferingPullSubscriber(
+          new BlockingPullSubscriber(
               // TODO(jiangmichael): Pass credentials settings here.
               (consumer) ->
                   SubscriberBuilder.newBuilder()
@@ -78,10 +76,7 @@ public class PslContinuousInputPartition
           "Unable to create PSL subscriber for " + startOffset.toString(), e);
     }
     return new PslContinuousInputPartitionReader(
-        subscriptionPath,
-        sparkPartitionOffset,
-        subscriber,
-        Executors.newSingleThreadScheduledExecutor());
+        subscriptionPath, sparkPartitionOffset, subscriber);
   }
 
   @Override

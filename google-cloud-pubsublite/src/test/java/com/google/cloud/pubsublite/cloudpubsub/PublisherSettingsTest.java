@@ -29,6 +29,7 @@ import com.google.cloud.pubsublite.TopicPath;
 import com.google.cloud.pubsublite.internal.CheckedApiException;
 import com.google.cloud.pubsublite.internal.Publisher;
 import com.google.cloud.pubsublite.internal.testing.FakeApiService;
+import com.google.cloud.pubsublite.internal.wire.PartitionCountWatcher;
 import com.google.cloud.pubsublite.internal.wire.SinglePartitionPublisherBuilder;
 import com.google.cloud.pubsublite.v1.PublisherServiceClient;
 import org.junit.Test;
@@ -49,7 +50,10 @@ public class PublisherSettingsTest {
   abstract static class FakePublisher extends FakeApiService
       implements Publisher<PublishMetadata> {}
 
+  abstract static class FakeConfigWatcher extends FakeApiService implements PartitionCountWatcher {}
+
   @Spy private FakePublisher underlying;
+  @Spy private FakeConfigWatcher fakeWatcher;
 
   @Test
   public void testSettings() throws CheckedApiException {
@@ -61,7 +65,7 @@ public class PublisherSettingsTest {
         .setTopicPath(getPath())
         .setServiceClientSupplier(() -> mock(PublisherServiceClient.class))
         .setUnderlyingBuilder(mockBuilder)
-        .setNumPartitions(77)
+        .setPartitionCountWatcherFactory((c) -> fakeWatcher)
         .build()
         .instantiate();
   }

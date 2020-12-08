@@ -1,5 +1,28 @@
 # Changelog
 
+## [0.7.0](https://www.github.com/googleapis/java-pubsublite/compare/v0.6.5...v0.7.0) (2020-12-08)
+
+
+### Features
+
+* Add the PartitionCountWatchingPublisher ([#387](https://www.github.com/googleapis/java-pubsublite/issues/387)) ([74a8504](https://www.github.com/googleapis/java-pubsublite/commit/74a85048141170d764e78a0c5f43c37d167510eb))
+* PSL spark sql streaming utility classes ([#391](https://www.github.com/googleapis/java-pubsublite/issues/391)) ([0e4cb93](https://www.github.com/googleapis/java-pubsublite/commit/0e4cb932cf74564780ad1461ca305b9487b7f9d6))
+* The TopicConfigWatcher polls the topic config and calls a handler whenever it changes ([#377](https://www.github.com/googleapis/java-pubsublite/issues/377)) ([b98c501](https://www.github.com/googleapis/java-pubsublite/commit/b98c501b4b2bb1d21668884dc7c0517e93e88c78))
+
+
+### Bug Fixes
+
+* Deadlock in RetryingConnectionImpl when tearing down a connection ([#406](https://www.github.com/googleapis/java-pubsublite/issues/406)) ([af77486](https://www.github.com/googleapis/java-pubsublite/commit/af774861b693375cbc93f26315cdcfa8139c52ba))
+* Remove extra logic to convert to project numbers now that this is handled in the backend ([#397](https://www.github.com/googleapis/java-pubsublite/issues/397)) ([14e5ab4](https://www.github.com/googleapis/java-pubsublite/commit/14e5ab4f61e532667ade4ad539acaeddbab738b9))
+
+
+### Dependencies
+
+* update dependency com.google.cloud:google-cloud-pubsub to v1.110.0 ([#393](https://www.github.com/googleapis/java-pubsublite/issues/393)) ([98aa9b2](https://www.github.com/googleapis/java-pubsublite/commit/98aa9b2293130732de65d1c6e0100b697bb1af8e))
+* update dependency com.google.cloud:google-cloud-pubsub-bom to v1.110.0 ([#392](https://www.github.com/googleapis/java-pubsublite/issues/392)) ([9e71b67](https://www.github.com/googleapis/java-pubsublite/commit/9e71b672b37ec54c2e945d1f9bb6254db0ea530d))
+* update dependency com.google.cloud:google-cloud-shared-dependencies to v0.16.0 ([#394](https://www.github.com/googleapis/java-pubsublite/issues/394)) ([6890f2a](https://www.github.com/googleapis/java-pubsublite/commit/6890f2a98a50051cf374004a08b7f77876579d86))
+* update dependency commons-codec:commons-codec to v1.15 ([#399](https://www.github.com/googleapis/java-pubsublite/issues/399)) ([00a18a6](https://www.github.com/googleapis/java-pubsublite/commit/00a18a6929fa5209a415d899513b1da82cb80584))
+
 ### [0.6.5](https://www.github.com/googleapis/java-pubsublite/compare/v0.6.4...v0.6.5) (2020-11-19)
 
 

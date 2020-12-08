@@ -19,12 +19,7 @@ package com.google.cloud.pubsublite.spark;
 import com.google.cloud.pubsublite.SequencedMessage;
 import com.google.cloud.pubsublite.SubscriptionPath;
 import com.google.cloud.pubsublite.internal.CheckedApiException;
-import com.google.cloud.pubsublite.internal.PullSubscriber;
 import com.google.common.flogger.GoogleLogger;
-import java.util.concurrent.BlockingDeque;
-import java.util.concurrent.LinkedBlockingDeque;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 import org.apache.spark.sql.catalyst.InternalRow;
 import org.apache.spark.sql.sources.v2.reader.streaming.ContinuousInputPartitionReader;
 import org.apache.spark.sql.sources.v2.reader.streaming.PartitionOffset;
@@ -34,31 +29,18 @@ public class PslContinuousInputPartitionReader
   private static final GoogleLogger log = GoogleLogger.forEnclosingClass();
 
   private final SubscriptionPath subscriptionPath;
-  private final PullSubscriber<SequencedMessage> subscriber;
-  private final BlockingDeque<SequencedMessage> messages = new LinkedBlockingDeque<>();
+  private final BlockingPullSubscriber subscriber;
   private SparkPartitionOffset currentOffset;
   private SequencedMessage currentMsg;
 
   PslContinuousInputPartitionReader(
       SubscriptionPath subscriptionPath,
       SparkPartitionOffset startOffset,
-      PullSubscriber<SequencedMessage> subscriber,
-      ScheduledExecutorService pullExecutorService) {
+      BlockingPullSubscriber subscriber) {
     this.subscriptionPath = subscriptionPath;
     this.currentOffset = startOffset;
     this.subscriber = subscriber;
     this.currentMsg = null;
-    pullExecutorService.scheduleAtFixedRate(
-        () -> {
-          try {
-            messages.addAll(subscriber.pull());
-          } catch (CheckedApiException e) {
-            log.atWarning().log("Unable to pull from subscriber.", e);
-          }
-        },
-        0,
-        50,
-        TimeUnit.MILLISECONDS);
   }
 
   @Override
@@ -69,15 +51,15 @@ public class PslContinuousInputPartitionReader
   @Override
   public boolean next() {
     try {
-      currentMsg = messages.takeFirst();
+      currentMsg = subscriber.pull();
       currentOffset =
           SparkPartitionOffset.builder()
               .partition(currentOffset.partition())
               .offset(currentMsg.offset().value())
               .build();
       return true;
-    } catch (InterruptedException e) {
-      throw new IllegalStateException("Retrieving messages interrupted.", e);
+    } catch (InterruptedException | CheckedApiException e) {
+      throw new IllegalStateException("Failed to retrieve messages.", e);
     }
   }
 

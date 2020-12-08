@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     https://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package com.google.cloud.pubsublite.v1;
 
 import static com.google.cloud.pubsublite.v1.CursorServiceClient.ListPartitionCursorsPagedResponse;
@@ -40,7 +41,7 @@ import java.io.IOException;
 import java.util.List;
 import javax.annotation.Generated;
 
-// AUTO-GENERATED DOCUMENTATION AND CLASS
+// AUTO-GENERATED DOCUMENTATION AND CLASS.
 /**
  * Settings class to configure an instance of {@link CursorServiceClient}.
  *
@@ -55,25 +56,25 @@ import javax.annotation.Generated;
  * <p>The builder of this class is recursive, so contained classes are themselves builders. When
  * build() is called, the tree of builders is called to create the complete settings object.
  *
- * <p>For example, to set the total timeout of listPartitionCursors to 30 seconds:
+ * <p>For example, to set the total timeout of commitCursor to 30 seconds:
  *
- * <pre>
- * <code>
- * CursorServiceSettings.Builder cursorServiceSettingsBuilder =
- *     CursorServiceSettings.newBuilder();
+ * <pre>{@code
+ * CursorServiceSettings.Builder cursorServiceSettingsBuilder = CursorServiceSettings.newBuilder();
  * cursorServiceSettingsBuilder
- *     .listPartitionCursorsSettings()
+ *     .commitCursorSettings()
  *     .setRetrySettings(
- *         cursorServiceSettingsBuilder.listPartitionCursorsSettings().getRetrySettings().toBuilder()
+ *         cursorServiceSettingsBuilder
+ *             .commitCursorSettings()
+ *             .getRetrySettings()
+ *             .toBuilder()
  *             .setTotalTimeout(Duration.ofSeconds(30))
  *             .build());
  * CursorServiceSettings cursorServiceSettings = cursorServiceSettingsBuilder.build();
- * </code>
- * </pre>
+ * }</pre>
  */
-@Generated("by gapic-generator")
-@BetaApi
+@Generated("by gapic-generator-java")
 public class CursorServiceSettings extends ClientSettings<CursorServiceSettings> {
+
   /** Returns the object with the settings used for calls to streamingCommitCursor. */
   public StreamingCallSettings<StreamingCommitCursorRequest, StreamingCommitCursorResponse>
       streamingCommitCursorSettings() {
@@ -154,16 +155,13 @@ public class CursorServiceSettings extends ClientSettings<CursorServiceSettings>
 
   /** Builder for CursorServiceSettings. */
   public static class Builder extends ClientSettings.Builder<CursorServiceSettings, Builder> {
+
     protected Builder() throws IOException {
-      this((ClientContext) null);
+      this(((ClientContext) null));
     }
 
     protected Builder(ClientContext clientContext) {
       super(CursorServiceStubSettings.newBuilder(clientContext));
-    }
-
-    private static Builder createDefault() {
-      return new Builder(CursorServiceStubSettings.newBuilder());
     }
 
     protected Builder(CursorServiceSettings settings) {
@@ -174,11 +172,15 @@ public class CursorServiceSettings extends ClientSettings<CursorServiceSettings>
       super(stubSettings);
     }
 
+    private static Builder createDefault() {
+      return new Builder(CursorServiceStubSettings.newBuilder());
+    }
+
     public CursorServiceStubSettings.Builder getStubSettingsBuilder() {
       return ((CursorServiceStubSettings.Builder) getStubSettings());
     }
 
-    // NEXT_MAJOR_VER: remove 'throws Exception'
+    // NEXT_MAJOR_VER: remove 'throws Exception'.
     /**
      * Applies the given settings updater function to all of the unary API methods in this service.
      *

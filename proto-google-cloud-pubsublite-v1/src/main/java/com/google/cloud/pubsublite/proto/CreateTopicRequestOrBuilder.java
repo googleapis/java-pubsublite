@@ -58,7 +58,8 @@ public interface CreateTopicRequestOrBuilder
    *
    *
    * <pre>
-   * Required. Configuration of the topic to create. Its `name` field is ignored.
+   * Required. Configuration of the topic to create. Its `name` field is
+   * ignored.
    * </pre>
    *
    * <code>.google.cloud.pubsublite.v1.Topic topic = 2 [(.google.api.field_behavior) = REQUIRED];
@@ -71,7 +72,8 @@ public interface CreateTopicRequestOrBuilder
    *
    *
    * <pre>
-   * Required. Configuration of the topic to create. Its `name` field is ignored.
+   * Required. Configuration of the topic to create. Its `name` field is
+   * ignored.
    * </pre>
    *
    * <code>.google.cloud.pubsublite.v1.Topic topic = 2 [(.google.api.field_behavior) = REQUIRED];
@@ -84,7 +86,8 @@ public interface CreateTopicRequestOrBuilder
    *
    *
    * <pre>
-   * Required. Configuration of the topic to create. Its `name` field is ignored.
+   * Required. Configuration of the topic to create. Its `name` field is
+   * ignored.
    * </pre>
    *
    * <code>.google.cloud.pubsublite.v1.Topic topic = 2 [(.google.api.field_behavior) = REQUIRED];
@@ -96,8 +99,8 @@ public interface CreateTopicRequestOrBuilder
    *
    *
    * <pre>
-   * Required. The ID to use for the topic, which will become the final component of
-   * the topic's name.
+   * Required. The ID to use for the topic, which will become the final
+   * component of the topic's name.
    * This value is structured like: `my-topic-name`.
    * </pre>
    *
@@ -110,8 +113,8 @@ public interface CreateTopicRequestOrBuilder
    *
    *
    * <pre>
-   * Required. The ID to use for the topic, which will become the final component of
-   * the topic's name.
+   * Required. The ID to use for the topic, which will become the final
+   * component of the topic's name.
    * This value is structured like: `my-topic-name`.
    * </pre>
    *

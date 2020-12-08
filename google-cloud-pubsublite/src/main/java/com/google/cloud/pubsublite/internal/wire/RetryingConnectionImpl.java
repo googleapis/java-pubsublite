@@ -107,8 +107,6 @@ class RetryingConnectionImpl<
     try (CloseableMonitor.Hold h = connectionMonitor.enter()) {
       if (completed) return;
       completed = true;
-    }
-    try {
       logger.atFine().log(
           String.format("Terminating connection with initial request %s.", initialRequest));
       currentConnection.close();

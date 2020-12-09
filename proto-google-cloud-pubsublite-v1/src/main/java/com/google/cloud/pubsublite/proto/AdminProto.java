@@ -211,11 +211,13 @@ public final class AdminProto {
           + "Empty\"F\202\323\344\223\0029*7/v1/admin/{name=projects/"
           + "*/locations/*/subscriptions/*}\332A\004name\032M\312"
           + "A\031pubsublite.googleapis.com\322A.https://ww"
-          + "w.googleapis.com/auth/cloud-platformBw\n!"
-          + "com.google.cloud.pubsublite.protoB\nAdmin"
-          + "ProtoP\001ZDgoogle.golang.org/genproto/goog"
-          + "leapis/cloud/pubsublite/v1;pubsubliteb\006p"
-          + "roto3"
+          + "w.googleapis.com/auth/cloud-platformB\321\001\n"
+          + "!com.google.cloud.pubsublite.protoB\nAdmi"
+          + "nProtoP\001ZDgoogle.golang.org/genproto/goo"
+          + "gleapis/cloud/pubsublite/v1;pubsublite\252\002"
+          + "\032Google.Cloud.PubSubLite.V1\312\002\032Google\\Clo"
+          + "ud\\PubSubLite\\V1\352\002\035Google::Cloud::PubSub"
+          + "Lite::V1b\006proto3"
     };
     descriptor =
         com.google.protobuf.Descriptors.FileDescriptor.internalBuildGeneratedFileFrom(

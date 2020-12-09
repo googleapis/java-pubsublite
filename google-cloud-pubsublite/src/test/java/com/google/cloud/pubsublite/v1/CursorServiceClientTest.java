@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     https://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package com.google.cloud.pubsublite.v1;
 
 import static com.google.cloud.pubsublite.v1.CursorServiceClient.ListPartitionCursorsPagedResponse;
@@ -30,6 +31,7 @@ import com.google.api.gax.rpc.InvalidArgumentException;
 import com.google.api.gax.rpc.StatusCode;
 import com.google.cloud.pubsublite.proto.CommitCursorRequest;
 import com.google.cloud.pubsublite.proto.CommitCursorResponse;
+import com.google.cloud.pubsublite.proto.Cursor;
 import com.google.cloud.pubsublite.proto.ListPartitionCursorsRequest;
 import com.google.cloud.pubsublite.proto.ListPartitionCursorsResponse;
 import com.google.cloud.pubsublite.proto.PartitionCursor;
@@ -38,13 +40,13 @@ import com.google.cloud.pubsublite.proto.StreamingCommitCursorResponse;
 import com.google.cloud.pubsublite.proto.SubscriptionName;
 import com.google.common.collect.Lists;
 import com.google.protobuf.AbstractMessage;
-import io.grpc.Status;
 import io.grpc.StatusRuntimeException;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
+import javax.annotation.Generated;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Assert;
@@ -52,48 +54,31 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-@javax.annotation.Generated("by GAPIC")
+@Generated("by gapic-generator-java")
 public class CursorServiceClientTest {
-  private static MockAdminService mockAdminService;
-  private static MockCursorService mockCursorService;
-  private static MockPublisherService mockPublisherService;
-  private static MockSubscriberService mockSubscriberService;
-  private static MockPartitionAssignmentService mockPartitionAssignmentService;
-  private static MockTopicStatsService mockTopicStatsService;
-  private static MockServiceHelper serviceHelper;
+  private static MockServiceHelper mockServiceHelper;
   private CursorServiceClient client;
+  private static MockCursorService mockCursorService;
   private LocalChannelProvider channelProvider;
 
   @BeforeClass
   public static void startStaticServer() {
-    mockAdminService = new MockAdminService();
     mockCursorService = new MockCursorService();
-    mockPublisherService = new MockPublisherService();
-    mockSubscriberService = new MockSubscriberService();
-    mockPartitionAssignmentService = new MockPartitionAssignmentService();
-    mockTopicStatsService = new MockTopicStatsService();
-    serviceHelper =
+    mockServiceHelper =
         new MockServiceHelper(
-            UUID.randomUUID().toString(),
-            Arrays.<MockGrpcService>asList(
-                mockAdminService,
-                mockCursorService,
-                mockPublisherService,
-                mockSubscriberService,
-                mockPartitionAssignmentService,
-                mockTopicStatsService));
-    serviceHelper.start();
+            UUID.randomUUID().toString(), Arrays.<MockGrpcService>asList(mockCursorService));
+    mockServiceHelper.start();
   }
 
   @AfterClass
   public static void stopServer() {
-    serviceHelper.stop();
+    mockServiceHelper.stop();
   }
 
   @Before
   public void setUp() throws IOException {
-    serviceHelper.reset();
-    channelProvider = serviceHelper.createChannelProvider();
+    mockServiceHelper.reset();
+    channelProvider = mockServiceHelper.createChannelProvider();
     CursorServiceSettings settings =
         CursorServiceSettings.newBuilder()
             .setTransportChannelProvider(channelProvider)
@@ -108,7 +93,6 @@ public class CursorServiceClientTest {
   }
 
   @Test
-  @SuppressWarnings("all")
   public void streamingCommitCursorTest() throws Exception {
     StreamingCommitCursorResponse expectedResponse =
         StreamingCommitCursorResponse.newBuilder().build();
@@ -131,9 +115,8 @@ public class CursorServiceClientTest {
   }
 
   @Test
-  @SuppressWarnings("all")
   public void streamingCommitCursorExceptionTest() throws Exception {
-    StatusRuntimeException exception = new StatusRuntimeException(Status.INVALID_ARGUMENT);
+    StatusRuntimeException exception = new StatusRuntimeException(io.grpc.Status.INVALID_ARGUMENT);
     mockCursorService.addException(exception);
     StreamingCommitCursorRequest request = StreamingCommitCursorRequest.newBuilder().build();
 
@@ -151,26 +134,33 @@ public class CursorServiceClientTest {
       Assert.fail("No exception thrown");
     } catch (ExecutionException e) {
       Assert.assertTrue(e.getCause() instanceof InvalidArgumentException);
-      InvalidArgumentException apiException = (InvalidArgumentException) e.getCause();
+      InvalidArgumentException apiException = ((InvalidArgumentException) e.getCause());
       Assert.assertEquals(StatusCode.Code.INVALID_ARGUMENT, apiException.getStatusCode().getCode());
     }
   }
 
   @Test
-  @SuppressWarnings("all")
-  public void commitCursorTest() {
+  public void commitCursorTest() throws Exception {
     CommitCursorResponse expectedResponse = CommitCursorResponse.newBuilder().build();
     mockCursorService.addResponse(expectedResponse);
 
-    CommitCursorRequest request = CommitCursorRequest.newBuilder().build();
+    CommitCursorRequest request =
+        CommitCursorRequest.newBuilder()
+            .setSubscription("subscription341203229")
+            .setPartition(-1799810326)
+            .setCursor(Cursor.newBuilder().build())
+            .build();
 
     CommitCursorResponse actualResponse = client.commitCursor(request);
     Assert.assertEquals(expectedResponse, actualResponse);
 
     List<AbstractMessage> actualRequests = mockCursorService.getRequests();
     Assert.assertEquals(1, actualRequests.size());
-    CommitCursorRequest actualRequest = (CommitCursorRequest) actualRequests.get(0);
+    CommitCursorRequest actualRequest = ((CommitCursorRequest) actualRequests.get(0));
 
+    Assert.assertEquals(request.getSubscription(), actualRequest.getSubscription());
+    Assert.assertEquals(request.getPartition(), actualRequest.getPartition());
+    Assert.assertEquals(request.getCursor(), actualRequest.getCursor());
     Assert.assertTrue(
         channelProvider.isHeaderSent(
             ApiClientHeaderProvider.getDefaultApiClientHeaderKey(),
@@ -178,31 +168,31 @@ public class CursorServiceClientTest {
   }
 
   @Test
-  @SuppressWarnings("all")
   public void commitCursorExceptionTest() throws Exception {
-    StatusRuntimeException exception = new StatusRuntimeException(Status.INVALID_ARGUMENT);
+    StatusRuntimeException exception = new StatusRuntimeException(io.grpc.Status.INVALID_ARGUMENT);
     mockCursorService.addException(exception);
 
     try {
-      CommitCursorRequest request = CommitCursorRequest.newBuilder().build();
-
+      CommitCursorRequest request =
+          CommitCursorRequest.newBuilder()
+              .setSubscription("subscription341203229")
+              .setPartition(-1799810326)
+              .setCursor(Cursor.newBuilder().build())
+              .build();
       client.commitCursor(request);
       Assert.fail("No exception raised");
     } catch (InvalidArgumentException e) {
-      // Expected exception
+      // Expected exception.
     }
   }
 
   @Test
-  @SuppressWarnings("all")
-  public void listPartitionCursorsTest() {
-    String nextPageToken = "";
-    PartitionCursor partitionCursorsElement = PartitionCursor.newBuilder().build();
-    List<PartitionCursor> partitionCursors = Arrays.asList(partitionCursorsElement);
+  public void listPartitionCursorsTest() throws Exception {
+    PartitionCursor responsesElement = PartitionCursor.newBuilder().build();
     ListPartitionCursorsResponse expectedResponse =
         ListPartitionCursorsResponse.newBuilder()
-            .setNextPageToken(nextPageToken)
-            .addAllPartitionCursors(partitionCursors)
+            .setNextPageToken("")
+            .addAllPartitionCursors(Arrays.asList(responsesElement))
             .build();
     mockCursorService.addResponse(expectedResponse);
 
@@ -211,14 +201,16 @@ public class CursorServiceClientTest {
     ListPartitionCursorsPagedResponse pagedListResponse = client.listPartitionCursors(parent);
 
     List<PartitionCursor> resources = Lists.newArrayList(pagedListResponse.iterateAll());
+
     Assert.assertEquals(1, resources.size());
     Assert.assertEquals(expectedResponse.getPartitionCursorsList().get(0), resources.get(0));
 
     List<AbstractMessage> actualRequests = mockCursorService.getRequests();
     Assert.assertEquals(1, actualRequests.size());
-    ListPartitionCursorsRequest actualRequest = (ListPartitionCursorsRequest) actualRequests.get(0);
+    ListPartitionCursorsRequest actualRequest =
+        ((ListPartitionCursorsRequest) actualRequests.get(0));
 
-    Assert.assertEquals(parent, SubscriptionName.parse(actualRequest.getParent()));
+    Assert.assertEquals(parent.toString(), actualRequest.getParent());
     Assert.assertTrue(
         channelProvider.isHeaderSent(
             ApiClientHeaderProvider.getDefaultApiClientHeaderKey(),
@@ -226,18 +218,61 @@ public class CursorServiceClientTest {
   }
 
   @Test
-  @SuppressWarnings("all")
   public void listPartitionCursorsExceptionTest() throws Exception {
-    StatusRuntimeException exception = new StatusRuntimeException(Status.INVALID_ARGUMENT);
+    StatusRuntimeException exception = new StatusRuntimeException(io.grpc.Status.INVALID_ARGUMENT);
     mockCursorService.addException(exception);
 
     try {
       SubscriptionName parent = SubscriptionName.of("[PROJECT]", "[LOCATION]", "[SUBSCRIPTION]");
-
       client.listPartitionCursors(parent);
       Assert.fail("No exception raised");
     } catch (InvalidArgumentException e) {
-      // Expected exception
+      // Expected exception.
+    }
+  }
+
+  @Test
+  public void listPartitionCursorsTest2() throws Exception {
+    PartitionCursor responsesElement = PartitionCursor.newBuilder().build();
+    ListPartitionCursorsResponse expectedResponse =
+        ListPartitionCursorsResponse.newBuilder()
+            .setNextPageToken("")
+            .addAllPartitionCursors(Arrays.asList(responsesElement))
+            .build();
+    mockCursorService.addResponse(expectedResponse);
+
+    String parent = "parent-995424086";
+
+    ListPartitionCursorsPagedResponse pagedListResponse = client.listPartitionCursors(parent);
+
+    List<PartitionCursor> resources = Lists.newArrayList(pagedListResponse.iterateAll());
+
+    Assert.assertEquals(1, resources.size());
+    Assert.assertEquals(expectedResponse.getPartitionCursorsList().get(0), resources.get(0));
+
+    List<AbstractMessage> actualRequests = mockCursorService.getRequests();
+    Assert.assertEquals(1, actualRequests.size());
+    ListPartitionCursorsRequest actualRequest =
+        ((ListPartitionCursorsRequest) actualRequests.get(0));
+
+    Assert.assertEquals(parent, actualRequest.getParent());
+    Assert.assertTrue(
+        channelProvider.isHeaderSent(
+            ApiClientHeaderProvider.getDefaultApiClientHeaderKey(),
+            GaxGrpcProperties.getDefaultApiClientHeaderPattern()));
+  }
+
+  @Test
+  public void listPartitionCursorsExceptionTest2() throws Exception {
+    StatusRuntimeException exception = new StatusRuntimeException(io.grpc.Status.INVALID_ARGUMENT);
+    mockCursorService.addException(exception);
+
+    try {
+      String parent = "parent-995424086";
+      client.listPartitionCursors(parent);
+      Assert.fail("No exception raised");
+    } catch (InvalidArgumentException e) {
+      // Expected exception.
     }
   }
 }

@@ -72,7 +72,8 @@ public class MultiPartitionCommitterImplTest {
     when(committer.startAsync())
         .thenReturn(committer)
         .thenThrow(new IllegalStateException("should only init once"));
-    MultiPartitionCommitterImpl multiCommitter = new MultiPartitionCommitterImpl(1, (p) -> committer);
+    MultiPartitionCommitterImpl multiCommitter =
+        new MultiPartitionCommitterImpl(1, (p) -> committer);
 
     PslSourceOffset offset =
         PslSourceOffset.builder()

@@ -18,14 +18,15 @@ package com.google.cloud.pubsublite.spark;
 
 import com.google.cloud.pubsublite.Partition;
 import com.google.cloud.pubsublite.internal.wire.Committer;
+import java.io.Closeable;
 
-import java.io.Serializable;
+public interface MultiPartitionCommitter extends Closeable {
 
-public interface MultiPartitionCommitter extends AutoCloseable{
+  interface CommitterFactory {
+    Committer newCommitter(Partition partition);
+  }
 
-    interface CommitterFactory extends Serializable {
-        Committer newCommitter(Partition partition);
-    }
+  void commit(PslSourceOffset offset);
 
-    void commit(PslSourceOffset offset);
+  void close();
 }

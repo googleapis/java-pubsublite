@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     https://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package com.google.cloud.pubsublite.v1;
 
 import com.google.api.core.BetaApi;
@@ -26,7 +27,7 @@ import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 import javax.annotation.Generated;
 
-// AUTO-GENERATED DOCUMENTATION AND SERVICE
+// AUTO-GENERATED DOCUMENTATION AND CLASS.
 /**
  * Service Description: The service that a publisher client application uses to publish messages to
  * topics. Published messages are retained by the service for the duration of the retention period
@@ -36,18 +37,7 @@ import javax.annotation.Generated;
  * <p>This class provides the ability to make remote calls to the backing service through method
  * calls that map to API methods. Sample code to get started:
  *
- * <pre>
- * <code>
- * try (PublisherServiceClient publisherServiceClient = PublisherServiceClient.create()) {
- *   PublishRequest request = PublishRequest.newBuilder().build();
- *   ApiFuture&lt;PublishResponse&gt; future = publisherServiceClient.publishCallable().futureCall(request);
- *   // Do something
- *   PublishResponse response = future.get();
- * }
- * </code>
- * </pre>
- *
- * <p>Note: close() needs to be called on the publisherServiceClient object to clean up resources
+ * <p>Note: close() needs to be called on the PublisherServiceClient object to clean up resources
  * such as threads. In the example above, try-with-resources is used, which automatically calls
  * close().
  *
@@ -76,30 +66,28 @@ import javax.annotation.Generated;
  *
  * <p>To customize credentials:
  *
- * <pre>
- * <code>
+ * <pre>{@code
  * PublisherServiceSettings publisherServiceSettings =
  *     PublisherServiceSettings.newBuilder()
  *         .setCredentialsProvider(FixedCredentialsProvider.create(myCredentials))
  *         .build();
  * PublisherServiceClient publisherServiceClient =
  *     PublisherServiceClient.create(publisherServiceSettings);
- * </code>
- * </pre>
+ * }</pre>
  *
- * To customize the endpoint:
+ * <p>To customize the endpoint:
  *
- * <pre>
- * <code>
+ * <pre>{@code
  * PublisherServiceSettings publisherServiceSettings =
  *     PublisherServiceSettings.newBuilder().setEndpoint(myEndpoint).build();
  * PublisherServiceClient publisherServiceClient =
  *     PublisherServiceClient.create(publisherServiceSettings);
- * </code>
- * </pre>
+ * }</pre>
+ *
+ * <p>Please refer to the GitHub repository's samples for more quickstart code snippets.
  */
-@Generated("by gapic-generator")
 @BetaApi
+@Generated("by gapic-generator")
 public class PublisherServiceClient implements BackgroundResource {
   private final PublisherServiceSettings settings;
   private final PublisherServiceStub stub;
@@ -120,7 +108,7 @@ public class PublisherServiceClient implements BackgroundResource {
 
   /**
    * Constructs an instance of PublisherServiceClient, using the given stub for making calls. This
-   * is for advanced usage - prefer to use PublisherServiceSettings}.
+   * is for advanced usage - prefer using create(PublisherServiceSettings).
    */
   @BetaApi("A restructuring of stub classes is planned, so this may break in the future")
   public static final PublisherServiceClient create(PublisherServiceStub stub) {
@@ -152,7 +140,7 @@ public class PublisherServiceClient implements BackgroundResource {
     return stub;
   }
 
-  // AUTO-GENERATED DOCUMENTATION AND METHOD
+  // AUTO-GENERATED DOCUMENTATION AND METHOD.
   /**
    * Establishes a stream with the server for publishing messages. Once the stream is initialized,
    * the client publishes messages by sending publish requests on the stream. The server responds
@@ -162,19 +150,6 @@ public class PublisherServiceClient implements BackgroundResource {
    * stream.
    *
    * <p>Sample code:
-   *
-   * <pre><code>
-   * try (PublisherServiceClient publisherServiceClient = PublisherServiceClient.create()) {
-   *   BidiStream&lt;PublishRequest, PublishResponse&gt; bidiStream =
-   *       publisherServiceClient.publishCallable().call();
-   *
-   *   PublishRequest request = PublishRequest.newBuilder().build();
-   *   bidiStream.send(request);
-   *   for (PublishResponse response : bidiStream) {
-   *     // Do something when receive a response
-   *   }
-   * }
-   * </code></pre>
    */
   public final BidiStreamingCallable<PublishRequest, PublishResponse> publishCallable() {
     return stub.publishCallable();

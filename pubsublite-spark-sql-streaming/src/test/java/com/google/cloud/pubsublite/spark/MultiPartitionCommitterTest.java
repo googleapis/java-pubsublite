@@ -31,36 +31,37 @@ public class MultiPartitionCommitterTest {
   public void testCommit() {
     Committer committer1 = mock(Committer.class);
     Committer committer2 = mock(Committer.class);
-    MultiPartitionCommitter multiCommitter =
-        new MultiPartitionCommitter(
-            (p) -> {
-              if (p.value() == 1L) {
-                return committer1;
-              } else {
-                return committer2;
-              }
-            });
-
-    PslSourceOffset offset =
-        PslSourceOffset.builder()
-            .partitionOffsetMap(
-                ImmutableMap.of(
-                    Partition.of(1), Offset.of(10L),
-                    Partition.of(2), Offset.of(8L)))
-            .build();
-    SettableApiFuture<Void> future1 = SettableApiFuture.create();
-    SettableApiFuture<Void> future2 = SettableApiFuture.create();
-    when(committer1.commitOffset(eq(Offset.of(10L)))).thenReturn(future1);
-    when(committer2.commitOffset(eq(Offset.of(8L)))).thenReturn(future2);
     when(committer1.startAsync())
         .thenReturn(committer1)
         .thenThrow(new IllegalStateException("should only init once"));
     when(committer2.startAsync())
         .thenReturn(committer2)
         .thenThrow(new IllegalStateException("should only init once"));
-    multiCommitter.commit(offset);
+    MultiPartitionCommitter multiCommitter =
+        new MultiPartitionCommitter(
+            2,
+            (p) -> {
+              if (p.value() == 0L) {
+                return committer1;
+              } else {
+                return committer2;
+              }
+            });
     verify(committer1, times(1)).startAsync();
     verify(committer2, times(1)).startAsync();
+
+    PslSourceOffset offset =
+        PslSourceOffset.builder()
+            .partitionOffsetMap(
+                ImmutableMap.of(
+                    Partition.of(0), Offset.of(10L),
+                    Partition.of(1), Offset.of(8L)))
+            .build();
+    SettableApiFuture<Void> future1 = SettableApiFuture.create();
+    SettableApiFuture<Void> future2 = SettableApiFuture.create();
+    when(committer1.commitOffset(eq(Offset.of(10L)))).thenReturn(future1);
+    when(committer2.commitOffset(eq(Offset.of(8L)))).thenReturn(future2);
+    multiCommitter.commit(offset);
     verify(committer1, times(1)).commitOffset(eq(Offset.of(10L)));
     verify(committer2, times(1)).commitOffset(eq(Offset.of(8L)));
   }
@@ -68,17 +69,17 @@ public class MultiPartitionCommitterTest {
   @Test
   public void testClose() {
     Committer committer = mock(Committer.class);
-    MultiPartitionCommitter multiCommitter = new MultiPartitionCommitter((p) -> committer);
-
-    PslSourceOffset offset =
-        PslSourceOffset.builder()
-            .partitionOffsetMap(ImmutableMap.of(Partition.of(1), Offset.of(10L)))
-            .build();
-    SettableApiFuture<Void> future1 = SettableApiFuture.create();
-    when(committer.commitOffset(eq(Offset.of(10L)))).thenReturn(future1);
     when(committer.startAsync())
         .thenReturn(committer)
         .thenThrow(new IllegalStateException("should only init once"));
+    MultiPartitionCommitter multiCommitter = new MultiPartitionCommitter(1, (p) -> committer);
+
+    PslSourceOffset offset =
+        PslSourceOffset.builder()
+            .partitionOffsetMap(ImmutableMap.of(Partition.of(0), Offset.of(10L)))
+            .build();
+    SettableApiFuture<Void> future1 = SettableApiFuture.create();
+    when(committer.commitOffset(eq(Offset.of(10L)))).thenReturn(future1);
     when(committer.stopAsync()).thenReturn(committer);
     multiCommitter.commit(offset);
 

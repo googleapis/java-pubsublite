@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     https://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package com.google.cloud.pubsublite.v1;
 
 import static com.google.cloud.pubsublite.v1.AdminServiceClient.ListSubscriptionsPagedResponse;
@@ -51,12 +52,12 @@ import com.google.common.collect.Lists;
 import com.google.protobuf.AbstractMessage;
 import com.google.protobuf.Empty;
 import com.google.protobuf.FieldMask;
-import io.grpc.Status;
 import io.grpc.StatusRuntimeException;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
+import javax.annotation.Generated;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Assert;
@@ -64,48 +65,31 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-@javax.annotation.Generated("by GAPIC")
+@Generated("by gapic-generator-java")
 public class AdminServiceClientTest {
-  private static MockAdminService mockAdminService;
-  private static MockCursorService mockCursorService;
-  private static MockPublisherService mockPublisherService;
-  private static MockSubscriberService mockSubscriberService;
-  private static MockPartitionAssignmentService mockPartitionAssignmentService;
-  private static MockTopicStatsService mockTopicStatsService;
-  private static MockServiceHelper serviceHelper;
+  private static MockServiceHelper mockServiceHelper;
   private AdminServiceClient client;
+  private static MockAdminService mockAdminService;
   private LocalChannelProvider channelProvider;
 
   @BeforeClass
   public static void startStaticServer() {
     mockAdminService = new MockAdminService();
-    mockCursorService = new MockCursorService();
-    mockPublisherService = new MockPublisherService();
-    mockSubscriberService = new MockSubscriberService();
-    mockPartitionAssignmentService = new MockPartitionAssignmentService();
-    mockTopicStatsService = new MockTopicStatsService();
-    serviceHelper =
+    mockServiceHelper =
         new MockServiceHelper(
-            UUID.randomUUID().toString(),
-            Arrays.<MockGrpcService>asList(
-                mockAdminService,
-                mockCursorService,
-                mockPublisherService,
-                mockSubscriberService,
-                mockPartitionAssignmentService,
-                mockTopicStatsService));
-    serviceHelper.start();
+            UUID.randomUUID().toString(), Arrays.<MockGrpcService>asList(mockAdminService));
+    mockServiceHelper.start();
   }
 
   @AfterClass
   public static void stopServer() {
-    serviceHelper.stop();
+    mockServiceHelper.stop();
   }
 
   @Before
   public void setUp() throws IOException {
-    serviceHelper.reset();
-    channelProvider = serviceHelper.createChannelProvider();
+    mockServiceHelper.reset();
+    channelProvider = mockServiceHelper.createChannelProvider();
     AdminServiceSettings settings =
         AdminServiceSettings.newBuilder()
             .setTransportChannelProvider(channelProvider)
@@ -120,24 +104,25 @@ public class AdminServiceClientTest {
   }
 
   @Test
-  @SuppressWarnings("all")
-  public void createTopicTest() {
-    TopicName name = TopicName.of("[PROJECT]", "[LOCATION]", "[TOPIC]");
-    Topic expectedResponse = Topic.newBuilder().setName(name.toString()).build();
+  public void createTopicTest() throws Exception {
+    Topic expectedResponse =
+        Topic.newBuilder()
+            .setName(TopicName.of("[PROJECT]", "[LOCATION]", "[TOPIC]").toString())
+            .build();
     mockAdminService.addResponse(expectedResponse);
 
     LocationName parent = LocationName.of("[PROJECT]", "[LOCATION]");
     Topic topic = Topic.newBuilder().build();
-    String topicId = "topicId-957291989";
+    String topicId = "topic_id-957291989";
 
     Topic actualResponse = client.createTopic(parent, topic, topicId);
     Assert.assertEquals(expectedResponse, actualResponse);
 
     List<AbstractMessage> actualRequests = mockAdminService.getRequests();
     Assert.assertEquals(1, actualRequests.size());
-    CreateTopicRequest actualRequest = (CreateTopicRequest) actualRequests.get(0);
+    CreateTopicRequest actualRequest = ((CreateTopicRequest) actualRequests.get(0));
 
-    Assert.assertEquals(parent, LocationName.parse(actualRequest.getParent()));
+    Assert.assertEquals(parent.toString(), actualRequest.getParent());
     Assert.assertEquals(topic, actualRequest.getTopic());
     Assert.assertEquals(topicId, actualRequest.getTopicId());
     Assert.assertTrue(
@@ -147,28 +132,71 @@ public class AdminServiceClientTest {
   }
 
   @Test
-  @SuppressWarnings("all")
   public void createTopicExceptionTest() throws Exception {
-    StatusRuntimeException exception = new StatusRuntimeException(Status.INVALID_ARGUMENT);
+    StatusRuntimeException exception = new StatusRuntimeException(io.grpc.Status.INVALID_ARGUMENT);
     mockAdminService.addException(exception);
 
     try {
       LocationName parent = LocationName.of("[PROJECT]", "[LOCATION]");
       Topic topic = Topic.newBuilder().build();
-      String topicId = "topicId-957291989";
-
+      String topicId = "topic_id-957291989";
       client.createTopic(parent, topic, topicId);
       Assert.fail("No exception raised");
     } catch (InvalidArgumentException e) {
-      // Expected exception
+      // Expected exception.
     }
   }
 
   @Test
-  @SuppressWarnings("all")
-  public void getTopicTest() {
-    TopicName name2 = TopicName.of("[PROJECT]", "[LOCATION]", "[TOPIC]");
-    Topic expectedResponse = Topic.newBuilder().setName(name2.toString()).build();
+  public void createTopicTest2() throws Exception {
+    Topic expectedResponse =
+        Topic.newBuilder()
+            .setName(TopicName.of("[PROJECT]", "[LOCATION]", "[TOPIC]").toString())
+            .build();
+    mockAdminService.addResponse(expectedResponse);
+
+    String parent = "parent-995424086";
+    Topic topic = Topic.newBuilder().build();
+    String topicId = "topic_id-957291989";
+
+    Topic actualResponse = client.createTopic(parent, topic, topicId);
+    Assert.assertEquals(expectedResponse, actualResponse);
+
+    List<AbstractMessage> actualRequests = mockAdminService.getRequests();
+    Assert.assertEquals(1, actualRequests.size());
+    CreateTopicRequest actualRequest = ((CreateTopicRequest) actualRequests.get(0));
+
+    Assert.assertEquals(parent, actualRequest.getParent());
+    Assert.assertEquals(topic, actualRequest.getTopic());
+    Assert.assertEquals(topicId, actualRequest.getTopicId());
+    Assert.assertTrue(
+        channelProvider.isHeaderSent(
+            ApiClientHeaderProvider.getDefaultApiClientHeaderKey(),
+            GaxGrpcProperties.getDefaultApiClientHeaderPattern()));
+  }
+
+  @Test
+  public void createTopicExceptionTest2() throws Exception {
+    StatusRuntimeException exception = new StatusRuntimeException(io.grpc.Status.INVALID_ARGUMENT);
+    mockAdminService.addException(exception);
+
+    try {
+      String parent = "parent-995424086";
+      Topic topic = Topic.newBuilder().build();
+      String topicId = "topic_id-957291989";
+      client.createTopic(parent, topic, topicId);
+      Assert.fail("No exception raised");
+    } catch (InvalidArgumentException e) {
+      // Expected exception.
+    }
+  }
+
+  @Test
+  public void getTopicTest() throws Exception {
+    Topic expectedResponse =
+        Topic.newBuilder()
+            .setName(TopicName.of("[PROJECT]", "[LOCATION]", "[TOPIC]").toString())
+            .build();
     mockAdminService.addResponse(expectedResponse);
 
     TopicName name = TopicName.of("[PROJECT]", "[LOCATION]", "[TOPIC]");
@@ -178,9 +206,9 @@ public class AdminServiceClientTest {
 
     List<AbstractMessage> actualRequests = mockAdminService.getRequests();
     Assert.assertEquals(1, actualRequests.size());
-    GetTopicRequest actualRequest = (GetTopicRequest) actualRequests.get(0);
+    GetTopicRequest actualRequest = ((GetTopicRequest) actualRequests.get(0));
 
-    Assert.assertEquals(name, TopicName.parse(actualRequest.getName()));
+    Assert.assertEquals(name.toString(), actualRequest.getName());
     Assert.assertTrue(
         channelProvider.isHeaderSent(
             ApiClientHeaderProvider.getDefaultApiClientHeaderKey(),
@@ -188,27 +216,61 @@ public class AdminServiceClientTest {
   }
 
   @Test
-  @SuppressWarnings("all")
   public void getTopicExceptionTest() throws Exception {
-    StatusRuntimeException exception = new StatusRuntimeException(Status.INVALID_ARGUMENT);
+    StatusRuntimeException exception = new StatusRuntimeException(io.grpc.Status.INVALID_ARGUMENT);
     mockAdminService.addException(exception);
 
     try {
       TopicName name = TopicName.of("[PROJECT]", "[LOCATION]", "[TOPIC]");
-
       client.getTopic(name);
       Assert.fail("No exception raised");
     } catch (InvalidArgumentException e) {
-      // Expected exception
+      // Expected exception.
     }
   }
 
   @Test
-  @SuppressWarnings("all")
-  public void getTopicPartitionsTest() {
-    long partitionCount = 1738969222L;
+  public void getTopicTest2() throws Exception {
+    Topic expectedResponse =
+        Topic.newBuilder()
+            .setName(TopicName.of("[PROJECT]", "[LOCATION]", "[TOPIC]").toString())
+            .build();
+    mockAdminService.addResponse(expectedResponse);
+
+    String name = "name3373707";
+
+    Topic actualResponse = client.getTopic(name);
+    Assert.assertEquals(expectedResponse, actualResponse);
+
+    List<AbstractMessage> actualRequests = mockAdminService.getRequests();
+    Assert.assertEquals(1, actualRequests.size());
+    GetTopicRequest actualRequest = ((GetTopicRequest) actualRequests.get(0));
+
+    Assert.assertEquals(name, actualRequest.getName());
+    Assert.assertTrue(
+        channelProvider.isHeaderSent(
+            ApiClientHeaderProvider.getDefaultApiClientHeaderKey(),
+            GaxGrpcProperties.getDefaultApiClientHeaderPattern()));
+  }
+
+  @Test
+  public void getTopicExceptionTest2() throws Exception {
+    StatusRuntimeException exception = new StatusRuntimeException(io.grpc.Status.INVALID_ARGUMENT);
+    mockAdminService.addException(exception);
+
+    try {
+      String name = "name3373707";
+      client.getTopic(name);
+      Assert.fail("No exception raised");
+    } catch (InvalidArgumentException e) {
+      // Expected exception.
+    }
+  }
+
+  @Test
+  public void getTopicPartitionsTest() throws Exception {
     TopicPartitions expectedResponse =
-        TopicPartitions.newBuilder().setPartitionCount(partitionCount).build();
+        TopicPartitions.newBuilder().setPartitionCount(-1738969222).build();
     mockAdminService.addResponse(expectedResponse);
 
     TopicName name = TopicName.of("[PROJECT]", "[LOCATION]", "[TOPIC]");
@@ -218,9 +280,9 @@ public class AdminServiceClientTest {
 
     List<AbstractMessage> actualRequests = mockAdminService.getRequests();
     Assert.assertEquals(1, actualRequests.size());
-    GetTopicPartitionsRequest actualRequest = (GetTopicPartitionsRequest) actualRequests.get(0);
+    GetTopicPartitionsRequest actualRequest = ((GetTopicPartitionsRequest) actualRequests.get(0));
 
-    Assert.assertEquals(name, TopicName.parse(actualRequest.getName()));
+    Assert.assertEquals(name.toString(), actualRequest.getName());
     Assert.assertTrue(
         channelProvider.isHeaderSent(
             ApiClientHeaderProvider.getDefaultApiClientHeaderKey(),
@@ -228,31 +290,62 @@ public class AdminServiceClientTest {
   }
 
   @Test
-  @SuppressWarnings("all")
   public void getTopicPartitionsExceptionTest() throws Exception {
-    StatusRuntimeException exception = new StatusRuntimeException(Status.INVALID_ARGUMENT);
+    StatusRuntimeException exception = new StatusRuntimeException(io.grpc.Status.INVALID_ARGUMENT);
     mockAdminService.addException(exception);
 
     try {
       TopicName name = TopicName.of("[PROJECT]", "[LOCATION]", "[TOPIC]");
-
       client.getTopicPartitions(name);
       Assert.fail("No exception raised");
     } catch (InvalidArgumentException e) {
-      // Expected exception
+      // Expected exception.
     }
   }
 
   @Test
-  @SuppressWarnings("all")
-  public void listTopicsTest() {
-    String nextPageToken = "";
-    Topic topicsElement = Topic.newBuilder().build();
-    List<Topic> topics = Arrays.asList(topicsElement);
+  public void getTopicPartitionsTest2() throws Exception {
+    TopicPartitions expectedResponse =
+        TopicPartitions.newBuilder().setPartitionCount(-1738969222).build();
+    mockAdminService.addResponse(expectedResponse);
+
+    String name = "name3373707";
+
+    TopicPartitions actualResponse = client.getTopicPartitions(name);
+    Assert.assertEquals(expectedResponse, actualResponse);
+
+    List<AbstractMessage> actualRequests = mockAdminService.getRequests();
+    Assert.assertEquals(1, actualRequests.size());
+    GetTopicPartitionsRequest actualRequest = ((GetTopicPartitionsRequest) actualRequests.get(0));
+
+    Assert.assertEquals(name, actualRequest.getName());
+    Assert.assertTrue(
+        channelProvider.isHeaderSent(
+            ApiClientHeaderProvider.getDefaultApiClientHeaderKey(),
+            GaxGrpcProperties.getDefaultApiClientHeaderPattern()));
+  }
+
+  @Test
+  public void getTopicPartitionsExceptionTest2() throws Exception {
+    StatusRuntimeException exception = new StatusRuntimeException(io.grpc.Status.INVALID_ARGUMENT);
+    mockAdminService.addException(exception);
+
+    try {
+      String name = "name3373707";
+      client.getTopicPartitions(name);
+      Assert.fail("No exception raised");
+    } catch (InvalidArgumentException e) {
+      // Expected exception.
+    }
+  }
+
+  @Test
+  public void listTopicsTest() throws Exception {
+    Topic responsesElement = Topic.newBuilder().build();
     ListTopicsResponse expectedResponse =
         ListTopicsResponse.newBuilder()
-            .setNextPageToken(nextPageToken)
-            .addAllTopics(topics)
+            .setNextPageToken("")
+            .addAllTopics(Arrays.asList(responsesElement))
             .build();
     mockAdminService.addResponse(expectedResponse);
 
@@ -261,14 +354,15 @@ public class AdminServiceClientTest {
     ListTopicsPagedResponse pagedListResponse = client.listTopics(parent);
 
     List<Topic> resources = Lists.newArrayList(pagedListResponse.iterateAll());
+
     Assert.assertEquals(1, resources.size());
     Assert.assertEquals(expectedResponse.getTopicsList().get(0), resources.get(0));
 
     List<AbstractMessage> actualRequests = mockAdminService.getRequests();
     Assert.assertEquals(1, actualRequests.size());
-    ListTopicsRequest actualRequest = (ListTopicsRequest) actualRequests.get(0);
+    ListTopicsRequest actualRequest = ((ListTopicsRequest) actualRequests.get(0));
 
-    Assert.assertEquals(parent, LocationName.parse(actualRequest.getParent()));
+    Assert.assertEquals(parent.toString(), actualRequest.getParent());
     Assert.assertTrue(
         channelProvider.isHeaderSent(
             ApiClientHeaderProvider.getDefaultApiClientHeaderKey(),
@@ -276,26 +370,69 @@ public class AdminServiceClientTest {
   }
 
   @Test
-  @SuppressWarnings("all")
   public void listTopicsExceptionTest() throws Exception {
-    StatusRuntimeException exception = new StatusRuntimeException(Status.INVALID_ARGUMENT);
+    StatusRuntimeException exception = new StatusRuntimeException(io.grpc.Status.INVALID_ARGUMENT);
     mockAdminService.addException(exception);
 
     try {
       LocationName parent = LocationName.of("[PROJECT]", "[LOCATION]");
-
       client.listTopics(parent);
       Assert.fail("No exception raised");
     } catch (InvalidArgumentException e) {
-      // Expected exception
+      // Expected exception.
     }
   }
 
   @Test
-  @SuppressWarnings("all")
-  public void updateTopicTest() {
-    TopicName name = TopicName.of("[PROJECT]", "[LOCATION]", "[TOPIC]");
-    Topic expectedResponse = Topic.newBuilder().setName(name.toString()).build();
+  public void listTopicsTest2() throws Exception {
+    Topic responsesElement = Topic.newBuilder().build();
+    ListTopicsResponse expectedResponse =
+        ListTopicsResponse.newBuilder()
+            .setNextPageToken("")
+            .addAllTopics(Arrays.asList(responsesElement))
+            .build();
+    mockAdminService.addResponse(expectedResponse);
+
+    String parent = "parent-995424086";
+
+    ListTopicsPagedResponse pagedListResponse = client.listTopics(parent);
+
+    List<Topic> resources = Lists.newArrayList(pagedListResponse.iterateAll());
+
+    Assert.assertEquals(1, resources.size());
+    Assert.assertEquals(expectedResponse.getTopicsList().get(0), resources.get(0));
+
+    List<AbstractMessage> actualRequests = mockAdminService.getRequests();
+    Assert.assertEquals(1, actualRequests.size());
+    ListTopicsRequest actualRequest = ((ListTopicsRequest) actualRequests.get(0));
+
+    Assert.assertEquals(parent, actualRequest.getParent());
+    Assert.assertTrue(
+        channelProvider.isHeaderSent(
+            ApiClientHeaderProvider.getDefaultApiClientHeaderKey(),
+            GaxGrpcProperties.getDefaultApiClientHeaderPattern()));
+  }
+
+  @Test
+  public void listTopicsExceptionTest2() throws Exception {
+    StatusRuntimeException exception = new StatusRuntimeException(io.grpc.Status.INVALID_ARGUMENT);
+    mockAdminService.addException(exception);
+
+    try {
+      String parent = "parent-995424086";
+      client.listTopics(parent);
+      Assert.fail("No exception raised");
+    } catch (InvalidArgumentException e) {
+      // Expected exception.
+    }
+  }
+
+  @Test
+  public void updateTopicTest() throws Exception {
+    Topic expectedResponse =
+        Topic.newBuilder()
+            .setName(TopicName.of("[PROJECT]", "[LOCATION]", "[TOPIC]").toString())
+            .build();
     mockAdminService.addResponse(expectedResponse);
 
     Topic topic = Topic.newBuilder().build();
@@ -306,7 +443,7 @@ public class AdminServiceClientTest {
 
     List<AbstractMessage> actualRequests = mockAdminService.getRequests();
     Assert.assertEquals(1, actualRequests.size());
-    UpdateTopicRequest actualRequest = (UpdateTopicRequest) actualRequests.get(0);
+    UpdateTopicRequest actualRequest = ((UpdateTopicRequest) actualRequests.get(0));
 
     Assert.assertEquals(topic, actualRequest.getTopic());
     Assert.assertEquals(updateMask, actualRequest.getUpdateMask());
@@ -317,25 +454,22 @@ public class AdminServiceClientTest {
   }
 
   @Test
-  @SuppressWarnings("all")
   public void updateTopicExceptionTest() throws Exception {
-    StatusRuntimeException exception = new StatusRuntimeException(Status.INVALID_ARGUMENT);
+    StatusRuntimeException exception = new StatusRuntimeException(io.grpc.Status.INVALID_ARGUMENT);
     mockAdminService.addException(exception);
 
     try {
       Topic topic = Topic.newBuilder().build();
       FieldMask updateMask = FieldMask.newBuilder().build();
-
       client.updateTopic(topic, updateMask);
       Assert.fail("No exception raised");
     } catch (InvalidArgumentException e) {
-      // Expected exception
+      // Expected exception.
     }
   }
 
   @Test
-  @SuppressWarnings("all")
-  public void deleteTopicTest() {
+  public void deleteTopicTest() throws Exception {
     Empty expectedResponse = Empty.newBuilder().build();
     mockAdminService.addResponse(expectedResponse);
 
@@ -345,9 +479,9 @@ public class AdminServiceClientTest {
 
     List<AbstractMessage> actualRequests = mockAdminService.getRequests();
     Assert.assertEquals(1, actualRequests.size());
-    DeleteTopicRequest actualRequest = (DeleteTopicRequest) actualRequests.get(0);
+    DeleteTopicRequest actualRequest = ((DeleteTopicRequest) actualRequests.get(0));
 
-    Assert.assertEquals(name, TopicName.parse(actualRequest.getName()));
+    Assert.assertEquals(name.toString(), actualRequest.getName());
     Assert.assertTrue(
         channelProvider.isHeaderSent(
             ApiClientHeaderProvider.getDefaultApiClientHeaderKey(),
@@ -355,31 +489,60 @@ public class AdminServiceClientTest {
   }
 
   @Test
-  @SuppressWarnings("all")
   public void deleteTopicExceptionTest() throws Exception {
-    StatusRuntimeException exception = new StatusRuntimeException(Status.INVALID_ARGUMENT);
+    StatusRuntimeException exception = new StatusRuntimeException(io.grpc.Status.INVALID_ARGUMENT);
     mockAdminService.addException(exception);
 
     try {
       TopicName name = TopicName.of("[PROJECT]", "[LOCATION]", "[TOPIC]");
-
       client.deleteTopic(name);
       Assert.fail("No exception raised");
     } catch (InvalidArgumentException e) {
-      // Expected exception
+      // Expected exception.
     }
   }
 
   @Test
-  @SuppressWarnings("all")
-  public void listTopicSubscriptionsTest() {
-    String nextPageToken = "";
-    String subscriptionsElement = "subscriptionsElement1698708147";
-    List<String> subscriptions = Arrays.asList(subscriptionsElement);
+  public void deleteTopicTest2() throws Exception {
+    Empty expectedResponse = Empty.newBuilder().build();
+    mockAdminService.addResponse(expectedResponse);
+
+    String name = "name3373707";
+
+    client.deleteTopic(name);
+
+    List<AbstractMessage> actualRequests = mockAdminService.getRequests();
+    Assert.assertEquals(1, actualRequests.size());
+    DeleteTopicRequest actualRequest = ((DeleteTopicRequest) actualRequests.get(0));
+
+    Assert.assertEquals(name, actualRequest.getName());
+    Assert.assertTrue(
+        channelProvider.isHeaderSent(
+            ApiClientHeaderProvider.getDefaultApiClientHeaderKey(),
+            GaxGrpcProperties.getDefaultApiClientHeaderPattern()));
+  }
+
+  @Test
+  public void deleteTopicExceptionTest2() throws Exception {
+    StatusRuntimeException exception = new StatusRuntimeException(io.grpc.Status.INVALID_ARGUMENT);
+    mockAdminService.addException(exception);
+
+    try {
+      String name = "name3373707";
+      client.deleteTopic(name);
+      Assert.fail("No exception raised");
+    } catch (InvalidArgumentException e) {
+      // Expected exception.
+    }
+  }
+
+  @Test
+  public void listTopicSubscriptionsTest() throws Exception {
+    String responsesElement = "responsesElement-318365110";
     ListTopicSubscriptionsResponse expectedResponse =
         ListTopicSubscriptionsResponse.newBuilder()
-            .setNextPageToken(nextPageToken)
-            .addAllSubscriptions(subscriptions)
+            .setNextPageToken("")
+            .addAllSubscriptions(Arrays.asList(responsesElement))
             .build();
     mockAdminService.addResponse(expectedResponse);
 
@@ -388,15 +551,16 @@ public class AdminServiceClientTest {
     ListTopicSubscriptionsPagedResponse pagedListResponse = client.listTopicSubscriptions(name);
 
     List<String> resources = Lists.newArrayList(pagedListResponse.iterateAll());
+
     Assert.assertEquals(1, resources.size());
     Assert.assertEquals(expectedResponse.getSubscriptionsList().get(0), resources.get(0));
 
     List<AbstractMessage> actualRequests = mockAdminService.getRequests();
     Assert.assertEquals(1, actualRequests.size());
     ListTopicSubscriptionsRequest actualRequest =
-        (ListTopicSubscriptionsRequest) actualRequests.get(0);
+        ((ListTopicSubscriptionsRequest) actualRequests.get(0));
 
-    Assert.assertEquals(name, TopicName.parse(actualRequest.getName()));
+    Assert.assertEquals(name.toString(), actualRequest.getName());
     Assert.assertTrue(
         channelProvider.isHeaderSent(
             ApiClientHeaderProvider.getDefaultApiClientHeaderKey(),
@@ -404,42 +568,85 @@ public class AdminServiceClientTest {
   }
 
   @Test
-  @SuppressWarnings("all")
   public void listTopicSubscriptionsExceptionTest() throws Exception {
-    StatusRuntimeException exception = new StatusRuntimeException(Status.INVALID_ARGUMENT);
+    StatusRuntimeException exception = new StatusRuntimeException(io.grpc.Status.INVALID_ARGUMENT);
     mockAdminService.addException(exception);
 
     try {
       TopicName name = TopicName.of("[PROJECT]", "[LOCATION]", "[TOPIC]");
-
       client.listTopicSubscriptions(name);
       Assert.fail("No exception raised");
     } catch (InvalidArgumentException e) {
-      // Expected exception
+      // Expected exception.
     }
   }
 
   @Test
-  @SuppressWarnings("all")
-  public void createSubscriptionTest() {
-    SubscriptionName name = SubscriptionName.of("[PROJECT]", "[LOCATION]", "[SUBSCRIPTION]");
-    TopicName topic = TopicName.of("[PROJECT]", "[LOCATION]", "[TOPIC]");
+  public void listTopicSubscriptionsTest2() throws Exception {
+    String responsesElement = "responsesElement-318365110";
+    ListTopicSubscriptionsResponse expectedResponse =
+        ListTopicSubscriptionsResponse.newBuilder()
+            .setNextPageToken("")
+            .addAllSubscriptions(Arrays.asList(responsesElement))
+            .build();
+    mockAdminService.addResponse(expectedResponse);
+
+    String name = "name3373707";
+
+    ListTopicSubscriptionsPagedResponse pagedListResponse = client.listTopicSubscriptions(name);
+
+    List<String> resources = Lists.newArrayList(pagedListResponse.iterateAll());
+
+    Assert.assertEquals(1, resources.size());
+    Assert.assertEquals(expectedResponse.getSubscriptionsList().get(0), resources.get(0));
+
+    List<AbstractMessage> actualRequests = mockAdminService.getRequests();
+    Assert.assertEquals(1, actualRequests.size());
+    ListTopicSubscriptionsRequest actualRequest =
+        ((ListTopicSubscriptionsRequest) actualRequests.get(0));
+
+    Assert.assertEquals(name, actualRequest.getName());
+    Assert.assertTrue(
+        channelProvider.isHeaderSent(
+            ApiClientHeaderProvider.getDefaultApiClientHeaderKey(),
+            GaxGrpcProperties.getDefaultApiClientHeaderPattern()));
+  }
+
+  @Test
+  public void listTopicSubscriptionsExceptionTest2() throws Exception {
+    StatusRuntimeException exception = new StatusRuntimeException(io.grpc.Status.INVALID_ARGUMENT);
+    mockAdminService.addException(exception);
+
+    try {
+      String name = "name3373707";
+      client.listTopicSubscriptions(name);
+      Assert.fail("No exception raised");
+    } catch (InvalidArgumentException e) {
+      // Expected exception.
+    }
+  }
+
+  @Test
+  public void createSubscriptionTest() throws Exception {
     Subscription expectedResponse =
-        Subscription.newBuilder().setName(name.toString()).setTopic(topic.toString()).build();
+        Subscription.newBuilder()
+            .setName(SubscriptionName.of("[PROJECT]", "[LOCATION]", "[SUBSCRIPTION]").toString())
+            .setTopic(TopicName.of("[PROJECT]", "[LOCATION]", "[TOPIC]").toString())
+            .build();
     mockAdminService.addResponse(expectedResponse);
 
     LocationName parent = LocationName.of("[PROJECT]", "[LOCATION]");
     Subscription subscription = Subscription.newBuilder().build();
-    String subscriptionId = "subscriptionId-1402099843";
+    String subscriptionId = "subscription_id-1402099843";
 
     Subscription actualResponse = client.createSubscription(parent, subscription, subscriptionId);
     Assert.assertEquals(expectedResponse, actualResponse);
 
     List<AbstractMessage> actualRequests = mockAdminService.getRequests();
     Assert.assertEquals(1, actualRequests.size());
-    CreateSubscriptionRequest actualRequest = (CreateSubscriptionRequest) actualRequests.get(0);
+    CreateSubscriptionRequest actualRequest = ((CreateSubscriptionRequest) actualRequests.get(0));
 
-    Assert.assertEquals(parent, LocationName.parse(actualRequest.getParent()));
+    Assert.assertEquals(parent.toString(), actualRequest.getParent());
     Assert.assertEquals(subscription, actualRequest.getSubscription());
     Assert.assertEquals(subscriptionId, actualRequest.getSubscriptionId());
     Assert.assertTrue(
@@ -449,30 +656,73 @@ public class AdminServiceClientTest {
   }
 
   @Test
-  @SuppressWarnings("all")
   public void createSubscriptionExceptionTest() throws Exception {
-    StatusRuntimeException exception = new StatusRuntimeException(Status.INVALID_ARGUMENT);
+    StatusRuntimeException exception = new StatusRuntimeException(io.grpc.Status.INVALID_ARGUMENT);
     mockAdminService.addException(exception);
 
     try {
       LocationName parent = LocationName.of("[PROJECT]", "[LOCATION]");
       Subscription subscription = Subscription.newBuilder().build();
-      String subscriptionId = "subscriptionId-1402099843";
-
+      String subscriptionId = "subscription_id-1402099843";
       client.createSubscription(parent, subscription, subscriptionId);
       Assert.fail("No exception raised");
     } catch (InvalidArgumentException e) {
-      // Expected exception
+      // Expected exception.
     }
   }
 
   @Test
-  @SuppressWarnings("all")
-  public void getSubscriptionTest() {
-    SubscriptionName name2 = SubscriptionName.of("[PROJECT]", "[LOCATION]", "[SUBSCRIPTION]");
-    TopicName topic = TopicName.of("[PROJECT]", "[LOCATION]", "[TOPIC]");
+  public void createSubscriptionTest2() throws Exception {
     Subscription expectedResponse =
-        Subscription.newBuilder().setName(name2.toString()).setTopic(topic.toString()).build();
+        Subscription.newBuilder()
+            .setName(SubscriptionName.of("[PROJECT]", "[LOCATION]", "[SUBSCRIPTION]").toString())
+            .setTopic(TopicName.of("[PROJECT]", "[LOCATION]", "[TOPIC]").toString())
+            .build();
+    mockAdminService.addResponse(expectedResponse);
+
+    String parent = "parent-995424086";
+    Subscription subscription = Subscription.newBuilder().build();
+    String subscriptionId = "subscription_id-1402099843";
+
+    Subscription actualResponse = client.createSubscription(parent, subscription, subscriptionId);
+    Assert.assertEquals(expectedResponse, actualResponse);
+
+    List<AbstractMessage> actualRequests = mockAdminService.getRequests();
+    Assert.assertEquals(1, actualRequests.size());
+    CreateSubscriptionRequest actualRequest = ((CreateSubscriptionRequest) actualRequests.get(0));
+
+    Assert.assertEquals(parent, actualRequest.getParent());
+    Assert.assertEquals(subscription, actualRequest.getSubscription());
+    Assert.assertEquals(subscriptionId, actualRequest.getSubscriptionId());
+    Assert.assertTrue(
+        channelProvider.isHeaderSent(
+            ApiClientHeaderProvider.getDefaultApiClientHeaderKey(),
+            GaxGrpcProperties.getDefaultApiClientHeaderPattern()));
+  }
+
+  @Test
+  public void createSubscriptionExceptionTest2() throws Exception {
+    StatusRuntimeException exception = new StatusRuntimeException(io.grpc.Status.INVALID_ARGUMENT);
+    mockAdminService.addException(exception);
+
+    try {
+      String parent = "parent-995424086";
+      Subscription subscription = Subscription.newBuilder().build();
+      String subscriptionId = "subscription_id-1402099843";
+      client.createSubscription(parent, subscription, subscriptionId);
+      Assert.fail("No exception raised");
+    } catch (InvalidArgumentException e) {
+      // Expected exception.
+    }
+  }
+
+  @Test
+  public void getSubscriptionTest() throws Exception {
+    Subscription expectedResponse =
+        Subscription.newBuilder()
+            .setName(SubscriptionName.of("[PROJECT]", "[LOCATION]", "[SUBSCRIPTION]").toString())
+            .setTopic(TopicName.of("[PROJECT]", "[LOCATION]", "[TOPIC]").toString())
+            .build();
     mockAdminService.addResponse(expectedResponse);
 
     SubscriptionName name = SubscriptionName.of("[PROJECT]", "[LOCATION]", "[SUBSCRIPTION]");
@@ -482,9 +732,9 @@ public class AdminServiceClientTest {
 
     List<AbstractMessage> actualRequests = mockAdminService.getRequests();
     Assert.assertEquals(1, actualRequests.size());
-    GetSubscriptionRequest actualRequest = (GetSubscriptionRequest) actualRequests.get(0);
+    GetSubscriptionRequest actualRequest = ((GetSubscriptionRequest) actualRequests.get(0));
 
-    Assert.assertEquals(name, SubscriptionName.parse(actualRequest.getName()));
+    Assert.assertEquals(name.toString(), actualRequest.getName());
     Assert.assertTrue(
         channelProvider.isHeaderSent(
             ApiClientHeaderProvider.getDefaultApiClientHeaderKey(),
@@ -492,31 +742,65 @@ public class AdminServiceClientTest {
   }
 
   @Test
-  @SuppressWarnings("all")
   public void getSubscriptionExceptionTest() throws Exception {
-    StatusRuntimeException exception = new StatusRuntimeException(Status.INVALID_ARGUMENT);
+    StatusRuntimeException exception = new StatusRuntimeException(io.grpc.Status.INVALID_ARGUMENT);
     mockAdminService.addException(exception);
 
     try {
       SubscriptionName name = SubscriptionName.of("[PROJECT]", "[LOCATION]", "[SUBSCRIPTION]");
-
       client.getSubscription(name);
       Assert.fail("No exception raised");
     } catch (InvalidArgumentException e) {
-      // Expected exception
+      // Expected exception.
     }
   }
 
   @Test
-  @SuppressWarnings("all")
-  public void listSubscriptionsTest() {
-    String nextPageToken = "";
-    Subscription subscriptionsElement = Subscription.newBuilder().build();
-    List<Subscription> subscriptions = Arrays.asList(subscriptionsElement);
+  public void getSubscriptionTest2() throws Exception {
+    Subscription expectedResponse =
+        Subscription.newBuilder()
+            .setName(SubscriptionName.of("[PROJECT]", "[LOCATION]", "[SUBSCRIPTION]").toString())
+            .setTopic(TopicName.of("[PROJECT]", "[LOCATION]", "[TOPIC]").toString())
+            .build();
+    mockAdminService.addResponse(expectedResponse);
+
+    String name = "name3373707";
+
+    Subscription actualResponse = client.getSubscription(name);
+    Assert.assertEquals(expectedResponse, actualResponse);
+
+    List<AbstractMessage> actualRequests = mockAdminService.getRequests();
+    Assert.assertEquals(1, actualRequests.size());
+    GetSubscriptionRequest actualRequest = ((GetSubscriptionRequest) actualRequests.get(0));
+
+    Assert.assertEquals(name, actualRequest.getName());
+    Assert.assertTrue(
+        channelProvider.isHeaderSent(
+            ApiClientHeaderProvider.getDefaultApiClientHeaderKey(),
+            GaxGrpcProperties.getDefaultApiClientHeaderPattern()));
+  }
+
+  @Test
+  public void getSubscriptionExceptionTest2() throws Exception {
+    StatusRuntimeException exception = new StatusRuntimeException(io.grpc.Status.INVALID_ARGUMENT);
+    mockAdminService.addException(exception);
+
+    try {
+      String name = "name3373707";
+      client.getSubscription(name);
+      Assert.fail("No exception raised");
+    } catch (InvalidArgumentException e) {
+      // Expected exception.
+    }
+  }
+
+  @Test
+  public void listSubscriptionsTest() throws Exception {
+    Subscription responsesElement = Subscription.newBuilder().build();
     ListSubscriptionsResponse expectedResponse =
         ListSubscriptionsResponse.newBuilder()
-            .setNextPageToken(nextPageToken)
-            .addAllSubscriptions(subscriptions)
+            .setNextPageToken("")
+            .addAllSubscriptions(Arrays.asList(responsesElement))
             .build();
     mockAdminService.addResponse(expectedResponse);
 
@@ -525,14 +809,15 @@ public class AdminServiceClientTest {
     ListSubscriptionsPagedResponse pagedListResponse = client.listSubscriptions(parent);
 
     List<Subscription> resources = Lists.newArrayList(pagedListResponse.iterateAll());
+
     Assert.assertEquals(1, resources.size());
     Assert.assertEquals(expectedResponse.getSubscriptionsList().get(0), resources.get(0));
 
     List<AbstractMessage> actualRequests = mockAdminService.getRequests();
     Assert.assertEquals(1, actualRequests.size());
-    ListSubscriptionsRequest actualRequest = (ListSubscriptionsRequest) actualRequests.get(0);
+    ListSubscriptionsRequest actualRequest = ((ListSubscriptionsRequest) actualRequests.get(0));
 
-    Assert.assertEquals(parent, LocationName.parse(actualRequest.getParent()));
+    Assert.assertEquals(parent.toString(), actualRequest.getParent());
     Assert.assertTrue(
         channelProvider.isHeaderSent(
             ApiClientHeaderProvider.getDefaultApiClientHeaderKey(),
@@ -540,28 +825,70 @@ public class AdminServiceClientTest {
   }
 
   @Test
-  @SuppressWarnings("all")
   public void listSubscriptionsExceptionTest() throws Exception {
-    StatusRuntimeException exception = new StatusRuntimeException(Status.INVALID_ARGUMENT);
+    StatusRuntimeException exception = new StatusRuntimeException(io.grpc.Status.INVALID_ARGUMENT);
     mockAdminService.addException(exception);
 
     try {
       LocationName parent = LocationName.of("[PROJECT]", "[LOCATION]");
-
       client.listSubscriptions(parent);
       Assert.fail("No exception raised");
     } catch (InvalidArgumentException e) {
-      // Expected exception
+      // Expected exception.
     }
   }
 
   @Test
-  @SuppressWarnings("all")
-  public void updateSubscriptionTest() {
-    SubscriptionName name = SubscriptionName.of("[PROJECT]", "[LOCATION]", "[SUBSCRIPTION]");
-    TopicName topic = TopicName.of("[PROJECT]", "[LOCATION]", "[TOPIC]");
+  public void listSubscriptionsTest2() throws Exception {
+    Subscription responsesElement = Subscription.newBuilder().build();
+    ListSubscriptionsResponse expectedResponse =
+        ListSubscriptionsResponse.newBuilder()
+            .setNextPageToken("")
+            .addAllSubscriptions(Arrays.asList(responsesElement))
+            .build();
+    mockAdminService.addResponse(expectedResponse);
+
+    String parent = "parent-995424086";
+
+    ListSubscriptionsPagedResponse pagedListResponse = client.listSubscriptions(parent);
+
+    List<Subscription> resources = Lists.newArrayList(pagedListResponse.iterateAll());
+
+    Assert.assertEquals(1, resources.size());
+    Assert.assertEquals(expectedResponse.getSubscriptionsList().get(0), resources.get(0));
+
+    List<AbstractMessage> actualRequests = mockAdminService.getRequests();
+    Assert.assertEquals(1, actualRequests.size());
+    ListSubscriptionsRequest actualRequest = ((ListSubscriptionsRequest) actualRequests.get(0));
+
+    Assert.assertEquals(parent, actualRequest.getParent());
+    Assert.assertTrue(
+        channelProvider.isHeaderSent(
+            ApiClientHeaderProvider.getDefaultApiClientHeaderKey(),
+            GaxGrpcProperties.getDefaultApiClientHeaderPattern()));
+  }
+
+  @Test
+  public void listSubscriptionsExceptionTest2() throws Exception {
+    StatusRuntimeException exception = new StatusRuntimeException(io.grpc.Status.INVALID_ARGUMENT);
+    mockAdminService.addException(exception);
+
+    try {
+      String parent = "parent-995424086";
+      client.listSubscriptions(parent);
+      Assert.fail("No exception raised");
+    } catch (InvalidArgumentException e) {
+      // Expected exception.
+    }
+  }
+
+  @Test
+  public void updateSubscriptionTest() throws Exception {
     Subscription expectedResponse =
-        Subscription.newBuilder().setName(name.toString()).setTopic(topic.toString()).build();
+        Subscription.newBuilder()
+            .setName(SubscriptionName.of("[PROJECT]", "[LOCATION]", "[SUBSCRIPTION]").toString())
+            .setTopic(TopicName.of("[PROJECT]", "[LOCATION]", "[TOPIC]").toString())
+            .build();
     mockAdminService.addResponse(expectedResponse);
 
     Subscription subscription = Subscription.newBuilder().build();
@@ -572,7 +899,7 @@ public class AdminServiceClientTest {
 
     List<AbstractMessage> actualRequests = mockAdminService.getRequests();
     Assert.assertEquals(1, actualRequests.size());
-    UpdateSubscriptionRequest actualRequest = (UpdateSubscriptionRequest) actualRequests.get(0);
+    UpdateSubscriptionRequest actualRequest = ((UpdateSubscriptionRequest) actualRequests.get(0));
 
     Assert.assertEquals(subscription, actualRequest.getSubscription());
     Assert.assertEquals(updateMask, actualRequest.getUpdateMask());
@@ -583,25 +910,22 @@ public class AdminServiceClientTest {
   }
 
   @Test
-  @SuppressWarnings("all")
   public void updateSubscriptionExceptionTest() throws Exception {
-    StatusRuntimeException exception = new StatusRuntimeException(Status.INVALID_ARGUMENT);
+    StatusRuntimeException exception = new StatusRuntimeException(io.grpc.Status.INVALID_ARGUMENT);
     mockAdminService.addException(exception);
 
     try {
       Subscription subscription = Subscription.newBuilder().build();
       FieldMask updateMask = FieldMask.newBuilder().build();
-
       client.updateSubscription(subscription, updateMask);
       Assert.fail("No exception raised");
     } catch (InvalidArgumentException e) {
-      // Expected exception
+      // Expected exception.
     }
   }
 
   @Test
-  @SuppressWarnings("all")
-  public void deleteSubscriptionTest() {
+  public void deleteSubscriptionTest() throws Exception {
     Empty expectedResponse = Empty.newBuilder().build();
     mockAdminService.addResponse(expectedResponse);
 
@@ -611,9 +935,9 @@ public class AdminServiceClientTest {
 
     List<AbstractMessage> actualRequests = mockAdminService.getRequests();
     Assert.assertEquals(1, actualRequests.size());
-    DeleteSubscriptionRequest actualRequest = (DeleteSubscriptionRequest) actualRequests.get(0);
+    DeleteSubscriptionRequest actualRequest = ((DeleteSubscriptionRequest) actualRequests.get(0));
 
-    Assert.assertEquals(name, SubscriptionName.parse(actualRequest.getName()));
+    Assert.assertEquals(name.toString(), actualRequest.getName());
     Assert.assertTrue(
         channelProvider.isHeaderSent(
             ApiClientHeaderProvider.getDefaultApiClientHeaderKey(),
@@ -621,18 +945,50 @@ public class AdminServiceClientTest {
   }
 
   @Test
-  @SuppressWarnings("all")
   public void deleteSubscriptionExceptionTest() throws Exception {
-    StatusRuntimeException exception = new StatusRuntimeException(Status.INVALID_ARGUMENT);
+    StatusRuntimeException exception = new StatusRuntimeException(io.grpc.Status.INVALID_ARGUMENT);
     mockAdminService.addException(exception);
 
     try {
       SubscriptionName name = SubscriptionName.of("[PROJECT]", "[LOCATION]", "[SUBSCRIPTION]");
-
       client.deleteSubscription(name);
       Assert.fail("No exception raised");
     } catch (InvalidArgumentException e) {
-      // Expected exception
+      // Expected exception.
+    }
+  }
+
+  @Test
+  public void deleteSubscriptionTest2() throws Exception {
+    Empty expectedResponse = Empty.newBuilder().build();
+    mockAdminService.addResponse(expectedResponse);
+
+    String name = "name3373707";
+
+    client.deleteSubscription(name);
+
+    List<AbstractMessage> actualRequests = mockAdminService.getRequests();
+    Assert.assertEquals(1, actualRequests.size());
+    DeleteSubscriptionRequest actualRequest = ((DeleteSubscriptionRequest) actualRequests.get(0));
+
+    Assert.assertEquals(name, actualRequest.getName());
+    Assert.assertTrue(
+        channelProvider.isHeaderSent(
+            ApiClientHeaderProvider.getDefaultApiClientHeaderKey(),
+            GaxGrpcProperties.getDefaultApiClientHeaderPattern()));
+  }
+
+  @Test
+  public void deleteSubscriptionExceptionTest2() throws Exception {
+    StatusRuntimeException exception = new StatusRuntimeException(io.grpc.Status.INVALID_ARGUMENT);
+    mockAdminService.addException(exception);
+
+    try {
+      String name = "name3373707";
+      client.deleteSubscription(name);
+      Assert.fail("No exception raised");
+    } catch (InvalidArgumentException e) {
+      // Expected exception.
     }
   }
 }

@@ -21,7 +21,6 @@ import static com.google.cloud.pubsublite.internal.ServiceClients.addDefaultSett
 
 import com.google.api.gax.rpc.ApiException;
 import com.google.auto.value.AutoValue;
-import com.google.cloud.pubsublite.ProjectLookupUtils;
 import com.google.cloud.pubsublite.SubscriptionPath;
 import com.google.cloud.pubsublite.proto.InitialPartitionAssignmentRequest;
 import com.google.cloud.pubsublite.v1.PartitionAssignmentServiceClient;
@@ -87,8 +86,7 @@ public abstract class AssignerBuilder {
 
       InitialPartitionAssignmentRequest initial =
           InitialPartitionAssignmentRequest.newBuilder()
-              .setSubscription(
-                  ProjectLookupUtils.toCanonical(builder.subscriptionPath()).toString())
+              .setSubscription(builder.subscriptionPath().toString())
               .setClientId(ByteString.copyFrom(uuidBuffer.array()))
               .build();
       return new AssignerImpl(serviceClient, initial, builder.receiver());

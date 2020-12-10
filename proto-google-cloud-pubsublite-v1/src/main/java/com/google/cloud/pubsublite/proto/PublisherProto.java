@@ -61,9 +61,9 @@ public final class PublisherProto {
   static {
     java.lang.String[] descriptorData = {
       "\n*google/cloud/pubsublite/v1/publisher.p"
-          + "roto\022\032google.cloud.pubsublite.v1\032\'google"
-          + "/cloud/pubsublite/v1/common.proto\032\027googl"
-          + "e/api/client.proto\"9\n\025InitialPublishRequ"
+          + "roto\022\032google.cloud.pubsublite.v1\032\027google"
+          + "/api/client.proto\032\'google/cloud/pubsubli"
+          + "te/v1/common.proto\"9\n\025InitialPublishRequ"
           + "est\022\r\n\005topic\030\001 \001(\t\022\021\n\tpartition\030\002 \001(\003\"\030\n"
           + "\026InitialPublishResponse\"T\n\025MessagePublis"
           + "hRequest\022;\n\010messages\030\001 \003(\0132).google.clou"
@@ -84,18 +84,20 @@ public final class PublisherProto {
           + "sublite.v1.PublishRequest\032+.google.cloud"
           + ".pubsublite.v1.PublishResponse\"\000(\0010\001\032M\312A"
           + "\031pubsublite.googleapis.com\322A.https://www"
-          + ".googleapis.com/auth/cloud-platformB~\n!c"
-          + "om.google.cloud.pubsublite.protoB\016Publis"
-          + "herProtoP\001ZDgoogle.golang.org/genproto/g"
-          + "oogleapis/cloud/pubsublite/v1;pubsublite"
-          + "\370\001\001b\006proto3"
+          + ".googleapis.com/auth/cloud-platformB\330\001\n!"
+          + "com.google.cloud.pubsublite.protoB\016Publi"
+          + "sherProtoP\001ZDgoogle.golang.org/genproto/"
+          + "googleapis/cloud/pubsublite/v1;pubsublit"
+          + "e\370\001\001\252\002\032Google.Cloud.PubSubLite.V1\312\002\032Goog"
+          + "le\\Cloud\\PubSubLite\\V1\352\002\035Google::Cloud::"
+          + "PubSubLite::V1b\006proto3"
     };
     descriptor =
         com.google.protobuf.Descriptors.FileDescriptor.internalBuildGeneratedFileFrom(
             descriptorData,
             new com.google.protobuf.Descriptors.FileDescriptor[] {
-              com.google.cloud.pubsublite.proto.CommonProto.getDescriptor(),
               com.google.api.ClientProto.getDescriptor(),
+              com.google.cloud.pubsublite.proto.CommonProto.getDescriptor(),
             });
     internal_static_google_cloud_pubsublite_v1_InitialPublishRequest_descriptor =
         getDescriptor().getMessageTypes().get(0);
@@ -149,8 +151,8 @@ public final class PublisherProto {
     registry.add(com.google.api.ClientProto.oauthScopes);
     com.google.protobuf.Descriptors.FileDescriptor.internalUpdateFileDescriptor(
         descriptor, registry);
-    com.google.cloud.pubsublite.proto.CommonProto.getDescriptor();
     com.google.api.ClientProto.getDescriptor();
+    com.google.cloud.pubsublite.proto.CommonProto.getDescriptor();
   }
 
   // @@protoc_insertion_point(outer_class_scope)

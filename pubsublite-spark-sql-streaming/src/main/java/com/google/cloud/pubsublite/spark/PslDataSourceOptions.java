@@ -51,11 +51,11 @@ public abstract class PslDataSourceOptions implements Serializable {
 
   public static Builder builder() {
     return new AutoValue_PslDataSourceOptions.Builder()
-        .credentialsKey(null)
+        .setCredentialsKey(null)
         // TODO(jiangmichael): Revisit this later about if we need to expose this as a user
         // configurable option. Ideally we should expose bytes range/# msgs range not
         // offsets range since PSL doesn't guarantee offset = msg.
-        .maxBatchOffsetRange(Constants.DEFAULT_BATCH_OFFSET_RANGE);
+        .setMaxBatchOffsetRange(Constants.DEFAULT_BATCH_OFFSET_RANGE);
   }
 
   public static PslDataSourceOptions fromSparkDataSourceOptions(DataSourceOptions options) {
@@ -66,12 +66,12 @@ public abstract class PslDataSourceOptions implements Serializable {
     Builder builder = builder();
     Optional<String> value;
     if ((value = options.get(Constants.CREDENTIALS_KEY_CONFIG_KEY)).isPresent()) {
-      builder.credentialsKey(value.get());
+      builder.setCredentialsKey(value.get());
     }
     return builder
-        .subscriptionPath(
+        .setSubscriptionPath(
             SubscriptionPath.parse(options.get(Constants.SUBSCRIPTION_CONFIG_KEY).get()))
-        .flowControlSettings(
+        .setFlowControlSettings(
             FlowControlSettings.builder()
                 .setMessagesOutstanding(
                     options.getLong(
@@ -88,13 +88,13 @@ public abstract class PslDataSourceOptions implements Serializable {
   @AutoValue.Builder
   public abstract static class Builder {
 
-    public abstract Builder credentialsKey(String credentialsKey);
+    public abstract Builder setCredentialsKey(String credentialsKey);
 
-    public abstract Builder subscriptionPath(SubscriptionPath subscriptionPath);
+    public abstract Builder setSubscriptionPath(SubscriptionPath subscriptionPath);
 
-    public abstract Builder maxBatchOffsetRange(long maxBatchOffsetRange);
+    public abstract Builder setMaxBatchOffsetRange(long maxBatchOffsetRange);
 
-    public abstract Builder flowControlSettings(FlowControlSettings flowControlSettings);
+    public abstract Builder setFlowControlSettings(FlowControlSettings flowControlSettings);
 
     public abstract PslDataSourceOptions build();
   }

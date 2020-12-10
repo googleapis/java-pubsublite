@@ -33,7 +33,7 @@ public class PslContinuousReaderTest {
 
   private static final PslDataSourceOptions OPTIONS =
       PslDataSourceOptions.builder()
-          .subscriptionPath(UnitTestExamples.exampleSubscriptionPath())
+          .setSubscriptionPath(UnitTestExamples.exampleSubscriptionPath())
           .build();
   private final CursorClient cursorClient = mock(CursorClient.class);
   private final AdminClient adminClient = mock(AdminClient.class);

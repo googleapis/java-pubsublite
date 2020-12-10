@@ -19,8 +19,14 @@ package com.google.cloud.pubsublite.spark;
 import static com.google.cloud.pubsublite.internal.ServiceClients.addDefaultSettings;
 
 import com.google.auto.value.AutoValue;
+import com.google.cloud.pubsublite.AdminClient;
+import com.google.cloud.pubsublite.AdminClientSettings;
 import com.google.cloud.pubsublite.SubscriptionPath;
 import com.google.cloud.pubsublite.cloudpubsub.FlowControlSettings;
+import com.google.cloud.pubsublite.internal.CursorClient;
+import com.google.cloud.pubsublite.internal.CursorClientSettings;
+import com.google.cloud.pubsublite.v1.AdminServiceClient;
+import com.google.cloud.pubsublite.v1.AdminServiceSettings;
 import com.google.cloud.pubsublite.v1.CursorServiceClient;
 import com.google.cloud.pubsublite.v1.CursorServiceSettings;
 import java.io.IOException;
@@ -38,17 +44,18 @@ public abstract class PslDataSourceOptions implements Serializable {
 
   public abstract SubscriptionPath subscriptionPath();
 
+  @Nullable
   public abstract FlowControlSettings flowControlSettings();
 
   public abstract long maxBatchOffsetRange();
 
   public static Builder builder() {
     return new AutoValue_PslDataSourceOptions.Builder()
-        .credentialsKey(null)
+        .setCredentialsKey(null)
         // TODO(jiangmichael): Revisit this later about if we need to expose this as a user
         // configurable option. Ideally we should expose bytes range/# msgs range not
         // offsets range since PSL doesn't guarantee offset = msg.
-        .maxBatchOffsetRange(Constants.DEFAULT_BATCH_OFFSET_RANGE);
+        .setMaxBatchOffsetRange(Constants.DEFAULT_BATCH_OFFSET_RANGE);
   }
 
   public static PslDataSourceOptions fromSparkDataSourceOptions(DataSourceOptions options) {
@@ -59,38 +66,41 @@ public abstract class PslDataSourceOptions implements Serializable {
     Builder builder = builder();
     Optional<String> value;
     if ((value = options.get(Constants.CREDENTIALS_KEY_CONFIG_KEY)).isPresent()) {
-      builder.credentialsKey(value.get());
+      builder.setCredentialsKey(value.get());
     }
-    builder.subscriptionPath(
-        SubscriptionPath.parse(options.get(Constants.SUBSCRIPTION_CONFIG_KEY).get()));
-    builder.flowControlSettings(
-        FlowControlSettings.builder()
-            .setMessagesOutstanding(
-                options.getLong(
-                    Constants.MESSAGES_OUTSTANDING_CONFIG_KEY,
-                    Constants.DEFAULT_MESSAGES_OUTSTANDING))
-            .setBytesOutstanding(
-                options.getLong(
-                    Constants.BYTES_OUTSTANDING_CONFIG_KEY, Constants.DEFAULT_BYTES_OUTSTANDING))
-            .build());
-    return builder.build();
+    return builder
+        .setSubscriptionPath(
+            SubscriptionPath.parse(options.get(Constants.SUBSCRIPTION_CONFIG_KEY).get()))
+        .setFlowControlSettings(
+            FlowControlSettings.builder()
+                .setMessagesOutstanding(
+                    options.getLong(
+                        Constants.MESSAGES_OUTSTANDING_CONFIG_KEY,
+                        Constants.DEFAULT_MESSAGES_OUTSTANDING))
+                .setBytesOutstanding(
+                    options.getLong(
+                        Constants.BYTES_OUTSTANDING_CONFIG_KEY,
+                        Constants.DEFAULT_BYTES_OUTSTANDING))
+                .build())
+        .build();
   }
 
   @AutoValue.Builder
   public abstract static class Builder {
 
-    public abstract Builder credentialsKey(String credentialsKey);
+    public abstract Builder setCredentialsKey(String credentialsKey);
 
-    public abstract Builder subscriptionPath(SubscriptionPath subscriptionPath);
+    public abstract Builder setSubscriptionPath(SubscriptionPath subscriptionPath);
 
-    public abstract Builder maxBatchOffsetRange(long maxBatchOffsetRange);
+    public abstract Builder setMaxBatchOffsetRange(long maxBatchOffsetRange);
 
-    public abstract Builder flowControlSettings(FlowControlSettings flowControlSettings);
+    public abstract Builder setFlowControlSettings(FlowControlSettings flowControlSettings);
 
     public abstract PslDataSourceOptions build();
   }
 
-  CursorServiceClient newCursorClient() {
+  // TODO(b/jiangmichael): Make XXXClientSettings accept creds so we could simplify below methods.
+  CursorServiceClient newCursorServiceClient() {
     try {
       return CursorServiceClient.create(
           addDefaultSettings(
@@ -100,5 +110,33 @@ public abstract class PslDataSourceOptions implements Serializable {
     } catch (IOException e) {
       throw new IllegalStateException("Unable to create CursorServiceClient.");
     }
+  }
+
+  CursorClient newCursorClient() {
+    return CursorClient.create(
+        CursorClientSettings.newBuilder()
+            .setRegion(this.subscriptionPath().location().region())
+            .setServiceClient(newCursorServiceClient())
+            .build());
+  }
+
+  AdminServiceClient newAdminServiceClient() {
+    try {
+      return AdminServiceClient.create(
+          addDefaultSettings(
+              this.subscriptionPath().location().region(),
+              AdminServiceSettings.newBuilder()
+                  .setCredentialsProvider(new PslCredentialsProvider(this))));
+    } catch (IOException e) {
+      throw new IllegalStateException("Unable to create AdminServiceClient.");
+    }
+  }
+
+  AdminClient newAdminClient() {
+    return AdminClient.create(
+        AdminClientSettings.newBuilder()
+            .setRegion(this.subscriptionPath().location().region())
+            .setServiceClient(newAdminServiceClient())
+            .build());
   }
 }

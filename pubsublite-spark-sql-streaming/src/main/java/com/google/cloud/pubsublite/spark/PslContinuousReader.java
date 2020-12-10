@@ -146,14 +146,11 @@ public class PslContinuousReader implements ContinuousReader {
 
   @Override
   public List<InputPartition<InternalRow>> planInputPartitions() {
-    return startOffset.getPartitionOffsetMap().entrySet().stream()
+    return startOffset.getPartitionOffsetMap().values().stream()
         .map(
-            e ->
+            v ->
                 new PslContinuousInputPartition(
-                    SparkPartitionOffset.builder()
-                        .partition(e.getKey())
-                        .offset(e.getValue().offset())
-                        .build(),
+                    v,
                     options.subscriptionPath(),
                     Objects.requireNonNull(options.flowControlSettings())))
         .collect(Collectors.toList());

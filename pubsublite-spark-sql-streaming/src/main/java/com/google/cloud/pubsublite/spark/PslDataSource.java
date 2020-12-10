@@ -16,7 +16,15 @@
 
 package com.google.cloud.pubsublite.spark;
 
+import com.google.cloud.pubsublite.AdminClient;
+import com.google.cloud.pubsublite.SubscriptionPath;
+import com.google.cloud.pubsublite.TopicPath;
+import com.google.cloud.pubsublite.internal.CursorClient;
+import com.google.cloud.pubsublite.internal.wire.CommitterBuilder;
+import com.google.cloud.pubsublite.proto.Subscription;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.concurrent.ExecutionException;
 import org.apache.spark.sql.sources.DataSourceRegister;
 import org.apache.spark.sql.sources.v2.ContinuousReadSupport;
 import org.apache.spark.sql.sources.v2.DataSourceOptions;
@@ -38,6 +46,36 @@ public class PslDataSource implements DataSourceV2, ContinuousReadSupport, DataS
       throw new IllegalArgumentException(
           "PubSub Lite uses fixed schema and custom schema is not allowed");
     }
-    return new PslContinuousReader(PslDataSourceOptions.fromSparkDataSourceOptions(options));
+
+    PslDataSourceOptions pslDataSourceOptions =
+        PslDataSourceOptions.fromSparkDataSourceOptions(options);
+    CursorClient cursorClient = pslDataSourceOptions.newCursorClient();
+    AdminClient adminClient = pslDataSourceOptions.newAdminClient();
+    SubscriptionPath subscriptionPath = pslDataSourceOptions.subscriptionPath();
+    long topicPartitionCount;
+    try {
+      Subscription sub = adminClient.getSubscription(subscriptionPath).get();
+      topicPartitionCount =
+          adminClient.getTopicPartitionCount(TopicPath.parse(sub.getTopic())).get();
+    } catch (InterruptedException | ExecutionException e) {
+      throw new IllegalStateException(
+          "Failed to get information of subscription " + pslDataSourceOptions.subscriptionPath(),
+          e);
+    }
+    MultiPartitionCommitter committer =
+        new MultiPartitionCommitterImpl(
+            topicPartitionCount,
+            (partition) ->
+                CommitterBuilder.newBuilder()
+                    .setSubscriptionPath(subscriptionPath)
+                    .setPartition(partition)
+                    .setServiceClient(pslDataSourceOptions.newCursorServiceClient())
+                    .build());
+    return new PslContinuousReader(
+        cursorClient,
+        committer,
+        subscriptionPath,
+        Objects.requireNonNull(pslDataSourceOptions.flowControlSettings()),
+        topicPartitionCount);
   }
 }

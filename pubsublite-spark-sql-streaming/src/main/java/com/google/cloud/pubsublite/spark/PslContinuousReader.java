@@ -16,18 +16,15 @@
 
 package com.google.cloud.pubsublite.spark;
 
-import com.google.cloud.pubsublite.AdminClient;
 import com.google.cloud.pubsublite.Partition;
-import com.google.cloud.pubsublite.TopicPath;
+import com.google.cloud.pubsublite.SubscriptionPath;
+import com.google.cloud.pubsublite.cloudpubsub.FlowControlSettings;
 import com.google.cloud.pubsublite.internal.CursorClient;
-import com.google.cloud.pubsublite.internal.wire.CommitterBuilder;
-import com.google.cloud.pubsublite.proto.Subscription;
 import com.google.common.annotations.VisibleForTesting;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
@@ -40,44 +37,24 @@ import org.apache.spark.sql.types.StructType;
 
 public class PslContinuousReader implements ContinuousReader {
 
-  private final PslDataSourceOptions options;
   private final CursorClient cursorClient;
   private final MultiPartitionCommitter committer;
+  private final SubscriptionPath subscriptionPath;
+  private final FlowControlSettings flowControlSettings;
   private final long topicPartitionCount;
   private SparkSourceOffset startOffset;
 
-  public PslContinuousReader(PslDataSourceOptions options) {
-    this.options = options;
-    this.cursorClient = options.newCursorClient();
-    AdminClient adminClient = options.newAdminClient();
-    try {
-      Subscription sub = adminClient.getSubscription(options.subscriptionPath()).get();
-      this.topicPartitionCount =
-          adminClient.getTopicPartitionCount(TopicPath.parse(sub.getTopic())).get();
-    } catch (InterruptedException | ExecutionException e) {
-      throw new IllegalStateException(
-          "Failed to get information of subscription " + options.subscriptionPath(), e);
-    }
-    this.committer =
-        new MultiPartitionCommitterImpl(
-            topicPartitionCount,
-            (partition) ->
-                CommitterBuilder.newBuilder()
-                    .setSubscriptionPath(options.subscriptionPath())
-                    .setPartition(partition)
-                    .setServiceClient(options.newCursorServiceClient())
-                    .build());
-  }
-
   @VisibleForTesting
   public PslContinuousReader(
-      PslDataSourceOptions options,
       CursorClient cursorClient,
-      MultiPartitionCommitterImpl committer,
+      MultiPartitionCommitter committer,
+      SubscriptionPath subscriptionPath,
+      FlowControlSettings flowControlSettings,
       long topicPartitionCount) {
-    this.options = options;
     this.cursorClient = cursorClient;
     this.committer = committer;
+    this.subscriptionPath = subscriptionPath;
+    this.flowControlSettings = flowControlSettings;
     this.topicPartitionCount = topicPartitionCount;
   }
 
@@ -113,7 +90,7 @@ public class PslContinuousReader implements ContinuousReader {
         pslSourceOffsetMap.put(Partition.of(i), com.google.cloud.pubsublite.Offset.of(0));
       }
       cursorClient
-          .listPartitionCursors(options.subscriptionPath())
+          .listPartitionCursors(subscriptionPath)
           .get()
           .entrySet()
           .forEach((e) -> pslSourceOffsetMap.replace(e.getKey(), e.getValue()));
@@ -154,8 +131,8 @@ public class PslContinuousReader implements ContinuousReader {
                         .partition(e.getKey())
                         .offset(e.getValue().offset())
                         .build(),
-                    options.subscriptionPath(),
-                    Objects.requireNonNull(options.flowControlSettings())))
+                    subscriptionPath,
+                    flowControlSettings))
         .collect(Collectors.toList());
   }
 }

@@ -19,7 +19,6 @@ import com.google.api.core.ApiFuture;
 import com.google.cloud.pubsublite.CloudRegion;
 import com.google.cloud.pubsublite.Offset;
 import com.google.cloud.pubsublite.Partition;
-import com.google.cloud.pubsublite.ProjectLookupUtils;
 import com.google.cloud.pubsublite.TopicPath;
 import com.google.cloud.pubsublite.proto.ComputeMessageStatsRequest;
 import com.google.cloud.pubsublite.proto.ComputeMessageStatsResponse;
@@ -48,7 +47,7 @@ public class TopicStatsClientImpl extends ApiResourceAggregation implements Topi
         .computeMessageStatsCallable()
         .futureCall(
             ComputeMessageStatsRequest.newBuilder()
-                .setTopic(ProjectLookupUtils.toCanonical(path).toString())
+                .setTopic(path.toString())
                 .setPartition(partition.value())
                 .setStartCursor(Cursor.newBuilder().setOffset(start.value()).build())
                 .setEndCursor(Cursor.newBuilder().setOffset(end.value()).build())

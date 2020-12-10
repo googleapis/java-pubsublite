@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     https://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -13,11 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package com.google.cloud.pubsublite.v1.stub;
 
 import static com.google.cloud.pubsublite.v1.CursorServiceClient.ListPartitionCursorsPagedResponse;
 
-import com.google.api.core.BetaApi;
 import com.google.api.gax.core.BackgroundResource;
 import com.google.api.gax.core.BackgroundResourceAggregation;
 import com.google.api.gax.grpc.GrpcCallSettings;
@@ -33,6 +33,7 @@ import com.google.cloud.pubsublite.proto.ListPartitionCursorsResponse;
 import com.google.cloud.pubsublite.proto.StreamingCommitCursorRequest;
 import com.google.cloud.pubsublite.proto.StreamingCommitCursorResponse;
 import com.google.common.collect.ImmutableMap;
+import com.google.longrunning.stub.GrpcOperationsStub;
 import io.grpc.MethodDescriptor;
 import io.grpc.protobuf.ProtoUtils;
 import java.io.IOException;
@@ -40,16 +41,14 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import javax.annotation.Generated;
 
-// AUTO-GENERATED DOCUMENTATION AND CLASS
+// AUTO-GENERATED DOCUMENTATION AND CLASS.
 /**
- * gRPC stub implementation for Pub/Sub Lite API.
+ * gRPC stub implementation for the CursorService service API.
  *
  * <p>This class is for advanced usage and reflects the underlying API directly.
  */
-@Generated("by gapic-generator")
-@BetaApi("A restructuring of stub classes is planned, so this may break in the future")
+@Generated("by gapic-generator-java")
 public class GrpcCursorServiceStub extends CursorServiceStub {
-
   private static final MethodDescriptor<StreamingCommitCursorRequest, StreamingCommitCursorResponse>
       streamingCommitCursorMethodDescriptor =
           MethodDescriptor.<StreamingCommitCursorRequest, StreamingCommitCursorResponse>newBuilder()
@@ -60,6 +59,7 @@ public class GrpcCursorServiceStub extends CursorServiceStub {
               .setResponseMarshaller(
                   ProtoUtils.marshaller(StreamingCommitCursorResponse.getDefaultInstance()))
               .build();
+
   private static final MethodDescriptor<CommitCursorRequest, CommitCursorResponse>
       commitCursorMethodDescriptor =
           MethodDescriptor.<CommitCursorRequest, CommitCursorResponse>newBuilder()
@@ -69,6 +69,7 @@ public class GrpcCursorServiceStub extends CursorServiceStub {
               .setResponseMarshaller(
                   ProtoUtils.marshaller(CommitCursorResponse.getDefaultInstance()))
               .build();
+
   private static final MethodDescriptor<ListPartitionCursorsRequest, ListPartitionCursorsResponse>
       listPartitionCursorsMethodDescriptor =
           MethodDescriptor.<ListPartitionCursorsRequest, ListPartitionCursorsResponse>newBuilder()
@@ -80,8 +81,6 @@ public class GrpcCursorServiceStub extends CursorServiceStub {
                   ProtoUtils.marshaller(ListPartitionCursorsResponse.getDefaultInstance()))
               .build();
 
-  private final BackgroundResource backgroundResources;
-
   private final BidiStreamingCallable<StreamingCommitCursorRequest, StreamingCommitCursorResponse>
       streamingCommitCursorCallable;
   private final UnaryCallable<CommitCursorRequest, CommitCursorResponse> commitCursorCallable;
@@ -90,6 +89,8 @@ public class GrpcCursorServiceStub extends CursorServiceStub {
   private final UnaryCallable<ListPartitionCursorsRequest, ListPartitionCursorsPagedResponse>
       listPartitionCursorsPagedCallable;
 
+  private final BackgroundResource backgroundResources;
+  private final GrpcOperationsStub operationsStub;
   private final GrpcStubCallableFactory callableFactory;
 
   public static final GrpcCursorServiceStub create(CursorServiceStubSettings settings)
@@ -107,27 +108,18 @@ public class GrpcCursorServiceStub extends CursorServiceStub {
         CursorServiceStubSettings.newBuilder().build(), clientContext, callableFactory);
   }
 
-  /**
-   * Constructs an instance of GrpcCursorServiceStub, using the given settings. This is protected so
-   * that it is easy to make a subclass, but otherwise, the static factory methods should be
-   * preferred.
-   */
   protected GrpcCursorServiceStub(CursorServiceStubSettings settings, ClientContext clientContext)
       throws IOException {
     this(settings, clientContext, new GrpcCursorServiceCallableFactory());
   }
 
-  /**
-   * Constructs an instance of GrpcCursorServiceStub, using the given settings. This is protected so
-   * that it is easy to make a subclass, but otherwise, the static factory methods should be
-   * preferred.
-   */
   protected GrpcCursorServiceStub(
       CursorServiceStubSettings settings,
       ClientContext clientContext,
       GrpcStubCallableFactory callableFactory)
       throws IOException {
     this.callableFactory = callableFactory;
+    this.operationsStub = GrpcOperationsStub.create(clientContext, callableFactory);
 
     GrpcCallSettings<StreamingCommitCursorRequest, StreamingCommitCursorResponse>
         streamingCommitCursorTransportSettings =
@@ -173,7 +165,12 @@ public class GrpcCursorServiceStub extends CursorServiceStub {
             settings.listPartitionCursorsSettings(),
             clientContext);
 
-    backgroundResources = new BackgroundResourceAggregation(clientContext.getBackgroundResources());
+    this.backgroundResources =
+        new BackgroundResourceAggregation(clientContext.getBackgroundResources());
+  }
+
+  public GrpcOperationsStub getOperationsStub() {
+    return operationsStub;
   }
 
   public BidiStreamingCallable<StreamingCommitCursorRequest, StreamingCommitCursorResponse>
@@ -185,14 +182,14 @@ public class GrpcCursorServiceStub extends CursorServiceStub {
     return commitCursorCallable;
   }
 
-  public UnaryCallable<ListPartitionCursorsRequest, ListPartitionCursorsPagedResponse>
-      listPartitionCursorsPagedCallable() {
-    return listPartitionCursorsPagedCallable;
-  }
-
   public UnaryCallable<ListPartitionCursorsRequest, ListPartitionCursorsResponse>
       listPartitionCursorsCallable() {
     return listPartitionCursorsCallable;
+  }
+
+  public UnaryCallable<ListPartitionCursorsRequest, ListPartitionCursorsPagedResponse>
+      listPartitionCursorsPagedCallable() {
+    return listPartitionCursorsPagedCallable;
   }
 
   @Override

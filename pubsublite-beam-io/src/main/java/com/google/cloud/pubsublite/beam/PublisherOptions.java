@@ -16,8 +16,6 @@
 
 package com.google.cloud.pubsublite.beam;
 
-import static com.google.cloud.pubsublite.ProjectLookupUtils.toCanonical;
-
 import com.google.auto.value.AutoValue;
 import com.google.cloud.pubsublite.PublishMetadata;
 import com.google.cloud.pubsublite.TopicPath;
@@ -62,13 +60,12 @@ public abstract class PublisherOptions implements Serializable {
     if (clientSupplier() != null) {
       singlePartitionPublisherBuilder.setServiceClient(clientSupplier().get());
     }
-    TopicPath canonicalTopic = toCanonical(topicPath());
     return RoutingPublisherBuilder.newBuilder()
-        .setTopic(canonicalTopic)
+        .setTopic(topicPath())
         .setPublisherFactory(
             partition ->
                 singlePartitionPublisherBuilder
-                    .setTopic(canonicalTopic)
+                    .setTopic(topicPath())
                     .setPartition(partition)
                     .build())
         .build();

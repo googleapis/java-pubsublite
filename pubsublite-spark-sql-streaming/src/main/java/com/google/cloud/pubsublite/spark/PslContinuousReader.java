@@ -42,7 +42,7 @@ public class PslContinuousReader implements ContinuousReader {
 
   private final PslDataSourceOptions options;
   private final CursorClient cursorClient;
-  private final MultiPartitionCommitter committer;
+  private final MultiPartitionCommitterImpl committer;
   private final long topicPartitionCount;
   private SparkSourceOffset startOffset;
 
@@ -59,7 +59,7 @@ public class PslContinuousReader implements ContinuousReader {
           "Failed to get information of subscription " + options.subscriptionPath(), e);
     }
     this.committer =
-        new MultiPartitionCommitter(
+        new MultiPartitionCommitterImpl(
             topicPartitionCount,
             (partition) ->
                 CommitterBuilder.newBuilder()
@@ -73,7 +73,7 @@ public class PslContinuousReader implements ContinuousReader {
   public PslContinuousReader(
       PslDataSourceOptions options,
       CursorClient cursorClient,
-      MultiPartitionCommitter committer,
+      MultiPartitionCommitterImpl committer,
       long topicPartitionCount) {
     this.options = options;
     this.cursorClient = cursorClient;

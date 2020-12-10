@@ -16,66 +16,16 @@
 
 package com.google.cloud.pubsublite.spark;
 
-import com.google.api.core.ApiFuture;
-import com.google.api.core.ApiFutureCallback;
-import com.google.api.core.ApiFutures;
 import com.google.cloud.pubsublite.Partition;
 import com.google.cloud.pubsublite.internal.wire.Committer;
-import com.google.common.annotations.VisibleForTesting;
-import com.google.common.flogger.GoogleLogger;
-import com.google.common.util.concurrent.MoreExecutors;
+
 import java.io.Serializable;
-import java.util.HashMap;
-import java.util.Map;
 
-public class MultiPartitionCommitter implements Serializable {
-  private static final GoogleLogger log = GoogleLogger.forEnclosingClass();
+public interface MultiPartitionCommitter extends AutoCloseable{
 
-  interface CommitterFactory extends Serializable {
-    Committer newCommitter(Partition partition);
-  }
-
-  private final Map<Partition, Committer> committerMap = new HashMap<>();
-
-  @VisibleForTesting
-  MultiPartitionCommitter(long topicPartitionCount, CommitterFactory committerFactory) {
-    for (int i = 0; i < topicPartitionCount; i++) {
-      Partition p = Partition.of(i);
-      Committer committer = committerFactory.newCommitter(p);
-      committer.startAsync().awaitRunning();
-      committerMap.put(p, committer);
+    interface CommitterFactory extends Serializable {
+        Committer newCommitter(Partition partition);
     }
-  }
 
-  synchronized void close() {
-    committerMap.values().forEach(c -> c.stopAsync().awaitTerminated());
-  }
-
-  synchronized void commit(PslSourceOffset offset) {
-    offset
-        .partitionOffsetMap()
-        .forEach(
-            (p, o) -> {
-              // Note we don't need to worry about commit offset disorder here since Committer
-              // guarantees the ordering. Once commitOffset() returns, it's either already
-              // sent to stream, or waiting for next connection to open to be sent in order.
-              ApiFuture<Void> future = committerMap.get(p).commitOffset(o);
-              ApiFutures.addCallback(
-                  future,
-                  new ApiFutureCallback<Void>() {
-                    @Override
-                    public void onFailure(Throwable t) {
-                      if (!future.isCancelled()) {
-                        log.atWarning().log("Failed to commit %s,%s.", p.value(), o.value(), t);
-                      }
-                    }
-
-                    @Override
-                    public void onSuccess(Void result) {
-                      log.atInfo().log("Committed %s,%s.", p.value(), o.value());
-                    }
-                  },
-                  MoreExecutors.directExecutor());
-            });
-  }
+    void commit(PslSourceOffset offset);
 }

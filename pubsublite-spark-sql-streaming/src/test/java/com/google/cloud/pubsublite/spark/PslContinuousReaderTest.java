@@ -24,7 +24,6 @@ import com.google.api.core.ApiFutures;
 import com.google.cloud.pubsublite.*;
 import com.google.cloud.pubsublite.internal.CursorClient;
 import com.google.cloud.pubsublite.internal.testing.UnitTestExamples;
-import com.google.cloud.pubsublite.proto.Subscription;
 import com.google.common.collect.ImmutableMap;
 import java.util.Optional;
 import org.junit.Test;
@@ -36,21 +35,12 @@ public class PslContinuousReaderTest {
           .setSubscriptionPath(UnitTestExamples.exampleSubscriptionPath())
           .build();
   private final CursorClient cursorClient = mock(CursorClient.class);
-  private final AdminClient adminClient = mock(AdminClient.class);
   private final MultiPartitionCommitter committer = mock(MultiPartitionCommitter.class);
   private final PslContinuousReader reader =
-      new PslContinuousReader(OPTIONS, adminClient, cursorClient, committer);
+      new PslContinuousReader(OPTIONS, cursorClient, committer, 2);
 
   @Test
   public void testEmptyStartOffset() {
-    when(adminClient.getSubscription(eq(UnitTestExamples.exampleSubscriptionPath())))
-        .thenReturn(
-            ApiFutures.immediateFuture(
-                Subscription.newBuilder()
-                    .setTopic(UnitTestExamples.exampleTopicPath().toString())
-                    .build()));
-    when(adminClient.getTopicPartitionCount(eq(UnitTestExamples.exampleTopicPath())))
-        .thenReturn(ApiFutures.immediateFuture(2L));
     when(cursorClient.listPartitionCursors(UnitTestExamples.exampleSubscriptionPath()))
         .thenReturn(
             ApiFutures.immediateFuture(

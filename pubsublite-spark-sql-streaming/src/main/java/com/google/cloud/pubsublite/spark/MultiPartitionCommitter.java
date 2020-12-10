@@ -27,7 +27,6 @@ import com.google.common.util.concurrent.MoreExecutors;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 
 public class MultiPartitionCommitter implements Serializable {
   private static final GoogleLogger log = GoogleLogger.forEnclosingClass();
@@ -36,22 +35,16 @@ public class MultiPartitionCommitter implements Serializable {
     Committer newCommitter(Partition partition);
   }
 
-  private final CommitterFactory committerFactory;
-  private boolean initialized = false;
-  private final Map<Partition, Committer> committerMap = new HashMap<>(); // lazily constructed
+  private final Map<Partition, Committer> committerMap = new HashMap<>();
 
   @VisibleForTesting
-  MultiPartitionCommitter(CommitterFactory committerFactory) {
-    this.committerFactory = committerFactory;
-  }
-
-  private synchronized void init(Set<Partition> partitions) {
-    partitions.forEach(
-        p -> {
-          Committer committer = committerFactory.newCommitter(p);
-          committer.startAsync().awaitRunning();
-          committerMap.put(p, committer);
-        });
+  MultiPartitionCommitter(long topicPartitionCount, CommitterFactory committerFactory) {
+    for (int i = 0; i < topicPartitionCount; i++) {
+      Partition p = Partition.of(i);
+      Committer committer = committerFactory.newCommitter(p);
+      committer.startAsync().awaitRunning();
+      committerMap.put(p, committer);
+    }
   }
 
   synchronized void close() {
@@ -59,11 +52,6 @@ public class MultiPartitionCommitter implements Serializable {
   }
 
   synchronized void commit(PslSourceOffset offset) {
-    if (!initialized) {
-      init(offset.partitionOffsetMap().keySet());
-      initialized = true;
-    }
-
     offset
         .partitionOffsetMap()
         .forEach(

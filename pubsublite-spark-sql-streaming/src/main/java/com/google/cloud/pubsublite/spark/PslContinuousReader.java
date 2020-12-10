@@ -41,35 +41,44 @@ import org.apache.spark.sql.types.StructType;
 public class PslContinuousReader implements ContinuousReader {
 
   private final PslDataSourceOptions options;
-  private final AdminClient adminClient;
   private final CursorClient cursorClient;
   private final MultiPartitionCommitter committer;
+  private final long topicPartitionCount;
   private SparkSourceOffset startOffset;
 
   public PslContinuousReader(PslDataSourceOptions options) {
-    this(
-        options,
-        options.newAdminClient(),
-        options.newCursorClient(),
+    this.options = options;
+    this.cursorClient = options.newCursorClient();
+    AdminClient adminClient = options.newAdminClient();
+    try {
+      Subscription sub = adminClient.getSubscription(options.subscriptionPath()).get();
+      this.topicPartitionCount =
+          adminClient.getTopicPartitionCount(TopicPath.parse(sub.getTopic())).get();
+    } catch (InterruptedException | ExecutionException e) {
+      throw new IllegalStateException(
+          "Failed to get information of subscription " + options.subscriptionPath(), e);
+    }
+    this.committer =
         new MultiPartitionCommitter(
+            topicPartitionCount,
             (partition) ->
                 CommitterBuilder.newBuilder()
                     .setSubscriptionPath(options.subscriptionPath())
                     .setPartition(partition)
                     .setServiceClient(options.newCursorServiceClient())
-                    .build()));
+                    .build());
   }
 
   @VisibleForTesting
   public PslContinuousReader(
       PslDataSourceOptions options,
-      AdminClient adminClient,
       CursorClient cursorClient,
-      MultiPartitionCommitter committer) {
+      MultiPartitionCommitter committer,
+      long topicPartitionCount) {
     this.options = options;
-    this.adminClient = adminClient;
     this.cursorClient = cursorClient;
     this.committer = committer;
+    this.topicPartitionCount = topicPartitionCount;
   }
 
   @Override
@@ -99,12 +108,8 @@ public class PslContinuousReader implements ContinuousReader {
       return;
     }
     try {
-      Subscription sub = adminClient.getSubscription(options.subscriptionPath()).get();
-      long topicPartitionCnt =
-          adminClient.getTopicPartitionCount(TopicPath.parse(sub.getTopic())).get();
-
       Map<Partition, com.google.cloud.pubsublite.Offset> pslSourceOffsetMap = new HashMap<>();
-      for (int i = 0; i < topicPartitionCnt; i++) {
+      for (int i = 0; i < topicPartitionCount; i++) {
         pslSourceOffsetMap.put(Partition.of(i), com.google.cloud.pubsublite.Offset.of(0));
       }
       cursorClient
@@ -131,7 +136,6 @@ public class PslContinuousReader implements ContinuousReader {
   @Override
   public void stop() {
     cursorClient.shutdown();
-    adminClient.shutdown();
     committer.close();
   }
 

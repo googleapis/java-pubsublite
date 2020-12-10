@@ -42,7 +42,7 @@ public class PslContinuousReader implements ContinuousReader {
 
   private final PslDataSourceOptions options;
   private final CursorClient cursorClient;
-  private final MultiPartitionCommitterImpl committer;
+  private final MultiPartitionCommitter committer;
   private final long topicPartitionCount;
   private SparkSourceOffset startOffset;
 

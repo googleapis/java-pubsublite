@@ -113,7 +113,7 @@ public class AdminServiceClientTest {
 
     LocationName parent = LocationName.of("[PROJECT]", "[LOCATION]");
     Topic topic = Topic.newBuilder().build();
-    String topicId = "topic_id-957291989";
+    String topicId = "topicId-1139259734";
 
     Topic actualResponse = client.createTopic(parent, topic, topicId);
     Assert.assertEquals(expectedResponse, actualResponse);
@@ -139,7 +139,7 @@ public class AdminServiceClientTest {
     try {
       LocationName parent = LocationName.of("[PROJECT]", "[LOCATION]");
       Topic topic = Topic.newBuilder().build();
-      String topicId = "topic_id-957291989";
+      String topicId = "topicId-1139259734";
       client.createTopic(parent, topic, topicId);
       Assert.fail("No exception raised");
     } catch (InvalidArgumentException e) {
@@ -157,7 +157,7 @@ public class AdminServiceClientTest {
 
     String parent = "parent-995424086";
     Topic topic = Topic.newBuilder().build();
-    String topicId = "topic_id-957291989";
+    String topicId = "topicId-1139259734";
 
     Topic actualResponse = client.createTopic(parent, topic, topicId);
     Assert.assertEquals(expectedResponse, actualResponse);
@@ -183,7 +183,7 @@ public class AdminServiceClientTest {
     try {
       String parent = "parent-995424086";
       Topic topic = Topic.newBuilder().build();
-      String topicId = "topic_id-957291989";
+      String topicId = "topicId-1139259734";
       client.createTopic(parent, topic, topicId);
       Assert.fail("No exception raised");
     } catch (InvalidArgumentException e) {
@@ -637,7 +637,7 @@ public class AdminServiceClientTest {
 
     LocationName parent = LocationName.of("[PROJECT]", "[LOCATION]");
     Subscription subscription = Subscription.newBuilder().build();
-    String subscriptionId = "subscription_id-1402099843";
+    String subscriptionId = "subscriptionId1478790936";
 
     Subscription actualResponse = client.createSubscription(parent, subscription, subscriptionId);
     Assert.assertEquals(expectedResponse, actualResponse);
@@ -663,7 +663,7 @@ public class AdminServiceClientTest {
     try {
       LocationName parent = LocationName.of("[PROJECT]", "[LOCATION]");
       Subscription subscription = Subscription.newBuilder().build();
-      String subscriptionId = "subscription_id-1402099843";
+      String subscriptionId = "subscriptionId1478790936";
       client.createSubscription(parent, subscription, subscriptionId);
       Assert.fail("No exception raised");
     } catch (InvalidArgumentException e) {
@@ -682,7 +682,7 @@ public class AdminServiceClientTest {
 
     String parent = "parent-995424086";
     Subscription subscription = Subscription.newBuilder().build();
-    String subscriptionId = "subscription_id-1402099843";
+    String subscriptionId = "subscriptionId1478790936";
 
     Subscription actualResponse = client.createSubscription(parent, subscription, subscriptionId);
     Assert.assertEquals(expectedResponse, actualResponse);
@@ -708,7 +708,7 @@ public class AdminServiceClientTest {
     try {
       String parent = "parent-995424086";
       Subscription subscription = Subscription.newBuilder().build();
-      String subscriptionId = "subscription_id-1402099843";
+      String subscriptionId = "subscriptionId1478790936";
       client.createSubscription(parent, subscription, subscriptionId);
       Assert.fail("No exception raised");
     } catch (InvalidArgumentException e) {

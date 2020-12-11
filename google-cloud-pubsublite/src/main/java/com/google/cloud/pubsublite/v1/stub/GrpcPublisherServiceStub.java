@@ -70,11 +70,21 @@ public class GrpcPublisherServiceStub extends PublisherServiceStub {
         PublisherServiceStubSettings.newBuilder().build(), clientContext, callableFactory);
   }
 
+  /**
+   * Constructs an instance of GrpcPublisherServiceStub, using the given settings. This is protected
+   * so that it is easy to make a subclass, but otherwise, the static factory methods should be
+   * preferred.
+   */
   protected GrpcPublisherServiceStub(
       PublisherServiceStubSettings settings, ClientContext clientContext) throws IOException {
     this(settings, clientContext, new GrpcPublisherServiceCallableFactory());
   }
 
+  /**
+   * Constructs an instance of GrpcPublisherServiceStub, using the given settings. This is protected
+   * so that it is easy to make a subclass, but otherwise, the static factory methods should be
+   * preferred.
+   */
   protected GrpcPublisherServiceStub(
       PublisherServiceStubSettings settings,
       ClientContext clientContext,

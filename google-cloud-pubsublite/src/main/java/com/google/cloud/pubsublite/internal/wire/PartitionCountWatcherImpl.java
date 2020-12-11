@@ -71,7 +71,7 @@ public class PartitionCountWatcherImpl extends AbstractApiService implements Par
       // the topic
       // config at least once to start up properly.
       if (!currentPartitionCount.isPresent()) {
-        notifyFailed(ExtractStatus.toCanonical(e.getCause()));
+        notifyFailed(ExtractStatus.toCanonical(e));
         stop();
       }
       log.atWarning().withCause(e).log("Failed to refresh partition count");

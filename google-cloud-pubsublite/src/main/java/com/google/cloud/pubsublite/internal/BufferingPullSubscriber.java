@@ -72,10 +72,8 @@ public class BufferingPullSubscriber implements PullSubscriber<SequencedMessage>
     underlying.startAsync().awaitRunning();
     try {
       underlying.seek(initialSeek).get();
-    } catch (InterruptedException e) {
+    } catch (InterruptedException | ExecutionException e) {
       throw ExtractStatus.toCanonical(e);
-    } catch (ExecutionException e) {
-      throw ExtractStatus.toCanonical(e.getCause());
     }
     underlying.allowFlow(
         FlowControlRequest.newBuilder()

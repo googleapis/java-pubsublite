@@ -22,7 +22,6 @@ import com.google.api.core.ApiFuture;
 import com.google.api.gax.rpc.ApiException;
 import com.google.cloud.pubsublite.internal.ExtractStatus;
 import com.google.cloud.pubsublite.proto.Subscription;
-import java.util.concurrent.ExecutionException;
 
 /** Utilities for looking up information on partitions. */
 public final class PartitionLookupUtils {
@@ -51,8 +50,6 @@ public final class PartitionLookupUtils {
           "Config has more than Integer.MAX_VALUE partitions configured. This"
               + " config cannot be used with this client library.");
       return (int) numPartitions;
-    } catch (ExecutionException e) {
-      throw ExtractStatus.toCanonical(e.getCause()).underlying;
     } catch (Throwable t) {
       throw ExtractStatus.toCanonical(t).underlying;
     }
@@ -78,8 +75,6 @@ public final class PartitionLookupUtils {
     ApiFuture<Subscription> subscriptionFuture = client.getSubscription(subscription);
     try {
       return numPartitions(TopicPath.parse(subscriptionFuture.get().getTopic()), client);
-    } catch (ExecutionException e) {
-      throw ExtractStatus.toCanonical(e.getCause()).underlying;
     } catch (Throwable t) {
       throw ExtractStatus.toCanonical(t).underlying;
     }

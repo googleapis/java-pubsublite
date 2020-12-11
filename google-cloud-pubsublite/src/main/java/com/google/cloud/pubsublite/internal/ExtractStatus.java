@@ -35,6 +35,8 @@ public final class ExtractStatus {
       return Optional.of(new CheckedApiException(e));
     } catch (CheckedApiException e) {
       return Optional.of(e);
+    } catch (ExecutionException e) {
+      return extract(e.getCause());
     } catch (Throwable e) {
       return Optional.empty();
     }
@@ -60,9 +62,7 @@ public final class ExtractStatus {
         () -> {
           try {
             future.get();
-          } catch (ExecutionException e) {
-            consumer.accept(toCanonical(e.getCause()));
-          } catch (InterruptedException e) {
+          } catch (InterruptedException | ExecutionException e) {
             consumer.accept(toCanonical(e));
           }
         },

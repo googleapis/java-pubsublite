@@ -77,12 +77,22 @@ public class GrpcPartitionAssignmentServiceStub extends PartitionAssignmentServi
         callableFactory);
   }
 
+  /**
+   * Constructs an instance of GrpcPartitionAssignmentServiceStub, using the given settings. This is
+   * protected so that it is easy to make a subclass, but otherwise, the static factory methods
+   * should be preferred.
+   */
   protected GrpcPartitionAssignmentServiceStub(
       PartitionAssignmentServiceStubSettings settings, ClientContext clientContext)
       throws IOException {
     this(settings, clientContext, new GrpcPartitionAssignmentServiceCallableFactory());
   }
 
+  /**
+   * Constructs an instance of GrpcPartitionAssignmentServiceStub, using the given settings. This is
+   * protected so that it is easy to make a subclass, but otherwise, the static factory methods
+   * should be preferred.
+   */
   protected GrpcPartitionAssignmentServiceStub(
       PartitionAssignmentServiceStubSettings settings,
       ClientContext clientContext,

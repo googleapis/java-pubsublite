@@ -171,7 +171,7 @@ public class AdminServiceClient implements BackgroundResource {
    * @param parent Required. The parent location in which to create the topic. Structured like
    *     `projects/{project_number}/locations/{location}`.
    * @param topic Required. Configuration of the topic to create. Its `name` field is ignored.
-   * @param topic_id Required. The ID to use for the topic, which will become the final component of
+   * @param topicId Required. The ID to use for the topic, which will become the final component of
    *     the topic's name.
    *     <p>This value is structured like: `my-topic-name`.
    * @throws com.google.api.gax.rpc.ApiException if the remote call fails
@@ -193,7 +193,7 @@ public class AdminServiceClient implements BackgroundResource {
    * @param parent Required. The parent location in which to create the topic. Structured like
    *     `projects/{project_number}/locations/{location}`.
    * @param topic Required. Configuration of the topic to create. Its `name` field is ignored.
-   * @param topic_id Required. The ID to use for the topic, which will become the final component of
+   * @param topicId Required. The ID to use for the topic, which will become the final component of
    *     the topic's name.
    *     <p>This value is structured like: `my-topic-name`.
    * @throws com.google.api.gax.rpc.ApiException if the remote call fails
@@ -388,7 +388,7 @@ public class AdminServiceClient implements BackgroundResource {
    * Updates properties of the specified topic.
    *
    * @param topic Required. The topic to update. Its `name` field must be populated.
-   * @param update_mask Required. A mask specifying the topic fields to change.
+   * @param updateMask Required. A mask specifying the topic fields to change.
    * @throws com.google.api.gax.rpc.ApiException if the remote call fails
    */
   public final Topic updateTopic(Topic topic, FieldMask updateMask) {
@@ -534,8 +534,8 @@ public class AdminServiceClient implements BackgroundResource {
    *     like `projects/{project_number}/locations/{location}`.
    * @param subscription Required. Configuration of the subscription to create. Its `name` field is
    *     ignored.
-   * @param subscription_id Required. The ID to use for the subscription, which will become the
-   *     final component of the subscription's name.
+   * @param subscriptionId Required. The ID to use for the subscription, which will become the final
+   *     component of the subscription's name.
    *     <p>This value is structured like: `my-sub-name`.
    * @throws com.google.api.gax.rpc.ApiException if the remote call fails
    */
@@ -558,8 +558,8 @@ public class AdminServiceClient implements BackgroundResource {
    *     like `projects/{project_number}/locations/{location}`.
    * @param subscription Required. Configuration of the subscription to create. Its `name` field is
    *     ignored.
-   * @param subscription_id Required. The ID to use for the subscription, which will become the
-   *     final component of the subscription's name.
+   * @param subscriptionId Required. The ID to use for the subscription, which will become the final
+   *     component of the subscription's name.
    *     <p>This value is structured like: `my-sub-name`.
    * @throws com.google.api.gax.rpc.ApiException if the remote call fails
    */
@@ -710,7 +710,7 @@ public class AdminServiceClient implements BackgroundResource {
    *
    * @param subscription Required. The subscription to update. Its `name` field must be populated.
    *     Topic field must not be populated.
-   * @param update_mask Required. A mask specifying the subscription fields to change.
+   * @param updateMask Required. A mask specifying the subscription fields to change.
    * @throws com.google.api.gax.rpc.ApiException if the remote call fails
    */
   public final Subscription updateSubscription(Subscription subscription, FieldMask updateMask) {

@@ -45,12 +45,13 @@ public class BlockingPullSubscriberImpl implements BlockingPullSubscriber {
   private Deque<SequencedMessage> messages = new ArrayDeque<>();
 
   private final CloseableMonitor monitor = new CloseableMonitor();
-  private final Monitor.Guard notEmtpyOrErr = new Monitor.Guard(monitor.monitor) {
-    @Override
-    public boolean isSatisfied() {
-      return !messages.isEmpty() || error.isPresent();
-    }
-  };
+  private final Monitor.Guard notEmtpyOrErr =
+      new Monitor.Guard(monitor.monitor) {
+        @Override
+        public boolean isSatisfied() {
+          return !messages.isEmpty() || error.isPresent();
+        }
+      };
 
   public BlockingPullSubscriberImpl(
       SubscriberFactory factory, FlowControlSettings settings, SeekRequest initialSeek)

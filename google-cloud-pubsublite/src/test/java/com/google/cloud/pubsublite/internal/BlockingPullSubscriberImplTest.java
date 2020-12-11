@@ -18,7 +18,6 @@ package com.google.cloud.pubsublite.internal;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.junit.Assert.assertThrows;
-import static org.junit.Assert.fail;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.inOrder;
@@ -89,7 +88,8 @@ public class BlockingPullSubscriberImplTest {
         .when(underlying)
         .addListener(any(), any());
 
-    subscriber = new BlockingPullSubscriberImpl(underlyingFactory, flowControlSettings, initialSeek);
+    subscriber =
+        new BlockingPullSubscriberImpl(underlyingFactory, flowControlSettings, initialSeek);
 
     InOrder inOrder = inOrder(underlyingFactory, underlying);
     inOrder.verify(underlyingFactory).newSubscriber(any());
@@ -112,8 +112,7 @@ public class BlockingPullSubscriberImplTest {
 
   @Test
   public void pullBeforeErrorThrows() throws InterruptedException {
-    Thread thread =
-            new Thread(() -> assertThrows(CheckedApiException.class, subscriber::pull));
+    Thread thread = new Thread(() -> assertThrows(CheckedApiException.class, subscriber::pull));
     thread.start();
     Thread.sleep(1000);
     assertThat(thread.getState()).isEqualTo(Thread.State.WAITING);

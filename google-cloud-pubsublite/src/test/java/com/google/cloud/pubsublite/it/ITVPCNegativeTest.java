@@ -51,6 +51,7 @@ import com.google.cloud.pubsublite.proto.Topic.PartitionConfig;
 import com.google.cloud.pubsublite.proto.Topic.RetentionConfig;
 import com.google.protobuf.FieldMask;
 import com.google.protobuf.util.Durations;
+import com.google.pubsub.v1.PubsubMessage;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -320,9 +321,16 @@ public class ITVPCNegativeTest {
           PublisherSettings.newBuilder().setTopicPath(topicPath).build();
 
       Publisher publisher = Publisher.create(publisherSettings);
+      publisher.startAsync().awaitRunning();
+      publisher.publish(PubsubMessage.newBuilder().build());
+      publisher.awaitTerminated(30, TimeUnit.SECONDS);
       fail("Expected PERMISSION_DENIED CheckedApiException");
     } catch (ApiException e) {
       checkExceptionForVPCError(new CheckedApiException(e));
+    } catch (TimeoutException t) {
+      fail("Expected PERMISSION_DENIED CheckedApiException but got: " + t.toString());
+    } catch (IllegalStateException e) {
+      checkExceptionForVPCError(toCanonical(e.getCause()));
     }
   }
 

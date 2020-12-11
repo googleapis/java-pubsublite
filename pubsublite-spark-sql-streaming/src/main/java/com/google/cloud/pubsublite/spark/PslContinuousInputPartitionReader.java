@@ -18,6 +18,7 @@ package com.google.cloud.pubsublite.spark;
 
 import com.google.cloud.pubsublite.SequencedMessage;
 import com.google.cloud.pubsublite.SubscriptionPath;
+import com.google.cloud.pubsublite.internal.BlockingPullSubscriberImpl;
 import com.google.cloud.pubsublite.internal.CheckedApiException;
 import com.google.common.flogger.GoogleLogger;
 import org.apache.spark.sql.catalyst.InternalRow;
@@ -29,14 +30,14 @@ public class PslContinuousInputPartitionReader
   private static final GoogleLogger log = GoogleLogger.forEnclosingClass();
 
   private final SubscriptionPath subscriptionPath;
-  private final BlockingPullSubscriber subscriber;
+  private final BlockingPullSubscriberImpl subscriber;
   private SparkPartitionOffset currentOffset;
   private SequencedMessage currentMsg;
 
   PslContinuousInputPartitionReader(
       SubscriptionPath subscriptionPath,
       SparkPartitionOffset startOffset,
-      BlockingPullSubscriber subscriber) {
+      BlockingPullSubscriberImpl subscriber) {
     this.subscriptionPath = subscriptionPath;
     this.currentOffset = startOffset;
     this.subscriber = subscriber;

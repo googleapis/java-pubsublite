@@ -14,18 +14,17 @@
  * limitations under the License.
  */
 
-package com.google.cloud.pubsublite.spark;
+package com.google.cloud.pubsublite.internal;
 
 import com.google.api.core.ApiService.Listener;
 import com.google.api.core.ApiService.State;
 import com.google.cloud.pubsublite.SequencedMessage;
 import com.google.cloud.pubsublite.cloudpubsub.FlowControlSettings;
-import com.google.cloud.pubsublite.internal.CheckedApiException;
-import com.google.cloud.pubsublite.internal.ExtractStatus;
 import com.google.cloud.pubsublite.internal.wire.Subscriber;
 import com.google.cloud.pubsublite.internal.wire.SubscriberFactory;
 import com.google.cloud.pubsublite.proto.FlowControlRequest;
 import com.google.cloud.pubsublite.proto.SeekRequest;
+import com.google.common.util.concurrent.Monitor;
 import com.google.common.util.concurrent.MoreExecutors;
 import com.google.errorprone.annotations.concurrent.GuardedBy;
 import java.util.ArrayDeque;
@@ -34,24 +33,26 @@ import java.util.Deque;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.locks.Condition;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 
-public class BlockingPullSubscriber implements AutoCloseable {
+public class BlockingPullSubscriberImpl implements BlockingPullSubscriber {
 
   private final Subscriber underlying;
 
-  private final Lock lock = new ReentrantLock();
-  private final Condition notEmpty = lock.newCondition();
-
-  @GuardedBy("lock")
+  @GuardedBy("monitor.monitor")
   private Optional<CheckedApiException> error = Optional.empty();
 
-  @GuardedBy("lock")
+  @GuardedBy("monitor.monitor")
   private Deque<SequencedMessage> messages = new ArrayDeque<>();
 
-  public BlockingPullSubscriber(
+  private final CloseableMonitor monitor = new CloseableMonitor();
+  private final Monitor.Guard notEmtpyOrErr = new Monitor.Guard(monitor.monitor) {
+    @Override
+    public boolean isSatisfied() {
+      return !messages.isEmpty() || error.isPresent();
+    }
+  };
+
+  public BlockingPullSubscriberImpl(
       SubscriberFactory factory, FlowControlSettings settings, SeekRequest initialSeek)
       throws CheckedApiException {
     underlying = factory.newSubscriber(this::addMessages);
@@ -79,35 +80,22 @@ public class BlockingPullSubscriber implements AutoCloseable {
   }
 
   private void fail(CheckedApiException e) {
-    lock.lock();
-    try {
+    try (CloseableMonitor.Hold h = monitor.enter()) {
       error = Optional.of(e);
-    } finally {
-      lock.unlock();
     }
   }
 
   private void addMessages(Collection<SequencedMessage> new_messages) {
-    lock.lock();
-    try {
+    try (CloseableMonitor.Hold h = monitor.enter()) {
       messages.addAll(new_messages);
-      if (!messages.isEmpty()) {
-        notEmpty.signal();
-      }
-    } finally {
-      lock.unlock();
     }
   }
 
-  // Blocking call until there is at least one message to return.
+  @Override
   public SequencedMessage pull() throws InterruptedException, CheckedApiException {
-    lock.lock();
-    try {
+    try (CloseableMonitor.Hold h = monitor.enterWhenUninterruptibly(notEmtpyOrErr)) {
       if (error.isPresent()) {
         throw error.get();
-      }
-      while (messages.isEmpty()) {
-        notEmpty.await();
       }
       SequencedMessage msg = Objects.requireNonNull(messages.pollFirst());
       underlying.allowFlow(
@@ -116,8 +104,6 @@ public class BlockingPullSubscriber implements AutoCloseable {
               .setAllowedMessages(1)
               .build());
       return msg;
-    } finally {
-      lock.unlock();
     }
   }
 

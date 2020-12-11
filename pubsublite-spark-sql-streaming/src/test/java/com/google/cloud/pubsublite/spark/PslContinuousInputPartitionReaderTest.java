@@ -20,6 +20,7 @@ import static com.google.common.truth.Truth.assertThat;
 import static org.mockito.Mockito.*;
 
 import com.google.cloud.pubsublite.*;
+import com.google.cloud.pubsublite.internal.BlockingPullSubscriberImpl;
 import com.google.cloud.pubsublite.internal.testing.UnitTestExamples;
 import com.google.protobuf.ByteString;
 import com.google.protobuf.util.Timestamps;
@@ -29,7 +30,7 @@ import org.junit.Test;
 
 public class PslContinuousInputPartitionReaderTest {
 
-  private final BlockingPullSubscriber subscriber = mock(BlockingPullSubscriber.class);
+  private final BlockingPullSubscriberImpl subscriber = mock(BlockingPullSubscriberImpl.class);
   private ContinuousInputPartitionReader<InternalRow> reader;
 
   private static SequencedMessage newMessage(long offset) {

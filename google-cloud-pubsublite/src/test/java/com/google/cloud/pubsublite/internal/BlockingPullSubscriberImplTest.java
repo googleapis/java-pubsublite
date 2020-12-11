@@ -14,10 +14,11 @@
  * limitations under the License.
  */
 
-package com.google.cloud.pubsublite.spark;
+package com.google.cloud.pubsublite.internal;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.junit.Assert.assertThrows;
+import static org.junit.Assert.fail;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.inOrder;
@@ -32,7 +33,6 @@ import com.google.cloud.pubsublite.Message;
 import com.google.cloud.pubsublite.Offset;
 import com.google.cloud.pubsublite.SequencedMessage;
 import com.google.cloud.pubsublite.cloudpubsub.FlowControlSettings;
-import com.google.cloud.pubsublite.internal.CheckedApiException;
 import com.google.cloud.pubsublite.internal.wire.Subscriber;
 import com.google.cloud.pubsublite.internal.wire.SubscriberFactory;
 import com.google.cloud.pubsublite.proto.Cursor;
@@ -46,7 +46,7 @@ import org.junit.Test;
 import org.mockito.InOrder;
 import org.mockito.stubbing.Answer;
 
-public class BlockingPullSubscriberTest {
+public class BlockingPullSubscriberImplTest {
   private final SubscriberFactory underlyingFactory = mock(SubscriberFactory.class);
   private final Subscriber underlying = mock(Subscriber.class);
   private final Offset initialOffset = Offset.of(5);
@@ -57,7 +57,7 @@ public class BlockingPullSubscriberTest {
   private final FlowControlSettings flowControlSettings =
       FlowControlSettings.builder().setBytesOutstanding(10).setMessagesOutstanding(20).build();
   // Initialized in setUp.
-  private BlockingPullSubscriber subscriber;
+  private BlockingPullSubscriberImpl subscriber;
   private Consumer<ImmutableList<SequencedMessage>> messageConsumer;
   private ApiService.Listener errorListener;
 
@@ -89,7 +89,7 @@ public class BlockingPullSubscriberTest {
         .when(underlying)
         .addListener(any(), any());
 
-    subscriber = new BlockingPullSubscriber(underlyingFactory, flowControlSettings, initialSeek);
+    subscriber = new BlockingPullSubscriberImpl(underlyingFactory, flowControlSettings, initialSeek);
 
     InOrder inOrder = inOrder(underlyingFactory, underlying);
     inOrder.verify(underlyingFactory).newSubscriber(any());
@@ -108,6 +108,19 @@ public class BlockingPullSubscriberTest {
     errorListener.failed(null, new CheckedApiException(StatusCode.Code.INTERNAL));
     CheckedApiException e = assertThrows(CheckedApiException.class, subscriber::pull);
     assertThat(e.code()).isEqualTo(StatusCode.Code.INTERNAL);
+  }
+
+  @Test
+  public void pullBeforeErrorThrows() throws InterruptedException {
+    Thread thread =
+            new Thread(() -> assertThrows(CheckedApiException.class, subscriber::pull));
+    thread.start();
+    Thread.sleep(1000);
+    assertThat(thread.getState()).isEqualTo(Thread.State.WAITING);
+
+    errorListener.failed(null, new CheckedApiException(StatusCode.Code.INTERNAL));
+    Thread.sleep(1000);
+    assertThat(thread.getState()).isEqualTo(Thread.State.TERMINATED);
   }
 
   @Test

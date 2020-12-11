@@ -166,7 +166,7 @@ public class ITVPCNegativeTest {
     } catch (InterruptedException e) {
       fail("Expected PERMISSION_DENIED StatusRuntimeException but got: " + e.toString());
     } catch (ExecutionException e) {
-      checkExceptionForVPCError(toCanonical(e.getCause()));
+      checkExceptionForVPCError(toCanonical(e));
       return;
     }
 
@@ -189,7 +189,7 @@ public class ITVPCNegativeTest {
     } catch (InterruptedException e) {
       fail("Expected PERMISSION_DENIED StatusRuntimeException but got: " + e.toString());
     } catch (ExecutionException e) {
-      checkExceptionForVPCError(toCanonical(e.getCause()));
+      checkExceptionForVPCError(toCanonical(e));
     }
   }
 
@@ -201,7 +201,7 @@ public class ITVPCNegativeTest {
     } catch (InterruptedException e) {
       fail("Expected PERMISSION_DENIED StatusRuntimeException but got: " + e.toString());
     } catch (ExecutionException e) {
-      checkExceptionForVPCError(toCanonical(e.getCause()));
+      checkExceptionForVPCError(toCanonical(e));
     }
   }
 
@@ -213,7 +213,7 @@ public class ITVPCNegativeTest {
     } catch (InterruptedException e) {
       fail("Expected PERMISSION_DENIED StatusRuntimeException but got: " + e.toString());
     } catch (ExecutionException e) {
-      checkExceptionForVPCError(toCanonical(e.getCause()));
+      checkExceptionForVPCError(toCanonical(e));
     }
   }
 
@@ -225,7 +225,7 @@ public class ITVPCNegativeTest {
     } catch (InterruptedException e) {
       fail("Expected PERMISSION_DENIED StatusRuntimeException but got: " + e.toString());
     } catch (ExecutionException e) {
-      checkExceptionForVPCError(toCanonical(e.getCause()));
+      checkExceptionForVPCError(toCanonical(e));
     }
   }
 
@@ -238,7 +238,7 @@ public class ITVPCNegativeTest {
     } catch (InterruptedException e) {
       fail("Expected PERMISSION_DENIED StatusRuntimeException but got: " + e.toString());
     } catch (ExecutionException e) {
-      checkExceptionForVPCError(toCanonical(e.getCause()));
+      checkExceptionForVPCError(toCanonical(e));
     }
   }
 
@@ -249,7 +249,7 @@ public class ITVPCNegativeTest {
     } catch (InterruptedException e) {
       fail("Expected PERMISSION_DENIED StatusRuntimeException but got: " + e.toString());
     } catch (ExecutionException e) {
-      checkExceptionForVPCError(toCanonical(e.getCause()));
+      checkExceptionForVPCError(toCanonical(e));
       return;
     }
 
@@ -272,7 +272,7 @@ public class ITVPCNegativeTest {
     } catch (InterruptedException e) {
       fail("Expected PERMISSION_DENIED StatusRuntimeException but got: " + e.toString());
     } catch (ExecutionException e) {
-      checkExceptionForVPCError(toCanonical(e.getCause()));
+      checkExceptionForVPCError(toCanonical(e));
     }
   }
 
@@ -284,7 +284,7 @@ public class ITVPCNegativeTest {
     } catch (InterruptedException e) {
       fail("Expected PERMISSION_DENIED StatusRuntimeException but got: " + e.toString());
     } catch (ExecutionException e) {
-      checkExceptionForVPCError(toCanonical(e.getCause()));
+      checkExceptionForVPCError(toCanonical(e));
     }
   }
 
@@ -296,7 +296,7 @@ public class ITVPCNegativeTest {
     } catch (InterruptedException e) {
       fail("Expected PERMISSION_DENIED StatusRuntimeException but got: " + e.toString());
     } catch (ExecutionException e) {
-      checkExceptionForVPCError(toCanonical(e.getCause()));
+      checkExceptionForVPCError(toCanonical(e));
     }
   }
 
@@ -310,7 +310,7 @@ public class ITVPCNegativeTest {
     } catch (InterruptedException e) {
       fail("Expected PERMISSION_DENIED StatusRuntimeException but got: " + e.toString());
     } catch (ExecutionException e) {
-      checkExceptionForVPCError(toCanonical(e.getCause()));
+      checkExceptionForVPCError(toCanonical(e));
     }
   }
 
@@ -330,7 +330,7 @@ public class ITVPCNegativeTest {
     } catch (TimeoutException t) {
       fail("Expected PERMISSION_DENIED CheckedApiException but got: " + t.toString());
     } catch (IllegalStateException e) {
-      checkExceptionForVPCError(toCanonical(e.getCause()));
+      checkExceptionForVPCError(toCanonical(e));
     }
   }
 
@@ -367,7 +367,7 @@ public class ITVPCNegativeTest {
     } catch (TimeoutException t) {
       fail("Expected PERMISSION_DENIED CheckedApiException but got: " + t.toString());
     } catch (IllegalStateException e) {
-      checkExceptionForVPCError(toCanonical(e.getCause()));
+      checkExceptionForVPCError(toCanonical(e));
     }
   }
 }

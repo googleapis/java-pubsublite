@@ -28,7 +28,6 @@ import com.google.cloud.pubsublite.internal.TopicStatsClientSettings;
 import com.google.cloud.pubsublite.v1.TopicStatsServiceClient;
 import com.google.common.base.Optional;
 import java.io.Serializable;
-import java.util.concurrent.ExecutionException;
 
 @AutoValue
 public abstract class TopicBacklogReaderSettings implements Serializable {
@@ -62,8 +61,6 @@ public abstract class TopicBacklogReaderSettings implements Serializable {
         setTopicPath(
             TopicPath.parse(adminClient.getSubscription(subscriptionPath).get().getTopic()));
         return this;
-      } catch (ExecutionException e) {
-        throw ExtractStatus.toCanonical(e.getCause()).underlying;
       } catch (Throwable t) {
         throw ExtractStatus.toCanonical(t).underlying;
       }

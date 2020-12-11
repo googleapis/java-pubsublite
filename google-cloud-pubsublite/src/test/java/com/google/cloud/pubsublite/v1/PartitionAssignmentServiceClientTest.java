@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     https://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package com.google.cloud.pubsublite.v1;
 
 import com.google.api.gax.core.NoCredentialsProvider;
@@ -26,13 +27,14 @@ import com.google.api.gax.rpc.InvalidArgumentException;
 import com.google.api.gax.rpc.StatusCode;
 import com.google.cloud.pubsublite.proto.PartitionAssignment;
 import com.google.cloud.pubsublite.proto.PartitionAssignmentRequest;
-import io.grpc.Status;
 import io.grpc.StatusRuntimeException;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
+import javax.annotation.Generated;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Assert;
@@ -40,48 +42,32 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-@javax.annotation.Generated("by GAPIC")
+@Generated("by gapic-generator-java")
 public class PartitionAssignmentServiceClientTest {
-  private static MockAdminService mockAdminService;
-  private static MockCursorService mockCursorService;
-  private static MockPublisherService mockPublisherService;
-  private static MockSubscriberService mockSubscriberService;
+  private static MockServiceHelper mockServiceHelper;
   private static MockPartitionAssignmentService mockPartitionAssignmentService;
-  private static MockTopicStatsService mockTopicStatsService;
-  private static MockServiceHelper serviceHelper;
   private PartitionAssignmentServiceClient client;
   private LocalChannelProvider channelProvider;
 
   @BeforeClass
   public static void startStaticServer() {
-    mockAdminService = new MockAdminService();
-    mockCursorService = new MockCursorService();
-    mockPublisherService = new MockPublisherService();
-    mockSubscriberService = new MockSubscriberService();
     mockPartitionAssignmentService = new MockPartitionAssignmentService();
-    mockTopicStatsService = new MockTopicStatsService();
-    serviceHelper =
+    mockServiceHelper =
         new MockServiceHelper(
             UUID.randomUUID().toString(),
-            Arrays.<MockGrpcService>asList(
-                mockAdminService,
-                mockCursorService,
-                mockPublisherService,
-                mockSubscriberService,
-                mockPartitionAssignmentService,
-                mockTopicStatsService));
-    serviceHelper.start();
+            Arrays.<MockGrpcService>asList(mockPartitionAssignmentService));
+    mockServiceHelper.start();
   }
 
   @AfterClass
   public static void stopServer() {
-    serviceHelper.stop();
+    mockServiceHelper.stop();
   }
 
   @Before
   public void setUp() throws IOException {
-    serviceHelper.reset();
-    channelProvider = serviceHelper.createChannelProvider();
+    mockServiceHelper.reset();
+    channelProvider = mockServiceHelper.createChannelProvider();
     PartitionAssignmentServiceSettings settings =
         PartitionAssignmentServiceSettings.newBuilder()
             .setTransportChannelProvider(channelProvider)
@@ -96,9 +82,9 @@ public class PartitionAssignmentServiceClientTest {
   }
 
   @Test
-  @SuppressWarnings("all")
   public void assignPartitionsTest() throws Exception {
-    PartitionAssignment expectedResponse = PartitionAssignment.newBuilder().build();
+    PartitionAssignment expectedResponse =
+        PartitionAssignment.newBuilder().addAllPartitions(new ArrayList<Long>()).build();
     mockPartitionAssignmentService.addResponse(expectedResponse);
     PartitionAssignmentRequest request = PartitionAssignmentRequest.newBuilder().build();
 
@@ -118,9 +104,8 @@ public class PartitionAssignmentServiceClientTest {
   }
 
   @Test
-  @SuppressWarnings("all")
   public void assignPartitionsExceptionTest() throws Exception {
-    StatusRuntimeException exception = new StatusRuntimeException(Status.INVALID_ARGUMENT);
+    StatusRuntimeException exception = new StatusRuntimeException(io.grpc.Status.INVALID_ARGUMENT);
     mockPartitionAssignmentService.addException(exception);
     PartitionAssignmentRequest request = PartitionAssignmentRequest.newBuilder().build();
 
@@ -138,7 +123,7 @@ public class PartitionAssignmentServiceClientTest {
       Assert.fail("No exception thrown");
     } catch (ExecutionException e) {
       Assert.assertTrue(e.getCause() instanceof InvalidArgumentException);
-      InvalidArgumentException apiException = (InvalidArgumentException) e.getCause();
+      InvalidArgumentException apiException = ((InvalidArgumentException) e.getCause());
       Assert.assertEquals(StatusCode.Code.INVALID_ARGUMENT, apiException.getStatusCode().getCode());
     }
   }

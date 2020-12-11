@@ -16,8 +16,6 @@
 
 package com.google.cloud.pubsublite.cloudpubsub;
 
-import static com.google.cloud.pubsublite.ProjectLookupUtils.toCanonical;
-
 import com.google.api.gax.batching.BatchingSettings;
 import com.google.api.gax.rpc.ApiException;
 import com.google.auto.value.AutoValue;
@@ -26,9 +24,11 @@ import com.google.cloud.pubsublite.Message;
 import com.google.cloud.pubsublite.MessageTransformer;
 import com.google.cloud.pubsublite.TopicPath;
 import com.google.cloud.pubsublite.cloudpubsub.internal.WrappingPublisher;
+import com.google.cloud.pubsublite.internal.wire.PartitionCountWatcher;
+import com.google.cloud.pubsublite.internal.wire.PartitionCountWatchingPublisher;
+import com.google.cloud.pubsublite.internal.wire.PartitionCountWatchingPublisherSettings;
 import com.google.cloud.pubsublite.internal.wire.PubsubContext;
 import com.google.cloud.pubsublite.internal.wire.PubsubContext.Framework;
-import com.google.cloud.pubsublite.internal.wire.RoutingPublisherBuilder;
 import com.google.cloud.pubsublite.internal.wire.SinglePartitionPublisherBuilder;
 import com.google.cloud.pubsublite.v1.PublisherServiceClient;
 import com.google.pubsub.v1.PubsubMessage;
@@ -71,8 +71,7 @@ public abstract class PublisherSettings {
   // For testing.
   abstract SinglePartitionPublisherBuilder.Builder underlyingBuilder();
 
-  // For testing.
-  abstract Optional<Integer> numPartitions();
+  abstract Optional<PartitionCountWatcher.Factory> partitionCountWatcherFactory();
 
   /** Get a new builder for a PublisherSettings. */
   public static Builder newBuilder() {
@@ -105,8 +104,7 @@ public abstract class PublisherSettings {
     abstract Builder setUnderlyingBuilder(
         SinglePartitionPublisherBuilder.Builder underlyingBuilder);
 
-    // For testing.
-    abstract Builder setNumPartitions(int numPartitions);
+    abstract Builder setPartitionCountWatcherFactory(PartitionCountWatcher.Factory factory);
 
     public abstract PublisherSettings build();
   }
@@ -119,26 +117,24 @@ public abstract class PublisherSettings {
         messageTransformer()
             .orElseGet(() -> MessageTransforms.fromCpsPublishTransformer(keyExtractor));
 
-    TopicPath canonicalTopic = toCanonical(topicPath());
-    RoutingPublisherBuilder.Builder wireBuilder =
-        RoutingPublisherBuilder.newBuilder()
-            .setTopic(canonicalTopic)
+    PartitionCountWatchingPublisherSettings.Builder publisherSettings =
+        PartitionCountWatchingPublisherSettings.newBuilder()
+            .setTopic(topicPath())
             .setPublisherFactory(
                 partition -> {
                   SinglePartitionPublisherBuilder.Builder singlePartitionBuilder =
                       underlyingBuilder()
                           .setBatchingSettings(batchingSettings)
                           .setContext(PubsubContext.of(FRAMEWORK))
-                          .setTopic(canonicalTopic)
+                          .setTopic(topicPath())
                           .setPartition(partition);
                   serviceClientSupplier()
                       .ifPresent(
                           supplier -> singlePartitionBuilder.setServiceClient(supplier.get()));
                   return singlePartitionBuilder.build();
                 });
-
-    numPartitions().ifPresent(wireBuilder::setNumPartitions);
-
-    return new WrappingPublisher(wireBuilder.build(), messageTransformer);
+    partitionCountWatcherFactory().ifPresent(publisherSettings::setConfigWatcherFactory);
+    return new WrappingPublisher(
+        new PartitionCountWatchingPublisher(publisherSettings.build()), messageTransformer);
   }
 }

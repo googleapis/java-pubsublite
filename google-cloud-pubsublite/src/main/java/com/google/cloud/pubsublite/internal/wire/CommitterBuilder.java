@@ -22,7 +22,6 @@ import static com.google.cloud.pubsublite.internal.ServiceClients.addDefaultSett
 import com.google.api.gax.rpc.ApiException;
 import com.google.auto.value.AutoValue;
 import com.google.cloud.pubsublite.Partition;
-import com.google.cloud.pubsublite.ProjectLookupUtils;
 import com.google.cloud.pubsublite.SubscriptionPath;
 import com.google.cloud.pubsublite.proto.InitialCommitCursorRequest;
 import com.google.cloud.pubsublite.v1.CursorServiceClient;
@@ -76,8 +75,7 @@ public abstract class CommitterBuilder {
 
       InitialCommitCursorRequest initialCommitCursorRequest =
           InitialCommitCursorRequest.newBuilder()
-              .setSubscription(
-                  ProjectLookupUtils.toCanonical(builder.subscriptionPath()).toString())
+              .setSubscription(builder.subscriptionPath().toString())
               .setPartition(builder.partition().value())
               .build();
       return new ApiExceptionCommitter(

@@ -14,19 +14,25 @@
  * limitations under the License.
  */
 
-package com.google.cloud.pubsublite.spark;
+package com.google.cloud.pubsublite.internal;
 
-import com.google.cloud.pubsublite.Partition;
-import com.google.cloud.pubsublite.internal.wire.Committer;
-import java.io.Closeable;
+import java.util.function.Supplier;
+import javax.annotation.Nullable;
+import javax.annotation.concurrent.GuardedBy;
 
-public interface MultiPartitionCommitter extends Closeable {
+/** A thread-safe, lazily constructed instance of an object. */
+public class Lazy<T> {
+  @GuardedBy("this")
+  private @Nullable T instance = null;
 
-  interface CommitterFactory {
-    Committer newCommitter(Partition partition);
+  private final Supplier<T> supplier;
+
+  public Lazy(Supplier<T> supplier) {
+    this.supplier = supplier;
   }
 
-  void commit(PslSourceOffset offset);
-
-  void close();
+  public synchronized T get() {
+    if (instance == null) instance = supplier.get();
+    return instance;
+  }
 }

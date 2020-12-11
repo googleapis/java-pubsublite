@@ -16,7 +16,6 @@
 
 package com.google.cloud.pubsublite.cloudpubsub;
 
-import static com.google.cloud.pubsublite.ProjectLookupUtils.toCanonical;
 import static com.google.cloud.pubsublite.internal.ExtractStatus.toCanonical;
 import static com.google.cloud.pubsublite.internal.UncheckedApiPreconditions.checkArgument;
 
@@ -177,13 +176,12 @@ public abstract class SubscriberSettings {
 
   @SuppressWarnings("CheckReturnValue")
   Subscriber instantiate() throws ApiException {
-    SubscriptionPath canonicalPath = toCanonical(subscriptionPath());
     PartitionSubscriberFactory partitionSubscriberFactory =
-        makePartitionSubscriberFactory(canonicalPath);
+        makePartitionSubscriberFactory(subscriptionPath());
 
     if (!partitions().isPresent()) {
       AssignerBuilder.Builder assignerBuilder = AssignerBuilder.newBuilder();
-      assignerBuilder.setSubscriptionPath(canonicalPath);
+      assignerBuilder.setSubscriptionPath(subscriptionPath());
       assignmentServiceClient().ifPresent(assignerBuilder::setServiceClient);
       AssignerFactory assignerFactory =
           receiver -> {

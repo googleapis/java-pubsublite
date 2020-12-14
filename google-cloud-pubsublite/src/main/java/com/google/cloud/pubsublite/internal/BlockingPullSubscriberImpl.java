@@ -16,16 +16,17 @@
 
 package com.google.cloud.pubsublite.internal;
 
+import com.google.api.core.ApiFutures;
 import com.google.api.core.ApiService.Listener;
 import com.google.api.core.ApiService.State;
+import com.google.api.core.SettableApiFuture;
 import com.google.cloud.pubsublite.SequencedMessage;
 import com.google.cloud.pubsublite.cloudpubsub.FlowControlSettings;
 import com.google.cloud.pubsublite.internal.wire.Subscriber;
 import com.google.cloud.pubsublite.internal.wire.SubscriberFactory;
 import com.google.cloud.pubsublite.proto.FlowControlRequest;
 import com.google.cloud.pubsublite.proto.SeekRequest;
-import com.google.common.util.concurrent.Monitor;
-import com.google.common.util.concurrent.SettableFuture;
+import com.google.common.util.concurrent.MoreExecutors;
 import com.google.errorprone.annotations.concurrent.GuardedBy;
 import java.util.ArrayDeque;
 import java.util.Collection;
@@ -33,31 +34,20 @@ import java.util.Deque;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 
 public class BlockingPullSubscriberImpl implements BlockingPullSubscriber {
 
   private final Subscriber underlying;
 
-  @GuardedBy("monitor.monitor")
+  @GuardedBy("this")
   private Optional<CheckedApiException> error = Optional.empty();
 
-  @GuardedBy("monitor.monitor")
+  @GuardedBy("this")
   private Deque<SequencedMessage> messages = new ArrayDeque<>();
 
-  private final CloseableMonitor monitor = new CloseableMonitor();
-  private final Monitor.Guard notEmptyOrErr =
-      new Monitor.Guard(monitor.monitor) {
-        @Override
-        public boolean isSatisfied() {
-          return !messages.isEmpty() || error.isPresent();
-        }
-      };
-  private final ExecutorService executorService = Executors.newCachedThreadPool();
+  @GuardedBy("this")
+  private Optional<SettableApiFuture<Void>> notification = Optional.empty();
 
   public BlockingPullSubscriberImpl(
       SubscriberFactory factory, FlowControlSettings settings, SeekRequest initialSeek)
@@ -70,7 +60,7 @@ public class BlockingPullSubscriberImpl implements BlockingPullSubscriber {
             fail(ExtractStatus.toCanonical(throwable));
           }
         },
-        executorService);
+            MoreExecutors.directExecutor());
     underlying.startAsync().awaitRunning();
     try {
       underlying.seek(initialSeek).get();
@@ -84,54 +74,43 @@ public class BlockingPullSubscriberImpl implements BlockingPullSubscriber {
             .build());
   }
 
-  private void fail(CheckedApiException e) {
-    try (CloseableMonitor.Hold h = monitor.enter()) {
-      error = Optional.of(e);
+  private synchronized void fail(CheckedApiException e) {
+    error = Optional.of(e);
+    if (notification.isPresent()) {
+      notification.get().setException(e);
+      notification = Optional.empty();
     }
   }
 
-  private void addMessages(Collection<SequencedMessage> new_messages) {
-    try (CloseableMonitor.Hold h = monitor.enter()) {
-      messages.addAll(new_messages);
+  private synchronized void addMessages(Collection<SequencedMessage> new_messages) {
+    messages.addAll(new_messages);
+    if (notification.isPresent()) {
+      notification.get().set(null);
+      notification = Optional.empty();
     }
   }
 
   @Override
-  public Future<Void> onData() {
-    return onData(Long.MAX_VALUE, TimeUnit.SECONDS);
+  public synchronized Future<Void> onData() {
+    if (error.isPresent()) {
+      return ApiFutures.immediateFailedFuture(error.get());
+    }
+    if (!messages.isEmpty()) {
+      return ApiFutures.immediateFuture(null);
+    }
+    notification = Optional.of(SettableApiFuture.create());
+    return notification.get();
   }
 
   @Override
-  public Future<Void> onData(long time, TimeUnit unit) {
-    SettableFuture<Void> toReturn = SettableFuture.create();
-    executorService.submit(
-        () -> {
-          CloseableMonitor.Hold h = monitor.enterWhenUninterruptibly(notEmptyOrErr, time, unit);
-          if (!h.satisfied()) {
-            toReturn.setException(new TimeoutException("No data available"));
-          }
-          try (CloseableMonitor.Hold hold = h) {
-            if (error.isPresent()) {
-              toReturn.setException(error.get());
-            } else {
-              toReturn.set(null);
-            }
-          }
-        });
-    return toReturn;
-  }
-
-  @Override
-  public Optional<SequencedMessage> messageIfAvailable() throws CheckedApiException {
-    try (CloseableMonitor.Hold h = monitor.enter()) {
-      if (!messages.isEmpty()) {
+  public synchronized Optional<SequencedMessage> messageIfAvailable() throws CheckedApiException {
+    if (error.isPresent()) {
+      throw error.get();
+    }
+    if (!messages.isEmpty()) {
         return Optional.of(Objects.requireNonNull(messages.pollFirst()));
-      }
-      if (error.isPresent()) {
-        throw error.get();
-      }
-      return Optional.empty();
     }
+    return Optional.empty();
   }
 
   @Override

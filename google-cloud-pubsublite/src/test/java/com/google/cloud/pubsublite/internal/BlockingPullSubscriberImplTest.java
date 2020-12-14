@@ -144,65 +144,11 @@ public class BlockingPullSubscriberImplTest {
   }
 
   @Test
-  public void onDataWithTimeoutAfterErrorThrows() {
-    CheckedApiException expected = new CheckedApiException(StatusCode.Code.INTERNAL);
-    errorListener.failed(null, expected);
-    ExecutionException e =
-        assertThrows(
-            ExecutionException.class, () -> subscriber.onData().get(100, TimeUnit.MILLISECONDS));
-    assertThat(expected).isEqualTo(e.getCause());
-  }
-
-  @Test
-  public void onDataWithTimeoutBeforeErrorThrows() throws Exception {
-    CheckedApiException expected = new CheckedApiException(StatusCode.Code.INTERNAL);
-    Future<?> future =
-        executorService.submit(
-            () -> {
-              ExecutionException e =
-                  assertThrows(
-                      ExecutionException.class,
-                      () -> subscriber.onData().get(300, TimeUnit.MILLISECONDS));
-              assertThat(expected).isEqualTo(e.getCause());
-            });
-    Thread.sleep(100);
-    assertThat(future.isDone()).isFalse();
-
-    errorListener.failed(null, expected);
-    future.get();
-  }
-
-  @Test
   public void onDataSuccess() throws Exception {
     SequencedMessage message =
         SequencedMessage.of(Message.builder().build(), Timestamps.EPOCH, Offset.of(12), 30);
     Future<?> future = executorService.submit(() -> subscriber.onData().get());
     messageConsumer.accept(ImmutableList.of(message));
-    future.get();
-  }
-
-  @Test
-  public void onDataWithTimeoutSuccess() throws Exception {
-    SequencedMessage message =
-        SequencedMessage.of(Message.builder().build(), Timestamps.EPOCH, Offset.of(12), 30);
-    Future<?> future =
-        executorService.submit(() -> subscriber.onData().get(100, TimeUnit.MILLISECONDS));
-    messageConsumer.accept(ImmutableList.of(message));
-    future.get();
-  }
-
-  @Test
-  public void onDataWithTimeoutNoMessage() throws Exception {
-    Future<?> future =
-        executorService.submit(
-            () -> {
-              try {
-                subscriber.onData().get(100, TimeUnit.MILLISECONDS);
-                fail();
-              } catch (Exception e) {
-                assertThat(e).isInstanceOf(TimeoutException.class);
-              }
-            });
     future.get();
   }
 
@@ -232,14 +178,13 @@ public class BlockingPullSubscriberImplTest {
   }
 
   @Test
-  public void pullMessagePrioritizeMessageOverError() throws Exception {
+  public void pullMessagePrioritizeErrorOverExistingMessage() {
     CheckedApiException expected = new CheckedApiException(StatusCode.Code.INTERNAL);
     errorListener.failed(null, expected);
     SequencedMessage message =
         SequencedMessage.of(Message.builder().build(), Timestamps.EPOCH, Offset.of(12), 30);
     messageConsumer.accept(ImmutableList.of(message));
 
-    assertThat(Optional.of(message)).isEqualTo(subscriber.messageIfAvailable());
     try {
       subscriber.messageIfAvailable();
       fail();

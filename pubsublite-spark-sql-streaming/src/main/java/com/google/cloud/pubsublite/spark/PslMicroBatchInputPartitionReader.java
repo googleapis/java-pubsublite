@@ -19,40 +19,72 @@ package com.google.cloud.pubsublite.spark;
 import com.google.cloud.pubsublite.Partition;
 import com.google.cloud.pubsublite.SequencedMessage;
 import com.google.cloud.pubsublite.SubscriptionPath;
+import com.google.cloud.pubsublite.internal.BlockingPullSubscriber;
 import com.google.cloud.pubsublite.internal.CheckedApiException;
 import com.google.common.flogger.GoogleLogger;
+import io.netty.util.Timeout;
 import org.apache.spark.sql.catalyst.InternalRow;
 import org.apache.spark.sql.sources.v2.reader.InputPartitionReader;
 import org.apache.spark.sql.sources.v2.reader.streaming.ContinuousInputPartitionReader;
 import org.apache.spark.sql.sources.v2.reader.streaming.PartitionOffset;
 
+import java.time.Duration;
+import java.util.Optional;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
+
 public class PslMicroBatchInputPartitionReader
         implements InputPartitionReader<InternalRow> {
     private static final GoogleLogger log = GoogleLogger.forEnclosingClass();
 
+    private static final Duration SUBSCRIBER_PULL_TIMEOUT = Duration.ofSeconds(10);
+
     private final SubscriptionPath subscriptionPath;
     private final Partition partition;
-    private final RangedBlockingPullSubscriber subscriber;
-    private SequencedMessage currentMsg;
+    private final SparkPartitionOffset endOffset;
+    private final BlockingPullSubscriber subscriber;
+    private SequencedMessage currentMsg = null;
+    private boolean batchFulfilled = false;
 
     PslMicroBatchInputPartitionReader(
             SubscriptionPath subscriptionPath,
             Partition partition,
-            RangedBlockingPullSubscriber subscriber) {
+            SparkPartitionOffset endOffset,
+            BlockingPullSubscriber subscriber) {
         this.subscriptionPath = subscriptionPath;
         this.partition = partition;
         this.subscriber = subscriber;
-        this.currentMsg = null;
+        this.endOffset = endOffset;
     }
 
     @Override
     public boolean next() {
-        try {
-            currentMsg = subscriber.pull();
-            return currentMsg != null;
-        } catch (InterruptedException | CheckedApiException e) {
-            throw new IllegalStateException("Failed to retrieve messages.", e);
+        if (batchFulfilled) {
+            return false;
         }
+        Optional<SequencedMessage> msg;
+        while (true) {
+            try {
+                subscriber.onData().get(SUBSCRIBER_PULL_TIMEOUT.getSeconds(), TimeUnit.SECONDS);
+                msg = subscriber.messageIfAvailable();
+                break;
+            } catch (TimeoutException e) {
+                log.atWarning().log("Unable to get any messages in last " +
+                        SUBSCRIBER_PULL_TIMEOUT.toString());
+            } catch (Throwable t) {
+                throw new IllegalStateException("Failed to retrieve messages.", t);
+            }
+        }
+        // since next() is only called one at a time, we are sure that the message is
+        // available to this thread.
+        assert msg.isPresent();
+        currentMsg = msg.get();
+        if (currentMsg.offset().value() >= endOffset.offset()) {
+            batchFulfilled = true;
+            return false;
+        }
+        return true;
     }
 
     @Override

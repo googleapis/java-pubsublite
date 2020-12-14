@@ -45,7 +45,7 @@ public class PslMicroBatchReader implements MicroBatchReader {
                     "Failed to get information of subscription " + options.subscriptionPath(), e);
         }
         this.committer =
-                new MultiPartitionCommitter(
+                new MultiPartitionCommitterImpl(
                         topicPartitionCount,
                         (partition) ->
                                 CommitterBuilder.newBuilder()
@@ -58,8 +58,8 @@ public class PslMicroBatchReader implements MicroBatchReader {
             @Override
             public PslSourceOffset getHeadOffset(TopicPath topic) {
                 return PslSourceOffset.builder().partitionOffsetMap(ImmutableMap.of(
-                        Partition.of(0), com.google.cloud.pubsublite.Offset.of(0),
-                        Partition.of(1), com.google.cloud.pubsublite.Offset.of(0)
+                        Partition.of(0), com.google.cloud.pubsublite.Offset.of(50),
+                        Partition.of(1), com.google.cloud.pubsublite.Offset.of(50)
                 )).build();
             }
             @Override
@@ -142,17 +142,15 @@ public class PslMicroBatchReader implements MicroBatchReader {
 
     @Override
     public List<InputPartition<InternalRow>> planInputPartitions() {
-        return startOffset.getPartitionOffsetMap().entrySet().stream()
+        return startOffset.getPartitionOffsetMap().values().stream()
                 .map(
-                        e -> {
-                            Partition partition = e.getKey();
-                            SparkPartitionOffset startPartitionOffset = e.getValue();
-                            SparkPartitionOffset endPartitionOfffset = endOffset.getPartitionOffsetMap()
-                                    .get(partition);
+                        v -> {
+                            SparkPartitionOffset endPartitionOffset = endOffset.getPartitionOffsetMap()
+                                    .get(v.partition());
                             return new PslMicroBatchInputPartition(
                                     options.subscriptionPath(),
                                     Objects.requireNonNull(options.flowControlSettings()),
-                                    startPartitionOffset, endPartitionOfffset);
+                                    v, endPartitionOffset);
                         })
                 .collect(Collectors.toList());
     }

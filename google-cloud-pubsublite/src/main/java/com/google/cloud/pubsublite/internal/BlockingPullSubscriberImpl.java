@@ -60,7 +60,7 @@ public class BlockingPullSubscriberImpl implements BlockingPullSubscriber {
             fail(ExtractStatus.toCanonical(throwable));
           }
         },
-            MoreExecutors.directExecutor());
+        MoreExecutors.directExecutor());
     underlying.startAsync().awaitRunning();
     try {
       underlying.seek(initialSeek).get();
@@ -92,6 +92,12 @@ public class BlockingPullSubscriberImpl implements BlockingPullSubscriber {
 
   @Override
   public synchronized Future<Void> onData() {
+    if (notification.isPresent()) {
+      notification
+          .get()
+          .setException(new InterruptedException("Interruped and superseded by newer onData call"));
+      notification = Optional.empty();
+    }
     if (error.isPresent()) {
       return ApiFutures.immediateFailedFuture(error.get());
     }
@@ -108,7 +114,7 @@ public class BlockingPullSubscriberImpl implements BlockingPullSubscriber {
       throw error.get();
     }
     if (!messages.isEmpty()) {
-        return Optional.of(Objects.requireNonNull(messages.pollFirst()));
+      return Optional.of(Objects.requireNonNull(messages.pollFirst()));
     }
     return Optional.empty();
   }

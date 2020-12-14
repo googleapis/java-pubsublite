@@ -26,20 +26,20 @@ import javax.annotation.concurrent.ThreadSafe;
 public interface BlockingPullSubscriber extends Closeable {
 
   /**
-   * Returns a {@link Future} that will be completed when there are messages available.
-   * Unfinished existing {@link Future} returned by onData() will be abandoned and superseded
-   * by new onData() call.
+   * Returns a {@link Future} that will be completed when there are messages available. Unfinished
+   * existing {@link Future} returned by onData() will be set with {@link InterruptedException} and
+   * superseded by new onData() call.
    *
-   * <p>{@link java.util.concurrent.ExecutionException} will be set to the Future if there is
-   * underlying non-retryable error.
+   * <p>{@link CheckedApiException} will be set to the Future if there is underlying permanent
+   * error.
    */
   Future<Void> onData();
 
   /**
-   * Pull messages if there is any ready to deliver. Any message will only be delivered to one
-   * call if there are multiple concurrent calls.
+   * Pull messages if there is any ready to deliver. Any message will only be delivered to one call
+   * if there are multiple concurrent calls.
    *
-   * @throws CheckedApiException if there is underlying non-retryable error.
+   * @throws CheckedApiException if there is underlying permanent error.
    */
   Optional<SequencedMessage> messageIfAvailable() throws CheckedApiException;
 

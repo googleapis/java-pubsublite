@@ -153,6 +153,14 @@ public class BlockingPullSubscriberImplTest {
   }
 
   @Test
+  public void onDataMultiCalls() {
+    Future<?> future1 = subscriber.onData();
+    Future<?> future2 = subscriber.onData();
+    ExecutionException e = assertThrows(ExecutionException.class, () -> future1.get());
+    assertThat(e.getCause()).isInstanceOf(InterruptedException.class);
+  }
+
+  @Test
   public void pullMessage() throws Exception {
     SequencedMessage message =
         SequencedMessage.of(Message.builder().build(), Timestamps.EPOCH, Offset.of(12), 30);

@@ -21,6 +21,8 @@ import com.google.cloud.pubsublite.SubscriptionPath;
 import com.google.cloud.pubsublite.internal.BlockingPullSubscriberImpl;
 import com.google.cloud.pubsublite.internal.CheckedApiException;
 import com.google.common.flogger.GoogleLogger;
+import java.util.Optional;
+import java.util.concurrent.ExecutionException;
 import org.apache.spark.sql.catalyst.InternalRow;
 import org.apache.spark.sql.sources.v2.reader.streaming.ContinuousInputPartitionReader;
 import org.apache.spark.sql.sources.v2.reader.streaming.PartitionOffset;
@@ -52,14 +54,19 @@ public class PslContinuousInputPartitionReader
   @Override
   public boolean next() {
     try {
-      currentMsg = subscriber.pull();
+      subscriber.onData().get();
+      // since next() will not be called concurrently, we are sure that the message
+      // is available to this thread.
+      Optional<SequencedMessage> msg = subscriber.messageIfAvailable();
+      assert msg.isPresent();
+      currentMsg = msg.get();
       currentOffset =
           SparkPartitionOffset.builder()
               .partition(currentOffset.partition())
               .offset(currentMsg.offset().value())
               .build();
       return true;
-    } catch (InterruptedException | CheckedApiException e) {
+    } catch (InterruptedException | CheckedApiException | ExecutionException e) {
       throw new IllegalStateException("Failed to retrieve messages.", e);
     }
   }

@@ -25,7 +25,7 @@ import com.google.cloud.pubsublite.internal.wire.SubscriberFactory;
 import com.google.cloud.pubsublite.proto.FlowControlRequest;
 import com.google.cloud.pubsublite.proto.SeekRequest;
 import com.google.common.util.concurrent.Monitor;
-import com.google.common.util.concurrent.MoreExecutors;
+import com.google.common.util.concurrent.SettableFuture;
 import com.google.errorprone.annotations.concurrent.GuardedBy;
 import java.util.ArrayDeque;
 import java.util.Collection;
@@ -33,7 +33,11 @@ import java.util.Deque;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 public class BlockingPullSubscriberImpl implements BlockingPullSubscriber {
 
@@ -46,13 +50,14 @@ public class BlockingPullSubscriberImpl implements BlockingPullSubscriber {
   private Deque<SequencedMessage> messages = new ArrayDeque<>();
 
   private final CloseableMonitor monitor = new CloseableMonitor();
-  private final Monitor.Guard notEmtpyOrErr =
+  private final Monitor.Guard notEmptyOrErr =
       new Monitor.Guard(monitor.monitor) {
         @Override
         public boolean isSatisfied() {
           return !messages.isEmpty() || error.isPresent();
         }
       };
+  private final ExecutorService executorService = Executors.newCachedThreadPool();
 
   public BlockingPullSubscriberImpl(
       SubscriberFactory factory, FlowControlSettings settings, SeekRequest initialSeek)
@@ -65,7 +70,7 @@ public class BlockingPullSubscriberImpl implements BlockingPullSubscriber {
             fail(ExtractStatus.toCanonical(throwable));
           }
         },
-        MoreExecutors.directExecutor());
+        executorService);
     underlying.startAsync().awaitRunning();
     try {
       underlying.seek(initialSeek).get();
@@ -92,30 +97,40 @@ public class BlockingPullSubscriberImpl implements BlockingPullSubscriber {
   }
 
   @Override
-  public SequencedMessage pull() throws InterruptedException, CheckedApiException {
-    Optional<SequencedMessage> msg = pull(Long.MAX_VALUE, TimeUnit.SECONDS);
-    assert msg.isPresent();
-    return msg.get();
+  public Future<Void> onData() {
+    return onData(Long.MAX_VALUE, TimeUnit.SECONDS);
   }
 
   @Override
-  public Optional<SequencedMessage> pull(long time, TimeUnit unit)
-      throws InterruptedException, CheckedApiException {
-    CloseableMonitor.Hold h = monitor.enterWhenUninterruptibly(notEmtpyOrErr, time, unit);
-    if (!h.satisfied()) {
-      return Optional.empty();
-    }
-    try (CloseableMonitor.Hold hold = h) {
+  public Future<Void> onData(long time, TimeUnit unit) {
+    SettableFuture<Void> toReturn = SettableFuture.create();
+    executorService.submit(
+        () -> {
+          CloseableMonitor.Hold h = monitor.enterWhenUninterruptibly(notEmptyOrErr, time, unit);
+          if (!h.satisfied()) {
+            toReturn.setException(new TimeoutException("No data available"));
+          }
+          try (CloseableMonitor.Hold hold = h) {
+            if (error.isPresent()) {
+              toReturn.setException(error.get());
+            } else {
+              toReturn.set(null);
+            }
+          }
+        });
+    return toReturn;
+  }
+
+  @Override
+  public Optional<SequencedMessage> messageIfAvailable() throws CheckedApiException {
+    try (CloseableMonitor.Hold h = monitor.enter()) {
+      if (!messages.isEmpty()) {
+        return Optional.of(Objects.requireNonNull(messages.pollFirst()));
+      }
       if (error.isPresent()) {
         throw error.get();
       }
-      SequencedMessage msg = Objects.requireNonNull(messages.pollFirst());
-      underlying.allowFlow(
-          FlowControlRequest.newBuilder()
-              .setAllowedBytes(msg.byteSize())
-              .setAllowedMessages(1)
-              .build());
-      return Optional.of(msg);
+      return Optional.empty();
     }
   }
 

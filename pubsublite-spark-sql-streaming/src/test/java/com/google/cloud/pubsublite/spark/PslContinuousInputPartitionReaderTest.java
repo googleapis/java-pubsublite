@@ -19,10 +19,10 @@ package com.google.cloud.pubsublite.spark;
 import static com.google.common.truth.Truth.assertThat;
 import static org.mockito.Mockito.*;
 
+import com.google.api.core.ApiFutures;
 import com.google.cloud.pubsublite.*;
 import com.google.cloud.pubsublite.internal.BlockingPullSubscriberImpl;
 import com.google.cloud.pubsublite.internal.testing.UnitTestExamples;
-import com.google.common.util.concurrent.Futures;
 import com.google.protobuf.ByteString;
 import com.google.protobuf.util.Timestamps;
 import java.util.Optional;
@@ -71,7 +71,7 @@ public class PslContinuousInputPartitionReaderTest {
             UnitTestExamples.examplePartition());
 
     // Multiple get w/o next will return same msg.
-    when(subscriber.onData()).thenReturn(Futures.immediateVoidFuture());
+    when(subscriber.onData()).thenReturn(ApiFutures.immediateFuture(null));
     when(subscriber.messageIfAvailable()).thenReturn(Optional.of(message1));
     assertThat(reader.next()).isTrue();
     assertThat(reader.get()).isEqualTo(expectedRow1);
@@ -79,7 +79,7 @@ public class PslContinuousInputPartitionReaderTest {
     assertThat(((SparkPartitionOffset) reader.getOffset()).offset()).isEqualTo(10L);
 
     // Next will advance to next msg.
-    when(subscriber.onData()).thenReturn(Futures.immediateVoidFuture());
+    when(subscriber.onData()).thenReturn(ApiFutures.immediateFuture(null));
     when(subscriber.messageIfAvailable()).thenReturn(Optional.of(message2));
     assertThat(reader.next()).isTrue();
     assertThat(reader.get()).isEqualTo(expectedRow2);

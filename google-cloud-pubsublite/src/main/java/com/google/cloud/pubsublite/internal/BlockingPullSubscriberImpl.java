@@ -16,10 +16,12 @@
 
 package com.google.cloud.pubsublite.internal;
 
+import com.google.api.core.ApiFuture;
 import com.google.api.core.ApiFutures;
 import com.google.api.core.ApiService.Listener;
 import com.google.api.core.ApiService.State;
 import com.google.api.core.SettableApiFuture;
+import com.google.api.gax.rpc.StatusCode;
 import com.google.cloud.pubsublite.SequencedMessage;
 import com.google.cloud.pubsublite.cloudpubsub.FlowControlSettings;
 import com.google.cloud.pubsublite.internal.wire.Subscriber;
@@ -34,7 +36,6 @@ import java.util.Deque;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
 
 public class BlockingPullSubscriberImpl implements BlockingPullSubscriber {
 
@@ -91,20 +92,16 @@ public class BlockingPullSubscriberImpl implements BlockingPullSubscriber {
   }
 
   @Override
-  public synchronized Future<Void> onData() {
-    if (notification.isPresent()) {
-      notification
-          .get()
-          .setException(new InterruptedException("Interruped and superseded by newer onData call"));
-      notification = Optional.empty();
-    }
+  public synchronized ApiFuture<Void> onData() {
     if (error.isPresent()) {
       return ApiFutures.immediateFailedFuture(error.get());
     }
     if (!messages.isEmpty()) {
       return ApiFutures.immediateFuture(null);
     }
-    notification = Optional.of(SettableApiFuture.create());
+    if (!notification.isPresent()) {
+      notification = Optional.of(SettableApiFuture.create());
+    }
     return notification.get();
   }
 
@@ -113,14 +110,22 @@ public class BlockingPullSubscriberImpl implements BlockingPullSubscriber {
     if (error.isPresent()) {
       throw error.get();
     }
-    if (!messages.isEmpty()) {
-      return Optional.of(Objects.requireNonNull(messages.pollFirst()));
+    if (messages.isEmpty()) {
+      return Optional.empty();
     }
-    return Optional.empty();
+    return Optional.of(Objects.requireNonNull(messages.pollFirst()));
   }
 
   @Override
   public void close() {
+    synchronized (this) {
+      if (!error.isPresent()) {
+        error =
+            Optional.of(
+                new CheckedApiException(
+                    "Subscriber client shut down", StatusCode.Code.UNAVAILABLE));
+      }
+    }
     underlying.stopAsync().awaitTerminated();
   }
 }

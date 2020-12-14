@@ -16,24 +16,24 @@
 
 package com.google.cloud.pubsublite.internal;
 
+import com.google.api.core.ApiFuture;
 import com.google.cloud.pubsublite.SequencedMessage;
 import java.io.Closeable;
 import java.util.Optional;
-import java.util.concurrent.Future;
 import javax.annotation.concurrent.ThreadSafe;
 
 @ThreadSafe
 public interface BlockingPullSubscriber extends Closeable {
 
   /**
-   * Returns a {@link Future} that will be completed when there are messages available. Unfinished
-   * existing {@link Future} returned by onData() will be set with {@link InterruptedException} and
-   * superseded by new onData() call.
+   * Returns a {@link ApiFuture} that will be completed when there are messages available.
+   * Unfinished existing {@link ApiFuture} returned by onData() will be abandoned and superseded by
+   * new onData() call.
    *
    * <p>{@link CheckedApiException} will be set to the Future if there is underlying permanent
    * error.
    */
-  Future<Void> onData();
+  ApiFuture<Void> onData();
 
   /**
    * Pull messages if there is any ready to deliver. Any message will only be delivered to one call

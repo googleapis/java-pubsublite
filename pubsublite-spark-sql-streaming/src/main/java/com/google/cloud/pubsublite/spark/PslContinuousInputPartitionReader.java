@@ -19,10 +19,8 @@ package com.google.cloud.pubsublite.spark;
 import com.google.cloud.pubsublite.SequencedMessage;
 import com.google.cloud.pubsublite.SubscriptionPath;
 import com.google.cloud.pubsublite.internal.BlockingPullSubscriberImpl;
-import com.google.cloud.pubsublite.internal.CheckedApiException;
 import com.google.common.flogger.GoogleLogger;
 import java.util.Optional;
-import java.util.concurrent.ExecutionException;
 import org.apache.spark.sql.catalyst.InternalRow;
 import org.apache.spark.sql.sources.v2.reader.streaming.ContinuousInputPartitionReader;
 import org.apache.spark.sql.sources.v2.reader.streaming.PartitionOffset;
@@ -66,8 +64,8 @@ public class PslContinuousInputPartitionReader
               .offset(currentMsg.offset().value())
               .build();
       return true;
-    } catch (InterruptedException | CheckedApiException | ExecutionException e) {
-      throw new IllegalStateException("Failed to retrieve messages.", e);
+    } catch (Throwable t) {
+      throw new IllegalStateException("Failed to retrieve messages.", t);
     }
   }
 

@@ -18,7 +18,6 @@ package com.google.cloud.pubsublite.internal;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.junit.Assert.assertThrows;
-import static org.junit.Assert.fail;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.inOrder;
@@ -129,18 +128,13 @@ public class BlockingPullSubscriberImplTest {
   @Test
   public void onDataBeforeErrorThrows() throws Exception {
     CheckedApiException expected = new CheckedApiException(StatusCode.Code.INTERNAL);
-    Future<?> future =
-        executorService.submit(
-            () -> {
-              ExecutionException e =
-                  assertThrows(ExecutionException.class, () -> subscriber.onData().get());
-              assertThat(expected).isEqualTo(e.getCause());
-            });
+    Future<?> future = subscriber.onData();
     Thread.sleep(1000);
     assertThat(future.isDone()).isFalse();
 
     errorListener.failed(null, expected);
-    future.get();
+    ExecutionException e = assertThrows(ExecutionException.class, future::get);
+    assertThat(expected).isEqualTo(e.getCause());
   }
 
   @Test
@@ -150,14 +144,6 @@ public class BlockingPullSubscriberImplTest {
     Future<?> future = executorService.submit(() -> subscriber.onData().get());
     messageConsumer.accept(ImmutableList.of(message));
     future.get();
-  }
-
-  @Test
-  public void onDataMultiCalls() {
-    Future<?> future1 = subscriber.onData();
-    Future<?> future2 = subscriber.onData();
-    ExecutionException e = assertThrows(ExecutionException.class, () -> future1.get());
-    assertThat(e.getCause()).isInstanceOf(InterruptedException.class);
   }
 
   @Test
@@ -177,12 +163,9 @@ public class BlockingPullSubscriberImplTest {
   public void pullMessageWhenError() {
     CheckedApiException expected = new CheckedApiException(StatusCode.Code.INTERNAL);
     errorListener.failed(null, expected);
-    try {
-      subscriber.messageIfAvailable();
-      fail();
-    } catch (CheckedApiException e) {
-      assertThat(expected).isEqualTo(e);
-    }
+    CheckedApiException e =
+        assertThrows(CheckedApiException.class, () -> subscriber.messageIfAvailable());
+    assertThat(expected).isEqualTo(e);
   }
 
   @Test
@@ -193,14 +176,13 @@ public class BlockingPullSubscriberImplTest {
         SequencedMessage.of(Message.builder().build(), Timestamps.EPOCH, Offset.of(12), 30);
     messageConsumer.accept(ImmutableList.of(message));
 
-    try {
-      subscriber.messageIfAvailable();
-      fail();
-    } catch (CheckedApiException e) {
-      assertThat(expected).isEqualTo(e);
-    }
+    CheckedApiException e =
+        assertThrows(CheckedApiException.class, () -> subscriber.messageIfAvailable());
+    assertThat(expected).isEqualTo(e);
   }
 
+  // Not guaranteed to fail if subscriber is not thread safe, investigate if this becomes
+  // flaky.
   @Test
   public void onlyOneMessageDeliveredWhenMultiCalls() throws Exception {
     SequencedMessage message =

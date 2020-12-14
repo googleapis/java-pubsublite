@@ -52,7 +52,7 @@ public class CloseableMonitor {
    * try-with-resources wrapper for enter. For example...
    *
    * <pre>{@code
-   * try (CloseableMonitor.Hold h = monitor.enter) {
+   * try (CloseableMonitor.Hold h = monitor.enter()) {
    *   // Do stuff
    * }
    * // Monitor is automatically released
@@ -70,6 +70,7 @@ public class CloseableMonitor {
    * utility methods above.
    */
   public class Hold implements AutoCloseable {
+
     private Hold() {}
 
     @UnlockMethod("monitor")

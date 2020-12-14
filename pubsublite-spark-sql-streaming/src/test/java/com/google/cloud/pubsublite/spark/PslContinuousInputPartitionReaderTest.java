@@ -19,17 +19,20 @@ package com.google.cloud.pubsublite.spark;
 import static com.google.common.truth.Truth.assertThat;
 import static org.mockito.Mockito.*;
 
+import com.google.api.core.ApiFutures;
 import com.google.cloud.pubsublite.*;
+import com.google.cloud.pubsublite.internal.BlockingPullSubscriberImpl;
 import com.google.cloud.pubsublite.internal.testing.UnitTestExamples;
 import com.google.protobuf.ByteString;
 import com.google.protobuf.util.Timestamps;
+import java.util.Optional;
 import org.apache.spark.sql.catalyst.InternalRow;
 import org.apache.spark.sql.sources.v2.reader.streaming.ContinuousInputPartitionReader;
 import org.junit.Test;
 
 public class PslContinuousInputPartitionReaderTest {
 
-  private final BlockingPullSubscriber subscriber = mock(BlockingPullSubscriber.class);
+  private final BlockingPullSubscriberImpl subscriber = mock(BlockingPullSubscriberImpl.class);
   private ContinuousInputPartitionReader<InternalRow> reader;
 
   private static SequencedMessage newMessage(long offset) {
@@ -68,14 +71,16 @@ public class PslContinuousInputPartitionReaderTest {
             UnitTestExamples.examplePartition());
 
     // Multiple get w/o next will return same msg.
-    when(subscriber.pull()).thenReturn(message1);
+    when(subscriber.onData()).thenReturn(ApiFutures.immediateFuture(null));
+    when(subscriber.messageIfAvailable()).thenReturn(Optional.of(message1));
     assertThat(reader.next()).isTrue();
     assertThat(reader.get()).isEqualTo(expectedRow1);
     assertThat(reader.get()).isEqualTo(expectedRow1);
     assertThat(((SparkPartitionOffset) reader.getOffset()).offset()).isEqualTo(10L);
 
     // Next will advance to next msg.
-    when(subscriber.pull()).thenReturn(message2);
+    when(subscriber.onData()).thenReturn(ApiFutures.immediateFuture(null));
+    when(subscriber.messageIfAvailable()).thenReturn(Optional.of(message2));
     assertThat(reader.next()).isTrue();
     assertThat(reader.get()).isEqualTo(expectedRow2);
     assertThat(((SparkPartitionOffset) reader.getOffset()).offset()).isEqualTo(13L);

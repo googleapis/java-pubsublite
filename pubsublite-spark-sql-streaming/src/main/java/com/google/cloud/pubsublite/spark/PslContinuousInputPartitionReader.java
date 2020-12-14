@@ -18,8 +18,9 @@ package com.google.cloud.pubsublite.spark;
 
 import com.google.cloud.pubsublite.SequencedMessage;
 import com.google.cloud.pubsublite.SubscriptionPath;
-import com.google.cloud.pubsublite.internal.CheckedApiException;
+import com.google.cloud.pubsublite.internal.BlockingPullSubscriberImpl;
 import com.google.common.flogger.GoogleLogger;
+import java.util.Optional;
 import org.apache.spark.sql.catalyst.InternalRow;
 import org.apache.spark.sql.sources.v2.reader.streaming.ContinuousInputPartitionReader;
 import org.apache.spark.sql.sources.v2.reader.streaming.PartitionOffset;
@@ -29,14 +30,14 @@ public class PslContinuousInputPartitionReader
   private static final GoogleLogger log = GoogleLogger.forEnclosingClass();
 
   private final SubscriptionPath subscriptionPath;
-  private final BlockingPullSubscriber subscriber;
+  private final BlockingPullSubscriberImpl subscriber;
   private SparkPartitionOffset currentOffset;
   private SequencedMessage currentMsg;
 
   PslContinuousInputPartitionReader(
       SubscriptionPath subscriptionPath,
       SparkPartitionOffset startOffset,
-      BlockingPullSubscriber subscriber) {
+      BlockingPullSubscriberImpl subscriber) {
     this.subscriptionPath = subscriptionPath;
     this.currentOffset = startOffset;
     this.subscriber = subscriber;
@@ -51,15 +52,20 @@ public class PslContinuousInputPartitionReader
   @Override
   public boolean next() {
     try {
-      currentMsg = subscriber.pull();
+      subscriber.onData().get();
+      // since next() will not be called concurrently, we are sure that the message
+      // is available to this thread.
+      Optional<SequencedMessage> msg = subscriber.messageIfAvailable();
+      assert msg.isPresent();
+      currentMsg = msg.get();
       currentOffset =
           SparkPartitionOffset.builder()
               .partition(currentOffset.partition())
               .offset(currentMsg.offset().value())
               .build();
       return true;
-    } catch (InterruptedException | CheckedApiException e) {
-      throw new IllegalStateException("Failed to retrieve messages.", e);
+    } catch (Throwable t) {
+      throw new IllegalStateException("Failed to retrieve messages.", t);
     }
   }
 

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.google.cloud.pubsublite.spark;
+package com.google.cloud.pubsublite.internal;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.junit.Assert.assertThrows;
@@ -32,7 +32,6 @@ import com.google.cloud.pubsublite.Message;
 import com.google.cloud.pubsublite.Offset;
 import com.google.cloud.pubsublite.SequencedMessage;
 import com.google.cloud.pubsublite.cloudpubsub.FlowControlSettings;
-import com.google.cloud.pubsublite.internal.CheckedApiException;
 import com.google.cloud.pubsublite.internal.wire.Subscriber;
 import com.google.cloud.pubsublite.internal.wire.SubscriberFactory;
 import com.google.cloud.pubsublite.proto.Cursor;
@@ -40,13 +39,18 @@ import com.google.cloud.pubsublite.proto.FlowControlRequest;
 import com.google.cloud.pubsublite.proto.SeekRequest;
 import com.google.common.collect.ImmutableList;
 import com.google.protobuf.util.Timestamps;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.concurrent.*;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InOrder;
 import org.mockito.stubbing.Answer;
 
-public class BlockingPullSubscriberTest {
+public class BlockingPullSubscriberImplTest {
   private final SubscriberFactory underlyingFactory = mock(SubscriberFactory.class);
   private final Subscriber underlying = mock(Subscriber.class);
   private final Offset initialOffset = Offset.of(5);
@@ -57,9 +61,10 @@ public class BlockingPullSubscriberTest {
   private final FlowControlSettings flowControlSettings =
       FlowControlSettings.builder().setBytesOutstanding(10).setMessagesOutstanding(20).build();
   // Initialized in setUp.
-  private BlockingPullSubscriber subscriber;
+  private BlockingPullSubscriberImpl subscriber;
   private Consumer<ImmutableList<SequencedMessage>> messageConsumer;
   private ApiService.Listener errorListener;
+  private final ExecutorService executorService = Executors.newCachedThreadPool();
 
   @Before
   public void setUp() throws Exception {
@@ -89,7 +94,8 @@ public class BlockingPullSubscriberTest {
         .when(underlying)
         .addListener(any(), any());
 
-    subscriber = new BlockingPullSubscriber(underlyingFactory, flowControlSettings, initialSeek);
+    subscriber =
+        new BlockingPullSubscriberImpl(underlyingFactory, flowControlSettings, initialSeek);
 
     InOrder inOrder = inOrder(underlyingFactory, underlying);
     inOrder.verify(underlyingFactory).newSubscriber(any());
@@ -104,13 +110,6 @@ public class BlockingPullSubscriberTest {
   }
 
   @Test
-  public void pullAfterErrorThrows() {
-    errorListener.failed(null, new CheckedApiException(StatusCode.Code.INTERNAL));
-    CheckedApiException e = assertThrows(CheckedApiException.class, subscriber::pull);
-    assertThat(e.code()).isEqualTo(StatusCode.Code.INTERNAL);
-  }
-
-  @Test
   public void closeStops() {
     when(underlying.stopAsync()).thenReturn(underlying);
     subscriber.close();
@@ -119,30 +118,98 @@ public class BlockingPullSubscriberTest {
   }
 
   @Test
-  public void testPullMessage() throws InterruptedException {
+  public void onDataAfterErrorThrows() {
+    CheckedApiException expected = new CheckedApiException(StatusCode.Code.INTERNAL);
+    errorListener.failed(null, expected);
+    ExecutionException e = assertThrows(ExecutionException.class, () -> subscriber.onData().get());
+    assertThat(expected).isEqualTo(e.getCause());
+  }
+
+  @Test
+  public void onDataBeforeErrorThrows() throws Exception {
+    CheckedApiException expected = new CheckedApiException(StatusCode.Code.INTERNAL);
+    Future<?> future = subscriber.onData();
+    Thread.sleep(1000);
+    assertThat(future.isDone()).isFalse();
+
+    errorListener.failed(null, expected);
+    ExecutionException e = assertThrows(ExecutionException.class, future::get);
+    assertThat(expected).isEqualTo(e.getCause());
+  }
+
+  @Test
+  public void onDataSuccess() throws Exception {
     SequencedMessage message =
         SequencedMessage.of(Message.builder().build(), Timestamps.EPOCH, Offset.of(12), 30);
-    Thread thread =
-        new Thread(
-            () -> {
-              try {
-                assertThat(subscriber.pull()).isEqualTo(message);
-                FlowControlRequest flowControlRequest =
-                    FlowControlRequest.newBuilder()
-                        .setAllowedMessages(1)
-                        .setAllowedBytes(30)
-                        .build();
-                verify(underlying).allowFlow(flowControlRequest);
-              } catch (CheckedApiException | InterruptedException e) {
-                throw new IllegalStateException(e);
-              }
-            });
-    thread.start();
-    Thread.sleep(1000);
-    assertThat(thread.getState()).isEqualTo(Thread.State.WAITING);
-
+    Future<?> future = executorService.submit(() -> subscriber.onData().get());
     messageConsumer.accept(ImmutableList.of(message));
-    Thread.sleep(1000);
-    assertThat(thread.getState()).isEqualTo(Thread.State.TERMINATED);
+    future.get();
+  }
+
+  @Test
+  public void pullMessage() throws Exception {
+    SequencedMessage message =
+        SequencedMessage.of(Message.builder().build(), Timestamps.EPOCH, Offset.of(12), 30);
+    messageConsumer.accept(ImmutableList.of(message));
+    assertThat(Optional.of(message)).isEqualTo(subscriber.messageIfAvailable());
+  }
+
+  @Test
+  public void pullMessageNoMessage() throws Exception {
+    assertThat(Optional.empty()).isEqualTo(subscriber.messageIfAvailable());
+  }
+
+  @Test
+  public void pullMessageWhenError() {
+    CheckedApiException expected = new CheckedApiException(StatusCode.Code.INTERNAL);
+    errorListener.failed(null, expected);
+    CheckedApiException e =
+        assertThrows(CheckedApiException.class, () -> subscriber.messageIfAvailable());
+    assertThat(expected).isEqualTo(e);
+  }
+
+  @Test
+  public void pullMessagePrioritizeErrorOverExistingMessage() {
+    CheckedApiException expected = new CheckedApiException(StatusCode.Code.INTERNAL);
+    errorListener.failed(null, expected);
+    SequencedMessage message =
+        SequencedMessage.of(Message.builder().build(), Timestamps.EPOCH, Offset.of(12), 30);
+    messageConsumer.accept(ImmutableList.of(message));
+
+    CheckedApiException e =
+        assertThrows(CheckedApiException.class, () -> subscriber.messageIfAvailable());
+    assertThat(expected).isEqualTo(e);
+  }
+
+  // Not guaranteed to fail if subscriber is not thread safe, investigate if this becomes
+  // flaky.
+  @Test
+  public void onlyOneMessageDeliveredWhenMultiCalls() throws Exception {
+    SequencedMessage message =
+        SequencedMessage.of(Message.builder().build(), Timestamps.EPOCH, Offset.of(12), 30);
+    messageConsumer.accept(ImmutableList.of(message));
+
+    AtomicInteger count = new AtomicInteger(0);
+    CountDownLatch latch = new CountDownLatch(1);
+    List<Future<?>> futures = new ArrayList<>();
+    for (int i = 0; i < 10; i++) {
+      futures.add(
+          executorService.submit(
+              () -> {
+                try {
+                  latch.await();
+                  if (subscriber.messageIfAvailable().isPresent()) {
+                    count.incrementAndGet();
+                  }
+                } catch (Exception e) {
+                  throw new IllegalStateException(e);
+                }
+              }));
+    }
+    latch.countDown();
+    for (Future<?> f : futures) {
+      f.get();
+    }
+    assertThat(1).isEqualTo(count.get());
   }
 }

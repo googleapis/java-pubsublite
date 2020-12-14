@@ -18,6 +18,7 @@ package com.google.cloud.pubsublite.spark;
 
 import com.google.cloud.pubsublite.SubscriptionPath;
 import com.google.cloud.pubsublite.cloudpubsub.FlowControlSettings;
+import com.google.cloud.pubsublite.internal.BlockingPullSubscriberImpl;
 import com.google.cloud.pubsublite.internal.CheckedApiException;
 import com.google.cloud.pubsublite.internal.wire.PubsubContext;
 import com.google.cloud.pubsublite.internal.wire.SubscriberBuilder;
@@ -54,10 +55,10 @@ public class PslContinuousInputPartition
     PslPartitionOffset pslPartitionOffset =
         PslSparkUtils.toPslPartitionOffset(sparkPartitionOffset);
 
-    BlockingPullSubscriber subscriber;
+    BlockingPullSubscriberImpl subscriber;
     try {
       subscriber =
-          new BlockingPullSubscriber(
+          new BlockingPullSubscriberImpl(
               // TODO(jiangmichael): Pass credentials settings here.
               (consumer) ->
                   SubscriberBuilder.newBuilder()

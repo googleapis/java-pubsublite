@@ -25,7 +25,7 @@ import com.google.cloud.pubsublite.internal.wire.Committer;
 import com.google.common.collect.ImmutableMap;
 import org.junit.Test;
 
-public class MultiPartitionCommitterTest {
+public class MultiPartitionCommitterImplTest {
 
   @Test
   public void testCommit() {
@@ -37,8 +37,8 @@ public class MultiPartitionCommitterTest {
     when(committer2.startAsync())
         .thenReturn(committer2)
         .thenThrow(new IllegalStateException("should only init once"));
-    MultiPartitionCommitter multiCommitter =
-        new MultiPartitionCommitter(
+    MultiPartitionCommitterImpl multiCommitter =
+        new MultiPartitionCommitterImpl(
             2,
             (p) -> {
               if (p.value() == 0L) {
@@ -72,7 +72,8 @@ public class MultiPartitionCommitterTest {
     when(committer.startAsync())
         .thenReturn(committer)
         .thenThrow(new IllegalStateException("should only init once"));
-    MultiPartitionCommitter multiCommitter = new MultiPartitionCommitter(1, (p) -> committer);
+    MultiPartitionCommitterImpl multiCommitter =
+        new MultiPartitionCommitterImpl(1, (p) -> committer);
 
     PslSourceOffset offset =
         PslSourceOffset.builder()

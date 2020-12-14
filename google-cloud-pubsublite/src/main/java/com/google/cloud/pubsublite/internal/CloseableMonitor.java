@@ -19,6 +19,7 @@ package com.google.cloud.pubsublite.internal;
 import com.google.common.util.concurrent.Monitor;
 import com.google.errorprone.annotations.concurrent.LockMethod;
 import com.google.errorprone.annotations.concurrent.UnlockMethod;
+import java.util.concurrent.TimeUnit;
 
 /** Wraps a Monitor with methods that can be used with try-with-resources. */
 public class CloseableMonitor {
@@ -45,14 +46,45 @@ public class CloseableMonitor {
   @LockMethod("monitor")
   public Hold enterWhenUninterruptibly(Monitor.Guard condition) {
     monitor.enterWhenUninterruptibly(condition);
-    return new Hold();
+    return new Hold(ConditionSatisfaction.CONDITION_SATISFIED);
+  }
+
+  /**
+   * try-with-resources wrapper for enterWhenUninterruptibly with timeout. For example:
+   *
+   * <pre>
+   * final Monitor.Guard guard = new Monitor.Guard(monitor.monitor) {
+   *     &#64;Override
+   *     public boolean isSatisfied() {
+   *       assertThat(monitor.monitor.isOccupied()).isTrue();
+   *       return state;
+   *     }
+   * };
+   *
+   * CloseableMonitor.Hold h = monitor.enterWhenUninterruptibly(guard));
+   * if (!h.isSatisfied()) {
+   *   // Do stuff if condition not satisfied when timeout expired
+   * } else {
+   *   try (CloseableMonitor.Hold hold = h) {
+   *     // Do stuff if condition satisfied
+   *   }
+   *   // Monitor is automatically released
+   * }
+   * </pre>
+   */
+  @LockMethod("monitor")
+  public Hold enterWhenUninterruptibly(Monitor.Guard condition, long time, TimeUnit unit) {
+    return new Hold(
+        monitor.enterWhenUninterruptibly(condition, time, unit)
+            ? ConditionSatisfaction.CONDITION_SATISFIED
+            : ConditionSatisfaction.CONDITION_UNSATISFIED);
   }
 
   /**
    * try-with-resources wrapper for enter. For example...
    *
    * <pre>{@code
-   * try (CloseableMonitor.Hold h = monitor.enter) {
+   * try (CloseableMonitor.Hold h = monitor.enter()) {
    *   // Do stuff
    * }
    * // Monitor is automatically released
@@ -61,7 +93,7 @@ public class CloseableMonitor {
   @LockMethod("monitor")
   public Hold enter() {
     monitor.enter();
-    return new Hold();
+    return new Hold(ConditionSatisfaction.CONDITION_SATISFIED);
   }
 
   /**
@@ -70,12 +102,28 @@ public class CloseableMonitor {
    * utility methods above.
    */
   public class Hold implements AutoCloseable {
-    private Hold() {}
+
+    private final ConditionSatisfaction satisfied;
+
+    private Hold(ConditionSatisfaction satisfied) {
+      this.satisfied = satisfied;
+    }
+
+    public boolean satisfied() {
+      return satisfied == ConditionSatisfaction.CONDITION_SATISFIED;
+    }
 
     @UnlockMethod("monitor")
     @Override
     public void close() {
+      assert satisfied == ConditionSatisfaction.CONDITION_SATISFIED
+          : "Hold should only be used in try-with-resources when condition satisfied";
       monitor.leave();
     }
+  }
+
+  public enum ConditionSatisfaction {
+    CONDITION_SATISFIED,
+    CONDITION_UNSATISFIED
   }
 }

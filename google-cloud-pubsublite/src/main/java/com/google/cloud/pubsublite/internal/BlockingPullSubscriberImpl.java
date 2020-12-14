@@ -33,6 +33,7 @@ import java.util.Deque;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
 
 public class BlockingPullSubscriberImpl implements BlockingPullSubscriber {
 
@@ -68,10 +69,8 @@ public class BlockingPullSubscriberImpl implements BlockingPullSubscriber {
     underlying.startAsync().awaitRunning();
     try {
       underlying.seek(initialSeek).get();
-    } catch (InterruptedException e) {
+    } catch (InterruptedException | ExecutionException e) {
       throw ExtractStatus.toCanonical(e);
-    } catch (ExecutionException e) {
-      throw ExtractStatus.toCanonical(e.getCause());
     }
     underlying.allowFlow(
         FlowControlRequest.newBuilder()
@@ -94,7 +93,19 @@ public class BlockingPullSubscriberImpl implements BlockingPullSubscriber {
 
   @Override
   public SequencedMessage pull() throws InterruptedException, CheckedApiException {
-    try (CloseableMonitor.Hold h = monitor.enterWhenUninterruptibly(notEmtpyOrErr)) {
+    Optional<SequencedMessage> msg = pull(Long.MAX_VALUE, TimeUnit.SECONDS);
+    assert msg.isPresent();
+    return msg.get();
+  }
+
+  @Override
+  public Optional<SequencedMessage> pull(long time, TimeUnit unit)
+      throws InterruptedException, CheckedApiException {
+    CloseableMonitor.Hold h = monitor.enterWhenUninterruptibly(notEmtpyOrErr, time, unit);
+    if (!h.satisfied()) {
+      return Optional.empty();
+    }
+    try (CloseableMonitor.Hold hold = h) {
       if (error.isPresent()) {
         throw error.get();
       }
@@ -104,7 +115,7 @@ public class BlockingPullSubscriberImpl implements BlockingPullSubscriber {
               .setAllowedBytes(msg.byteSize())
               .setAllowedMessages(1)
               .build());
-      return msg;
+      return Optional.of(msg);
     }
   }
 

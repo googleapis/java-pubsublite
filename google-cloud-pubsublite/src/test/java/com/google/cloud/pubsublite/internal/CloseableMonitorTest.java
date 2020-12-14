@@ -22,6 +22,7 @@ import com.google.common.util.concurrent.Monitor;
 import com.google.errorprone.annotations.concurrent.GuardedBy;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -62,6 +63,52 @@ public final class CloseableMonitorTest {
               }
             })) {
       assertThat(monitor.monitor.isOccupied()).isTrue();
+      assertThat(state).isTrue();
+    }
+  }
+
+  @Test
+  public void enterWhenUninterruptiblyWithTimeoutUnsatisfied() {
+    CloseableMonitor.Hold h =
+        monitor.enterWhenUninterruptibly(
+            new Monitor.Guard(monitor.monitor) {
+              @Override
+              public boolean isSatisfied() {
+                assertThat(monitor.monitor.isOccupied()).isTrue();
+                return state;
+              }
+            },
+            100,
+            TimeUnit.MILLISECONDS);
+    assertThat(h.satisfied()).isFalse();
+    assertThat(monitor.monitor.isOccupied()).isFalse();
+    assertThat(state).isFalse();
+  }
+
+  @Test
+  public void enterWhenUninterruptiblyWithTimeoutSatisfied() {
+    ExecutorService executorService = Executors.newCachedThreadPool();
+    executorService.execute(
+        () -> {
+          try (CloseableMonitor.Hold h = monitor.enter()) {
+            state = true;
+          }
+        });
+
+    CloseableMonitor.Hold h =
+        monitor.enterWhenUninterruptibly(
+            new Monitor.Guard(monitor.monitor) {
+              @Override
+              public boolean isSatisfied() {
+                assertThat(monitor.monitor.isOccupied()).isTrue();
+                return state;
+              }
+            },
+            200,
+            TimeUnit.MILLISECONDS);
+    assertThat(h.satisfied()).isTrue();
+    assertThat(monitor.monitor.isOccupied()).isTrue();
+    try (CloseableMonitor.Hold hold = h) {
       assertThat(state).isTrue();
     }
   }

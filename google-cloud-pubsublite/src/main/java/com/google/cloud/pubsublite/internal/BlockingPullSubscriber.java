@@ -18,11 +18,18 @@ package com.google.cloud.pubsublite.internal;
 
 import com.google.cloud.pubsublite.SequencedMessage;
 import java.io.Closeable;
+import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 
 public interface BlockingPullSubscriber extends Closeable {
 
   // Pull one message, blocking. Only one call may be outstanding at any time.
   SequencedMessage pull() throws InterruptedException, CheckedApiException;
+
+  // Try to pull one message with timeout. Returns Optional.empty() if no
+  // messages available within timeout.
+  Optional<SequencedMessage> pull(long time, TimeUnit unit)
+      throws InterruptedException, CheckedApiException;
 
   void close();
 }

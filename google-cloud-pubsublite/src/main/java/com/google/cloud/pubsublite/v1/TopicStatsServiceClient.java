@@ -19,6 +19,8 @@ package com.google.cloud.pubsublite.v1;
 import com.google.api.core.BetaApi;
 import com.google.api.gax.core.BackgroundResource;
 import com.google.api.gax.rpc.UnaryCallable;
+import com.google.cloud.pubsublite.proto.ComputeHeadCursorRequest;
+import com.google.cloud.pubsublite.proto.ComputeHeadCursorResponse;
 import com.google.cloud.pubsublite.proto.ComputeMessageStatsRequest;
 import com.google.cloud.pubsublite.proto.ComputeMessageStatsResponse;
 import com.google.cloud.pubsublite.v1.stub.TopicStatsServiceStub;
@@ -157,6 +159,34 @@ public class TopicStatsServiceClient implements BackgroundResource {
   public final UnaryCallable<ComputeMessageStatsRequest, ComputeMessageStatsResponse>
       computeMessageStatsCallable() {
     return stub.computeMessageStatsCallable();
+  }
+
+  // AUTO-GENERATED DOCUMENTATION AND METHOD.
+  /**
+   * Compute the head cursor for the partition. The head cursor?s offset is guaranteed to be before
+   * or equal to all messages which have not yet been acknowledged to be published, and greater than
+   * the offset of any message whose publish has already been acknowledged. It is 0 if there have
+   * never been messages on the partition.
+   *
+   * @param request The request object containing all of the parameters for the API call.
+   * @throws com.google.api.gax.rpc.ApiException if the remote call fails
+   */
+  public final ComputeHeadCursorResponse computeHeadCursor(ComputeHeadCursorRequest request) {
+    return computeHeadCursorCallable().call(request);
+  }
+
+  // AUTO-GENERATED DOCUMENTATION AND METHOD.
+  /**
+   * Compute the head cursor for the partition. The head cursor?s offset is guaranteed to be before
+   * or equal to all messages which have not yet been acknowledged to be published, and greater than
+   * the offset of any message whose publish has already been acknowledged. It is 0 if there have
+   * never been messages on the partition.
+   *
+   * <p>Sample code:
+   */
+  public final UnaryCallable<ComputeHeadCursorRequest, ComputeHeadCursorResponse>
+      computeHeadCursorCallable() {
+    return stub.computeHeadCursorCallable();
   }
 
   @Override

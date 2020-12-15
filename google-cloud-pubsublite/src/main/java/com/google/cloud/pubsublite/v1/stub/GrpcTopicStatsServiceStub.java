@@ -23,6 +23,8 @@ import com.google.api.gax.grpc.GrpcStubCallableFactory;
 import com.google.api.gax.rpc.ClientContext;
 import com.google.api.gax.rpc.RequestParamsExtractor;
 import com.google.api.gax.rpc.UnaryCallable;
+import com.google.cloud.pubsublite.proto.ComputeHeadCursorRequest;
+import com.google.cloud.pubsublite.proto.ComputeHeadCursorResponse;
 import com.google.cloud.pubsublite.proto.ComputeMessageStatsRequest;
 import com.google.cloud.pubsublite.proto.ComputeMessageStatsResponse;
 import com.google.common.collect.ImmutableMap;
@@ -53,8 +55,21 @@ public class GrpcTopicStatsServiceStub extends TopicStatsServiceStub {
                   ProtoUtils.marshaller(ComputeMessageStatsResponse.getDefaultInstance()))
               .build();
 
+  private static final MethodDescriptor<ComputeHeadCursorRequest, ComputeHeadCursorResponse>
+      computeHeadCursorMethodDescriptor =
+          MethodDescriptor.<ComputeHeadCursorRequest, ComputeHeadCursorResponse>newBuilder()
+              .setType(MethodDescriptor.MethodType.UNARY)
+              .setFullMethodName("google.cloud.pubsublite.v1.TopicStatsService/ComputeHeadCursor")
+              .setRequestMarshaller(
+                  ProtoUtils.marshaller(ComputeHeadCursorRequest.getDefaultInstance()))
+              .setResponseMarshaller(
+                  ProtoUtils.marshaller(ComputeHeadCursorResponse.getDefaultInstance()))
+              .build();
+
   private final UnaryCallable<ComputeMessageStatsRequest, ComputeMessageStatsResponse>
       computeMessageStatsCallable;
+  private final UnaryCallable<ComputeHeadCursorRequest, ComputeHeadCursorResponse>
+      computeHeadCursorCallable;
 
   private final BackgroundResource backgroundResources;
   private final GrpcOperationsStub operationsStub;
@@ -114,11 +129,30 @@ public class GrpcTopicStatsServiceStub extends TopicStatsServiceStub {
                       }
                     })
                 .build();
+    GrpcCallSettings<ComputeHeadCursorRequest, ComputeHeadCursorResponse>
+        computeHeadCursorTransportSettings =
+            GrpcCallSettings.<ComputeHeadCursorRequest, ComputeHeadCursorResponse>newBuilder()
+                .setMethodDescriptor(computeHeadCursorMethodDescriptor)
+                .setParamsExtractor(
+                    new RequestParamsExtractor<ComputeHeadCursorRequest>() {
+                      @Override
+                      public Map<String, String> extract(ComputeHeadCursorRequest request) {
+                        ImmutableMap.Builder<String, String> params = ImmutableMap.builder();
+                        params.put("topic", String.valueOf(request.getTopic()));
+                        return params.build();
+                      }
+                    })
+                .build();
 
     this.computeMessageStatsCallable =
         callableFactory.createUnaryCallable(
             computeMessageStatsTransportSettings,
             settings.computeMessageStatsSettings(),
+            clientContext);
+    this.computeHeadCursorCallable =
+        callableFactory.createUnaryCallable(
+            computeHeadCursorTransportSettings,
+            settings.computeHeadCursorSettings(),
             clientContext);
 
     this.backgroundResources =
@@ -132,6 +166,11 @@ public class GrpcTopicStatsServiceStub extends TopicStatsServiceStub {
   public UnaryCallable<ComputeMessageStatsRequest, ComputeMessageStatsResponse>
       computeMessageStatsCallable() {
     return computeMessageStatsCallable;
+  }
+
+  public UnaryCallable<ComputeHeadCursorRequest, ComputeHeadCursorResponse>
+      computeHeadCursorCallable() {
+    return computeHeadCursorCallable;
   }
 
   @Override

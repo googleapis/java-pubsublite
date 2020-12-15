@@ -185,8 +185,8 @@ public final class ComputeMessageStatsResponse extends com.google.protobuf.Gener
    *
    * <pre>
    * The minimum publish timestamp across these messages. Note that publish
-   * timestamps within a partition are non-decreasing. The timestamp will be
-   * unset if there are no messages.
+   * timestamps within a partition are not guaranteed to be non-decreasing. The
+   * timestamp will be unset if there are no messages.
    * </pre>
    *
    * <code>.google.protobuf.Timestamp minimum_publish_time = 3;</code>
@@ -202,8 +202,8 @@ public final class ComputeMessageStatsResponse extends com.google.protobuf.Gener
    *
    * <pre>
    * The minimum publish timestamp across these messages. Note that publish
-   * timestamps within a partition are non-decreasing. The timestamp will be
-   * unset if there are no messages.
+   * timestamps within a partition are not guaranteed to be non-decreasing. The
+   * timestamp will be unset if there are no messages.
    * </pre>
    *
    * <code>.google.protobuf.Timestamp minimum_publish_time = 3;</code>
@@ -221,8 +221,8 @@ public final class ComputeMessageStatsResponse extends com.google.protobuf.Gener
    *
    * <pre>
    * The minimum publish timestamp across these messages. Note that publish
-   * timestamps within a partition are non-decreasing. The timestamp will be
-   * unset if there are no messages.
+   * timestamps within a partition are not guaranteed to be non-decreasing. The
+   * timestamp will be unset if there are no messages.
    * </pre>
    *
    * <code>.google.protobuf.Timestamp minimum_publish_time = 3;</code>
@@ -793,8 +793,8 @@ public final class ComputeMessageStatsResponse extends com.google.protobuf.Gener
      *
      * <pre>
      * The minimum publish timestamp across these messages. Note that publish
-     * timestamps within a partition are non-decreasing. The timestamp will be
-     * unset if there are no messages.
+     * timestamps within a partition are not guaranteed to be non-decreasing. The
+     * timestamp will be unset if there are no messages.
      * </pre>
      *
      * <code>.google.protobuf.Timestamp minimum_publish_time = 3;</code>
@@ -809,8 +809,8 @@ public final class ComputeMessageStatsResponse extends com.google.protobuf.Gener
      *
      * <pre>
      * The minimum publish timestamp across these messages. Note that publish
-     * timestamps within a partition are non-decreasing. The timestamp will be
-     * unset if there are no messages.
+     * timestamps within a partition are not guaranteed to be non-decreasing. The
+     * timestamp will be unset if there are no messages.
      * </pre>
      *
      * <code>.google.protobuf.Timestamp minimum_publish_time = 3;</code>
@@ -831,8 +831,8 @@ public final class ComputeMessageStatsResponse extends com.google.protobuf.Gener
      *
      * <pre>
      * The minimum publish timestamp across these messages. Note that publish
-     * timestamps within a partition are non-decreasing. The timestamp will be
-     * unset if there are no messages.
+     * timestamps within a partition are not guaranteed to be non-decreasing. The
+     * timestamp will be unset if there are no messages.
      * </pre>
      *
      * <code>.google.protobuf.Timestamp minimum_publish_time = 3;</code>
@@ -855,8 +855,8 @@ public final class ComputeMessageStatsResponse extends com.google.protobuf.Gener
      *
      * <pre>
      * The minimum publish timestamp across these messages. Note that publish
-     * timestamps within a partition are non-decreasing. The timestamp will be
-     * unset if there are no messages.
+     * timestamps within a partition are not guaranteed to be non-decreasing. The
+     * timestamp will be unset if there are no messages.
      * </pre>
      *
      * <code>.google.protobuf.Timestamp minimum_publish_time = 3;</code>
@@ -876,8 +876,8 @@ public final class ComputeMessageStatsResponse extends com.google.protobuf.Gener
      *
      * <pre>
      * The minimum publish timestamp across these messages. Note that publish
-     * timestamps within a partition are non-decreasing. The timestamp will be
-     * unset if there are no messages.
+     * timestamps within a partition are not guaranteed to be non-decreasing. The
+     * timestamp will be unset if there are no messages.
      * </pre>
      *
      * <code>.google.protobuf.Timestamp minimum_publish_time = 3;</code>
@@ -904,8 +904,8 @@ public final class ComputeMessageStatsResponse extends com.google.protobuf.Gener
      *
      * <pre>
      * The minimum publish timestamp across these messages. Note that publish
-     * timestamps within a partition are non-decreasing. The timestamp will be
-     * unset if there are no messages.
+     * timestamps within a partition are not guaranteed to be non-decreasing. The
+     * timestamp will be unset if there are no messages.
      * </pre>
      *
      * <code>.google.protobuf.Timestamp minimum_publish_time = 3;</code>
@@ -926,8 +926,8 @@ public final class ComputeMessageStatsResponse extends com.google.protobuf.Gener
      *
      * <pre>
      * The minimum publish timestamp across these messages. Note that publish
-     * timestamps within a partition are non-decreasing. The timestamp will be
-     * unset if there are no messages.
+     * timestamps within a partition are not guaranteed to be non-decreasing. The
+     * timestamp will be unset if there are no messages.
      * </pre>
      *
      * <code>.google.protobuf.Timestamp minimum_publish_time = 3;</code>
@@ -942,8 +942,8 @@ public final class ComputeMessageStatsResponse extends com.google.protobuf.Gener
      *
      * <pre>
      * The minimum publish timestamp across these messages. Note that publish
-     * timestamps within a partition are non-decreasing. The timestamp will be
-     * unset if there are no messages.
+     * timestamps within a partition are not guaranteed to be non-decreasing. The
+     * timestamp will be unset if there are no messages.
      * </pre>
      *
      * <code>.google.protobuf.Timestamp minimum_publish_time = 3;</code>
@@ -962,8 +962,8 @@ public final class ComputeMessageStatsResponse extends com.google.protobuf.Gener
      *
      * <pre>
      * The minimum publish timestamp across these messages. Note that publish
-     * timestamps within a partition are non-decreasing. The timestamp will be
-     * unset if there are no messages.
+     * timestamps within a partition are not guaranteed to be non-decreasing. The
+     * timestamp will be unset if there are no messages.
      * </pre>
      *
      * <code>.google.protobuf.Timestamp minimum_publish_time = 3;</code>

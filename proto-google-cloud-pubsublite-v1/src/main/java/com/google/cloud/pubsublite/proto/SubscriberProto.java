@@ -85,9 +85,9 @@ public final class SubscriberProto {
   static {
     java.lang.String[] descriptorData = {
       "\n+google/cloud/pubsublite/v1/subscriber."
-          + "proto\022\032google.cloud.pubsublite.v1\032\027googl"
-          + "e/api/client.proto\032\'google/cloud/pubsubl"
-          + "ite/v1/common.proto\"B\n\027InitialSubscribeR"
+          + "proto\022\032google.cloud.pubsublite.v1\032\'googl"
+          + "e/cloud/pubsublite/v1/common.proto\032\027goog"
+          + "le/api/client.proto\"B\n\027InitialSubscribeR"
           + "equest\022\024\n\014subscription\030\001 \001(\t\022\021\n\tpartitio"
           + "n\030\002 \001(\003\"N\n\030InitialSubscribeResponse\0222\n\006c"
           + "ursor\030\001 \001(\0132\".google.cloud.pubsublite.v1"
@@ -145,8 +145,8 @@ public final class SubscriberProto {
         com.google.protobuf.Descriptors.FileDescriptor.internalBuildGeneratedFileFrom(
             descriptorData,
             new com.google.protobuf.Descriptors.FileDescriptor[] {
-              com.google.api.ClientProto.getDescriptor(),
               com.google.cloud.pubsublite.proto.CommonProto.getDescriptor(),
+              com.google.api.ClientProto.getDescriptor(),
             });
     internal_static_google_cloud_pubsublite_v1_InitialSubscribeRequest_descriptor =
         getDescriptor().getMessageTypes().get(0);
@@ -248,8 +248,8 @@ public final class SubscriberProto {
     registry.add(com.google.api.ClientProto.oauthScopes);
     com.google.protobuf.Descriptors.FileDescriptor.internalUpdateFileDescriptor(
         descriptor, registry);
-    com.google.api.ClientProto.getDescriptor();
     com.google.cloud.pubsublite.proto.CommonProto.getDescriptor();
+    com.google.api.ClientProto.getDescriptor();
   }
 
   // @@protoc_insertion_point(outer_class_scope)

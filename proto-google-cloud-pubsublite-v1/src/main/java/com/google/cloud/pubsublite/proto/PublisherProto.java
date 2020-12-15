@@ -61,9 +61,9 @@ public final class PublisherProto {
   static {
     java.lang.String[] descriptorData = {
       "\n*google/cloud/pubsublite/v1/publisher.p"
-          + "roto\022\032google.cloud.pubsublite.v1\032\027google"
-          + "/api/client.proto\032\'google/cloud/pubsubli"
-          + "te/v1/common.proto\"9\n\025InitialPublishRequ"
+          + "roto\022\032google.cloud.pubsublite.v1\032\'google"
+          + "/cloud/pubsublite/v1/common.proto\032\027googl"
+          + "e/api/client.proto\"9\n\025InitialPublishRequ"
           + "est\022\r\n\005topic\030\001 \001(\t\022\021\n\tpartition\030\002 \001(\003\"\030\n"
           + "\026InitialPublishResponse\"T\n\025MessagePublis"
           + "hRequest\022;\n\010messages\030\001 \003(\0132).google.clou"
@@ -96,8 +96,8 @@ public final class PublisherProto {
         com.google.protobuf.Descriptors.FileDescriptor.internalBuildGeneratedFileFrom(
             descriptorData,
             new com.google.protobuf.Descriptors.FileDescriptor[] {
-              com.google.api.ClientProto.getDescriptor(),
               com.google.cloud.pubsublite.proto.CommonProto.getDescriptor(),
+              com.google.api.ClientProto.getDescriptor(),
             });
     internal_static_google_cloud_pubsublite_v1_InitialPublishRequest_descriptor =
         getDescriptor().getMessageTypes().get(0);
@@ -151,8 +151,8 @@ public final class PublisherProto {
     registry.add(com.google.api.ClientProto.oauthScopes);
     com.google.protobuf.Descriptors.FileDescriptor.internalUpdateFileDescriptor(
         descriptor, registry);
-    com.google.api.ClientProto.getDescriptor();
     com.google.cloud.pubsublite.proto.CommonProto.getDescriptor();
+    com.google.api.ClientProto.getDescriptor();
   }
 
   // @@protoc_insertion_point(outer_class_scope)

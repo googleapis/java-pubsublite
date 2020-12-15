@@ -17,11 +17,13 @@
 package com.google.cloud.pubsublite.spark;
 
 import com.google.cloud.pubsublite.AdminClient;
+import com.google.cloud.pubsublite.Partition;
 import com.google.cloud.pubsublite.SubscriptionPath;
 import com.google.cloud.pubsublite.TopicPath;
 import com.google.cloud.pubsublite.internal.CursorClient;
 import com.google.cloud.pubsublite.internal.wire.CommitterBuilder;
 import com.google.cloud.pubsublite.proto.Subscription;
+import com.google.common.collect.ImmutableMap;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.ExecutionException;
@@ -34,8 +36,8 @@ import org.apache.spark.sql.sources.v2.reader.streaming.ContinuousReader;
 import org.apache.spark.sql.sources.v2.reader.streaming.MicroBatchReader;
 import org.apache.spark.sql.types.StructType;
 
-public class PslDataSource implements DataSourceV2, ContinuousReadSupport,
-        MicroBatchReadSupport, DataSourceRegister {
+public class PslDataSource
+    implements DataSourceV2, ContinuousReadSupport, MicroBatchReadSupport, DataSourceRegister {
 
   @Override
   public String shortName() {
@@ -62,9 +64,9 @@ public class PslDataSource implements DataSourceV2, ContinuousReadSupport,
           adminClient.getTopicPartitionCount(TopicPath.parse(sub.getTopic())).get();
     } catch (InterruptedException | ExecutionException e) {
       throw new IllegalStateException(
-          "Failed to get information of subscription " + pslDataSourceOptions.subscriptionPath(),
-          e);
+          "Failed to get information of subscription " + subscriptionPath, e);
     }
+
     MultiPartitionCommitter committer =
         new MultiPartitionCommitterImpl(
             topicPartitionCount,
@@ -83,12 +85,60 @@ public class PslDataSource implements DataSourceV2, ContinuousReadSupport,
   }
 
   @Override
-  public MicroBatchReader createMicroBatchReader(Optional<StructType> schema,
-                                                 String checkpointLocation, DataSourceOptions options) {
+  public MicroBatchReader createMicroBatchReader(
+      Optional<StructType> schema, String checkpointLocation, DataSourceOptions options) {
     if (schema.isPresent()) {
       throw new IllegalArgumentException(
-              "PubSub Lite uses fixed schema and custom schema is not allowed");
+          "PubSub Lite uses fixed schema and custom schema is not allowed");
     }
-    return new PslMicroBatchReader(PslDataSourceOptions.fromSparkDataSourceOptions(options));
+
+    PslDataSourceOptions pslDataSourceOptions =
+        PslDataSourceOptions.fromSparkDataSourceOptions(options);
+    CursorClient cursorClient = pslDataSourceOptions.newCursorClient();
+    AdminClient adminClient = pslDataSourceOptions.newAdminClient();
+    SubscriptionPath subscriptionPath = pslDataSourceOptions.subscriptionPath();
+    long topicPartitionCount;
+    TopicPath topicPath;
+    try {
+      topicPath = TopicPath.parse(adminClient.getSubscription(subscriptionPath).get().getTopic());
+      topicPartitionCount = adminClient.getTopicPartitionCount(topicPath).get();
+    } catch (InterruptedException | ExecutionException e) {
+      throw new IllegalStateException(
+          "Failed to get information of subscription " + subscriptionPath, e);
+    }
+    MultiPartitionCommitter committer =
+        new MultiPartitionCommitterImpl(
+            topicPartitionCount,
+            (partition) ->
+                CommitterBuilder.newBuilder()
+                    .setSubscriptionPath(subscriptionPath)
+                    .setPartition(partition)
+                    .setServiceClient(pslDataSourceOptions.newCursorServiceClient())
+                    .build());
+    // TODO(jiangmichael): Replace it with real implementation.
+    HeadOffsetReader headOffsetReader =
+        new HeadOffsetReader() {
+          @Override
+          public PslSourceOffset getHeadOffset(TopicPath topic) {
+            return PslSourceOffset.builder()
+                .partitionOffsetMap(
+                    ImmutableMap.of(
+                        Partition.of(0), com.google.cloud.pubsublite.Offset.of(50),
+                        Partition.of(1), com.google.cloud.pubsublite.Offset.of(50)))
+                .build();
+          }
+
+          @Override
+          public void close() {}
+        };
+
+    return new PslMicroBatchReader(
+        cursorClient,
+        headOffsetReader,
+        committer,
+        subscriptionPath,
+        topicPath,
+        Objects.requireNonNull(pslDataSourceOptions.flowControlSettings()),
+        topicPartitionCount);
   }
 }

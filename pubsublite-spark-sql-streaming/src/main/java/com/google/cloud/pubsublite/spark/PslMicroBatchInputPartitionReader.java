@@ -25,6 +25,7 @@ import java.time.Duration;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
+import javax.annotation.Nullable;
 import org.apache.spark.sql.catalyst.InternalRow;
 import org.apache.spark.sql.sources.v2.reader.InputPartitionReader;
 
@@ -36,7 +37,7 @@ public class PslMicroBatchInputPartitionReader implements InputPartitionReader<I
   private final SubscriptionPath subscriptionPath;
   private final SparkPartitionOffset endOffset;
   private final BlockingPullSubscriber subscriber;
-  private SequencedMessage currentMsg = null;
+  @Nullable private SequencedMessage currentMsg = null;
   private boolean batchFulfilled = false;
 
   @VisibleForTesting
@@ -61,22 +62,21 @@ public class PslMicroBatchInputPartitionReader implements InputPartitionReader<I
         msg = subscriber.messageIfAvailable();
         break;
       } catch (TimeoutException e) {
-        // NOTE this would only happen when a broker abnormally crashes and fails to
-        // write the unused reserved offsets back to storage. In this case, the
-        // spark pipeline could get stuck forever until a new message is published at
-        // head.
-        log.atWarning().log(
-            "Unable to get any messages in last " + SUBSCRIBER_PULL_TIMEOUT.toString());
+        log.atWarning().log("Unable to get any messages in last " + SUBSCRIBER_PULL_TIMEOUT);
       } catch (Throwable t) {
         throw new IllegalStateException("Failed to retrieve messages.", t);
       }
     }
-    // since next() is only called one at a time, we are sure that the message is
+    // since next() is only called on one thread at a time, we are sure that the message is
     // available to this thread.
     assert msg.isPresent();
     currentMsg = msg.get();
-    if (currentMsg.offset().value() >= endOffset.offset()) {
+    if (currentMsg.offset().value() == endOffset.offset()) {
+      // this is the last msg for the batch.
       batchFulfilled = true;
+    } else if (currentMsg.offset().value() > endOffset.offset()) {
+      batchFulfilled = true;
+      return false;
     }
     return true;
   }

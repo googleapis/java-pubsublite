@@ -16,19 +16,16 @@
 
 package com.google.cloud.pubsublite.spark;
 
-import com.google.cloud.pubsublite.Partition;
 import com.google.cloud.pubsublite.SubscriptionPath;
-import com.google.cloud.pubsublite.TopicPath;
 import com.google.cloud.pubsublite.cloudpubsub.FlowControlSettings;
-import com.google.cloud.pubsublite.internal.CheckedApiException;
 import com.google.cloud.pubsublite.internal.CursorClient;
-import java.util.HashMap;
+import com.google.cloud.pubsublite.internal.wire.PubsubContext;
+import com.google.cloud.pubsublite.internal.wire.SubscriberBuilder;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
+import javax.annotation.Nullable;
 import org.apache.spark.sql.catalyst.InternalRow;
 import org.apache.spark.sql.sources.v2.reader.InputPartition;
 import org.apache.spark.sql.sources.v2.reader.streaming.MicroBatchReader;
@@ -38,28 +35,24 @@ import org.apache.spark.sql.types.StructType;
 public class PslMicroBatchReader implements MicroBatchReader {
 
   private final CursorClient cursorClient;
-  private final HeadOffsetReader headOffsetReader;
   private final MultiPartitionCommitter committer;
   private final SubscriptionPath subscriptionPath;
-  private final TopicPath topicPath;
   private final FlowControlSettings flowControlSettings;
   private final long topicPartitionCount;
-  private SparkSourceOffset startOffset;
+  @Nullable private SparkSourceOffset startOffset = null;
   private SparkSourceOffset endOffset;
 
   public PslMicroBatchReader(
       CursorClient cursorClient,
-      HeadOffsetReader headOffsetReader,
       MultiPartitionCommitter committer,
       SubscriptionPath subscriptionPath,
-      TopicPath topicPath,
+      SparkSourceOffset endOffset,
       FlowControlSettings flowControlSettings,
       long topicPartitionCount) {
     this.cursorClient = cursorClient;
-    this.headOffsetReader = headOffsetReader;
     this.committer = committer;
     this.subscriptionPath = subscriptionPath;
-    this.topicPath = topicPath;
+    this.endOffset = endOffset;
     this.flowControlSettings = flowControlSettings;
     this.topicPartitionCount = topicPartitionCount;
   }
@@ -71,33 +64,13 @@ public class PslMicroBatchReader implements MicroBatchReader {
           : "start offset is not assignable to PslSourceOffset.";
       startOffset = (SparkSourceOffset) start.get();
     } else {
-      try {
-        Map<Partition, com.google.cloud.pubsublite.Offset> pslSourceOffsetMap = new HashMap<>();
-        for (int i = 0; i < topicPartitionCount; i++) {
-          pslSourceOffsetMap.put(Partition.of(i), com.google.cloud.pubsublite.Offset.of(0));
-        }
-        cursorClient
-            .listPartitionCursors(subscriptionPath)
-            .get()
-            .forEach((key, value) -> pslSourceOffsetMap.replace(key, value));
-        startOffset =
-            PslSparkUtils.toSparkSourceOffset(
-                PslSourceOffset.builder().partitionOffsetMap(pslSourceOffsetMap).build());
-      } catch (InterruptedException | ExecutionException e) {
-        throw new IllegalStateException(
-            "Failed to get information from PSL and construct startOffset", e);
-      }
+      startOffset =
+          PslSparkUtils.getSparkStartOffset(cursorClient, subscriptionPath, topicPartitionCount);
     }
     if (end.isPresent()) {
       assert SparkSourceOffset.class.isAssignableFrom(end.get().getClass())
           : "start offset is not assignable to PslSourceOffset.";
       endOffset = (SparkSourceOffset) end.get();
-    } else {
-      try {
-        endOffset = PslSparkUtils.toSparkSourceOffset(headOffsetReader.getHeadOffset(topicPath));
-      } catch (CheckedApiException e) {
-        throw new IllegalStateException("Unable to get head offsets.", e);
-      }
     }
   }
 
@@ -126,7 +99,6 @@ public class PslMicroBatchReader implements MicroBatchReader {
   @Override
   public void stop() {
     committer.close();
-    headOffsetReader.close();
   }
 
   @Override
@@ -141,12 +113,22 @@ public class PslMicroBatchReader implements MicroBatchReader {
             v -> {
               SparkPartitionOffset endPartitionOffset =
                   endOffset.getPartitionOffsetMap().get(v.partition());
-              if (Objects.equals(v, endPartitionOffset)) {
+              if (v.equals(endPartitionOffset)) {
                 // There is no message to pull for this partition.
                 return null;
               }
               return new PslMicroBatchInputPartition(
-                  subscriptionPath, flowControlSettings, v, endPartitionOffset);
+                  subscriptionPath,
+                  flowControlSettings,
+                  endPartitionOffset,
+                  // TODO(jiangmichael): Pass credentials settings here.
+                  (consumer) ->
+                      SubscriberBuilder.newBuilder()
+                          .setSubscriptionPath(subscriptionPath)
+                          .setPartition(endPartitionOffset.partition())
+                          .setContext(PubsubContext.of(Constants.FRAMEWORK))
+                          .setMessageConsumer(consumer)
+                          .build());
             })
         .filter(Objects::nonNull)
         .collect(Collectors.toList());

@@ -16,17 +16,13 @@
 
 package com.google.cloud.pubsublite.spark;
 
-import com.google.cloud.pubsublite.Partition;
 import com.google.cloud.pubsublite.SubscriptionPath;
 import com.google.cloud.pubsublite.cloudpubsub.FlowControlSettings;
 import com.google.cloud.pubsublite.internal.CursorClient;
 import com.google.common.annotations.VisibleForTesting;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
-import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 import org.apache.spark.sql.catalyst.InternalRow;
 import org.apache.spark.sql.sources.v2.reader.InputPartition;
@@ -84,23 +80,8 @@ public class PslContinuousReader implements ContinuousReader {
       startOffset = (SparkSourceOffset) start.get();
       return;
     }
-    try {
-      Map<Partition, com.google.cloud.pubsublite.Offset> pslSourceOffsetMap = new HashMap<>();
-      for (int i = 0; i < topicPartitionCount; i++) {
-        pslSourceOffsetMap.put(Partition.of(i), com.google.cloud.pubsublite.Offset.of(0));
-      }
-      cursorClient
-          .listPartitionCursors(subscriptionPath)
-          .get()
-          .entrySet()
-          .forEach((e) -> pslSourceOffsetMap.replace(e.getKey(), e.getValue()));
-      startOffset =
-          PslSparkUtils.toSparkSourceOffset(
-              PslSourceOffset.builder().partitionOffsetMap(pslSourceOffsetMap).build());
-    } catch (InterruptedException | ExecutionException e) {
-      throw new IllegalStateException(
-          "Failed to get information from PSL and construct startOffset", e);
-    }
+    startOffset =
+        PslSparkUtils.getSparkStartOffset(cursorClient, subscriptionPath, topicPartitionCount);
   }
 
   @Override

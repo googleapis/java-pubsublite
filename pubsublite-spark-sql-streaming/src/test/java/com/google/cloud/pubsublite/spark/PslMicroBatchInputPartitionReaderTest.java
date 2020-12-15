@@ -81,13 +81,38 @@ public class PslMicroBatchInputPartitionReaderTest {
     assertThat(reader.get()).isEqualTo(expectedRow1);
     assertThat(reader.get()).isEqualTo(expectedRow1);
 
-    // Next will advance to next msg.
+    // Next will advance to next msg which is also the last msg in the batch.
     when(subscriber.onData()).thenReturn(ApiFutures.immediateFuture(null));
     when(subscriber.messageIfAvailable()).thenReturn(Optional.of(message2));
     assertThat(reader.next()).isTrue();
     assertThat(reader.get()).isEqualTo(expectedRow2);
 
     // Now it already reached the end of the batch
+    assertThat(reader.next()).isFalse();
+  }
+
+  @Test
+  public void testPartitionReaderNewMessageExceedsRange() throws Exception {
+    long endOffset = 14L;
+    createReader(endOffset);
+    SequencedMessage message1 = newMessage(10L);
+    InternalRow expectedRow1 =
+        PslSparkUtils.toInternalRow(
+            message1,
+            UnitTestExamples.exampleSubscriptionPath(),
+            UnitTestExamples.examplePartition());
+    SequencedMessage message2 = newMessage(endOffset + 1);
+
+    // Multiple get w/o next will return same msg.
+    when(subscriber.onData()).thenReturn(ApiFutures.immediateFuture(null));
+    when(subscriber.messageIfAvailable()).thenReturn(Optional.of(message1));
+    assertThat(reader.next()).isTrue();
+    assertThat(reader.get()).isEqualTo(expectedRow1);
+    assertThat(reader.get()).isEqualTo(expectedRow1);
+
+    // Next will advance to next msg, and recognize it's out of the batch range.
+    when(subscriber.onData()).thenReturn(ApiFutures.immediateFuture(null));
+    when(subscriber.messageIfAvailable()).thenReturn(Optional.of(message2));
     assertThat(reader.next()).isFalse();
   }
 }

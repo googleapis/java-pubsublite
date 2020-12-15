@@ -37,14 +37,12 @@ public class PslMicroBatchReaderTest {
           .build();
   private final CursorClient cursorClient = mock(CursorClient.class);
   private final MultiPartitionCommitter committer = mock(MultiPartitionCommitter.class);
-  private final HeadOffsetReader headOffsetReader = mock(HeadOffsetReader.class);
   private final PslMicroBatchReader reader =
       new PslMicroBatchReader(
           cursorClient,
-          headOffsetReader,
           committer,
           UnitTestExamples.exampleSubscriptionPath(),
-          UnitTestExamples.exampleTopicPath(),
+          createSparkSourceOffsetTwoPartition(300L, -1L),
           OPTIONS.flowControlSettings(),
           2);
 
@@ -66,12 +64,9 @@ public class PslMicroBatchReaderTest {
   }
 
   @Test
-  public void testEmptyOffsets() throws Exception {
+  public void testEmptyOffsets() {
     when(cursorClient.listPartitionCursors(UnitTestExamples.exampleSubscriptionPath()))
         .thenReturn(ApiFutures.immediateFuture(ImmutableMap.of(Partition.of(0L), Offset.of(100L))));
-    when(headOffsetReader.getHeadOffset(UnitTestExamples.exampleTopicPath()))
-        .thenReturn(createPslSourceOffsetTwoPartition(300L, 0L));
-
     reader.setOffsetRange(Optional.empty(), Optional.empty());
     assertThat(((SparkSourceOffset) reader.getStartOffset()).getPartitionOffsetMap())
         .containsExactly(
@@ -82,7 +77,7 @@ public class PslMicroBatchReaderTest {
     assertThat(((SparkSourceOffset) reader.getEndOffset()).getPartitionOffsetMap())
         .containsExactly(
             Partition.of(0L),
-            SparkPartitionOffset.create(Partition.of(0L), 299L),
+            SparkPartitionOffset.create(Partition.of(0L), 300L),
             Partition.of(1L),
             SparkPartitionOffset.create(Partition.of(1L), -1L));
   }

@@ -18,15 +18,14 @@ package com.google.cloud.pubsublite.spark;
 
 import com.google.cloud.pubsublite.AdminClient;
 import com.google.cloud.pubsublite.Partition;
+import com.google.cloud.pubsublite.PartitionLookupUtils;
 import com.google.cloud.pubsublite.SubscriptionPath;
 import com.google.cloud.pubsublite.TopicPath;
 import com.google.cloud.pubsublite.internal.CursorClient;
 import com.google.cloud.pubsublite.internal.wire.CommitterBuilder;
-import com.google.cloud.pubsublite.proto.Subscription;
 import com.google.common.collect.ImmutableMap;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.concurrent.ExecutionException;
 import org.apache.spark.sql.sources.DataSourceRegister;
 import org.apache.spark.sql.sources.v2.ContinuousReadSupport;
 import org.apache.spark.sql.sources.v2.DataSourceOptions;
@@ -57,16 +56,7 @@ public class PslDataSource
     CursorClient cursorClient = pslDataSourceOptions.newCursorClient();
     AdminClient adminClient = pslDataSourceOptions.newAdminClient();
     SubscriptionPath subscriptionPath = pslDataSourceOptions.subscriptionPath();
-    long topicPartitionCount;
-    try {
-      Subscription sub = adminClient.getSubscription(subscriptionPath).get();
-      topicPartitionCount =
-          adminClient.getTopicPartitionCount(TopicPath.parse(sub.getTopic())).get();
-    } catch (InterruptedException | ExecutionException e) {
-      throw new IllegalStateException(
-          "Failed to get information of subscription " + subscriptionPath, e);
-    }
-
+    long topicPartitionCount = PartitionLookupUtils.numPartitions(subscriptionPath, adminClient);
     MultiPartitionCommitter committer =
         new MultiPartitionCommitterImpl(
             topicPartitionCount,
@@ -97,15 +87,7 @@ public class PslDataSource
     CursorClient cursorClient = pslDataSourceOptions.newCursorClient();
     AdminClient adminClient = pslDataSourceOptions.newAdminClient();
     SubscriptionPath subscriptionPath = pslDataSourceOptions.subscriptionPath();
-    long topicPartitionCount;
-    TopicPath topicPath;
-    try {
-      topicPath = TopicPath.parse(adminClient.getSubscription(subscriptionPath).get().getTopic());
-      topicPartitionCount = adminClient.getTopicPartitionCount(topicPath).get();
-    } catch (InterruptedException | ExecutionException e) {
-      throw new IllegalStateException(
-          "Failed to get information of subscription " + subscriptionPath, e);
-    }
+    long topicPartitionCount = PartitionLookupUtils.numPartitions(subscriptionPath, adminClient);
     MultiPartitionCommitter committer =
         new MultiPartitionCommitterImpl(
             topicPartitionCount,
@@ -115,6 +97,18 @@ public class PslDataSource
                     .setPartition(partition)
                     .setServiceClient(pslDataSourceOptions.newCursorServiceClient())
                     .build());
+
+    return new PslMicroBatchReader(
+        cursorClient,
+        committer,
+        subscriptionPath,
+        PslSparkUtils.toSparkSourceOffset(getHeadOffset(adminClient, subscriptionPath)),
+        Objects.requireNonNull(pslDataSourceOptions.flowControlSettings()),
+        topicPartitionCount);
+  }
+
+  private static PslSourceOffset getHeadOffset(
+      AdminClient adminClient, SubscriptionPath subscriptionPath) {
     // TODO(jiangmichael): Replace it with real implementation.
     HeadOffsetReader headOffsetReader =
         new HeadOffsetReader() {
@@ -131,14 +125,13 @@ public class PslDataSource
           @Override
           public void close() {}
         };
-
-    return new PslMicroBatchReader(
-        cursorClient,
-        headOffsetReader,
-        committer,
-        subscriptionPath,
-        topicPath,
-        Objects.requireNonNull(pslDataSourceOptions.flowControlSettings()),
-        topicPartitionCount);
+    try {
+      TopicPath tp =
+          TopicPath.parse(adminClient.getSubscription(subscriptionPath).get().getTopic());
+      return headOffsetReader.getHeadOffset(tp);
+    } catch (Throwable t) {
+      throw new IllegalStateException(
+          "Unable to get topic for subscription " + subscriptionPath, t);
+    }
   }
 }

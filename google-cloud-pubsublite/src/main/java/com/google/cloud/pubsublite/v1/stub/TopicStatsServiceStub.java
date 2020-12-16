@@ -18,6 +18,8 @@ package com.google.cloud.pubsublite.v1.stub;
 
 import com.google.api.gax.core.BackgroundResource;
 import com.google.api.gax.rpc.UnaryCallable;
+import com.google.cloud.pubsublite.proto.ComputeHeadCursorRequest;
+import com.google.cloud.pubsublite.proto.ComputeHeadCursorResponse;
 import com.google.cloud.pubsublite.proto.ComputeMessageStatsRequest;
 import com.google.cloud.pubsublite.proto.ComputeMessageStatsResponse;
 import javax.annotation.Generated;
@@ -34,6 +36,11 @@ public abstract class TopicStatsServiceStub implements BackgroundResource {
   public UnaryCallable<ComputeMessageStatsRequest, ComputeMessageStatsResponse>
       computeMessageStatsCallable() {
     throw new UnsupportedOperationException("Not implemented: computeMessageStatsCallable()");
+  }
+
+  public UnaryCallable<ComputeHeadCursorRequest, ComputeHeadCursorResponse>
+      computeHeadCursorCallable() {
+    throw new UnsupportedOperationException("Not implemented: computeHeadCursorCallable()");
   }
 
   @Override

@@ -196,8 +196,7 @@ public final class CreateSubscriptionRequest extends com.google.protobuf.Generat
    *
    *
    * <pre>
-   * Required. Configuration of the subscription to create. Its `name` field is
-   * ignored.
+   * Required. Configuration of the subscription to create. Its `name` field is ignored.
    * </pre>
    *
    * <code>
@@ -214,8 +213,7 @@ public final class CreateSubscriptionRequest extends com.google.protobuf.Generat
    *
    *
    * <pre>
-   * Required. Configuration of the subscription to create. Its `name` field is
-   * ignored.
+   * Required. Configuration of the subscription to create. Its `name` field is ignored.
    * </pre>
    *
    * <code>
@@ -234,8 +232,7 @@ public final class CreateSubscriptionRequest extends com.google.protobuf.Generat
    *
    *
    * <pre>
-   * Required. Configuration of the subscription to create. Its `name` field is
-   * ignored.
+   * Required. Configuration of the subscription to create. Its `name` field is ignored.
    * </pre>
    *
    * <code>
@@ -253,8 +250,8 @@ public final class CreateSubscriptionRequest extends com.google.protobuf.Generat
    *
    *
    * <pre>
-   * Required. The ID to use for the subscription, which will become the final
-   * component of the subscription's name.
+   * Required. The ID to use for the subscription, which will become the final component
+   * of the subscription's name.
    * This value is structured like: `my-sub-name`.
    * </pre>
    *
@@ -278,8 +275,8 @@ public final class CreateSubscriptionRequest extends com.google.protobuf.Generat
    *
    *
    * <pre>
-   * Required. The ID to use for the subscription, which will become the final
-   * component of the subscription's name.
+   * Required. The ID to use for the subscription, which will become the final component
+   * of the subscription's name.
    * This value is structured like: `my-sub-name`.
    * </pre>
    *
@@ -794,8 +791,7 @@ public final class CreateSubscriptionRequest extends com.google.protobuf.Generat
      *
      *
      * <pre>
-     * Required. Configuration of the subscription to create. Its `name` field is
-     * ignored.
+     * Required. Configuration of the subscription to create. Its `name` field is ignored.
      * </pre>
      *
      * <code>
@@ -811,8 +807,7 @@ public final class CreateSubscriptionRequest extends com.google.protobuf.Generat
      *
      *
      * <pre>
-     * Required. Configuration of the subscription to create. Its `name` field is
-     * ignored.
+     * Required. Configuration of the subscription to create. Its `name` field is ignored.
      * </pre>
      *
      * <code>
@@ -834,8 +829,7 @@ public final class CreateSubscriptionRequest extends com.google.protobuf.Generat
      *
      *
      * <pre>
-     * Required. Configuration of the subscription to create. Its `name` field is
-     * ignored.
+     * Required. Configuration of the subscription to create. Its `name` field is ignored.
      * </pre>
      *
      * <code>
@@ -859,8 +853,7 @@ public final class CreateSubscriptionRequest extends com.google.protobuf.Generat
      *
      *
      * <pre>
-     * Required. Configuration of the subscription to create. Its `name` field is
-     * ignored.
+     * Required. Configuration of the subscription to create. Its `name` field is ignored.
      * </pre>
      *
      * <code>
@@ -882,8 +875,7 @@ public final class CreateSubscriptionRequest extends com.google.protobuf.Generat
      *
      *
      * <pre>
-     * Required. Configuration of the subscription to create. Its `name` field is
-     * ignored.
+     * Required. Configuration of the subscription to create. Its `name` field is ignored.
      * </pre>
      *
      * <code>
@@ -911,8 +903,7 @@ public final class CreateSubscriptionRequest extends com.google.protobuf.Generat
      *
      *
      * <pre>
-     * Required. Configuration of the subscription to create. Its `name` field is
-     * ignored.
+     * Required. Configuration of the subscription to create. Its `name` field is ignored.
      * </pre>
      *
      * <code>
@@ -934,8 +925,7 @@ public final class CreateSubscriptionRequest extends com.google.protobuf.Generat
      *
      *
      * <pre>
-     * Required. Configuration of the subscription to create. Its `name` field is
-     * ignored.
+     * Required. Configuration of the subscription to create. Its `name` field is ignored.
      * </pre>
      *
      * <code>
@@ -951,8 +941,7 @@ public final class CreateSubscriptionRequest extends com.google.protobuf.Generat
      *
      *
      * <pre>
-     * Required. Configuration of the subscription to create. Its `name` field is
-     * ignored.
+     * Required. Configuration of the subscription to create. Its `name` field is ignored.
      * </pre>
      *
      * <code>
@@ -972,8 +961,7 @@ public final class CreateSubscriptionRequest extends com.google.protobuf.Generat
      *
      *
      * <pre>
-     * Required. Configuration of the subscription to create. Its `name` field is
-     * ignored.
+     * Required. Configuration of the subscription to create. Its `name` field is ignored.
      * </pre>
      *
      * <code>
@@ -1002,8 +990,8 @@ public final class CreateSubscriptionRequest extends com.google.protobuf.Generat
      *
      *
      * <pre>
-     * Required. The ID to use for the subscription, which will become the final
-     * component of the subscription's name.
+     * Required. The ID to use for the subscription, which will become the final component
+     * of the subscription's name.
      * This value is structured like: `my-sub-name`.
      * </pre>
      *
@@ -1026,8 +1014,8 @@ public final class CreateSubscriptionRequest extends com.google.protobuf.Generat
      *
      *
      * <pre>
-     * Required. The ID to use for the subscription, which will become the final
-     * component of the subscription's name.
+     * Required. The ID to use for the subscription, which will become the final component
+     * of the subscription's name.
      * This value is structured like: `my-sub-name`.
      * </pre>
      *
@@ -1050,8 +1038,8 @@ public final class CreateSubscriptionRequest extends com.google.protobuf.Generat
      *
      *
      * <pre>
-     * Required. The ID to use for the subscription, which will become the final
-     * component of the subscription's name.
+     * Required. The ID to use for the subscription, which will become the final component
+     * of the subscription's name.
      * This value is structured like: `my-sub-name`.
      * </pre>
      *
@@ -1073,8 +1061,8 @@ public final class CreateSubscriptionRequest extends com.google.protobuf.Generat
      *
      *
      * <pre>
-     * Required. The ID to use for the subscription, which will become the final
-     * component of the subscription's name.
+     * Required. The ID to use for the subscription, which will become the final component
+     * of the subscription's name.
      * This value is structured like: `my-sub-name`.
      * </pre>
      *
@@ -1092,8 +1080,8 @@ public final class CreateSubscriptionRequest extends com.google.protobuf.Generat
      *
      *
      * <pre>
-     * Required. The ID to use for the subscription, which will become the final
-     * component of the subscription's name.
+     * Required. The ID to use for the subscription, which will become the final component
+     * of the subscription's name.
      * This value is structured like: `my-sub-name`.
      * </pre>
      *

@@ -23,6 +23,8 @@ import com.google.api.gax.grpc.testing.MockGrpcService;
 import com.google.api.gax.grpc.testing.MockServiceHelper;
 import com.google.api.gax.rpc.ApiClientHeaderProvider;
 import com.google.api.gax.rpc.InvalidArgumentException;
+import com.google.cloud.pubsublite.proto.ComputeHeadCursorRequest;
+import com.google.cloud.pubsublite.proto.ComputeHeadCursorResponse;
 import com.google.cloud.pubsublite.proto.ComputeMessageStatsRequest;
 import com.google.cloud.pubsublite.proto.ComputeMessageStatsResponse;
 import com.google.cloud.pubsublite.proto.Cursor;
@@ -130,6 +132,51 @@ public class TopicStatsServiceClientTest {
               .setEndCursor(Cursor.newBuilder().build())
               .build();
       client.computeMessageStats(request);
+      Assert.fail("No exception raised");
+    } catch (InvalidArgumentException e) {
+      // Expected exception.
+    }
+  }
+
+  @Test
+  public void computeHeadCursorTest() throws Exception {
+    ComputeHeadCursorResponse expectedResponse =
+        ComputeHeadCursorResponse.newBuilder().setHeadCursor(Cursor.newBuilder().build()).build();
+    mockTopicStatsService.addResponse(expectedResponse);
+
+    ComputeHeadCursorRequest request =
+        ComputeHeadCursorRequest.newBuilder()
+            .setTopic(TopicName.of("[PROJECT]", "[LOCATION]", "[TOPIC]").toString())
+            .setPartition(-1799810326)
+            .build();
+
+    ComputeHeadCursorResponse actualResponse = client.computeHeadCursor(request);
+    Assert.assertEquals(expectedResponse, actualResponse);
+
+    List<AbstractMessage> actualRequests = mockTopicStatsService.getRequests();
+    Assert.assertEquals(1, actualRequests.size());
+    ComputeHeadCursorRequest actualRequest = ((ComputeHeadCursorRequest) actualRequests.get(0));
+
+    Assert.assertEquals(request.getTopic(), actualRequest.getTopic());
+    Assert.assertEquals(request.getPartition(), actualRequest.getPartition());
+    Assert.assertTrue(
+        channelProvider.isHeaderSent(
+            ApiClientHeaderProvider.getDefaultApiClientHeaderKey(),
+            GaxGrpcProperties.getDefaultApiClientHeaderPattern()));
+  }
+
+  @Test
+  public void computeHeadCursorExceptionTest() throws Exception {
+    StatusRuntimeException exception = new StatusRuntimeException(io.grpc.Status.INVALID_ARGUMENT);
+    mockTopicStatsService.addException(exception);
+
+    try {
+      ComputeHeadCursorRequest request =
+          ComputeHeadCursorRequest.newBuilder()
+              .setTopic(TopicName.of("[PROJECT]", "[LOCATION]", "[TOPIC]").toString())
+              .setPartition(-1799810326)
+              .build();
+      client.computeHeadCursor(request);
       Assert.fail("No exception raised");
     } catch (InvalidArgumentException e) {
       // Expected exception.

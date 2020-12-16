@@ -17,6 +17,8 @@
 package com.google.cloud.pubsublite.v1;
 
 import com.google.api.core.BetaApi;
+import com.google.cloud.pubsublite.proto.ComputeHeadCursorRequest;
+import com.google.cloud.pubsublite.proto.ComputeHeadCursorResponse;
 import com.google.cloud.pubsublite.proto.ComputeMessageStatsRequest;
 import com.google.cloud.pubsublite.proto.ComputeMessageStatsResponse;
 import com.google.cloud.pubsublite.proto.TopicStatsServiceGrpc.TopicStatsServiceImplBase;
@@ -68,6 +70,22 @@ public class MockTopicStatsServiceImpl extends TopicStatsServiceImplBase {
     if (response instanceof ComputeMessageStatsResponse) {
       requests.add(request);
       responseObserver.onNext(((ComputeMessageStatsResponse) response));
+      responseObserver.onCompleted();
+    } else if (response instanceof Exception) {
+      responseObserver.onError(((Exception) response));
+    } else {
+      responseObserver.onError(new IllegalArgumentException("Unrecognized response type"));
+    }
+  }
+
+  @Override
+  public void computeHeadCursor(
+      ComputeHeadCursorRequest request,
+      StreamObserver<ComputeHeadCursorResponse> responseObserver) {
+    Object response = responses.remove();
+    if (response instanceof ComputeHeadCursorResponse) {
+      requests.add(request);
+      responseObserver.onNext(((ComputeHeadCursorResponse) response));
       responseObserver.onCompleted();
     } else if (response instanceof Exception) {
       responseObserver.onError(((Exception) response));

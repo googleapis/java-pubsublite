@@ -89,6 +89,54 @@ public final class TopicStatsServiceGrpc {
     return getComputeMessageStatsMethod;
   }
 
+  private static volatile io.grpc.MethodDescriptor<
+          com.google.cloud.pubsublite.proto.ComputeHeadCursorRequest,
+          com.google.cloud.pubsublite.proto.ComputeHeadCursorResponse>
+      getComputeHeadCursorMethod;
+
+  @io.grpc.stub.annotations.RpcMethod(
+      fullMethodName = SERVICE_NAME + '/' + "ComputeHeadCursor",
+      requestType = com.google.cloud.pubsublite.proto.ComputeHeadCursorRequest.class,
+      responseType = com.google.cloud.pubsublite.proto.ComputeHeadCursorResponse.class,
+      methodType = io.grpc.MethodDescriptor.MethodType.UNARY)
+  public static io.grpc.MethodDescriptor<
+          com.google.cloud.pubsublite.proto.ComputeHeadCursorRequest,
+          com.google.cloud.pubsublite.proto.ComputeHeadCursorResponse>
+      getComputeHeadCursorMethod() {
+    io.grpc.MethodDescriptor<
+            com.google.cloud.pubsublite.proto.ComputeHeadCursorRequest,
+            com.google.cloud.pubsublite.proto.ComputeHeadCursorResponse>
+        getComputeHeadCursorMethod;
+    if ((getComputeHeadCursorMethod = TopicStatsServiceGrpc.getComputeHeadCursorMethod) == null) {
+      synchronized (TopicStatsServiceGrpc.class) {
+        if ((getComputeHeadCursorMethod = TopicStatsServiceGrpc.getComputeHeadCursorMethod)
+            == null) {
+          TopicStatsServiceGrpc.getComputeHeadCursorMethod =
+              getComputeHeadCursorMethod =
+                  io.grpc.MethodDescriptor
+                      .<com.google.cloud.pubsublite.proto.ComputeHeadCursorRequest,
+                          com.google.cloud.pubsublite.proto.ComputeHeadCursorResponse>
+                          newBuilder()
+                      .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
+                      .setFullMethodName(generateFullMethodName(SERVICE_NAME, "ComputeHeadCursor"))
+                      .setSampledToLocalTracing(true)
+                      .setRequestMarshaller(
+                          io.grpc.protobuf.ProtoUtils.marshaller(
+                              com.google.cloud.pubsublite.proto.ComputeHeadCursorRequest
+                                  .getDefaultInstance()))
+                      .setResponseMarshaller(
+                          io.grpc.protobuf.ProtoUtils.marshaller(
+                              com.google.cloud.pubsublite.proto.ComputeHeadCursorResponse
+                                  .getDefaultInstance()))
+                      .setSchemaDescriptor(
+                          new TopicStatsServiceMethodDescriptorSupplier("ComputeHeadCursor"))
+                      .build();
+        }
+      }
+    }
+    return getComputeHeadCursorMethod;
+  }
+
   /** Creates a new async stub that supports all call types for the service */
   public static TopicStatsServiceStub newStub(io.grpc.Channel channel) {
     io.grpc.stub.AbstractStub.StubFactory<TopicStatsServiceStub> factory =
@@ -154,6 +202,25 @@ public final class TopicStatsServiceGrpc {
       asyncUnimplementedUnaryCall(getComputeMessageStatsMethod(), responseObserver);
     }
 
+    /**
+     *
+     *
+     * <pre>
+     * Compute the head cursor for the partition.
+     * The head cursor’s offset is guaranteed to be before or equal to all
+     * messages which have not yet been acknowledged to be published, and
+     * greater than the offset of any message whose publish has already
+     * been acknowledged. It is 0 if there have never been messages on the
+     * partition.
+     * </pre>
+     */
+    public void computeHeadCursor(
+        com.google.cloud.pubsublite.proto.ComputeHeadCursorRequest request,
+        io.grpc.stub.StreamObserver<com.google.cloud.pubsublite.proto.ComputeHeadCursorResponse>
+            responseObserver) {
+      asyncUnimplementedUnaryCall(getComputeHeadCursorMethod(), responseObserver);
+    }
+
     @java.lang.Override
     public final io.grpc.ServerServiceDefinition bindService() {
       return io.grpc.ServerServiceDefinition.builder(getServiceDescriptor())
@@ -164,6 +231,13 @@ public final class TopicStatsServiceGrpc {
                       com.google.cloud.pubsublite.proto.ComputeMessageStatsRequest,
                       com.google.cloud.pubsublite.proto.ComputeMessageStatsResponse>(
                       this, METHODID_COMPUTE_MESSAGE_STATS)))
+          .addMethod(
+              getComputeHeadCursorMethod(),
+              asyncUnaryCall(
+                  new MethodHandlers<
+                      com.google.cloud.pubsublite.proto.ComputeHeadCursorRequest,
+                      com.google.cloud.pubsublite.proto.ComputeHeadCursorResponse>(
+                      this, METHODID_COMPUTE_HEAD_CURSOR)))
           .build();
     }
   }
@@ -204,6 +278,28 @@ public final class TopicStatsServiceGrpc {
           request,
           responseObserver);
     }
+
+    /**
+     *
+     *
+     * <pre>
+     * Compute the head cursor for the partition.
+     * The head cursor’s offset is guaranteed to be before or equal to all
+     * messages which have not yet been acknowledged to be published, and
+     * greater than the offset of any message whose publish has already
+     * been acknowledged. It is 0 if there have never been messages on the
+     * partition.
+     * </pre>
+     */
+    public void computeHeadCursor(
+        com.google.cloud.pubsublite.proto.ComputeHeadCursorRequest request,
+        io.grpc.stub.StreamObserver<com.google.cloud.pubsublite.proto.ComputeHeadCursorResponse>
+            responseObserver) {
+      asyncUnaryCall(
+          getChannel().newCall(getComputeHeadCursorMethod(), getCallOptions()),
+          request,
+          responseObserver);
+    }
   }
 
   /**
@@ -238,6 +334,24 @@ public final class TopicStatsServiceGrpc {
         com.google.cloud.pubsublite.proto.ComputeMessageStatsRequest request) {
       return blockingUnaryCall(
           getChannel(), getComputeMessageStatsMethod(), getCallOptions(), request);
+    }
+
+    /**
+     *
+     *
+     * <pre>
+     * Compute the head cursor for the partition.
+     * The head cursor’s offset is guaranteed to be before or equal to all
+     * messages which have not yet been acknowledged to be published, and
+     * greater than the offset of any message whose publish has already
+     * been acknowledged. It is 0 if there have never been messages on the
+     * partition.
+     * </pre>
+     */
+    public com.google.cloud.pubsublite.proto.ComputeHeadCursorResponse computeHeadCursor(
+        com.google.cloud.pubsublite.proto.ComputeHeadCursorRequest request) {
+      return blockingUnaryCall(
+          getChannel(), getComputeHeadCursorMethod(), getCallOptions(), request);
     }
   }
 
@@ -274,9 +388,29 @@ public final class TopicStatsServiceGrpc {
       return futureUnaryCall(
           getChannel().newCall(getComputeMessageStatsMethod(), getCallOptions()), request);
     }
+
+    /**
+     *
+     *
+     * <pre>
+     * Compute the head cursor for the partition.
+     * The head cursor’s offset is guaranteed to be before or equal to all
+     * messages which have not yet been acknowledged to be published, and
+     * greater than the offset of any message whose publish has already
+     * been acknowledged. It is 0 if there have never been messages on the
+     * partition.
+     * </pre>
+     */
+    public com.google.common.util.concurrent.ListenableFuture<
+            com.google.cloud.pubsublite.proto.ComputeHeadCursorResponse>
+        computeHeadCursor(com.google.cloud.pubsublite.proto.ComputeHeadCursorRequest request) {
+      return futureUnaryCall(
+          getChannel().newCall(getComputeHeadCursorMethod(), getCallOptions()), request);
+    }
   }
 
   private static final int METHODID_COMPUTE_MESSAGE_STATS = 0;
+  private static final int METHODID_COMPUTE_HEAD_CURSOR = 1;
 
   private static final class MethodHandlers<Req, Resp>
       implements io.grpc.stub.ServerCalls.UnaryMethod<Req, Resp>,
@@ -300,6 +434,13 @@ public final class TopicStatsServiceGrpc {
               (com.google.cloud.pubsublite.proto.ComputeMessageStatsRequest) request,
               (io.grpc.stub.StreamObserver<
                       com.google.cloud.pubsublite.proto.ComputeMessageStatsResponse>)
+                  responseObserver);
+          break;
+        case METHODID_COMPUTE_HEAD_CURSOR:
+          serviceImpl.computeHeadCursor(
+              (com.google.cloud.pubsublite.proto.ComputeHeadCursorRequest) request,
+              (io.grpc.stub.StreamObserver<
+                      com.google.cloud.pubsublite.proto.ComputeHeadCursorResponse>)
                   responseObserver);
           break;
         default:
@@ -367,6 +508,7 @@ public final class TopicStatsServiceGrpc {
                   io.grpc.ServiceDescriptor.newBuilder(SERVICE_NAME)
                       .setSchemaDescriptor(new TopicStatsServiceFileDescriptorSupplier())
                       .addMethod(getComputeMessageStatsMethod())
+                      .addMethod(getComputeHeadCursorMethod())
                       .build();
         }
       }

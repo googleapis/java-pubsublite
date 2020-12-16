@@ -31,6 +31,8 @@ import com.google.api.gax.rpc.StatusCode;
 import com.google.api.gax.rpc.StubSettings;
 import com.google.api.gax.rpc.TransportChannelProvider;
 import com.google.api.gax.rpc.UnaryCallSettings;
+import com.google.cloud.pubsublite.proto.ComputeHeadCursorRequest;
+import com.google.cloud.pubsublite.proto.ComputeHeadCursorResponse;
 import com.google.cloud.pubsublite.proto.ComputeMessageStatsRequest;
 import com.google.cloud.pubsublite.proto.ComputeMessageStatsResponse;
 import com.google.common.collect.ImmutableList;
@@ -84,11 +86,19 @@ public class TopicStatsServiceStubSettings extends StubSettings<TopicStatsServic
 
   private final UnaryCallSettings<ComputeMessageStatsRequest, ComputeMessageStatsResponse>
       computeMessageStatsSettings;
+  private final UnaryCallSettings<ComputeHeadCursorRequest, ComputeHeadCursorResponse>
+      computeHeadCursorSettings;
 
   /** Returns the object with the settings used for calls to computeMessageStats. */
   public UnaryCallSettings<ComputeMessageStatsRequest, ComputeMessageStatsResponse>
       computeMessageStatsSettings() {
     return computeMessageStatsSettings;
+  }
+
+  /** Returns the object with the settings used for calls to computeHeadCursor. */
+  public UnaryCallSettings<ComputeHeadCursorRequest, ComputeHeadCursorResponse>
+      computeHeadCursorSettings() {
+    return computeHeadCursorSettings;
   }
 
   @BetaApi("A restructuring of stub classes is planned, so this may break in the future")
@@ -161,6 +171,7 @@ public class TopicStatsServiceStubSettings extends StubSettings<TopicStatsServic
     super(settingsBuilder);
 
     computeMessageStatsSettings = settingsBuilder.computeMessageStatsSettings().build();
+    computeHeadCursorSettings = settingsBuilder.computeHeadCursorSettings().build();
   }
 
   /** Builder for TopicStatsServiceStubSettings. */
@@ -168,6 +179,8 @@ public class TopicStatsServiceStubSettings extends StubSettings<TopicStatsServic
     private final ImmutableList<UnaryCallSettings.Builder<?, ?>> unaryMethodSettingsBuilders;
     private final UnaryCallSettings.Builder<ComputeMessageStatsRequest, ComputeMessageStatsResponse>
         computeMessageStatsSettings;
+    private final UnaryCallSettings.Builder<ComputeHeadCursorRequest, ComputeHeadCursorResponse>
+        computeHeadCursorSettings;
     private static final ImmutableMap<String, ImmutableSet<StatusCode.Code>>
         RETRYABLE_CODE_DEFINITIONS;
 
@@ -183,6 +196,7 @@ public class TopicStatsServiceStubSettings extends StubSettings<TopicStatsServic
                   StatusCode.Code.ABORTED,
                   StatusCode.Code.INTERNAL,
                   StatusCode.Code.UNKNOWN)));
+      definitions.put("no_retry_codes", ImmutableSet.copyOf(Lists.<StatusCode.Code>newArrayList()));
       RETRYABLE_CODE_DEFINITIONS = definitions.build();
     }
 
@@ -202,6 +216,8 @@ public class TopicStatsServiceStubSettings extends StubSettings<TopicStatsServic
               .setTotalTimeout(Duration.ofMillis(600000L))
               .build();
       definitions.put("retry_policy_0_params", settings);
+      settings = RetrySettings.newBuilder().setRpcTimeoutMultiplier(1.0).build();
+      definitions.put("no_retry_params", settings);
       RETRY_PARAM_DEFINITIONS = definitions.build();
     }
 
@@ -213,9 +229,11 @@ public class TopicStatsServiceStubSettings extends StubSettings<TopicStatsServic
       super(clientContext);
 
       computeMessageStatsSettings = UnaryCallSettings.newUnaryCallSettingsBuilder();
+      computeHeadCursorSettings = UnaryCallSettings.newUnaryCallSettingsBuilder();
 
       unaryMethodSettingsBuilders =
-          ImmutableList.<UnaryCallSettings.Builder<?, ?>>of(computeMessageStatsSettings);
+          ImmutableList.<UnaryCallSettings.Builder<?, ?>>of(
+              computeMessageStatsSettings, computeHeadCursorSettings);
       initDefaults(this);
     }
 
@@ -223,9 +241,11 @@ public class TopicStatsServiceStubSettings extends StubSettings<TopicStatsServic
       super(settings);
 
       computeMessageStatsSettings = settings.computeMessageStatsSettings.toBuilder();
+      computeHeadCursorSettings = settings.computeHeadCursorSettings.toBuilder();
 
       unaryMethodSettingsBuilders =
-          ImmutableList.<UnaryCallSettings.Builder<?, ?>>of(computeMessageStatsSettings);
+          ImmutableList.<UnaryCallSettings.Builder<?, ?>>of(
+              computeMessageStatsSettings, computeHeadCursorSettings);
     }
 
     private static Builder createDefault() {
@@ -244,6 +264,11 @@ public class TopicStatsServiceStubSettings extends StubSettings<TopicStatsServic
           .computeMessageStatsSettings()
           .setRetryableCodes(RETRYABLE_CODE_DEFINITIONS.get("retry_policy_0_codes"))
           .setRetrySettings(RETRY_PARAM_DEFINITIONS.get("retry_policy_0_params"));
+
+      builder
+          .computeHeadCursorSettings()
+          .setRetryableCodes(RETRYABLE_CODE_DEFINITIONS.get("no_retry_codes"))
+          .setRetrySettings(RETRY_PARAM_DEFINITIONS.get("no_retry_params"));
 
       return builder;
     }
@@ -268,6 +293,12 @@ public class TopicStatsServiceStubSettings extends StubSettings<TopicStatsServic
     public UnaryCallSettings.Builder<ComputeMessageStatsRequest, ComputeMessageStatsResponse>
         computeMessageStatsSettings() {
       return computeMessageStatsSettings;
+    }
+
+    /** Returns the builder for the settings used for calls to computeHeadCursor. */
+    public UnaryCallSettings.Builder<ComputeHeadCursorRequest, ComputeHeadCursorResponse>
+        computeHeadCursorSettings() {
+      return computeHeadCursorSettings;
     }
 
     @Override

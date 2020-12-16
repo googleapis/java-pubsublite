@@ -26,6 +26,8 @@ import com.google.api.gax.rpc.ClientContext;
 import com.google.api.gax.rpc.ClientSettings;
 import com.google.api.gax.rpc.TransportChannelProvider;
 import com.google.api.gax.rpc.UnaryCallSettings;
+import com.google.cloud.pubsublite.proto.ComputeHeadCursorRequest;
+import com.google.cloud.pubsublite.proto.ComputeHeadCursorResponse;
 import com.google.cloud.pubsublite.proto.ComputeMessageStatsRequest;
 import com.google.cloud.pubsublite.proto.ComputeMessageStatsResponse;
 import com.google.cloud.pubsublite.v1.stub.TopicStatsServiceStubSettings;
@@ -72,6 +74,12 @@ public class TopicStatsServiceSettings extends ClientSettings<TopicStatsServiceS
   public UnaryCallSettings<ComputeMessageStatsRequest, ComputeMessageStatsResponse>
       computeMessageStatsSettings() {
     return ((TopicStatsServiceStubSettings) getStubSettings()).computeMessageStatsSettings();
+  }
+
+  /** Returns the object with the settings used for calls to computeHeadCursor. */
+  public UnaryCallSettings<ComputeHeadCursorRequest, ComputeHeadCursorResponse>
+      computeHeadCursorSettings() {
+    return ((TopicStatsServiceStubSettings) getStubSettings()).computeHeadCursorSettings();
   }
 
   public static final TopicStatsServiceSettings create(TopicStatsServiceStubSettings stub)
@@ -176,6 +184,12 @@ public class TopicStatsServiceSettings extends ClientSettings<TopicStatsServiceS
     public UnaryCallSettings.Builder<ComputeMessageStatsRequest, ComputeMessageStatsResponse>
         computeMessageStatsSettings() {
       return getStubSettingsBuilder().computeMessageStatsSettings();
+    }
+
+    /** Returns the builder for the settings used for calls to computeHeadCursor. */
+    public UnaryCallSettings.Builder<ComputeHeadCursorRequest, ComputeHeadCursorResponse>
+        computeHeadCursorSettings() {
+      return getStubSettingsBuilder().computeHeadCursorSettings();
     }
 
     @Override

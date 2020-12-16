@@ -14,15 +14,17 @@
  * limitations under the License.
  */
 
-package com.google.cloud.pubsublite.internal.wire;
+package com.google.cloud.pubsublite.spark;
 
-import com.google.api.gax.rpc.ApiException;
-import com.google.cloud.pubsublite.SequencedMessage;
-import com.google.common.collect.ImmutableList;
-import java.io.Serializable;
-import java.util.function.Consumer;
+import com.google.cloud.pubsublite.TopicPath;
+import com.google.cloud.pubsublite.internal.CheckedApiException;
+import java.io.Closeable;
 
-public interface SubscriberFactory extends Serializable {
-  Subscriber newSubscriber(Consumer<ImmutableList<SequencedMessage>> message_consumer)
-      throws ApiException;
+public interface HeadOffsetReader extends Closeable {
+
+  // Gets the head offsets for all partitions in a topic. Blocks.
+  PslSourceOffset getHeadOffset(TopicPath topic) throws CheckedApiException;
+
+  @Override
+  void close();
 }

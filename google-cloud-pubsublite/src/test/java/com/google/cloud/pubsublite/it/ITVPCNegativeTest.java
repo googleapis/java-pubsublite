@@ -67,7 +67,6 @@ import org.junit.rules.Timeout;
 
 /* Integration tests for VPC-SC */
 public class ITVPCNegativeTest {
-
   private static final boolean IS_VPCSC_TEST =
       System.getenv("GOOGLE_CLOUD_TESTS_IN_VPCSC") != null
           && System.getenv("GOOGLE_CLOUD_TESTS_IN_VPCSC").equalsIgnoreCase("true");
@@ -330,7 +329,7 @@ public class ITVPCNegativeTest {
     } catch (TimeoutException t) {
       fail("Expected PERMISSION_DENIED CheckedApiException but got: " + t.toString());
     } catch (IllegalStateException e) {
-      checkExceptionForVPCError(toCanonical(e));
+      checkExceptionForVPCError(toCanonical(e.getCause()));
     }
   }
 
@@ -367,7 +366,7 @@ public class ITVPCNegativeTest {
     } catch (TimeoutException t) {
       fail("Expected PERMISSION_DENIED CheckedApiException but got: " + t.toString());
     } catch (IllegalStateException e) {
-      checkExceptionForVPCError(toCanonical(e));
+      checkExceptionForVPCError(toCanonical(e.getCause()));
     }
   }
 }

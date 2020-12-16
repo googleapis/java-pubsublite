@@ -29,6 +29,10 @@ abstract class SparkPartitionOffset implements PartitionOffset, Serializable {
 
   abstract long offset();
 
+  public static SparkPartitionOffset create(Partition partition, long offset) {
+    return builder().partition(partition).offset(offset).build();
+  }
+
   public static Builder builder() {
     return new AutoValue_SparkPartitionOffset.Builder();
   }

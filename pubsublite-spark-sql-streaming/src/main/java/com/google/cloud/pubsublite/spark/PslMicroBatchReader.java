@@ -19,52 +19,59 @@ package com.google.cloud.pubsublite.spark;
 import com.google.cloud.pubsublite.SubscriptionPath;
 import com.google.cloud.pubsublite.cloudpubsub.FlowControlSettings;
 import com.google.cloud.pubsublite.internal.CursorClient;
-import com.google.common.annotations.VisibleForTesting;
-import java.util.Arrays;
+import com.google.cloud.pubsublite.internal.wire.PubsubContext;
+import com.google.cloud.pubsublite.internal.wire.SubscriberBuilder;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import javax.annotation.Nullable;
 import org.apache.spark.sql.catalyst.InternalRow;
 import org.apache.spark.sql.sources.v2.reader.InputPartition;
-import org.apache.spark.sql.sources.v2.reader.streaming.ContinuousReader;
+import org.apache.spark.sql.sources.v2.reader.streaming.MicroBatchReader;
 import org.apache.spark.sql.sources.v2.reader.streaming.Offset;
-import org.apache.spark.sql.sources.v2.reader.streaming.PartitionOffset;
 import org.apache.spark.sql.types.StructType;
 
-public class PslContinuousReader implements ContinuousReader {
+public class PslMicroBatchReader implements MicroBatchReader {
 
   private final CursorClient cursorClient;
   private final MultiPartitionCommitter committer;
   private final SubscriptionPath subscriptionPath;
   private final FlowControlSettings flowControlSettings;
   private final long topicPartitionCount;
-  private SparkSourceOffset startOffset;
+  @Nullable private SparkSourceOffset startOffset = null;
+  private SparkSourceOffset endOffset;
 
-  @VisibleForTesting
-  public PslContinuousReader(
+  public PslMicroBatchReader(
       CursorClient cursorClient,
       MultiPartitionCommitter committer,
       SubscriptionPath subscriptionPath,
+      SparkSourceOffset endOffset,
       FlowControlSettings flowControlSettings,
       long topicPartitionCount) {
     this.cursorClient = cursorClient;
     this.committer = committer;
     this.subscriptionPath = subscriptionPath;
+    this.endOffset = endOffset;
     this.flowControlSettings = flowControlSettings;
     this.topicPartitionCount = topicPartitionCount;
   }
 
   @Override
-  public Offset mergeOffsets(PartitionOffset[] offsets) {
-    assert SparkPartitionOffset.class.isAssignableFrom(offsets.getClass().getComponentType())
-        : "PartitionOffset object is not assignable to SparkPartitionOffset.";
-    return SparkSourceOffset.merge(
-        Arrays.copyOf(offsets, offsets.length, SparkPartitionOffset[].class));
-  }
-
-  @Override
-  public Offset deserializeOffset(String json) {
-    return SparkSourceOffset.fromJson(json);
+  public void setOffsetRange(Optional<Offset> start, Optional<Offset> end) {
+    if (start.isPresent()) {
+      assert SparkSourceOffset.class.isAssignableFrom(start.get().getClass())
+          : "start offset is not assignable to PslSourceOffset.";
+      startOffset = (SparkSourceOffset) start.get();
+    } else {
+      startOffset =
+          PslSparkUtils.getSparkStartOffset(cursorClient, subscriptionPath, topicPartitionCount);
+    }
+    if (end.isPresent()) {
+      assert SparkSourceOffset.class.isAssignableFrom(end.get().getClass())
+          : "start offset is not assignable to PslSourceOffset.";
+      endOffset = (SparkSourceOffset) end.get();
+    }
   }
 
   @Override
@@ -73,15 +80,13 @@ public class PslContinuousReader implements ContinuousReader {
   }
 
   @Override
-  public void setStartOffset(Optional<Offset> start) {
-    if (start.isPresent()) {
-      assert SparkSourceOffset.class.isAssignableFrom(start.get().getClass())
-          : "start offset is not assignable to PslSourceOffset.";
-      startOffset = (SparkSourceOffset) start.get();
-      return;
-    }
-    startOffset =
-        PslSparkUtils.getSparkStartOffset(cursorClient, subscriptionPath, topicPartitionCount);
+  public Offset getEndOffset() {
+    return endOffset;
+  }
+
+  @Override
+  public Offset deserializeOffset(String json) {
+    return SparkSourceOffset.fromJson(json);
   }
 
   @Override
@@ -93,7 +98,6 @@ public class PslContinuousReader implements ContinuousReader {
 
   @Override
   public void stop() {
-    cursorClient.shutdown();
     committer.close();
   }
 
@@ -106,14 +110,27 @@ public class PslContinuousReader implements ContinuousReader {
   public List<InputPartition<InternalRow>> planInputPartitions() {
     return startOffset.getPartitionOffsetMap().values().stream()
         .map(
-            v ->
-                new PslContinuousInputPartition(
-                    SparkPartitionOffset.builder()
-                        .partition(v.partition())
-                        .offset(v.offset())
-                        .build(),
-                    subscriptionPath,
-                    flowControlSettings))
+            v -> {
+              SparkPartitionOffset endPartitionOffset =
+                  endOffset.getPartitionOffsetMap().get(v.partition());
+              if (v.equals(endPartitionOffset)) {
+                // There is no message to pull for this partition.
+                return null;
+              }
+              return new PslMicroBatchInputPartition(
+                  subscriptionPath,
+                  flowControlSettings,
+                  endPartitionOffset,
+                  // TODO(jiangmichael): Pass credentials settings here.
+                  (consumer) ->
+                      SubscriberBuilder.newBuilder()
+                          .setSubscriptionPath(subscriptionPath)
+                          .setPartition(endPartitionOffset.partition())
+                          .setContext(PubsubContext.of(Constants.FRAMEWORK))
+                          .setMessageConsumer(consumer)
+                          .build());
+            })
+        .filter(Objects::nonNull)
         .collect(Collectors.toList());
   }
 }

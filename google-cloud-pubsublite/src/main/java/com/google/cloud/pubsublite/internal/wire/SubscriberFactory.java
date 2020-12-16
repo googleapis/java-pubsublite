@@ -22,7 +22,6 @@ import com.google.common.collect.ImmutableList;
 import java.io.Serializable;
 import java.util.function.Consumer;
 
-@FunctionalInterface
 public interface SubscriberFactory extends Serializable {
   Subscriber newSubscriber(Consumer<ImmutableList<SequencedMessage>> message_consumer)
       throws ApiException;

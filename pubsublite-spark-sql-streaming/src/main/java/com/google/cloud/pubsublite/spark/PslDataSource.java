@@ -21,6 +21,7 @@ import com.google.cloud.pubsublite.Partition;
 import com.google.cloud.pubsublite.PartitionLookupUtils;
 import com.google.cloud.pubsublite.SubscriptionPath;
 import com.google.cloud.pubsublite.TopicPath;
+import com.google.cloud.pubsublite.internal.CheckedApiException;
 import com.google.cloud.pubsublite.internal.CursorClient;
 import com.google.cloud.pubsublite.internal.wire.CommitterBuilder;
 import com.google.common.collect.ImmutableMap;
@@ -87,7 +88,14 @@ public class PslDataSource
     CursorClient cursorClient = pslDataSourceOptions.newCursorClient();
     AdminClient adminClient = pslDataSourceOptions.newAdminClient();
     SubscriptionPath subscriptionPath = pslDataSourceOptions.subscriptionPath();
-    long topicPartitionCount = PartitionLookupUtils.numPartitions(subscriptionPath, adminClient);
+    TopicPath topicPath;
+    try {
+      topicPath = TopicPath.parse(adminClient.getSubscription(subscriptionPath).get().getTopic());
+    } catch (Throwable t) {
+      throw new IllegalStateException(
+          "Unable to get topic for subscription " + subscriptionPath, t);
+    }
+    long topicPartitionCount = PartitionLookupUtils.numPartitions(topicPath, adminClient);
     MultiPartitionCommitter committer =
         new MultiPartitionCommitterImpl(
             topicPartitionCount,
@@ -102,13 +110,12 @@ public class PslDataSource
         cursorClient,
         committer,
         subscriptionPath,
-        PslSparkUtils.toSparkSourceOffset(getHeadOffset(adminClient, subscriptionPath)),
+        PslSparkUtils.toSparkSourceOffset(getHeadOffset(topicPath)),
         Objects.requireNonNull(pslDataSourceOptions.flowControlSettings()),
         topicPartitionCount);
   }
 
-  private static PslSourceOffset getHeadOffset(
-      AdminClient adminClient, SubscriptionPath subscriptionPath) {
+  private static PslSourceOffset getHeadOffset(TopicPath topicPath) {
     // TODO(jiangmichael): Replace it with real implementation.
     HeadOffsetReader headOffsetReader =
         new HeadOffsetReader() {
@@ -126,12 +133,9 @@ public class PslDataSource
           public void close() {}
         };
     try {
-      TopicPath tp =
-          TopicPath.parse(adminClient.getSubscription(subscriptionPath).get().getTopic());
-      return headOffsetReader.getHeadOffset(tp);
-    } catch (Throwable t) {
-      throw new IllegalStateException(
-          "Unable to get topic for subscription " + subscriptionPath, t);
+      return headOffsetReader.getHeadOffset(topicPath);
+    } catch (CheckedApiException e) {
+      throw new IllegalStateException("Unable to get head offset for topic " + topicPath, e);
     }
   }
 }

@@ -43,6 +43,12 @@ public class PslContinuousInputPartitionReaderTest {
         10000);
   }
 
+  private static void verifyInternalRow(InternalRow row, long expectedOffset) {
+    assertThat(row.getString(0)).isEqualTo(UnitTestExamples.exampleSubscriptionPath().toString());
+    assertThat(row.getLong(1)).isEqualTo(UnitTestExamples.examplePartition().value());
+    assertThat(row.getLong(2)).isEqualTo(expectedOffset);
+  }
+
   private void createReader() {
     reader =
         new PslContinuousInputPartitionReader(
@@ -58,31 +64,21 @@ public class PslContinuousInputPartitionReaderTest {
   public void testPartitionReader() throws Exception {
     createReader();
     SequencedMessage message1 = newMessage(10);
-    InternalRow expectedRow1 =
-        PslSparkUtils.toInternalRow(
-            message1,
-            UnitTestExamples.exampleSubscriptionPath(),
-            UnitTestExamples.examplePartition());
     SequencedMessage message2 = newMessage(13);
-    InternalRow expectedRow2 =
-        PslSparkUtils.toInternalRow(
-            message2,
-            UnitTestExamples.exampleSubscriptionPath(),
-            UnitTestExamples.examplePartition());
 
     // Multiple get w/o next will return same msg.
     when(subscriber.onData()).thenReturn(ApiFutures.immediateFuture(null));
     when(subscriber.messageIfAvailable()).thenReturn(Optional.of(message1));
     assertThat(reader.next()).isTrue();
-    assertThat(reader.get()).isEqualTo(expectedRow1);
-    assertThat(reader.get()).isEqualTo(expectedRow1);
+    verifyInternalRow(reader.get(), 10L);
+    verifyInternalRow(reader.get(), 10L);
     assertThat(((SparkPartitionOffset) reader.getOffset()).offset()).isEqualTo(10L);
 
     // Next will advance to next msg.
     when(subscriber.onData()).thenReturn(ApiFutures.immediateFuture(null));
     when(subscriber.messageIfAvailable()).thenReturn(Optional.of(message2));
     assertThat(reader.next()).isTrue();
-    assertThat(reader.get()).isEqualTo(expectedRow2);
+    verifyInternalRow(reader.get(), 13L);
     assertThat(((SparkPartitionOffset) reader.getOffset()).offset()).isEqualTo(13L);
   }
 }

@@ -38,7 +38,8 @@ public class PslCredentialsProvider implements CredentialsProvider {
 
   private static Credentials createCredentialsFromKey(String key) {
     try {
-      return GoogleCredentials.fromStream(new ByteArrayInputStream(Base64.decodeBase64(key)));
+      return GoogleCredentials.fromStream(new ByteArrayInputStream(Base64.decodeBase64(key)))
+          .createScoped("https://www.googleapis.com/auth/cloud-platform");
     } catch (IOException e) {
       throw new UncheckedIOException("Failed to create Credentials from key", e);
     }
@@ -46,7 +47,8 @@ public class PslCredentialsProvider implements CredentialsProvider {
 
   public static Credentials createDefaultCredentials() {
     try {
-      return GoogleCredentials.getApplicationDefault();
+      return GoogleCredentials.getApplicationDefault()
+          .createScoped("https://www.googleapis.com/auth/cloud-platform");
     } catch (IOException e) {
       throw new UncheckedIOException("Failed to create default Credentials", e);
     }

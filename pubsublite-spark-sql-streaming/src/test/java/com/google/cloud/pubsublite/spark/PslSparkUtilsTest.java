@@ -18,12 +18,43 @@ package com.google.cloud.pubsublite.spark;
 
 import static com.google.common.truth.Truth.assertThat;
 
+import com.google.cloud.pubsublite.Message;
 import com.google.cloud.pubsublite.Offset;
 import com.google.cloud.pubsublite.Partition;
+import com.google.cloud.pubsublite.SequencedMessage;
+import com.google.cloud.pubsublite.internal.testing.UnitTestExamples;
+import com.google.common.collect.ImmutableListMultimap;
 import com.google.common.collect.ImmutableMap;
+import com.google.protobuf.ByteString;
+import com.google.protobuf.Timestamp;
 import org.junit.Test;
 
 public class PslSparkUtilsTest {
+
+  @Test
+  public void testToInternalRow() {
+    Message message =
+        Message.builder()
+            .setKey(ByteString.copyFromUtf8("key"))
+            .setData(ByteString.copyFromUtf8("data"))
+            .setEventTime(Timestamp.newBuilder().setSeconds(10000000L).setNanos(10).build())
+            .setAttributes(
+                ImmutableListMultimap.of(
+                    "key1", ByteString.copyFromUtf8("val1"),
+                    "key1", ByteString.copyFromUtf8("val2"),
+                    "key2", ByteString.copyFromUtf8("val3")))
+            .build();
+    SequencedMessage sequencedMessage =
+        SequencedMessage.of(
+            message,
+            Timestamp.newBuilder().setSeconds(10000000L).setNanos(10).build(),
+            Offset.of(10L),
+            10L);
+    PslSparkUtils.toInternalRow(
+        sequencedMessage,
+        UnitTestExamples.exampleSubscriptionPath(),
+        UnitTestExamples.examplePartition());
+  }
 
   @Test
   public void testSourceOffsetConversion() {

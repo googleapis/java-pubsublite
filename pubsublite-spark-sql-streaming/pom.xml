@@ -106,6 +106,7 @@
       <groupId>org.scala-lang</groupId>
       <artifactId>scala-library</artifactId>
       <version>2.11.12</version>
+      <scope>provided</scope>
     </dependency>
 
     <!--test dependencies-->
@@ -258,9 +259,10 @@
               </filters>
               <relocations>
                 <relocation>
-                  <pattern>com.google.common</pattern>
-                  <shadedPattern>repackaged.com.google.common</shadedPattern>
+                  <pattern>com</pattern>
+                  <shadedPattern>repackaged.com</shadedPattern>
                   <includes>
+                    <include>com.google.protobuf.**</include>
                     <include>com.google.common.**</include>
                   </includes>
                 </relocation>

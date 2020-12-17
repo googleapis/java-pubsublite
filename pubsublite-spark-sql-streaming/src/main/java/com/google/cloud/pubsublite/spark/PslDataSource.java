@@ -16,6 +16,7 @@
 
 package com.google.cloud.pubsublite.spark;
 
+import com.google.api.core.ApiFuture;
 import com.google.cloud.pubsublite.AdminClient;
 import com.google.cloud.pubsublite.Partition;
 import com.google.cloud.pubsublite.PartitionLookupUtils;
@@ -24,6 +25,7 @@ import com.google.cloud.pubsublite.TopicPath;
 import com.google.cloud.pubsublite.internal.CheckedApiException;
 import com.google.cloud.pubsublite.internal.CursorClient;
 import com.google.cloud.pubsublite.internal.wire.CommitterBuilder;
+import com.google.cloud.pubsublite.proto.Subscription;
 import com.google.common.collect.ImmutableMap;
 import java.util.Objects;
 import java.util.Optional;
@@ -90,7 +92,8 @@ public class PslDataSource
     SubscriptionPath subscriptionPath = pslDataSourceOptions.subscriptionPath();
     TopicPath topicPath;
     try {
-      topicPath = TopicPath.parse(adminClient.getSubscription(subscriptionPath).get().getTopic());
+      ApiFuture<Subscription> future = adminClient.getSubscription(subscriptionPath);
+      topicPath = TopicPath.parse(future.get().getTopic());
     } catch (Throwable t) {
       throw new IllegalStateException(
           "Unable to get topic for subscription " + subscriptionPath, t);

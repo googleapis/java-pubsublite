@@ -179,26 +179,6 @@
             </ignoredUnusedDeclaredDependencies>
           </configuration>
         </plugin>
-        <plugin>
-          <artifactId>maven-compiler-plugin</artifactId>
-          <version>3.8.1</version>
-          <configuration>
-            <source>1.8</source>
-            <target>1.8</target>
-            <encoding>UTF-8</encoding>
-            <compilerArgument>-Xlint:unchecked</compilerArgument>
-            <annotationProcessorPaths>
-              <path>
-                <groupId>com.google.auto.value</groupId>
-                <artifactId>auto-value</artifactId>
-              </path>
-              <path>
-                <groupId>com.google.auto.service</groupId>
-                <artifactId>auto-service-annotations</artifactId>
-              </path>
-            </annotationProcessorPaths>
-          </configuration>
-        </plugin>
       </plugins>
     </pluginManagement>
     <plugins>
@@ -230,18 +210,6 @@
                 <transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
               </transformers>
               <filters>
-                <filter>
-                  <artifact>org.slf4j:*</artifact>
-                  <excludes>
-                    <exclude>**</exclude>
-                  </excludes>
-                </filter>
-                <filter>
-                  <artifact>log4j:*</artifact>
-                  <excludes>
-                    <exclude>**</exclude>
-                  </excludes>
-                </filter>
                 <filter>
                   <artifact>*:*</artifact>
                   <excludes>

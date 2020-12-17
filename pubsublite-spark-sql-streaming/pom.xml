@@ -56,6 +56,10 @@
       <artifactId>auto-value-annotations</artifactId>
     </dependency>
     <dependency>
+      <groupId>com.google.auto.service</groupId>
+      <artifactId>auto-service-annotations</artifactId>
+    </dependency>
+    <dependency>
       <groupId>com.google.code.findbugs</groupId>
       <artifactId>jsr305</artifactId>
     </dependency>
@@ -195,7 +199,6 @@
             </annotationProcessorPaths>
           </configuration>
         </plugin>
-
       </plugins>
     </pluginManagement>
     <plugins>
@@ -233,13 +236,6 @@
                   <artifact>log4j:*</artifact>
                   <excludes>
                     <exclude>**</exclude>
-                  </excludes>
-                </filter>
-                <filter>
-                  <artifact>io.grpc:grpc-grpclb</artifact>
-                  <excludes>
-                    <exclude>META-INF/services/io.grpc.LoadBalancerProvider</exclude>
-                    <exclude>META-INF/services/io.grpc.NameResolverProvider</exclude>
                   </excludes>
                 </filter>
                 <filter>

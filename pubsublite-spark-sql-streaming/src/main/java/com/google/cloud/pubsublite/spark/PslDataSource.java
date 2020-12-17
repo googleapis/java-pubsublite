@@ -16,6 +16,7 @@
 
 package com.google.cloud.pubsublite.spark;
 
+import com.google.auto.service.AutoService;
 import com.google.cloud.pubsublite.AdminClient;
 import com.google.cloud.pubsublite.Partition;
 import com.google.cloud.pubsublite.PartitionLookupUtils;
@@ -36,7 +37,8 @@ import org.apache.spark.sql.sources.v2.reader.streaming.ContinuousReader;
 import org.apache.spark.sql.sources.v2.reader.streaming.MicroBatchReader;
 import org.apache.spark.sql.types.StructType;
 
-public class PslDataSource
+@AutoService(DataSourceRegister.class)
+public final class PslDataSource
     implements DataSourceV2, ContinuousReadSupport, MicroBatchReadSupport, DataSourceRegister {
 
   @Override

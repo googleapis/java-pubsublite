@@ -16,7 +16,7 @@
 
 package com.google.cloud.pubsublite.spark;
 
-import com.google.api.core.ApiFuture;
+import com.google.auto.service.AutoService;
 import com.google.cloud.pubsublite.AdminClient;
 import com.google.cloud.pubsublite.Partition;
 import com.google.cloud.pubsublite.PartitionLookupUtils;
@@ -25,7 +25,6 @@ import com.google.cloud.pubsublite.TopicPath;
 import com.google.cloud.pubsublite.internal.CheckedApiException;
 import com.google.cloud.pubsublite.internal.CursorClient;
 import com.google.cloud.pubsublite.internal.wire.CommitterBuilder;
-import com.google.cloud.pubsublite.proto.Subscription;
 import com.google.common.collect.ImmutableMap;
 import java.util.Objects;
 import java.util.Optional;
@@ -38,7 +37,8 @@ import org.apache.spark.sql.sources.v2.reader.streaming.ContinuousReader;
 import org.apache.spark.sql.sources.v2.reader.streaming.MicroBatchReader;
 import org.apache.spark.sql.types.StructType;
 
-public class PslDataSource
+@AutoService(DataSourceRegister.class)
+public final class PslDataSource
     implements DataSourceV2, ContinuousReadSupport, MicroBatchReadSupport, DataSourceRegister {
 
   @Override
@@ -92,8 +92,7 @@ public class PslDataSource
     SubscriptionPath subscriptionPath = pslDataSourceOptions.subscriptionPath();
     TopicPath topicPath;
     try {
-      ApiFuture<Subscription> future = adminClient.getSubscription(subscriptionPath);
-      topicPath = TopicPath.parse(future.get().getTopic());
+      topicPath = TopicPath.parse(adminClient.getSubscription(subscriptionPath).get().getTopic());
     } catch (Throwable t) {
       throw new IllegalStateException(
           "Unable to get topic for subscription " + subscriptionPath, t);

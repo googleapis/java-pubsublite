@@ -225,6 +225,10 @@
               <goal>shade</goal>
             </goals>
             <configuration>
+              <!-- Used to merge META-INF/services-->
+              <transformers>
+                <transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
+              </transformers>
               <filters>
                 <filter>
                   <artifact>org.slf4j:*</artifact>

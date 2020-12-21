@@ -243,7 +243,8 @@ public final class PublisherImpl extends ProxyService
   @Override
   public void cancelOutstandingPublishes() {
     try (CloseableMonitor.Hold h = monitor.enter()) {
-      terminateOutstandingPublishes(new CheckedApiException("Canceled by client.", Code.CANCELLED));
+      terminateOutstandingPublishes(
+          new CheckedApiException("Cancelled by client.", Code.CANCELLED));
     }
   }
 

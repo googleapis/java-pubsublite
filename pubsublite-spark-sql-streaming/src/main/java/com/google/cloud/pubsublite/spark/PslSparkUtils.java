@@ -16,32 +16,69 @@
 
 package com.google.cloud.pubsublite.spark;
 
+import static scala.collection.JavaConverters.asScalaBufferConverter;
+
 import com.google.cloud.pubsublite.Offset;
 import com.google.cloud.pubsublite.Partition;
 import com.google.cloud.pubsublite.SequencedMessage;
 import com.google.cloud.pubsublite.SubscriptionPath;
 import com.google.cloud.pubsublite.internal.CursorClient;
-import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ListMultimap;
+import com.google.protobuf.ByteString;
+import com.google.protobuf.util.Timestamps;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 import org.apache.spark.sql.catalyst.InternalRow;
+import org.apache.spark.sql.catalyst.util.ArrayBasedMapData;
+import org.apache.spark.sql.catalyst.util.GenericArrayData;
+import org.apache.spark.unsafe.types.ByteArray;
+import org.apache.spark.unsafe.types.UTF8String;
 
 public class PslSparkUtils {
+  private static ArrayBasedMapData convertAttributesToSparkMap(
+      ListMultimap<String, ByteString> attributeMap) {
+
+    List<UTF8String> keyList = new ArrayList<>();
+    List<GenericArrayData> valueList = new ArrayList<>();
+
+    attributeMap
+        .asMap()
+        .forEach(
+            (key, value) -> {
+              keyList.add(UTF8String.fromString(key));
+              List<byte[]> attributeVals =
+                  value.stream()
+                      .map(v -> ByteArray.concat(v.toByteArray()))
+                      .collect(Collectors.toList());
+              valueList.add(new GenericArrayData(asScalaBufferConverter(attributeVals).asScala()));
+            });
+
+    return new ArrayBasedMapData(
+        new GenericArrayData(asScalaBufferConverter(keyList).asScala()),
+        new GenericArrayData(asScalaBufferConverter(valueList).asScala()));
+  }
+
   public static InternalRow toInternalRow(
       SequencedMessage msg, SubscriptionPath subscription, Partition partition) {
-    return InternalRow.apply(
-        scala.collection.JavaConverters.asScalaBuffer(
-            ImmutableList.of(
-                subscription.toString(),
+    List<Object> list =
+        new ArrayList<>(
+            Arrays.asList(
+                UTF8String.fromString(subscription.toString()),
                 partition.value(),
                 msg.offset().value(),
-                msg.message().key(),
-                msg.message().data(),
-                msg.publishTime(),
-                msg.message().eventTime(),
-                msg.message().attributes())));
+                ByteArray.concat(msg.message().key().toByteArray()),
+                ByteArray.concat(msg.message().data().toByteArray()),
+                Timestamps.toMillis(msg.publishTime()),
+                msg.message().eventTime().isPresent()
+                    ? Timestamps.toMillis(msg.message().eventTime().get())
+                    : null,
+                convertAttributesToSparkMap(msg.message().attributes())));
+    return InternalRow.apply(asScalaBufferConverter(list).asScala());
   }
 
   public static SparkSourceOffset toSparkSourceOffset(PslSourceOffset pslSourceOffset) {

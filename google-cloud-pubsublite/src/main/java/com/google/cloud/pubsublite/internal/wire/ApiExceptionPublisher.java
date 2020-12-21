@@ -39,6 +39,11 @@ public class ApiExceptionPublisher<T> extends TrivialProxyService implements Pub
   }
 
   @Override
+  public void cancelOutstandingPublishes() {
+    publisher.cancelOutstandingPublishes();
+  }
+
+  @Override
   public void flush() throws IOException {
     publisher.flush();
   }

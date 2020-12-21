@@ -17,18 +17,12 @@
 package com.google.cloud.pubsublite.internal;
 
 import com.google.api.core.ApiFuture;
-import com.google.api.gax.core.BackgroundResourceAggregation;
-import com.google.api.gax.core.ExecutorAsBackgroundResource;
-import com.google.api.gax.retrying.RetrySettings;
-import com.google.api.gax.retrying.RetryingExecutor;
+import com.google.api.core.ApiFutures;
 import com.google.cloud.pubsublite.AdminClient;
 import com.google.cloud.pubsublite.CloudRegion;
 import com.google.cloud.pubsublite.LocationPath;
 import com.google.cloud.pubsublite.SubscriptionPath;
-import com.google.cloud.pubsublite.SubscriptionPaths;
 import com.google.cloud.pubsublite.TopicPath;
-import com.google.cloud.pubsublite.TopicPaths;
-import com.google.cloud.pubsublite.proto.AdminServiceGrpc;
 import com.google.cloud.pubsublite.proto.CreateSubscriptionRequest;
 import com.google.cloud.pubsublite.proto.CreateTopicRequest;
 import com.google.cloud.pubsublite.proto.DeleteSubscriptionRequest;
@@ -37,61 +31,29 @@ import com.google.cloud.pubsublite.proto.GetSubscriptionRequest;
 import com.google.cloud.pubsublite.proto.GetTopicPartitionsRequest;
 import com.google.cloud.pubsublite.proto.GetTopicRequest;
 import com.google.cloud.pubsublite.proto.ListSubscriptionsRequest;
+import com.google.cloud.pubsublite.proto.ListSubscriptionsResponse;
 import com.google.cloud.pubsublite.proto.ListTopicSubscriptionsRequest;
 import com.google.cloud.pubsublite.proto.ListTopicsRequest;
+import com.google.cloud.pubsublite.proto.ListTopicsResponse;
 import com.google.cloud.pubsublite.proto.Subscription;
 import com.google.cloud.pubsublite.proto.Topic;
+import com.google.cloud.pubsublite.proto.TopicPartitions;
 import com.google.cloud.pubsublite.proto.UpdateSubscriptionRequest;
 import com.google.cloud.pubsublite.proto.UpdateTopicRequest;
+import com.google.cloud.pubsublite.v1.AdminServiceClient;
 import com.google.common.collect.ImmutableList;
+import com.google.common.util.concurrent.MoreExecutors;
 import com.google.protobuf.FieldMask;
 import java.util.List;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
 
-public class AdminClientImpl extends BackgroundResourceAggregation implements AdminClient {
+public class AdminClientImpl extends ApiResourceAggregation implements AdminClient {
   private final CloudRegion region;
-  private final AdminServiceGrpc.AdminServiceBlockingStub stub;
-  private final RetryingExecutor<Void> voidRetryingExecutor;
-  private final RetryingExecutor<Topic> topicRetryingExecutor;
-  private final RetryingExecutor<Subscription> subscriptionRetryingExecutor;
-  private final RetryingExecutor<Long> partitionCountRetryingExecutor;
-  private final RetryingExecutor<List<Topic>> listTopicsRetryingExecutor;
-  private final RetryingExecutor<List<SubscriptionPath>> listTopicSubscriptionsRetryingExecutor;
-  private final RetryingExecutor<List<Subscription>> listSubscriptionsRetryingExecutor;
+  AdminServiceClient serviceClient;
 
-  public AdminClientImpl(
-      CloudRegion region,
-      AdminServiceGrpc.AdminServiceBlockingStub stub,
-      RetrySettings retrySettings) {
-    this(
-        region,
-        stub,
-        retrySettings,
-        // TODO: Consider allowing tuning in the future.
-        Executors.newScheduledThreadPool(6));
-  }
-
-  private AdminClientImpl(
-      CloudRegion region,
-      AdminServiceGrpc.AdminServiceBlockingStub stub,
-      RetrySettings retrySettings,
-      ScheduledExecutorService executor) {
-    super(ImmutableList.of(new ExecutorAsBackgroundResource(executor)));
+  public AdminClientImpl(CloudRegion region, AdminServiceClient serviceClient) {
+    super(serviceClient);
     this.region = region;
-    this.stub = stub;
-    this.voidRetryingExecutor = RetryingExecutorUtil.retryingExecutor(retrySettings, executor);
-    this.topicRetryingExecutor = RetryingExecutorUtil.retryingExecutor(retrySettings, executor);
-    this.subscriptionRetryingExecutor =
-        RetryingExecutorUtil.retryingExecutor(retrySettings, executor);
-    this.partitionCountRetryingExecutor =
-        RetryingExecutorUtil.retryingExecutor(retrySettings, executor);
-    this.listTopicsRetryingExecutor =
-        RetryingExecutorUtil.retryingExecutor(retrySettings, executor);
-    this.listSubscriptionsRetryingExecutor =
-        RetryingExecutorUtil.retryingExecutor(retrySettings, executor);
-    this.listTopicSubscriptionsRetryingExecutor =
-        RetryingExecutorUtil.retryingExecutor(retrySettings, executor);
+    this.serviceClient = serviceClient;
   }
 
   @Override
@@ -101,141 +63,126 @@ public class AdminClientImpl extends BackgroundResourceAggregation implements Ad
 
   @Override
   public ApiFuture<Topic> createTopic(Topic topic) {
-    return RetryingExecutorUtil.runWithRetries(
-        () -> {
-          TopicPath path = TopicPath.of(topic.getName());
-          return stub.createTopic(
-              CreateTopicRequest.newBuilder()
-                  .setParent(TopicPaths.getLocationPath(path).value())
-                  .setTopic(topic)
-                  .setTopicId(TopicPaths.getTopicName(path).value())
-                  .build());
-        },
-        topicRetryingExecutor);
+    TopicPath path = TopicPath.parse(topic.getName());
+    return serviceClient
+        .createTopicCallable()
+        .futureCall(
+            CreateTopicRequest.newBuilder()
+                .setParent(path.locationPath().toString())
+                .setTopic(topic)
+                .setTopicId(path.name().value())
+                .build());
   }
 
   @Override
   public ApiFuture<Topic> getTopic(TopicPath path) {
-    return RetryingExecutorUtil.runWithRetries(
-        () -> stub.getTopic(GetTopicRequest.newBuilder().setName(path.value()).build()),
-        topicRetryingExecutor);
+    return serviceClient
+        .getTopicCallable()
+        .futureCall(GetTopicRequest.newBuilder().setName(path.toString()).build());
   }
 
   @Override
   public ApiFuture<Long> getTopicPartitionCount(TopicPath path) {
-    return RetryingExecutorUtil.runWithRetries(
-        () ->
-            stub.getTopicPartitions(
-                    GetTopicPartitionsRequest.newBuilder().setName(path.value()).build())
-                .getPartitionCount(),
-        partitionCountRetryingExecutor);
+    return ApiFutures.transform(
+        serviceClient
+            .getTopicPartitionsCallable()
+            .futureCall(GetTopicPartitionsRequest.newBuilder().setName(path.toString()).build()),
+        TopicPartitions::getPartitionCount,
+        MoreExecutors.directExecutor());
   }
 
   @Override
   public ApiFuture<List<Topic>> listTopics(LocationPath path) {
-    return RetryingExecutorUtil.runWithRetries(
-        () -> {
-          return stub.listTopics(ListTopicsRequest.newBuilder().setParent(path.value()).build())
-              .getTopicsList();
-        },
-        listTopicsRetryingExecutor);
+    return ApiFutures.transform(
+        serviceClient
+            .listTopicsCallable()
+            .futureCall(ListTopicsRequest.newBuilder().setParent(path.toString()).build()),
+        ListTopicsResponse::getTopicsList,
+        MoreExecutors.directExecutor());
   }
 
   @Override
   public ApiFuture<Topic> updateTopic(Topic topic, FieldMask mask) {
-    return RetryingExecutorUtil.runWithRetries(
-        () -> {
-          return stub.updateTopic(
-              UpdateTopicRequest.newBuilder().setTopic(topic).setUpdateMask(mask).build());
-        },
-        topicRetryingExecutor);
+    return serviceClient
+        .updateTopicCallable()
+        .futureCall(UpdateTopicRequest.newBuilder().setTopic(topic).setUpdateMask(mask).build());
   }
 
   @Override
-  @SuppressWarnings("UnusedReturnValue")
   public ApiFuture<Void> deleteTopic(TopicPath path) {
-    return RetryingExecutorUtil.runWithRetries(
-        () -> {
-          stub.deleteTopic(DeleteTopicRequest.newBuilder().setName(path.value()).build());
-          return null;
-        },
-        voidRetryingExecutor);
+    return ApiFutures.transform(
+        serviceClient
+            .deleteTopicCallable()
+            .futureCall(DeleteTopicRequest.newBuilder().setName(path.toString()).build()),
+        x -> null,
+        MoreExecutors.directExecutor());
   }
 
   @Override
   public ApiFuture<List<SubscriptionPath>> listTopicSubscriptions(TopicPath path) {
-    return RetryingExecutorUtil.runWithRetries(
-        () -> {
+    return ApiFutures.transform(
+        serviceClient
+            .listTopicSubscriptionsCallable()
+            .futureCall(
+                ListTopicSubscriptionsRequest.newBuilder().setName(path.toString()).build()),
+        result -> {
           ImmutableList.Builder<SubscriptionPath> builder = ImmutableList.builder();
-          for (String subscription :
-              stub.listTopicSubscriptions(
-                      ListTopicSubscriptionsRequest.newBuilder().setName(path.value()).build())
-                  .getSubscriptionsList()) {
-            SubscriptionPath subscription_path = SubscriptionPath.of(subscription);
-            SubscriptionPaths.check(subscription_path);
-            builder.add(subscription_path);
+          for (String subscription : result.getSubscriptionsList()) {
+            builder.add(SubscriptionPath.parse(subscription));
           }
           return builder.build();
         },
-        listTopicSubscriptionsRetryingExecutor);
+        MoreExecutors.directExecutor());
   }
 
   @Override
   public ApiFuture<Subscription> createSubscription(Subscription subscription) {
-    return RetryingExecutorUtil.runWithRetries(
-        () -> {
-          SubscriptionPath path = SubscriptionPath.of(subscription.getName());
-          return stub.createSubscription(
-              CreateSubscriptionRequest.newBuilder()
-                  .setParent(SubscriptionPaths.getLocationPath(path).value())
-                  .setSubscription(subscription)
-                  .setSubscriptionId(SubscriptionPaths.getSubscriptionName(path).value())
-                  .build());
-        },
-        subscriptionRetryingExecutor);
+    SubscriptionPath path = SubscriptionPath.parse(subscription.getName());
+    return serviceClient
+        .createSubscriptionCallable()
+        .futureCall(
+            CreateSubscriptionRequest.newBuilder()
+                .setParent(path.locationPath().toString())
+                .setSubscription(subscription)
+                .setSubscriptionId(path.name().toString())
+                .build());
   }
 
   @Override
   public ApiFuture<Subscription> getSubscription(SubscriptionPath path) {
-    return RetryingExecutorUtil.runWithRetries(
-        () ->
-            stub.getSubscription(GetSubscriptionRequest.newBuilder().setName(path.value()).build()),
-        subscriptionRetryingExecutor);
+    return serviceClient
+        .getSubscriptionCallable()
+        .futureCall(GetSubscriptionRequest.newBuilder().setName(path.toString()).build());
   }
 
   @Override
   public ApiFuture<List<Subscription>> listSubscriptions(LocationPath path) {
-    return RetryingExecutorUtil.runWithRetries(
-        () -> {
-          return stub.listSubscriptions(
-                  ListSubscriptionsRequest.newBuilder().setParent(path.value()).build())
-              .getSubscriptionsList();
-        },
-        listSubscriptionsRetryingExecutor);
+    return ApiFutures.transform(
+        serviceClient
+            .listSubscriptionsCallable()
+            .futureCall(ListSubscriptionsRequest.newBuilder().setParent(path.toString()).build()),
+        ListSubscriptionsResponse::getSubscriptionsList,
+        MoreExecutors.directExecutor());
   }
 
   @Override
   public ApiFuture<Subscription> updateSubscription(Subscription subscription, FieldMask mask) {
-    return RetryingExecutorUtil.runWithRetries(
-        () -> {
-          return stub.updateSubscription(
-              UpdateSubscriptionRequest.newBuilder()
-                  .setSubscription(subscription)
-                  .setUpdateMask(mask)
-                  .build());
-        },
-        subscriptionRetryingExecutor);
+    return serviceClient
+        .updateSubscriptionCallable()
+        .futureCall(
+            UpdateSubscriptionRequest.newBuilder()
+                .setSubscription(subscription)
+                .setUpdateMask(mask)
+                .build());
   }
 
   @Override
-  @SuppressWarnings("UnusedReturnValue")
   public ApiFuture<Void> deleteSubscription(SubscriptionPath path) {
-    return RetryingExecutorUtil.runWithRetries(
-        () -> {
-          stub.deleteSubscription(
-              DeleteSubscriptionRequest.newBuilder().setName(path.value()).build());
-          return null;
-        },
-        voidRetryingExecutor);
+    return ApiFutures.transform(
+        serviceClient
+            .deleteSubscriptionCallable()
+            .futureCall(DeleteSubscriptionRequest.newBuilder().setName(path.toString()).build()),
+        x -> null,
+        MoreExecutors.directExecutor());
   }
 }

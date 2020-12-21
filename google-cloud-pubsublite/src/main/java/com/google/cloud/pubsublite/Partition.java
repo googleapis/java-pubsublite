@@ -16,10 +16,10 @@
 
 package com.google.cloud.pubsublite;
 
-import static com.google.cloud.pubsublite.internal.Preconditions.checkArgument;
+import static com.google.cloud.pubsublite.internal.UncheckedApiPreconditions.checkArgument;
 
+import com.google.api.gax.rpc.ApiException;
 import com.google.auto.value.AutoValue;
-import io.grpc.StatusException;
 import java.io.Serializable;
 
 /** A partition of a topic. */
@@ -27,10 +27,12 @@ import java.io.Serializable;
 public abstract class Partition implements Serializable {
   private static final long serialVersionUID = 7583927435022345L;
 
-  public static Partition of(long partition) throws StatusException {
+  /** Create a partition from its long value. */
+  public static Partition of(long partition) throws ApiException {
     checkArgument(partition >= 0, "Partitions are zero indexed.");
     return new AutoValue_Partition(partition);
   }
 
+  /** The long value of this partition. */
   public abstract long value();
 }

@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     https://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package com.google.cloud.pubsublite.v1.stub;
 
 import static com.google.cloud.pubsublite.v1.CursorServiceClient.ListPartitionCursorsPagedResponse;
@@ -56,7 +57,7 @@ import java.util.List;
 import javax.annotation.Generated;
 import org.threeten.bp.Duration;
 
-// AUTO-GENERATED DOCUMENTATION AND CLASS
+// AUTO-GENERATED DOCUMENTATION AND CLASS.
 /**
  * Settings class to configure an instance of {@link CursorServiceStub}.
  *
@@ -71,24 +72,25 @@ import org.threeten.bp.Duration;
  * <p>The builder of this class is recursive, so contained classes are themselves builders. When
  * build() is called, the tree of builders is called to create the complete settings object.
  *
- * <p>For example, to set the total timeout of listPartitionCursors to 30 seconds:
+ * <p>For example, to set the total timeout of commitCursor to 30 seconds:
  *
- * <pre>
- * <code>
+ * <pre>{@code
  * CursorServiceStubSettings.Builder cursorServiceSettingsBuilder =
  *     CursorServiceStubSettings.newBuilder();
  * cursorServiceSettingsBuilder
- *     .listPartitionCursorsSettings()
+ *     .commitCursorSettings()
  *     .setRetrySettings(
- *         cursorServiceSettingsBuilder.listPartitionCursorsSettings().getRetrySettings().toBuilder()
+ *         cursorServiceSettingsBuilder
+ *             .commitCursorSettings()
+ *             .getRetrySettings()
+ *             .toBuilder()
  *             .setTotalTimeout(Duration.ofSeconds(30))
  *             .build());
  * CursorServiceStubSettings cursorServiceSettings = cursorServiceSettingsBuilder.build();
- * </code>
- * </pre>
+ * }</pre>
  */
-@Generated("by gapic-generator")
 @BetaApi
+@Generated("by gapic-generator-java")
 public class CursorServiceStubSettings extends StubSettings<CursorServiceStubSettings> {
   /** The default scopes of the service. */
   private static final ImmutableList<String> DEFAULT_SERVICE_SCOPES =
@@ -102,6 +104,71 @@ public class CursorServiceStubSettings extends StubSettings<CursorServiceStubSet
           ListPartitionCursorsResponse,
           ListPartitionCursorsPagedResponse>
       listPartitionCursorsSettings;
+
+  private static final PagedListDescriptor<
+          ListPartitionCursorsRequest, ListPartitionCursorsResponse, PartitionCursor>
+      LIST_PARTITION_CURSORS_PAGE_STR_DESC =
+          new PagedListDescriptor<
+              ListPartitionCursorsRequest, ListPartitionCursorsResponse, PartitionCursor>() {
+            @Override
+            public String emptyToken() {
+              return "";
+            }
+
+            @Override
+            public ListPartitionCursorsRequest injectToken(
+                ListPartitionCursorsRequest payload, String token) {
+              return ListPartitionCursorsRequest.newBuilder(payload).setPageToken(token).build();
+            }
+
+            @Override
+            public ListPartitionCursorsRequest injectPageSize(
+                ListPartitionCursorsRequest payload, int pageSize) {
+              return ListPartitionCursorsRequest.newBuilder(payload).setPageSize(pageSize).build();
+            }
+
+            @Override
+            public Integer extractPageSize(ListPartitionCursorsRequest payload) {
+              return payload.getPageSize();
+            }
+
+            @Override
+            public String extractNextToken(ListPartitionCursorsResponse payload) {
+              return payload.getNextPageToken();
+            }
+
+            @Override
+            public Iterable<PartitionCursor> extractResources(
+                ListPartitionCursorsResponse payload) {
+              return payload.getPartitionCursorsList() == null
+                  ? ImmutableList.<PartitionCursor>of()
+                  : payload.getPartitionCursorsList();
+            }
+          };
+
+  private static final PagedListResponseFactory<
+          ListPartitionCursorsRequest,
+          ListPartitionCursorsResponse,
+          ListPartitionCursorsPagedResponse>
+      LIST_PARTITION_CURSORS_PAGE_STR_FACT =
+          new PagedListResponseFactory<
+              ListPartitionCursorsRequest,
+              ListPartitionCursorsResponse,
+              ListPartitionCursorsPagedResponse>() {
+            @Override
+            public ApiFuture<ListPartitionCursorsPagedResponse> getFuturePagedResponse(
+                UnaryCallable<ListPartitionCursorsRequest, ListPartitionCursorsResponse> callable,
+                ListPartitionCursorsRequest request,
+                ApiCallContext context,
+                ApiFuture<ListPartitionCursorsResponse> futureResponse) {
+              PageContext<
+                      ListPartitionCursorsRequest, ListPartitionCursorsResponse, PartitionCursor>
+                  pageContext =
+                      PageContext.create(
+                          callable, LIST_PARTITION_CURSORS_PAGE_STR_DESC, request, context);
+              return ListPartitionCursorsPagedResponse.createAsync(pageContext, futureResponse);
+            }
+          };
 
   /** Returns the object with the settings used for calls to streamingCommitCursor. */
   public StreamingCallSettings<StreamingCommitCursorRequest, StreamingCommitCursorResponse>
@@ -129,10 +196,10 @@ public class CursorServiceStubSettings extends StubSettings<CursorServiceStubSet
         .getTransportName()
         .equals(GrpcTransportChannel.getGrpcTransportName())) {
       return GrpcCursorServiceStub.create(this);
-    } else {
-      throw new UnsupportedOperationException(
-          "Transport not supported: " + getTransportChannelProvider().getTransportName());
     }
+    throw new UnsupportedOperationException(
+        String.format(
+            "Transport not supported: %s", getTransportChannelProvider().getTransportName()));
   }
 
   /** Returns a builder for the default ExecutorProvider for this service. */
@@ -197,75 +264,9 @@ public class CursorServiceStubSettings extends StubSettings<CursorServiceStubSet
     listPartitionCursorsSettings = settingsBuilder.listPartitionCursorsSettings().build();
   }
 
-  private static final PagedListDescriptor<
-          ListPartitionCursorsRequest, ListPartitionCursorsResponse, PartitionCursor>
-      LIST_PARTITION_CURSORS_PAGE_STR_DESC =
-          new PagedListDescriptor<
-              ListPartitionCursorsRequest, ListPartitionCursorsResponse, PartitionCursor>() {
-            @Override
-            public String emptyToken() {
-              return "";
-            }
-
-            @Override
-            public ListPartitionCursorsRequest injectToken(
-                ListPartitionCursorsRequest payload, String token) {
-              return ListPartitionCursorsRequest.newBuilder(payload).setPageToken(token).build();
-            }
-
-            @Override
-            public ListPartitionCursorsRequest injectPageSize(
-                ListPartitionCursorsRequest payload, int pageSize) {
-              return ListPartitionCursorsRequest.newBuilder(payload).setPageSize(pageSize).build();
-            }
-
-            @Override
-            public Integer extractPageSize(ListPartitionCursorsRequest payload) {
-              return payload.getPageSize();
-            }
-
-            @Override
-            public String extractNextToken(ListPartitionCursorsResponse payload) {
-              return payload.getNextPageToken();
-            }
-
-            @Override
-            public Iterable<PartitionCursor> extractResources(
-                ListPartitionCursorsResponse payload) {
-              return payload.getPartitionCursorsList() != null
-                  ? payload.getPartitionCursorsList()
-                  : ImmutableList.<PartitionCursor>of();
-            }
-          };
-
-  private static final PagedListResponseFactory<
-          ListPartitionCursorsRequest,
-          ListPartitionCursorsResponse,
-          ListPartitionCursorsPagedResponse>
-      LIST_PARTITION_CURSORS_PAGE_STR_FACT =
-          new PagedListResponseFactory<
-              ListPartitionCursorsRequest,
-              ListPartitionCursorsResponse,
-              ListPartitionCursorsPagedResponse>() {
-            @Override
-            public ApiFuture<ListPartitionCursorsPagedResponse> getFuturePagedResponse(
-                UnaryCallable<ListPartitionCursorsRequest, ListPartitionCursorsResponse> callable,
-                ListPartitionCursorsRequest request,
-                ApiCallContext context,
-                ApiFuture<ListPartitionCursorsResponse> futureResponse) {
-              PageContext<
-                      ListPartitionCursorsRequest, ListPartitionCursorsResponse, PartitionCursor>
-                  pageContext =
-                      PageContext.create(
-                          callable, LIST_PARTITION_CURSORS_PAGE_STR_DESC, request, context);
-              return ListPartitionCursorsPagedResponse.createAsync(pageContext, futureResponse);
-            }
-          };
-
   /** Builder for CursorServiceStubSettings. */
   public static class Builder extends StubSettings.Builder<CursorServiceStubSettings, Builder> {
     private final ImmutableList<UnaryCallSettings.Builder<?, ?>> unaryMethodSettingsBuilders;
-
     private final StreamingCallSettings.Builder<
             StreamingCommitCursorRequest, StreamingCommitCursorResponse>
         streamingCommitCursorSettings;
@@ -276,19 +277,22 @@ public class CursorServiceStubSettings extends StubSettings<CursorServiceStubSet
             ListPartitionCursorsResponse,
             ListPartitionCursorsPagedResponse>
         listPartitionCursorsSettings;
-
     private static final ImmutableMap<String, ImmutableSet<StatusCode.Code>>
         RETRYABLE_CODE_DEFINITIONS;
 
     static {
       ImmutableMap.Builder<String, ImmutableSet<StatusCode.Code>> definitions =
           ImmutableMap.builder();
+      definitions.put("no_retry_codes", ImmutableSet.copyOf(Lists.<StatusCode.Code>newArrayList()));
       definitions.put(
-          "idempotent",
+          "retry_policy_0_codes",
           ImmutableSet.copyOf(
               Lists.<StatusCode.Code>newArrayList(
-                  StatusCode.Code.DEADLINE_EXCEEDED, StatusCode.Code.UNAVAILABLE)));
-      definitions.put("non_idempotent", ImmutableSet.copyOf(Lists.<StatusCode.Code>newArrayList()));
+                  StatusCode.Code.DEADLINE_EXCEEDED,
+                  StatusCode.Code.UNAVAILABLE,
+                  StatusCode.Code.ABORTED,
+                  StatusCode.Code.INTERNAL,
+                  StatusCode.Code.UNKNOWN)));
       RETRYABLE_CODE_DEFINITIONS = definitions.build();
     }
 
@@ -297,63 +301,38 @@ public class CursorServiceStubSettings extends StubSettings<CursorServiceStubSet
     static {
       ImmutableMap.Builder<String, RetrySettings> definitions = ImmutableMap.builder();
       RetrySettings settings = null;
+      settings = RetrySettings.newBuilder().setRpcTimeoutMultiplier(1.0).build();
+      definitions.put("no_retry_params", settings);
       settings =
           RetrySettings.newBuilder()
               .setInitialRetryDelay(Duration.ofMillis(100L))
               .setRetryDelayMultiplier(1.3)
               .setMaxRetryDelay(Duration.ofMillis(60000L))
-              .setInitialRpcTimeout(Duration.ofMillis(20000L))
+              .setInitialRpcTimeout(Duration.ofMillis(600000L))
               .setRpcTimeoutMultiplier(1.0)
-              .setMaxRpcTimeout(Duration.ofMillis(20000L))
+              .setMaxRpcTimeout(Duration.ofMillis(600000L))
               .setTotalTimeout(Duration.ofMillis(600000L))
               .build();
-      definitions.put("default", settings);
+      definitions.put("retry_policy_0_params", settings);
       RETRY_PARAM_DEFINITIONS = definitions.build();
     }
 
     protected Builder() {
-      this((ClientContext) null);
+      this(((ClientContext) null));
     }
 
     protected Builder(ClientContext clientContext) {
       super(clientContext);
 
       streamingCommitCursorSettings = StreamingCallSettings.newBuilder();
-
       commitCursorSettings = UnaryCallSettings.newUnaryCallSettingsBuilder();
-
       listPartitionCursorsSettings =
           PagedCallSettings.newBuilder(LIST_PARTITION_CURSORS_PAGE_STR_FACT);
 
       unaryMethodSettingsBuilders =
           ImmutableList.<UnaryCallSettings.Builder<?, ?>>of(
               commitCursorSettings, listPartitionCursorsSettings);
-
       initDefaults(this);
-    }
-
-    private static Builder createDefault() {
-      Builder builder = new Builder((ClientContext) null);
-      builder.setTransportChannelProvider(defaultTransportChannelProvider());
-      builder.setCredentialsProvider(defaultCredentialsProviderBuilder().build());
-      builder.setInternalHeaderProvider(defaultApiClientHeaderProviderBuilder().build());
-      builder.setEndpoint(getDefaultEndpoint());
-      return initDefaults(builder);
-    }
-
-    private static Builder initDefaults(Builder builder) {
-
-      builder
-          .commitCursorSettings()
-          .setRetryableCodes(RETRYABLE_CODE_DEFINITIONS.get("non_idempotent"))
-          .setRetrySettings(RETRY_PARAM_DEFINITIONS.get("default"));
-
-      builder
-          .listPartitionCursorsSettings()
-          .setRetryableCodes(RETRYABLE_CODE_DEFINITIONS.get("idempotent"))
-          .setRetrySettings(RETRY_PARAM_DEFINITIONS.get("default"));
-
-      return builder;
     }
 
     protected Builder(CursorServiceStubSettings settings) {
@@ -368,7 +347,32 @@ public class CursorServiceStubSettings extends StubSettings<CursorServiceStubSet
               commitCursorSettings, listPartitionCursorsSettings);
     }
 
-    // NEXT_MAJOR_VER: remove 'throws Exception'
+    private static Builder createDefault() {
+      Builder builder = new Builder(((ClientContext) null));
+
+      builder.setTransportChannelProvider(defaultTransportChannelProvider());
+      builder.setCredentialsProvider(defaultCredentialsProviderBuilder().build());
+      builder.setInternalHeaderProvider(defaultApiClientHeaderProviderBuilder().build());
+      builder.setEndpoint(getDefaultEndpoint());
+
+      return initDefaults(builder);
+    }
+
+    private static Builder initDefaults(Builder builder) {
+      builder
+          .commitCursorSettings()
+          .setRetryableCodes(RETRYABLE_CODE_DEFINITIONS.get("retry_policy_0_codes"))
+          .setRetrySettings(RETRY_PARAM_DEFINITIONS.get("retry_policy_0_params"));
+
+      builder
+          .listPartitionCursorsSettings()
+          .setRetryableCodes(RETRYABLE_CODE_DEFINITIONS.get("retry_policy_0_codes"))
+          .setRetrySettings(RETRY_PARAM_DEFINITIONS.get("retry_policy_0_params"));
+
+      return builder;
+    }
+
+    // NEXT_MAJOR_VER: remove 'throws Exception'.
     /**
      * Applies the given settings updater function to all of the unary API methods in this service.
      *

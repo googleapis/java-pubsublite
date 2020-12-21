@@ -16,7 +16,8 @@
 
 package com.google.cloud.pubsublite.internal.wire;
 
-import static com.google.cloud.pubsublite.internal.StatusExceptionMatcher.assertFutureThrowsCode;
+import static com.google.cloud.pubsublite.internal.ApiExceptionMatcher.assertFutureThrowsCode;
+import static com.google.cloud.pubsublite.internal.wire.RetryingConnectionHelpers.whenFailed;
 import static com.google.common.truth.Truth.assertThat;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static org.junit.Assert.assertThrows;
@@ -30,9 +31,12 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.verifyZeroInteractions;
+import static org.mockito.MockitoAnnotations.initMocks;
 
 import com.google.api.core.ApiFuture;
 import com.google.api.core.ApiService.Listener;
+import com.google.api.gax.rpc.ResponseObserver;
+import com.google.api.gax.rpc.StatusCode.Code;
 import com.google.cloud.pubsublite.CloudRegion;
 import com.google.cloud.pubsublite.CloudZone;
 import com.google.cloud.pubsublite.Message;
@@ -40,73 +44,60 @@ import com.google.cloud.pubsublite.Offset;
 import com.google.cloud.pubsublite.ProjectNumber;
 import com.google.cloud.pubsublite.SequencedMessage;
 import com.google.cloud.pubsublite.SubscriptionName;
-import com.google.cloud.pubsublite.SubscriptionPaths;
-import com.google.cloud.pubsublite.internal.StatusExceptionMatcher;
+import com.google.cloud.pubsublite.SubscriptionPath;
+import com.google.cloud.pubsublite.internal.ApiExceptionMatcher;
+import com.google.cloud.pubsublite.internal.CheckedApiException;
 import com.google.cloud.pubsublite.internal.wire.ConnectedSubscriber.Response;
 import com.google.cloud.pubsublite.proto.Cursor;
 import com.google.cloud.pubsublite.proto.FlowControlRequest;
 import com.google.cloud.pubsublite.proto.InitialSubscribeRequest;
 import com.google.cloud.pubsublite.proto.SeekRequest;
 import com.google.cloud.pubsublite.proto.SubscribeRequest;
-import com.google.cloud.pubsublite.proto.SubscriberServiceGrpc;
-import com.google.cloud.pubsublite.proto.SubscriberServiceGrpc.SubscriberServiceStub;
+import com.google.cloud.pubsublite.proto.SubscribeResponse;
 import com.google.common.collect.ImmutableList;
 import com.google.common.util.concurrent.MoreExecutors;
 import com.google.protobuf.util.Timestamps;
-import io.grpc.ManagedChannel;
-import io.grpc.Status.Code;
-import io.grpc.StatusException;
-import io.grpc.StatusRuntimeException;
-import io.grpc.inprocess.InProcessChannelBuilder;
-import io.grpc.stub.StreamObserver;
-import io.grpc.testing.GrpcCleanupRule;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.Future;
 import java.util.function.Consumer;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
+import org.mockito.Mock;
 import org.mockito.stubbing.Answer;
 
 @RunWith(JUnit4.class)
 public class SubscriberImplTest {
-  @Rule public final GrpcCleanupRule grpcCleanup = new GrpcCleanupRule();
-
   private static SubscribeRequest initialRequest() {
-    try {
-      return SubscribeRequest.newBuilder()
-          .setInitial(
-              InitialSubscribeRequest.newBuilder()
-                  .setSubscription(
-                      SubscriptionPaths.newBuilder()
-                          .setProjectNumber(ProjectNumber.of(12345))
-                          .setZone(CloudZone.of(CloudRegion.of("us-east1"), 'a'))
-                          .setSubscriptionName(SubscriptionName.of("some_subscription"))
-                          .build()
-                          .value())
-                  .setPartition(1024))
-          .build();
-    } catch (StatusException e) {
-      throw e.getStatus().asRuntimeException();
-    }
+    return SubscribeRequest.newBuilder()
+        .setInitial(
+            InitialSubscribeRequest.newBuilder()
+                .setSubscription(
+                    SubscriptionPath.newBuilder()
+                        .setProject(ProjectNumber.of(12345))
+                        .setLocation(CloudZone.of(CloudRegion.of("us-east1"), 'a'))
+                        .setName(SubscriptionName.of("some_subscription"))
+                        .build()
+                        .toString())
+                .setPartition(1024))
+        .build();
   }
 
-  private final ConnectedSubscriber mockConnectedSubscriber = mock(ConnectedSubscriber.class);
-  private final ConnectedSubscriberFactory mockSubscriberFactory =
-      mock(ConnectedSubscriberFactory.class);
+  @Mock private StreamFactory<SubscribeRequest, SubscribeResponse> unusedStreamFactory;
+  @Mock private ConnectedSubscriber mockConnectedSubscriber;
+  @Mock private ConnectedSubscriberFactory mockSubscriberFactory;
 
-  @SuppressWarnings("unchecked")
-  private final Consumer<ImmutableList<SequencedMessage>> mockMessageConsumer =
-      mock(Consumer.class);
+  @Mock Consumer<ImmutableList<SequencedMessage>> mockMessageConsumer;
 
   private final Listener permanentErrorHandler = mock(Listener.class);
 
   private SubscriberImpl subscriber;
-  private StreamObserver<Response> leakedResponseObserver;
+  private ResponseObserver<Response> leakedResponseObserver;
 
   @Before
-  public void setUp() throws StatusException {
+  public void setUp() throws CheckedApiException {
+    initMocks(this);
     doAnswer(
             args -> {
               leakedResponseObserver = args.getArgument(1);
@@ -114,13 +105,12 @@ public class SubscriberImplTest {
             })
         .when(mockSubscriberFactory)
         .New(any(), any(), eq(initialRequest()));
-    ManagedChannel channel =
-        grpcCleanup.register(
-            InProcessChannelBuilder.forName("localhost:12345").directExecutor().build());
-    SubscriberServiceStub unusedStub = SubscriberServiceGrpc.newStub(channel);
     subscriber =
         new SubscriberImpl(
-            unusedStub, mockSubscriberFactory, initialRequest().getInitial(), mockMessageConsumer);
+            unusedStreamFactory,
+            mockSubscriberFactory,
+            initialRequest().getInitial(),
+            mockMessageConsumer);
     subscriber.addListener(permanentErrorHandler, MoreExecutors.directExecutor());
     subscriber.startAsync().awaitRunning();
     verify(mockSubscriberFactory).New(any(), any(), eq(initialRequest()));
@@ -142,7 +132,7 @@ public class SubscriberImplTest {
   @Test
   public void invalidFlowThrows() {
     assertThrows(
-        StatusRuntimeException.class,
+        CheckedApiException.class,
         () -> subscriber.allowFlow(FlowControlRequest.newBuilder().setAllowedBytes(-1).build()));
   }
 
@@ -154,7 +144,7 @@ public class SubscriberImplTest {
   }
 
   @Test
-  public void anyFlowAllowedAndProxies() {
+  public void anyFlowAllowedAndProxies() throws CheckedApiException {
     subscriber.allowFlow(bigFlowControlRequest());
     verify(mockConnectedSubscriber).allowFlow(bigFlowControlRequest());
   }
@@ -192,56 +182,60 @@ public class SubscriberImplTest {
   }
 
   @Test
-  public void messagesEmpty_IsError() {
+  public void messagesEmpty_IsError() throws Exception {
     subscriber.allowFlow(bigFlowControlRequest());
-    leakedResponseObserver.onNext(Response.ofMessages(ImmutableList.of()));
+    leakedResponseObserver.onResponse(Response.ofMessages(ImmutableList.of()));
     assertThrows(IllegalStateException.class, subscriber::awaitTerminated);
     verify(permanentErrorHandler)
-        .failed(any(), argThat(new StatusExceptionMatcher(Code.INVALID_ARGUMENT)));
+        .failed(any(), argThat(new ApiExceptionMatcher(Code.INVALID_ARGUMENT)));
   }
 
   @Test
-  public void messagesUnordered_IsError() {
+  public void messagesUnordered_IsError() throws Exception {
+    Future<Void> failed = whenFailed(permanentErrorHandler);
     subscriber.allowFlow(bigFlowControlRequest());
-    leakedResponseObserver.onNext(
+    leakedResponseObserver.onResponse(
         Response.ofMessages(
             ImmutableList.of(
                 SequencedMessage.of(Message.builder().build(), Timestamps.EPOCH, Offset.of(1), 10),
                 SequencedMessage.of(
                     Message.builder().build(), Timestamps.EPOCH, Offset.of(0), 10))));
     assertThrows(IllegalStateException.class, subscriber::awaitTerminated);
+    failed.get();
     verify(permanentErrorHandler)
-        .failed(any(), argThat(new StatusExceptionMatcher(Code.INVALID_ARGUMENT)));
+        .failed(any(), argThat(new ApiExceptionMatcher(Code.INVALID_ARGUMENT)));
   }
 
   @Test
-  public void messageBatchesOutOfOrder_IsError() {
+  public void messageBatchesOutOfOrder_IsError() throws Exception {
+    Future<Void> failed = whenFailed(permanentErrorHandler);
     subscriber.allowFlow(bigFlowControlRequest());
     ImmutableList<SequencedMessage> messages =
         ImmutableList.of(
             SequencedMessage.of(Message.builder().build(), Timestamps.EPOCH, Offset.of(0), 0));
-    leakedResponseObserver.onNext(Response.ofMessages(messages));
-    leakedResponseObserver.onNext(Response.ofMessages(messages));
-    assertThrows(IllegalStateException.class, subscriber::awaitTerminated);
+    leakedResponseObserver.onResponse(Response.ofMessages(messages));
+    leakedResponseObserver.onResponse(Response.ofMessages(messages));
+    failed.get();
     verify(permanentErrorHandler)
-        .failed(any(), argThat(new StatusExceptionMatcher(Code.FAILED_PRECONDITION)));
+        .failed(any(), argThat(new ApiExceptionMatcher(Code.FAILED_PRECONDITION)));
   }
 
   @Test
-  public void messagesOrdered_Ok() {
+  public void messagesOrdered_Ok() throws Exception {
     subscriber.allowFlow(bigFlowControlRequest());
     ImmutableList<SequencedMessage> messages =
         ImmutableList.of(
             SequencedMessage.of(Message.builder().build(), Timestamps.EPOCH, Offset.of(0), 10),
             SequencedMessage.of(Message.builder().build(), Timestamps.EPOCH, Offset.of(1), 10));
-    leakedResponseObserver.onNext(Response.ofMessages(messages));
+    leakedResponseObserver.onResponse(Response.ofMessages(messages));
 
     verify(mockMessageConsumer).accept(messages);
     verify(permanentErrorHandler, times(0)).failed(any(), any());
   }
 
   @Test
-  public void messageResponseSubtracts() {
+  public void messageResponseSubtracts() throws Exception {
+    Future<Void> failed = whenFailed(permanentErrorHandler);
     FlowControlRequest request =
         FlowControlRequest.newBuilder().setAllowedBytes(100).setAllowedMessages(100).build();
     subscriber.allowFlow(request);
@@ -253,12 +247,13 @@ public class SubscriberImplTest {
     ImmutableList<SequencedMessage> messages2 =
         ImmutableList.of(
             SequencedMessage.of(Message.builder().build(), Timestamps.EPOCH, Offset.of(3), 2));
-    leakedResponseObserver.onNext(Response.ofMessages(messages1));
+    leakedResponseObserver.onResponse(Response.ofMessages(messages1));
     verify(mockMessageConsumer).accept(messages1);
     verify(permanentErrorHandler, times(0)).failed(any(), any());
-    leakedResponseObserver.onNext(Response.ofMessages(messages2));
+    leakedResponseObserver.onResponse(Response.ofMessages(messages2));
+    failed.get();
     verify(permanentErrorHandler)
-        .failed(any(), argThat(new StatusExceptionMatcher(Code.FAILED_PRECONDITION)));
+        .failed(any(), argThat(new ApiExceptionMatcher(Code.FAILED_PRECONDITION)));
   }
 
   @Test
@@ -272,25 +267,25 @@ public class SubscriberImplTest {
     subscriber.triggerReinitialize();
     verify(mockConnectedSubscriber, times(2)).seek(seekRequest);
 
-    leakedResponseObserver.onNext(Response.ofSeekOffset(offset));
+    leakedResponseObserver.onResponse(Response.ofSeekOffset(offset));
     assertTrue(future.isDone());
     assertThat(subscriber.seekInFlight()).isFalse();
   }
 
   @Test
-  public void reinitialize_sendsNextOffsetSeek() {
+  public void reinitialize_sendsNextOffsetSeek() throws Exception {
     subscriber.allowFlow(bigFlowControlRequest());
     ImmutableList<SequencedMessage> messages =
         ImmutableList.of(
             SequencedMessage.of(Message.builder().build(), Timestamps.EPOCH, Offset.of(0), 10),
             SequencedMessage.of(Message.builder().build(), Timestamps.EPOCH, Offset.of(1), 10));
-    leakedResponseObserver.onNext(Response.ofMessages(messages));
+    leakedResponseObserver.onResponse(Response.ofMessages(messages));
     verify(mockMessageConsumer).accept(messages);
 
     subscriber.triggerReinitialize();
     verify(mockConnectedSubscriber)
         .seek(SeekRequest.newBuilder().setCursor(Cursor.newBuilder().setOffset(2)).build());
     assertThat(subscriber.seekInFlight()).isFalse();
-    leakedResponseObserver.onNext(Response.ofSeekOffset(Offset.of(2)));
+    leakedResponseObserver.onResponse(Response.ofSeekOffset(Offset.of(2)));
   }
 }

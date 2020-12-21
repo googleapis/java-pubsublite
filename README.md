@@ -20,34 +20,24 @@ If you are using Maven, add this to your pom.xml file:
 <dependency>
   <groupId>com.google.cloud</groupId>
   <artifactId>google-cloud-pubsublite</artifactId>
-  <version>0.1.7</version>
+  <version>0.7.0</version>
 </dependency>
 <dependency>
   <groupId>com.google.cloud</groupId>
   <artifactId>google-cloud-pubsub</artifactId>
-  <version>1.108.0</version>
-</dependency>
-<!-- A logging dependency used by the underlying library  -->
-<dependency>
-  <groupId>com.google.flogger</groupId>
-  <artifactId>flogger-system-backend</artifactId>
-  <version>0.5.1</version>
-  <scope>runtime</scope>
+  <version>1.110.1</version>
 </dependency>
 
 ```
-
-[//]: # ({x-version-update-start:google-cloud-pubsublite:released})
 
 If you are using Gradle, add this to your dependencies
 ```Groovy
-compile 'com.google.cloud:google-cloud-pubsublite:0.1.7'
+compile 'com.google.cloud:google-cloud-pubsublite:0.7.0'
 ```
 If you are using SBT, add this to your dependencies
 ```Scala
-libraryDependencies += "com.google.cloud" % "google-cloud-pubsublite" % "0.1.7"
+libraryDependencies += "com.google.cloud" % "google-cloud-pubsublite" % "0.7.0"
 ```
-[//]: # ({x-version-update-end})
 
 ## Authentication
 
@@ -108,10 +98,10 @@ String topicId = "your-topic-id";
 Integer partitions = 1;
 
 TopicPath topicPath =
-    TopicPaths.newBuilder()
-        .setProjectNumber(ProjectNumber.of(projectNumber))
-        .setZone(CloudZone.of(CloudRegion.of(cloudRegion), zoneId))
-        .setTopicName(TopicName.of(topicId))
+    TopicPath.newBuilder()
+        .setProject(ProjectNumber.of(projectNumber))
+        .setLocation(CloudZone.of(CloudRegion.of(cloudRegion), zoneId))
+        .setName(TopicName.of(topicId))
         .build();
 
 Topic topic =
@@ -127,12 +117,12 @@ Topic topic =
             RetentionConfig.newBuilder()
                 // How long messages are retained.
                 .setPeriod(Durations.fromDays(1))
-                // Set storage per partition to 100 GiB. This must be 30 GiB-10 TiB.
+                // Set storage per partition to 30 GiB. This must be 30 GiB-10 TiB.
                 // If the number of bytes stored in any of the topic's partitions grows
                 // beyond this value, older messages will be dropped to make room for
                 // newer ones, regardless of the value of `period`.
-                .setPerPartitionBytes(100 * 1024 * 1024 * 1024L))
-        .setName(topicPath.value())
+                .setPerPartitionBytes(30 * 1024 * 1024 * 1024L))
+        .setName(topicPath.toString())
         .build();
 
 AdminClientSettings adminClientSettings =
@@ -168,10 +158,10 @@ String topicId = "your-topic-id";
 int messageCount = 100;
 
 TopicPath topicPath =
-    TopicPaths.newBuilder()
-        .setProjectNumber(ProjectNumber.of(projectNumber))
-        .setZone(CloudZone.of(CloudRegion.of(cloudRegion), zoneId))
-        .setTopicName(TopicName.of(topicId))
+    TopicPath.newBuilder()
+        .setProject(ProjectNumber.of(projectNumber))
+        .setLocation(CloudZone.of(CloudRegion.of(cloudRegion), zoneId))
+        .setName(TopicName.of(topicId))
         .build();
 Publisher publisher = null;
 List<ApiFuture<String>> futures = new ArrayList<>();
@@ -236,17 +226,17 @@ String topicId = "your-topic-id";
 String subscriptionId = "your-subscription-id";
 
 TopicPath topicPath =
-    TopicPaths.newBuilder()
-        .setProjectNumber(ProjectNumber.of(projectNumber))
-        .setZone(CloudZone.of(CloudRegion.of(cloudRegion), zoneId))
-        .setTopicName(TopicName.of(topicId))
+    TopicPath.newBuilder()
+        .setProject(ProjectNumber.of(projectNumber))
+        .setLocation(CloudZone.of(CloudRegion.of(cloudRegion), zoneId))
+        .setName(TopicName.of(topicId))
         .build();
 
 SubscriptionPath subscriptionPath =
-    SubscriptionPaths.newBuilder()
-        .setZone(CloudZone.of(CloudRegion.of(cloudRegion), zoneId))
-        .setProjectNumber(ProjectNumber.of(projectNumber))
-        .setSubscriptionName(SubscriptionName.of(subscriptionId))
+    SubscriptionPath.newBuilder()
+        .setLocation(CloudZone.of(CloudRegion.of(cloudRegion), zoneId))
+        .setProject(ProjectNumber.of(projectNumber))
+        .setName(SubscriptionName.of(subscriptionId))
         .build();
 
 Subscription subscription =
@@ -259,8 +249,8 @@ Subscription subscription =
             // may be a gap at that offset.
             DeliveryConfig.newBuilder()
                 .setDeliveryRequirement(DeliveryRequirement.DELIVER_IMMEDIATELY))
-        .setName(subscriptionPath.value())
-        .setTopic(topicPath.value())
+        .setName(subscriptionPath.toString())
+        .setTopic(topicPath.toString())
         .build();
 
 AdminClientSettings adminClientSettings =
@@ -297,13 +287,12 @@ char zoneId = 'b';
 String topicId = "your-topic-id";
 // Choose an existing subscription.
 String subscriptionId = "your-subscription-id";
-List<Integer> partitionNumbers = ImmutableList.of(0);
 
 SubscriptionPath subscriptionPath =
-    SubscriptionPaths.newBuilder()
-        .setZone(CloudZone.of(CloudRegion.of(cloudRegion), zoneId))
-        .setProjectNumber(ProjectNumber.of(projectNumber))
-        .setSubscriptionName(SubscriptionName.of(subscriptionId))
+    SubscriptionPath.newBuilder()
+        .setLocation(CloudZone.of(CloudRegion.of(cloudRegion), zoneId))
+        .setProject(ProjectNumber.of(projectNumber))
+        .setName(SubscriptionName.of(subscriptionId))
         .build();
 
 // The message stream is paused based on the maximum size or number of messages that the
@@ -316,11 +305,6 @@ FlowControlSettings flowControlSettings =
         .setMessagesOutstanding(1000L)
         .build();
 
-List<Partition> partitions = new ArrayList<>();
-for (Integer num : partitionNumbers) {
-  partitions.add(Partition.of(num));
-}
-
 MessageReceiver receiver =
     (PubsubMessage message, AckReplyConsumer consumer) -> {
       System.out.println("Id : " + message.getMessageId());
@@ -331,7 +315,6 @@ MessageReceiver receiver =
 SubscriberSettings subscriberSettings =
     SubscriberSettings.newBuilder()
         .setSubscriptionPath(subscriptionPath)
-        .setPartitions(partitions)
         .setReceiver(receiver)
         // Flow control settings are set at the partition level.
         .setPerPartitionFlowControlSettings(flowControlSettings)
@@ -342,13 +325,14 @@ Subscriber subscriber = Subscriber.create(subscriberSettings);
 // Start the subscriber. Upon successful starting, its state will become RUNNING.
 subscriber.startAsync().awaitRunning();
 
-System.out.println("Listening to messages on " + subscriptionPath.value() + "...");
+System.out.println("Listening to messages on " + subscriptionPath.toString() + "...");
 
 try {
-  // Wait 30 seconds for the subscriber to reach TERMINATED state. If it encounters
+  System.out.println(subscriber.state());
+  // Wait 90 seconds for the subscriber to reach TERMINATED state. If it encounters
   // unrecoverable errors before then, its state will change to FAILED and an
   // IllegalStateException will be thrown.
-  subscriber.awaitTerminated(30, TimeUnit.SECONDS);
+  subscriber.awaitTerminated(90, TimeUnit.SECONDS);
 } catch (TimeoutException t) {
   // Shut down the subscriber. This will change the state of the subscriber to TERMINATED.
   subscriber.stopAsync().awaitTerminated();
@@ -429,6 +413,8 @@ Java 8 | [![Kokoro CI][kokoro-badge-image-2]][kokoro-badge-link-2]
 Java 8 OSX | [![Kokoro CI][kokoro-badge-image-3]][kokoro-badge-link-3]
 Java 8 Windows | [![Kokoro CI][kokoro-badge-image-4]][kokoro-badge-link-4]
 Java 11 | [![Kokoro CI][kokoro-badge-image-5]][kokoro-badge-link-5]
+
+Java is a registered trademark of Oracle and/or its affiliates.
 
 [product-docs]: https://cloud.google.com/pubsub/lite/docs
 [javadocs]: https://googleapis.dev/java/google-cloud-pubsublite/latest/index.html

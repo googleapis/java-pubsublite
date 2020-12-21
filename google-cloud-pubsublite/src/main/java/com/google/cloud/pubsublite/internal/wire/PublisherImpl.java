@@ -16,16 +16,20 @@
 
 package com.google.cloud.pubsublite.internal.wire;
 
-import static com.google.cloud.pubsublite.internal.Preconditions.checkState;
+import static com.google.cloud.pubsublite.internal.CheckedApiPreconditions.checkState;
+import static com.google.cloud.pubsublite.internal.wire.ApiServiceUtils.backgroundResourceAsApiService;
 
 import com.google.api.core.ApiFuture;
 import com.google.api.core.ApiFutures;
 import com.google.api.core.ApiService;
 import com.google.api.core.SettableApiFuture;
 import com.google.api.gax.batching.BatchingSettings;
+import com.google.api.gax.rpc.ApiException;
+import com.google.api.gax.rpc.StatusCode.Code;
 import com.google.cloud.pubsublite.Constants;
 import com.google.cloud.pubsublite.Message;
 import com.google.cloud.pubsublite.Offset;
+import com.google.cloud.pubsublite.internal.CheckedApiException;
 import com.google.cloud.pubsublite.internal.CloseableMonitor;
 import com.google.cloud.pubsublite.internal.ProxyService;
 import com.google.cloud.pubsublite.internal.Publisher;
@@ -33,12 +37,11 @@ import com.google.cloud.pubsublite.internal.wire.SerialBatcher.UnbatchedMessage;
 import com.google.cloud.pubsublite.proto.InitialPublishRequest;
 import com.google.cloud.pubsublite.proto.PubSubMessage;
 import com.google.cloud.pubsublite.proto.PublishRequest;
-import com.google.cloud.pubsublite.proto.PublisherServiceGrpc;
+import com.google.cloud.pubsublite.proto.PublishResponse;
+import com.google.cloud.pubsublite.v1.PublisherServiceClient;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Preconditions;
 import com.google.common.util.concurrent.Monitor;
-import io.grpc.Status;
-import io.grpc.StatusException;
 import java.util.ArrayDeque;
 import java.util.Collection;
 import java.util.List;
@@ -98,17 +101,17 @@ public final class PublisherImpl extends ProxyService
 
   @VisibleForTesting
   PublisherImpl(
-      PublisherServiceGrpc.PublisherServiceStub stub,
+      StreamFactory<PublishRequest, PublishResponse> streamFactory,
       BatchPublisherFactory publisherFactory,
       InitialPublishRequest initialRequest,
       BatchingSettings batchingSettings)
-      throws StatusException {
+      throws ApiException {
     Preconditions.checkNotNull(batchingSettings.getDelayThreshold());
     Preconditions.checkNotNull(batchingSettings.getRequestByteThreshold());
     Preconditions.checkNotNull(batchingSettings.getElementCountThreshold());
     this.connection =
         new RetryingConnectionImpl<>(
-            stub::publish,
+            streamFactory,
             publisherFactory,
             PublishRequest.newBuilder().setInitialRequest(initialRequest).build(),
             this);
@@ -122,11 +125,16 @@ public final class PublisherImpl extends ProxyService
   }
 
   public PublisherImpl(
-      PublisherServiceGrpc.PublisherServiceStub stub,
+      PublisherServiceClient client,
       InitialPublishRequest initialRequest,
       BatchingSettings batchingSettings)
-      throws StatusException {
-    this(stub, new BatchPublisherImpl.Factory(), initialRequest, batchingSettings);
+      throws ApiException {
+    this(
+        responseStream -> client.publishCallable().splitCall(responseStream),
+        new BatchPublisherImpl.Factory(),
+        initialRequest,
+        batchingSettings);
+    addServices(backgroundResourceAsApiService(client));
   }
 
   @Override
@@ -139,13 +147,13 @@ public final class PublisherImpl extends ProxyService
             if (!connectionOr.isPresent()) return;
             batches.forEach(batch -> connectionOr.get().publish(batch.messages));
           });
-    } catch (StatusException e) {
+    } catch (CheckedApiException e) {
       onPermanentError(e);
     }
   }
 
   @Override
-  protected void handlePermanentError(StatusException error) {
+  protected void handlePermanentError(CheckedApiException error) {
     try (CloseableMonitor.Hold h = monitor.enter()) {
       shutdown = true;
       batchesInFlight.forEach(
@@ -181,7 +189,7 @@ public final class PublisherImpl extends ProxyService
   }
 
   @GuardedBy("monitor.monitor")
-  private void processBatch(Collection<UnbatchedMessage> batch) throws StatusException {
+  private void processBatch(Collection<UnbatchedMessage> batch) throws CheckedApiException {
     if (batch.isEmpty()) return;
     InFlightBatch inFlightBatch = new InFlightBatch(batch);
     batchesInFlight.add(inFlightBatch);
@@ -196,18 +204,19 @@ public final class PublisherImpl extends ProxyService
   public ApiFuture<Offset> publish(Message message) {
     PubSubMessage proto = message.toProto();
     if (proto.getSerializedSize() > Constants.MAX_PUBLISH_MESSAGE_BYTES) {
-      Status error =
-          Status.FAILED_PRECONDITION.withDescription(
+      CheckedApiException error =
+          new CheckedApiException(
               String.format(
                   "Tried to send message with serialized size %s larger than limit %s on the"
                       + " stream.",
-                  proto.getSerializedSize(), Constants.MAX_PUBLISH_MESSAGE_BYTES));
+                  proto.getSerializedSize(), Constants.MAX_PUBLISH_MESSAGE_BYTES),
+              Code.FAILED_PRECONDITION);
       try (CloseableMonitor.Hold h = monitor.enter()) {
         if (!shutdown) {
-          onPermanentError(error.asException());
+          onPermanentError(error);
         }
       }
-      return ApiFutures.immediateFailedFuture(error.asException());
+      return ApiFutures.immediateFailedFuture(error);
     }
     try (CloseableMonitor.Hold h = monitor.enter()) {
       ApiService.State currentState = state();
@@ -220,7 +229,7 @@ public final class PublisherImpl extends ProxyService
         processBatch(batcher.flush());
       }
       return messageFuture;
-    } catch (StatusException e) {
+    } catch (CheckedApiException e) {
       onPermanentError(e);
       return ApiFutures.immediateFailedFuture(e);
     }
@@ -231,7 +240,7 @@ public final class PublisherImpl extends ProxyService
     try (CloseableMonitor.Hold h = monitor.enter()) {
       if (shutdown) return;
       processBatch(batcher.flush());
-    } catch (StatusException e) {
+    } catch (CheckedApiException e) {
       onPermanentError(e);
     }
   }
@@ -244,21 +253,17 @@ public final class PublisherImpl extends ProxyService
   }
 
   @Override
-  public Status onClientResponse(Offset value) {
+  public void onClientResponse(Offset value) throws CheckedApiException {
     try (CloseableMonitor.Hold h = monitor.enter()) {
-      if (batchesInFlight.isEmpty()) {
-        return Status.FAILED_PRECONDITION.withDescription(
-            "Received publish response with no batches in flight.");
-      }
+      checkState(
+          !batchesInFlight.isEmpty(), "Received publish response with no batches in flight.");
       if (lastSentOffset.isPresent() && lastSentOffset.get().value() >= value.value()) {
-        return Status.FAILED_PRECONDITION.withDescription(
+        throw new CheckedApiException(
             String.format(
                 "Received publish response with offset %s that is inconsistent with previous"
                     + " responses max %s",
-                value, lastSentOffset.get()));
-      }
-      if (batchesInFlight.isEmpty()) {
-        return Status.FAILED_PRECONDITION.withDescription("Received empty batch on stream.");
+                value, lastSentOffset.get()),
+            Code.FAILED_PRECONDITION);
       }
       InFlightBatch batch = batchesInFlight.remove();
       lastSentOffset = Optional.of(Offset.of(value.value() + batch.messages.size() - 1));
@@ -266,7 +271,6 @@ public final class PublisherImpl extends ProxyService
         Offset offset = Offset.of(value.value() + i);
         batch.messageFutures.get(i).set(offset);
       }
-      return Status.OK;
     }
   }
 }

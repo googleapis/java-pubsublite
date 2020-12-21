@@ -21,10 +21,13 @@ import "google/protobuf/duration.proto";
 import "google/protobuf/timestamp.proto";
 
 option cc_enable_arenas = true;
+option csharp_namespace = "Google.Cloud.PubSubLite.V1";
 option go_package = "google.golang.org/genproto/googleapis/cloud/pubsublite/v1;pubsublite";
 option java_multiple_files = true;
 option java_outer_classname = "CommonProto";
 option java_package = "com.google.cloud.pubsublite.proto";
+option php_namespace = "Google\\Cloud\\PubSubLite\\V1";
+option ruby_package = "Google::Cloud::PubSubLite::V1";
 
 // The values associated with a key of an attribute.
 message AttributeValues {
@@ -56,6 +59,7 @@ message Cursor {
   int64 offset = 1;
 }
 
+// A message that has been stored and sequenced by the Pub/Sub Lite system.
 message SequencedMessage {
   // The position of a message within the partition where it is stored.
   Cursor cursor = 1;
@@ -94,13 +98,17 @@ message Topic {
     // The number of partitions in the topic. Must be at least 1.
     int64 count = 1;
 
+    // The throughput dimension of this topic.
     oneof dimension {
+      // DEPRECATED: Use capacity instead which can express a superset of
+      // configurations.
+      //
       // Every partition in the topic is allocated throughput equivalent to
       // `scale` times the standard partition throughput (4 MiB/s). This is also
       // reflected in the cost of this topic; a topic with `scale` of 2 and
       // count of 10 is charged for 20 partitions. This value must be in the
       // range [1,4].
-      int32 scale = 2;
+      int32 scale = 2 [deprecated = true];
 
       // The capacity configuration.
       Capacity capacity = 3;

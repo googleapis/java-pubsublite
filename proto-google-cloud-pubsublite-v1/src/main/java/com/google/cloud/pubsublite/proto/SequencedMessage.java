@@ -18,7 +18,15 @@
 
 package com.google.cloud.pubsublite.proto;
 
-/** Protobuf type {@code google.cloud.pubsublite.v1.SequencedMessage} */
+/**
+ *
+ *
+ * <pre>
+ * A message that has been stored and sequenced by the Pub/Sub Lite system.
+ * </pre>
+ *
+ * Protobuf type {@code google.cloud.pubsublite.v1.SequencedMessage}
+ */
 public final class SequencedMessage extends com.google.protobuf.GeneratedMessageV3
     implements
     // @@protoc_insertion_point(message_implements:google.cloud.pubsublite.v1.SequencedMessage)
@@ -510,7 +518,15 @@ public final class SequencedMessage extends com.google.protobuf.GeneratedMessage
     Builder builder = new Builder(parent);
     return builder;
   }
-  /** Protobuf type {@code google.cloud.pubsublite.v1.SequencedMessage} */
+  /**
+   *
+   *
+   * <pre>
+   * A message that has been stored and sequenced by the Pub/Sub Lite system.
+   * </pre>
+   *
+   * Protobuf type {@code google.cloud.pubsublite.v1.SequencedMessage}
+   */
   public static final class Builder extends com.google.protobuf.GeneratedMessageV3.Builder<Builder>
       implements
       // @@protoc_insertion_point(builder_implements:google.cloud.pubsublite.v1.SequencedMessage)

@@ -16,50 +16,57 @@
 
 package com.google.cloud.pubsublite.cloudpubsub;
 
-import static com.google.cloud.pubsublite.internal.Preconditions.checkArgument;
+import static com.google.cloud.pubsublite.internal.UncheckedApiPreconditions.checkArgument;
 
+import com.google.api.gax.rpc.ApiException;
+import com.google.api.gax.rpc.StatusCode.Code;
 import com.google.cloud.pubsublite.Message;
 import com.google.cloud.pubsublite.MessageTransformer;
 import com.google.cloud.pubsublite.SequencedMessage;
+import com.google.cloud.pubsublite.internal.CheckedApiException;
 import com.google.common.collect.ImmutableListMultimap;
 import com.google.protobuf.ByteString;
 import com.google.protobuf.Timestamp;
 import com.google.pubsub.v1.PubsubMessage;
-import io.grpc.Status;
-import io.grpc.StatusException;
 import java.util.Base64;
 import java.util.Collection;
 
-// MessageTransforms details how to transform message representations from Cloud Pub/Sub to
-// Pub/Sub Lite.
-//
-// Transformers are made public to allow user code that currently uses PubsubMessages to use
-// interfaces interacting with Pub/Sub Lite.
+/**
+ * MessageTransforms details how to transform message representations from Cloud Pub/Sub to Pub/Sub
+ * Lite.
+ *
+ * <p>Transformers are made public to allow user code that currently uses PubsubMessages to use
+ * interfaces interacting with Pub/Sub Lite.
+ */
 public class MessageTransforms {
   private MessageTransforms() {}
 
   public static final String PUBSUB_LITE_EVENT_TIME_TIMESTAMP_PROTO =
       "x-goog-pubsublite-event-time-timestamp-proto";
 
-  // Encode a timestamp in a way that it will be interpreted as an event time if published on a
-  // message with an attribute named PUBSUB_LITE_EVENT_TIME_TIMESTAMP_PROTO.
+  /**
+   * Encode a timestamp in a way that it will be interpreted as an event time if published on a
+   * message with an attribute named PUBSUB_LITE_EVENT_TIME_TIMESTAMP_PROTO.
+   */
   public static String encodeAttributeEventTime(Timestamp timestamp) {
     return Base64.getEncoder().encodeToString(timestamp.toByteArray());
   }
 
-  // Decode a timestamp encoded with encodeAttributeEventTime.
-  public static Timestamp decodeAttributeEventTime(String encoded) throws StatusException {
+  /** Decode a timestamp encoded with encodeAttributeEventTime. */
+  public static Timestamp decodeAttributeEventTime(String encoded) throws ApiException {
     try {
       return Timestamp.parseFrom(Base64.getDecoder().decode(encoded));
     } catch (Exception e) {
-      throw Status.INVALID_ARGUMENT.withCause(e).asException();
+      throw new CheckedApiException(e, Code.INVALID_ARGUMENT).underlying;
     }
   }
 
-  // The default attribute parsing logic requires that all attributes could have been generated
-  // from the Cloud Pub/Sub client library shim. This means it requires that all of them are
-  // single entry representations of UTF-8 encoded strings.
-  private static String parseAttributes(Collection<ByteString> values) throws StatusException {
+  /**
+   * The default attribute parsing logic requires that all attributes could have been generated from
+   * the Cloud Pub/Sub client library shim. This means it requires that all of them are single entry
+   * representations of UTF-8 encoded strings.
+   */
+  private static String parseAttributes(Collection<ByteString> values) throws ApiException {
     checkArgument(
         values.size() == 1,
         "Received an unparseable message with multiple values for an attribute.");

@@ -16,13 +16,15 @@
 
 package com.google.cloud.pubsublite.internal.wire;
 
+import com.google.api.gax.rpc.ClientStream;
+import com.google.api.gax.rpc.ResponseObserver;
+import com.google.api.gax.rpc.StreamController;
+import com.google.cloud.pubsublite.internal.CheckedApiException;
 import com.google.cloud.pubsublite.internal.CloseableMonitor;
 import com.google.common.base.Preconditions;
 import com.google.common.flogger.GoogleLogger;
 import com.google.common.util.concurrent.Monitor.Guard;
 import com.google.errorprone.annotations.concurrent.GuardedBy;
-import io.grpc.Status;
-import io.grpc.stub.StreamObserver;
 
 /**
  * A SingleConnection handles the state for a stream with an initial connection request that may
@@ -33,11 +35,11 @@ import io.grpc.stub.StreamObserver;
  * @param <ClientResponseT> The response type sent to the client.
  */
 public abstract class SingleConnection<StreamRequestT, StreamResponseT, ClientResponseT>
-    implements StreamObserver<StreamResponseT>, AutoCloseable {
+    implements ResponseObserver<StreamResponseT>, AutoCloseable {
   private static final GoogleLogger log = GoogleLogger.forEnclosingClass();
 
-  private final StreamObserver<StreamRequestT> requestStream;
-  private final StreamObserver<ClientResponseT> clientStream;
+  private final ClientStream<StreamRequestT> requestStream;
+  private final ResponseObserver<ClientResponseT> clientStream;
 
   private final CloseableMonitor connectionMonitor = new CloseableMonitor();
 
@@ -47,19 +49,20 @@ public abstract class SingleConnection<StreamRequestT, StreamResponseT, ClientRe
   @GuardedBy("connectionMonitor.monitor")
   private boolean completed = false;
 
-  protected abstract Status handleInitialResponse(StreamResponseT response);
+  protected abstract void handleInitialResponse(StreamResponseT response)
+      throws CheckedApiException;
 
-  protected abstract Status handleStreamResponse(StreamResponseT response);
+  protected abstract void handleStreamResponse(StreamResponseT response) throws CheckedApiException;
 
   protected SingleConnection(
       StreamFactory<StreamRequestT, StreamResponseT> streamFactory,
-      StreamObserver<ClientResponseT> clientStream) {
+      ResponseObserver<ClientResponseT> clientStream) {
     this.clientStream = clientStream;
     this.requestStream = streamFactory.New(this);
   }
 
   protected void initialize(StreamRequestT initialRequest) {
-    this.requestStream.onNext(initialRequest);
+    this.requestStream.send(initialRequest);
     try (CloseableMonitor.Hold h =
         connectionMonitor.enterWhenUninterruptibly(
             new Guard(connectionMonitor.monitor) {
@@ -79,7 +82,7 @@ public abstract class SingleConnection<StreamRequestT, StreamResponseT, ClientRe
       // This should be impossible to not have received the initial request, or be completed, and
       // the caller has access to this object.
       Preconditions.checkState(receivedInitial);
-      requestStream.onNext(request);
+      requestStream.send(request);
     }
   }
 
@@ -94,11 +97,10 @@ public abstract class SingleConnection<StreamRequestT, StreamResponseT, ClientRe
       Preconditions.checkState(receivedInitial);
     }
     // The upcall may be reentrant, possibly on another thread while this thread is blocked.
-    clientStream.onNext(response);
+    clientStream.onResponse(response);
   }
 
-  protected void setError(Status error) {
-    Preconditions.checkArgument(!error.isOk());
+  protected void setError(CheckedApiException error) {
     abort(error);
   }
 
@@ -114,23 +116,25 @@ public abstract class SingleConnection<StreamRequestT, StreamResponseT, ClientRe
       if (completed) return;
       completed = true;
     }
-    requestStream.onCompleted();
-    clientStream.onCompleted();
+    requestStream.closeSend();
+    clientStream.onComplete();
   }
 
-  private void abort(Status error) {
-    Preconditions.checkArgument(!error.isOk());
+  private void abort(CheckedApiException error) {
     try (CloseableMonitor.Hold h = connectionMonitor.enter()) {
       if (completed) return;
       completed = true;
     }
-    requestStream.onError(error.asRuntimeException());
-    clientStream.onError(error.asRuntimeException());
+    requestStream.closeSendWithError(error.underlying);
+    clientStream.onError(error);
   }
 
-  // StreamObserver implementation
+  // ResponseObserver implementation
   @Override
-  public void onNext(StreamResponseT response) {
+  public void onStart(StreamController streamController) {}
+
+  @Override
+  public void onResponse(StreamResponseT response) {
     boolean isFirst;
     try (CloseableMonitor.Hold h = connectionMonitor.enter()) {
       if (completed) {
@@ -140,14 +144,14 @@ public abstract class SingleConnection<StreamRequestT, StreamResponseT, ClientRe
       isFirst = !receivedInitial;
       receivedInitial = true;
     }
-    Status responseStatus;
-    if (isFirst) {
-      responseStatus = handleInitialResponse(response);
-    } else {
-      responseStatus = handleStreamResponse(response);
-    }
-    if (!responseStatus.isOk()) {
-      abort(responseStatus);
+    try {
+      if (isFirst) {
+        handleInitialResponse(response);
+      } else {
+        handleStreamResponse(response);
+      }
+    } catch (CheckedApiException e) {
+      abort(e);
     }
   }
 
@@ -158,14 +162,16 @@ public abstract class SingleConnection<StreamRequestT, StreamResponseT, ClientRe
       completed = true;
     }
     clientStream.onError(t);
+    requestStream.closeSendWithError(t);
   }
 
   @Override
-  public void onCompleted() {
+  public void onComplete() {
     try (CloseableMonitor.Hold h = connectionMonitor.enter()) {
       if (completed) return;
       completed = true;
-      clientStream.onCompleted();
     }
+    clientStream.onComplete();
+    requestStream.closeSend();
   }
 }

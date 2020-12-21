@@ -16,17 +16,56 @@
 
 package com.google.cloud.pubsublite;
 
-import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.cloud.pubsublite.internal.UncheckedApiPreconditions.checkArgument;
 
+import com.google.api.gax.rpc.ApiException;
 import com.google.auto.value.AutoValue;
 import java.io.Serializable;
+import java.util.Arrays;
 
+/** A string wrapper representing a project and location. */
 @AutoValue
 public abstract class LocationPath implements Serializable {
-  public abstract String value();
+  public abstract ProjectIdOrNumber project();
 
-  public static LocationPath of(String value) {
-    checkArgument(!value.isEmpty());
-    return new AutoValue_LocationPath(value);
+  public abstract CloudZone location();
+
+  public ProjectPath projectPath() {
+    return ProjectPath.newBuilder().setProject(project()).build();
+  }
+
+  @Override
+  public String toString() {
+    return projectPath() + "/locations/" + location();
+  }
+
+  /** Create a new LocationPath builder. */
+  public static Builder newBuilder() {
+    return new AutoValue_LocationPath.Builder();
+  }
+
+  public abstract Builder toBuilder();
+
+  @AutoValue.Builder
+  public abstract static class Builder extends ProjectBuilderHelper<Builder> {
+    public abstract Builder setLocation(CloudZone zone);
+
+    public abstract LocationPath build();
+  }
+
+  /**
+   * Parse a location path. Should be structured like:
+   *
+   * <p>projects/&lt;project number&gt;/locations/&lt;cloud zone&gt;
+   */
+  public static LocationPath parse(String path) throws ApiException {
+    String[] splits = path.split("/");
+    checkArgument(splits.length == 4);
+    checkArgument(splits[2].equals("locations"));
+    ProjectPath project = ProjectPath.parse(String.join("/", Arrays.copyOf(splits, 2)));
+    return LocationPath.newBuilder()
+        .setProject(project.project())
+        .setLocation(CloudZone.parse(splits[3]))
+        .build();
   }
 }

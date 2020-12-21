@@ -3,13 +3,13 @@
   <parent>
     <groupId>com.google.cloud</groupId>
     <artifactId>google-cloud-pubsublite-parent</artifactId>
-    <version>0.1.9-SNAPSHOT</version><!-- {x-version-update:google-cloud-pubsublite:current} -->
+    <version>0.7.1-SNAPSHOT</version><!-- {x-version-update:google-cloud-pubsublite:current} -->
     <relativePath>../pom.xml</relativePath>
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.google.cloud</groupId>
   <artifactId>pubsublite-beam-io</artifactId>
-  <version>0.1.9-SNAPSHOT</version><!-- {x-version-update:google-cloud-pubsublite:current} -->
+  <version>0.7.1-SNAPSHOT</version><!-- {x-version-update:google-cloud-pubsublite:current} -->
   <packaging>jar</packaging>
   <name>Pub/Sub Lite IO</name>
   <url>https://github.com/googleapis/java-pubsublite</url>
@@ -18,12 +18,12 @@
     <dependency>
       <groupId>com.google.cloud</groupId>
       <artifactId>google-cloud-pubsublite</artifactId>
-      <version>0.1.9-SNAPSHOT</version><!-- {x-version-update:google-cloud-pubsublite:current} -->
+      <version>0.7.1-SNAPSHOT</version><!-- {x-version-update:google-cloud-pubsublite:current} -->
     </dependency>
     <dependency>
       <groupId>org.apache.beam</groupId>
       <artifactId>beam-sdks-java-core</artifactId>
-      <version>2.22.0</version>
+      <version>2.25.0</version>
     </dependency>
     <dependency>
       <groupId>com.google.code.findbugs</groupId>
@@ -38,8 +38,8 @@
       <artifactId>guava</artifactId>
     </dependency>
     <dependency>
-      <groupId>io.grpc</groupId>
-      <artifactId>grpc-api</artifactId>
+      <groupId>com.google.api</groupId>
+      <artifactId>gax</artifactId>
     </dependency>
     <dependency>
       <groupId>com.google.protobuf</groupId>
@@ -52,7 +52,6 @@
     <dependency>
       <groupId>com.google.errorprone</groupId>
       <artifactId>error_prone_annotations</artifactId>
-      <version>2.4.0</version>
     </dependency>
     <dependency>
       <groupId>com.google.auto.value</groupId>
@@ -61,57 +60,54 @@
     <dependency>
       <groupId>joda-time</groupId>
       <artifactId>joda-time</artifactId>
-      <version>2.10.6</version>
+      <version>2.10.8</version>
     </dependency>
     <dependency>
       <groupId>com.google.api.grpc</groupId>
       <artifactId>proto-google-cloud-pubsublite-v1</artifactId>
-      <version>0.1.9-SNAPSHOT</version><!-- {x-version-update:google-cloud-pubsublite:current} -->
-    </dependency>
-    <dependency>
-      <groupId>com.google.api.grpc</groupId>
-      <artifactId>grpc-google-cloud-pubsublite-v1</artifactId>
-      <version>0.1.9-SNAPSHOT</version><!-- {x-version-update:google-cloud-pubsublite:current} -->
+      <version>0.7.1-SNAPSHOT</version><!-- {x-version-update:google-cloud-pubsublite:current} -->
     </dependency>
     <dependency>
       <groupId>com.google.api.grpc</groupId>
       <artifactId>proto-google-cloud-pubsub-v1</artifactId>
     </dependency>
+    <dependency>
+      <groupId>com.google.flogger</groupId>
+      <artifactId>google-extensions</artifactId>
+    </dependency>
+
     <!--test dependencies-->
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
-      <version>4.13</version>
+      <version>4.13.1</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>com.google.truth</groupId>
       <artifactId>truth</artifactId>
-      <version>1.0.1</version>
+      <version>1.1</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>com.google.truth.extensions</groupId>
       <artifactId>truth-java8-extension</artifactId>
-      <version>1.0.1</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.apache.beam</groupId>
       <artifactId>beam-runners-direct-java</artifactId>
-      <version>2.22.0</version>
+      <version>2.25.0</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.mockito</groupId>
       <artifactId>mockito-core</artifactId>
-      <version>3.4.6</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>io.grpc</groupId>
       <artifactId>grpc-testing</artifactId>
-      <version>1.31.0</version>
       <scope>test</scope>
     </dependency>
     <dependency>

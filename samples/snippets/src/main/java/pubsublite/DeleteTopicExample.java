@@ -24,7 +24,6 @@ import com.google.cloud.pubsublite.CloudZone;
 import com.google.cloud.pubsublite.ProjectNumber;
 import com.google.cloud.pubsublite.TopicName;
 import com.google.cloud.pubsublite.TopicPath;
-import com.google.cloud.pubsublite.TopicPaths;
 
 public class DeleteTopicExample {
 
@@ -42,10 +41,10 @@ public class DeleteTopicExample {
   public static void deleteTopicExample(
       String cloudRegion, char zoneId, long projectNumber, String topicId) throws Exception {
     TopicPath topicPath =
-        TopicPaths.newBuilder()
-            .setProjectNumber(ProjectNumber.of(projectNumber))
-            .setZone(CloudZone.of(CloudRegion.of(cloudRegion), zoneId))
-            .setTopicName(TopicName.of(topicId))
+        TopicPath.newBuilder()
+            .setProject(ProjectNumber.of(projectNumber))
+            .setLocation(CloudZone.of(CloudRegion.of(cloudRegion), zoneId))
+            .setName(TopicName.of(topicId))
             .build();
 
     AdminClientSettings adminClientSettings =
@@ -53,7 +52,7 @@ public class DeleteTopicExample {
 
     try (AdminClient adminClient = AdminClient.create(adminClientSettings)) {
       adminClient.deleteTopic(topicPath).get();
-      System.out.println(topicPath.value() + " deleted successfully.");
+      System.out.println(topicPath.toString() + " deleted successfully.");
     }
   }
 } // [END pubsublite_delete_topic]

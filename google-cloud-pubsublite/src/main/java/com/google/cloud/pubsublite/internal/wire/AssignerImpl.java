@@ -16,21 +16,23 @@
 
 package com.google.cloud.pubsublite.internal.wire;
 
+import static com.google.cloud.pubsublite.internal.wire.ApiServiceUtils.backgroundResourceAsApiService;
+
+import com.google.api.gax.rpc.ApiException;
 import com.google.cloud.pubsublite.Partition;
+import com.google.cloud.pubsublite.internal.CheckedApiException;
 import com.google.cloud.pubsublite.internal.CloseableMonitor;
-import com.google.cloud.pubsublite.internal.ProxyService;
+import com.google.cloud.pubsublite.internal.TrivialProxyService;
 import com.google.cloud.pubsublite.proto.InitialPartitionAssignmentRequest;
 import com.google.cloud.pubsublite.proto.PartitionAssignment;
 import com.google.cloud.pubsublite.proto.PartitionAssignmentRequest;
-import com.google.cloud.pubsublite.proto.PartitionAssignmentServiceGrpc.PartitionAssignmentServiceStub;
+import com.google.cloud.pubsublite.v1.PartitionAssignmentServiceClient;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.errorprone.annotations.concurrent.GuardedBy;
-import io.grpc.Status;
-import io.grpc.StatusException;
 import java.util.HashSet;
 import java.util.Set;
 
-public class AssignerImpl extends ProxyService
+public class AssignerImpl extends TrivialProxyService
     implements Assigner, RetryingConnectionObserver<PartitionAssignment> {
   @GuardedBy("monitor.monitor")
   private final RetryingConnection<ConnectedAssigner> connection;
@@ -42,29 +44,33 @@ public class AssignerImpl extends ProxyService
 
   @VisibleForTesting
   AssignerImpl(
-      PartitionAssignmentServiceStub stub,
+      StreamFactory<PartitionAssignmentRequest, PartitionAssignment> streamFactory,
       ConnectedAssignerFactory factory,
       InitialPartitionAssignmentRequest initialRequest,
       PartitionAssignmentReceiver receiver)
-      throws StatusException {
+      throws ApiException {
     this.receiver = receiver;
     this.connection =
         new RetryingConnectionImpl<>(
-            stub::assignPartitions,
+            streamFactory,
             factory,
             PartitionAssignmentRequest.newBuilder().setInitial(initialRequest).build(),
             this);
     addServices(this.connection);
   }
 
-  @Override
-  protected void start() {}
-
-  @Override
-  protected void stop() {}
-
-  @Override
-  protected void handlePermanentError(StatusException error) {}
+  public AssignerImpl(
+      PartitionAssignmentServiceClient client,
+      InitialPartitionAssignmentRequest initialRequest,
+      PartitionAssignmentReceiver receiver)
+      throws ApiException {
+    this(
+        stream -> client.assignPartitionsCallable().splitCall(stream),
+        new ConnectedAssignerImpl.Factory(),
+        initialRequest,
+        receiver);
+    addServices(backgroundResourceAsApiService(client));
+  }
 
   @Override
   public void triggerReinitialize() {
@@ -73,7 +79,7 @@ public class AssignerImpl extends ProxyService
     }
   }
 
-  private static Set<Partition> toSet(PartitionAssignment assignment) throws StatusException {
+  private static Set<Partition> toSet(PartitionAssignment assignment) throws ApiException {
     Set<Partition> partitions = new HashSet<>();
     for (long partition : assignment.getPartitionsList()) {
       partitions.add(Partition.of(partition));
@@ -82,13 +88,10 @@ public class AssignerImpl extends ProxyService
   }
 
   @Override
-  public Status onClientResponse(PartitionAssignment value) {
+  public void onClientResponse(PartitionAssignment value) throws CheckedApiException {
     try (CloseableMonitor.Hold h = monitor.enter()) {
       receiver.handleAssignment(toSet(value));
       connection.modifyConnection(connectionOr -> connectionOr.ifPresent(ConnectedAssigner::ack));
-    } catch (StatusException e) {
-      return e.getStatus();
     }
-    return Status.OK;
   }
 }

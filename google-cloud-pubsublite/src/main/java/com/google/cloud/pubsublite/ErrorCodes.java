@@ -16,16 +16,22 @@
 
 package com.google.cloud.pubsublite;
 
+import com.google.api.gax.rpc.StatusCode.Code;
 import com.google.common.collect.ImmutableSet;
-import io.grpc.Status.Code;
 
+/** Pub/Sub Lite retryable error codes. */
 public final class ErrorCodes {
-  public static final ImmutableSet<Code> RETRYABLE_CODES =
+  public static final ImmutableSet<Code> STREAM_RETRYABLE_CODES =
       ImmutableSet.of(
-          Code.DEADLINE_EXCEEDED, Code.ABORTED, Code.INTERNAL, Code.UNAVAILABLE, Code.UNKNOWN);
+          Code.DEADLINE_EXCEEDED,
+          Code.ABORTED,
+          Code.INTERNAL,
+          Code.UNAVAILABLE,
+          Code.UNKNOWN,
+          Code.RESOURCE_EXHAUSTED);
 
-  public static boolean IsRetryable(Code code) {
-    return RETRYABLE_CODES.contains(code);
+  public static boolean IsRetryableForStreams(Code code) {
+    return STREAM_RETRYABLE_CODES.contains(code);
   }
 
   private ErrorCodes() {}

@@ -29,6 +29,8 @@ import static org.mockito.Mockito.when;
 import com.google.api.core.ApiFutures;
 import com.google.api.core.ApiService;
 import com.google.api.core.SettableApiFuture;
+import com.google.api.gax.rpc.ApiException;
+import com.google.api.gax.rpc.StatusCode.Code;
 import com.google.cloud.pubsublite.CloudRegion;
 import com.google.cloud.pubsublite.CloudZone;
 import com.google.cloud.pubsublite.Message;
@@ -37,14 +39,13 @@ import com.google.cloud.pubsublite.Partition;
 import com.google.cloud.pubsublite.ProjectNumber;
 import com.google.cloud.pubsublite.PublishMetadata;
 import com.google.cloud.pubsublite.TopicName;
-import com.google.cloud.pubsublite.TopicPaths;
+import com.google.cloud.pubsublite.TopicPath;
+import com.google.cloud.pubsublite.internal.CheckedApiException;
 import com.google.cloud.pubsublite.internal.ExtractStatus;
-import com.google.cloud.pubsublite.internal.FakeApiService;
 import com.google.cloud.pubsublite.internal.Publisher;
+import com.google.cloud.pubsublite.internal.testing.FakeApiService;
 import com.google.common.collect.ImmutableList;
 import com.google.protobuf.ByteString;
-import io.grpc.Status;
-import io.grpc.StatusException;
 import java.util.Optional;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
@@ -75,18 +76,14 @@ public class PubsubLiteSinkTest {
   @Spy private PublisherFakeService publisher;
 
   private final PublisherOptions defaultOptions() {
-    try {
-      return PublisherOptions.newBuilder()
-          .setTopicPath(
-              TopicPaths.newBuilder()
-                  .setProjectNumber(ProjectNumber.of(9))
-                  .setTopicName(TopicName.of("abc"))
-                  .setZone(CloudZone.of(CloudRegion.of("us-east1"), 'a'))
-                  .build())
-          .build();
-    } catch (StatusException e) {
-      throw e.getStatus().asRuntimeException();
-    }
+    return PublisherOptions.newBuilder()
+        .setTopicPath(
+            TopicPath.newBuilder()
+                .setProject(ProjectNumber.of(9))
+                .setName(TopicName.of("abc"))
+                .setLocation(CloudZone.of(CloudRegion.of("us-east1"), 'a'))
+                .build())
+        .build();
   }
 
   private final PubsubLiteSink sink = new PubsubLiteSink(defaultOptions());
@@ -145,13 +142,14 @@ public class PubsubLiteSinkTest {
   public void singleExceptionWhenProcessing() {
     Message message1 = Message.builder().build();
     when(publisher.publish(message1))
-        .thenReturn(ApiFutures.immediateFailedFuture(Status.INTERNAL.asException()));
+        .thenReturn(
+            ApiFutures.immediateFailedFuture(new CheckedApiException(Code.INTERNAL).underlying));
     PipelineExecutionException e =
         assertThrows(PipelineExecutionException.class, () -> runWith(message1));
     verify(publisher).publish(message1);
-    Optional<Status> statusOr = ExtractStatus.extract(e.getCause());
+    Optional<CheckedApiException> statusOr = ExtractStatus.extract(e.getCause());
     assertThat(statusOr).isPresent();
-    assertThat(statusOr.get().getCode()).isEqualTo(Status.Code.INTERNAL);
+    assertThat(statusOr.get().code()).isEqualTo(Code.INTERNAL);
   }
 
   @Test
@@ -187,9 +185,9 @@ public class PubsubLiteSinkTest {
           try {
             startedLatch.await();
             future1.set(PublishMetadata.of(Partition.of(1), Offset.of(2)));
-            future2.setException(Status.INTERNAL.asException());
+            future2.setException(new CheckedApiException(Code.INTERNAL).underlying);
             future3.set(PublishMetadata.of(Partition.of(1), Offset.of(3)));
-          } catch (StatusException | InterruptedException e) {
+          } catch (ApiException | InterruptedException e) {
             fail();
             throw new RuntimeException(e);
           }
@@ -198,9 +196,9 @@ public class PubsubLiteSinkTest {
         assertThrows(PipelineExecutionException.class, () -> runWith(message1, message2, message3));
     verify(publisher, times(3)).publish(publishedMessageCaptor.capture());
     assertThat(publishedMessageCaptor.getAllValues()).containsExactly(message1, message2, message3);
-    Optional<Status> statusOr = ExtractStatus.extract(e.getCause());
+    Optional<CheckedApiException> statusOr = ExtractStatus.extract(e.getCause());
     assertThat(statusOr).isPresent();
-    assertThat(statusOr.get().getCode()).isEqualTo(Status.Code.INTERNAL);
+    assertThat(statusOr.get().code()).isEqualTo(Code.INTERNAL);
     exec.shutdownNow();
   }
 
@@ -222,12 +220,12 @@ public class PubsubLiteSinkTest {
                 () -> {
                   PipelineExecutionException e =
                       assertThrows(PipelineExecutionException.class, () -> runWith(message1));
-                  Optional<Status> statusOr = ExtractStatus.extract(e.getCause());
+                  Optional<CheckedApiException> statusOr = ExtractStatus.extract(e.getCause());
                   assertThat(statusOr).isPresent();
-                  assertThat(statusOr.get().getCode()).isEqualTo(Status.Code.INTERNAL);
+                  assertThat(statusOr.get().code()).isEqualTo(Code.INTERNAL);
                 });
     publishFuture.get();
-    listener.failed(null, Status.INTERNAL.asException());
+    listener.failed(null, new CheckedApiException(Code.INTERNAL).underlying);
     future.set(PublishMetadata.of(Partition.of(1), Offset.of(2)));
     executorFuture.get();
   }

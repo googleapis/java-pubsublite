@@ -16,11 +16,13 @@
 
 package com.google.cloud.pubsublite;
 
+import com.google.api.gax.rpc.ApiException;
+import com.google.api.gax.rpc.StatusCode.Code;
 import com.google.auto.value.AutoValue;
-import io.grpc.Status;
-import io.grpc.StatusException;
+import com.google.cloud.pubsublite.internal.CheckedApiException;
 import java.io.Serializable;
 
+/** A representation of a Google Cloud zone. */
 @AutoValue
 public abstract class CloudZone implements Serializable {
   private static final long serialVersionUID = 867184651465L;
@@ -29,24 +31,29 @@ public abstract class CloudZone implements Serializable {
     return new AutoValue_CloudZone(region, zoneId);
   }
 
-  // Construct a CloudZone from a valid zone string. `zone` must be formatted as:
-  // <location>-<direction><number>-<letter>
-  public static CloudZone parse(String zone) throws StatusException {
+  /**
+   * Construct a CloudZone from a valid zone string. `zone` must be formatted as:
+   * &lt;location&gt;-&lt;direction&gt;&lt;number&gt;-&lt;letter&gt;
+   */
+  public static CloudZone parse(String zone) throws ApiException {
     String[] splits = zone.split("-", -1);
     if (splits.length != 3) {
-      throw Status.INVALID_ARGUMENT.withDescription("Invalid zone name: " + zone).asException();
+      throw new CheckedApiException("Invalid zone name: " + zone, Code.INVALID_ARGUMENT).underlying;
     }
     if (splits[2].length() != 1) {
-      throw Status.INVALID_ARGUMENT.withDescription("Invalid zone name: " + zone).asException();
+      throw new CheckedApiException("Invalid zone name: " + zone, Code.INVALID_ARGUMENT).underlying;
     }
     CloudRegion region = CloudRegion.of(splits[0] + "-" + splits[1]);
     return of(region, splits[2].charAt(0));
   }
 
+  /** The region this zone is in. */
   public abstract CloudRegion region();
 
+  /** The character identifier for this zone in this region. */
   public abstract char zoneId();
 
+  /** {@inheritDoc} */
   @Override
   public final String toString() {
     return String.format("%s-%c", region().value(), zoneId());

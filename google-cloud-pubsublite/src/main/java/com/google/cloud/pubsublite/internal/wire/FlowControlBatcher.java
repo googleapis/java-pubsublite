@@ -17,8 +17,8 @@
 package com.google.cloud.pubsublite.internal.wire;
 
 import com.google.cloud.pubsublite.SequencedMessage;
+import com.google.cloud.pubsublite.internal.CheckedApiException;
 import com.google.cloud.pubsublite.proto.FlowControlRequest;
-import io.grpc.StatusException;
 import java.util.Collection;
 import java.util.Optional;
 
@@ -34,12 +34,12 @@ class FlowControlBatcher {
   // The pending aggregate flow control request that needs to be sent to the stream.
   private final TokenCounter pendingTokens = new TokenCounter();
 
-  void onClientFlowRequest(FlowControlRequest request) throws StatusException {
+  void onClientFlowRequest(FlowControlRequest request) throws CheckedApiException {
     clientTokens.add(request.getAllowedBytes(), request.getAllowedMessages());
     pendingTokens.add(request.getAllowedBytes(), request.getAllowedMessages());
   }
 
-  void onMessages(Collection<SequencedMessage> received) throws StatusException {
+  void onMessages(Collection<SequencedMessage> received) throws CheckedApiException {
     long byteSize = received.stream().mapToLong(SequencedMessage::byteSize).sum();
     clientTokens.sub(byteSize, received.size());
   }

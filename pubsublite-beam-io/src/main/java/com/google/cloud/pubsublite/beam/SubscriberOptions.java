@@ -16,6 +16,7 @@
 
 package com.google.cloud.pubsublite.beam;
 
+import com.google.api.gax.rpc.ApiException;
 import com.google.auto.value.AutoValue;
 import com.google.cloud.pubsublite.Partition;
 import com.google.cloud.pubsublite.PartitionLookupUtils;
@@ -27,12 +28,11 @@ import com.google.cloud.pubsublite.internal.wire.PubsubContext;
 import com.google.cloud.pubsublite.internal.wire.PubsubContext.Framework;
 import com.google.cloud.pubsublite.internal.wire.SubscriberBuilder;
 import com.google.cloud.pubsublite.internal.wire.SubscriberFactory;
-import com.google.cloud.pubsublite.proto.CursorServiceGrpc.CursorServiceStub;
-import com.google.cloud.pubsublite.proto.SubscriberServiceGrpc.SubscriberServiceStub;
+import com.google.cloud.pubsublite.v1.CursorServiceClient;
+import com.google.cloud.pubsublite.v1.SubscriberServiceClient;
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
-import io.grpc.StatusException;
 import java.io.Serializable;
 
 @AutoValue
@@ -50,11 +50,15 @@ public abstract class SubscriberOptions implements Serializable {
   /** A set of partitions. If empty, retrieve the set of partitions using an admin client. */
   public abstract ImmutableSet<Partition> partitions();
 
+  /** The class used to read backlog for the subscription described by subscriptionPath(). */
+  public abstract TopicBacklogReaderSettings topicBacklogReaderSettings();
+
   /** A supplier for the subscriber stub to be used. */
-  public abstract Optional<SerializableSupplier<SubscriberServiceStub>> subscriberStubSupplier();
+  public abstract Optional<SerializableSupplier<SubscriberServiceClient>>
+      subscriberClientSupplier();
 
   /** A supplier for the cursor service stub to be used. */
-  public abstract Optional<SerializableSupplier<CursorServiceStub>> committerStubSupplier();
+  public abstract Optional<SerializableSupplier<CursorServiceClient>> committerClientSupplier();
 
   /**
    * A factory to override subscriber creation entirely and delegate to another method. Primarily
@@ -89,8 +93,8 @@ public abstract class SubscriberOptions implements Serializable {
                     builder.setSubscriptionPath(subscriptionPath());
                     builder.setPartition(partition);
                     builder.setContext(PubsubContext.of(FRAMEWORK));
-                    if (subscriberStubSupplier().isPresent()) {
-                      builder.setSubscriberServiceStub(subscriberStubSupplier().get().get());
+                    if (subscriberClientSupplier().isPresent()) {
+                      builder.setServiceClient(subscriberClientSupplier().get().get());
                     }
                     return builder.build();
                   }));
@@ -99,7 +103,7 @@ public abstract class SubscriberOptions implements Serializable {
   }
 
   @SuppressWarnings("CheckReturnValue")
-  public ImmutableMap<Partition, Committer> getCommitters() throws StatusException {
+  public ImmutableMap<Partition, Committer> getCommitters() throws ApiException {
     ImmutableMap.Builder<Partition, Committer> committers = ImmutableMap.builder();
     for (Partition partition : partitions()) {
       if (committerSupplier().isPresent()) {
@@ -108,8 +112,8 @@ public abstract class SubscriberOptions implements Serializable {
         CommitterBuilder.Builder builder = CommitterBuilder.newBuilder();
         builder.setSubscriptionPath(subscriptionPath());
         builder.setPartition(partition);
-        if (committerStubSupplier().isPresent()) {
-          builder.setCursorStub(committerStubSupplier().get().get());
+        if (committerClientSupplier().isPresent()) {
+          builder.setServiceClient(committerClientSupplier().get().get());
         }
         committers.put(partition, builder.build());
       }
@@ -127,30 +131,49 @@ public abstract class SubscriberOptions implements Serializable {
     public abstract Builder setFlowControlSettings(FlowControlSettings flowControlSettings);
 
     // Optional parameters.
-    public abstract Builder setSubscriberStubSupplier(
-        SerializableSupplier<SubscriberServiceStub> stubSupplier);
+    public abstract Builder setSubscriberClientSupplier(
+        SerializableSupplier<SubscriberServiceClient> supplier);
 
-    public abstract Builder setCommitterStubSupplier(
-        SerializableSupplier<CursorServiceStub> stubSupplier);
+    public abstract Builder setCommitterClientSupplier(
+        SerializableSupplier<CursorServiceClient> supplier);
 
+    public abstract Builder setTopicBacklogReaderSettings(
+        TopicBacklogReaderSettings topicBacklogReaderSettings);
+
+    // Used in unit tests
     abstract Builder setSubscriberFactory(SubscriberFactory subscriberFactory);
 
     abstract Builder setCommitterSupplier(SerializableSupplier<Committer> committerSupplier);
 
+    // Used for implementing build();
+    abstract SubscriptionPath subscriptionPath();
+
+    abstract ImmutableSet<Partition> partitions();
+
+    abstract Optional<TopicBacklogReaderSettings> topicBacklogReaderSettings();
+
     abstract SubscriberOptions autoBuild();
 
-    public SubscriberOptions build() throws StatusException {
-      SubscriberOptions built = autoBuild();
-      if (!built.partitions().isEmpty()) {
-        return built;
+    public SubscriberOptions build() throws ApiException {
+      if (!partitions().isEmpty() && topicBacklogReaderSettings().isPresent()) {
+        return autoBuild();
       }
-      int partition_count = PartitionLookupUtils.numPartitions(built.subscriptionPath());
-      SubscriberOptions.Builder builder = built.toBuilder();
-      ImmutableSet.Builder<Partition> partitions = ImmutableSet.builder();
-      for (int i = 0; i < partition_count; i++) {
-        partitions.add(Partition.of(i));
+
+      if (partitions().isEmpty()) {
+        int partitionCount = PartitionLookupUtils.numPartitions(subscriptionPath());
+        ImmutableSet.Builder<Partition> partitions = ImmutableSet.builder();
+        for (int i = 0; i < partitionCount; i++) {
+          partitions.add(Partition.of(i));
+        }
+        setPartitions(partitions.build());
       }
-      return builder.setPartitions(partitions.build()).autoBuild();
+      if (!topicBacklogReaderSettings().isPresent()) {
+        setTopicBacklogReaderSettings(
+            TopicBacklogReaderSettings.newBuilder()
+                .setTopicPathFromSubscriptionPath(subscriptionPath())
+                .build());
+      }
+      return autoBuild();
     }
   }
 }

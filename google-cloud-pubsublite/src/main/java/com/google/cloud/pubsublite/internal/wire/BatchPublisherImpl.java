@@ -16,15 +16,18 @@
 
 package com.google.cloud.pubsublite.internal.wire;
 
+import static com.google.cloud.pubsublite.internal.CheckedApiPreconditions.checkState;
+
+import com.google.api.gax.rpc.ResponseObserver;
+import com.google.api.gax.rpc.StatusCode.Code;
 import com.google.cloud.pubsublite.Offset;
+import com.google.cloud.pubsublite.internal.CheckedApiException;
 import com.google.cloud.pubsublite.internal.CloseableMonitor;
 import com.google.cloud.pubsublite.proto.MessagePublishResponse;
 import com.google.cloud.pubsublite.proto.PubSubMessage;
 import com.google.cloud.pubsublite.proto.PublishRequest;
 import com.google.cloud.pubsublite.proto.PublishResponse;
 import com.google.errorprone.annotations.concurrent.GuardedBy;
-import io.grpc.Status;
-import io.grpc.stub.StreamObserver;
 import java.util.Collection;
 import java.util.Optional;
 
@@ -39,7 +42,7 @@ class BatchPublisherImpl extends SingleConnection<PublishRequest, PublishRespons
     @Override
     public BatchPublisherImpl New(
         StreamFactory<PublishRequest, PublishResponse> streamFactory,
-        StreamObserver<Offset> clientStream,
+        ResponseObserver<Offset> clientStream,
         PublishRequest initialRequest) {
       return new BatchPublisherImpl(streamFactory, clientStream, initialRequest);
     }
@@ -47,7 +50,7 @@ class BatchPublisherImpl extends SingleConnection<PublishRequest, PublishRespons
 
   private BatchPublisherImpl(
       StreamFactory<PublishRequest, PublishResponse> streamFactory,
-      StreamObserver<Offset> publishCompleteStream,
+      ResponseObserver<Offset> publishCompleteStream,
       PublishRequest initialRequest) {
     super(streamFactory, publishCompleteStream);
     initialize(initialRequest);
@@ -61,36 +64,30 @@ class BatchPublisherImpl extends SingleConnection<PublishRequest, PublishRespons
   }
 
   @Override
-  protected Status handleInitialResponse(PublishResponse response) {
-    if (!response.hasInitialResponse()) {
-      return Status.FAILED_PRECONDITION.withDescription(
-          "First stream response is not an initial response: " + response);
-    }
-    return Status.OK;
+  protected void handleInitialResponse(PublishResponse response) throws CheckedApiException {
+    checkState(
+        response.hasInitialResponse(),
+        "First stream response is not an initial response: " + response);
   }
 
   @Override
-  protected Status handleStreamResponse(PublishResponse response) {
-    if (response.hasInitialResponse()) {
-      return Status.FAILED_PRECONDITION.withDescription("Received duplicate initial response.");
-    } else if (response.hasMessageResponse()) {
-      return onMessageResponse(response.getMessageResponse());
-    } else {
-      return Status.FAILED_PRECONDITION.withDescription(
-          "Received response on stream which was neither a message or initial response.");
-    }
+  protected void handleStreamResponse(PublishResponse response) throws CheckedApiException {
+    checkState(!response.hasInitialResponse(), "Received duplicate initial response.");
+    checkState(
+        response.hasMessageResponse(),
+        "Received response on stream which was neither a message or initial response.");
+    onMessageResponse(response.getMessageResponse());
   }
 
-  private Status onMessageResponse(MessagePublishResponse response) {
+  private void onMessageResponse(MessagePublishResponse response) throws CheckedApiException {
     Offset offset = Offset.of(response.getStartCursor().getOffset());
     try (CloseableMonitor.Hold h = monitor.enter()) {
       if (lastOffset.isPresent() && offset.value() <= lastOffset.get().value()) {
-        return Status.FAILED_PRECONDITION.withDescription(
-            "Received out of order offsets on stream.");
+        throw new CheckedApiException(
+            "Received out of order offsets on stream.", Code.FAILED_PRECONDITION);
       }
       lastOffset = Optional.of(offset);
     }
     sendToClient(offset);
-    return Status.OK;
   }
 }

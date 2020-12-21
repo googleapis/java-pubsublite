@@ -27,13 +27,13 @@ import static org.mockito.MockitoAnnotations.initMocks;
 
 import com.google.cloud.pubsublite.Partition;
 import com.google.cloud.pubsublite.cloudpubsub.Subscriber;
-import com.google.cloud.pubsublite.internal.FakeApiService;
+import com.google.cloud.pubsublite.internal.CheckedApiException;
+import com.google.cloud.pubsublite.internal.testing.FakeApiService;
 import com.google.cloud.pubsublite.internal.wire.Assigner;
 import com.google.cloud.pubsublite.internal.wire.AssignerFactory;
 import com.google.cloud.pubsublite.internal.wire.PartitionAssignmentReceiver;
 import com.google.common.collect.ImmutableSet;
 import io.grpc.Status;
-import io.grpc.StatusException;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -57,7 +57,7 @@ public class AssigningSubscriberTest {
   private PartitionAssignmentReceiver leakedReceiver;
 
   @Before
-  public void setUp() throws StatusException {
+  public void setUp() {
     initMocks(this);
     when(assignerFactory.New(any()))
         .then(
@@ -78,51 +78,51 @@ public class AssigningSubscriberTest {
   }
 
   @Test
-  public void createSubscribers() throws StatusException {
+  public void createSubscribers() throws CheckedApiException {
     Subscriber sub1 = spy(FakeSubscriber.class);
-    when(subscriberFactory.New(Partition.of(1))).thenReturn(sub1);
+    when(subscriberFactory.newSubscriber(Partition.of(1))).thenReturn(sub1);
     leakedReceiver.handleAssignment(ImmutableSet.of(Partition.of(1)));
-    verify(subscriberFactory).New(Partition.of(1));
+    verify(subscriberFactory).newSubscriber(Partition.of(1));
     verify(sub1).startAsync();
     reset(sub1);
 
     Subscriber sub2 = spy(FakeSubscriber.class);
-    when(subscriberFactory.New(Partition.of(2))).thenReturn(sub2);
+    when(subscriberFactory.newSubscriber(Partition.of(2))).thenReturn(sub2);
     leakedReceiver.handleAssignment(ImmutableSet.of(Partition.of(1), Partition.of(2)));
-    verify(subscriberFactory).New(Partition.of(2));
+    verify(subscriberFactory).newSubscriber(Partition.of(2));
     verify(sub2).startAsync();
     verifyNoMoreInteractions(sub1);
   }
 
   @Test
-  public void createAndEvict() throws StatusException {
+  public void createAndEvict() throws CheckedApiException {
     Subscriber sub1 = spy(FakeSubscriber.class);
-    when(subscriberFactory.New(Partition.of(1))).thenReturn(sub1);
+    when(subscriberFactory.newSubscriber(Partition.of(1))).thenReturn(sub1);
     leakedReceiver.handleAssignment(ImmutableSet.of(Partition.of(1)));
-    verify(subscriberFactory).New(Partition.of(1));
+    verify(subscriberFactory).newSubscriber(Partition.of(1));
     verify(sub1).startAsync();
     reset(sub1);
 
     Subscriber sub2 = spy(FakeSubscriber.class);
-    when(subscriberFactory.New(Partition.of(2))).thenReturn(sub2);
+    when(subscriberFactory.newSubscriber(Partition.of(2))).thenReturn(sub2);
     leakedReceiver.handleAssignment(ImmutableSet.of(Partition.of(2)));
-    verify(subscriberFactory).New(Partition.of(2));
+    verify(subscriberFactory).newSubscriber(Partition.of(2));
     verify(sub2).startAsync();
     verify(sub1).stopAsync();
   }
 
-  private Subscriber initSub1() throws StatusException {
+  private Subscriber initSub1() throws CheckedApiException {
     Subscriber sub1 = spy(FakeSubscriber.class);
-    when(subscriberFactory.New(Partition.of(1))).thenReturn(sub1);
+    when(subscriberFactory.newSubscriber(Partition.of(1))).thenReturn(sub1);
     leakedReceiver.handleAssignment(ImmutableSet.of(Partition.of(1)));
-    verify(subscriberFactory).New(Partition.of(1));
+    verify(subscriberFactory).newSubscriber(Partition.of(1));
     verify(sub1).startAsync();
     reset(sub1);
     return sub1;
   }
 
   @Test
-  public void stopStopsSubs() throws StatusException {
+  public void stopStopsSubs() throws CheckedApiException {
     Subscriber sub1 = initSub1();
 
     assigningSubscriber.stopAsync();
@@ -131,7 +131,7 @@ public class AssigningSubscriberTest {
   }
 
   @Test
-  public void assignerErrorStopsSubs() throws StatusException {
+  public void assignerErrorStopsSubs() throws CheckedApiException {
     Subscriber sub1 = initSub1();
 
     assigner.fail(Status.INVALID_ARGUMENT.asException());

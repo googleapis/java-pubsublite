@@ -16,7 +16,7 @@
 
 package com.google.cloud.pubsublite.internal.wire;
 
-import io.grpc.Status;
+import com.google.cloud.pubsublite.internal.CheckedApiException;
 
 public interface RetryingConnectionObserver<ClientResponseT> {
   // Trigger reinitialization. This cannot be an upcall. It needs to be atomic so there is no
@@ -26,5 +26,5 @@ public interface RetryingConnectionObserver<ClientResponseT> {
   // deadlocks.
   void triggerReinitialize();
 
-  Status onClientResponse(ClientResponseT value);
+  void onClientResponse(ClientResponseT value) throws CheckedApiException;
 }

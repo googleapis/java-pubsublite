@@ -16,8 +16,14 @@
 
 package com.google.cloud.pubsublite.internal.wire;
 
+import static com.google.cloud.pubsublite.internal.CheckedApiPreconditions.checkArgument;
+import static com.google.cloud.pubsublite.internal.CheckedApiPreconditions.checkState;
+
+import com.google.api.gax.rpc.ResponseObserver;
+import com.google.api.gax.rpc.StatusCode.Code;
 import com.google.cloud.pubsublite.Offset;
 import com.google.cloud.pubsublite.SequencedMessage;
+import com.google.cloud.pubsublite.internal.CheckedApiException;
 import com.google.cloud.pubsublite.internal.CloseableMonitor;
 import com.google.cloud.pubsublite.internal.wire.ConnectedSubscriber.Response;
 import com.google.cloud.pubsublite.proto.FlowControlRequest;
@@ -29,8 +35,6 @@ import com.google.cloud.pubsublite.proto.SubscribeResponse;
 import com.google.common.base.Preconditions;
 import com.google.common.flogger.GoogleLogger;
 import com.google.errorprone.annotations.concurrent.GuardedBy;
-import io.grpc.Status;
-import io.grpc.stub.StreamObserver;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -50,7 +54,7 @@ class ConnectedSubscriberImpl
     @Override
     public ConnectedSubscriberImpl New(
         StreamFactory<SubscribeRequest, SubscribeResponse> streamFactory,
-        StreamObserver<Response> clientStream,
+        ResponseObserver<Response> clientStream,
         SubscribeRequest initialRequest) {
       return new ConnectedSubscriberImpl(streamFactory, clientStream, initialRequest);
     }
@@ -58,7 +62,7 @@ class ConnectedSubscriberImpl
 
   private ConnectedSubscriberImpl(
       StreamFactory<SubscribeRequest, SubscribeResponse> streamFactory,
-      StreamObserver<Response> clientStream,
+      ResponseObserver<Response> clientStream,
       SubscribeRequest initialRequest) {
     super(streamFactory, clientStream);
     this.initialRequest = initialRequest;
@@ -68,13 +72,11 @@ class ConnectedSubscriberImpl
   // ConnectedSubscriber implementation.
   @Override
   public void seek(SeekRequest request) {
-    Preconditions.checkArgument(Predicates.isValidSeekRequest(request));
-    Status seekStatus;
     try (CloseableMonitor.Hold h = monitor.enter()) {
-      seekStatus = seekLockHeld(request);
-    }
-    if (!seekStatus.isOk()) {
-      setError(seekStatus);
+      checkArgument(Predicates.isValidSeekRequest(request));
+      seekLockHeld(request);
+    } catch (CheckedApiException e) {
+      setError(e);
     }
   }
 
@@ -88,89 +90,81 @@ class ConnectedSubscriberImpl
   }
 
   @GuardedBy("monitor.monitor")
-  private Status seekLockHeld(SeekRequest request) {
-    if (seekInFlight) {
-      return Status.FAILED_PRECONDITION.withDescription(
-          String.format(
-              "Sent second seek while seek in flight on stream with initial request %s.",
-              initialRequest));
-    }
+  private void seekLockHeld(SeekRequest request) throws CheckedApiException {
+    checkState(
+        !seekInFlight,
+        String.format(
+            "Sent second seek while seek in flight on stream with initial request %s.",
+            initialRequest));
     seekInFlight = true;
     sendToStream(SubscribeRequest.newBuilder().setSeek(request).build());
-    return Status.OK;
   }
 
   @Override
-  protected Status handleInitialResponse(SubscribeResponse response) {
-    if (!response.hasInitial()) {
-      return Status.FAILED_PRECONDITION.withDescription(
-          String.format(
-              "Received non-initial first response %s on stream with initial request %s.",
-              response, initialRequest));
-    }
-    return Status.OK;
+  protected void handleInitialResponse(SubscribeResponse response) throws CheckedApiException {
+    checkState(
+        response.hasInitial(),
+        String.format(
+            "Received non-initial first response %s on stream with initial request %s.",
+            response, initialRequest));
   }
 
   @Override
-  protected Status handleStreamResponse(SubscribeResponse response) {
+  protected void handleStreamResponse(SubscribeResponse response) throws CheckedApiException {
     switch (response.getResponseCase()) {
       case INITIAL:
-        return Status.FAILED_PRECONDITION.withDescription(
+        throw new CheckedApiException(
             String.format(
                 "Received duplicate initial response on stream with initial request %s.",
-                initialRequest));
+                initialRequest),
+            Code.FAILED_PRECONDITION);
       case MESSAGES:
-        return onMessages(response.getMessages());
+        onMessages(response.getMessages());
+        return;
       case SEEK:
-        return onSeekResponse(response.getSeek());
+        onSeekResponse(response.getSeek());
+        return;
       default:
-        return Status.FAILED_PRECONDITION.withDescription(
-            "Received a message on the stream with no case set.");
+        throw new CheckedApiException(
+            "Received a message on the stream with no case set.", Code.FAILED_PRECONDITION);
     }
   }
 
-  private Status onMessages(MessageResponse response) {
-    List<SequencedMessage> messages;
+  private void onMessages(MessageResponse response) throws CheckedApiException {
     try (CloseableMonitor.Hold h = monitor.enter()) {
       if (seekInFlight) {
         log.atInfo().log(
             "Dropping %s messages due to outstanding seek on stream with initial request %s.",
             response.getMessagesCount(), initialRequest);
-        return Status.OK;
-      }
-      if (response.getMessagesCount() == 0) {
-        return Status.FAILED_PRECONDITION.withDescription(
-            String.format(
-                "Received an empty PullResponse on stream with initial request %s.",
-                initialRequest));
-      }
-      messages =
-          response.getMessagesList().stream()
-              .map(SequencedMessage::fromProto)
-              .collect(Collectors.toList());
-      if (!Predicates.isOrdered(messages)) {
-        return Status.FAILED_PRECONDITION.withDescription(
-            String.format(
-                "Received out of order messages on the stream with initial request %s.",
-                initialRequest));
+        return;
       }
     }
+    checkState(
+        response.getMessagesCount() > 0,
+        String.format(
+            "Received an empty PullResponse on stream with initial request %s.", initialRequest));
+    List<SequencedMessage> messages =
+        response.getMessagesList().stream()
+            .map(SequencedMessage::fromProto)
+            .collect(Collectors.toList());
+    checkState(
+        Predicates.isOrdered(messages),
+        String.format(
+            "Received out of order messages on the stream with initial request %s.",
+            initialRequest));
     sendToClient(Response.ofMessages(messages));
-    return Status.OK;
   }
 
-  private Status onSeekResponse(SeekResponse response) {
+  private void onSeekResponse(SeekResponse response) throws CheckedApiException {
     try (CloseableMonitor.Hold h = monitor.enter()) {
-      if (!seekInFlight) {
-        return Status.FAILED_PRECONDITION.withDescription(
-            String.format(
-                "Received a SeekResponse when no seeks were in flight on stream with initial"
-                    + " request %s.",
-                initialRequest));
-      }
+      checkState(
+          seekInFlight,
+          String.format(
+              "Received a SeekResponse when no seeks were in flight on stream with initial"
+                  + " request %s.",
+              initialRequest));
       seekInFlight = false;
     }
     sendToClient(Response.ofSeekOffset(Offset.of(response.getCursor().getOffset())));
-    return Status.OK;
   }
 }

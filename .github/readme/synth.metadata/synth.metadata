@@ -1,0 +1,18 @@
+{
+  "sources": [
+    {
+      "git": {
+        "name": ".",
+        "remote": "https://github.com/googleapis/java-pubsublite.git",
+        "sha": "06120dd8125b2b03e76c55186cdf976813216def"
+      }
+    },
+    {
+      "git": {
+        "name": "synthtool",
+        "remote": "https://github.com/googleapis/synthtool.git",
+        "sha": "996775eca5fd934edac3c2ae34b80ff0395b1717"
+      }
+    }
+  ]
+}

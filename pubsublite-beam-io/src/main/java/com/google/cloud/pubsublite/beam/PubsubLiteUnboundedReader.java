@@ -17,20 +17,27 @@
 package com.google.cloud.pubsublite.beam;
 
 import com.google.api.core.ApiFuture;
+import com.google.api.gax.rpc.StatusCode.Code;
 import com.google.auto.value.AutoValue;
 import com.google.cloud.pubsublite.Offset;
 import com.google.cloud.pubsublite.Partition;
 import com.google.cloud.pubsublite.SequencedMessage;
+import com.google.cloud.pubsublite.internal.CheckedApiException;
 import com.google.cloud.pubsublite.internal.CloseableMonitor;
 import com.google.cloud.pubsublite.internal.ExtractStatus;
 import com.google.cloud.pubsublite.internal.ProxyService;
+import com.google.cloud.pubsublite.internal.PullSubscriber;
 import com.google.cloud.pubsublite.internal.wire.Committer;
+import com.google.cloud.pubsublite.proto.ComputeMessageStatsResponse;
+import com.google.common.base.Ticker;
+import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.CacheLoader;
+import com.google.common.cache.LoadingCache;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.flogger.GoogleLogger;
 import com.google.errorprone.annotations.concurrent.GuardedBy;
 import com.google.protobuf.Timestamp;
 import com.google.protobuf.util.Timestamps;
-import io.grpc.Status;
-import io.grpc.StatusException;
 import java.io.IOException;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
@@ -40,6 +47,8 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.Queue;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import org.apache.beam.sdk.io.UnboundedSource;
@@ -50,7 +59,10 @@ import org.joda.time.Instant;
 
 class PubsubLiteUnboundedReader extends UnboundedReader<SequencedMessage>
     implements OffsetFinalizer {
+  private static final GoogleLogger logger = GoogleLogger.forEnclosingClass();
   private final UnboundedSource<SequencedMessage, ?> source;
+  private final TopicBacklogReader backlogReader;
+  private final LoadingCache<String, Long> backlogCache;
   private final CloseableMonitor monitor = new CloseableMonitor();
 
   @GuardedBy("monitor.monitor")
@@ -62,14 +74,14 @@ class PubsubLiteUnboundedReader extends UnboundedReader<SequencedMessage>
   private final Queue<PartitionedSequencedMessage> messages = new ArrayDeque<>();
 
   @GuardedBy("monitor.monitor")
-  private Optional<StatusException> permanentError = Optional.empty();
+  private Optional<CheckedApiException> permanentError = Optional.empty();
 
   private static class CommitterProxy extends ProxyService {
-    private final Consumer<StatusException> permanentErrorSetter;
+    private final Consumer<CheckedApiException> permanentErrorSetter;
 
     CommitterProxy(
-        Collection<SubscriberState> states, Consumer<StatusException> permanentErrorSetter)
-        throws StatusException {
+        Collection<SubscriberState> states, Consumer<CheckedApiException> permanentErrorSetter)
+        throws CheckedApiException {
       this.permanentErrorSetter = permanentErrorSetter;
       addServices(states.stream().map(state -> state.committer).collect(Collectors.toList()));
     }
@@ -81,15 +93,17 @@ class PubsubLiteUnboundedReader extends UnboundedReader<SequencedMessage>
     protected void stop() {}
 
     @Override
-    protected void handlePermanentError(StatusException error) {
+    protected void handlePermanentError(CheckedApiException error) {
       permanentErrorSetter.accept(error);
     }
   }
 
   public PubsubLiteUnboundedReader(
       UnboundedSource<SequencedMessage, ?> source,
-      ImmutableMap<Partition, SubscriberState> subscriberMap)
-      throws StatusException {
+      ImmutableMap<Partition, SubscriberState> subscriberMap,
+      TopicBacklogReader backlogReader,
+      Ticker ticker)
+      throws CheckedApiException {
     this.source = source;
     this.subscriberMap = subscriberMap;
     this.committerProxy =
@@ -100,22 +114,44 @@ class PubsubLiteUnboundedReader extends UnboundedReader<SequencedMessage>
                 permanentError = Optional.of(permanentError.orElse(error));
               }
             });
+    this.backlogReader = backlogReader;
+    this.backlogCache =
+        CacheBuilder.newBuilder()
+            .ticker(ticker)
+            .maximumSize(1)
+            .expireAfterWrite(1, TimeUnit.MINUTES)
+            .refreshAfterWrite(10, TimeUnit.SECONDS)
+            .build(
+                new CacheLoader<Object, Long>() {
+                  public Long load(Object val) throws InterruptedException, ExecutionException {
+                    return computeSplitBacklog().get().getMessageBytes();
+                  }
+                });
     this.committerProxy.startAsync().awaitRunning();
   }
 
+  private ApiFuture<ComputeMessageStatsResponse> computeSplitBacklog() {
+    ImmutableMap.Builder<Partition, Offset> builder = ImmutableMap.builder();
+    try (CloseableMonitor.Hold h = monitor.enter()) {
+      subscriberMap.forEach(
+          (partition, subscriberState) ->
+              subscriberState.lastDelivered.ifPresent(offset -> builder.put(partition, offset)));
+    }
+    return backlogReader.computeMessageStats(builder.build());
+  }
+
   @Override
-  public void finalizeOffsets(Map<Partition, Offset> offsets) throws StatusException {
+  public void finalizeOffsets(Map<Partition, Offset> offsets) throws CheckedApiException {
     List<ApiFuture<Void>> commitFutures = new ArrayList<>();
     try (CloseableMonitor.Hold h = monitor.enter()) {
       for (Partition partition : offsets.keySet()) {
         if (!subscriberMap.containsKey(partition)) {
-          throw Status.INVALID_ARGUMENT
-              .withDescription(
-                  String.format(
-                      "Asked to finalize an offset for partition %s which was not managed by this"
-                          + " reader.",
-                      partition))
-              .asException();
+          throw new CheckedApiException(
+              String.format(
+                  "Asked to finalize an offset for partition %s which was not managed by this"
+                      + " reader.",
+                  partition),
+              Code.INVALID_ARGUMENT);
         }
         commitFutures.add(
             subscriberMap.get(partition).committer.commitOffset(offsets.get(partition)));
@@ -180,7 +216,7 @@ class PubsubLiteUnboundedReader extends UnboundedReader<SequencedMessage>
         return true;
       }
       return false;
-    } catch (StatusException e) {
+    } catch (CheckedApiException e) {
       throw new IOException(e);
     }
   }
@@ -194,7 +230,7 @@ class PubsubLiteUnboundedReader extends UnboundedReader<SequencedMessage>
   }
 
   @GuardedBy("monitor.monitor")
-  private void pullFromSubscribers() throws StatusException {
+  private void pullFromSubscribers() throws CheckedApiException {
     for (Map.Entry<Partition, SubscriberState> entry : subscriberMap.entrySet()) {
       for (SequencedMessage message : entry.getValue().subscriber.pull()) {
         messages.add(PartitionedSequencedMessage.of(entry.getKey(), message));
@@ -254,6 +290,20 @@ class PubsubLiteUnboundedReader extends UnboundedReader<SequencedMessage>
           (partition, subscriberState) ->
               subscriberState.lastDelivered.ifPresent(offset -> builder.put(partition, offset)));
       return new OffsetCheckpointMark(this, builder.build());
+    }
+  }
+
+  @Override
+  public long getSplitBacklogBytes() {
+    try {
+      // We use the cache because it allows us to coalesce request, periodically refresh the value
+      // and expire the value after a maximum staleness, but there is only ever one key.
+      return backlogCache.get("Backlog");
+    } catch (ExecutionException e) {
+      logger.atWarning().log(
+          "Failed to retrieve backlog information, reporting the backlog size as UNKNOWN: {}",
+          e.getCause().getMessage());
+      return BACKLOG_UNKNOWN;
     }
   }
 

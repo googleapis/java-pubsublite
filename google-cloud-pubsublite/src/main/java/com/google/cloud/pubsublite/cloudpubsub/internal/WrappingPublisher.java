@@ -16,41 +16,34 @@
 
 package com.google.cloud.pubsublite.cloudpubsub.internal;
 
+import static com.google.cloud.pubsublite.internal.ExtractStatus.toCanonical;
+
 import com.google.api.core.ApiFuture;
 import com.google.api.core.ApiFutures;
+import com.google.api.gax.rpc.ApiException;
 import com.google.cloud.pubsublite.Message;
 import com.google.cloud.pubsublite.MessageTransformer;
 import com.google.cloud.pubsublite.PublishMetadata;
 import com.google.cloud.pubsublite.cloudpubsub.Publisher;
-import com.google.cloud.pubsublite.internal.ProxyService;
+import com.google.cloud.pubsublite.internal.CheckedApiException;
+import com.google.cloud.pubsublite.internal.TrivialProxyService;
 import com.google.common.util.concurrent.MoreExecutors;
 import com.google.pubsub.v1.PubsubMessage;
-import io.grpc.StatusException;
 
 // A WrappingPublisher wraps the wire protocol client with a Cloud Pub/Sub api compliant
 // publisher. It encodes a PublishMetadata object in the response string.
-public class WrappingPublisher extends ProxyService implements Publisher {
+public class WrappingPublisher extends TrivialProxyService implements Publisher {
   private final com.google.cloud.pubsublite.internal.Publisher<PublishMetadata> wirePublisher;
   private final MessageTransformer<PubsubMessage, Message> transformer;
 
   public WrappingPublisher(
       com.google.cloud.pubsublite.internal.Publisher<PublishMetadata> wirePublisher,
       MessageTransformer<PubsubMessage, Message> transformer)
-      throws StatusException {
+      throws ApiException {
+    super(wirePublisher);
     this.wirePublisher = wirePublisher;
     this.transformer = transformer;
-    addServices(wirePublisher);
   }
-
-  // ProxyService implementation. SinglePartitionPublisher is a thin proxy around a wire publisher.
-  @Override
-  protected void start() {}
-
-  @Override
-  protected void stop() {}
-
-  @Override
-  protected void handlePermanentError(StatusException error) {}
 
   // Publisher implementation.
   @Override
@@ -58,9 +51,10 @@ public class WrappingPublisher extends ProxyService implements Publisher {
     Message wireMessage;
     try {
       wireMessage = transformer.transform(message);
-    } catch (StatusException e) {
+    } catch (Throwable t) {
+      CheckedApiException e = toCanonical(t);
       onPermanentError(e);
-      return ApiFutures.immediateFailedFuture(e);
+      return ApiFutures.immediateFailedFuture(e.underlying);
     }
     return ApiFutures.transform(
         wirePublisher.publish(wireMessage),

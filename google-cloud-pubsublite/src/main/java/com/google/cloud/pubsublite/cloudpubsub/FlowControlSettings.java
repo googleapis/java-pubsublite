@@ -16,31 +16,36 @@
 
 package com.google.cloud.pubsublite.cloudpubsub;
 
-import static com.google.cloud.pubsublite.internal.Preconditions.checkState;
+import static com.google.cloud.pubsublite.internal.UncheckedApiPreconditions.checkState;
 
+import com.google.api.gax.rpc.ApiException;
 import com.google.auto.value.AutoValue;
-import io.grpc.StatusException;
 import java.io.Serializable;
 
-// Describes limits on bytes and messages outstanding for a single partition Pub/Sub Lite
-// subscriber. These are hard limits enforced by the server.
+/**
+ * Describes limits on bytes and messages outstanding for a single partition Pub/Sub Lite
+ * subscriber. These are hard limits enforced by the server.
+ */
 @AutoValue
 public abstract class FlowControlSettings implements Serializable {
   private static final long serialVersionUID = 982475982347L;
 
+  /** Create a new builder for these settings. */
   public static Builder builder() {
     return new AutoValue_FlowControlSettings.Builder();
   }
 
   @AutoValue.Builder
   public abstract static class Builder {
+    /** The number of quota bytes that may be outstanding to the client. */
     public abstract Builder setBytesOutstanding(long bytes);
 
+    /** The number of messages that may be outstanding to the client. */
     public abstract Builder setMessagesOutstanding(long elements);
 
     abstract FlowControlSettings autoBuild();
 
-    public FlowControlSettings build() throws StatusException {
+    public FlowControlSettings build() throws ApiException {
       FlowControlSettings settings = autoBuild();
       checkState(settings.bytesOutstanding() > 0, "Cannot have 0 or less bytes outstanding.");
       checkState(settings.messagesOutstanding() > 0, "Cannot have 0 or less messages outstanding.");
@@ -48,7 +53,9 @@ public abstract class FlowControlSettings implements Serializable {
     }
   }
 
+  /** The number of quota bytes that may be outstanding to the client. */
   public abstract long bytesOutstanding();
 
+  /** The number of messages that may be outstanding to the client. */
   public abstract long messagesOutstanding();
 }

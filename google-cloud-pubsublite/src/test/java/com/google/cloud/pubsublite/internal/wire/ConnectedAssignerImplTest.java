@@ -16,42 +16,32 @@
 
 package com.google.cloud.pubsublite.internal.wire;
 
-import static org.mockito.AdditionalAnswers.delegatesTo;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.doAnswer;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 
+import com.google.api.gax.rpc.ClientStream;
+import com.google.api.gax.rpc.ResponseObserver;
+import com.google.api.gax.rpc.StatusCode.Code;
 import com.google.cloud.pubsublite.CloudRegion;
 import com.google.cloud.pubsublite.CloudZone;
 import com.google.cloud.pubsublite.ProjectNumber;
 import com.google.cloud.pubsublite.SubscriptionName;
-import com.google.cloud.pubsublite.SubscriptionPaths;
-import com.google.cloud.pubsublite.internal.StatusExceptionMatcher;
+import com.google.cloud.pubsublite.SubscriptionPath;
+import com.google.cloud.pubsublite.internal.ApiExceptionMatcher;
+import com.google.cloud.pubsublite.internal.CheckedApiException;
 import com.google.cloud.pubsublite.proto.InitialPartitionAssignmentRequest;
 import com.google.cloud.pubsublite.proto.PartitionAssignment;
 import com.google.cloud.pubsublite.proto.PartitionAssignmentAck;
 import com.google.cloud.pubsublite.proto.PartitionAssignmentRequest;
-import com.google.cloud.pubsublite.proto.PartitionAssignmentServiceGrpc;
-import com.google.cloud.pubsublite.proto.PartitionAssignmentServiceGrpc.PartitionAssignmentServiceImplBase;
-import com.google.cloud.pubsublite.proto.PartitionAssignmentServiceGrpc.PartitionAssignmentServiceStub;
 import com.google.common.base.Preconditions;
-import io.grpc.ManagedChannel;
-import io.grpc.Status;
-import io.grpc.Status.Code;
-import io.grpc.StatusException;
-import io.grpc.inprocess.InProcessChannelBuilder;
-import io.grpc.inprocess.InProcessServerBuilder;
-import io.grpc.stub.StreamObserver;
-import io.grpc.testing.GrpcCleanupRule;
 import java.io.IOException;
 import java.util.Optional;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -61,40 +51,29 @@ import org.mockito.stubbing.Answer;
 
 @RunWith(JUnit4.class)
 public class ConnectedAssignerImplTest {
-  @Rule public final GrpcCleanupRule grpcCleanup = new GrpcCleanupRule();
-
   private static PartitionAssignmentRequest initialRequest() {
-    try {
-      return PartitionAssignmentRequest.newBuilder()
-          .setInitial(
-              InitialPartitionAssignmentRequest.newBuilder()
-                  .setSubscription(
-                      SubscriptionPaths.newBuilder()
-                          .setProjectNumber(ProjectNumber.of(12345))
-                          .setZone(CloudZone.of(CloudRegion.of("us-east1"), 'a'))
-                          .setSubscriptionName(SubscriptionName.of("some_subscription"))
-                          .build()
-                          .value()))
-          .build();
-    } catch (StatusException e) {
-      throw e.getStatus().asRuntimeException();
-    }
+    return PartitionAssignmentRequest.newBuilder()
+        .setInitial(
+            InitialPartitionAssignmentRequest.newBuilder()
+                .setSubscription(
+                    SubscriptionPath.newBuilder()
+                        .setProject(ProjectNumber.of(12345))
+                        .setLocation(CloudZone.of(CloudRegion.of("us-east1"), 'a'))
+                        .setName(SubscriptionName.of("some_subscription"))
+                        .build()
+                        .toString()))
+        .build();
   }
 
   private static final ConnectedAssignerImpl.Factory FACTORY = new ConnectedAssignerImpl.Factory();
 
-  private PartitionAssignmentServiceStub stub;
+  @Mock private StreamFactory<PartitionAssignmentRequest, PartitionAssignment> streamFactory;
 
-  @Mock private StreamObserver<PartitionAssignmentRequest> mockRequestStream;
+  @Mock private ClientStream<PartitionAssignmentRequest> mockRequestStream;
 
-  @Mock private StreamObserver<PartitionAssignment> mockOutputStream;
+  @Mock private ResponseObserver<PartitionAssignment> mockOutputStream;
 
-  private final PartitionAssignmentServiceImplBase serviceImpl =
-      mock(
-          PartitionAssignmentServiceImplBase.class,
-          delegatesTo(new PartitionAssignmentServiceImplBase() {}));
-
-  private Optional<StreamObserver<PartitionAssignment>> leakedResponseStream = Optional.empty();
+  private Optional<ResponseObserver<PartitionAssignment>> leakedResponseStream = Optional.empty();
 
   private ConnectedAssigner assigner;
 
@@ -103,38 +82,27 @@ public class ConnectedAssignerImplTest {
   @Before
   public void setUp() throws IOException {
     MockitoAnnotations.initMocks(this);
-    String serverName = InProcessServerBuilder.generateName();
-    grpcCleanup.register(
-        InProcessServerBuilder.forName(serverName)
-            .directExecutor()
-            .addService(serviceImpl)
-            .build()
-            .start());
-    ManagedChannel channel =
-        grpcCleanup.register(InProcessChannelBuilder.forName(serverName).directExecutor().build());
-    stub = PartitionAssignmentServiceGrpc.newStub(channel);
-
     doAnswer(
-            (Answer<StreamObserver<PartitionAssignmentRequest>>)
+            (Answer<ClientStream<PartitionAssignmentRequest>>)
                 args -> {
                   Preconditions.checkArgument(!leakedResponseStream.isPresent());
-                  StreamObserver<PartitionAssignment> responseObserver = args.getArgument(0);
-                  leakedResponseStream = Optional.of(responseObserver);
+                  ResponseObserver<PartitionAssignment> ResponseObserver = args.getArgument(0);
+                  leakedResponseStream = Optional.of(ResponseObserver);
                   return mockRequestStream;
                 })
-        .when(serviceImpl)
-        .assignPartitions(any());
+        .when(streamFactory)
+        .New(any());
   }
 
   @After
   public void tearDown() {
-    leakedResponseStream.ifPresent(StreamObserver::onCompleted);
+    leakedResponseStream.ifPresent(ResponseObserver::onComplete);
   }
 
   private Answer<Void> AnswerWith(PartitionAssignment response) {
     return invocation -> {
       Preconditions.checkArgument(leakedResponseStream.isPresent());
-      leakedResponseStream.get().onNext(response);
+      leakedResponseStream.get().onResponse(response);
       return null;
     };
   }
@@ -143,13 +111,13 @@ public class ConnectedAssignerImplTest {
     return AnswerWith(response.build());
   }
 
-  private Answer<Void> AnswerWith(Status error) {
-    Preconditions.checkArgument(!error.isOk());
+  private Answer<Void> AnswerWith(Code error) {
     return invocation -> {
       Preconditions.checkArgument(leakedResponseStream.isPresent());
-      leakedResponseStream.get().onError(error.asRuntimeException());
+      leakedResponseStream.get().onError(new CheckedApiException(error).underlying);
       leakedResponseStream = Optional.empty();
-      verify(mockRequestStream).onError(argThat(new StatusExceptionMatcher(error.getCode())));
+      verify(mockRequestStream).closeSendWithError(argThat(new ApiExceptionMatcher(error)));
+      verify(mockOutputStream).onError(argThat(new ApiExceptionMatcher(error)));
       verifyNoMoreInteractions(mockOutputStream);
       return null;
     };
@@ -157,29 +125,26 @@ public class ConnectedAssignerImplTest {
 
   @Test
   public void construct_SendsInitialThenResponse() throws Exception {
-    Preconditions.checkNotNull(serviceImpl);
     doAnswer(AnswerWith(PartitionAssignment.newBuilder().addPartitions(7)))
         .when(mockRequestStream)
-        .onNext(initialRequest());
+        .send(initialRequest());
     try (ConnectedAssigner assigner =
-        FACTORY.New(stub::assignPartitions, mockOutputStream, initialRequest())) {}
+        FACTORY.New(streamFactory, mockOutputStream, initialRequest())) {}
   }
 
   @Test
   public void construct_SendsInitialThenError() throws Exception {
-    Preconditions.checkNotNull(serviceImpl);
-    doAnswer(AnswerWith(Status.INTERNAL)).when(mockRequestStream).onNext(initialRequest());
+    doAnswer(AnswerWith(Code.INTERNAL)).when(mockRequestStream).send(initialRequest());
     try (ConnectedAssigner assigner =
-        FACTORY.New(stub::assignPartitions, mockOutputStream, initialRequest())) {}
+        FACTORY.New(streamFactory, mockOutputStream, initialRequest())) {}
   }
 
   private void initialize() {
-    Preconditions.checkNotNull(serviceImpl);
     doAnswer(AnswerWith(PartitionAssignment.newBuilder().addPartitions(1)))
         .when(mockRequestStream)
-        .onNext(initialRequest());
-    assigner = FACTORY.New(stub::assignPartitions, mockOutputStream, initialRequest());
-    verify(mockRequestStream).onNext(initialRequest());
+        .send(initialRequest());
+    assigner = FACTORY.New(streamFactory, mockOutputStream, initialRequest());
+    verify(mockRequestStream).send(initialRequest());
     reset(mockRequestStream);
     reset(mockOutputStream);
   }
@@ -188,7 +153,7 @@ public class ConnectedAssignerImplTest {
   public void ackAfterClose_Dropped() throws Exception {
     initialize();
     assigner.close();
-    verify(mockRequestStream).onCompleted();
+    verify(mockRequestStream).closeSend();
     assigner.ack();
     verifyNoMoreInteractions(mockRequestStream);
   }
@@ -201,15 +166,15 @@ public class ConnectedAssignerImplTest {
             .setAck(PartitionAssignmentAck.getDefaultInstance())
             .build();
     assigner.ack();
-    verify(mockRequestStream).onNext(request);
+    verify(mockRequestStream).send(request);
   }
 
   @Test
   public void assignmentResponseBeforeAckAborts() {
     initialize();
     PartitionAssignment response = PartitionAssignment.newBuilder().addPartitions(1).build();
-    leakedResponseStream.get().onNext(response);
-    verify(mockOutputStream).onError(argThat(new StatusExceptionMatcher(Code.FAILED_PRECONDITION)));
+    leakedResponseStream.get().onResponse(response);
+    verify(mockOutputStream).onError(argThat(new ApiExceptionMatcher(Code.FAILED_PRECONDITION)));
     leakedResponseStream = Optional.empty();
   }
 
@@ -221,9 +186,9 @@ public class ConnectedAssignerImplTest {
             .setAck(PartitionAssignmentAck.getDefaultInstance())
             .build();
     assigner.ack();
-    verify(mockRequestStream).onNext(request);
+    verify(mockRequestStream).send(request);
     PartitionAssignment response = PartitionAssignment.newBuilder().addPartitions(1).build();
-    leakedResponseStream.get().onNext(response);
-    verify(mockOutputStream).onNext(response);
+    leakedResponseStream.get().onResponse(response);
+    verify(mockOutputStream).onResponse(response);
   }
 }

@@ -17,43 +17,98 @@
 package com.google.cloud.pubsublite.internal;
 
 import com.google.api.core.ApiFuture;
+import com.google.api.core.ApiFutures;
+import com.google.api.gax.rpc.ApiException;
+import com.google.api.gax.rpc.StatusCode.Code;
 import com.google.common.util.concurrent.MoreExecutors;
-import io.grpc.Status;
-import io.grpc.StatusException;
-import io.grpc.StatusRuntimeException;
 import java.util.Optional;
 import java.util.concurrent.ExecutionException;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
+import java.util.function.Function;
 
 public final class ExtractStatus {
-  public static Optional<Status> extract(Throwable t) {
-    if (t instanceof StatusException) {
-      return Optional.of(((StatusException) t).getStatus());
+  public static Optional<CheckedApiException> extract(Throwable t) {
+    try {
+      throw t;
+    } catch (ApiException e) {
+      return Optional.of(new CheckedApiException(e));
+    } catch (CheckedApiException e) {
+      return Optional.of(e);
+    } catch (ExecutionException e) {
+      return extract(e.getCause());
+    } catch (Throwable e) {
+      return Optional.empty();
     }
-    if (t instanceof StatusRuntimeException) {
-      return Optional.of(((StatusRuntimeException) t).getStatus());
-    }
-    return Optional.empty();
   }
 
-  public static StatusException toCanonical(Throwable t) {
-    Optional<Status> statusOr = extract(t);
-    if (statusOr.isPresent()) return statusOr.get().asException();
-    return Status.INTERNAL.withCause(t).asException();
+  public static CheckedApiException toCanonical(Throwable t) {
+    Optional<CheckedApiException> statusOr = extract(t);
+    if (statusOr.isPresent()) return statusOr.get();
+    return new CheckedApiException(t, Code.INTERNAL);
   }
 
-  public static void addFailureHandler(ApiFuture<?> future, Consumer<StatusException> consumer) {
+  public static <T> ApiFuture<T> toClientFuture(ApiFuture<T> source) {
+    return ApiFutures.catchingAsync(
+        source,
+        Throwable.class,
+        t -> ApiFutures.immediateFailedFuture(toCanonical(t).underlying),
+        MoreExecutors.directExecutor());
+  }
+
+  public static void addFailureHandler(
+      ApiFuture<?> future, Consumer<CheckedApiException> consumer) {
     future.addListener(
         () -> {
           try {
             future.get();
-          } catch (ExecutionException e) {
-            consumer.accept(toCanonical(e.getCause()));
-          } catch (InterruptedException e) {
+          } catch (InterruptedException | ExecutionException e) {
             consumer.accept(toCanonical(e));
           }
         },
         MoreExecutors.directExecutor());
+  }
+
+  public interface StatusFunction<I, O> {
+    O apply(I input) throws CheckedApiException;
+  }
+
+  public interface StatusConsumer<I> {
+    void apply(I input) throws CheckedApiException;
+  }
+
+  public interface StatusBiconsumer<K, V> {
+    void apply(K key, V value) throws CheckedApiException;
+  }
+
+  public static <I, O> Function<I, O> rethrowAsRuntime(StatusFunction<I, O> function) {
+    return i -> {
+      try {
+        return function.apply(i);
+      } catch (CheckedApiException e) {
+        throw e.underlying;
+      }
+    };
+  }
+
+  public static <I> Consumer<I> rethrowAsRuntime(StatusConsumer<I> consumer) {
+    return i -> {
+      try {
+        consumer.apply(i);
+      } catch (CheckedApiException e) {
+        throw e.underlying;
+      }
+    };
+  }
+
+  public static <K, V> BiConsumer<K, V> rethrowAsRuntime(StatusBiconsumer<K, V> consumer) {
+    return (k, v) -> {
+      try {
+        consumer.apply(k, v);
+      } catch (CheckedApiException e) {
+        throw e.underlying;
+      }
+    };
   }
 
   private ExtractStatus() {}

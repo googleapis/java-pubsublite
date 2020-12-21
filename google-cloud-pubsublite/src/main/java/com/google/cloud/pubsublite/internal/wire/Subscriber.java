@@ -19,6 +19,7 @@ package com.google.cloud.pubsublite.internal.wire;
 import com.google.api.core.ApiFuture;
 import com.google.api.core.ApiService;
 import com.google.cloud.pubsublite.Offset;
+import com.google.cloud.pubsublite.internal.CheckedApiException;
 import com.google.cloud.pubsublite.proto.FlowControlRequest;
 import com.google.cloud.pubsublite.proto.SeekRequest;
 
@@ -35,5 +36,5 @@ public interface Subscriber extends ApiService {
   boolean seekInFlight();
 
   // Allow the provided amount of messages and bytes to be sent by the server.
-  void allowFlow(FlowControlRequest request);
+  void allowFlow(FlowControlRequest request) throws CheckedApiException;
 }

@@ -23,8 +23,8 @@ import static com.google.cloud.pubsublite.cloudpubsub.MessageTransforms.toCpsSub
 import com.google.cloud.pubsublite.Message;
 import com.google.cloud.pubsublite.SequencedMessage;
 import com.google.cloud.pubsublite.cloudpubsub.KeyExtractor;
+import com.google.cloud.pubsublite.internal.CheckedApiException;
 import com.google.pubsub.v1.PubsubMessage;
-import io.grpc.StatusException;
 import org.apache.beam.sdk.transforms.DoFn;
 import org.apache.beam.sdk.transforms.PTransform;
 import org.apache.beam.sdk.transforms.ParDo;
@@ -42,7 +42,7 @@ public final class CloudPubsubTransforms {
           @ProcessElement
           public void processElement(
               @Element SequencedMessage sequencedMessage, OutputReceiver<PubsubMessage> output)
-              throws StatusException {
+              throws CheckedApiException {
             output.output(toCpsSubscribeTransformer().transform(sequencedMessage));
           }
         });
@@ -56,7 +56,7 @@ public final class CloudPubsubTransforms {
         new DoFn<PubsubMessage, Message>() {
           @ProcessElement
           public void processElement(@Element PubsubMessage message, OutputReceiver<Message> output)
-              throws StatusException {
+              throws CheckedApiException {
             output.output(fromCpsPublishTransformer(KeyExtractor.DEFAULT).transform(message));
           }
         });
@@ -71,7 +71,7 @@ public final class CloudPubsubTransforms {
         new DoFn<Message, PubsubMessage>() {
           @ProcessElement
           public void processElement(@Element Message message, OutputReceiver<PubsubMessage> output)
-              throws StatusException {
+              throws CheckedApiException {
             output.output(toCpsPublishTransformer().transform(message));
           }
         });
@@ -85,7 +85,7 @@ public final class CloudPubsubTransforms {
         new DoFn<Message, Message>() {
           @ProcessElement
           public void processElement(@Element Message message, OutputReceiver<Message> output)
-              throws StatusException {
+              throws CheckedApiException {
             Object unused = toCpsPublishTransformer().transform(message);
             output.output(message);
           }

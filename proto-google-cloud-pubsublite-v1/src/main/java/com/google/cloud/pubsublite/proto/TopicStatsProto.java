@@ -35,6 +35,14 @@ public final class TopicStatsProto {
       internal_static_google_cloud_pubsublite_v1_ComputeMessageStatsResponse_descriptor;
   static final com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_google_cloud_pubsublite_v1_ComputeMessageStatsResponse_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+      internal_static_google_cloud_pubsublite_v1_ComputeHeadCursorRequest_descriptor;
+  static final com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_google_cloud_pubsublite_v1_ComputeHeadCursorRequest_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+      internal_static_google_cloud_pubsublite_v1_ComputeHeadCursorResponse_descriptor;
+  static final com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_google_cloud_pubsublite_v1_ComputeHeadCursorResponse_fieldAccessorTable;
 
   public static com.google.protobuf.Descriptors.FileDescriptor getDescriptor() {
     return descriptor;
@@ -61,18 +69,30 @@ public final class TopicStatsProto {
           + "\030\002 \001(\003\0228\n\024minimum_publish_time\030\003 \001(\0132\032.g"
           + "oogle.protobuf.Timestamp\0226\n\022minimum_even"
           + "t_time\030\004 \001(\0132\032.google.protobuf.Timestamp"
-          + "2\302\002\n\021TopicStatsService\022\335\001\n\023ComputeMessag"
-          + "eStats\0226.google.cloud.pubsublite.v1.Comp"
-          + "uteMessageStatsRequest\0327.google.cloud.pu"
-          + "bsublite.v1.ComputeMessageStatsResponse\""
-          + "U\202\323\344\223\002O\"J/v1/topicStats/{topic=projects/"
-          + "*/locations/*/topics/*}:computeMessageSt"
-          + "ats:\001*\032M\312A\031pubsublite.googleapis.com\322A.h"
-          + "ttps://www.googleapis.com/auth/cloud-pla"
-          + "tformB|\n!com.google.cloud.pubsublite.pro"
-          + "toB\017TopicStatsProtoP\001ZDgoogle.golang.org"
-          + "/genproto/googleapis/cloud/pubsublite/v1"
-          + ";pubsubliteb\006proto3"
+          + "\"j\n\030ComputeHeadCursorRequest\0226\n\005topic\030\001 "
+          + "\001(\tB\'\340A\002\372A!\n\037pubsublite.googleapis.com/T"
+          + "opic\022\026\n\tpartition\030\002 \001(\003B\003\340A\002\"T\n\031ComputeH"
+          + "eadCursorResponse\0227\n\013head_cursor\030\001 \001(\0132\""
+          + ".google.cloud.pubsublite.v1.Cursor2\232\004\n\021T"
+          + "opicStatsService\022\335\001\n\023ComputeMessageStats"
+          + "\0226.google.cloud.pubsublite.v1.ComputeMes"
+          + "sageStatsRequest\0327.google.cloud.pubsubli"
+          + "te.v1.ComputeMessageStatsResponse\"U\202\323\344\223\002"
+          + "O\"J/v1/topicStats/{topic=projects/*/loca"
+          + "tions/*/topics/*}:computeMessageStats:\001*"
+          + "\022\325\001\n\021ComputeHeadCursor\0224.google.cloud.pu"
+          + "bsublite.v1.ComputeHeadCursorRequest\0325.g"
+          + "oogle.cloud.pubsublite.v1.ComputeHeadCur"
+          + "sorResponse\"S\202\323\344\223\002M\"H/v1/topicStats/{top"
+          + "ic=projects/*/locations/*/topics/*}:comp"
+          + "uteHeadCursor:\001*\032M\312A\031pubsublite.googleap"
+          + "is.com\322A.https://www.googleapis.com/auth"
+          + "/cloud-platformB\326\001\n!com.google.cloud.pub"
+          + "sublite.protoB\017TopicStatsProtoP\001ZDgoogle"
+          + ".golang.org/genproto/googleapis/cloud/pu"
+          + "bsublite/v1;pubsublite\252\002\032Google.Cloud.Pu"
+          + "bSubLite.V1\312\002\032Google\\Cloud\\PubSubLite\\V1"
+          + "\352\002\035Google::Cloud::PubSubLite::V1b\006proto3"
     };
     descriptor =
         com.google.protobuf.Descriptors.FileDescriptor.internalBuildGeneratedFileFrom(
@@ -100,6 +120,22 @@ public final class TopicStatsProto {
             internal_static_google_cloud_pubsublite_v1_ComputeMessageStatsResponse_descriptor,
             new java.lang.String[] {
               "MessageCount", "MessageBytes", "MinimumPublishTime", "MinimumEventTime",
+            });
+    internal_static_google_cloud_pubsublite_v1_ComputeHeadCursorRequest_descriptor =
+        getDescriptor().getMessageTypes().get(2);
+    internal_static_google_cloud_pubsublite_v1_ComputeHeadCursorRequest_fieldAccessorTable =
+        new com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+            internal_static_google_cloud_pubsublite_v1_ComputeHeadCursorRequest_descriptor,
+            new java.lang.String[] {
+              "Topic", "Partition",
+            });
+    internal_static_google_cloud_pubsublite_v1_ComputeHeadCursorResponse_descriptor =
+        getDescriptor().getMessageTypes().get(3);
+    internal_static_google_cloud_pubsublite_v1_ComputeHeadCursorResponse_fieldAccessorTable =
+        new com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+            internal_static_google_cloud_pubsublite_v1_ComputeHeadCursorResponse_descriptor,
+            new java.lang.String[] {
+              "HeadCursor",
             });
     com.google.protobuf.ExtensionRegistry registry =
         com.google.protobuf.ExtensionRegistry.newInstance();

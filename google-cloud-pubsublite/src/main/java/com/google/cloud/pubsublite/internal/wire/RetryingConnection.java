@@ -17,7 +17,7 @@
 package com.google.cloud.pubsublite.internal.wire;
 
 import com.google.api.core.ApiService;
-import io.grpc.StatusException;
+import com.google.cloud.pubsublite.internal.CheckedApiException;
 import java.util.Optional;
 
 interface RetryingConnection<ConnectionT> extends ApiService {
@@ -25,9 +25,9 @@ interface RetryingConnection<ConnectionT> extends ApiService {
   void reinitialize();
 
   interface Modifier<ConnectionT> {
-    void modify(Optional<ConnectionT> connectionOr) throws StatusException;
+    void modify(Optional<ConnectionT> connectionOr) throws CheckedApiException;
   }
 
   // Run modification on the current connection or empty if not connected.
-  void modifyConnection(Modifier<ConnectionT> modifier) throws StatusException;
+  void modifyConnection(Modifier<ConnectionT> modifier) throws CheckedApiException;
 }

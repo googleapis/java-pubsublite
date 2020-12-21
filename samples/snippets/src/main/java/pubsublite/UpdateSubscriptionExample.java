@@ -24,7 +24,6 @@ import com.google.cloud.pubsublite.CloudZone;
 import com.google.cloud.pubsublite.ProjectNumber;
 import com.google.cloud.pubsublite.SubscriptionName;
 import com.google.cloud.pubsublite.SubscriptionPath;
-import com.google.cloud.pubsublite.SubscriptionPaths;
 import com.google.cloud.pubsublite.proto.Subscription;
 import com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig;
 import com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig.DeliveryRequirement;
@@ -46,23 +45,26 @@ public class UpdateSubscriptionExample {
   public static void updateSubscriptionExample(
       String cloudRegion, char zoneId, long projectNumber, String subscriptionId) throws Exception {
     SubscriptionPath subscriptionPath =
-        SubscriptionPaths.newBuilder()
-            .setZone(CloudZone.of(CloudRegion.of(cloudRegion), zoneId))
-            .setProjectNumber(ProjectNumber.of(projectNumber))
-            .setSubscriptionName(SubscriptionName.of(subscriptionId))
+        SubscriptionPath.newBuilder()
+            .setLocation(CloudZone.of(CloudRegion.of(cloudRegion), zoneId))
+            .setProject(ProjectNumber.of(projectNumber))
+            .setName(SubscriptionName.of(subscriptionId))
             .build();
 
-    FieldMask MASK =
+    FieldMask fieldMask =
         FieldMask.newBuilder().addPaths("delivery_config.delivery_requirement").build();
 
     Subscription subscription =
         Subscription.newBuilder()
             .setDeliveryConfig(
-                // DELIVER_AFTER_STORED ensures that the server won't deliver a published message
-                // to subscribers until the message has been successfully written to storage.
+                // Possible values for DeliveryRequirement:
+                // - `DELIVER_IMMEDIATELY`
+                // - `DELIVER_AFTER_STORED`
+                // `DELIVER_AFTER_STORED` requires a published message to be successfully written
+                // to storage before the server delivers it to subscribers.
                 DeliveryConfig.newBuilder()
                     .setDeliveryRequirement(DeliveryRequirement.DELIVER_AFTER_STORED))
-            .setName(subscriptionPath.value())
+            .setName(subscriptionPath.toString())
             .build();
 
     AdminClientSettings adminClientSettings =
@@ -73,7 +75,7 @@ public class UpdateSubscriptionExample {
       System.out.println("Before update: " + subscriptionBeforeUpdate.getAllFields());
 
       Subscription subscriptionAfterUpdate =
-          adminClient.updateSubscription(subscription, MASK).get();
+          adminClient.updateSubscription(subscription, fieldMask).get();
       System.out.println("After update: " + subscriptionAfterUpdate.getAllFields());
     }
   }

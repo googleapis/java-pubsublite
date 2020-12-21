@@ -16,17 +16,61 @@
 
 package com.google.cloud.pubsublite;
 
-import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.cloud.pubsublite.internal.UncheckedApiPreconditions.checkArgument;
 
+import com.google.api.gax.rpc.ApiException;
 import com.google.auto.value.AutoValue;
 import java.io.Serializable;
+import java.util.Arrays;
 
+/**
+ * A string wrapper representing a topic. Should be structured like:
+ *
+ * <p>projects/&lt;project number&gt;/locations/&lt;cloud zone&gt;/topics/&lt;id&gt;
+ */
 @AutoValue
 public abstract class TopicPath implements Serializable {
-  public abstract String value();
+  public abstract ProjectIdOrNumber project();
 
-  public static TopicPath of(String value) {
-    checkArgument(!value.isEmpty());
-    return new AutoValue_TopicPath(value);
+  public abstract CloudZone location();
+
+  public abstract TopicName name();
+
+  public LocationPath locationPath() {
+    return LocationPath.newBuilder().setProject(project()).setLocation(location()).build();
+  }
+
+  @Override
+  public String toString() {
+    return locationPath() + "/topics/" + name();
+  }
+
+  /** Create a new TopicPath builder. */
+  public static Builder newBuilder() {
+    return new AutoValue_TopicPath.Builder();
+  }
+
+  public abstract Builder toBuilder();
+
+  @AutoValue.Builder
+  public abstract static class Builder extends ProjectBuilderHelper<Builder> {
+    public abstract Builder setLocation(CloudZone zone);
+
+    public abstract Builder setName(TopicName name);
+
+    /** Build a new TopicPath. */
+    public abstract TopicPath build();
+  }
+
+  public static TopicPath parse(String path) throws ApiException {
+    String[] splits = path.split("/");
+    checkArgument(splits.length == 6);
+    checkArgument(splits[4].equals("topics"));
+    LocationPath location = LocationPath.parse(String.join("/", Arrays.copyOf(splits, 4)));
+    return TopicPath.newBuilder()
+        .setProject(location.project())
+        .setLocation(location.location())
+        .setName(TopicName.of(splits[5]))
+        .build();
   }
 }

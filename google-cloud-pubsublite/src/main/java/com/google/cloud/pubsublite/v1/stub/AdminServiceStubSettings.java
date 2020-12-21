@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     https://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package com.google.cloud.pubsublite.v1.stub;
 
 import static com.google.cloud.pubsublite.v1.AdminServiceClient.ListSubscriptionsPagedResponse;
@@ -69,7 +70,7 @@ import java.util.List;
 import javax.annotation.Generated;
 import org.threeten.bp.Duration;
 
-// AUTO-GENERATED DOCUMENTATION AND CLASS
+// AUTO-GENERATED DOCUMENTATION AND CLASS.
 /**
  * Settings class to configure an instance of {@link AdminServiceStub}.
  *
@@ -86,22 +87,23 @@ import org.threeten.bp.Duration;
  *
  * <p>For example, to set the total timeout of createTopic to 30 seconds:
  *
- * <pre>
- * <code>
+ * <pre>{@code
  * AdminServiceStubSettings.Builder adminServiceSettingsBuilder =
  *     AdminServiceStubSettings.newBuilder();
  * adminServiceSettingsBuilder
  *     .createTopicSettings()
  *     .setRetrySettings(
- *         adminServiceSettingsBuilder.createTopicSettings().getRetrySettings().toBuilder()
+ *         adminServiceSettingsBuilder
+ *             .createTopicSettings()
+ *             .getRetrySettings()
+ *             .toBuilder()
  *             .setTotalTimeout(Duration.ofSeconds(30))
  *             .build());
  * AdminServiceStubSettings adminServiceSettings = adminServiceSettingsBuilder.build();
- * </code>
- * </pre>
+ * }</pre>
  */
-@Generated("by gapic-generator")
 @BetaApi
+@Generated("by gapic-generator-java")
 public class AdminServiceStubSettings extends StubSettings<AdminServiceStubSettings> {
   /** The default scopes of the service. */
   private static final ImmutableList<String> DEFAULT_SERVICE_SCOPES =
@@ -129,6 +131,186 @@ public class AdminServiceStubSettings extends StubSettings<AdminServiceStubSetti
   private final UnaryCallSettings<UpdateSubscriptionRequest, Subscription>
       updateSubscriptionSettings;
   private final UnaryCallSettings<DeleteSubscriptionRequest, Empty> deleteSubscriptionSettings;
+
+  private static final PagedListDescriptor<ListTopicsRequest, ListTopicsResponse, Topic>
+      LIST_TOPICS_PAGE_STR_DESC =
+          new PagedListDescriptor<ListTopicsRequest, ListTopicsResponse, Topic>() {
+            @Override
+            public String emptyToken() {
+              return "";
+            }
+
+            @Override
+            public ListTopicsRequest injectToken(ListTopicsRequest payload, String token) {
+              return ListTopicsRequest.newBuilder(payload).setPageToken(token).build();
+            }
+
+            @Override
+            public ListTopicsRequest injectPageSize(ListTopicsRequest payload, int pageSize) {
+              return ListTopicsRequest.newBuilder(payload).setPageSize(pageSize).build();
+            }
+
+            @Override
+            public Integer extractPageSize(ListTopicsRequest payload) {
+              return payload.getPageSize();
+            }
+
+            @Override
+            public String extractNextToken(ListTopicsResponse payload) {
+              return payload.getNextPageToken();
+            }
+
+            @Override
+            public Iterable<Topic> extractResources(ListTopicsResponse payload) {
+              return payload.getTopicsList() == null
+                  ? ImmutableList.<Topic>of()
+                  : payload.getTopicsList();
+            }
+          };
+
+  private static final PagedListDescriptor<
+          ListTopicSubscriptionsRequest, ListTopicSubscriptionsResponse, String>
+      LIST_TOPIC_SUBSCRIPTIONS_PAGE_STR_DESC =
+          new PagedListDescriptor<
+              ListTopicSubscriptionsRequest, ListTopicSubscriptionsResponse, String>() {
+            @Override
+            public String emptyToken() {
+              return "";
+            }
+
+            @Override
+            public ListTopicSubscriptionsRequest injectToken(
+                ListTopicSubscriptionsRequest payload, String token) {
+              return ListTopicSubscriptionsRequest.newBuilder(payload).setPageToken(token).build();
+            }
+
+            @Override
+            public ListTopicSubscriptionsRequest injectPageSize(
+                ListTopicSubscriptionsRequest payload, int pageSize) {
+              return ListTopicSubscriptionsRequest.newBuilder(payload)
+                  .setPageSize(pageSize)
+                  .build();
+            }
+
+            @Override
+            public Integer extractPageSize(ListTopicSubscriptionsRequest payload) {
+              return payload.getPageSize();
+            }
+
+            @Override
+            public String extractNextToken(ListTopicSubscriptionsResponse payload) {
+              return payload.getNextPageToken();
+            }
+
+            @Override
+            public Iterable<String> extractResources(ListTopicSubscriptionsResponse payload) {
+              return payload.getSubscriptionsList() == null
+                  ? ImmutableList.<String>of()
+                  : payload.getSubscriptionsList();
+            }
+          };
+
+  private static final PagedListDescriptor<
+          ListSubscriptionsRequest, ListSubscriptionsResponse, Subscription>
+      LIST_SUBSCRIPTIONS_PAGE_STR_DESC =
+          new PagedListDescriptor<
+              ListSubscriptionsRequest, ListSubscriptionsResponse, Subscription>() {
+            @Override
+            public String emptyToken() {
+              return "";
+            }
+
+            @Override
+            public ListSubscriptionsRequest injectToken(
+                ListSubscriptionsRequest payload, String token) {
+              return ListSubscriptionsRequest.newBuilder(payload).setPageToken(token).build();
+            }
+
+            @Override
+            public ListSubscriptionsRequest injectPageSize(
+                ListSubscriptionsRequest payload, int pageSize) {
+              return ListSubscriptionsRequest.newBuilder(payload).setPageSize(pageSize).build();
+            }
+
+            @Override
+            public Integer extractPageSize(ListSubscriptionsRequest payload) {
+              return payload.getPageSize();
+            }
+
+            @Override
+            public String extractNextToken(ListSubscriptionsResponse payload) {
+              return payload.getNextPageToken();
+            }
+
+            @Override
+            public Iterable<Subscription> extractResources(ListSubscriptionsResponse payload) {
+              return payload.getSubscriptionsList() == null
+                  ? ImmutableList.<Subscription>of()
+                  : payload.getSubscriptionsList();
+            }
+          };
+
+  private static final PagedListResponseFactory<
+          ListTopicsRequest, ListTopicsResponse, ListTopicsPagedResponse>
+      LIST_TOPICS_PAGE_STR_FACT =
+          new PagedListResponseFactory<
+              ListTopicsRequest, ListTopicsResponse, ListTopicsPagedResponse>() {
+            @Override
+            public ApiFuture<ListTopicsPagedResponse> getFuturePagedResponse(
+                UnaryCallable<ListTopicsRequest, ListTopicsResponse> callable,
+                ListTopicsRequest request,
+                ApiCallContext context,
+                ApiFuture<ListTopicsResponse> futureResponse) {
+              PageContext<ListTopicsRequest, ListTopicsResponse, Topic> pageContext =
+                  PageContext.create(callable, LIST_TOPICS_PAGE_STR_DESC, request, context);
+              return ListTopicsPagedResponse.createAsync(pageContext, futureResponse);
+            }
+          };
+
+  private static final PagedListResponseFactory<
+          ListTopicSubscriptionsRequest,
+          ListTopicSubscriptionsResponse,
+          ListTopicSubscriptionsPagedResponse>
+      LIST_TOPIC_SUBSCRIPTIONS_PAGE_STR_FACT =
+          new PagedListResponseFactory<
+              ListTopicSubscriptionsRequest,
+              ListTopicSubscriptionsResponse,
+              ListTopicSubscriptionsPagedResponse>() {
+            @Override
+            public ApiFuture<ListTopicSubscriptionsPagedResponse> getFuturePagedResponse(
+                UnaryCallable<ListTopicSubscriptionsRequest, ListTopicSubscriptionsResponse>
+                    callable,
+                ListTopicSubscriptionsRequest request,
+                ApiCallContext context,
+                ApiFuture<ListTopicSubscriptionsResponse> futureResponse) {
+              PageContext<ListTopicSubscriptionsRequest, ListTopicSubscriptionsResponse, String>
+                  pageContext =
+                      PageContext.create(
+                          callable, LIST_TOPIC_SUBSCRIPTIONS_PAGE_STR_DESC, request, context);
+              return ListTopicSubscriptionsPagedResponse.createAsync(pageContext, futureResponse);
+            }
+          };
+
+  private static final PagedListResponseFactory<
+          ListSubscriptionsRequest, ListSubscriptionsResponse, ListSubscriptionsPagedResponse>
+      LIST_SUBSCRIPTIONS_PAGE_STR_FACT =
+          new PagedListResponseFactory<
+              ListSubscriptionsRequest,
+              ListSubscriptionsResponse,
+              ListSubscriptionsPagedResponse>() {
+            @Override
+            public ApiFuture<ListSubscriptionsPagedResponse> getFuturePagedResponse(
+                UnaryCallable<ListSubscriptionsRequest, ListSubscriptionsResponse> callable,
+                ListSubscriptionsRequest request,
+                ApiCallContext context,
+                ApiFuture<ListSubscriptionsResponse> futureResponse) {
+              PageContext<ListSubscriptionsRequest, ListSubscriptionsResponse, Subscription>
+                  pageContext =
+                      PageContext.create(
+                          callable, LIST_SUBSCRIPTIONS_PAGE_STR_DESC, request, context);
+              return ListSubscriptionsPagedResponse.createAsync(pageContext, futureResponse);
+            }
+          };
 
   /** Returns the object with the settings used for calls to createTopic. */
   public UnaryCallSettings<CreateTopicRequest, Topic> createTopicSettings() {
@@ -204,10 +386,10 @@ public class AdminServiceStubSettings extends StubSettings<AdminServiceStubSetti
         .getTransportName()
         .equals(GrpcTransportChannel.getGrpcTransportName())) {
       return GrpcAdminServiceStub.create(this);
-    } else {
-      throw new UnsupportedOperationException(
-          "Transport not supported: " + getTransportChannelProvider().getTransportName());
     }
+    throw new UnsupportedOperationException(
+        String.format(
+            "Transport not supported: %s", getTransportChannelProvider().getTransportName()));
   }
 
   /** Returns a builder for the default ExecutorProvider for this service. */
@@ -281,190 +463,9 @@ public class AdminServiceStubSettings extends StubSettings<AdminServiceStubSetti
     deleteSubscriptionSettings = settingsBuilder.deleteSubscriptionSettings().build();
   }
 
-  private static final PagedListDescriptor<ListTopicsRequest, ListTopicsResponse, Topic>
-      LIST_TOPICS_PAGE_STR_DESC =
-          new PagedListDescriptor<ListTopicsRequest, ListTopicsResponse, Topic>() {
-            @Override
-            public String emptyToken() {
-              return "";
-            }
-
-            @Override
-            public ListTopicsRequest injectToken(ListTopicsRequest payload, String token) {
-              return ListTopicsRequest.newBuilder(payload).setPageToken(token).build();
-            }
-
-            @Override
-            public ListTopicsRequest injectPageSize(ListTopicsRequest payload, int pageSize) {
-              return ListTopicsRequest.newBuilder(payload).setPageSize(pageSize).build();
-            }
-
-            @Override
-            public Integer extractPageSize(ListTopicsRequest payload) {
-              return payload.getPageSize();
-            }
-
-            @Override
-            public String extractNextToken(ListTopicsResponse payload) {
-              return payload.getNextPageToken();
-            }
-
-            @Override
-            public Iterable<Topic> extractResources(ListTopicsResponse payload) {
-              return payload.getTopicsList() != null
-                  ? payload.getTopicsList()
-                  : ImmutableList.<Topic>of();
-            }
-          };
-
-  private static final PagedListDescriptor<
-          ListTopicSubscriptionsRequest, ListTopicSubscriptionsResponse, String>
-      LIST_TOPIC_SUBSCRIPTIONS_PAGE_STR_DESC =
-          new PagedListDescriptor<
-              ListTopicSubscriptionsRequest, ListTopicSubscriptionsResponse, String>() {
-            @Override
-            public String emptyToken() {
-              return "";
-            }
-
-            @Override
-            public ListTopicSubscriptionsRequest injectToken(
-                ListTopicSubscriptionsRequest payload, String token) {
-              return ListTopicSubscriptionsRequest.newBuilder(payload).setPageToken(token).build();
-            }
-
-            @Override
-            public ListTopicSubscriptionsRequest injectPageSize(
-                ListTopicSubscriptionsRequest payload, int pageSize) {
-              return ListTopicSubscriptionsRequest.newBuilder(payload)
-                  .setPageSize(pageSize)
-                  .build();
-            }
-
-            @Override
-            public Integer extractPageSize(ListTopicSubscriptionsRequest payload) {
-              return payload.getPageSize();
-            }
-
-            @Override
-            public String extractNextToken(ListTopicSubscriptionsResponse payload) {
-              return payload.getNextPageToken();
-            }
-
-            @Override
-            public Iterable<String> extractResources(ListTopicSubscriptionsResponse payload) {
-              return payload.getSubscriptionsList() != null
-                  ? payload.getSubscriptionsList()
-                  : ImmutableList.<String>of();
-            }
-          };
-
-  private static final PagedListDescriptor<
-          ListSubscriptionsRequest, ListSubscriptionsResponse, Subscription>
-      LIST_SUBSCRIPTIONS_PAGE_STR_DESC =
-          new PagedListDescriptor<
-              ListSubscriptionsRequest, ListSubscriptionsResponse, Subscription>() {
-            @Override
-            public String emptyToken() {
-              return "";
-            }
-
-            @Override
-            public ListSubscriptionsRequest injectToken(
-                ListSubscriptionsRequest payload, String token) {
-              return ListSubscriptionsRequest.newBuilder(payload).setPageToken(token).build();
-            }
-
-            @Override
-            public ListSubscriptionsRequest injectPageSize(
-                ListSubscriptionsRequest payload, int pageSize) {
-              return ListSubscriptionsRequest.newBuilder(payload).setPageSize(pageSize).build();
-            }
-
-            @Override
-            public Integer extractPageSize(ListSubscriptionsRequest payload) {
-              return payload.getPageSize();
-            }
-
-            @Override
-            public String extractNextToken(ListSubscriptionsResponse payload) {
-              return payload.getNextPageToken();
-            }
-
-            @Override
-            public Iterable<Subscription> extractResources(ListSubscriptionsResponse payload) {
-              return payload.getSubscriptionsList() != null
-                  ? payload.getSubscriptionsList()
-                  : ImmutableList.<Subscription>of();
-            }
-          };
-
-  private static final PagedListResponseFactory<
-          ListTopicsRequest, ListTopicsResponse, ListTopicsPagedResponse>
-      LIST_TOPICS_PAGE_STR_FACT =
-          new PagedListResponseFactory<
-              ListTopicsRequest, ListTopicsResponse, ListTopicsPagedResponse>() {
-            @Override
-            public ApiFuture<ListTopicsPagedResponse> getFuturePagedResponse(
-                UnaryCallable<ListTopicsRequest, ListTopicsResponse> callable,
-                ListTopicsRequest request,
-                ApiCallContext context,
-                ApiFuture<ListTopicsResponse> futureResponse) {
-              PageContext<ListTopicsRequest, ListTopicsResponse, Topic> pageContext =
-                  PageContext.create(callable, LIST_TOPICS_PAGE_STR_DESC, request, context);
-              return ListTopicsPagedResponse.createAsync(pageContext, futureResponse);
-            }
-          };
-
-  private static final PagedListResponseFactory<
-          ListTopicSubscriptionsRequest,
-          ListTopicSubscriptionsResponse,
-          ListTopicSubscriptionsPagedResponse>
-      LIST_TOPIC_SUBSCRIPTIONS_PAGE_STR_FACT =
-          new PagedListResponseFactory<
-              ListTopicSubscriptionsRequest,
-              ListTopicSubscriptionsResponse,
-              ListTopicSubscriptionsPagedResponse>() {
-            @Override
-            public ApiFuture<ListTopicSubscriptionsPagedResponse> getFuturePagedResponse(
-                UnaryCallable<ListTopicSubscriptionsRequest, ListTopicSubscriptionsResponse>
-                    callable,
-                ListTopicSubscriptionsRequest request,
-                ApiCallContext context,
-                ApiFuture<ListTopicSubscriptionsResponse> futureResponse) {
-              PageContext<ListTopicSubscriptionsRequest, ListTopicSubscriptionsResponse, String>
-                  pageContext =
-                      PageContext.create(
-                          callable, LIST_TOPIC_SUBSCRIPTIONS_PAGE_STR_DESC, request, context);
-              return ListTopicSubscriptionsPagedResponse.createAsync(pageContext, futureResponse);
-            }
-          };
-
-  private static final PagedListResponseFactory<
-          ListSubscriptionsRequest, ListSubscriptionsResponse, ListSubscriptionsPagedResponse>
-      LIST_SUBSCRIPTIONS_PAGE_STR_FACT =
-          new PagedListResponseFactory<
-              ListSubscriptionsRequest,
-              ListSubscriptionsResponse,
-              ListSubscriptionsPagedResponse>() {
-            @Override
-            public ApiFuture<ListSubscriptionsPagedResponse> getFuturePagedResponse(
-                UnaryCallable<ListSubscriptionsRequest, ListSubscriptionsResponse> callable,
-                ListSubscriptionsRequest request,
-                ApiCallContext context,
-                ApiFuture<ListSubscriptionsResponse> futureResponse) {
-              PageContext<ListSubscriptionsRequest, ListSubscriptionsResponse, Subscription>
-                  pageContext =
-                      PageContext.create(
-                          callable, LIST_SUBSCRIPTIONS_PAGE_STR_DESC, request, context);
-              return ListSubscriptionsPagedResponse.createAsync(pageContext, futureResponse);
-            }
-          };
-
   /** Builder for AdminServiceStubSettings. */
   public static class Builder extends StubSettings.Builder<AdminServiceStubSettings, Builder> {
     private final ImmutableList<UnaryCallSettings.Builder<?, ?>> unaryMethodSettingsBuilders;
-
     private final UnaryCallSettings.Builder<CreateTopicRequest, Topic> createTopicSettings;
     private final UnaryCallSettings.Builder<GetTopicRequest, Topic> getTopicSettings;
     private final UnaryCallSettings.Builder<GetTopicPartitionsRequest, TopicPartitions>
@@ -490,7 +491,6 @@ public class AdminServiceStubSettings extends StubSettings<AdminServiceStubSetti
         updateSubscriptionSettings;
     private final UnaryCallSettings.Builder<DeleteSubscriptionRequest, Empty>
         deleteSubscriptionSettings;
-
     private static final ImmutableMap<String, ImmutableSet<StatusCode.Code>>
         RETRYABLE_CODE_DEFINITIONS;
 
@@ -498,11 +498,14 @@ public class AdminServiceStubSettings extends StubSettings<AdminServiceStubSetti
       ImmutableMap.Builder<String, ImmutableSet<StatusCode.Code>> definitions =
           ImmutableMap.builder();
       definitions.put(
-          "idempotent",
+          "retry_policy_0_codes",
           ImmutableSet.copyOf(
               Lists.<StatusCode.Code>newArrayList(
-                  StatusCode.Code.DEADLINE_EXCEEDED, StatusCode.Code.UNAVAILABLE)));
-      definitions.put("non_idempotent", ImmutableSet.copyOf(Lists.<StatusCode.Code>newArrayList()));
+                  StatusCode.Code.DEADLINE_EXCEEDED,
+                  StatusCode.Code.UNAVAILABLE,
+                  StatusCode.Code.ABORTED,
+                  StatusCode.Code.INTERNAL,
+                  StatusCode.Code.UNKNOWN)));
       RETRYABLE_CODE_DEFINITIONS = definitions.build();
     }
 
@@ -516,45 +519,34 @@ public class AdminServiceStubSettings extends StubSettings<AdminServiceStubSetti
               .setInitialRetryDelay(Duration.ofMillis(100L))
               .setRetryDelayMultiplier(1.3)
               .setMaxRetryDelay(Duration.ofMillis(60000L))
-              .setInitialRpcTimeout(Duration.ofMillis(20000L))
+              .setInitialRpcTimeout(Duration.ofMillis(600000L))
               .setRpcTimeoutMultiplier(1.0)
-              .setMaxRpcTimeout(Duration.ofMillis(20000L))
+              .setMaxRpcTimeout(Duration.ofMillis(600000L))
               .setTotalTimeout(Duration.ofMillis(600000L))
               .build();
-      definitions.put("default", settings);
+      definitions.put("retry_policy_0_params", settings);
       RETRY_PARAM_DEFINITIONS = definitions.build();
     }
 
     protected Builder() {
-      this((ClientContext) null);
+      this(((ClientContext) null));
     }
 
     protected Builder(ClientContext clientContext) {
       super(clientContext);
 
       createTopicSettings = UnaryCallSettings.newUnaryCallSettingsBuilder();
-
       getTopicSettings = UnaryCallSettings.newUnaryCallSettingsBuilder();
-
       getTopicPartitionsSettings = UnaryCallSettings.newUnaryCallSettingsBuilder();
-
       listTopicsSettings = PagedCallSettings.newBuilder(LIST_TOPICS_PAGE_STR_FACT);
-
       updateTopicSettings = UnaryCallSettings.newUnaryCallSettingsBuilder();
-
       deleteTopicSettings = UnaryCallSettings.newUnaryCallSettingsBuilder();
-
       listTopicSubscriptionsSettings =
           PagedCallSettings.newBuilder(LIST_TOPIC_SUBSCRIPTIONS_PAGE_STR_FACT);
-
       createSubscriptionSettings = UnaryCallSettings.newUnaryCallSettingsBuilder();
-
       getSubscriptionSettings = UnaryCallSettings.newUnaryCallSettingsBuilder();
-
       listSubscriptionsSettings = PagedCallSettings.newBuilder(LIST_SUBSCRIPTIONS_PAGE_STR_FACT);
-
       updateSubscriptionSettings = UnaryCallSettings.newUnaryCallSettingsBuilder();
-
       deleteSubscriptionSettings = UnaryCallSettings.newUnaryCallSettingsBuilder();
 
       unaryMethodSettingsBuilders =
@@ -571,82 +563,7 @@ public class AdminServiceStubSettings extends StubSettings<AdminServiceStubSetti
               listSubscriptionsSettings,
               updateSubscriptionSettings,
               deleteSubscriptionSettings);
-
       initDefaults(this);
-    }
-
-    private static Builder createDefault() {
-      Builder builder = new Builder((ClientContext) null);
-      builder.setTransportChannelProvider(defaultTransportChannelProvider());
-      builder.setCredentialsProvider(defaultCredentialsProviderBuilder().build());
-      builder.setInternalHeaderProvider(defaultApiClientHeaderProviderBuilder().build());
-      builder.setEndpoint(getDefaultEndpoint());
-      return initDefaults(builder);
-    }
-
-    private static Builder initDefaults(Builder builder) {
-
-      builder
-          .createTopicSettings()
-          .setRetryableCodes(RETRYABLE_CODE_DEFINITIONS.get("non_idempotent"))
-          .setRetrySettings(RETRY_PARAM_DEFINITIONS.get("default"));
-
-      builder
-          .getTopicSettings()
-          .setRetryableCodes(RETRYABLE_CODE_DEFINITIONS.get("idempotent"))
-          .setRetrySettings(RETRY_PARAM_DEFINITIONS.get("default"));
-
-      builder
-          .getTopicPartitionsSettings()
-          .setRetryableCodes(RETRYABLE_CODE_DEFINITIONS.get("idempotent"))
-          .setRetrySettings(RETRY_PARAM_DEFINITIONS.get("default"));
-
-      builder
-          .listTopicsSettings()
-          .setRetryableCodes(RETRYABLE_CODE_DEFINITIONS.get("idempotent"))
-          .setRetrySettings(RETRY_PARAM_DEFINITIONS.get("default"));
-
-      builder
-          .updateTopicSettings()
-          .setRetryableCodes(RETRYABLE_CODE_DEFINITIONS.get("non_idempotent"))
-          .setRetrySettings(RETRY_PARAM_DEFINITIONS.get("default"));
-
-      builder
-          .deleteTopicSettings()
-          .setRetryableCodes(RETRYABLE_CODE_DEFINITIONS.get("non_idempotent"))
-          .setRetrySettings(RETRY_PARAM_DEFINITIONS.get("default"));
-
-      builder
-          .listTopicSubscriptionsSettings()
-          .setRetryableCodes(RETRYABLE_CODE_DEFINITIONS.get("idempotent"))
-          .setRetrySettings(RETRY_PARAM_DEFINITIONS.get("default"));
-
-      builder
-          .createSubscriptionSettings()
-          .setRetryableCodes(RETRYABLE_CODE_DEFINITIONS.get("non_idempotent"))
-          .setRetrySettings(RETRY_PARAM_DEFINITIONS.get("default"));
-
-      builder
-          .getSubscriptionSettings()
-          .setRetryableCodes(RETRYABLE_CODE_DEFINITIONS.get("idempotent"))
-          .setRetrySettings(RETRY_PARAM_DEFINITIONS.get("default"));
-
-      builder
-          .listSubscriptionsSettings()
-          .setRetryableCodes(RETRYABLE_CODE_DEFINITIONS.get("idempotent"))
-          .setRetrySettings(RETRY_PARAM_DEFINITIONS.get("default"));
-
-      builder
-          .updateSubscriptionSettings()
-          .setRetryableCodes(RETRYABLE_CODE_DEFINITIONS.get("non_idempotent"))
-          .setRetrySettings(RETRY_PARAM_DEFINITIONS.get("default"));
-
-      builder
-          .deleteSubscriptionSettings()
-          .setRetryableCodes(RETRYABLE_CODE_DEFINITIONS.get("non_idempotent"))
-          .setRetrySettings(RETRY_PARAM_DEFINITIONS.get("default"));
-
-      return builder;
     }
 
     protected Builder(AdminServiceStubSettings settings) {
@@ -681,7 +598,82 @@ public class AdminServiceStubSettings extends StubSettings<AdminServiceStubSetti
               deleteSubscriptionSettings);
     }
 
-    // NEXT_MAJOR_VER: remove 'throws Exception'
+    private static Builder createDefault() {
+      Builder builder = new Builder(((ClientContext) null));
+
+      builder.setTransportChannelProvider(defaultTransportChannelProvider());
+      builder.setCredentialsProvider(defaultCredentialsProviderBuilder().build());
+      builder.setInternalHeaderProvider(defaultApiClientHeaderProviderBuilder().build());
+      builder.setEndpoint(getDefaultEndpoint());
+
+      return initDefaults(builder);
+    }
+
+    private static Builder initDefaults(Builder builder) {
+      builder
+          .createTopicSettings()
+          .setRetryableCodes(RETRYABLE_CODE_DEFINITIONS.get("retry_policy_0_codes"))
+          .setRetrySettings(RETRY_PARAM_DEFINITIONS.get("retry_policy_0_params"));
+
+      builder
+          .getTopicSettings()
+          .setRetryableCodes(RETRYABLE_CODE_DEFINITIONS.get("retry_policy_0_codes"))
+          .setRetrySettings(RETRY_PARAM_DEFINITIONS.get("retry_policy_0_params"));
+
+      builder
+          .getTopicPartitionsSettings()
+          .setRetryableCodes(RETRYABLE_CODE_DEFINITIONS.get("retry_policy_0_codes"))
+          .setRetrySettings(RETRY_PARAM_DEFINITIONS.get("retry_policy_0_params"));
+
+      builder
+          .listTopicsSettings()
+          .setRetryableCodes(RETRYABLE_CODE_DEFINITIONS.get("retry_policy_0_codes"))
+          .setRetrySettings(RETRY_PARAM_DEFINITIONS.get("retry_policy_0_params"));
+
+      builder
+          .updateTopicSettings()
+          .setRetryableCodes(RETRYABLE_CODE_DEFINITIONS.get("retry_policy_0_codes"))
+          .setRetrySettings(RETRY_PARAM_DEFINITIONS.get("retry_policy_0_params"));
+
+      builder
+          .deleteTopicSettings()
+          .setRetryableCodes(RETRYABLE_CODE_DEFINITIONS.get("retry_policy_0_codes"))
+          .setRetrySettings(RETRY_PARAM_DEFINITIONS.get("retry_policy_0_params"));
+
+      builder
+          .listTopicSubscriptionsSettings()
+          .setRetryableCodes(RETRYABLE_CODE_DEFINITIONS.get("retry_policy_0_codes"))
+          .setRetrySettings(RETRY_PARAM_DEFINITIONS.get("retry_policy_0_params"));
+
+      builder
+          .createSubscriptionSettings()
+          .setRetryableCodes(RETRYABLE_CODE_DEFINITIONS.get("retry_policy_0_codes"))
+          .setRetrySettings(RETRY_PARAM_DEFINITIONS.get("retry_policy_0_params"));
+
+      builder
+          .getSubscriptionSettings()
+          .setRetryableCodes(RETRYABLE_CODE_DEFINITIONS.get("retry_policy_0_codes"))
+          .setRetrySettings(RETRY_PARAM_DEFINITIONS.get("retry_policy_0_params"));
+
+      builder
+          .listSubscriptionsSettings()
+          .setRetryableCodes(RETRYABLE_CODE_DEFINITIONS.get("retry_policy_0_codes"))
+          .setRetrySettings(RETRY_PARAM_DEFINITIONS.get("retry_policy_0_params"));
+
+      builder
+          .updateSubscriptionSettings()
+          .setRetryableCodes(RETRYABLE_CODE_DEFINITIONS.get("retry_policy_0_codes"))
+          .setRetrySettings(RETRY_PARAM_DEFINITIONS.get("retry_policy_0_params"));
+
+      builder
+          .deleteSubscriptionSettings()
+          .setRetryableCodes(RETRYABLE_CODE_DEFINITIONS.get("retry_policy_0_codes"))
+          .setRetrySettings(RETRY_PARAM_DEFINITIONS.get("retry_policy_0_params"));
+
+      return builder;
+    }
+
+    // NEXT_MAJOR_VER: remove 'throws Exception'.
     /**
      * Applies the given settings updater function to all of the unary API methods in this service.
      *

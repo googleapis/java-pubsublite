@@ -16,25 +16,24 @@
 
 package com.google.cloud.pubsublite.internal.wire;
 
+import static com.google.cloud.pubsublite.internal.ExtractStatus.toCanonical;
+import static com.google.cloud.pubsublite.internal.ServiceClients.addDefaultSettings;
+
 import com.google.api.gax.batching.BatchingSettings;
 import com.google.api.gax.batching.FlowController.LimitExceededBehavior;
+import com.google.api.gax.rpc.ApiException;
 import com.google.auto.value.AutoValue;
 import com.google.cloud.pubsublite.Constants;
-import com.google.cloud.pubsublite.Endpoints;
 import com.google.cloud.pubsublite.Offset;
 import com.google.cloud.pubsublite.Partition;
-import com.google.cloud.pubsublite.Stubs;
 import com.google.cloud.pubsublite.TopicPath;
-import com.google.cloud.pubsublite.TopicPaths;
-import com.google.cloud.pubsublite.internal.ExtractStatus;
 import com.google.cloud.pubsublite.internal.Publisher;
 import com.google.cloud.pubsublite.proto.InitialPublishRequest;
-import com.google.cloud.pubsublite.proto.PublisherServiceGrpc;
+import com.google.cloud.pubsublite.v1.PublisherServiceClient;
+import com.google.cloud.pubsublite.v1.PublisherServiceSettings;
 import com.google.common.base.Preconditions;
-import io.grpc.Metadata;
-import io.grpc.StatusException;
-import io.grpc.stub.MetadataUtils;
-import java.io.IOException;
+import com.google.common.collect.ImmutableMap;
+import java.util.Map;
 import java.util.Optional;
 import org.threeten.bp.Duration;
 
@@ -44,16 +43,16 @@ import org.threeten.bp.Duration;
  * <pre>{@code
  * Publisher<Offset> publisher = PublisherBuilder.builder()
  *   .setTopic(
- *     TopicPaths.newBuilder()
- *       .setProjectNumber(MY_PROJECT)
- *       .setTopicName(MY_TOPIC)
- *       .setZone(CloudZone.of("us-east1-a"))
+ *     TopicPath.newBuilder()
+ *       .setProject(MY_PROJECT)
+ *       .setName(MY_TOPIC)
+ *       .setLocation(CloudZone.of("us-east1-a"))
  *       .build())
  *  .setPartition(Partition.of(10))
  *  .build();
  * }</pre>
  *
- * <p>Custom batching settings and a custom GRPC stub can also be set.
+ * <p>A custom service client can also be set.
  */
 @AutoValue
 public abstract class PublisherBuilder {
@@ -79,7 +78,7 @@ public abstract class PublisherBuilder {
   // Optional parameters.
   abstract BatchingSettings batching();
 
-  abstract Optional<PublisherServiceGrpc.PublisherServiceStub> stub();
+  abstract Optional<PublisherServiceClient> serviceClient();
 
   abstract PubsubContext context();
 
@@ -98,32 +97,40 @@ public abstract class PublisherBuilder {
     // Optional parameters.
     public abstract Builder setBatching(BatchingSettings batching);
 
-    public abstract Builder setStub(PublisherServiceGrpc.PublisherServiceStub stub);
+    public abstract Builder setServiceClient(PublisherServiceClient client);
 
     public abstract Builder setContext(PubsubContext context);
 
     abstract PublisherBuilder autoBuild();
 
-    public Publisher<Offset> build() throws StatusException {
+    public Publisher<Offset> build() throws ApiException {
       PublisherBuilder autoBuilt = autoBuild();
-      PublisherServiceGrpc.PublisherServiceStub actualStub;
-      try {
-        actualStub =
-            autoBuilt.stub().isPresent()
-                ? autoBuilt.stub().get()
-                : Stubs.defaultStub(
-                    Endpoints.regionalEndpoint(TopicPaths.getZone(autoBuilt.topic()).region()),
-                    PublisherServiceGrpc::newStub);
-      } catch (IOException e) {
-        throw ExtractStatus.toCanonical(e);
+      PublisherServiceClient serviceClient;
+      if (autoBuilt.serviceClient().isPresent()) {
+        serviceClient = autoBuilt.serviceClient().get();
+      } else {
+        try {
+          Map<String, String> metadata = autoBuilt.context().getMetadata();
+          Map<String, String> routingMetadata =
+              RoutingMetadata.of(autoBuilt.topic(), autoBuilt.partition());
+          Map<String, String> allMetadata =
+              ImmutableMap.<String, String>builder()
+                  .putAll(metadata)
+                  .putAll(routingMetadata)
+                  .build();
+          serviceClient =
+              PublisherServiceClient.create(
+                  addDefaultSettings(
+                      autoBuilt.topic().location().region(),
+                      PublisherServiceSettings.newBuilder().setHeaderProvider(() -> allMetadata)));
+        } catch (Throwable t) {
+          throw toCanonical(t).underlying;
+        }
       }
-      Metadata metadata = autoBuilt.context().getMetadata();
-      metadata.merge(RoutingMetadata.of(autoBuilt.topic(), autoBuilt.partition()));
-      actualStub = MetadataUtils.attachHeaders(actualStub, metadata);
       return new PublisherImpl(
-          actualStub,
+          serviceClient,
           InitialPublishRequest.newBuilder()
-              .setTopic(autoBuilt.topic().value())
+              .setTopic(autoBuilt.topic().toString())
               .setPartition(autoBuilt.partition().value())
               .build(),
           validateBatchingSettings(autoBuilt.batching()));

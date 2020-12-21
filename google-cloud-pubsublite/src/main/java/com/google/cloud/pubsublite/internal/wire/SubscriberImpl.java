@@ -16,14 +16,18 @@
 
 package com.google.cloud.pubsublite.internal.wire;
 
-import static com.google.cloud.pubsublite.internal.Preconditions.checkArgument;
-import static com.google.cloud.pubsublite.internal.Preconditions.checkState;
+import static com.google.cloud.pubsublite.internal.CheckedApiPreconditions.checkArgument;
+import static com.google.cloud.pubsublite.internal.CheckedApiPreconditions.checkState;
+import static com.google.cloud.pubsublite.internal.wire.ApiServiceUtils.backgroundResourceAsApiService;
 
 import com.google.api.core.ApiFuture;
 import com.google.api.core.ApiFutures;
 import com.google.api.core.SettableApiFuture;
+import com.google.api.gax.rpc.ApiException;
+import com.google.api.gax.rpc.StatusCode.Code;
 import com.google.cloud.pubsublite.Offset;
 import com.google.cloud.pubsublite.SequencedMessage;
+import com.google.cloud.pubsublite.internal.CheckedApiException;
 import com.google.cloud.pubsublite.internal.CloseableMonitor;
 import com.google.cloud.pubsublite.internal.ProxyService;
 import com.google.cloud.pubsublite.internal.wire.ConnectedSubscriber.Response;
@@ -31,12 +35,11 @@ import com.google.cloud.pubsublite.proto.FlowControlRequest;
 import com.google.cloud.pubsublite.proto.InitialSubscribeRequest;
 import com.google.cloud.pubsublite.proto.SeekRequest;
 import com.google.cloud.pubsublite.proto.SubscribeRequest;
-import com.google.cloud.pubsublite.proto.SubscriberServiceGrpc.SubscriberServiceStub;
+import com.google.cloud.pubsublite.proto.SubscribeResponse;
+import com.google.cloud.pubsublite.v1.SubscriberServiceClient;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.ImmutableList;
 import com.google.common.util.concurrent.Monitor;
-import io.grpc.Status;
-import io.grpc.StatusException;
 import java.util.Optional;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -86,15 +89,15 @@ public class SubscriberImpl extends ProxyService
 
   @VisibleForTesting
   SubscriberImpl(
-      SubscriberServiceStub stub,
+      StreamFactory<SubscribeRequest, SubscribeResponse> streamFactory,
       ConnectedSubscriberFactory factory,
       InitialSubscribeRequest initialRequest,
       Consumer<ImmutableList<SequencedMessage>> messageConsumer)
-      throws StatusException {
+      throws ApiException {
     this.messageConsumer = messageConsumer;
     this.connection =
         new RetryingConnectionImpl<>(
-            stub::subscribe,
+            streamFactory,
             factory,
             SubscribeRequest.newBuilder().setInitial(initialRequest).build(),
             this);
@@ -103,16 +106,21 @@ public class SubscriberImpl extends ProxyService
   }
 
   public SubscriberImpl(
-      SubscriberServiceStub stub,
+      SubscriberServiceClient client,
       InitialSubscribeRequest initialRequest,
       Consumer<ImmutableList<SequencedMessage>> messageConsumer)
-      throws StatusException {
-    this(stub, new ConnectedSubscriberImpl.Factory(), initialRequest, messageConsumer);
+      throws ApiException {
+    this(
+        stream -> client.subscribeCallable().splitCall(stream),
+        new ConnectedSubscriberImpl.Factory(),
+        initialRequest,
+        messageConsumer);
+    addServices(backgroundResourceAsApiService(client));
   }
 
   // ProxyService implementation.
   @Override
-  protected void handlePermanentError(StatusException error) {
+  protected void handlePermanentError(CheckedApiException error) {
     try (CloseableMonitor.Hold h = monitor.enter()) {
       shutdown = true;
       inFlightSeek.ifPresent(inFlight -> inFlight.seekFuture.setException(error));
@@ -142,9 +150,7 @@ public class SubscriberImpl extends ProxyService
       inFlightSeek.ifPresent(
           inFlight ->
               inFlight.seekFuture.setException(
-                  Status.ABORTED
-                      .withDescription("Client stopped while seek in flight.")
-                      .asException()));
+                  new CheckedApiException("Client stopped while seek in flight.", Code.ABORTED)));
     }
   }
 
@@ -169,7 +175,7 @@ public class SubscriberImpl extends ProxyService
           connectedSubscriber ->
               connectedSubscriber.ifPresent(subscriber -> subscriber.seek(request)));
       return future;
-    } catch (StatusException e) {
+    } catch (CheckedApiException e) {
       onPermanentError(e);
       return ApiFutures.immediateFailedFuture(e);
     }
@@ -183,7 +189,7 @@ public class SubscriberImpl extends ProxyService
   }
 
   @Override
-  public void allowFlow(FlowControlRequest clientRequest) {
+  public void allowFlow(FlowControlRequest clientRequest) throws CheckedApiException {
     try (CloseableMonitor.Hold h = monitor.enter()) {
       if (shutdown) return;
       flowControlBatcher.onClientFlowRequest(clientRequest);
@@ -192,9 +198,6 @@ public class SubscriberImpl extends ProxyService
             connectedSubscriber ->
                 connectedSubscriber.ifPresent(subscriber -> flushBatchFlowRequest(subscriber)));
       }
-    } catch (StatusException e) {
-      onPermanentError(e);
-      throw e.getStatus().asRuntimeException();
     }
   }
 
@@ -223,55 +226,46 @@ public class SubscriberImpl extends ProxyService
                 .requestForRestart()
                 .ifPresent(request -> connectedSubscriber.get().allowFlow(request));
           });
-    } catch (StatusException e) {
+    } catch (CheckedApiException e) {
       onPermanentError(e);
     }
   }
 
   @Override
-  public Status onClientResponse(Response value) {
+  public void onClientResponse(Response value) throws CheckedApiException {
     switch (value.getKind()) {
       case MESSAGES:
-        return onMessageResponse(value.messages());
+        onMessageResponse(value.messages());
+        return;
       case SEEK_OFFSET:
-        return onSeekResponse(value.seekOffset());
+        onSeekResponse(value.seekOffset());
+        return;
     }
-    return Status.FAILED_PRECONDITION.withDescription("Invalid switch case: " + value.getKind());
+    throw new CheckedApiException(
+        "Invalid switch case: " + value.getKind(), Code.FAILED_PRECONDITION);
   }
 
-  private Status onMessageResponse(ImmutableList<SequencedMessage> messages) {
+  private void onMessageResponse(ImmutableList<SequencedMessage> messages)
+      throws CheckedApiException {
     try (CloseableMonitor.Hold h = monitor.enter()) {
-      if (shutdown) {
-        return Status.OK;
-      }
+      if (shutdown) return;
       nextOffsetTracker.onMessages(messages);
       flowControlBatcher.onMessages(messages);
-    } catch (StatusException e) {
-
-      onPermanentError(e);
-      return e.getStatus();
     }
     messageConsumer.accept(messages);
-    return Status.OK;
   }
 
-  private Status onSeekResponse(Offset seekOffset) {
+  private void onSeekResponse(Offset seekOffset) throws CheckedApiException {
     try (CloseableMonitor.Hold h = monitor.enter()) {
-      if (shutdown) {
-        return Status.OK;
-      }
+      if (shutdown) return;
       if (internalSeekInFlight) {
         internalSeekInFlight = false;
-        return Status.OK;
+        return;
       }
       checkState(inFlightSeek.isPresent(), "No in flight seek, but received a seek response.");
       nextOffsetTracker.onClientSeek(seekOffset);
       inFlightSeek.get().seekFuture.set(seekOffset);
       inFlightSeek = Optional.empty();
-      return Status.OK;
-    } catch (StatusException e) {
-      onPermanentError(e);
-      return e.getStatus();
     }
   }
 
@@ -282,7 +276,7 @@ public class SubscriberImpl extends ProxyService
       connection.modifyConnection(
           connectedSubscriber ->
               connectedSubscriber.ifPresent(subscriber -> flushBatchFlowRequest(subscriber)));
-    } catch (StatusException e) {
+    } catch (CheckedApiException e) {
       onPermanentError(e);
     }
   }

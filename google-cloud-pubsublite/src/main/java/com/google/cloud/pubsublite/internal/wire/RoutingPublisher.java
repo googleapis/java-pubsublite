@@ -16,42 +16,33 @@
 
 package com.google.cloud.pubsublite.internal.wire;
 
-import static com.google.cloud.pubsublite.internal.Preconditions.checkState;
+import static com.google.cloud.pubsublite.internal.CheckedApiPreconditions.checkState;
+import static com.google.cloud.pubsublite.internal.ExtractStatus.toCanonical;
 
 import com.google.api.core.ApiFuture;
 import com.google.api.core.ApiFutures;
+import com.google.api.gax.rpc.ApiException;
 import com.google.cloud.pubsublite.Message;
 import com.google.cloud.pubsublite.Partition;
 import com.google.cloud.pubsublite.PublishMetadata;
-import com.google.cloud.pubsublite.internal.ProxyService;
+import com.google.cloud.pubsublite.internal.CheckedApiException;
 import com.google.cloud.pubsublite.internal.Publisher;
 import com.google.cloud.pubsublite.internal.RoutingPolicy;
-import io.grpc.StatusException;
+import com.google.cloud.pubsublite.internal.TrivialProxyService;
 import java.io.IOException;
 import java.util.Map;
 
-public class RoutingPublisher extends ProxyService implements Publisher<PublishMetadata> {
+public class RoutingPublisher extends TrivialProxyService implements Publisher<PublishMetadata> {
   private final Map<Partition, Publisher<PublishMetadata>> partitionPublishers;
   private final RoutingPolicy policy;
 
   RoutingPublisher(
       Map<Partition, Publisher<PublishMetadata>> partitionPublishers, RoutingPolicy policy)
-      throws StatusException {
+      throws ApiException {
+    super(partitionPublishers.values());
     this.partitionPublishers = partitionPublishers;
     this.policy = policy;
-    addServices(partitionPublishers.values());
   }
-
-  // ProxyService implementation. This is a thin proxy around all of the partition publishers so
-  // methods are noops.
-  @Override
-  protected void start() {}
-
-  @Override
-  protected void stop() {}
-
-  @Override
-  protected void handlePermanentError(StatusException error) {}
 
   // Publisher implementation.
   @Override
@@ -65,7 +56,8 @@ public class RoutingPublisher extends ProxyService implements Publisher<PublishM
               "Routed to partition %s for which there is no publisher available.",
               routedPartition));
       return partitionPublishers.get(routedPartition).publish(message);
-    } catch (StatusException e) {
+    } catch (Throwable t) {
+      CheckedApiException e = toCanonical(t);
       onPermanentError(e);
       return ApiFutures.immediateFailedFuture(e);
     }

@@ -1,0 +1,20 @@
+// File defining a map from routing keys to the expected partition in a 29
+// partition topic for test purposes. This file should be copied into all client
+// library test suites.
+{
+  "oaisdhfoiahsd": 18,
+  "P(#*YNPOIUDF": 9,
+  "LCIUNDFPOASIUN":8,
+  ";odsfiupoius": 9,
+  "OPISUDfpoiu": 2,
+  "dokjwO:IDf": 21,
+  "%^&*": 19,
+  "XXXXXXXXX": 15,
+  "dpcollins": 28,
+  "#()&$IJHLOIURF": 2,
+  "dfasiduyf": 6,
+  "983u2poer": 3,
+  "8888888": 6,
+  "OPUIPOUYPOIOPUIOIPUOUIPJOP": 2,
+  "x": 16
+}

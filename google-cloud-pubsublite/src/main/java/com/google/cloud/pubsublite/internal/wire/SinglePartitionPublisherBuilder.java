@@ -17,11 +17,13 @@
 package com.google.cloud.pubsublite.internal.wire;
 
 import com.google.api.gax.batching.BatchingSettings;
+import com.google.api.gax.rpc.ApiException;
 import com.google.auto.value.AutoValue;
 import com.google.cloud.pubsublite.Partition;
+import com.google.cloud.pubsublite.PublishMetadata;
 import com.google.cloud.pubsublite.TopicPath;
-import com.google.cloud.pubsublite.proto.PublisherServiceGrpc;
-import io.grpc.StatusException;
+import com.google.cloud.pubsublite.internal.Publisher;
+import com.google.cloud.pubsublite.v1.PublisherServiceClient;
 import java.util.Optional;
 
 @AutoValue
@@ -32,15 +34,20 @@ public abstract class SinglePartitionPublisherBuilder {
   abstract Partition partition();
 
   // Optional parameters.
-  abstract Optional<PublisherServiceGrpc.PublisherServiceStub> stub();
+  abstract Optional<PublisherServiceClient> serviceClient();
 
   abstract Optional<BatchingSettings> batchingSettings();
 
   // Rarely set parameters.
   abstract PubsubContext context();
 
+  // For testing.
+  abstract PublisherBuilder.Builder underlyingBuilder();
+
   public static Builder newBuilder() {
-    return new AutoValue_SinglePartitionPublisherBuilder.Builder().setContext(PubsubContext.of());
+    return new AutoValue_SinglePartitionPublisherBuilder.Builder()
+        .setContext(PubsubContext.of())
+        .setUnderlyingBuilder(PublisherBuilder.builder());
   }
 
   @AutoValue.Builder
@@ -52,23 +59,27 @@ public abstract class SinglePartitionPublisherBuilder {
     public abstract Builder setPartition(Partition partition);
 
     // Optional parameters.
-    public abstract Builder setStub(Optional<PublisherServiceGrpc.PublisherServiceStub> stub);
+    public abstract Builder setServiceClient(PublisherServiceClient serviceClient);
 
-    public abstract Builder setBatchingSettings(Optional<BatchingSettings> batchingSettings);
+    public abstract Builder setBatchingSettings(BatchingSettings batchingSettings);
 
     // Rarely set parameters.
     public abstract Builder setContext(PubsubContext context);
 
+    // For testing.
+    abstract Builder setUnderlyingBuilder(PublisherBuilder.Builder underlyingBuilder);
+
     abstract SinglePartitionPublisherBuilder autoBuild();
 
-    public SinglePartitionPublisher build() throws StatusException {
+    public Publisher<PublishMetadata> build() throws ApiException {
       SinglePartitionPublisherBuilder builder = autoBuild();
       PublisherBuilder.Builder publisherBuilder =
-          PublisherBuilder.builder()
+          builder
+              .underlyingBuilder()
               .setTopic(builder.topic())
               .setPartition(builder.partition())
               .setContext(builder.context());
-      builder.stub().ifPresent(publisherBuilder::setStub);
+      builder.serviceClient().ifPresent(publisherBuilder::setServiceClient);
       builder.batchingSettings().ifPresent(publisherBuilder::setBatching);
       return new SinglePartitionPublisher(publisherBuilder.build(), builder.partition());
     }

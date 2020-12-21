@@ -15,17 +15,14 @@
  */
 package com.google.cloud.pubsublite.internal;
 
-import com.google.api.gax.retrying.RetrySettings;
+import static com.google.cloud.pubsublite.internal.ExtractStatus.toCanonical;
+import static com.google.cloud.pubsublite.internal.ServiceClients.addDefaultSettings;
+
+import com.google.api.gax.rpc.ApiException;
 import com.google.auto.value.AutoValue;
 import com.google.cloud.pubsublite.CloudRegion;
-import com.google.cloud.pubsublite.Constants;
-import com.google.cloud.pubsublite.Endpoints;
-import com.google.cloud.pubsublite.Stubs;
-import com.google.cloud.pubsublite.proto.TopicStatsServiceGrpc;
-import com.google.cloud.pubsublite.proto.TopicStatsServiceGrpc.TopicStatsServiceBlockingStub;
-import io.grpc.Status;
-import io.grpc.StatusException;
-import java.io.IOException;
+import com.google.cloud.pubsublite.v1.TopicStatsServiceClient;
+import com.google.cloud.pubsublite.v1.TopicStatsServiceSettings;
 import java.util.Optional;
 
 @AutoValue
@@ -35,13 +32,10 @@ public abstract class TopicStatsClientSettings {
   abstract CloudRegion region();
 
   // Optional parameters.
-  abstract RetrySettings retrySettings();
-
-  abstract Optional<TopicStatsServiceBlockingStub> stub();
+  abstract Optional<TopicStatsServiceClient> serviceClient();
 
   public static Builder newBuilder() {
-    return new AutoValue_TopicStatsClientSettings.Builder()
-        .setRetrySettings(Constants.DEFAULT_RETRY_SETTINGS);
+    return new AutoValue_TopicStatsClientSettings.Builder();
   }
 
   @AutoValue.Builder
@@ -50,30 +44,25 @@ public abstract class TopicStatsClientSettings {
     // Required parameters.
     public abstract Builder setRegion(CloudRegion region);
 
-    public abstract Builder setRetrySettings(RetrySettings retrySettings);
-
     // Optional parameters.
-    public abstract Builder setStub(TopicStatsServiceBlockingStub stub);
+    public abstract Builder setServiceClient(TopicStatsServiceClient stub);
 
     public abstract TopicStatsClientSettings build();
   }
 
-  TopicStatsClient instantiate() throws StatusException {
-    TopicStatsServiceBlockingStub stub;
-    if (stub().isPresent()) {
-      stub = stub().get();
+  TopicStatsClient instantiate() throws ApiException {
+    TopicStatsServiceClient serviceClient;
+    if (serviceClient().isPresent()) {
+      serviceClient = serviceClient().get();
     } else {
       try {
-        stub =
-            Stubs.defaultStub(
-                Endpoints.regionalEndpoint(region()), TopicStatsServiceGrpc::newBlockingStub);
-      } catch (IOException e) {
-        throw Status.INTERNAL
-            .withCause(e)
-            .withDescription("Creating topic stats stub failed.")
-            .asException();
+        serviceClient =
+            TopicStatsServiceClient.create(
+                addDefaultSettings(region(), TopicStatsServiceSettings.newBuilder()));
+      } catch (Throwable t) {
+        throw toCanonical(t).underlying;
       }
     }
-    return new TopicStatsClientImpl(region(), stub, retrySettings());
+    return new TopicStatsClientImpl(region(), serviceClient);
   }
 }

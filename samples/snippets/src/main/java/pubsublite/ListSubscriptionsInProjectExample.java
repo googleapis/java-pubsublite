@@ -22,7 +22,6 @@ import com.google.cloud.pubsublite.AdminClientSettings;
 import com.google.cloud.pubsublite.CloudRegion;
 import com.google.cloud.pubsublite.CloudZone;
 import com.google.cloud.pubsublite.LocationPath;
-import com.google.cloud.pubsublite.LocationPaths;
 import com.google.cloud.pubsublite.ProjectNumber;
 import com.google.cloud.pubsublite.proto.Subscription;
 import java.util.List;
@@ -45,9 +44,9 @@ public class ListSubscriptionsInProjectExample {
         AdminClientSettings.newBuilder().setRegion(CloudRegion.of(cloudRegion)).build();
 
     LocationPath locationPath =
-        LocationPaths.newBuilder()
-            .setProjectNumber(ProjectNumber.of(projectNumber))
-            .setZone(CloudZone.of(CloudRegion.of(cloudRegion), zoneId))
+        LocationPath.newBuilder()
+            .setProject(ProjectNumber.of(projectNumber))
+            .setLocation(CloudZone.of(CloudRegion.of(cloudRegion), zoneId))
             .build();
 
     try (AdminClient adminClient = AdminClient.create(adminClientSettings)) {

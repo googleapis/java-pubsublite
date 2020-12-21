@@ -16,30 +16,30 @@
 
 package com.google.cloud.pubsublite;
 
-import static com.google.cloud.pubsublite.internal.Preconditions.checkState;
+import static com.google.cloud.pubsublite.internal.UncheckedApiPreconditions.checkState;
 
 import com.google.api.core.ApiFuture;
+import com.google.api.gax.rpc.ApiException;
 import com.google.cloud.pubsublite.internal.ExtractStatus;
 import com.google.cloud.pubsublite.proto.Subscription;
-import io.grpc.StatusException;
-import java.util.concurrent.ExecutionException;
 
+/** Utilities for looking up information on partitions. */
 public final class PartitionLookupUtils {
   private PartitionLookupUtils() {}
 
-  public static int numPartitions(TopicPath topic) throws StatusException {
+  /** Look up the number of partitions in a topic. */
+  public static int numPartitions(TopicPath topic) throws ApiException {
     try (AdminClient client =
         AdminClient.create(
-            AdminClientSettings.newBuilder()
-                .setRegion(TopicPaths.getZone(topic).region())
-                .build())) {;
+            AdminClientSettings.newBuilder().setRegion(topic.location().region()).build())) {
       return numPartitions(topic, client);
     } catch (Exception e) {
-      throw ExtractStatus.toCanonical(e);
+      throw ExtractStatus.toCanonical(e).underlying;
     }
   }
 
-  public static int numPartitions(TopicPath topic, AdminClient client) throws StatusException {
+  /** Look up the number of partitions in a topic using the provided AdminClient. */
+  public static int numPartitions(TopicPath topic, AdminClient client) throws ApiException {
     ApiFuture<Long> partitionCountFuture = client.getTopicPartitionCount(topic);
     try {
       long numPartitions = partitionCountFuture.get();
@@ -50,36 +50,33 @@ public final class PartitionLookupUtils {
           "Config has more than Integer.MAX_VALUE partitions configured. This"
               + " config cannot be used with this client library.");
       return (int) numPartitions;
-    } catch (ExecutionException e) {
-      throw ExtractStatus.toCanonical(e.getCause());
-    } catch (InterruptedException t) {
-      throw ExtractStatus.toCanonical(t);
     } catch (Throwable t) {
-      throw ExtractStatus.toCanonical(t);
+      throw ExtractStatus.toCanonical(t).underlying;
     }
   }
 
-  public static int numPartitions(SubscriptionPath subscription) throws StatusException {
+  /** Look up the number of partitions in the topic associated with a subscription. */
+  public static int numPartitions(SubscriptionPath subscription) throws ApiException {
     try (AdminClient client =
         AdminClient.create(
-            AdminClientSettings.newBuilder()
-                .setRegion(SubscriptionPaths.getZone(subscription).region())
-                .build())) {
+            AdminClientSettings.newBuilder().setRegion(subscription.location().region()).build())) {
       return numPartitions(subscription, client);
-    } catch (Exception e) {
-      throw ExtractStatus.toCanonical(e);
+    } catch (Throwable t) {
+      throw ExtractStatus.toCanonical(t).underlying;
     }
   }
 
+  /**
+   * Look up the number of partitions in the topic associated with a subscription using the provided
+   * AdminClient.
+   */
   public static int numPartitions(SubscriptionPath subscription, AdminClient client)
-      throws StatusException {
+      throws ApiException {
     ApiFuture<Subscription> subscriptionFuture = client.getSubscription(subscription);
     try {
-      return numPartitions(TopicPath.of(subscriptionFuture.get().getTopic()), client);
-    } catch (ExecutionException e) {
-      throw ExtractStatus.toCanonical(e.getCause());
+      return numPartitions(TopicPath.parse(subscriptionFuture.get().getTopic()), client);
     } catch (Throwable t) {
-      throw ExtractStatus.toCanonical(t);
+      throw ExtractStatus.toCanonical(t).underlying;
     }
   }
 }

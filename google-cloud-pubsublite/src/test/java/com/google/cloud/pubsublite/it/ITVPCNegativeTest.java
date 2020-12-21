@@ -23,26 +23,26 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 import static org.junit.Assume.assumeTrue;
 
+import com.google.api.gax.rpc.ApiException;
+import com.google.api.gax.rpc.StatusCode.Code;
 import com.google.cloud.pubsub.v1.MessageReceiver;
 import com.google.cloud.pubsublite.AdminClient;
 import com.google.cloud.pubsublite.AdminClientSettings;
 import com.google.cloud.pubsublite.CloudRegion;
 import com.google.cloud.pubsublite.CloudZone;
 import com.google.cloud.pubsublite.LocationPath;
-import com.google.cloud.pubsublite.LocationPaths;
 import com.google.cloud.pubsublite.Partition;
 import com.google.cloud.pubsublite.ProjectNumber;
 import com.google.cloud.pubsublite.SubscriptionName;
 import com.google.cloud.pubsublite.SubscriptionPath;
-import com.google.cloud.pubsublite.SubscriptionPaths;
 import com.google.cloud.pubsublite.TopicName;
 import com.google.cloud.pubsublite.TopicPath;
-import com.google.cloud.pubsublite.TopicPaths;
 import com.google.cloud.pubsublite.cloudpubsub.FlowControlSettings;
 import com.google.cloud.pubsublite.cloudpubsub.Publisher;
 import com.google.cloud.pubsublite.cloudpubsub.PublisherSettings;
 import com.google.cloud.pubsublite.cloudpubsub.Subscriber;
 import com.google.cloud.pubsublite.cloudpubsub.SubscriberSettings;
+import com.google.cloud.pubsublite.internal.CheckedApiException;
 import com.google.cloud.pubsublite.proto.Subscription;
 import com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig;
 import com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig.DeliveryRequirement;
@@ -51,10 +51,7 @@ import com.google.cloud.pubsublite.proto.Topic.PartitionConfig;
 import com.google.cloud.pubsublite.proto.Topic.RetentionConfig;
 import com.google.protobuf.FieldMask;
 import com.google.protobuf.util.Durations;
-import io.grpc.Status;
-import io.grpc.Status.Code;
-import io.grpc.StatusException;
-import io.grpc.StatusRuntimeException;
+import com.google.pubsub.v1.PubsubMessage;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -70,7 +67,6 @@ import org.junit.rules.Timeout;
 
 /* Integration tests for VPC-SC */
 public class ITVPCNegativeTest {
-
   private static final boolean IS_VPCSC_TEST =
       System.getenv("GOOGLE_CLOUD_TESTS_IN_VPCSC") != null
           && System.getenv("GOOGLE_CLOUD_TESTS_IN_VPCSC").equalsIgnoreCase("true");
@@ -117,14 +113,10 @@ public class ITVPCNegativeTest {
     CloudRegion cloudRegion = CloudRegion.of(CLOUD_REGION);
     CloudZone zone = CloudZone.of(cloudRegion, ZONE_ID);
     ProjectNumber projectNum = ProjectNumber.of(PROJECT_NUMBER);
-    locationPath = LocationPaths.newBuilder().setProjectNumber(projectNum).setZone(zone).build();
+    locationPath = LocationPath.newBuilder().setProject(projectNum).setLocation(zone).build();
     TopicName topicName = TopicName.of(TOPIC_NAME);
     topicPath =
-        TopicPaths.newBuilder()
-            .setZone(zone)
-            .setProjectNumber(projectNum)
-            .setTopicName(topicName)
-            .build();
+        TopicPath.newBuilder().setLocation(zone).setProject(projectNum).setName(topicName).build();
     topic =
         Topic.newBuilder()
             .setPartitionConfig(PartitionConfig.newBuilder().setScale(1).setCount(PARTITIONS))
@@ -132,22 +124,22 @@ public class ITVPCNegativeTest {
                 RetentionConfig.newBuilder()
                     .setPeriod(Durations.fromDays(1))
                     .setPerPartitionBytes(100 * 1024 * 1024 * 1024L))
-            .setName(topicPath.value())
+            .setName(topicPath.toString())
             .build();
     SubscriptionName subscriptionName = SubscriptionName.of(SUBSCRIPTION_NAME);
     subscriptionPath =
-        SubscriptionPaths.newBuilder()
-            .setZone(zone)
-            .setProjectNumber(projectNum)
-            .setSubscriptionName(subscriptionName)
+        SubscriptionPath.newBuilder()
+            .setLocation(zone)
+            .setProject(projectNum)
+            .setName(subscriptionName)
             .build();
     subscription =
         Subscription.newBuilder()
             .setDeliveryConfig(
                 DeliveryConfig.newBuilder()
                     .setDeliveryRequirement(DeliveryRequirement.DELIVER_AFTER_STORED))
-            .setName(subscriptionPath.value())
-            .setTopic(topicPath.value())
+            .setName(subscriptionPath.toString())
+            .setTopic(topicPath.toString())
             .build();
 
     // Instantiate an AdminClient to test with.
@@ -161,16 +153,9 @@ public class ITVPCNegativeTest {
     adminClient.close();
   }
 
-  private static void checkExceptionForVPCError(StatusRuntimeException e) {
-    assertEquals(Code.PERMISSION_DENIED, e.getStatus().getCode());
-    assertThat(e.getStatus().getDescription())
-        .contains("Request is prohibited by organization's policy");
-  }
-
-  private static void checkExceptionForVPCError(StatusException e) {
-    assertEquals(Status.Code.PERMISSION_DENIED, e.getStatus().getCode());
-    assertThat(e.getStatus().getDescription())
-        .contains("Request is prohibited by organization's policy");
+  private static void checkExceptionForVPCError(CheckedApiException e) {
+    assertEquals(Code.PERMISSION_DENIED, e.code());
+    assertThat(e.getMessage()).contains("Request is prohibited by organization's policy");
   }
 
   @Test
@@ -180,7 +165,7 @@ public class ITVPCNegativeTest {
     } catch (InterruptedException e) {
       fail("Expected PERMISSION_DENIED StatusRuntimeException but got: " + e.toString());
     } catch (ExecutionException e) {
-      checkExceptionForVPCError(toCanonical(e.getCause()));
+      checkExceptionForVPCError(toCanonical(e));
       return;
     }
 
@@ -203,7 +188,7 @@ public class ITVPCNegativeTest {
     } catch (InterruptedException e) {
       fail("Expected PERMISSION_DENIED StatusRuntimeException but got: " + e.toString());
     } catch (ExecutionException e) {
-      checkExceptionForVPCError(toCanonical(e.getCause()));
+      checkExceptionForVPCError(toCanonical(e));
     }
   }
 
@@ -215,7 +200,7 @@ public class ITVPCNegativeTest {
     } catch (InterruptedException e) {
       fail("Expected PERMISSION_DENIED StatusRuntimeException but got: " + e.toString());
     } catch (ExecutionException e) {
-      checkExceptionForVPCError(toCanonical(e.getCause()));
+      checkExceptionForVPCError(toCanonical(e));
     }
   }
 
@@ -227,7 +212,7 @@ public class ITVPCNegativeTest {
     } catch (InterruptedException e) {
       fail("Expected PERMISSION_DENIED StatusRuntimeException but got: " + e.toString());
     } catch (ExecutionException e) {
-      checkExceptionForVPCError(toCanonical(e.getCause()));
+      checkExceptionForVPCError(toCanonical(e));
     }
   }
 
@@ -239,7 +224,7 @@ public class ITVPCNegativeTest {
     } catch (InterruptedException e) {
       fail("Expected PERMISSION_DENIED StatusRuntimeException but got: " + e.toString());
     } catch (ExecutionException e) {
-      checkExceptionForVPCError(toCanonical(e.getCause()));
+      checkExceptionForVPCError(toCanonical(e));
     }
   }
 
@@ -252,7 +237,7 @@ public class ITVPCNegativeTest {
     } catch (InterruptedException e) {
       fail("Expected PERMISSION_DENIED StatusRuntimeException but got: " + e.toString());
     } catch (ExecutionException e) {
-      checkExceptionForVPCError(toCanonical(e.getCause()));
+      checkExceptionForVPCError(toCanonical(e));
     }
   }
 
@@ -263,7 +248,7 @@ public class ITVPCNegativeTest {
     } catch (InterruptedException e) {
       fail("Expected PERMISSION_DENIED StatusRuntimeException but got: " + e.toString());
     } catch (ExecutionException e) {
-      checkExceptionForVPCError(toCanonical(e.getCause()));
+      checkExceptionForVPCError(toCanonical(e));
       return;
     }
 
@@ -286,7 +271,7 @@ public class ITVPCNegativeTest {
     } catch (InterruptedException e) {
       fail("Expected PERMISSION_DENIED StatusRuntimeException but got: " + e.toString());
     } catch (ExecutionException e) {
-      checkExceptionForVPCError(toCanonical(e.getCause()));
+      checkExceptionForVPCError(toCanonical(e));
     }
   }
 
@@ -298,7 +283,7 @@ public class ITVPCNegativeTest {
     } catch (InterruptedException e) {
       fail("Expected PERMISSION_DENIED StatusRuntimeException but got: " + e.toString());
     } catch (ExecutionException e) {
-      checkExceptionForVPCError(toCanonical(e.getCause()));
+      checkExceptionForVPCError(toCanonical(e));
     }
   }
 
@@ -310,7 +295,7 @@ public class ITVPCNegativeTest {
     } catch (InterruptedException e) {
       fail("Expected PERMISSION_DENIED StatusRuntimeException but got: " + e.toString());
     } catch (ExecutionException e) {
-      checkExceptionForVPCError(toCanonical(e.getCause()));
+      checkExceptionForVPCError(toCanonical(e));
     }
   }
 
@@ -324,7 +309,7 @@ public class ITVPCNegativeTest {
     } catch (InterruptedException e) {
       fail("Expected PERMISSION_DENIED StatusRuntimeException but got: " + e.toString());
     } catch (ExecutionException e) {
-      checkExceptionForVPCError(toCanonical(e.getCause()));
+      checkExceptionForVPCError(toCanonical(e));
     }
   }
 
@@ -335,9 +320,16 @@ public class ITVPCNegativeTest {
           PublisherSettings.newBuilder().setTopicPath(topicPath).build();
 
       Publisher publisher = Publisher.create(publisherSettings);
-      fail("Expected PERMISSION_DENIED StatusException");
-    } catch (StatusException e) {
-      checkExceptionForVPCError(e);
+      publisher.startAsync().awaitRunning();
+      publisher.publish(PubsubMessage.newBuilder().build());
+      publisher.awaitTerminated(30, TimeUnit.SECONDS);
+      fail("Expected PERMISSION_DENIED CheckedApiException");
+    } catch (ApiException e) {
+      checkExceptionForVPCError(new CheckedApiException(e));
+    } catch (TimeoutException t) {
+      fail("Expected PERMISSION_DENIED CheckedApiException but got: " + t.toString());
+    } catch (IllegalStateException e) {
+      checkExceptionForVPCError(toCanonical(e.getCause()));
     }
   }
 
@@ -354,7 +346,7 @@ public class ITVPCNegativeTest {
       partitions.add(Partition.of(0));
 
       MessageReceiver receiver =
-          (message, consumer) -> fail("Expected PERMISSION_DENIED StatusException");
+          (message, consumer) -> fail("Expected PERMISSION_DENIED CheckedApiException");
 
       SubscriberSettings subscriberSettings =
           SubscriberSettings.newBuilder()
@@ -368,11 +360,11 @@ public class ITVPCNegativeTest {
 
       subscriber.startAsync().awaitRunning();
       subscriber.awaitTerminated(30, TimeUnit.SECONDS);
-      fail("Expected PERMISSION_DENIED StatusException");
-    } catch (StatusException e) {
-      checkExceptionForVPCError(e);
+      fail("Expected PERMISSION_DENIED CheckedApiException");
+    } catch (ApiException e) {
+      checkExceptionForVPCError(new CheckedApiException(e));
     } catch (TimeoutException t) {
-      fail("Expected PERMISSION_DENIED StatusException but got: " + t.toString());
+      fail("Expected PERMISSION_DENIED CheckedApiException but got: " + t.toString());
     } catch (IllegalStateException e) {
       checkExceptionForVPCError(toCanonical(e.getCause()));
     }

@@ -24,10 +24,8 @@ import com.google.cloud.pubsublite.CloudZone;
 import com.google.cloud.pubsublite.ProjectNumber;
 import com.google.cloud.pubsublite.SubscriptionName;
 import com.google.cloud.pubsublite.SubscriptionPath;
-import com.google.cloud.pubsublite.SubscriptionPaths;
 import com.google.cloud.pubsublite.TopicName;
 import com.google.cloud.pubsublite.TopicPath;
-import com.google.cloud.pubsublite.TopicPaths;
 import com.google.cloud.pubsublite.proto.Subscription;
 import com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig;
 import com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig.DeliveryRequirement;
@@ -50,31 +48,32 @@ public class CreateSubscriptionExample {
       throws Exception {
 
     TopicPath topicPath =
-        TopicPaths.newBuilder()
-            .setProjectNumber(ProjectNumber.of(projectNumber))
-            .setZone(CloudZone.of(CloudRegion.of(cloudRegion), zoneId))
-            .setTopicName(TopicName.of(topicId))
+        TopicPath.newBuilder()
+            .setProject(ProjectNumber.of(projectNumber))
+            .setLocation(CloudZone.of(CloudRegion.of(cloudRegion), zoneId))
+            .setName(TopicName.of(topicId))
             .build();
 
     SubscriptionPath subscriptionPath =
-        SubscriptionPaths.newBuilder()
-            .setZone(CloudZone.of(CloudRegion.of(cloudRegion), zoneId))
-            .setProjectNumber(ProjectNumber.of(projectNumber))
-            .setSubscriptionName(SubscriptionName.of(subscriptionId))
+        SubscriptionPath.newBuilder()
+            .setLocation(CloudZone.of(CloudRegion.of(cloudRegion), zoneId))
+            .setProject(ProjectNumber.of(projectNumber))
+            .setName(SubscriptionName.of(subscriptionId))
             .build();
 
     Subscription subscription =
         Subscription.newBuilder()
             .setDeliveryConfig(
-                // The server does not wait for a published message to be successfully
-                // written to storage before delivering it to subscribers. As such, a
-                // subscriber may receive a message for which the write to storage failed.
-                // If the subscriber re-reads the offset of that message later on, there
-                // may be a gap at that offset.
+                // Possible values for DeliveryRequirement:
+                // - `DELIVER_IMMEDIATELY`
+                // - `DELIVER_AFTER_STORED`
+                // You may choose whether to wait for a published message to be successfully written
+                // to storage before the server delivers it to subscribers. `DELIVER_IMMEDIATELY` is
+                // suitable for applications that need higher throughput.
                 DeliveryConfig.newBuilder()
                     .setDeliveryRequirement(DeliveryRequirement.DELIVER_IMMEDIATELY))
-            .setName(subscriptionPath.value())
-            .setTopic(topicPath.value())
+            .setName(subscriptionPath.toString())
+            .setTopic(topicPath.toString())
             .build();
 
     AdminClientSettings adminClientSettings =

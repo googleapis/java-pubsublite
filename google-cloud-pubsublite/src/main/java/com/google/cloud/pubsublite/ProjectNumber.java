@@ -16,16 +16,29 @@
 
 package com.google.cloud.pubsublite;
 
-import static com.google.cloud.pubsublite.internal.Preconditions.checkArgument;
+import static com.google.cloud.pubsublite.internal.UncheckedApiPreconditions.checkArgument;
 
+import com.google.api.gax.rpc.ApiException;
 import com.google.auto.value.AutoValue;
-import io.grpc.StatusException;
+import java.io.Serializable;
 
+/**
+ * A wrapper class for the <a
+ * href="https://cloud.google.com/resource-manager/docs/creating-managing-projects#before_you_begin">project
+ * number</a>.
+ */
 @AutoValue
-public abstract class ProjectNumber {
+public abstract class ProjectNumber implements Serializable {
+  /** The long value of this project number. */
   public abstract long value();
 
-  public static ProjectNumber of(long value) throws StatusException {
+  @Override
+  public String toString() {
+    return Long.toString(value());
+  }
+
+  /** Construct a ProjectNumber from its long value. */
+  public static ProjectNumber of(long value) throws ApiException {
     checkArgument(value > 0);
     return new AutoValue_ProjectNumber(value);
   }

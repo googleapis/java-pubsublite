@@ -134,10 +134,12 @@ public final class SubscriberProto {
           + ".pubsublite.v1.PartitionAssignment\"\000(\0010\001"
           + "\032M\312A\031pubsublite.googleapis.com\322A.https:/"
           + "/www.googleapis.com/auth/cloud-platformB"
-          + "\177\n!com.google.cloud.pubsublite.protoB\017Su"
-          + "bscriberProtoP\001ZDgoogle.golang.org/genpr"
-          + "oto/googleapis/cloud/pubsublite/v1;pubsu"
-          + "blite\370\001\001b\006proto3"
+          + "\331\001\n!com.google.cloud.pubsublite.protoB\017S"
+          + "ubscriberProtoP\001ZDgoogle.golang.org/genp"
+          + "roto/googleapis/cloud/pubsublite/v1;pubs"
+          + "ublite\370\001\001\252\002\032Google.Cloud.PubSubLite.V1\312\002"
+          + "\032Google\\Cloud\\PubSubLite\\V1\352\002\035Google::Cl"
+          + "oud::PubSubLite::V1b\006proto3"
     };
     descriptor =
         com.google.protobuf.Descriptors.FileDescriptor.internalBuildGeneratedFileFrom(

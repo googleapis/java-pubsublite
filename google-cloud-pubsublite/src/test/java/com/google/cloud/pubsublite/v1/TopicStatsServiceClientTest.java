@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     https://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package com.google.cloud.pubsublite.v1;
 
 import com.google.api.gax.core.NoCredentialsProvider;
@@ -22,16 +23,20 @@ import com.google.api.gax.grpc.testing.MockGrpcService;
 import com.google.api.gax.grpc.testing.MockServiceHelper;
 import com.google.api.gax.rpc.ApiClientHeaderProvider;
 import com.google.api.gax.rpc.InvalidArgumentException;
+import com.google.cloud.pubsublite.proto.ComputeHeadCursorRequest;
+import com.google.cloud.pubsublite.proto.ComputeHeadCursorResponse;
 import com.google.cloud.pubsublite.proto.ComputeMessageStatsRequest;
 import com.google.cloud.pubsublite.proto.ComputeMessageStatsResponse;
+import com.google.cloud.pubsublite.proto.Cursor;
 import com.google.cloud.pubsublite.proto.TopicName;
 import com.google.protobuf.AbstractMessage;
-import io.grpc.Status;
+import com.google.protobuf.Timestamp;
 import io.grpc.StatusRuntimeException;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
+import javax.annotation.Generated;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Assert;
@@ -39,48 +44,31 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-@javax.annotation.Generated("by GAPIC")
+@Generated("by gapic-generator-java")
 public class TopicStatsServiceClientTest {
-  private static MockAdminService mockAdminService;
-  private static MockCursorService mockCursorService;
-  private static MockPublisherService mockPublisherService;
-  private static MockSubscriberService mockSubscriberService;
-  private static MockPartitionAssignmentService mockPartitionAssignmentService;
   private static MockTopicStatsService mockTopicStatsService;
-  private static MockServiceHelper serviceHelper;
+  private static MockServiceHelper mockServiceHelper;
   private TopicStatsServiceClient client;
   private LocalChannelProvider channelProvider;
 
   @BeforeClass
   public static void startStaticServer() {
-    mockAdminService = new MockAdminService();
-    mockCursorService = new MockCursorService();
-    mockPublisherService = new MockPublisherService();
-    mockSubscriberService = new MockSubscriberService();
-    mockPartitionAssignmentService = new MockPartitionAssignmentService();
     mockTopicStatsService = new MockTopicStatsService();
-    serviceHelper =
+    mockServiceHelper =
         new MockServiceHelper(
-            UUID.randomUUID().toString(),
-            Arrays.<MockGrpcService>asList(
-                mockAdminService,
-                mockCursorService,
-                mockPublisherService,
-                mockSubscriberService,
-                mockPartitionAssignmentService,
-                mockTopicStatsService));
-    serviceHelper.start();
+            UUID.randomUUID().toString(), Arrays.<MockGrpcService>asList(mockTopicStatsService));
+    mockServiceHelper.start();
   }
 
   @AfterClass
   public static void stopServer() {
-    serviceHelper.stop();
+    mockServiceHelper.stop();
   }
 
   @Before
   public void setUp() throws IOException {
-    serviceHelper.reset();
-    channelProvider = serviceHelper.createChannelProvider();
+    mockServiceHelper.reset();
+    channelProvider = mockServiceHelper.createChannelProvider();
     TopicStatsServiceSettings settings =
         TopicStatsServiceSettings.newBuilder()
             .setTransportChannelProvider(channelProvider)
@@ -95,23 +83,22 @@ public class TopicStatsServiceClientTest {
   }
 
   @Test
-  @SuppressWarnings("all")
-  public void computeMessageStatsTest() {
-    long messageCount = 1229303081L;
-    long messageBytes = 1229929933L;
+  public void computeMessageStatsTest() throws Exception {
     ComputeMessageStatsResponse expectedResponse =
         ComputeMessageStatsResponse.newBuilder()
-            .setMessageCount(messageCount)
-            .setMessageBytes(messageBytes)
+            .setMessageCount(-1229303081)
+            .setMessageBytes(-1229929933)
+            .setMinimumPublishTime(Timestamp.newBuilder().build())
+            .setMinimumEventTime(Timestamp.newBuilder().build())
             .build();
     mockTopicStatsService.addResponse(expectedResponse);
 
-    TopicName topic = TopicName.of("[PROJECT]", "[LOCATION]", "[TOPIC]");
-    long partition = 1799810326L;
     ComputeMessageStatsRequest request =
         ComputeMessageStatsRequest.newBuilder()
-            .setTopic(topic.toString())
-            .setPartition(partition)
+            .setTopic(TopicName.of("[PROJECT]", "[LOCATION]", "[TOPIC]").toString())
+            .setPartition(-1799810326)
+            .setStartCursor(Cursor.newBuilder().build())
+            .setEndCursor(Cursor.newBuilder().build())
             .build();
 
     ComputeMessageStatsResponse actualResponse = client.computeMessageStats(request);
@@ -119,10 +106,12 @@ public class TopicStatsServiceClientTest {
 
     List<AbstractMessage> actualRequests = mockTopicStatsService.getRequests();
     Assert.assertEquals(1, actualRequests.size());
-    ComputeMessageStatsRequest actualRequest = (ComputeMessageStatsRequest) actualRequests.get(0);
+    ComputeMessageStatsRequest actualRequest = ((ComputeMessageStatsRequest) actualRequests.get(0));
 
-    Assert.assertEquals(topic, TopicName.parse(actualRequest.getTopic()));
-    Assert.assertEquals(partition, actualRequest.getPartition());
+    Assert.assertEquals(request.getTopic(), actualRequest.getTopic());
+    Assert.assertEquals(request.getPartition(), actualRequest.getPartition());
+    Assert.assertEquals(request.getStartCursor(), actualRequest.getStartCursor());
+    Assert.assertEquals(request.getEndCursor(), actualRequest.getEndCursor());
     Assert.assertTrue(
         channelProvider.isHeaderSent(
             ApiClientHeaderProvider.getDefaultApiClientHeaderKey(),
@@ -130,24 +119,67 @@ public class TopicStatsServiceClientTest {
   }
 
   @Test
-  @SuppressWarnings("all")
   public void computeMessageStatsExceptionTest() throws Exception {
-    StatusRuntimeException exception = new StatusRuntimeException(Status.INVALID_ARGUMENT);
+    StatusRuntimeException exception = new StatusRuntimeException(io.grpc.Status.INVALID_ARGUMENT);
     mockTopicStatsService.addException(exception);
 
     try {
-      TopicName topic = TopicName.of("[PROJECT]", "[LOCATION]", "[TOPIC]");
-      long partition = 1799810326L;
       ComputeMessageStatsRequest request =
           ComputeMessageStatsRequest.newBuilder()
-              .setTopic(topic.toString())
-              .setPartition(partition)
+              .setTopic(TopicName.of("[PROJECT]", "[LOCATION]", "[TOPIC]").toString())
+              .setPartition(-1799810326)
+              .setStartCursor(Cursor.newBuilder().build())
+              .setEndCursor(Cursor.newBuilder().build())
               .build();
-
       client.computeMessageStats(request);
       Assert.fail("No exception raised");
     } catch (InvalidArgumentException e) {
-      // Expected exception
+      // Expected exception.
+    }
+  }
+
+  @Test
+  public void computeHeadCursorTest() throws Exception {
+    ComputeHeadCursorResponse expectedResponse =
+        ComputeHeadCursorResponse.newBuilder().setHeadCursor(Cursor.newBuilder().build()).build();
+    mockTopicStatsService.addResponse(expectedResponse);
+
+    ComputeHeadCursorRequest request =
+        ComputeHeadCursorRequest.newBuilder()
+            .setTopic(TopicName.of("[PROJECT]", "[LOCATION]", "[TOPIC]").toString())
+            .setPartition(-1799810326)
+            .build();
+
+    ComputeHeadCursorResponse actualResponse = client.computeHeadCursor(request);
+    Assert.assertEquals(expectedResponse, actualResponse);
+
+    List<AbstractMessage> actualRequests = mockTopicStatsService.getRequests();
+    Assert.assertEquals(1, actualRequests.size());
+    ComputeHeadCursorRequest actualRequest = ((ComputeHeadCursorRequest) actualRequests.get(0));
+
+    Assert.assertEquals(request.getTopic(), actualRequest.getTopic());
+    Assert.assertEquals(request.getPartition(), actualRequest.getPartition());
+    Assert.assertTrue(
+        channelProvider.isHeaderSent(
+            ApiClientHeaderProvider.getDefaultApiClientHeaderKey(),
+            GaxGrpcProperties.getDefaultApiClientHeaderPattern()));
+  }
+
+  @Test
+  public void computeHeadCursorExceptionTest() throws Exception {
+    StatusRuntimeException exception = new StatusRuntimeException(io.grpc.Status.INVALID_ARGUMENT);
+    mockTopicStatsService.addException(exception);
+
+    try {
+      ComputeHeadCursorRequest request =
+          ComputeHeadCursorRequest.newBuilder()
+              .setTopic(TopicName.of("[PROJECT]", "[LOCATION]", "[TOPIC]").toString())
+              .setPartition(-1799810326)
+              .build();
+      client.computeHeadCursor(request);
+      Assert.fail("No exception raised");
+    } catch (InvalidArgumentException e) {
+      // Expected exception.
     }
   }
 }

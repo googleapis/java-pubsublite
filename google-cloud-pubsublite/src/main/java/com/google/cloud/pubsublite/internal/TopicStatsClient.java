@@ -16,17 +16,15 @@
 package com.google.cloud.pubsublite.internal;
 
 import com.google.api.core.ApiFuture;
-import com.google.api.gax.core.BackgroundResource;
+import com.google.api.gax.rpc.ApiException;
 import com.google.cloud.pubsublite.CloudRegion;
 import com.google.cloud.pubsublite.Offset;
 import com.google.cloud.pubsublite.Partition;
 import com.google.cloud.pubsublite.TopicPath;
 import com.google.cloud.pubsublite.proto.ComputeMessageStatsResponse;
-import io.grpc.StatusException;
 
-public interface TopicStatsClient extends BackgroundResource {
-
-  static TopicStatsClient create(TopicStatsClientSettings settings) throws StatusException {
+public interface TopicStatsClient extends ApiBackgroundResource {
+  static TopicStatsClient create(TopicStatsClientSettings settings) throws ApiException {
     return settings.instantiate();
   }
 
@@ -40,16 +38,9 @@ public interface TopicStatsClient extends BackgroundResource {
    * @param partition The partition to compute statistics for
    * @param start The start cursor
    * @param end The end cursor
-   * @return A future that will have either an error {@link io.grpc.StatusException} or the
+   * @return A future that will have either an error {@link ApiException} or the
    *     ComputeMessageStatistics on success.
    */
   ApiFuture<ComputeMessageStatsResponse> computeMessageStats(
       TopicPath path, Partition partition, Offset start, Offset end);
-
-  /**
-   * Tear down this admin client.
-   *
-   * @throws StatusException on a failure to properly terminate.
-   */
-  void close() throws StatusException;
 }

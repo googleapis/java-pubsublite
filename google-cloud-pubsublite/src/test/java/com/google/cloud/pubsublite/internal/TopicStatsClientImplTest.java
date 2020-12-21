@@ -16,74 +16,50 @@
 
 package com.google.cloud.pubsublite.internal;
 
+import static com.google.cloud.pubsublite.internal.ApiExceptionMatcher.assertFutureThrowsCode;
 import static com.google.common.truth.Truth.assertThat;
 import static com.google.common.truth.Truth8.assertThat;
-import static java.util.concurrent.TimeUnit.SECONDS;
-import static org.junit.Assert.assertThrows;
-import static org.mockito.AdditionalAnswers.delegatesTo;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.doAnswer;
-import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.mockito.MockitoAnnotations.initMocks;
 
-import com.google.api.core.ApiFuture;
+import com.google.api.core.ApiFutures;
+import com.google.api.gax.rpc.StatusCode.Code;
+import com.google.api.gax.rpc.UnaryCallable;
 import com.google.cloud.pubsublite.CloudRegion;
 import com.google.cloud.pubsublite.CloudZone;
-import com.google.cloud.pubsublite.Constants;
-import com.google.cloud.pubsublite.ErrorCodes;
 import com.google.cloud.pubsublite.Offset;
 import com.google.cloud.pubsublite.Partition;
 import com.google.cloud.pubsublite.ProjectNumber;
 import com.google.cloud.pubsublite.TopicName;
 import com.google.cloud.pubsublite.TopicPath;
-import com.google.cloud.pubsublite.TopicPaths;
 import com.google.cloud.pubsublite.proto.ComputeMessageStatsRequest;
 import com.google.cloud.pubsublite.proto.ComputeMessageStatsResponse;
 import com.google.cloud.pubsublite.proto.Cursor;
-import com.google.cloud.pubsublite.proto.TopicStatsServiceGrpc;
-import io.grpc.ManagedChannel;
-import io.grpc.Status;
-import io.grpc.Status.Code;
-import io.grpc.StatusException;
-import io.grpc.inprocess.InProcessChannelBuilder;
-import io.grpc.inprocess.InProcessServerBuilder;
-import io.grpc.testing.GrpcCleanupRule;
+import com.google.cloud.pubsublite.v1.TopicStatsServiceClient;
+import com.google.cloud.pubsublite.v1.stub.TopicStatsServiceStub;
 import java.io.IOException;
-import java.util.Optional;
-import java.util.concurrent.ExecutionException;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
-import org.mockito.stubbing.Answer;
+import org.mockito.Mock;
 
 @RunWith(JUnit4.class)
 public class TopicStatsClientImplTest {
-
-  @Rule public final GrpcCleanupRule grpcCleanup = new GrpcCleanupRule();
   private static final CloudRegion REGION = CloudRegion.of("us-east1");
 
   private static TopicPath path() {
-    try {
-      return TopicPaths.newBuilder()
-          .setTopicName(TopicName.of("a"))
-          .setProjectNumber(ProjectNumber.of(4))
-          .setZone(CloudZone.of(REGION, 'a'))
-          .build();
-
-    } catch (StatusException e) {
-      throw e.getStatus().asRuntimeException();
-    }
+    return TopicPath.newBuilder()
+        .setName(TopicName.of("a"))
+        .setProject(ProjectNumber.of(4))
+        .setLocation(CloudZone.of(REGION, 'a'))
+        .build();
   }
 
   private static Partition partition() {
-    try {
-      return Partition.of(0);
-    } catch (StatusException e) {
-      throw e.getStatus().asRuntimeException();
-    }
+    return Partition.of(0);
   }
 
   private static Offset start() {
@@ -107,33 +83,22 @@ public class TopicStatsClientImplTest {
     return ComputeMessageStatsResponse.newBuilder().setMessageBytes(1).setMessageCount(2).build();
   }
 
-  private final TopicStatsServiceGrpc.TopicStatsServiceImplBase serviceImpl =
-      mock(
-          TopicStatsServiceGrpc.TopicStatsServiceImplBase.class,
-          delegatesTo(new TopicStatsServiceGrpc.TopicStatsServiceImplBase() {}));
+  @Mock TopicStatsServiceStub stub;
+  @Mock UnaryCallable<ComputeMessageStatsRequest, ComputeMessageStatsResponse> computeCallable;
 
   private TopicStatsClientImpl client;
 
   @Before
   public void setUp() throws IOException {
-    String serverName = InProcessServerBuilder.generateName();
-    grpcCleanup.register(
-        InProcessServerBuilder.forName(serverName)
-            .directExecutor()
-            .addService(serviceImpl)
-            .build()
-            .start());
-    ManagedChannel channel =
-        grpcCleanup.register(InProcessChannelBuilder.forName(serverName).directExecutor().build());
-    TopicStatsServiceGrpc.TopicStatsServiceBlockingStub stub =
-        TopicStatsServiceGrpc.newBlockingStub(channel);
-    client = new TopicStatsClientImpl(REGION, stub, Constants.DEFAULT_RETRY_SETTINGS);
+    initMocks(this);
+    when(stub.computeMessageStatsCallable()).thenReturn(computeCallable);
+    client = new TopicStatsClientImpl(REGION, TopicStatsServiceClient.create(stub));
   }
 
   @After
   public void tearDown() throws Exception {
     client.shutdownNow();
-    Preconditions.checkArgument(client.awaitTermination(10, SECONDS));
+    verify(stub).shutdownNow();
   }
 
   @Test
@@ -141,66 +106,20 @@ public class TopicStatsClientImplTest {
     assertThat(client.region()).isEqualTo(REGION);
   }
 
-  private static <T> Answer<Void> answerWith(T response) {
-    return TestUtil.answerWith(response);
-  }
-
-  private static Answer<Void> answerWith(Status status) {
-    return TestUtil.answerWith(status);
-  }
-
-  private static Answer<Void> inOrder(Answer<Void>... answers) {
-    return TestUtil.inOrder(answers);
-  }
-
   @Test
   public void computeMessageStats_Ok() throws Exception {
-    doAnswer(answerWith(response())).when(serviceImpl).computeMessageStats(eq(request()), any());
+    when(computeCallable.futureCall(request())).thenReturn(ApiFutures.immediateFuture(response()));
     assertThat(client.computeMessageStats(path(), partition(), start(), end()).get())
         .isEqualTo(response());
   }
 
   @Test
-  public void computeMessageStats_NonRetryableError() {
-    assertThat(ErrorCodes.IsRetryable(Code.FAILED_PRECONDITION)).isFalse();
-
-    doAnswer(answerWith(Status.FAILED_PRECONDITION))
-        .when(serviceImpl)
-        .computeMessageStats(eq(request()), any());
-
-    ApiFuture<ComputeMessageStatsResponse> future =
-        client.computeMessageStats(path(), partition(), start(), end());
-    ExecutionException exception = assertThrows(ExecutionException.class, future::get);
-    Optional<Status> statusOr = ExtractStatus.extract(exception.getCause());
-    assertThat(statusOr).isPresent();
-    assertThat(statusOr.get().getCode()).isEqualTo(Code.FAILED_PRECONDITION);
-  }
-
-  @Test
-  public void computeMessageStats_RetryableError() throws Exception {
-    for (Code code : ErrorCodes.RETRYABLE_CODES) {
-      assertThat(ErrorCodes.IsRetryable(code)).isTrue();
-      doAnswer(inOrder(answerWith(Status.fromCode(code)), answerWith(response())))
-          .when(serviceImpl)
-          .computeMessageStats(eq(request()), any());
-
-      assertThat(client.computeMessageStats(path(), partition(), start(), end()).get())
-          .isEqualTo(response());
-    }
-  }
-
-  @Test
-  public void computeMessageStats_MultipleRetryableErrors() throws Exception {
-    assertThat(ErrorCodes.IsRetryable(Code.DEADLINE_EXCEEDED)).isTrue();
-    doAnswer(
-            inOrder(
-                answerWith(Status.DEADLINE_EXCEEDED),
-                answerWith(Status.DEADLINE_EXCEEDED),
-                answerWith(response())))
-        .when(serviceImpl)
-        .computeMessageStats(eq(request()), any());
-
-    assertThat(client.computeMessageStats(path(), partition(), start(), end()).get())
-        .isEqualTo(response());
+  public void computeMessageStats_Error() {
+    when(computeCallable.futureCall(request()))
+        .thenReturn(
+            ApiFutures.immediateFailedFuture(
+                new CheckedApiException(Code.FAILED_PRECONDITION).underlying));
+    assertFutureThrowsCode(
+        client.computeMessageStats(path(), partition(), start(), end()), Code.FAILED_PRECONDITION);
   }
 }

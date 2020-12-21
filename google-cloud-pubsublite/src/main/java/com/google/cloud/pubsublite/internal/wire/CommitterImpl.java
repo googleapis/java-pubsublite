@@ -16,23 +16,25 @@
 
 package com.google.cloud.pubsublite.internal.wire;
 
-import static com.google.cloud.pubsublite.internal.Preconditions.checkState;
+import static com.google.cloud.pubsublite.internal.CheckedApiPreconditions.checkState;
+import static com.google.cloud.pubsublite.internal.wire.ApiServiceUtils.backgroundResourceAsApiService;
 
 import com.google.api.core.ApiFuture;
 import com.google.api.core.ApiFutures;
+import com.google.api.gax.rpc.ApiException;
 import com.google.cloud.pubsublite.Offset;
+import com.google.cloud.pubsublite.internal.CheckedApiException;
 import com.google.cloud.pubsublite.internal.CloseableMonitor;
 import com.google.cloud.pubsublite.internal.ProxyService;
-import com.google.cloud.pubsublite.proto.CursorServiceGrpc.CursorServiceStub;
 import com.google.cloud.pubsublite.proto.InitialCommitCursorRequest;
 import com.google.cloud.pubsublite.proto.SequencedCommitCursorResponse;
 import com.google.cloud.pubsublite.proto.StreamingCommitCursorRequest;
+import com.google.cloud.pubsublite.proto.StreamingCommitCursorResponse;
+import com.google.cloud.pubsublite.v1.CursorServiceClient;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Preconditions;
 import com.google.common.util.concurrent.Monitor.Guard;
 import com.google.errorprone.annotations.concurrent.GuardedBy;
-import io.grpc.Status;
-import io.grpc.StatusException;
 import java.util.Optional;
 
 public class CommitterImpl extends ProxyService
@@ -53,27 +55,31 @@ public class CommitterImpl extends ProxyService
 
   @VisibleForTesting
   CommitterImpl(
-      CursorServiceStub stub,
+      StreamFactory<StreamingCommitCursorRequest, StreamingCommitCursorResponse> streamFactory,
       ConnectedCommitterFactory factory,
       InitialCommitCursorRequest initialRequest)
-      throws StatusException {
+      throws ApiException {
     this.connection =
         new RetryingConnectionImpl<>(
-            stub::streamingCommitCursor,
+            streamFactory,
             factory,
             StreamingCommitCursorRequest.newBuilder().setInitial(initialRequest).build(),
             this);
     addServices(this.connection);
   }
 
-  public CommitterImpl(CursorServiceStub stub, InitialCommitCursorRequest request)
-      throws StatusException {
-    this(stub, new ConnectedCommitterImpl.Factory(), request);
+  public CommitterImpl(CursorServiceClient client, InitialCommitCursorRequest request)
+      throws ApiException {
+    this(
+        stream -> client.streamingCommitCursorCallable().splitCall(stream),
+        new ConnectedCommitterImpl.Factory(),
+        request);
+    addServices(backgroundResourceAsApiService(client));
   }
 
   // ProxyService implementation.
   @Override
-  protected void handlePermanentError(StatusException error) {
+  protected void handlePermanentError(CheckedApiException error) {
     try (CloseableMonitor.Hold h = monitor.enter()) {
       hadPermanentError = true;
       shutdown = true;
@@ -112,7 +118,7 @@ public class CommitterImpl extends ProxyService
             Preconditions.checkArgument(connectedCommitter.isPresent());
             connectedCommitter.get().commit(offsetOr.get());
           });
-    } catch (StatusException e) {
+    } catch (CheckedApiException e) {
       onPermanentError(e);
     }
   }
@@ -126,17 +132,17 @@ public class CommitterImpl extends ProxyService
           connectedCommitter ->
               connectedCommitter.ifPresent(committer -> committer.commit(offset)));
       return state.addCommit(offset);
-    } catch (StatusException e) {
+    } catch (CheckedApiException e) {
       onPermanentError(e);
       return ApiFutures.immediateFailedFuture(e);
     }
   }
 
   @Override
-  public Status onClientResponse(SequencedCommitCursorResponse value) {
+  public void onClientResponse(SequencedCommitCursorResponse value) throws CheckedApiException {
     Preconditions.checkArgument(value.getAcknowledgedCommits() > 0);
     try (CloseableMonitor.Hold h = monitor.enter()) {
-      return state.complete(value.getAcknowledgedCommits());
+      state.complete(value.getAcknowledgedCommits());
     }
   }
 }

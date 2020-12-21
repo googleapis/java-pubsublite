@@ -19,19 +19,20 @@ package com.google.cloud.pubsublite.internal.wire;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 
 import com.google.api.core.AbstractApiService;
+import com.google.api.gax.rpc.ResponseObserver;
+import com.google.api.gax.rpc.StatusCode.Code;
+import com.google.api.gax.rpc.StreamController;
 import com.google.cloud.pubsublite.ErrorCodes;
+import com.google.cloud.pubsublite.internal.CheckedApiException;
 import com.google.cloud.pubsublite.internal.CloseableMonitor;
 import com.google.cloud.pubsublite.internal.ExtractStatus;
 import com.google.common.flogger.GoogleLogger;
-import io.grpc.Status;
-import io.grpc.StatusException;
-import io.grpc.stub.StreamObserver;
+import java.time.Duration;
 import java.util.Optional;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import javax.annotation.concurrent.GuardedBy;
-import org.threeten.bp.Duration;
 
 /**
  * A connection which recreates an underlying stream on retryable errors.
@@ -44,7 +45,7 @@ import org.threeten.bp.Duration;
 class RetryingConnectionImpl<
         StreamRequestT, StreamResponseT, ClientResponseT, ConnectionT extends AutoCloseable>
     extends AbstractApiService
-    implements RetryingConnection<ConnectionT>, StreamObserver<ClientResponseT> {
+    implements RetryingConnection<ConnectionT>, ResponseObserver<ClientResponseT> {
   private static final GoogleLogger logger = GoogleLogger.forEnclosingClass();
 
   private static final Duration INITIAL_RECONNECT_BACKOFF_TIME = Duration.ofMillis(10);
@@ -85,8 +86,11 @@ class RetryingConnectionImpl<
 
   @Override
   protected void doStart() {
-    reinitialize();
-    notifyStarted();
+    this.systemExecutor.execute(
+        () -> {
+          reinitialize();
+          notifyStarted();
+        });
   }
 
   // Reinitialize the stream. Must be called in a downcall to prevent deadlock.
@@ -101,19 +105,27 @@ class RetryingConnectionImpl<
   @Override
   protected void doStop() {
     try (CloseableMonitor.Hold h = connectionMonitor.enter()) {
+      if (completed) return;
       completed = true;
+      logger.atFine().log(
+          String.format("Terminating connection with initial request %s.", initialRequest));
       currentConnection.close();
-    } catch (Exception e) {
-      notifyFailed(e);
+    } catch (Throwable t) {
+      logger.atWarning().withCause(t).log(
+          String.format(
+              "Failed while terminating connection with initial request %s.", initialRequest));
+      notifyFailed(t);
       return;
     }
+    logger.atFine().log(
+        String.format("Terminated connection with initial request %s.", initialRequest));
     systemExecutor.shutdownNow();
     notifyStopped();
   }
 
   // Run modification on the current connection or empty if not connected.
   @Override
-  public void modifyConnection(Modifier<ConnectionT> modifier) throws StatusException {
+  public void modifyConnection(Modifier<ConnectionT> modifier) throws CheckedApiException {
     try (CloseableMonitor.Hold h = connectionMonitor.enter()) {
       if (completed) {
         modifier.modify(Optional.empty());
@@ -131,30 +143,36 @@ class RetryingConnectionImpl<
     notifyFailed(error);
   }
 
-  // StreamObserver implementation
   @Override
-  public final void onNext(ClientResponseT value) {
-    Status status;
+  public void onStart(StreamController controller) {
+    controller.disableAutoInboundFlowControl();
+    controller.request(Integer.MAX_VALUE);
+  }
+
+  // ResponseObserver implementation
+  @Override
+  public final void onResponse(ClientResponseT value) {
     try (CloseableMonitor.Hold h = connectionMonitor.enter()) {
       if (completed) return;
       nextRetryBackoffDuration = INITIAL_RECONNECT_BACKOFF_TIME.toMillis();
     }
-    status = observer.onClientResponse(value);
-    if (!status.isOk()) {
-      setPermanentError(status.asRuntimeException());
+    try {
+      observer.onClientResponse(value);
+    } catch (Throwable t) {
+      setPermanentError(t);
     }
   }
 
   @Override
   public final void onError(Throwable t) {
     // This is an error code sent from the server.
-    Optional<Status> statusOr = ExtractStatus.extract(t);
+    Optional<CheckedApiException> statusOr = ExtractStatus.extract(t);
     if (!statusOr.isPresent()) {
       setPermanentError(t);
       return;
     }
-    if (!ErrorCodes.IsRetryable(statusOr.get().getCode())) {
-      setPermanentError(statusOr.get().asRuntimeException());
+    if (!ErrorCodes.IsRetryableForStreams(statusOr.get().code())) {
+      setPermanentError(statusOr.get());
       return;
     }
     Optional<Throwable> throwable = Optional.empty();
@@ -163,25 +181,35 @@ class RetryingConnectionImpl<
       currentConnection.close();
       backoffTime = nextRetryBackoffDuration;
       nextRetryBackoffDuration = Math.min(backoffTime * 2, MAX_RECONNECT_BACKOFF_TIME.toMillis());
-    } catch (Exception e) {
-      throwable = Optional.of(e);
+    } catch (Throwable t2) {
+      throwable = Optional.of(t2);
     }
     if (throwable.isPresent()) {
       setPermanentError(
-          Status.FAILED_PRECONDITION
-              .withCause(throwable.get())
-              .withDescription("Failed to close preexisting stream after error.")
-              .asRuntimeException());
+          new CheckedApiException(
+              "Failed to close preexisting stream after error.",
+              throwable.get(),
+              Code.FAILED_PRECONDITION));
       return;
     }
     logger.atFine().withCause(t).log(
         "Stream disconnected attempting retry, after %s milliseconds", backoffTime);
     ScheduledFuture<?> retry =
-        systemExecutor.schedule(observer::triggerReinitialize, backoffTime, MILLISECONDS);
+        systemExecutor.schedule(
+            () -> {
+              try {
+                observer.triggerReinitialize();
+              } catch (Throwable t2) {
+                logger.atWarning().withCause(t2).log("Error occurred in triggerReinitialize.");
+                onError(t2);
+              }
+            },
+            backoffTime,
+            MILLISECONDS);
   }
 
   @Override
-  public final void onCompleted() {
+  public final void onComplete() {
     logger.atFine().log("Stream completed for %s.", initialRequest);
     boolean expectedCompletion;
     try (CloseableMonitor.Hold h = connectionMonitor.enter()) {
@@ -189,9 +217,7 @@ class RetryingConnectionImpl<
     }
     if (!expectedCompletion) {
       setPermanentError(
-          Status.FAILED_PRECONDITION
-              .withDescription("Server unexpectedly closed stream.")
-              .asRuntimeException());
+          new CheckedApiException("Server unexpectedly closed stream.", Code.FAILED_PRECONDITION));
     }
   }
 }

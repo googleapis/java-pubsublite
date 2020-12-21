@@ -16,38 +16,45 @@
 
 package com.google.cloud.pubsublite;
 
-import com.google.auto.value.AutoValue;
-import com.google.cloud.pubsublite.internal.Preconditions;
-import io.grpc.Status;
-import io.grpc.StatusException;
+import static com.google.cloud.pubsublite.internal.UncheckedApiPreconditions.checkArgument;
 
-// Information about a successful publish operation. Can be encoded in the string returned by the
-// Cloud Pub/Sub publish() api.
+import com.google.api.gax.rpc.ApiException;
+import com.google.api.gax.rpc.StatusCode.Code;
+import com.google.auto.value.AutoValue;
+import com.google.cloud.pubsublite.internal.CheckedApiException;
+
+/**
+ * Information about a successful publish operation. Can be encoded in the string returned by the
+ * Cloud Pub/Sub {@link com.google.cloud.pubsub.v1.Publisher#publish} api.
+ */
 @AutoValue
 public abstract class PublishMetadata {
+  /** The partition a message was published to. */
   public abstract Partition partition();
 
+  /** The offset a message was assigned. */
   public abstract Offset offset();
 
+  /** Construct a PublishMetadata from a Partition and Offset. */
   public static PublishMetadata of(Partition partition, Offset offset) {
     return new AutoValue_PublishMetadata(partition, offset);
   }
 
-  public static PublishMetadata decode(String encoded) throws StatusException {
+  /** Decode a PublishMetadata from the Cloud Pub/Sub ack id. */
+  public static PublishMetadata decode(String encoded) throws ApiException {
     String[] split = encoded.split(":");
-    Preconditions.checkArgument(split.length == 2, "Invalid encoded PublishMetadata.");
+    checkArgument(split.length == 2, "Invalid encoded PublishMetadata.");
     try {
       Partition partition = Partition.of(Long.parseLong(split[0]));
       Offset offset = Offset.of(Long.parseLong(split[1]));
       return of(partition, offset);
     } catch (NumberFormatException e) {
-      throw Status.INVALID_ARGUMENT
-          .withCause(e)
-          .withDescription("Invalid encoded PublishMetadata.")
-          .asException();
+      throw new CheckedApiException("Invalid encoded PublishMetadata.", e, Code.INVALID_ARGUMENT)
+          .underlying;
     }
   }
 
+  /** Encode a publish metadata as a Cloud Pub/Sub ack id. */
   public String encode() {
     return String.format("%s:%s", partition().value(), offset().value());
   }

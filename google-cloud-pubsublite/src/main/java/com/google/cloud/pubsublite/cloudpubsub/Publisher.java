@@ -17,12 +17,13 @@
 package com.google.cloud.pubsublite.cloudpubsub;
 
 import com.google.api.core.ApiService;
+import com.google.api.gax.rpc.ApiException;
 import com.google.cloud.pubsub.v1.PublisherInterface;
-import io.grpc.StatusException;
 
-// Pub/Sub Lite publishers are streaming based and can experience permanent errors.
+/** Pub/Sub Lite publishers are streaming based and can experience permanent errors. */
 public interface Publisher extends PublisherInterface, ApiService {
-  static Publisher create(PublisherSettings settings) throws StatusException {
+  /** Create a new Pub/Sub Lite publisher using the provided settings. */
+  static Publisher create(PublisherSettings settings) throws ApiException {
     return settings.instantiate();
   }
 }

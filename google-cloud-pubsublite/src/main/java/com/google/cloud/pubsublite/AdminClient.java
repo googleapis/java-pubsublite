@@ -17,16 +17,16 @@
 package com.google.cloud.pubsublite;
 
 import com.google.api.core.ApiFuture;
-import com.google.api.gax.core.BackgroundResource;
+import com.google.api.gax.rpc.ApiException;
+import com.google.cloud.pubsublite.internal.ApiBackgroundResource;
 import com.google.cloud.pubsublite.proto.Subscription;
 import com.google.cloud.pubsublite.proto.Topic;
 import com.google.protobuf.FieldMask;
-import io.grpc.StatusException;
 import java.util.List;
 
 /** A client for performing Pub/Sub Lite admin operations. */
-public interface AdminClient extends BackgroundResource {
-  static AdminClient create(AdminClientSettings settings) throws StatusException {
+public interface AdminClient extends ApiBackgroundResource {
+  static AdminClient create(AdminClientSettings settings) throws ApiException {
     return settings.instantiate();
   }
 
@@ -37,8 +37,8 @@ public interface AdminClient extends BackgroundResource {
    * Create the provided topic if it does not yet exist.
    *
    * @param topic The topic to create.
-   * @return A future that will have either an error {@link io.grpc.StatusException} or the topic on
-   *     success.
+   * @return A future that will have either an error {@link com.google.api.gax.rpc.ApiException} or
+   *     the topic on success.
    */
   ApiFuture<Topic> createTopic(Topic topic);
 
@@ -46,8 +46,8 @@ public interface AdminClient extends BackgroundResource {
    * Get the topic with id {@code id} if it exists.
    *
    * @param path The path of the topic to retrieve.
-   * @return A future that will have either an error {@link io.grpc.StatusException} or the topic on
-   *     success.
+   * @return A future that will have either an error {@link com.google.api.gax.rpc.ApiException} or
+   *     the topic on success.
    */
   ApiFuture<Topic> getTopic(TopicPath path);
 
@@ -55,8 +55,8 @@ public interface AdminClient extends BackgroundResource {
    * Get the partitioning info for the topic with id {@code id} if it exists.
    *
    * @param path The path of the topic to retrieve.
-   * @return A future that will have either an error {@link io.grpc.StatusException} or the number
-   *     of topic partitions on success.
+   * @return A future that will have either an error {@link com.google.api.gax.rpc.ApiException} or
+   *     the number of topic partitions on success.
    */
   ApiFuture<Long> getTopicPartitionCount(TopicPath path);
 
@@ -64,8 +64,8 @@ public interface AdminClient extends BackgroundResource {
    * List all topics for the specified project.
    *
    * @param path The path of the project to list topics for.
-   * @return A future that will have either an error {@link io.grpc.StatusException} or the list of
-   *     topic paths on success.
+   * @return A future that will have either an error {@link com.google.api.gax.rpc.ApiException} or
+   *     the list of topic paths on success.
    */
   ApiFuture<List<Topic>> listTopics(LocationPath path);
 
@@ -74,9 +74,9 @@ public interface AdminClient extends BackgroundResource {
    *
    * @param topic The topic to update.
    * @param mask The mask indicating which fields should be updated.
-   * @return A future that will have either an error {@link io.grpc.StatusException} or the
-   *     resulting topic on success. Updating nonexistent topics will cause the future to have an
-   *     exception with status {@link io.grpc.Status.Code#NOT_FOUND}
+   * @return A future that will have either an error {@link com.google.api.gax.rpc.ApiException} or
+   *     the resulting topic on success. Updating nonexistent topics will cause the future to have
+   *     an exception with status {@link com.google.api.gax.rpc.StatusCode.Code#NOT_FOUND}
    */
   ApiFuture<Topic> updateTopic(Topic topic, FieldMask mask);
 
@@ -84,9 +84,9 @@ public interface AdminClient extends BackgroundResource {
    * Delete the topic with id {@code id} if it exists.
    *
    * @param path The path of the topic to retrieve.
-   * @return A future that will have either an error {@link io.grpc.StatusException} or void on
-   *     success. Deleting nonexistent topics will cause the future to have an exception with status
-   *     {@link io.grpc.Status.Code#NOT_FOUND}
+   * @return A future that will have either an error {@link com.google.api.gax.rpc.ApiException} or
+   *     void on success. Deleting nonexistent topics will cause the future to have an exception
+   *     with status {@link com.google.api.gax.rpc.StatusCode.Code#NOT_FOUND}
    */
   ApiFuture<Void> deleteTopic(TopicPath path);
 
@@ -94,8 +94,8 @@ public interface AdminClient extends BackgroundResource {
    * Get the list of subscriptions for the topic with id {@code id} if it exists.
    *
    * @param path The path of the topic to retrieve.
-   * @return A future that will have either an error {@link io.grpc.StatusException} or the list of
-   *     subscriptions on success.
+   * @return A future that will have either an error {@link com.google.api.gax.rpc.ApiException} or
+   *     the list of subscriptions on success.
    */
   ApiFuture<List<SubscriptionPath>> listTopicSubscriptions(TopicPath path);
 
@@ -103,8 +103,8 @@ public interface AdminClient extends BackgroundResource {
    * Create the provided subscription if it does not yet exist.
    *
    * @param subscription The subscription to create.
-   * @return A future that will have either an error {@link io.grpc.StatusException} or the
-   *     subscription on success.
+   * @return A future that will have either an error {@link com.google.api.gax.rpc.ApiException} or
+   *     the subscription on success.
    */
   ApiFuture<Subscription> createSubscription(Subscription subscription);
 
@@ -112,8 +112,8 @@ public interface AdminClient extends BackgroundResource {
    * Get the subscription with id {@code id} if it exists.
    *
    * @param path The path of the subscription to retrieve.
-   * @return A future that will have either an error {@link io.grpc.StatusException} or the
-   *     subscription on success.
+   * @return A future that will have either an error {@link com.google.api.gax.rpc.ApiException} or
+   *     the subscription on success.
    */
   ApiFuture<Subscription> getSubscription(SubscriptionPath path);
 
@@ -121,8 +121,8 @@ public interface AdminClient extends BackgroundResource {
    * List all subscriptions for the specified project.
    *
    * @param path The path of the project to list subscriptions for.
-   * @return A future that will have either an error {@link io.grpc.StatusException} or the list of
-   *     subscription paths on success.
+   * @return A future that will have either an error {@link com.google.api.gax.rpc.ApiException} or
+   *     the list of subscription paths on success.
    */
   ApiFuture<List<Subscription>> listSubscriptions(LocationPath path);
 
@@ -131,9 +131,10 @@ public interface AdminClient extends BackgroundResource {
    *
    * @param subscription The subscription to update.
    * @param mask The mask indicating which fields should be updated.
-   * @return A future that will have either an error {@link io.grpc.StatusException} or the
-   *     resulting subscription on success. Updating nonexistent subscriptions will cause the future
-   *     to have an exception with status {@link io.grpc.Status.Code#NOT_FOUND}
+   * @return A future that will have either an error {@link com.google.api.gax.rpc.ApiException} or
+   *     the resulting subscription on success. Updating nonexistent subscriptions will cause the
+   *     future to have an exception with status {@link
+   *     com.google.api.gax.rpc.StatusCode.Code#NOT_FOUND}
    */
   ApiFuture<Subscription> updateSubscription(Subscription subscription, FieldMask mask);
 
@@ -141,9 +142,9 @@ public interface AdminClient extends BackgroundResource {
    * Delete the subscription with id {@code id} if it exists.
    *
    * @param path The path of the subscription to retrieve.
-   * @return A future that will have either an error {@link io.grpc.StatusException} or void on
-   *     success. Deleting nonexistent subscriptions will cause the future to have an exception with
-   *     status {@link io.grpc.Status.Code#NOT_FOUND}
+   * @return A future that will have either an error {@link com.google.api.gax.rpc.ApiException} or
+   *     void on success. Deleting nonexistent subscriptions will cause the future to have an
+   *     exception with status {@link com.google.api.gax.rpc.StatusCode.Code#NOT_FOUND}
    */
   ApiFuture<Void> deleteSubscription(SubscriptionPath path);
 }

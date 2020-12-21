@@ -16,7 +16,8 @@
 
 package com.google.cloud.pubsublite.internal.wire;
 
-import static com.google.cloud.pubsublite.internal.StatusExceptionMatcher.assertFutureThrowsCode;
+import static com.google.cloud.pubsublite.internal.ApiExceptionMatcher.assertFutureThrowsCode;
+import static com.google.cloud.pubsublite.internal.wire.RetryingConnectionHelpers.whenFailed;
 import static com.google.common.truth.Truth.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.argThat;
@@ -27,78 +28,71 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.verifyZeroInteractions;
+import static org.mockito.MockitoAnnotations.initMocks;
 
 import com.google.api.core.ApiFuture;
 import com.google.api.core.ApiService.Listener;
+import com.google.api.gax.rpc.ResponseObserver;
+import com.google.api.gax.rpc.StatusCode.Code;
 import com.google.cloud.pubsublite.CloudRegion;
 import com.google.cloud.pubsublite.CloudZone;
 import com.google.cloud.pubsublite.Offset;
 import com.google.cloud.pubsublite.ProjectNumber;
 import com.google.cloud.pubsublite.SubscriptionName;
-import com.google.cloud.pubsublite.SubscriptionPaths;
-import com.google.cloud.pubsublite.internal.ExtractStatus;
-import com.google.cloud.pubsublite.internal.StatusExceptionMatcher;
-import com.google.cloud.pubsublite.proto.CursorServiceGrpc;
-import com.google.cloud.pubsublite.proto.CursorServiceGrpc.CursorServiceStub;
+import com.google.cloud.pubsublite.SubscriptionPath;
+import com.google.cloud.pubsublite.internal.ApiExceptionMatcher;
+import com.google.cloud.pubsublite.internal.CheckedApiException;
 import com.google.cloud.pubsublite.proto.InitialCommitCursorRequest;
 import com.google.cloud.pubsublite.proto.SequencedCommitCursorResponse;
 import com.google.cloud.pubsublite.proto.StreamingCommitCursorRequest;
+import com.google.cloud.pubsublite.proto.StreamingCommitCursorResponse;
 import com.google.common.util.concurrent.MoreExecutors;
-import io.grpc.ManagedChannel;
-import io.grpc.Status;
-import io.grpc.Status.Code;
-import io.grpc.StatusException;
-import io.grpc.inprocess.InProcessChannelBuilder;
-import io.grpc.stub.StreamObserver;
-import io.grpc.testing.GrpcCleanupRule;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
+import org.mockito.Mock;
 
 @RunWith(JUnit4.class)
 public class CommitterImplTest {
-  @Rule public final GrpcCleanupRule grpcCleanup = new GrpcCleanupRule();
-
   private static StreamingCommitCursorRequest initialRequest() {
-    try {
-      return StreamingCommitCursorRequest.newBuilder()
-          .setInitial(
-              InitialCommitCursorRequest.newBuilder()
-                  .setSubscription(
-                      SubscriptionPaths.newBuilder()
-                          .setProjectNumber(ProjectNumber.of(12345))
-                          .setZone(CloudZone.of(CloudRegion.of("us-east1"), 'a'))
-                          .setSubscriptionName(SubscriptionName.of("some_subscription"))
-                          .build()
-                          .value())
-                  .setPartition(1024))
-          .build();
-    } catch (StatusException e) {
-      throw e.getStatus().asRuntimeException();
-    }
+    return StreamingCommitCursorRequest.newBuilder()
+        .setInitial(
+            InitialCommitCursorRequest.newBuilder()
+                .setSubscription(
+                    SubscriptionPath.newBuilder()
+                        .setProject(ProjectNumber.of(12345))
+                        .setLocation(CloudZone.of(CloudRegion.of("us-east1"), 'a'))
+                        .setName(SubscriptionName.of("some_subscription"))
+                        .build()
+                        .toString())
+                .setPartition(1024))
+        .build();
   }
 
-  private final ConnectedCommitter mockConnectedCommitter = mock(ConnectedCommitter.class);
-  private final ConnectedCommitterFactory mockCommitterFactory =
-      mock(ConnectedCommitterFactory.class);
+  @Mock
+  private StreamFactory<StreamingCommitCursorRequest, StreamingCommitCursorResponse>
+      unusedStreamFactory;
+
+  @Mock private ConnectedCommitter mockConnectedCommitter;
+  @Mock private ConnectedCommitterFactory mockCommitterFactory;
 
   private final Listener permanentErrorHandler = mock(Listener.class);
 
   private Committer committer;
-  private StreamObserver<SequencedCommitCursorResponse> leakedResponseObserver;
+  private ResponseObserver<SequencedCommitCursorResponse> leakedResponseObserver;
 
   SequencedCommitCursorResponse ResponseWithCount(long count) {
     return SequencedCommitCursorResponse.newBuilder().setAcknowledgedCommits(count).build();
   }
 
   @Before
-  public void setUp() throws StatusException {
+  public void setUp() throws CheckedApiException {
+    initMocks(this);
     doAnswer(
             args -> {
               leakedResponseObserver = args.getArgument(1);
@@ -106,11 +100,8 @@ public class CommitterImplTest {
             })
         .when(mockCommitterFactory)
         .New(any(), any(), eq(initialRequest()));
-    ManagedChannel channel =
-        grpcCleanup.register(
-            InProcessChannelBuilder.forName("localhost:12345").directExecutor().build());
-    CursorServiceStub unusedStub = CursorServiceGrpc.newStub(channel);
-    committer = new CommitterImpl(unusedStub, mockCommitterFactory, initialRequest().getInitial());
+    committer =
+        new CommitterImpl(unusedStreamFactory, mockCommitterFactory, initialRequest().getInitial());
     committer.addListener(permanentErrorHandler, MoreExecutors.directExecutor());
     committer.startAsync().awaitRunning();
     verify(mockCommitterFactory).New(any(), any(), eq(initialRequest()));
@@ -142,18 +133,20 @@ public class CommitterImplTest {
     latch.await();
     Thread.sleep(100);
     assertThat(future.isDone()).isFalse();
-    leakedResponseObserver.onNext(ResponseWithCount(1));
+    leakedResponseObserver.onResponse(ResponseWithCount(1));
     closeFuture.get();
 
     assertFutureThrowsCode(committer.commitOffset(Offset.of(1)), Code.FAILED_PRECONDITION);
   }
 
   @Test
-  public void responseMoreThanSentError() {
+  public void responseMoreThanSentError() throws Exception {
+    Future<Void> failed = whenFailed(permanentErrorHandler);
     ApiFuture<Void> future = committer.commitOffset(Offset.of(10));
-    leakedResponseObserver.onNext(ResponseWithCount(2));
+    leakedResponseObserver.onResponse(ResponseWithCount(2));
+    failed.get();
     verify(permanentErrorHandler)
-        .failed(any(), argThat(new StatusExceptionMatcher(Code.FAILED_PRECONDITION)));
+        .failed(any(), argThat(new ApiExceptionMatcher(Code.FAILED_PRECONDITION)));
     assertFutureThrowsCode(future, Code.FAILED_PRECONDITION);
   }
 
@@ -167,13 +160,13 @@ public class CommitterImplTest {
     assertThat(future2.isDone()).isFalse();
     assertThat(future3.isDone()).isFalse();
 
-    leakedResponseObserver.onNext(ResponseWithCount(1));
+    leakedResponseObserver.onResponse(ResponseWithCount(1));
 
     assertThat(future1.isDone()).isTrue();
     assertThat(future2.isDone()).isFalse();
     assertThat(future3.isDone()).isFalse();
 
-    leakedResponseObserver.onNext(ResponseWithCount(2));
+    leakedResponseObserver.onResponse(ResponseWithCount(2));
 
     assertThat(future2.isDone()).isTrue();
     assertThat(future3.isDone()).isTrue();
@@ -184,17 +177,11 @@ public class CommitterImplTest {
   @Test
   public void stopInCommitCallback() throws Exception {
     ApiFuture<Void> future = committer.commitOffset(Offset.of(10));
-    CountDownLatch latch = new CountDownLatch(1);
-    ExtractStatus.addFailureHandler(
-        future,
-        (error) -> {
-          committer.stopAsync();
-          latch.countDown();
-        });
-    leakedResponseObserver.onError(Status.FAILED_PRECONDITION.asException());
-    latch.await();
+    Future<Void> failed = whenFailed(permanentErrorHandler);
+    leakedResponseObserver.onError(new CheckedApiException(Code.FAILED_PRECONDITION).underlying);
     assertFutureThrowsCode(future, Code.FAILED_PRECONDITION);
+    failed.get();
     verify(permanentErrorHandler)
-        .failed(any(), argThat(new StatusExceptionMatcher(Code.FAILED_PRECONDITION)));
+        .failed(any(), argThat(new ApiExceptionMatcher(Code.FAILED_PRECONDITION)));
   }
 }

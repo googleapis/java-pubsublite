@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     https://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -13,13 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package com.google.cloud.pubsublite.v1.stub;
 
 import static com.google.cloud.pubsublite.v1.AdminServiceClient.ListSubscriptionsPagedResponse;
 import static com.google.cloud.pubsublite.v1.AdminServiceClient.ListTopicSubscriptionsPagedResponse;
 import static com.google.cloud.pubsublite.v1.AdminServiceClient.ListTopicsPagedResponse;
 
-import com.google.api.core.BetaApi;
 import com.google.api.gax.core.BackgroundResource;
 import com.google.api.gax.core.BackgroundResourceAggregation;
 import com.google.api.gax.grpc.GrpcCallSettings;
@@ -46,6 +46,7 @@ import com.google.cloud.pubsublite.proto.TopicPartitions;
 import com.google.cloud.pubsublite.proto.UpdateSubscriptionRequest;
 import com.google.cloud.pubsublite.proto.UpdateTopicRequest;
 import com.google.common.collect.ImmutableMap;
+import com.google.longrunning.stub.GrpcOperationsStub;
 import com.google.protobuf.Empty;
 import io.grpc.MethodDescriptor;
 import io.grpc.protobuf.ProtoUtils;
@@ -54,16 +55,14 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import javax.annotation.Generated;
 
-// AUTO-GENERATED DOCUMENTATION AND CLASS
+// AUTO-GENERATED DOCUMENTATION AND CLASS.
 /**
- * gRPC stub implementation for Pub/Sub Lite API.
+ * gRPC stub implementation for the AdminService service API.
  *
  * <p>This class is for advanced usage and reflects the underlying API directly.
  */
-@Generated("by gapic-generator")
-@BetaApi("A restructuring of stub classes is planned, so this may break in the future")
+@Generated("by gapic-generator-java")
 public class GrpcAdminServiceStub extends AdminServiceStub {
-
   private static final MethodDescriptor<CreateTopicRequest, Topic> createTopicMethodDescriptor =
       MethodDescriptor.<CreateTopicRequest, Topic>newBuilder()
           .setType(MethodDescriptor.MethodType.UNARY)
@@ -71,6 +70,7 @@ public class GrpcAdminServiceStub extends AdminServiceStub {
           .setRequestMarshaller(ProtoUtils.marshaller(CreateTopicRequest.getDefaultInstance()))
           .setResponseMarshaller(ProtoUtils.marshaller(Topic.getDefaultInstance()))
           .build();
+
   private static final MethodDescriptor<GetTopicRequest, Topic> getTopicMethodDescriptor =
       MethodDescriptor.<GetTopicRequest, Topic>newBuilder()
           .setType(MethodDescriptor.MethodType.UNARY)
@@ -78,6 +78,7 @@ public class GrpcAdminServiceStub extends AdminServiceStub {
           .setRequestMarshaller(ProtoUtils.marshaller(GetTopicRequest.getDefaultInstance()))
           .setResponseMarshaller(ProtoUtils.marshaller(Topic.getDefaultInstance()))
           .build();
+
   private static final MethodDescriptor<GetTopicPartitionsRequest, TopicPartitions>
       getTopicPartitionsMethodDescriptor =
           MethodDescriptor.<GetTopicPartitionsRequest, TopicPartitions>newBuilder()
@@ -87,6 +88,7 @@ public class GrpcAdminServiceStub extends AdminServiceStub {
                   ProtoUtils.marshaller(GetTopicPartitionsRequest.getDefaultInstance()))
               .setResponseMarshaller(ProtoUtils.marshaller(TopicPartitions.getDefaultInstance()))
               .build();
+
   private static final MethodDescriptor<ListTopicsRequest, ListTopicsResponse>
       listTopicsMethodDescriptor =
           MethodDescriptor.<ListTopicsRequest, ListTopicsResponse>newBuilder()
@@ -95,6 +97,7 @@ public class GrpcAdminServiceStub extends AdminServiceStub {
               .setRequestMarshaller(ProtoUtils.marshaller(ListTopicsRequest.getDefaultInstance()))
               .setResponseMarshaller(ProtoUtils.marshaller(ListTopicsResponse.getDefaultInstance()))
               .build();
+
   private static final MethodDescriptor<UpdateTopicRequest, Topic> updateTopicMethodDescriptor =
       MethodDescriptor.<UpdateTopicRequest, Topic>newBuilder()
           .setType(MethodDescriptor.MethodType.UNARY)
@@ -102,6 +105,7 @@ public class GrpcAdminServiceStub extends AdminServiceStub {
           .setRequestMarshaller(ProtoUtils.marshaller(UpdateTopicRequest.getDefaultInstance()))
           .setResponseMarshaller(ProtoUtils.marshaller(Topic.getDefaultInstance()))
           .build();
+
   private static final MethodDescriptor<DeleteTopicRequest, Empty> deleteTopicMethodDescriptor =
       MethodDescriptor.<DeleteTopicRequest, Empty>newBuilder()
           .setType(MethodDescriptor.MethodType.UNARY)
@@ -109,6 +113,7 @@ public class GrpcAdminServiceStub extends AdminServiceStub {
           .setRequestMarshaller(ProtoUtils.marshaller(DeleteTopicRequest.getDefaultInstance()))
           .setResponseMarshaller(ProtoUtils.marshaller(Empty.getDefaultInstance()))
           .build();
+
   private static final MethodDescriptor<
           ListTopicSubscriptionsRequest, ListTopicSubscriptionsResponse>
       listTopicSubscriptionsMethodDescriptor =
@@ -121,6 +126,7 @@ public class GrpcAdminServiceStub extends AdminServiceStub {
               .setResponseMarshaller(
                   ProtoUtils.marshaller(ListTopicSubscriptionsResponse.getDefaultInstance()))
               .build();
+
   private static final MethodDescriptor<CreateSubscriptionRequest, Subscription>
       createSubscriptionMethodDescriptor =
           MethodDescriptor.<CreateSubscriptionRequest, Subscription>newBuilder()
@@ -130,6 +136,7 @@ public class GrpcAdminServiceStub extends AdminServiceStub {
                   ProtoUtils.marshaller(CreateSubscriptionRequest.getDefaultInstance()))
               .setResponseMarshaller(ProtoUtils.marshaller(Subscription.getDefaultInstance()))
               .build();
+
   private static final MethodDescriptor<GetSubscriptionRequest, Subscription>
       getSubscriptionMethodDescriptor =
           MethodDescriptor.<GetSubscriptionRequest, Subscription>newBuilder()
@@ -139,6 +146,7 @@ public class GrpcAdminServiceStub extends AdminServiceStub {
                   ProtoUtils.marshaller(GetSubscriptionRequest.getDefaultInstance()))
               .setResponseMarshaller(ProtoUtils.marshaller(Subscription.getDefaultInstance()))
               .build();
+
   private static final MethodDescriptor<ListSubscriptionsRequest, ListSubscriptionsResponse>
       listSubscriptionsMethodDescriptor =
           MethodDescriptor.<ListSubscriptionsRequest, ListSubscriptionsResponse>newBuilder()
@@ -149,6 +157,7 @@ public class GrpcAdminServiceStub extends AdminServiceStub {
               .setResponseMarshaller(
                   ProtoUtils.marshaller(ListSubscriptionsResponse.getDefaultInstance()))
               .build();
+
   private static final MethodDescriptor<UpdateSubscriptionRequest, Subscription>
       updateSubscriptionMethodDescriptor =
           MethodDescriptor.<UpdateSubscriptionRequest, Subscription>newBuilder()
@@ -158,6 +167,7 @@ public class GrpcAdminServiceStub extends AdminServiceStub {
                   ProtoUtils.marshaller(UpdateSubscriptionRequest.getDefaultInstance()))
               .setResponseMarshaller(ProtoUtils.marshaller(Subscription.getDefaultInstance()))
               .build();
+
   private static final MethodDescriptor<DeleteSubscriptionRequest, Empty>
       deleteSubscriptionMethodDescriptor =
           MethodDescriptor.<DeleteSubscriptionRequest, Empty>newBuilder()
@@ -167,8 +177,6 @@ public class GrpcAdminServiceStub extends AdminServiceStub {
                   ProtoUtils.marshaller(DeleteSubscriptionRequest.getDefaultInstance()))
               .setResponseMarshaller(ProtoUtils.marshaller(Empty.getDefaultInstance()))
               .build();
-
-  private final BackgroundResource backgroundResources;
 
   private final UnaryCallable<CreateTopicRequest, Topic> createTopicCallable;
   private final UnaryCallable<GetTopicRequest, Topic> getTopicCallable;
@@ -191,6 +199,8 @@ public class GrpcAdminServiceStub extends AdminServiceStub {
   private final UnaryCallable<UpdateSubscriptionRequest, Subscription> updateSubscriptionCallable;
   private final UnaryCallable<DeleteSubscriptionRequest, Empty> deleteSubscriptionCallable;
 
+  private final BackgroundResource backgroundResources;
+  private final GrpcOperationsStub operationsStub;
   private final GrpcStubCallableFactory callableFactory;
 
   public static final GrpcAdminServiceStub create(AdminServiceStubSettings settings)
@@ -229,6 +239,7 @@ public class GrpcAdminServiceStub extends AdminServiceStub {
       GrpcStubCallableFactory callableFactory)
       throws IOException {
     this.callableFactory = callableFactory;
+    this.operationsStub = GrpcOperationsStub.create(clientContext, callableFactory);
 
     GrpcCallSettings<CreateTopicRequest, Topic> createTopicTransportSettings =
         GrpcCallSettings.<CreateTopicRequest, Topic>newBuilder()
@@ -454,7 +465,12 @@ public class GrpcAdminServiceStub extends AdminServiceStub {
             settings.deleteSubscriptionSettings(),
             clientContext);
 
-    backgroundResources = new BackgroundResourceAggregation(clientContext.getBackgroundResources());
+    this.backgroundResources =
+        new BackgroundResourceAggregation(clientContext.getBackgroundResources());
+  }
+
+  public GrpcOperationsStub getOperationsStub() {
+    return operationsStub;
   }
 
   public UnaryCallable<CreateTopicRequest, Topic> createTopicCallable() {
@@ -469,12 +485,12 @@ public class GrpcAdminServiceStub extends AdminServiceStub {
     return getTopicPartitionsCallable;
   }
 
-  public UnaryCallable<ListTopicsRequest, ListTopicsPagedResponse> listTopicsPagedCallable() {
-    return listTopicsPagedCallable;
-  }
-
   public UnaryCallable<ListTopicsRequest, ListTopicsResponse> listTopicsCallable() {
     return listTopicsCallable;
+  }
+
+  public UnaryCallable<ListTopicsRequest, ListTopicsPagedResponse> listTopicsPagedCallable() {
+    return listTopicsPagedCallable;
   }
 
   public UnaryCallable<UpdateTopicRequest, Topic> updateTopicCallable() {
@@ -485,14 +501,14 @@ public class GrpcAdminServiceStub extends AdminServiceStub {
     return deleteTopicCallable;
   }
 
-  public UnaryCallable<ListTopicSubscriptionsRequest, ListTopicSubscriptionsPagedResponse>
-      listTopicSubscriptionsPagedCallable() {
-    return listTopicSubscriptionsPagedCallable;
-  }
-
   public UnaryCallable<ListTopicSubscriptionsRequest, ListTopicSubscriptionsResponse>
       listTopicSubscriptionsCallable() {
     return listTopicSubscriptionsCallable;
+  }
+
+  public UnaryCallable<ListTopicSubscriptionsRequest, ListTopicSubscriptionsPagedResponse>
+      listTopicSubscriptionsPagedCallable() {
+    return listTopicSubscriptionsPagedCallable;
   }
 
   public UnaryCallable<CreateSubscriptionRequest, Subscription> createSubscriptionCallable() {
@@ -503,14 +519,14 @@ public class GrpcAdminServiceStub extends AdminServiceStub {
     return getSubscriptionCallable;
   }
 
-  public UnaryCallable<ListSubscriptionsRequest, ListSubscriptionsPagedResponse>
-      listSubscriptionsPagedCallable() {
-    return listSubscriptionsPagedCallable;
-  }
-
   public UnaryCallable<ListSubscriptionsRequest, ListSubscriptionsResponse>
       listSubscriptionsCallable() {
     return listSubscriptionsCallable;
+  }
+
+  public UnaryCallable<ListSubscriptionsRequest, ListSubscriptionsPagedResponse>
+      listSubscriptionsPagedCallable() {
+    return listSubscriptionsPagedCallable;
   }
 
   public UnaryCallable<UpdateSubscriptionRequest, Subscription> updateSubscriptionCallable() {

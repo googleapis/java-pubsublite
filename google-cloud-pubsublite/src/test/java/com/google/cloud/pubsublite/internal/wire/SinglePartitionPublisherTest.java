@@ -19,6 +19,8 @@ package com.google.cloud.pubsublite.internal.wire;
 import static com.google.common.truth.Truth.assertThat;
 import static org.mockito.Mockito.RETURNS_SELF;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
@@ -48,13 +50,12 @@ public class SinglePartitionPublisherTest {
 
   @Spy private FakeOffsetPublisher underlying;
 
+  private Publisher<PublishMetadata> pub;
+
   @Before
   public void setUp() {
     initMocks(this);
-  }
 
-  @Test
-  public void publishResultTransformed() throws Exception {
     TopicPath topic =
         TopicPath.newBuilder()
             .setName(TopicName.of("abc"))
@@ -67,13 +68,17 @@ public class SinglePartitionPublisherTest {
     when(mockBuilder.build()).thenReturn(underlying);
 
     when(mockBuilder.setTopic(topic)).thenReturn(mockBuilder);
-    Publisher<PublishMetadata> pub =
+    this.pub =
         SinglePartitionPublisherBuilder.newBuilder()
             .setTopic(topic)
             .setPartition(partition)
             .setUnderlyingBuilder(mockBuilder)
             .build();
-    pub.startAsync().awaitRunning();
+    this.pub.startAsync().awaitRunning();
+  }
+
+  @Test
+  public void publishResultTransformed() throws Exception {
     SettableApiFuture<Offset> offsetFuture = SettableApiFuture.create();
     Message message = Message.builder().setData(ByteString.copyFromUtf8("xyz")).build();
     when(underlying.publish(message)).thenReturn(offsetFuture);
@@ -82,5 +87,20 @@ public class SinglePartitionPublisherTest {
     offsetFuture.set(Offset.of(7));
     assertThat(metadataFuture.isDone()).isTrue();
     assertThat(metadataFuture.get()).isEqualTo(PublishMetadata.of(Partition.of(3), Offset.of(7)));
+    pub.stopAsync().awaitTerminated();
+  }
+
+  @Test
+  public void flushFlushesUnderlying() throws Exception {
+    pub.flush();
+    verify(underlying, times(1)).flush();
+    pub.stopAsync().awaitTerminated();
+  }
+
+  @Test
+  public void cancelOutstandingCancelsUnderlyingPublishes() throws Exception {
+    pub.cancelOutstandingPublishes();
+    verify(underlying, times(1)).cancelOutstandingPublishes();
+    pub.stopAsync().awaitTerminated();
   }
 }

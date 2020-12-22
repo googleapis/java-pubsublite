@@ -73,6 +73,14 @@ public class RoutingPublisherTest {
   }
 
   @Test
+  public void cancelOutstandingCancelsAll() throws Exception {
+    routing.cancelOutstandingPublishes();
+    verify(publisher0, times(1)).cancelOutstandingPublishes();
+    verify(publisher1, times(1)).cancelOutstandingPublishes();
+    this.routing.stopAsync().awaitTerminated();
+  }
+
+  @Test
   public void publishValidRoute() throws Exception {
     Message message = Message.builder().setKey(ByteString.copyFromUtf8("abc")).build();
     when(routingPolicy.route(message.key())).thenReturn(Partition.of(1));

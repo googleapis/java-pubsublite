@@ -168,6 +168,13 @@ public class PartitionCountWatchingPublisherTest {
   }
 
   @Test
+  public void testCancelOutstandingPublishes() throws Exception {
+    publisher.cancelOutstandingPublishes();
+    verify(publisher0).cancelOutstandingPublishes();
+    verify(publisher1).cancelOutstandingPublishes();
+  }
+
+  @Test
   public void testIncreaseSucceeds() throws Exception {
     leakedConsumer.accept(3L);
     verify(mockRoutingPolicyFactory).newPolicy(3L);

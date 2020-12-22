@@ -156,10 +156,7 @@ public final class PublisherImpl extends ProxyService
   protected void handlePermanentError(CheckedApiException error) {
     try (CloseableMonitor.Hold h = monitor.enter()) {
       shutdown = true;
-      batchesInFlight.forEach(
-          batch -> batch.messageFutures.forEach(future -> future.setException(error)));
-      batcher.flush().forEach(m -> m.future().setException(error));
-      batchesInFlight.clear();
+      terminateOutstandingPublishes(error);
     }
   }
 
@@ -200,6 +197,14 @@ public final class PublisherImpl extends ProxyService
         });
   }
 
+  @GuardedBy("monitor.monitor")
+  private void terminateOutstandingPublishes(CheckedApiException e) {
+    batchesInFlight.forEach(
+        batch -> batch.messageFutures.forEach(future -> future.setException(e)));
+    batcher.flush().forEach(m -> m.future().setException(e));
+    batchesInFlight.clear();
+  }
+
   @Override
   public ApiFuture<Offset> publish(Message message) {
     PubSubMessage proto = message.toProto();
@@ -232,6 +237,14 @@ public final class PublisherImpl extends ProxyService
     } catch (CheckedApiException e) {
       onPermanentError(e);
       return ApiFutures.immediateFailedFuture(e);
+    }
+  }
+
+  @Override
+  public void cancelOutstandingPublishes() {
+    try (CloseableMonitor.Hold h = monitor.enter()) {
+      terminateOutstandingPublishes(
+          new CheckedApiException("Cancelled by client.", Code.CANCELLED));
     }
   }
 

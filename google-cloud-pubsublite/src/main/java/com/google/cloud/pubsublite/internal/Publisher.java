@@ -29,4 +29,7 @@ public interface Publisher<ResponseT> extends ApiService, Flushable {
   // Guarantees that if a single publish future has an exception set, all publish calls made after
   // that will also have an exception set.
   ApiFuture<ResponseT> publish(Message message);
+
+  // Attempts to cancel all outstanding publishes.
+  void cancelOutstandingPublishes();
 }

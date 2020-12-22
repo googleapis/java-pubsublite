@@ -64,6 +64,13 @@ public class RoutingPublisher extends TrivialProxyService implements Publisher<P
   }
 
   @Override
+  public void cancelOutstandingPublishes() {
+    for (Publisher<PublishMetadata> publisher : partitionPublishers.values()) {
+      publisher.cancelOutstandingPublishes();
+    }
+  }
+
+  @Override
   public void flush() throws IOException {
     for (Publisher<PublishMetadata> publisher : partitionPublishers.values()) {
       publisher.flush();

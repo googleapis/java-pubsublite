@@ -20,7 +20,11 @@ import com.google.cloud.pubsublite.CloudRegion;
 import com.google.cloud.pubsublite.Offset;
 import com.google.cloud.pubsublite.Partition;
 import com.google.cloud.pubsublite.TopicPath;
-import com.google.cloud.pubsublite.proto.*;
+import com.google.cloud.pubsublite.proto.ComputeHeadCursorRequest;
+import com.google.cloud.pubsublite.proto.ComputeHeadCursorResponse;
+import com.google.cloud.pubsublite.proto.ComputeMessageStatsRequest;
+import com.google.cloud.pubsublite.proto.ComputeMessageStatsResponse;
+import com.google.cloud.pubsublite.proto.Cursor;
 import com.google.cloud.pubsublite.v1.TopicStatsServiceClient;
 
 public class TopicStatsClientImpl extends ApiResourceAggregation implements TopicStatsClient {

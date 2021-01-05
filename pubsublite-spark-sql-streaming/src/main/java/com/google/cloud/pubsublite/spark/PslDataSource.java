@@ -56,6 +56,7 @@ public final class PslDataSource
 
     PslDataSourceOptions pslDataSourceOptions =
         PslDataSourceOptions.fromSparkDataSourceOptions(options);
+    PslCredentialsProvider credentialsProvider = new PslCredentialsProvider(pslDataSourceOptions);
     CursorClient cursorClient = pslDataSourceOptions.newCursorClient();
     AdminClient adminClient = pslDataSourceOptions.newAdminClient();
     SubscriptionPath subscriptionPath = pslDataSourceOptions.subscriptionPath();
@@ -72,6 +73,7 @@ public final class PslDataSource
     return new PslContinuousReader(
         cursorClient,
         committer,
+        credentialsProvider,
         subscriptionPath,
         Objects.requireNonNull(pslDataSourceOptions.flowControlSettings()),
         topicPartitionCount);
@@ -87,6 +89,7 @@ public final class PslDataSource
 
     PslDataSourceOptions pslDataSourceOptions =
         PslDataSourceOptions.fromSparkDataSourceOptions(options);
+    PslCredentialsProvider credentialsProvider = new PslCredentialsProvider(pslDataSourceOptions);
     CursorClient cursorClient = pslDataSourceOptions.newCursorClient();
     AdminClient adminClient = pslDataSourceOptions.newAdminClient();
     SubscriptionPath subscriptionPath = pslDataSourceOptions.subscriptionPath();
@@ -111,6 +114,7 @@ public final class PslDataSource
     return new PslMicroBatchReader(
         cursorClient,
         committer,
+        credentialsProvider,
         subscriptionPath,
         PslSparkUtils.toSparkSourceOffset(getHeadOffset(topicPath)),
         Objects.requireNonNull(pslDataSourceOptions.flowControlSettings()),

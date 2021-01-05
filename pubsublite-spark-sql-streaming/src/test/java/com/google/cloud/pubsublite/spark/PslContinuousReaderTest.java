@@ -36,10 +36,12 @@ public class PslContinuousReaderTest {
           .build();
   private final CursorClient cursorClient = mock(CursorClient.class);
   private final MultiPartitionCommitter committer = mock(MultiPartitionCommitter.class);
+  private final PslCredentialsProvider credentialsProvider = mock(PslCredentialsProvider.class);
   private final PslContinuousReader reader =
       new PslContinuousReader(
           cursorClient,
           committer,
+          credentialsProvider,
           UnitTestExamples.exampleSubscriptionPath(),
           OPTIONS.flowControlSettings(),
           2);

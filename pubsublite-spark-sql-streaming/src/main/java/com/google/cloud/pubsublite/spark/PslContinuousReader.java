@@ -19,6 +19,8 @@ package com.google.cloud.pubsublite.spark;
 import com.google.cloud.pubsublite.SubscriptionPath;
 import com.google.cloud.pubsublite.cloudpubsub.FlowControlSettings;
 import com.google.cloud.pubsublite.internal.CursorClient;
+import com.google.cloud.pubsublite.internal.wire.PubsubContext;
+import com.google.cloud.pubsublite.internal.wire.SubscriberBuilder;
 import com.google.common.annotations.VisibleForTesting;
 import java.util.Arrays;
 import java.util.List;
@@ -35,6 +37,7 @@ public class PslContinuousReader implements ContinuousReader {
 
   private final CursorClient cursorClient;
   private final MultiPartitionCommitter committer;
+  private final PslCredentialsProvider credentialsProvider;
   private final SubscriptionPath subscriptionPath;
   private final FlowControlSettings flowControlSettings;
   private final long topicPartitionCount;
@@ -44,11 +47,13 @@ public class PslContinuousReader implements ContinuousReader {
   public PslContinuousReader(
       CursorClient cursorClient,
       MultiPartitionCommitter committer,
+      PslCredentialsProvider credentialsProvider,
       SubscriptionPath subscriptionPath,
       FlowControlSettings flowControlSettings,
       long topicPartitionCount) {
     this.cursorClient = cursorClient;
     this.committer = committer;
+    this.credentialsProvider = credentialsProvider;
     this.subscriptionPath = subscriptionPath;
     this.flowControlSettings = flowControlSettings;
     this.topicPartitionCount = topicPartitionCount;
@@ -108,6 +113,14 @@ public class PslContinuousReader implements ContinuousReader {
         .map(
             v ->
                 new PslContinuousInputPartition(
+                    (consumer) ->
+                        SubscriberBuilder.newBuilder()
+                            .setSubscriptionPath(subscriptionPath)
+                            .setPartition(v.partition())
+                            .setContext(PubsubContext.of(Constants.FRAMEWORK))
+                            .setMessageConsumer(consumer)
+                            .setCredentialsProvider(credentialsProvider)
+                            .build(),
                     SparkPartitionOffset.builder()
                         .partition(v.partition())
                         .offset(v.offset())

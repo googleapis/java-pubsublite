@@ -19,6 +19,7 @@ package com.google.cloud.pubsublite.internal.wire;
 import static com.google.cloud.pubsublite.internal.ExtractStatus.toCanonical;
 import static com.google.cloud.pubsublite.internal.ServiceClients.addDefaultSettings;
 
+import com.google.api.gax.core.CredentialsProvider;
 import com.google.api.gax.rpc.ApiException;
 import com.google.auto.value.AutoValue;
 import com.google.cloud.pubsublite.Partition;
@@ -45,6 +46,9 @@ public abstract class SubscriberBuilder {
   // Optional parameters.
   abstract Optional<SubscriberServiceClient> serviceClient();
 
+  // Optional parameters.
+  abstract Optional<CredentialsProvider> credentialsProvider();
+
   abstract PubsubContext context();
 
   public static Builder newBuilder() {
@@ -64,6 +68,9 @@ public abstract class SubscriberBuilder {
     // Optional parameters.
     public abstract Builder setServiceClient(SubscriberServiceClient serviceClient);
 
+    // Optional parameters.
+    public abstract Builder setCredentialsProvider(CredentialsProvider credentialsProvider);
+
     public abstract Builder setContext(PubsubContext context);
 
     abstract SubscriberBuilder autoBuild();
@@ -71,6 +78,11 @@ public abstract class SubscriberBuilder {
     @SuppressWarnings("CheckReturnValue")
     public Subscriber build() throws ApiException {
       SubscriberBuilder autoBuilt = autoBuild();
+
+      if (autoBuilt.serviceClient().isPresent() && autoBuilt.credentialsProvider().isPresent()) {
+        throw new IllegalArgumentException(
+            "Can not set serviceClient and credentialProvider at " + "the same time.");
+      }
 
       SubscriberServiceClient serviceClient;
       if (autoBuilt.serviceClient().isPresent()) {
@@ -85,11 +97,15 @@ public abstract class SubscriberBuilder {
                   .putAll(metadata)
                   .putAll(routingMetadata)
                   .build();
+          SubscriberServiceSettings.Builder settingsBuilder =
+              SubscriberServiceSettings.newBuilder().setHeaderProvider(() -> allMetadata);
+          if (autoBuilt.credentialsProvider().isPresent()) {
+            settingsBuilder.setCredentialsProvider(autoBuilt.credentialsProvider().get());
+          }
           serviceClient =
               SubscriberServiceClient.create(
                   addDefaultSettings(
-                      autoBuilt.subscriptionPath().location().region(),
-                      SubscriberServiceSettings.newBuilder().setHeaderProvider(() -> allMetadata)));
+                      autoBuilt.subscriptionPath().location().region(), settingsBuilder));
         } catch (Throwable t) {
           throw toCanonical(t).underlying;
         }

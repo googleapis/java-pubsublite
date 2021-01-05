@@ -36,6 +36,7 @@ public class PslMicroBatchReader implements MicroBatchReader {
 
   private final CursorClient cursorClient;
   private final MultiPartitionCommitter committer;
+  private final PslCredentialsProvider credentialsProvider;
   private final SubscriptionPath subscriptionPath;
   private final FlowControlSettings flowControlSettings;
   private final long topicPartitionCount;
@@ -45,12 +46,14 @@ public class PslMicroBatchReader implements MicroBatchReader {
   public PslMicroBatchReader(
       CursorClient cursorClient,
       MultiPartitionCommitter committer,
+      PslCredentialsProvider credentialsProvider,
       SubscriptionPath subscriptionPath,
       SparkSourceOffset endOffset,
       FlowControlSettings flowControlSettings,
       long topicPartitionCount) {
     this.cursorClient = cursorClient;
     this.committer = committer;
+    this.credentialsProvider = credentialsProvider;
     this.subscriptionPath = subscriptionPath;
     this.endOffset = endOffset;
     this.flowControlSettings = flowControlSettings;
@@ -108,6 +111,7 @@ public class PslMicroBatchReader implements MicroBatchReader {
 
   @Override
   public List<InputPartition<InternalRow>> planInputPartitions() {
+    assert startOffset != null;
     return startOffset.getPartitionOffsetMap().values().stream()
         .map(
             v -> {
@@ -121,12 +125,12 @@ public class PslMicroBatchReader implements MicroBatchReader {
                   subscriptionPath,
                   flowControlSettings,
                   endPartitionOffset,
-                  // TODO(jiangmichael): Pass credentials settings here.
                   (consumer) ->
                       SubscriberBuilder.newBuilder()
                           .setSubscriptionPath(subscriptionPath)
                           .setPartition(endPartitionOffset.partition())
                           .setContext(PubsubContext.of(Constants.FRAMEWORK))
+                          .setCredentialsProvider(credentialsProvider)
                           .setMessageConsumer(consumer)
                           .build());
             })

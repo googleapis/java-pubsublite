@@ -25,10 +25,9 @@ import com.google.cloud.pubsublite.SubscriptionPath;
 import com.google.cloud.pubsublite.cloudpubsub.FlowControlSettings;
 import com.google.cloud.pubsublite.internal.CursorClient;
 import com.google.cloud.pubsublite.internal.CursorClientSettings;
-import com.google.cloud.pubsublite.v1.AdminServiceClient;
-import com.google.cloud.pubsublite.v1.AdminServiceSettings;
-import com.google.cloud.pubsublite.v1.CursorServiceClient;
-import com.google.cloud.pubsublite.v1.CursorServiceSettings;
+import com.google.cloud.pubsublite.internal.TopicStatsClient;
+import com.google.cloud.pubsublite.internal.TopicStatsClientSettings;
+import com.google.cloud.pubsublite.v1.*;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.Optional;
@@ -137,6 +136,26 @@ public abstract class PslDataSourceOptions implements Serializable {
         AdminClientSettings.newBuilder()
             .setRegion(this.subscriptionPath().location().region())
             .setServiceClient(newAdminServiceClient())
+            .build());
+  }
+
+  TopicStatsServiceClient newTopicStatsServiceClient() {
+    try {
+      return TopicStatsServiceClient.create(
+          addDefaultSettings(
+              this.subscriptionPath().location().region(),
+              TopicStatsServiceSettings.newBuilder()
+                  .setCredentialsProvider(new PslCredentialsProvider(this))));
+    } catch (IOException e) {
+      throw new IllegalStateException("Unable to create TopicStatsServiceClient.");
+    }
+  }
+
+  TopicStatsClient newTopicStatsClient() {
+    return TopicStatsClient.create(
+        TopicStatsClientSettings.newBuilder()
+            .setRegion(this.subscriptionPath().location().region())
+            .setServiceClient(newTopicStatsServiceClient())
             .build());
   }
 }

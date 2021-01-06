@@ -18,16 +18,12 @@ package com.google.cloud.pubsublite.spark;
 
 import com.google.auto.service.AutoService;
 import com.google.cloud.pubsublite.AdminClient;
-import com.google.cloud.pubsublite.Offset;
-import com.google.cloud.pubsublite.Partition;
 import com.google.cloud.pubsublite.PartitionLookupUtils;
 import com.google.cloud.pubsublite.SubscriptionPath;
 import com.google.cloud.pubsublite.TopicPath;
 import com.google.cloud.pubsublite.internal.CursorClient;
-import com.google.cloud.pubsublite.internal.TopicStatsClient;
 import com.google.cloud.pubsublite.internal.wire.CommitterBuilder;
-import java.util.HashMap;
-import java.util.Map;
+import com.google.common.base.Ticker;
 import java.util.Objects;
 import java.util.Optional;
 import org.apache.spark.sql.sources.DataSourceRegister;
@@ -113,35 +109,13 @@ public final class PslDataSource
     return new PslMicroBatchReader(
         cursorClient,
         committer,
+        new LimitingHeadOffsetReader(
+            pslDataSourceOptions.newTopicStatsClient(),
+            topicPath,
+            topicPartitionCount,
+            Ticker.systemTicker()),
         subscriptionPath,
-        PslSparkUtils.toSparkSourceOffset(
-            getHeadOffset(
-                pslDataSourceOptions.newTopicStatsClient(), topicPath, topicPartitionCount)),
         Objects.requireNonNull(pslDataSourceOptions.flowControlSettings()),
         topicPartitionCount);
-  }
-
-  private static PslSourceOffset getHeadOffset(
-      TopicStatsClient topicStatsClient, TopicPath topicPath, long topicPartitionCount) {
-    Map<Partition, Offset> partitionOffsetMap = new HashMap<>();
-    for (int i = 0; i < topicPartitionCount; i++) {
-      try {
-        partitionOffsetMap.put(
-            Partition.of(i),
-            Offset.of(
-                topicStatsClient
-                    .computeHeadCursor(topicPath, Partition.of(i))
-                    .get()
-                    .getHeadCursor()
-                    .getOffset()));
-      } catch (Throwable t) {
-        throw new IllegalStateException(
-            String.format(
-                "Unable to compute head cursor for topic partition: [%s,%d]",
-                topicPath.toString(), i),
-            t);
-      }
-    }
-    return PslSourceOffset.builder().partitionOffsetMap(partitionOffsetMap).build();
   }
 }

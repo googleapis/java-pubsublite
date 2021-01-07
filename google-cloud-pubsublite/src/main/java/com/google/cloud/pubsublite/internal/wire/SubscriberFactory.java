@@ -17,6 +17,7 @@
 package com.google.cloud.pubsublite.internal.wire;
 
 import com.google.api.gax.rpc.ApiException;
+import com.google.cloud.pubsublite.Partition;
 import com.google.cloud.pubsublite.SequencedMessage;
 import com.google.common.collect.ImmutableList;
 import java.io.Serializable;

@@ -46,13 +46,23 @@ public abstract class SubscriberBuilder {
   // Optional parameters.
   abstract Optional<SubscriberServiceClient> serviceClient();
 
-  // Optional parameters.
-  abstract Optional<CredentialsProvider> credentialsProvider();
-
   abstract PubsubContext context();
 
   public static Builder newBuilder() {
     return new AutoValue_SubscriberBuilder.Builder().setContext(PubsubContext.of());
+  }
+
+  public static void addDefaultMetadata(
+          PubsubContext context, SubscriptionPath subscriptionPath,
+          Partition partition, SubscriberServiceSettings.Builder builder) {
+    Map<String, String> metadata = context.getMetadata();
+    Map<String, String> routingMetadata = RoutingMetadata.of(subscriptionPath, partition);
+    Map<String, String> allMetadata =
+            ImmutableMap.<String, String>builder()
+                    .putAll(metadata)
+                    .putAll(routingMetadata)
+                    .build();
+    builder.setHeaderProvider(() -> allMetadata);
   }
 
   @AutoValue.Builder
@@ -68,9 +78,6 @@ public abstract class SubscriberBuilder {
     // Optional parameters.
     public abstract Builder setServiceClient(SubscriberServiceClient serviceClient);
 
-    // Optional parameters.
-    public abstract Builder setCredentialsProvider(CredentialsProvider credentialsProvider);
-
     public abstract Builder setContext(PubsubContext context);
 
     abstract SubscriberBuilder autoBuild();
@@ -79,29 +86,14 @@ public abstract class SubscriberBuilder {
     public Subscriber build() throws ApiException {
       SubscriberBuilder autoBuilt = autoBuild();
 
-      if (autoBuilt.serviceClient().isPresent() && autoBuilt.credentialsProvider().isPresent()) {
-        throw new IllegalArgumentException(
-            "Can not set serviceClient and credentialProvider at " + "the same time.");
-      }
-
       SubscriberServiceClient serviceClient;
       if (autoBuilt.serviceClient().isPresent()) {
         serviceClient = autoBuilt.serviceClient().get();
       } else {
         try {
-          Map<String, String> metadata = autoBuilt.context().getMetadata();
-          Map<String, String> routingMetadata =
-              RoutingMetadata.of(autoBuilt.subscriptionPath(), autoBuilt.partition());
-          Map<String, String> allMetadata =
-              ImmutableMap.<String, String>builder()
-                  .putAll(metadata)
-                  .putAll(routingMetadata)
-                  .build();
           SubscriberServiceSettings.Builder settingsBuilder =
-              SubscriberServiceSettings.newBuilder().setHeaderProvider(() -> allMetadata);
-          if (autoBuilt.credentialsProvider().isPresent()) {
-            settingsBuilder.setCredentialsProvider(autoBuilt.credentialsProvider().get());
-          }
+              addDefaultMetadata(autoBuilt.context(), autoBuilt.subscriptionPath(),
+                      autoBuilt.partition(), SubscriberServiceSettings.newBuilder());
           serviceClient =
               SubscriberServiceClient.create(
                   addDefaultSettings(

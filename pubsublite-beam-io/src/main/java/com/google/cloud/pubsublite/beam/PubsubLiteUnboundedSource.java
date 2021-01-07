@@ -24,7 +24,7 @@ import com.google.cloud.pubsublite.SequencedMessage;
 import com.google.cloud.pubsublite.internal.BufferingPullSubscriber;
 import com.google.cloud.pubsublite.internal.CheckedApiException;
 import com.google.cloud.pubsublite.internal.wire.Committer;
-import com.google.cloud.pubsublite.internal.wire.SubscriberFactory;
+import com.google.cloud.pubsublite.internal.wire.SinglePartitionSubscriberFactory;
 import com.google.cloud.pubsublite.proto.Cursor;
 import com.google.cloud.pubsublite.proto.SeekRequest;
 import com.google.common.base.Ticker;
@@ -76,7 +76,7 @@ class PubsubLiteUnboundedSource extends UnboundedSource<SequencedMessage, Offset
   public UnboundedReader<SequencedMessage> createReader(
       PipelineOptions options, @Nullable OffsetCheckpointMark checkpointMark) throws IOException {
     try {
-      ImmutableMap<Partition, SubscriberFactory> subscriberFactories =
+      ImmutableMap<Partition, SinglePartitionSubscriberFactory> subscriberFactories =
           subscriberOptions.getSubscriberFactories();
       ImmutableMap<Partition, Committer> committers = subscriberOptions.getCommitters();
       ImmutableMap.Builder<Partition, PubsubLiteUnboundedReader.SubscriberState> statesBuilder =

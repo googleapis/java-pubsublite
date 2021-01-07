@@ -30,7 +30,7 @@ import com.google.cloud.pubsublite.cloudpubsub.Subscriber;
 import com.google.cloud.pubsublite.internal.CheckedApiException;
 import com.google.cloud.pubsublite.internal.ExtractStatus;
 import com.google.cloud.pubsublite.internal.ProxyService;
-import com.google.cloud.pubsublite.internal.wire.SubscriberFactory;
+import com.google.cloud.pubsublite.internal.wire.SinglePartitionSubscriberFactory;
 import com.google.cloud.pubsublite.proto.FlowControlRequest;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.ImmutableList;
@@ -50,7 +50,7 @@ public class SinglePartitionSubscriber extends ProxyService implements Subscribe
       MessageTransformer<SequencedMessage, PubsubMessage> transformer,
       AckSetTracker ackSetTracker,
       NackHandler nackHandler,
-      SubscriberFactory wireSubscriberFactory,
+      SinglePartitionSubscriberFactory wireSubscriberFactory,
       FlowControlSettings flowControlSettings)
       throws ApiException {
     this.receiver = receiver;

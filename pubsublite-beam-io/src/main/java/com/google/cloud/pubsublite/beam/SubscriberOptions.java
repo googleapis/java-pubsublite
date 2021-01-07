@@ -22,12 +22,9 @@ import com.google.cloud.pubsublite.Partition;
 import com.google.cloud.pubsublite.PartitionLookupUtils;
 import com.google.cloud.pubsublite.SubscriptionPath;
 import com.google.cloud.pubsublite.cloudpubsub.FlowControlSettings;
-import com.google.cloud.pubsublite.internal.wire.Committer;
-import com.google.cloud.pubsublite.internal.wire.CommitterBuilder;
-import com.google.cloud.pubsublite.internal.wire.PubsubContext;
+import com.google.cloud.pubsublite.internal.wire.*;
 import com.google.cloud.pubsublite.internal.wire.PubsubContext.Framework;
-import com.google.cloud.pubsublite.internal.wire.SubscriberBuilder;
-import com.google.cloud.pubsublite.internal.wire.SubscriberFactory;
+import com.google.cloud.pubsublite.internal.wire.SinglePartitionSubscriberFactory;
 import com.google.cloud.pubsublite.v1.CursorServiceClient;
 import com.google.cloud.pubsublite.v1.SubscriberServiceClient;
 import com.google.common.base.Optional;
@@ -64,7 +61,7 @@ public abstract class SubscriberOptions implements Serializable {
    * A factory to override subscriber creation entirely and delegate to another method. Primarily
    * useful for testing.
    */
-  abstract Optional<SubscriberFactory> subscriberFactory();
+  abstract Optional<SinglePartitionSubscriberFactory> subscriberFactory();
 
   /**
    * A supplier to override committer creation entirely and delegate to another method. Primarily
@@ -80,8 +77,9 @@ public abstract class SubscriberOptions implements Serializable {
   public abstract Builder toBuilder();
 
   @SuppressWarnings("CheckReturnValue")
-  public ImmutableMap<Partition, SubscriberFactory> getSubscriberFactories() {
-    ImmutableMap.Builder<Partition, SubscriberFactory> factories = ImmutableMap.builder();
+  public ImmutableMap<Partition, SinglePartitionSubscriberFactory> getSubscriberFactories() {
+    ImmutableMap.Builder<Partition, SinglePartitionSubscriberFactory> factories =
+        ImmutableMap.builder();
     for (Partition partition : partitions()) {
       factories.put(
           partition,
@@ -141,7 +139,8 @@ public abstract class SubscriberOptions implements Serializable {
         TopicBacklogReaderSettings topicBacklogReaderSettings);
 
     // Used in unit tests
-    abstract Builder setSubscriberFactory(SubscriberFactory subscriberFactory);
+    abstract Builder setSubscriberFactory(
+        SinglePartitionSubscriberFactory singlePartitionSubscriberFactory);
 
     abstract Builder setCommitterSupplier(SerializableSupplier<Committer> committerSupplier);
 

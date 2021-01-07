@@ -24,8 +24,8 @@ import com.google.api.core.SettableApiFuture;
 import com.google.api.gax.rpc.StatusCode;
 import com.google.cloud.pubsublite.SequencedMessage;
 import com.google.cloud.pubsublite.cloudpubsub.FlowControlSettings;
+import com.google.cloud.pubsublite.internal.wire.SinglePartitionSubscriberFactory;
 import com.google.cloud.pubsublite.internal.wire.Subscriber;
-import com.google.cloud.pubsublite.internal.wire.SubscriberFactory;
 import com.google.cloud.pubsublite.proto.FlowControlRequest;
 import com.google.cloud.pubsublite.proto.SeekRequest;
 import com.google.common.util.concurrent.MoreExecutors;
@@ -51,7 +51,9 @@ public class BlockingPullSubscriberImpl implements BlockingPullSubscriber {
   private Optional<SettableApiFuture<Void>> notification = Optional.empty();
 
   public BlockingPullSubscriberImpl(
-      SubscriberFactory factory, FlowControlSettings settings, SeekRequest initialSeek)
+      SinglePartitionSubscriberFactory factory,
+      FlowControlSettings settings,
+      SeekRequest initialSeek)
       throws CheckedApiException {
     underlying = factory.newSubscriber(this::addMessages);
     underlying.addListener(

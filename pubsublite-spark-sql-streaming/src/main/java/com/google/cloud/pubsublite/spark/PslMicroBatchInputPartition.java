@@ -21,7 +21,7 @@ import com.google.cloud.pubsublite.cloudpubsub.FlowControlSettings;
 import com.google.cloud.pubsublite.internal.BlockingPullSubscriber;
 import com.google.cloud.pubsublite.internal.BlockingPullSubscriberImpl;
 import com.google.cloud.pubsublite.internal.CheckedApiException;
-import com.google.cloud.pubsublite.internal.wire.SubscriberFactory;
+import com.google.cloud.pubsublite.internal.wire.SinglePartitionSubscriberFactory;
 import com.google.cloud.pubsublite.proto.Cursor;
 import com.google.cloud.pubsublite.proto.SeekRequest;
 import org.apache.spark.sql.catalyst.InternalRow;
@@ -30,7 +30,7 @@ import org.apache.spark.sql.sources.v2.reader.InputPartitionReader;
 
 public class PslMicroBatchInputPartition implements InputPartition<InternalRow> {
 
-  private final SubscriberFactory subscriberFactory;
+  private final SinglePartitionSubscriberFactory singlePartitionSubscriberFactory;
   private final SparkPartitionOffset endOffset;
   private final SubscriptionPath subscriptionPath;
   private final FlowControlSettings flowControlSettings;
@@ -39,11 +39,11 @@ public class PslMicroBatchInputPartition implements InputPartition<InternalRow> 
       SubscriptionPath subscriptionPath,
       FlowControlSettings flowControlSettings,
       SparkPartitionOffset endOffset,
-      SubscriberFactory subscriberFactory) {
+      SinglePartitionSubscriberFactory singlePartitionSubscriberFactory) {
     this.endOffset = endOffset;
     this.subscriptionPath = subscriptionPath;
     this.flowControlSettings = flowControlSettings;
-    this.subscriberFactory = subscriberFactory;
+    this.singlePartitionSubscriberFactory = singlePartitionSubscriberFactory;
   }
 
   @Override
@@ -52,7 +52,7 @@ public class PslMicroBatchInputPartition implements InputPartition<InternalRow> 
     try {
       subscriber =
           new BlockingPullSubscriberImpl(
-              subscriberFactory,
+                  singlePartitionSubscriberFactory,
               flowControlSettings,
               SeekRequest.newBuilder()
                   .setCursor(Cursor.newBuilder().setOffset(endOffset.offset()).build())

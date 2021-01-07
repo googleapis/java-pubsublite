@@ -32,8 +32,8 @@ import com.google.cloud.pubsublite.Message;
 import com.google.cloud.pubsublite.Offset;
 import com.google.cloud.pubsublite.SequencedMessage;
 import com.google.cloud.pubsublite.cloudpubsub.FlowControlSettings;
+import com.google.cloud.pubsublite.internal.wire.SinglePartitionSubscriberFactory;
 import com.google.cloud.pubsublite.internal.wire.Subscriber;
-import com.google.cloud.pubsublite.internal.wire.SubscriberFactory;
 import com.google.cloud.pubsublite.proto.Cursor;
 import com.google.cloud.pubsublite.proto.FlowControlRequest;
 import com.google.cloud.pubsublite.proto.SeekRequest;
@@ -51,7 +51,8 @@ import org.mockito.InOrder;
 import org.mockito.stubbing.Answer;
 
 public class BlockingPullSubscriberImplTest {
-  private final SubscriberFactory underlyingFactory = mock(SubscriberFactory.class);
+  private final SinglePartitionSubscriberFactory underlyingFactory =
+      mock(SinglePartitionSubscriberFactory.class);
   private final Subscriber underlying = mock(Subscriber.class);
   private final Offset initialOffset = Offset.of(5);
   private final SeekRequest initialSeek =

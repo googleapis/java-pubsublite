@@ -16,6 +16,7 @@
 package com.google.cloud.pubsublite.internal;
 
 import com.google.api.core.ApiFuture;
+import com.google.api.core.ApiFutures;
 import com.google.cloud.pubsublite.CloudRegion;
 import com.google.cloud.pubsublite.Offset;
 import com.google.cloud.pubsublite.Partition;
@@ -26,6 +27,7 @@ import com.google.cloud.pubsublite.proto.ComputeMessageStatsRequest;
 import com.google.cloud.pubsublite.proto.ComputeMessageStatsResponse;
 import com.google.cloud.pubsublite.proto.Cursor;
 import com.google.cloud.pubsublite.v1.TopicStatsServiceClient;
+import com.google.common.util.concurrent.MoreExecutors;
 
 public class TopicStatsClientImpl extends ApiResourceAggregation implements TopicStatsClient {
   private final CloudRegion region;
@@ -57,14 +59,16 @@ public class TopicStatsClientImpl extends ApiResourceAggregation implements Topi
   }
 
   @Override
-  public ApiFuture<ComputeHeadCursorResponse> computeHeadCursor(
-      TopicPath path, Partition partition) {
-    return serviceClient
-        .computeHeadCursorCallable()
-        .futureCall(
-            ComputeHeadCursorRequest.newBuilder()
-                .setTopic(path.toString())
-                .setPartition(partition.value())
-                .build());
+  public ApiFuture<Cursor> computeHeadCursor(TopicPath path, Partition partition) {
+    return ApiFutures.transform(
+        serviceClient
+            .computeHeadCursorCallable()
+            .futureCall(
+                ComputeHeadCursorRequest.newBuilder()
+                    .setTopic(path.toString())
+                    .setPartition(partition.value())
+                    .build()),
+        ComputeHeadCursorResponse::getHeadCursor,
+        MoreExecutors.directExecutor());
   }
 }

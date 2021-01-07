@@ -16,12 +16,9 @@
 
 package com.google.cloud.pubsublite.spark;
 
-import com.google.cloud.pubsublite.TopicPath;
 import java.io.Closeable;
 
 public interface PerTopicHeadOffsetReader extends Closeable {
-
-  TopicPath getTopic();
 
   // Gets the head offsets for all partitions in the topic. Blocks.
   PslSourceOffset getHeadOffset();

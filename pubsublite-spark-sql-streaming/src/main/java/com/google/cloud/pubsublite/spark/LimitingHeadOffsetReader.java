@@ -36,11 +36,10 @@ import java.util.concurrent.TimeUnit;
  */
 public class LimitingHeadOffsetReader implements PerTopicHeadOffsetReader {
 
-  private static final String CACHE_KEY = "CACHE";
   private final TopicStatsClient topicStatsClient;
   private final TopicPath topic;
   private final long topicPartitionCount;
-  private final LoadingCache<String, PslSourceOffset> cachedHeadOffsets;
+  private final LoadingCache<Partition, Offset> cachedHeadOffsets;
 
   @VisibleForTesting
   public LimitingHeadOffsetReader(
@@ -52,49 +51,33 @@ public class LimitingHeadOffsetReader implements PerTopicHeadOffsetReader {
         CacheBuilder.newBuilder()
             .ticker(ticker)
             .expireAfterWrite(1, TimeUnit.MINUTES)
-            .build(
-                new CacheLoader<String, PslSourceOffset>() {
-                  @Override
-                  public PslSourceOffset load(String key) throws Exception {
-                    assert CACHE_KEY.equals(key);
+            .build(CacheLoader.from(this::loadHeadOffset));
+  }
 
-                    Map<Partition, Offset> partitionOffsetMap = new HashMap<>();
-                    for (int i = 0; i < topicPartitionCount; i++) {
-                      try {
-                        partitionOffsetMap.put(
-                            Partition.of(i),
-                            Offset.of(
-                                topicStatsClient
-                                    .computeHeadCursor(topic, Partition.of(i))
-                                    .get()
-                                    .getHeadCursor()
-                                    .getOffset()));
-                      } catch (Throwable t) {
-                        throw new IllegalStateException(
-                            String.format(
-                                "Unable to compute head cursor for topic partition: [%s,%d]",
-                                topic, i),
-                            t);
-                      }
-                    }
-                    return PslSourceOffset.builder().partitionOffsetMap(partitionOffsetMap).build();
-                  }
-                });
+  private Offset loadHeadOffset(Partition partition) {
+    try {
+      return Offset.of(topicStatsClient.computeHeadCursor(topic, partition).get().getOffset());
+    } catch (Throwable t) {
+      throw new IllegalStateException(
+          String.format(
+              "Unable to compute head cursor for topic partition: [%s,%d]",
+              topic, partition.value()),
+          t);
+    }
   }
 
   @Override
   public PslSourceOffset getHeadOffset() {
     try {
-      return cachedHeadOffsets.get(CACHE_KEY);
+      Map<Partition, Offset> partitionOffsetMap = new HashMap<>();
+      for (int i = 0; i < topicPartitionCount; i++) {
+        partitionOffsetMap.put(Partition.of(i), cachedHeadOffsets.get(Partition.of(i)));
+      }
+      return PslSourceOffset.builder().partitionOffsetMap(partitionOffsetMap).build();
     } catch (ExecutionException e) {
       throw new IllegalStateException(
           "Unable to compute head offset for topic: " + topic, e.getCause());
     }
-  }
-
-  @Override
-  public TopicPath getTopic() {
-    return topic;
   }
 
   @Override

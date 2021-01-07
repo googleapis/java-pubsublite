@@ -124,7 +124,7 @@ public abstract class PslDataSourceOptions implements Serializable {
             .build());
   }
 
-  AdminServiceClient newAdminServiceClient() {
+  private AdminServiceClient newAdminServiceClient() {
     try {
       return AdminServiceClient.create(
           addDefaultSettings(
@@ -144,7 +144,7 @@ public abstract class PslDataSourceOptions implements Serializable {
             .build());
   }
 
-  TopicStatsServiceClient newTopicStatsServiceClient() {
+  private TopicStatsServiceClient newTopicStatsServiceClient() {
     try {
       return TopicStatsServiceClient.create(
           addDefaultSettings(

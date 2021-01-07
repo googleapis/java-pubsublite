@@ -17,14 +17,18 @@
 package com.google.cloud.pubsublite.spark;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.mockito.Mockito.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import com.google.api.core.ApiFutures;
 import com.google.cloud.pubsublite.Offset;
 import com.google.cloud.pubsublite.Partition;
 import com.google.cloud.pubsublite.internal.TopicStatsClient;
 import com.google.cloud.pubsublite.internal.testing.UnitTestExamples;
-import com.google.cloud.pubsublite.proto.ComputeHeadCursorResponse;
 import com.google.cloud.pubsublite.proto.Cursor;
 import com.google.common.testing.FakeTicker;
 import java.util.concurrent.TimeUnit;
@@ -40,16 +44,10 @@ public class LimitingHeadOffsetReaderTest {
 
   @Test
   public void testRead() {
-    ComputeHeadCursorResponse resp1 =
-        ComputeHeadCursorResponse.newBuilder()
-            .setHeadCursor(Cursor.newBuilder().setOffset(10).build())
-            .build();
-    ComputeHeadCursorResponse resp2 =
-        ComputeHeadCursorResponse.newBuilder()
-            .setHeadCursor(Cursor.newBuilder().setOffset(13).build())
-            .build();
+    Cursor cursor1 = Cursor.newBuilder().setOffset(10).build();
+    Cursor cursor2 = Cursor.newBuilder().setOffset(13).build();
     when(topicStatsClient.computeHeadCursor(UnitTestExamples.exampleTopicPath(), Partition.of(0)))
-        .thenReturn(ApiFutures.immediateFuture(resp1));
+        .thenReturn(ApiFutures.immediateFuture(cursor1));
     assertThat(reader.getHeadOffset().partitionOffsetMap())
         .containsExactly(Partition.of(0), Offset.of(10));
     verify(topicStatsClient).computeHeadCursor(any(), any());
@@ -57,15 +55,15 @@ public class LimitingHeadOffsetReaderTest {
     reset(topicStatsClient);
     ticker.advance(59, TimeUnit.SECONDS);
     assertThat(reader.getHeadOffset().partitionOffsetMap())
-        .containsExactly(Partition.of(0), Offset.of(10));
+        .containsExactly(Partition.of(0), Offset.of(cursor1.getOffset()));
     verify(topicStatsClient, times(0)).computeHeadCursor(any(), any());
 
     reset(topicStatsClient);
     ticker.advance(2, TimeUnit.SECONDS);
     when(topicStatsClient.computeHeadCursor(UnitTestExamples.exampleTopicPath(), Partition.of(0)))
-        .thenReturn(ApiFutures.immediateFuture(resp2));
+        .thenReturn(ApiFutures.immediateFuture(cursor2));
     assertThat(reader.getHeadOffset().partitionOffsetMap())
-        .containsExactly(Partition.of(0), Offset.of(13));
+        .containsExactly(Partition.of(0), Offset.of(cursor2.getOffset()));
     verify(topicStatsClient).computeHeadCursor(any(), any());
   }
 }

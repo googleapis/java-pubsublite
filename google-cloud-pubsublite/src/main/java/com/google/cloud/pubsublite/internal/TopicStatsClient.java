@@ -21,8 +21,8 @@ import com.google.cloud.pubsublite.CloudRegion;
 import com.google.cloud.pubsublite.Offset;
 import com.google.cloud.pubsublite.Partition;
 import com.google.cloud.pubsublite.TopicPath;
-import com.google.cloud.pubsublite.proto.ComputeHeadCursorResponse;
 import com.google.cloud.pubsublite.proto.ComputeMessageStatsResponse;
+import com.google.cloud.pubsublite.proto.Cursor;
 
 public interface TopicStatsClient extends ApiBackgroundResource {
   static TopicStatsClient create(TopicStatsClientSettings settings) throws ApiException {
@@ -53,8 +53,8 @@ public interface TopicStatsClient extends ApiBackgroundResource {
    *
    * @param path The topic to compute head cursor on
    * @param partition The partition to compute head cursor for
-   * @return A future that will have either an error {@link ApiException} or the
-   *     ComputeHeadCursorResponse on success.
+   * @return A future that will have either an error {@link ApiException} or the head cursor on
+   *     success.
    */
-  ApiFuture<ComputeHeadCursorResponse> computeHeadCursor(TopicPath path, Partition partition);
+  ApiFuture<Cursor> computeHeadCursor(TopicPath path, Partition partition);
 }

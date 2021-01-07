@@ -19,7 +19,6 @@ package com.google.cloud.pubsublite.internal.wire;
 import static com.google.cloud.pubsublite.internal.ExtractStatus.toCanonical;
 import static com.google.cloud.pubsublite.internal.ServiceClients.addDefaultSettings;
 
-import com.google.api.gax.core.CredentialsProvider;
 import com.google.api.gax.rpc.ApiException;
 import com.google.auto.value.AutoValue;
 import com.google.cloud.pubsublite.Partition;
@@ -53,15 +52,14 @@ public abstract class SubscriberBuilder {
   }
 
   public static void addDefaultMetadata(
-          PubsubContext context, SubscriptionPath subscriptionPath,
-          Partition partition, SubscriberServiceSettings.Builder builder) {
+      PubsubContext context,
+      SubscriptionPath subscriptionPath,
+      Partition partition,
+      SubscriberServiceSettings.Builder builder) {
     Map<String, String> metadata = context.getMetadata();
     Map<String, String> routingMetadata = RoutingMetadata.of(subscriptionPath, partition);
     Map<String, String> allMetadata =
-            ImmutableMap.<String, String>builder()
-                    .putAll(metadata)
-                    .putAll(routingMetadata)
-                    .build();
+        ImmutableMap.<String, String>builder().putAll(metadata).putAll(routingMetadata).build();
     builder.setHeaderProvider(() -> allMetadata);
   }
 
@@ -92,8 +90,12 @@ public abstract class SubscriberBuilder {
       } else {
         try {
           SubscriberServiceSettings.Builder settingsBuilder =
-              addDefaultMetadata(autoBuilt.context(), autoBuilt.subscriptionPath(),
-                      autoBuilt.partition(), SubscriberServiceSettings.newBuilder());
+              SubscriberServiceSettings.newBuilder();
+          addDefaultMetadata(
+              autoBuilt.context(),
+              autoBuilt.subscriptionPath(),
+              autoBuilt.partition(),
+              SubscriberServiceSettings.newBuilder());
           serviceClient =
               SubscriberServiceClient.create(
                   addDefaultSettings(

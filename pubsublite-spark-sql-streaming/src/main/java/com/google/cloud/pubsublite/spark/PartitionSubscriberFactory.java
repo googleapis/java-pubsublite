@@ -14,15 +14,18 @@
  * limitations under the License.
  */
 
-package com.google.cloud.pubsublite.internal.wire;
+package com.google.cloud.pubsublite.spark;
 
 import com.google.api.gax.rpc.ApiException;
+import com.google.cloud.pubsublite.Partition;
 import com.google.cloud.pubsublite.SequencedMessage;
+import com.google.cloud.pubsublite.internal.wire.Subscriber;
 import com.google.common.collect.ImmutableList;
 import java.io.Serializable;
 import java.util.function.Consumer;
 
-public interface SubscriberFactory extends Serializable {
-  Subscriber newSubscriber(Consumer<ImmutableList<SequencedMessage>> message_consumer)
+public interface PartitionSubscriberFactory extends Serializable {
+  Subscriber newSubscriber(
+      Partition partition, Consumer<ImmutableList<SequencedMessage>> message_consumer)
       throws ApiException;
 }

@@ -16,27 +16,14 @@
 
 package com.google.cloud.pubsublite.spark;
 
-import com.google.cloud.pubsublite.Partition;
-import com.google.cloud.pubsublite.SequencedMessage;
 import com.google.cloud.pubsublite.SubscriptionPath;
 import com.google.cloud.pubsublite.cloudpubsub.FlowControlSettings;
 import com.google.cloud.pubsublite.internal.CursorClient;
-import com.google.cloud.pubsublite.internal.wire.PubsubContext;
-import com.google.cloud.pubsublite.internal.wire.Subscriber;
-import com.google.cloud.pubsublite.internal.wire.SubscriberBuilder;
-import com.google.cloud.pubsublite.internal.wire.SubscriberFactory;
-import com.google.cloud.pubsublite.v1.SubscriberServiceClient;
-import com.google.cloud.pubsublite.v1.SubscriberServiceSettings;
 import com.google.common.annotations.VisibleForTesting;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-import java.util.function.BiFunction;
-import java.util.function.Consumer;
-import java.util.function.Function;
 import java.util.stream.Collectors;
-
-import com.google.common.collect.ImmutableList;
 import org.apache.spark.sql.catalyst.InternalRow;
 import org.apache.spark.sql.sources.v2.reader.InputPartition;
 import org.apache.spark.sql.sources.v2.reader.streaming.ContinuousReader;
@@ -44,13 +31,11 @@ import org.apache.spark.sql.sources.v2.reader.streaming.Offset;
 import org.apache.spark.sql.sources.v2.reader.streaming.PartitionOffset;
 import org.apache.spark.sql.types.StructType;
 
-import static com.google.cloud.pubsublite.internal.ServiceClients.addDefaultSettings;
-
 public class PslContinuousReader implements ContinuousReader {
 
   private final CursorClient cursorClient;
   private final MultiPartitionCommitter committer;
-  private final PslCredentialsProvider credentialsProvider;
+  private final PartitionSubscriberFactory partitionSubscriberFactory;
   private final SubscriptionPath subscriptionPath;
   private final FlowControlSettings flowControlSettings;
   private final long topicPartitionCount;
@@ -60,13 +45,13 @@ public class PslContinuousReader implements ContinuousReader {
   public PslContinuousReader(
       CursorClient cursorClient,
       MultiPartitionCommitter committer,
-      PslCredentialsProvider credentialsProvider,
+      PartitionSubscriberFactory partitionSubscriberFactory,
       SubscriptionPath subscriptionPath,
       FlowControlSettings flowControlSettings,
       long topicPartitionCount) {
     this.cursorClient = cursorClient;
     this.committer = committer;
-    this.credentialsProvider = credentialsProvider;
+    this.partitionSubscriberFactory = partitionSubscriberFactory;
     this.subscriptionPath = subscriptionPath;
     this.flowControlSettings = flowControlSettings;
     this.topicPartitionCount = topicPartitionCount;
@@ -122,31 +107,12 @@ public class PslContinuousReader implements ContinuousReader {
 
   @Override
   public List<InputPartition<InternalRow>> planInputPartitions() {
-    BiFunction<Partition, Consumer<ImmutableList<SequencedMessage>>, Subscriber> subscriberFactory =
-            (partition, consumer) -> {
-      PubsubContext context = PubsubContext.of(Constants.FRAMEWORK);
-      SubscriberServiceSettings.Builder settingsBuilder =
-              SubscriberServiceSettings.newBuilder()
-                      .setCredentialsProvider(credentialsProvider);
-      SubscriberBuilder.addDefaultMetadata(context, subscriptionPath,
-              partition, settingsBuilder);
-      SubscriberServiceClient serviceClient =
-              SubscriberServiceClient.create(
-                      addDefaultSettings(
-                              subscriptionPath.location().region(), settingsBuilder));
-      return SubscriberBuilder.newBuilder()
-              .setSubscriptionPath(subscriptionPath)
-              .setPartition(partition)
-              .setContext(context)
-              .setServiceClient(serviceClient)
-              .setMessageConsumer(consumer)
-              .build();
-    };
+
     return startOffset.getPartitionOffsetMap().values().stream()
         .map(
             v ->
                 new PslContinuousInputPartition(
-                        (consumer) -> subscriberFactory.apply(v.partition(), consumer),
+                    (consumer) -> partitionSubscriberFactory.newSubscriber(v.partition(), consumer),
                     SparkPartitionOffset.builder()
                         .partition(v.partition())
                         .offset(v.offset())

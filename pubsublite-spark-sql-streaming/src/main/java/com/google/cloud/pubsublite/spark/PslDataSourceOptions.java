@@ -16,7 +16,7 @@
 
 package com.google.cloud.pubsublite.spark;
 
-import static com.google.cloud.pubsublite.internal.ServiceClients.addDefaultSettings;
+import static com.google.cloud.pubsublite.internal.wire.ServiceClients.addDefaultSettings;
 
 import com.google.auto.value.AutoValue;
 import com.google.cloud.pubsublite.AdminClient;

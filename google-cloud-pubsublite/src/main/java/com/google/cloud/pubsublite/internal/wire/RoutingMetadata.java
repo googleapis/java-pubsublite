@@ -28,31 +28,43 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
-final class RoutingMetadata {
-  private RoutingMetadata() {}
+public final class RoutingMetadata {
 
-  static final String PARAMS_HEADER = "x-goog-request-params";
+  private static final String PARAMS_HEADER = "x-goog-request-params";
+  private final Map<String, String> metadata;
 
-  static Map<String, String> of(TopicPath topic, Partition partition) throws ApiException {
+  public static RoutingMetadata of(TopicPath topic, Partition partition) throws ApiException {
+    return new RoutingMetadata(topic, partition);
+  }
+
+  public static RoutingMetadata of(SubscriptionPath subscription, Partition partition)
+      throws ApiException {
+    return new RoutingMetadata(subscription, partition);
+  }
+
+  private RoutingMetadata(TopicPath topic, Partition partition) {
     try {
       String topic_value = URLEncoder.encode(topic.toString(), StandardCharsets.UTF_8.toString());
       String params = String.format("partition=%s&topic=%s", partition.value(), topic_value);
-      return ImmutableMap.of(PARAMS_HEADER, params);
+      this.metadata = ImmutableMap.of(PARAMS_HEADER, params);
     } catch (UnsupportedEncodingException e) {
       throw toCanonical(e).underlying;
     }
   }
 
-  static Map<String, String> of(SubscriptionPath subscription, Partition partition)
-      throws ApiException {
+  private RoutingMetadata(SubscriptionPath subscription, Partition partition) {
     try {
       String subscription_value =
           URLEncoder.encode(subscription.toString(), StandardCharsets.UTF_8.toString());
       String params =
           String.format("partition=%s&subscription=%s", partition.value(), subscription_value);
-      return ImmutableMap.of(PARAMS_HEADER, params);
+      this.metadata = ImmutableMap.of(PARAMS_HEADER, params);
     } catch (UnsupportedEncodingException e) {
       throw toCanonical(e).underlying;
     }
+  }
+
+  public Map<String, String> getMetadata() {
+    return metadata;
   }
 }

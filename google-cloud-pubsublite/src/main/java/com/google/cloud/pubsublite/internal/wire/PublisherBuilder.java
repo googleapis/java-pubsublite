@@ -17,7 +17,8 @@
 package com.google.cloud.pubsublite.internal.wire;
 
 import static com.google.cloud.pubsublite.internal.ExtractStatus.toCanonical;
-import static com.google.cloud.pubsublite.internal.ServiceClients.addDefaultSettings;
+import static com.google.cloud.pubsublite.internal.wire.ServiceClients.addDefaultMetadata;
+import static com.google.cloud.pubsublite.internal.wire.ServiceClients.addDefaultSettings;
 
 import com.google.api.gax.batching.BatchingSettings;
 import com.google.api.gax.batching.FlowController.LimitExceededBehavior;
@@ -32,8 +33,6 @@ import com.google.cloud.pubsublite.proto.InitialPublishRequest;
 import com.google.cloud.pubsublite.v1.PublisherServiceClient;
 import com.google.cloud.pubsublite.v1.PublisherServiceSettings;
 import com.google.common.base.Preconditions;
-import com.google.common.collect.ImmutableMap;
-import java.util.Map;
 import java.util.Optional;
 import org.threeten.bp.Duration;
 
@@ -110,19 +109,14 @@ public abstract class PublisherBuilder {
         serviceClient = autoBuilt.serviceClient().get();
       } else {
         try {
-          Map<String, String> metadata = autoBuilt.context().getMetadata();
-          Map<String, String> routingMetadata =
-              RoutingMetadata.of(autoBuilt.topic(), autoBuilt.partition());
-          Map<String, String> allMetadata =
-              ImmutableMap.<String, String>builder()
-                  .putAll(metadata)
-                  .putAll(routingMetadata)
-                  .build();
+          PublisherServiceSettings.Builder settingsBuilder = PublisherServiceSettings.newBuilder();
+          addDefaultMetadata(
+              autoBuilt.context(),
+              RoutingMetadata.of(autoBuilt.topic(), autoBuilt.partition()),
+              settingsBuilder);
           serviceClient =
               PublisherServiceClient.create(
-                  addDefaultSettings(
-                      autoBuilt.topic().location().region(),
-                      PublisherServiceSettings.newBuilder().setHeaderProvider(() -> allMetadata)));
+                  addDefaultSettings(autoBuilt.topic().location().region(), settingsBuilder));
         } catch (Throwable t) {
           throw toCanonical(t).underlying;
         }

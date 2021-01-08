@@ -17,7 +17,8 @@
 package com.google.cloud.pubsublite.internal.wire;
 
 import static com.google.cloud.pubsublite.internal.ExtractStatus.toCanonical;
-import static com.google.cloud.pubsublite.internal.ServiceClients.addDefaultSettings;
+import static com.google.cloud.pubsublite.internal.wire.ServiceClients.addDefaultMetadata;
+import static com.google.cloud.pubsublite.internal.wire.ServiceClients.addDefaultSettings;
 
 import com.google.api.gax.rpc.ApiException;
 import com.google.auto.value.AutoValue;
@@ -28,8 +29,6 @@ import com.google.cloud.pubsublite.proto.InitialSubscribeRequest;
 import com.google.cloud.pubsublite.v1.SubscriberServiceClient;
 import com.google.cloud.pubsublite.v1.SubscriberServiceSettings;
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
-import java.util.Map;
 import java.util.Optional;
 import java.util.function.Consumer;
 
@@ -49,18 +48,6 @@ public abstract class SubscriberBuilder {
 
   public static Builder newBuilder() {
     return new AutoValue_SubscriberBuilder.Builder().setContext(PubsubContext.of());
-  }
-
-  public static void addDefaultMetadata(
-      PubsubContext context,
-      SubscriptionPath subscriptionPath,
-      Partition partition,
-      SubscriberServiceSettings.Builder builder) {
-    Map<String, String> metadata = context.getMetadata();
-    Map<String, String> routingMetadata = RoutingMetadata.of(subscriptionPath, partition);
-    Map<String, String> allMetadata =
-        ImmutableMap.<String, String>builder().putAll(metadata).putAll(routingMetadata).build();
-    builder.setHeaderProvider(() -> allMetadata);
   }
 
   @AutoValue.Builder
@@ -93,9 +80,8 @@ public abstract class SubscriberBuilder {
               SubscriberServiceSettings.newBuilder();
           addDefaultMetadata(
               autoBuilt.context(),
-              autoBuilt.subscriptionPath(),
-              autoBuilt.partition(),
-              SubscriberServiceSettings.newBuilder());
+              RoutingMetadata.of(autoBuilt.subscriptionPath(), autoBuilt.partition()),
+              settingsBuilder);
           serviceClient =
               SubscriberServiceClient.create(
                   addDefaultSettings(

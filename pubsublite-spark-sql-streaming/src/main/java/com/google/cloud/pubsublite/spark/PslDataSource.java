@@ -16,7 +16,7 @@
 
 package com.google.cloud.pubsublite.spark;
 
-import static com.google.cloud.pubsublite.internal.ServiceClients.addDefaultSettings;
+import static com.google.cloud.pubsublite.internal.wire.ServiceClients.addDefaultSettings;
 
 import com.google.auto.service.AutoService;
 import com.google.cloud.pubsublite.AdminClient;
@@ -28,6 +28,8 @@ import com.google.cloud.pubsublite.internal.CheckedApiException;
 import com.google.cloud.pubsublite.internal.CursorClient;
 import com.google.cloud.pubsublite.internal.wire.CommitterBuilder;
 import com.google.cloud.pubsublite.internal.wire.PubsubContext;
+import com.google.cloud.pubsublite.internal.wire.RoutingMetadata;
+import com.google.cloud.pubsublite.internal.wire.ServiceClients;
 import com.google.cloud.pubsublite.internal.wire.SubscriberBuilder;
 import com.google.cloud.pubsublite.v1.SubscriberServiceClient;
 import com.google.cloud.pubsublite.v1.SubscriberServiceSettings;
@@ -158,7 +160,8 @@ public final class PslDataSource
       PubsubContext context = PubsubContext.of(Constants.FRAMEWORK);
       SubscriberServiceSettings.Builder settingsBuilder =
           SubscriberServiceSettings.newBuilder().setCredentialsProvider(credentialsProvider);
-      SubscriberBuilder.addDefaultMetadata(context, subscriptionPath, partition, settingsBuilder);
+      ServiceClients.addDefaultMetadata(
+          context, RoutingMetadata.of(subscriptionPath, partition), settingsBuilder);
       try {
         SubscriberServiceClient serviceClient =
             SubscriberServiceClient.create(

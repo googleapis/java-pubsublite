@@ -16,6 +16,8 @@
 
 package com.google.cloud.pubsublite.spark;
 
+import static com.google.cloud.pubsublite.internal.wire.ServiceClients.addDefaultSettings;
+
 import com.google.auto.service.AutoService;
 import com.google.cloud.pubsublite.AdminClient;
 import com.google.cloud.pubsublite.Partition;
@@ -25,7 +27,14 @@ import com.google.cloud.pubsublite.TopicPath;
 import com.google.cloud.pubsublite.internal.CheckedApiException;
 import com.google.cloud.pubsublite.internal.CursorClient;
 import com.google.cloud.pubsublite.internal.wire.CommitterBuilder;
+import com.google.cloud.pubsublite.internal.wire.PubsubContext;
+import com.google.cloud.pubsublite.internal.wire.RoutingMetadata;
+import com.google.cloud.pubsublite.internal.wire.ServiceClients;
+import com.google.cloud.pubsublite.internal.wire.SubscriberBuilder;
+import com.google.cloud.pubsublite.v1.SubscriberServiceClient;
+import com.google.cloud.pubsublite.v1.SubscriberServiceSettings;
 import com.google.common.collect.ImmutableMap;
+import java.io.IOException;
 import java.util.Objects;
 import java.util.Optional;
 import org.apache.spark.sql.sources.DataSourceRegister;
@@ -69,9 +78,11 @@ public final class PslDataSource
                     .setPartition(partition)
                     .setServiceClient(pslDataSourceOptions.newCursorServiceClient())
                     .build());
+
     return new PslContinuousReader(
         cursorClient,
         committer,
+        getSubscriberFactory(new PslCredentialsProvider(pslDataSourceOptions), subscriptionPath),
         subscriptionPath,
         Objects.requireNonNull(pslDataSourceOptions.flowControlSettings()),
         topicPartitionCount);
@@ -87,6 +98,7 @@ public final class PslDataSource
 
     PslDataSourceOptions pslDataSourceOptions =
         PslDataSourceOptions.fromSparkDataSourceOptions(options);
+    PslCredentialsProvider credentialsProvider = new PslCredentialsProvider(pslDataSourceOptions);
     CursorClient cursorClient = pslDataSourceOptions.newCursorClient();
     AdminClient adminClient = pslDataSourceOptions.newAdminClient();
     SubscriptionPath subscriptionPath = pslDataSourceOptions.subscriptionPath();
@@ -111,6 +123,7 @@ public final class PslDataSource
     return new PslMicroBatchReader(
         cursorClient,
         committer,
+        getSubscriberFactory(new PslCredentialsProvider(pslDataSourceOptions), subscriptionPath),
         subscriptionPath,
         PslSparkUtils.toSparkSourceOffset(getHeadOffset(topicPath)),
         Objects.requireNonNull(pslDataSourceOptions.flowControlSettings()),
@@ -139,5 +152,30 @@ public final class PslDataSource
     } catch (CheckedApiException e) {
       throw new IllegalStateException("Unable to get head offset for topic " + topicPath, e);
     }
+  }
+
+  private static PartitionSubscriberFactory getSubscriberFactory(
+      PslCredentialsProvider credentialsProvider, SubscriptionPath subscriptionPath) {
+    return (partition, consumer) -> {
+      PubsubContext context = PubsubContext.of(Constants.FRAMEWORK);
+      SubscriberServiceSettings.Builder settingsBuilder =
+          SubscriberServiceSettings.newBuilder().setCredentialsProvider(credentialsProvider);
+      ServiceClients.addDefaultMetadata(
+          context, RoutingMetadata.of(subscriptionPath, partition), settingsBuilder);
+      try {
+        SubscriberServiceClient serviceClient =
+            SubscriberServiceClient.create(
+                addDefaultSettings(subscriptionPath.location().region(), settingsBuilder));
+        return SubscriberBuilder.newBuilder()
+            .setSubscriptionPath(subscriptionPath)
+            .setPartition(partition)
+            .setContext(context)
+            .setServiceClient(serviceClient)
+            .setMessageConsumer(consumer)
+            .build();
+      } catch (IOException e) {
+        throw new IllegalStateException("Failed to create subscriber service.", e);
+      }
+    };
   }
 }

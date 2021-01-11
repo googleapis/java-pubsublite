@@ -23,7 +23,6 @@ import com.google.cloud.pubsublite.PartitionLookupUtils;
 import com.google.cloud.pubsublite.SubscriptionPath;
 import com.google.cloud.pubsublite.TopicPath;
 import com.google.cloud.pubsublite.internal.CursorClient;
-import com.google.cloud.pubsublite.internal.wire.CommitterBuilder;
 import java.util.Objects;
 import java.util.Optional;
 import org.apache.spark.sql.sources.DataSourceRegister;
@@ -58,18 +57,9 @@ public final class PslDataSource
     AdminClient adminClient = pslDataSourceOptions.newAdminClient();
     SubscriptionPath subscriptionPath = pslDataSourceOptions.subscriptionPath();
     long topicPartitionCount = PartitionLookupUtils.numPartitions(subscriptionPath, adminClient);
-    MultiPartitionCommitter committer =
-        new MultiPartitionCommitterImpl(
-            topicPartitionCount,
-            (partition) ->
-                CommitterBuilder.newBuilder()
-                    .setSubscriptionPath(subscriptionPath)
-                    .setPartition(partition)
-                    .setServiceClient(pslDataSourceOptions.newCursorServiceClient())
-                    .build());
     return new PslContinuousReader(
         cursorClient,
-        committer,
+        pslDataSourceOptions.newMultiPartitionCommitter(topicPartitionCount),
         subscriptionPath,
         Objects.requireNonNull(pslDataSourceOptions.flowControlSettings()),
         topicPartitionCount);
@@ -96,19 +86,9 @@ public final class PslDataSource
           "Unable to get topic for subscription " + subscriptionPath, t);
     }
     long topicPartitionCount = PartitionLookupUtils.numPartitions(topicPath, adminClient);
-    MultiPartitionCommitter committer =
-        new MultiPartitionCommitterImpl(
-            topicPartitionCount,
-            (partition) ->
-                CommitterBuilder.newBuilder()
-                    .setSubscriptionPath(subscriptionPath)
-                    .setPartition(partition)
-                    .setServiceClient(pslDataSourceOptions.newCursorServiceClient())
-                    .build());
-
     return new PslMicroBatchReader(
         cursorClient,
-        committer,
+        pslDataSourceOptions.newMultiPartitionCommitter(topicPartitionCount),
         new LimitingHeadOffsetReader(
             pslDataSourceOptions.newTopicStatsClient(),
             topicPath,

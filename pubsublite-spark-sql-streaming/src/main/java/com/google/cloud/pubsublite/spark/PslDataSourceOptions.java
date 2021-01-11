@@ -27,6 +27,7 @@ import com.google.cloud.pubsublite.internal.CursorClient;
 import com.google.cloud.pubsublite.internal.CursorClientSettings;
 import com.google.cloud.pubsublite.internal.TopicStatsClient;
 import com.google.cloud.pubsublite.internal.TopicStatsClientSettings;
+import com.google.cloud.pubsublite.internal.wire.CommitterBuilder;
 import com.google.cloud.pubsublite.v1.AdminServiceClient;
 import com.google.cloud.pubsublite.v1.AdminServiceSettings;
 import com.google.cloud.pubsublite.v1.CursorServiceClient;
@@ -103,8 +104,20 @@ public abstract class PslDataSourceOptions implements Serializable {
     public abstract PslDataSourceOptions build();
   }
 
+  MultiPartitionCommitterImpl newMultiPartitionCommitter(long topicPartitionCount) {
+    return
+            new MultiPartitionCommitterImpl(
+                    topicPartitionCount,
+                    (partition) ->
+                            CommitterBuilder.newBuilder()
+                                    .setSubscriptionPath(this.subscriptionPath())
+                                    .setPartition(partition)
+                                    .setServiceClient(newCursorServiceClient())
+                                    .build());
+  }
+
   // TODO(b/jiangmichael): Make XXXClientSettings accept creds so we could simplify below methods.
-  CursorServiceClient newCursorServiceClient() {
+  private CursorServiceClient newCursorServiceClient() {
     try {
       return CursorServiceClient.create(
           addDefaultSettings(

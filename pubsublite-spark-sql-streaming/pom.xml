@@ -21,8 +21,6 @@
     <scala.version>2.11.12</scala.version>
     <scala.version.short>2.11</scala.version.short>
     <spark.version>2.4.7</spark.version>
-    <grpc.netty.version>1.30.2</grpc.netty.version>
-    <netty.tcnative.version>2.0.34.Final</netty.tcnative.version>
   </properties>
   <dependencies>
     <dependency>
@@ -187,12 +185,12 @@
                 <relocation>
                   <pattern>io.grpc.netty.shaded</pattern>
                   <shadedPattern>
-                    com.google.cloud.hadoop.repackaged.gcs.io.grpc.netty.shaded
+                    com.google.cloud.pubsublite.repackaged.io.grpc.netty.shaded
                   </shadedPattern>
                 </relocation>
                 <relocation>
                   <pattern>io</pattern>
-                  <shadedPattern>com.google.cloud.hadoop.repackaged.gcs.io</shadedPattern>
+                  <shadedPattern>com.google.cloud.pubsublite.repackaged.io</shadedPattern>
                   <includes>
                     <include>io.grpc.**</include>
                     <include>io.opencensus.**</include>
@@ -202,13 +200,13 @@
                 <relocation>
                   <pattern>META-INF/native/io_grpc_netty_shaded_</pattern>
                   <shadedPattern>
-                    META-INF/native/com_google_cloud_hadoop_repackaged_gcs_io_grpc_netty_shaded_
+                    META-INF/native/com_google_cloud_pubsublite_repackaged_io_grpc_netty_shaded_
                   </shadedPattern>
                 </relocation>
                 <relocation>
                   <pattern>META-INF/native/libio_grpc_netty_shaded_</pattern>
                   <shadedPattern>
-                    META-INF/native/libcom_google_cloud_hadoop_repackaged_gcs_io_grpc_netty_shaded_
+                    META-INF/native/libcom_google_cloud_pubsublite_repackaged_io_grpc_netty_shaded_
                   </shadedPattern>
                 </relocation>
               </relocations>

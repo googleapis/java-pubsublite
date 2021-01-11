@@ -19,24 +19,26 @@
     <maven.compiler.target>1.8</maven.compiler.target>
     <encoding>UTF-8</encoding>
     <scala.version>2.11.12</scala.version>
+    <scala.version.short>2.11</scala.version.short>
+    <spark.version>2.4.7</spark.version>
   </properties>
   <dependencies>
     <dependency>
       <groupId>org.apache.spark</groupId>
-      <artifactId>spark-sql_2.11</artifactId>
-      <version>2.4.7</version>
+      <artifactId>spark-sql_${scala.version.short}</artifactId>
+      <version>${spark.version}</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.apache.spark</groupId>
-      <artifactId>spark-catalyst_2.11</artifactId>
-      <version>2.4.7</version>
+      <artifactId>spark-catalyst_${scala.version.short}</artifactId>
+      <version>${spark.version}</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.apache.spark</groupId>
-      <artifactId>spark-unsafe_2.11</artifactId>
-      <version>2.4.7</version>
+      <artifactId>spark-unsafe_${scala.version.short}</artifactId>
+      <version>${spark.version}</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
@@ -110,7 +112,8 @@
     <dependency>
       <groupId>org.scala-lang</groupId>
       <artifactId>scala-library</artifactId>
-      <version>2.11.12</version>
+      <version>${scala.version}</version>
+      <scope>provided</scope>
     </dependency>
 
     <!--test dependencies-->
@@ -175,6 +178,36 @@
                     <include>com.google.protobuf.**</include>
                     <include>com.google.common.**</include>
                   </includes>
+                </relocation>
+                <!-- Take special care of grpc-netty-shaded, it uses the package
+                     io.grpc.netty.shaded.io.grpc.netty, which will cause the
+                     ServicesResourceTransformer to replace both occurrences of io.grpc -->
+                <relocation>
+                  <pattern>io.grpc.netty.shaded</pattern>
+                  <shadedPattern>
+                    com.google.cloud.pubsublite.repackaged.io.grpc.netty.shaded
+                  </shadedPattern>
+                </relocation>
+                <relocation>
+                  <pattern>io</pattern>
+                  <shadedPattern>com.google.cloud.pubsublite.repackaged.io</shadedPattern>
+                  <includes>
+                    <include>io.grpc.**</include>
+                    <include>io.opencensus.**</include>
+                    <include>io.perfmark.**</include>
+                  </includes>
+                </relocation>
+                <relocation>
+                  <pattern>META-INF/native/io_grpc_netty_shaded_</pattern>
+                  <shadedPattern>
+                    META-INF/native/com_google_cloud_pubsublite_repackaged_io_grpc_netty_shaded_
+                  </shadedPattern>
+                </relocation>
+                <relocation>
+                  <pattern>META-INF/native/libio_grpc_netty_shaded_</pattern>
+                  <shadedPattern>
+                    META-INF/native/libcom_google_cloud_pubsublite_repackaged_io_grpc_netty_shaded_
+                  </shadedPattern>
                 </relocation>
               </relocations>
               <shadedArtifactAttached>true</shadedArtifactAttached>

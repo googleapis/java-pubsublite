@@ -16,19 +16,23 @@
 
 package com.google.cloud.pubsublite.spark;
 
+import com.github.benmanes.caffeine.cache.AsyncLoadingCache;
+import com.github.benmanes.caffeine.cache.Caffeine;
+import com.github.benmanes.caffeine.cache.Ticker;
+import com.google.api.core.ApiFutures;
 import com.google.cloud.pubsublite.Offset;
 import com.google.cloud.pubsublite.Partition;
 import com.google.cloud.pubsublite.TopicPath;
 import com.google.cloud.pubsublite.internal.TopicStatsClient;
 import com.google.common.annotations.VisibleForTesting;
-import com.google.common.base.Ticker;
-import com.google.common.cache.CacheBuilder;
-import com.google.common.cache.CacheLoader;
-import com.google.common.cache.LoadingCache;
-import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
-import java.util.concurrent.ExecutionException;
+import java.util.Set;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Executor;
 import java.util.concurrent.TimeUnit;
+import net.javacrumbs.futureconverter.apifuturecommon.ApiFutureUtils;
+import net.javacrumbs.futureconverter.java8common.Java8FutureUtils;
 
 /**
  * Rate limited HeadOffsetReader, utilizing a LoadingCache that refreshes all partitions head
@@ -39,7 +43,7 @@ public class LimitingHeadOffsetReader implements PerTopicHeadOffsetReader {
   private final TopicStatsClient topicStatsClient;
   private final TopicPath topic;
   private final long topicPartitionCount;
-  private final LoadingCache<Partition, Offset> cachedHeadOffsets;
+  private final AsyncLoadingCache<Partition, Offset> cachedHeadOffsets;
 
   @VisibleForTesting
   public LimitingHeadOffsetReader(
@@ -48,35 +52,32 @@ public class LimitingHeadOffsetReader implements PerTopicHeadOffsetReader {
     this.topic = topic;
     this.topicPartitionCount = topicPartitionCount;
     this.cachedHeadOffsets =
-        CacheBuilder.newBuilder()
+        Caffeine.newBuilder()
             .ticker(ticker)
             .expireAfterWrite(1, TimeUnit.MINUTES)
-            .build(CacheLoader.from(this::loadHeadOffset));
+            .buildAsync(this::loadHeadOffset);
   }
 
-  private Offset loadHeadOffset(Partition partition) {
-    try {
-      return Offset.of(topicStatsClient.computeHeadCursor(topic, partition).get().getOffset());
-    } catch (Throwable t) {
-      throw new IllegalStateException(
-          String.format(
-              "Unable to compute head cursor for topic partition: [%s,%d]",
-              topic, partition.value()),
-          t);
-    }
+  private CompletableFuture<Offset> loadHeadOffset(Partition partition, Executor executor) {
+    return Java8FutureUtils.createCompletableFuture(
+        ApiFutureUtils.createValueSourceFuture(
+            ApiFutures.transform(
+                topicStatsClient.computeHeadCursor(topic, partition),
+                c -> Offset.of(c.getOffset()),
+                executor)));
   }
 
   @Override
   public PslSourceOffset getHeadOffset() {
+    Set<Partition> keySet = new HashSet<>();
+    for (int i = 0; i < topicPartitionCount; i++) {
+      keySet.add(Partition.of(i));
+    }
+    CompletableFuture<Map<Partition, Offset>> future = cachedHeadOffsets.getAll(keySet);
     try {
-      Map<Partition, Offset> partitionOffsetMap = new HashMap<>();
-      for (int i = 0; i < topicPartitionCount; i++) {
-        partitionOffsetMap.put(Partition.of(i), cachedHeadOffsets.get(Partition.of(i)));
-      }
-      return PslSourceOffset.builder().partitionOffsetMap(partitionOffsetMap).build();
-    } catch (ExecutionException e) {
-      throw new IllegalStateException(
-          "Unable to compute head offset for topic: " + topic, e.getCause());
+      return PslSourceOffset.builder().partitionOffsetMap(future.get()).build();
+    } catch (Throwable t) {
+      throw new IllegalStateException("Unable to compute head offset for topic: " + topic, t);
     }
   }
 

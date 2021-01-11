@@ -16,6 +16,7 @@
 
 package com.google.cloud.pubsublite.spark;
 
+import com.github.benmanes.caffeine.cache.Ticker;
 import com.google.auto.service.AutoService;
 import com.google.cloud.pubsublite.AdminClient;
 import com.google.cloud.pubsublite.PartitionLookupUtils;
@@ -23,7 +24,6 @@ import com.google.cloud.pubsublite.SubscriptionPath;
 import com.google.cloud.pubsublite.TopicPath;
 import com.google.cloud.pubsublite.internal.CursorClient;
 import com.google.cloud.pubsublite.internal.wire.CommitterBuilder;
-import com.google.common.base.Ticker;
 import java.util.Objects;
 import java.util.Optional;
 import org.apache.spark.sql.sources.DataSourceRegister;

@@ -40,7 +40,7 @@ public class LimitingHeadOffsetReaderTest {
   private final TopicStatsClient topicStatsClient = mock(TopicStatsClient.class);
   private final LimitingHeadOffsetReader reader =
       new LimitingHeadOffsetReader(
-          topicStatsClient, UnitTestExamples.exampleTopicPath(), 1, ticker);
+          topicStatsClient, UnitTestExamples.exampleTopicPath(), 1, ticker::read);
 
   @Test
   public void testRead() {

@@ -25,10 +25,21 @@ import com.google.cloud.pubsublite.SubscriptionPath;
 import com.google.cloud.pubsublite.cloudpubsub.FlowControlSettings;
 import com.google.cloud.pubsublite.internal.CursorClient;
 import com.google.cloud.pubsublite.internal.CursorClientSettings;
+import com.google.cloud.pubsublite.internal.TopicStatsClient;
+import com.google.cloud.pubsublite.internal.TopicStatsClientSettings;
+import com.google.cloud.pubsublite.internal.wire.CommitterBuilder;
+import com.google.cloud.pubsublite.internal.wire.PubsubContext;
+import com.google.cloud.pubsublite.internal.wire.RoutingMetadata;
+import com.google.cloud.pubsublite.internal.wire.ServiceClients;
+import com.google.cloud.pubsublite.internal.wire.SubscriberBuilder;
 import com.google.cloud.pubsublite.v1.AdminServiceClient;
 import com.google.cloud.pubsublite.v1.AdminServiceSettings;
 import com.google.cloud.pubsublite.v1.CursorServiceClient;
 import com.google.cloud.pubsublite.v1.CursorServiceSettings;
+import com.google.cloud.pubsublite.v1.SubscriberServiceClient;
+import com.google.cloud.pubsublite.v1.SubscriberServiceSettings;
+import com.google.cloud.pubsublite.v1.TopicStatsServiceClient;
+import com.google.cloud.pubsublite.v1.TopicStatsServiceSettings;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.Optional;
@@ -99,8 +110,44 @@ public abstract class PslDataSourceOptions implements Serializable {
     public abstract PslDataSourceOptions build();
   }
 
+  MultiPartitionCommitter newMultiPartitionCommitter(long topicPartitionCount) {
+    return new MultiPartitionCommitterImpl(
+        topicPartitionCount,
+        (partition) ->
+            CommitterBuilder.newBuilder()
+                .setSubscriptionPath(this.subscriptionPath())
+                .setPartition(partition)
+                .setServiceClient(newCursorServiceClient())
+                .build());
+  }
+
+  PartitionSubscriberFactory getSubscriberFactory() {
+    return (partition, consumer) -> {
+      PubsubContext context = PubsubContext.of(Constants.FRAMEWORK);
+      SubscriberServiceSettings.Builder settingsBuilder =
+          SubscriberServiceSettings.newBuilder()
+              .setCredentialsProvider(new PslCredentialsProvider(this));
+      ServiceClients.addDefaultMetadata(
+          context, RoutingMetadata.of(this.subscriptionPath(), partition), settingsBuilder);
+      try {
+        SubscriberServiceClient serviceClient =
+            SubscriberServiceClient.create(
+                addDefaultSettings(this.subscriptionPath().location().region(), settingsBuilder));
+        return SubscriberBuilder.newBuilder()
+            .setSubscriptionPath(this.subscriptionPath())
+            .setPartition(partition)
+            .setContext(context)
+            .setServiceClient(serviceClient)
+            .setMessageConsumer(consumer)
+            .build();
+      } catch (IOException e) {
+        throw new IllegalStateException("Failed to create subscriber service.", e);
+      }
+    };
+  }
+
   // TODO(b/jiangmichael): Make XXXClientSettings accept creds so we could simplify below methods.
-  CursorServiceClient newCursorServiceClient() {
+  private CursorServiceClient newCursorServiceClient() {
     try {
       return CursorServiceClient.create(
           addDefaultSettings(
@@ -120,7 +167,7 @@ public abstract class PslDataSourceOptions implements Serializable {
             .build());
   }
 
-  AdminServiceClient newAdminServiceClient() {
+  private AdminServiceClient newAdminServiceClient() {
     try {
       return AdminServiceClient.create(
           addDefaultSettings(
@@ -137,6 +184,26 @@ public abstract class PslDataSourceOptions implements Serializable {
         AdminClientSettings.newBuilder()
             .setRegion(this.subscriptionPath().location().region())
             .setServiceClient(newAdminServiceClient())
+            .build());
+  }
+
+  private TopicStatsServiceClient newTopicStatsServiceClient() {
+    try {
+      return TopicStatsServiceClient.create(
+          addDefaultSettings(
+              this.subscriptionPath().location().region(),
+              TopicStatsServiceSettings.newBuilder()
+                  .setCredentialsProvider(new PslCredentialsProvider(this))));
+    } catch (IOException e) {
+      throw new IllegalStateException("Unable to create TopicStatsServiceClient.");
+    }
+  }
+
+  TopicStatsClient newTopicStatsClient() {
+    return TopicStatsClient.create(
+        TopicStatsClientSettings.newBuilder()
+            .setRegion(this.subscriptionPath().location().region())
+            .setServiceClient(newTopicStatsServiceClient())
             .build());
   }
 }

@@ -16,25 +16,13 @@
 
 package com.google.cloud.pubsublite.spark;
 
-import static com.google.cloud.pubsublite.internal.wire.ServiceClients.addDefaultSettings;
-
+import com.github.benmanes.caffeine.cache.Ticker;
 import com.google.auto.service.AutoService;
 import com.google.cloud.pubsublite.AdminClient;
-import com.google.cloud.pubsublite.Partition;
 import com.google.cloud.pubsublite.PartitionLookupUtils;
 import com.google.cloud.pubsublite.SubscriptionPath;
 import com.google.cloud.pubsublite.TopicPath;
-import com.google.cloud.pubsublite.internal.CheckedApiException;
 import com.google.cloud.pubsublite.internal.CursorClient;
-import com.google.cloud.pubsublite.internal.wire.CommitterBuilder;
-import com.google.cloud.pubsublite.internal.wire.PubsubContext;
-import com.google.cloud.pubsublite.internal.wire.RoutingMetadata;
-import com.google.cloud.pubsublite.internal.wire.ServiceClients;
-import com.google.cloud.pubsublite.internal.wire.SubscriberBuilder;
-import com.google.cloud.pubsublite.v1.SubscriberServiceClient;
-import com.google.cloud.pubsublite.v1.SubscriberServiceSettings;
-import com.google.common.collect.ImmutableMap;
-import java.io.IOException;
 import java.util.Objects;
 import java.util.Optional;
 import org.apache.spark.sql.sources.DataSourceRegister;
@@ -69,20 +57,10 @@ public final class PslDataSource
     AdminClient adminClient = pslDataSourceOptions.newAdminClient();
     SubscriptionPath subscriptionPath = pslDataSourceOptions.subscriptionPath();
     long topicPartitionCount = PartitionLookupUtils.numPartitions(subscriptionPath, adminClient);
-    MultiPartitionCommitter committer =
-        new MultiPartitionCommitterImpl(
-            topicPartitionCount,
-            (partition) ->
-                CommitterBuilder.newBuilder()
-                    .setSubscriptionPath(subscriptionPath)
-                    .setPartition(partition)
-                    .setServiceClient(pslDataSourceOptions.newCursorServiceClient())
-                    .build());
-
     return new PslContinuousReader(
         cursorClient,
-        committer,
-        getSubscriberFactory(new PslCredentialsProvider(pslDataSourceOptions), subscriptionPath),
+        pslDataSourceOptions.newMultiPartitionCommitter(topicPartitionCount),
+        pslDataSourceOptions.getSubscriberFactory(),
         subscriptionPath,
         Objects.requireNonNull(pslDataSourceOptions.flowControlSettings()),
         topicPartitionCount);
@@ -98,7 +76,6 @@ public final class PslDataSource
 
     PslDataSourceOptions pslDataSourceOptions =
         PslDataSourceOptions.fromSparkDataSourceOptions(options);
-    PslCredentialsProvider credentialsProvider = new PslCredentialsProvider(pslDataSourceOptions);
     CursorClient cursorClient = pslDataSourceOptions.newCursorClient();
     AdminClient adminClient = pslDataSourceOptions.newAdminClient();
     SubscriptionPath subscriptionPath = pslDataSourceOptions.subscriptionPath();
@@ -110,72 +87,17 @@ public final class PslDataSource
           "Unable to get topic for subscription " + subscriptionPath, t);
     }
     long topicPartitionCount = PartitionLookupUtils.numPartitions(topicPath, adminClient);
-    MultiPartitionCommitter committer =
-        new MultiPartitionCommitterImpl(
-            topicPartitionCount,
-            (partition) ->
-                CommitterBuilder.newBuilder()
-                    .setSubscriptionPath(subscriptionPath)
-                    .setPartition(partition)
-                    .setServiceClient(pslDataSourceOptions.newCursorServiceClient())
-                    .build());
-
     return new PslMicroBatchReader(
         cursorClient,
-        committer,
-        getSubscriberFactory(new PslCredentialsProvider(pslDataSourceOptions), subscriptionPath),
+        pslDataSourceOptions.newMultiPartitionCommitter(topicPartitionCount),
+        pslDataSourceOptions.getSubscriberFactory(),
+        new LimitingHeadOffsetReader(
+            pslDataSourceOptions.newTopicStatsClient(),
+            topicPath,
+            topicPartitionCount,
+            Ticker.systemTicker()),
         subscriptionPath,
-        PslSparkUtils.toSparkSourceOffset(getHeadOffset(topicPath)),
         Objects.requireNonNull(pslDataSourceOptions.flowControlSettings()),
         topicPartitionCount);
-  }
-
-  private static PslSourceOffset getHeadOffset(TopicPath topicPath) {
-    // TODO(jiangmichael): Replace it with real implementation.
-    HeadOffsetReader headOffsetReader =
-        new HeadOffsetReader() {
-          @Override
-          public PslSourceOffset getHeadOffset(TopicPath topic) {
-            return PslSourceOffset.builder()
-                .partitionOffsetMap(
-                    ImmutableMap.of(
-                        Partition.of(0), com.google.cloud.pubsublite.Offset.of(50),
-                        Partition.of(1), com.google.cloud.pubsublite.Offset.of(50)))
-                .build();
-          }
-
-          @Override
-          public void close() {}
-        };
-    try {
-      return headOffsetReader.getHeadOffset(topicPath);
-    } catch (CheckedApiException e) {
-      throw new IllegalStateException("Unable to get head offset for topic " + topicPath, e);
-    }
-  }
-
-  private static PartitionSubscriberFactory getSubscriberFactory(
-      PslCredentialsProvider credentialsProvider, SubscriptionPath subscriptionPath) {
-    return (partition, consumer) -> {
-      PubsubContext context = PubsubContext.of(Constants.FRAMEWORK);
-      SubscriberServiceSettings.Builder settingsBuilder =
-          SubscriberServiceSettings.newBuilder().setCredentialsProvider(credentialsProvider);
-      ServiceClients.addDefaultMetadata(
-          context, RoutingMetadata.of(subscriptionPath, partition), settingsBuilder);
-      try {
-        SubscriberServiceClient serviceClient =
-            SubscriberServiceClient.create(
-                addDefaultSettings(subscriptionPath.location().region(), settingsBuilder));
-        return SubscriberBuilder.newBuilder()
-            .setSubscriptionPath(subscriptionPath)
-            .setPartition(partition)
-            .setContext(context)
-            .setServiceClient(serviceClient)
-            .setMessageConsumer(consumer)
-            .build();
-      } catch (IOException e) {
-        throw new IllegalStateException("Failed to create subscriber service.", e);
-      }
-    };
   }
 }

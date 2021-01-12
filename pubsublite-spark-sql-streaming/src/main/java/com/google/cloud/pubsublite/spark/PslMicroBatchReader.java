@@ -35,6 +35,7 @@ public class PslMicroBatchReader implements MicroBatchReader {
   private final CursorClient cursorClient;
   private final MultiPartitionCommitter committer;
   private final PartitionSubscriberFactory partitionSubscriberFactory;
+  private final PerTopicHeadOffsetReader headOffsetReader;
   private final SubscriptionPath subscriptionPath;
   private final FlowControlSettings flowControlSettings;
   private final long topicPartitionCount;
@@ -45,15 +46,15 @@ public class PslMicroBatchReader implements MicroBatchReader {
       CursorClient cursorClient,
       MultiPartitionCommitter committer,
       PartitionSubscriberFactory partitionSubscriberFactory,
+      PerTopicHeadOffsetReader headOffsetReader,
       SubscriptionPath subscriptionPath,
-      SparkSourceOffset endOffset,
       FlowControlSettings flowControlSettings,
       long topicPartitionCount) {
     this.cursorClient = cursorClient;
     this.committer = committer;
     this.partitionSubscriberFactory = partitionSubscriberFactory;
+    this.headOffsetReader = headOffsetReader;
     this.subscriptionPath = subscriptionPath;
-    this.endOffset = endOffset;
     this.flowControlSettings = flowControlSettings;
     this.topicPartitionCount = topicPartitionCount;
   }
@@ -72,6 +73,8 @@ public class PslMicroBatchReader implements MicroBatchReader {
       assert SparkSourceOffset.class.isAssignableFrom(end.get().getClass())
           : "start offset is not assignable to PslSourceOffset.";
       endOffset = (SparkSourceOffset) end.get();
+    } else {
+      endOffset = PslSparkUtils.toSparkSourceOffset(headOffsetReader.getHeadOffset());
     }
   }
 

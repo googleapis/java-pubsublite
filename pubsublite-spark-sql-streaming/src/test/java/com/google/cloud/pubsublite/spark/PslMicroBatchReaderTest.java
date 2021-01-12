@@ -39,13 +39,14 @@ public class PslMicroBatchReaderTest {
   private final MultiPartitionCommitter committer = mock(MultiPartitionCommitter.class);
   private final PartitionSubscriberFactory partitionSubscriberFactory =
       mock(PartitionSubscriberFactory.class);
+  private final PerTopicHeadOffsetReader headOffsetReader = mock(PerTopicHeadOffsetReader.class);
   private final PslMicroBatchReader reader =
       new PslMicroBatchReader(
           cursorClient,
           committer,
           partitionSubscriberFactory,
+          headOffsetReader,
           UnitTestExamples.exampleSubscriptionPath(),
-          createSparkSourceOffsetTwoPartition(300L, -1L),
           OPTIONS.flowControlSettings(),
           2);
 
@@ -70,6 +71,7 @@ public class PslMicroBatchReaderTest {
   public void testEmptyOffsets() {
     when(cursorClient.listPartitionCursors(UnitTestExamples.exampleSubscriptionPath()))
         .thenReturn(ApiFutures.immediateFuture(ImmutableMap.of(Partition.of(0L), Offset.of(100L))));
+    when(headOffsetReader.getHeadOffset()).thenReturn(createPslSourceOffsetTwoPartition(301L, 0L));
     reader.setOffsetRange(Optional.empty(), Optional.empty());
     assertThat(((SparkSourceOffset) reader.getStartOffset()).getPartitionOffsetMap())
         .containsExactly(

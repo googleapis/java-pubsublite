@@ -112,7 +112,7 @@ public class BlockingPullSubscriberImpl implements BlockingPullSubscriber {
     if (messages.isEmpty()) {
       return Optional.empty();
     }
-    SequencedMessage msg = messages.poll();
+    SequencedMessage msg = messages.remove();
     underlying.allowFlow(
         FlowControlRequest.newBuilder()
             .setAllowedMessages(1)

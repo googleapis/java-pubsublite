@@ -68,6 +68,12 @@ public class PartitionCountWatchingPublisher extends ProxyService
       }
     }
 
+    public void cancelOutstandingPublishes() {
+      for (Publisher<PublishMetadata> publisher : publishers.values()) {
+        publisher.cancelOutstandingPublishes();
+      }
+    }
+
     public void flush() throws IOException {
       for (Publisher<PublishMetadata> publisher : publishers.values()) {
         publisher.flush();
@@ -111,6 +117,19 @@ public class PartitionCountWatchingPublisher extends ProxyService
       onPermanentError(e);
       return ApiFutures.immediateFailedFuture(e);
     }
+  }
+
+  @Override
+  public void cancelOutstandingPublishes() {
+    Optional<PartitionsWithRouting> partitions;
+    try (CloseableMonitor.Hold h = monitor.enter()) {
+      partitions = partitionsWithRouting;
+    }
+    if (!partitions.isPresent()) {
+      throw new IllegalStateException(
+          "Cancel outstanding publishes called before start or after shutdown");
+    }
+    partitions.get().cancelOutstandingPublishes();
   }
 
   @Override

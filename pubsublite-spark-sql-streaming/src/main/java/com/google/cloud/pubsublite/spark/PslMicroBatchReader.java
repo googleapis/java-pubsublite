@@ -19,8 +19,6 @@ package com.google.cloud.pubsublite.spark;
 import com.google.cloud.pubsublite.SubscriptionPath;
 import com.google.cloud.pubsublite.cloudpubsub.FlowControlSettings;
 import com.google.cloud.pubsublite.internal.CursorClient;
-import com.google.cloud.pubsublite.internal.wire.PubsubContext;
-import com.google.cloud.pubsublite.internal.wire.SubscriberBuilder;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -36,6 +34,7 @@ public class PslMicroBatchReader implements MicroBatchReader {
 
   private final CursorClient cursorClient;
   private final MultiPartitionCommitter committer;
+  private final PartitionSubscriberFactory partitionSubscriberFactory;
   private final PerTopicHeadOffsetReader headOffsetReader;
   private final SubscriptionPath subscriptionPath;
   private final FlowControlSettings flowControlSettings;
@@ -46,12 +45,14 @@ public class PslMicroBatchReader implements MicroBatchReader {
   public PslMicroBatchReader(
       CursorClient cursorClient,
       MultiPartitionCommitter committer,
+      PartitionSubscriberFactory partitionSubscriberFactory,
       PerTopicHeadOffsetReader headOffsetReader,
       SubscriptionPath subscriptionPath,
       FlowControlSettings flowControlSettings,
       long topicPartitionCount) {
     this.cursorClient = cursorClient;
     this.committer = committer;
+    this.partitionSubscriberFactory = partitionSubscriberFactory;
     this.headOffsetReader = headOffsetReader;
     this.subscriptionPath = subscriptionPath;
     this.flowControlSettings = flowControlSettings;
@@ -111,6 +112,7 @@ public class PslMicroBatchReader implements MicroBatchReader {
 
   @Override
   public List<InputPartition<InternalRow>> planInputPartitions() {
+    assert startOffset != null;
     return startOffset.getPartitionOffsetMap().values().stream()
         .map(
             v -> {
@@ -124,14 +126,7 @@ public class PslMicroBatchReader implements MicroBatchReader {
                   subscriptionPath,
                   flowControlSettings,
                   endPartitionOffset,
-                  // TODO(jiangmichael): Pass credentials settings here.
-                  (consumer) ->
-                      SubscriberBuilder.newBuilder()
-                          .setSubscriptionPath(subscriptionPath)
-                          .setPartition(endPartitionOffset.partition())
-                          .setContext(PubsubContext.of(Constants.FRAMEWORK))
-                          .setMessageConsumer(consumer)
-                          .build());
+                  (consumer) -> partitionSubscriberFactory.newSubscriber(v.partition(), consumer));
             })
         .filter(Objects::nonNull)
         .collect(Collectors.toList());

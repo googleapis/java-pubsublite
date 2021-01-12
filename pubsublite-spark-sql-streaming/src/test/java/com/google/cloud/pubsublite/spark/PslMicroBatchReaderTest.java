@@ -37,11 +37,14 @@ public class PslMicroBatchReaderTest {
           .build();
   private final CursorClient cursorClient = mock(CursorClient.class);
   private final MultiPartitionCommitter committer = mock(MultiPartitionCommitter.class);
+  private final PartitionSubscriberFactory partitionSubscriberFactory =
+      mock(PartitionSubscriberFactory.class);
   private final PerTopicHeadOffsetReader headOffsetReader = mock(PerTopicHeadOffsetReader.class);
   private final PslMicroBatchReader reader =
       new PslMicroBatchReader(
           cursorClient,
           committer,
+          partitionSubscriberFactory,
           headOffsetReader,
           UnitTestExamples.exampleSubscriptionPath(),
           OPTIONS.flowControlSettings(),

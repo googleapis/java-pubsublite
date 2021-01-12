@@ -16,7 +16,7 @@
 
 package com.google.cloud.pubsublite.spark;
 
-import static com.google.cloud.pubsublite.internal.ServiceClients.addDefaultSettings;
+import static com.google.cloud.pubsublite.internal.wire.ServiceClients.addDefaultSettings;
 
 import com.google.auto.value.AutoValue;
 import com.google.cloud.pubsublite.AdminClient;
@@ -28,10 +28,16 @@ import com.google.cloud.pubsublite.internal.CursorClientSettings;
 import com.google.cloud.pubsublite.internal.TopicStatsClient;
 import com.google.cloud.pubsublite.internal.TopicStatsClientSettings;
 import com.google.cloud.pubsublite.internal.wire.CommitterBuilder;
+import com.google.cloud.pubsublite.internal.wire.PubsubContext;
+import com.google.cloud.pubsublite.internal.wire.RoutingMetadata;
+import com.google.cloud.pubsublite.internal.wire.ServiceClients;
+import com.google.cloud.pubsublite.internal.wire.SubscriberBuilder;
 import com.google.cloud.pubsublite.v1.AdminServiceClient;
 import com.google.cloud.pubsublite.v1.AdminServiceSettings;
 import com.google.cloud.pubsublite.v1.CursorServiceClient;
 import com.google.cloud.pubsublite.v1.CursorServiceSettings;
+import com.google.cloud.pubsublite.v1.SubscriberServiceClient;
+import com.google.cloud.pubsublite.v1.SubscriberServiceSettings;
 import com.google.cloud.pubsublite.v1.TopicStatsServiceClient;
 import com.google.cloud.pubsublite.v1.TopicStatsServiceSettings;
 import java.io.IOException;
@@ -113,6 +119,31 @@ public abstract class PslDataSourceOptions implements Serializable {
                 .setPartition(partition)
                 .setServiceClient(newCursorServiceClient())
                 .build());
+  }
+
+  PartitionSubscriberFactory getSubscriberFactory() {
+    return (partition, consumer) -> {
+      PubsubContext context = PubsubContext.of(Constants.FRAMEWORK);
+      SubscriberServiceSettings.Builder settingsBuilder =
+          SubscriberServiceSettings.newBuilder()
+              .setCredentialsProvider(new PslCredentialsProvider(this));
+      ServiceClients.addDefaultMetadata(
+          context, RoutingMetadata.of(this.subscriptionPath(), partition), settingsBuilder);
+      try {
+        SubscriberServiceClient serviceClient =
+            SubscriberServiceClient.create(
+                addDefaultSettings(this.subscriptionPath().location().region(), settingsBuilder));
+        return SubscriberBuilder.newBuilder()
+            .setSubscriptionPath(this.subscriptionPath())
+            .setPartition(partition)
+            .setContext(context)
+            .setServiceClient(serviceClient)
+            .setMessageConsumer(consumer)
+            .build();
+      } catch (IOException e) {
+        throw new IllegalStateException("Failed to create subscriber service.", e);
+      }
+    };
   }
 
   // TODO(b/jiangmichael): Make XXXClientSettings accept creds so we could simplify below methods.

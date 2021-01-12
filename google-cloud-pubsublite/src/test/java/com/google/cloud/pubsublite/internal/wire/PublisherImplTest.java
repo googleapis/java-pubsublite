@@ -310,4 +310,31 @@ public class PublisherImplTest {
 
     verifyNoMoreInteractions(mockBatchPublisher);
   }
+
+  @Test
+  public void cancelOutstandingPublishes_terminatesFutures() throws Exception {
+    startPublisher();
+
+    // Publish a message and flush to stream.
+    Message message1 = Message.builder().setData(ByteString.copyFromUtf8("data")).build();
+    Future<Offset> future1 = publisher.publish(message1);
+    publisher.flushToStream();
+    verify(mockBatchPublisher)
+        .publish((Collection<PubSubMessage>) argThat(hasItems(message1.toProto())));
+
+    // Publish another message but do not flush to stream yet.
+    Message message2 = Message.builder().setData(ByteString.copyFromUtf8("other_data")).build();
+    Future<Offset> future2 = publisher.publish(message2);
+
+    // Cancel outstanding publishes and verify that both futures complete with a cancelled status.
+    assertThat(future1.isDone()).isFalse();
+    assertThat(future2.isDone()).isFalse();
+    publisher.cancelOutstandingPublishes();
+    assertThat(future1.isDone()).isTrue();
+    ExecutionException e1 = assertThrows(ExecutionException.class, future1::get);
+    assertThat(ExtractStatus.extract(e1.getCause()).get().code()).isEqualTo(Code.CANCELLED);
+    assertThat(future2.isDone()).isTrue();
+    ExecutionException e2 = assertThrows(ExecutionException.class, future2::get);
+    assertThat(ExtractStatus.extract(e2.getCause()).get().code()).isEqualTo(Code.CANCELLED);
+  }
 }

@@ -16,6 +16,7 @@
 
 package com.google.cloud.pubsublite.spark;
 
+
 import com.github.benmanes.caffeine.cache.Ticker;
 import com.google.auto.service.AutoService;
 import com.google.cloud.pubsublite.AdminClient;
@@ -60,6 +61,7 @@ public final class PslDataSource
     return new PslContinuousReader(
         cursorClient,
         pslDataSourceOptions.newMultiPartitionCommitter(topicPartitionCount),
+        pslDataSourceOptions.getSubscriberFactory(),
         subscriptionPath,
         Objects.requireNonNull(pslDataSourceOptions.flowControlSettings()),
         topicPartitionCount);
@@ -89,6 +91,7 @@ public final class PslDataSource
     return new PslMicroBatchReader(
         cursorClient,
         pslDataSourceOptions.newMultiPartitionCommitter(topicPartitionCount),
+        pslDataSourceOptions.getSubscriberFactory(),
         new LimitingHeadOffsetReader(
             pslDataSourceOptions.newTopicStatsClient(),
             topicPath,

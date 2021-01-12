@@ -20,8 +20,7 @@ import com.google.cloud.pubsublite.SubscriptionPath;
 import com.google.cloud.pubsublite.cloudpubsub.FlowControlSettings;
 import com.google.cloud.pubsublite.internal.BlockingPullSubscriberImpl;
 import com.google.cloud.pubsublite.internal.CheckedApiException;
-import com.google.cloud.pubsublite.internal.wire.PubsubContext;
-import com.google.cloud.pubsublite.internal.wire.SubscriberBuilder;
+import com.google.cloud.pubsublite.internal.wire.SubscriberFactory;
 import com.google.cloud.pubsublite.proto.Cursor;
 import com.google.cloud.pubsublite.proto.SeekRequest;
 import java.io.Serializable;
@@ -33,14 +32,17 @@ import org.apache.spark.sql.sources.v2.reader.streaming.PartitionOffset;
 public class PslContinuousInputPartition
     implements ContinuousInputPartition<InternalRow>, Serializable {
 
+  private final SubscriberFactory subscriberFactory;
   private final SparkPartitionOffset startOffset;
   private final SubscriptionPath subscriptionPath;
   private final FlowControlSettings flowControlSettings;
 
   public PslContinuousInputPartition(
+      SubscriberFactory subscriberFactory,
       SparkPartitionOffset startOffset,
       SubscriptionPath subscriptionPath,
       FlowControlSettings flowControlSettings) {
+    this.subscriberFactory = subscriberFactory;
     this.startOffset = startOffset;
     this.subscriptionPath = subscriptionPath;
     this.flowControlSettings = flowControlSettings;
@@ -59,14 +61,7 @@ public class PslContinuousInputPartition
     try {
       subscriber =
           new BlockingPullSubscriberImpl(
-              // TODO(jiangmichael): Pass credentials settings here.
-              (consumer) ->
-                  SubscriberBuilder.newBuilder()
-                      .setSubscriptionPath(subscriptionPath)
-                      .setPartition(pslPartitionOffset.partition())
-                      .setContext(PubsubContext.of(Constants.FRAMEWORK))
-                      .setMessageConsumer(consumer)
-                      .build(),
+              subscriberFactory,
               flowControlSettings,
               SeekRequest.newBuilder()
                   .setCursor(

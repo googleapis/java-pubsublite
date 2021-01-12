@@ -49,6 +49,11 @@ public class SinglePartitionPublisher extends TrivialProxyService
   }
 
   @Override
+  public void cancelOutstandingPublishes() {
+    publisher.cancelOutstandingPublishes();
+  }
+
+  @Override
   public void flush() throws IOException {
     publisher.flush();
   }

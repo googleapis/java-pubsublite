@@ -16,7 +16,6 @@
 
 package com.google.cloud.pubsublite.spark;
 
-
 import com.github.benmanes.caffeine.cache.Ticker;
 import com.google.auto.service.AutoService;
 import com.google.cloud.pubsublite.AdminClient;

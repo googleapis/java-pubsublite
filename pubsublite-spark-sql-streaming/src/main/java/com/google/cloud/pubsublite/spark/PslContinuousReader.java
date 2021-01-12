@@ -35,6 +35,7 @@ public class PslContinuousReader implements ContinuousReader {
 
   private final CursorClient cursorClient;
   private final MultiPartitionCommitter committer;
+  private final PartitionSubscriberFactory partitionSubscriberFactory;
   private final SubscriptionPath subscriptionPath;
   private final FlowControlSettings flowControlSettings;
   private final long topicPartitionCount;
@@ -44,11 +45,13 @@ public class PslContinuousReader implements ContinuousReader {
   public PslContinuousReader(
       CursorClient cursorClient,
       MultiPartitionCommitter committer,
+      PartitionSubscriberFactory partitionSubscriberFactory,
       SubscriptionPath subscriptionPath,
       FlowControlSettings flowControlSettings,
       long topicPartitionCount) {
     this.cursorClient = cursorClient;
     this.committer = committer;
+    this.partitionSubscriberFactory = partitionSubscriberFactory;
     this.subscriptionPath = subscriptionPath;
     this.flowControlSettings = flowControlSettings;
     this.topicPartitionCount = topicPartitionCount;
@@ -104,10 +107,12 @@ public class PslContinuousReader implements ContinuousReader {
 
   @Override
   public List<InputPartition<InternalRow>> planInputPartitions() {
+
     return startOffset.getPartitionOffsetMap().values().stream()
         .map(
             v ->
                 new PslContinuousInputPartition(
+                    (consumer) -> partitionSubscriberFactory.newSubscriber(v.partition(), consumer),
                     SparkPartitionOffset.builder()
                         .partition(v.partition())
                         .offset(v.offset())

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.google.cloud.pubsublite.internal;
+package com.google.cloud.pubsublite.internal.wire;
 
 import static com.google.cloud.pubsublite.internal.ExtractStatus.toCanonical;
 
@@ -25,6 +25,8 @@ import com.google.api.gax.rpc.ApiException;
 import com.google.api.gax.rpc.ClientSettings;
 import com.google.cloud.pubsublite.CloudRegion;
 import com.google.cloud.pubsublite.Endpoints;
+import com.google.cloud.pubsublite.internal.Lazy;
+import com.google.common.collect.ImmutableMap;
 import com.google.common.util.concurrent.MoreExecutors;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import org.threeten.bp.Duration;
@@ -59,5 +61,19 @@ public final class ServiceClients {
     } catch (Throwable t) {
       throw toCanonical(t).underlying;
     }
+  }
+
+  // Adds context routing metadata for publisher or subscriber.
+  public static <
+          Settings extends ClientSettings<Settings>,
+          Builder extends ClientSettings.Builder<Settings, Builder>>
+      Builder addDefaultMetadata(
+          PubsubContext context, RoutingMetadata routingMetadata, Builder builder) {
+    return builder.setHeaderProvider(
+        () ->
+            ImmutableMap.<String, String>builder()
+                .putAll(context.getMetadata())
+                .putAll(routingMetadata.getMetadata())
+                .build());
   }
 }

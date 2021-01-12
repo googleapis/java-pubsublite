@@ -148,10 +148,17 @@ public class BlockingPullSubscriberImplTest {
 
   @Test
   public void pullMessage() throws Exception {
+    int byteSize = 30;
     SequencedMessage message =
-        SequencedMessage.of(Message.builder().build(), Timestamps.EPOCH, Offset.of(12), 30);
+        SequencedMessage.of(Message.builder().build(), Timestamps.EPOCH, Offset.of(12), byteSize);
     messageConsumer.accept(ImmutableList.of(message));
     assertThat(Optional.of(message)).isEqualTo(subscriber.messageIfAvailable());
+    verify(underlying)
+        .allowFlow(
+            FlowControlRequest.newBuilder()
+                .setAllowedBytes(byteSize)
+                .setAllowedMessages(1)
+                .build());
   }
 
   @Test

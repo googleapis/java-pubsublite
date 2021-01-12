@@ -6,6 +6,11 @@
     <differenceType>8001</differenceType>
     <className>com/google/cloud/pubsublite/ProjectLookupUtils</className>
   </difference>
+  <difference>
+    <differenceType>6011</differenceType>
+    <className>com/google/cloud/pubsublite/Constants</className>
+    <field>MAX_PUBLISH_MESSAGE_BYTES</field>
+  </difference>
   <!-- Blanket ignored files -->
   <difference>
     <differenceType>4001</differenceType>

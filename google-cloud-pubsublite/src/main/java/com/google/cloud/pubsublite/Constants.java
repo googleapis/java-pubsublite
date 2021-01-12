@@ -31,7 +31,6 @@ public class Constants {
           .build();
 
   public static final long MAX_PUBLISH_BATCH_COUNT = 1_000;
-  public static final long MAX_PUBLISH_MESSAGE_BYTES = 1_000_000;
   public static final long MAX_PUBLISH_BATCH_BYTES = 3_500_000;
 
   private Constants() {}

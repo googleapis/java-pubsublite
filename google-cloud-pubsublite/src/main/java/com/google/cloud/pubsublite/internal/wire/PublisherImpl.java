@@ -26,7 +26,6 @@ import com.google.api.core.SettableApiFuture;
 import com.google.api.gax.batching.BatchingSettings;
 import com.google.api.gax.rpc.ApiException;
 import com.google.api.gax.rpc.StatusCode.Code;
-import com.google.cloud.pubsublite.Constants;
 import com.google.cloud.pubsublite.Message;
 import com.google.cloud.pubsublite.Offset;
 import com.google.cloud.pubsublite.internal.CheckedApiException;
@@ -208,21 +207,6 @@ public final class PublisherImpl extends ProxyService
   @Override
   public ApiFuture<Offset> publish(Message message) {
     PubSubMessage proto = message.toProto();
-    if (proto.getSerializedSize() > Constants.MAX_PUBLISH_MESSAGE_BYTES) {
-      CheckedApiException error =
-          new CheckedApiException(
-              String.format(
-                  "Tried to send message with serialized size %s larger than limit %s on the"
-                      + " stream.",
-                  proto.getSerializedSize(), Constants.MAX_PUBLISH_MESSAGE_BYTES),
-              Code.FAILED_PRECONDITION);
-      try (CloseableMonitor.Hold h = monitor.enter()) {
-        if (!shutdown) {
-          onPermanentError(error);
-        }
-      }
-      return ApiFutures.immediateFailedFuture(error);
-    }
     try (CloseableMonitor.Hold h = monitor.enter()) {
       ApiService.State currentState = state();
       checkState(

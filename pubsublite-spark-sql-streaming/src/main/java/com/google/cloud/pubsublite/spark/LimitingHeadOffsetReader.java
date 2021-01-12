@@ -19,20 +19,21 @@ package com.google.cloud.pubsublite.spark;
 import com.github.benmanes.caffeine.cache.AsyncLoadingCache;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import com.github.benmanes.caffeine.cache.Ticker;
+import com.google.api.core.ApiFutureCallback;
 import com.google.api.core.ApiFutures;
 import com.google.cloud.pubsublite.Offset;
 import com.google.cloud.pubsublite.Partition;
 import com.google.cloud.pubsublite.TopicPath;
 import com.google.cloud.pubsublite.internal.TopicStatsClient;
+import com.google.cloud.pubsublite.proto.Cursor;
 import com.google.common.annotations.VisibleForTesting;
+import com.google.common.util.concurrent.MoreExecutors;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
 import java.util.concurrent.TimeUnit;
-import net.javacrumbs.futureconverter.apifuturecommon.ApiFutureUtils;
-import net.javacrumbs.futureconverter.java8common.Java8FutureUtils;
 
 /**
  * Rate limited HeadOffsetReader, utilizing a LoadingCache that refreshes all partitions head
@@ -59,12 +60,23 @@ public class LimitingHeadOffsetReader implements PerTopicHeadOffsetReader {
   }
 
   private CompletableFuture<Offset> loadHeadOffset(Partition partition, Executor executor) {
-    return Java8FutureUtils.createCompletableFuture(
-        ApiFutureUtils.createValueSourceFuture(
-            ApiFutures.transform(
-                topicStatsClient.computeHeadCursor(topic, partition),
-                c -> Offset.of(c.getOffset()),
-                executor)));
+
+    CompletableFuture<Offset> result = new CompletableFuture<>();
+    ApiFutures.addCallback(
+        topicStatsClient.computeHeadCursor(topic, partition),
+        new ApiFutureCallback<Cursor>() {
+          @Override
+          public void onFailure(Throwable t) {
+            result.completeExceptionally(t);
+          }
+
+          @Override
+          public void onSuccess(Cursor c) {
+            result.complete(Offset.of(c.getOffset()));
+          }
+        },
+        MoreExecutors.directExecutor());
+    return result;
   }
 
   @Override

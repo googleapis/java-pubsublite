@@ -104,16 +104,15 @@ public abstract class PslDataSourceOptions implements Serializable {
     public abstract PslDataSourceOptions build();
   }
 
-  MultiPartitionCommitterImpl newMultiPartitionCommitter(long topicPartitionCount) {
-    return
-            new MultiPartitionCommitterImpl(
-                    topicPartitionCount,
-                    (partition) ->
-                            CommitterBuilder.newBuilder()
-                                    .setSubscriptionPath(this.subscriptionPath())
-                                    .setPartition(partition)
-                                    .setServiceClient(newCursorServiceClient())
-                                    .build());
+  MultiPartitionCommitter newMultiPartitionCommitter(long topicPartitionCount) {
+    return new MultiPartitionCommitterImpl(
+        topicPartitionCount,
+        (partition) ->
+            CommitterBuilder.newBuilder()
+                .setSubscriptionPath(this.subscriptionPath())
+                .setPartition(partition)
+                .setServiceClient(newCursorServiceClient())
+                .build());
   }
 
   // TODO(b/jiangmichael): Make XXXClientSettings accept creds so we could simplify below methods.

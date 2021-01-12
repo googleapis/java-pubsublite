@@ -33,7 +33,6 @@ import com.google.errorprone.annotations.concurrent.GuardedBy;
 import java.util.ArrayDeque;
 import java.util.Collection;
 import java.util.Deque;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 
@@ -113,7 +112,13 @@ public class BlockingPullSubscriberImpl implements BlockingPullSubscriber {
     if (messages.isEmpty()) {
       return Optional.empty();
     }
-    return Optional.of(Objects.requireNonNull(messages.pollFirst()));
+    SequencedMessage msg = messages.remove();
+    underlying.allowFlow(
+        FlowControlRequest.newBuilder()
+            .setAllowedMessages(1)
+            .setAllowedBytes(msg.byteSize())
+            .build());
+    return Optional.of(msg);
   }
 
   @Override

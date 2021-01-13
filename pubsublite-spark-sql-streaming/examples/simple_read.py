@@ -31,3 +31,6 @@ spark \
     .trigger(continuous='1 second') \
     .start() \
     .awaitTermination()
+
+# .trigger(processingTime='1 second') \
+# .trigger(continuous='1 second') \

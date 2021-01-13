@@ -23,6 +23,7 @@ import com.google.cloud.pubsublite.Partition;
 import com.google.cloud.pubsublite.SequencedMessage;
 import com.google.cloud.pubsublite.SubscriptionPath;
 import com.google.cloud.pubsublite.internal.CursorClient;
+import com.google.common.base.Preconditions;
 import com.google.common.collect.ListMultimap;
 import com.google.protobuf.ByteString;
 import com.google.protobuf.util.Timestamps;
@@ -99,7 +100,7 @@ public class PslSparkUtils {
     Map<Partition, Offset> pslSourceOffsetMap = new HashMap<>();
     for (long i = 0; i < partitionCount; i++) {
       Partition p = Partition.of(i);
-      assert sparkSourceOffset.getPartitionOffsetMap().containsKey(p);
+      Preconditions.checkState(sparkSourceOffset.getPartitionOffsetMap().containsKey(p));
       pslSourceOffsetMap.put(
           p, Offset.of(sparkSourceOffset.getPartitionOffsetMap().get(p).offset() + 1));
     }

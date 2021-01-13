@@ -20,6 +20,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.google.cloud.pubsublite.Partition;
+import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import java.io.IOException;
@@ -44,10 +45,10 @@ public final class SparkSourceOffset
 
   private static void validateMap(Map<Partition, SparkPartitionOffset> map) {
     map.forEach(
-        (k, v) -> {
-          assert Objects.equals(k, v.partition())
-              : "Key(Partition) and value(SparkPartitionOffset)'s partition don't match.";
-        });
+        (k, v) ->
+            Preconditions.checkState(
+                Objects.equals(k, v.partition()),
+                "Key(Partition) and value(SparkPartitionOffset)'s partition don't match."));
   }
 
   public static SparkSourceOffset merge(SparkSourceOffset o1, SparkSourceOffset o2) {
@@ -68,7 +69,8 @@ public final class SparkSourceOffset
   public static SparkSourceOffset merge(SparkPartitionOffset[] offsets) {
     Map<Partition, SparkPartitionOffset> map = new HashMap<>();
     for (SparkPartitionOffset po : offsets) {
-      assert !map.containsKey(po.partition()) : "Multiple PslPartitionOffset has same partition.";
+      Preconditions.checkState(
+          !map.containsKey(po.partition()), "Multiple PslPartitionOffset has same partition.");
       map.put(
           po.partition(),
           SparkPartitionOffset.builder().partition(po.partition()).offset(po.offset()).build());

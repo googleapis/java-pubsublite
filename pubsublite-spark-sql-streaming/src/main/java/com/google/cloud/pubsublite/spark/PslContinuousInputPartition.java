@@ -23,6 +23,7 @@ import com.google.cloud.pubsublite.internal.CheckedApiException;
 import com.google.cloud.pubsublite.internal.wire.SubscriberFactory;
 import com.google.cloud.pubsublite.proto.Cursor;
 import com.google.cloud.pubsublite.proto.SeekRequest;
+import com.google.common.base.Preconditions;
 import java.io.Serializable;
 import org.apache.spark.sql.catalyst.InternalRow;
 import org.apache.spark.sql.sources.v2.reader.ContinuousInputPartition;
@@ -50,8 +51,9 @@ public class PslContinuousInputPartition
 
   @Override
   public InputPartitionReader<InternalRow> createContinuousReader(PartitionOffset offset) {
-    assert SparkPartitionOffset.class.isAssignableFrom(offset.getClass())
-        : "offset is not assignable to SparkPartitionOffset";
+    Preconditions.checkState(
+        SparkPartitionOffset.class.isAssignableFrom(offset.getClass()),
+        "offset is not assignable to SparkPartitionOffset");
 
     SparkPartitionOffset sparkPartitionOffset = (SparkPartitionOffset) offset;
     PslPartitionOffset pslPartitionOffset =

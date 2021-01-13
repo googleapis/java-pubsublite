@@ -20,6 +20,7 @@ import com.google.cloud.pubsublite.SubscriptionPath;
 import com.google.cloud.pubsublite.cloudpubsub.FlowControlSettings;
 import com.google.cloud.pubsublite.internal.CursorClient;
 import com.google.common.annotations.VisibleForTesting;
+import com.google.common.base.Preconditions;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -59,8 +60,9 @@ public class PslContinuousReader implements ContinuousReader {
 
   @Override
   public Offset mergeOffsets(PartitionOffset[] offsets) {
-    assert SparkPartitionOffset.class.isAssignableFrom(offsets.getClass().getComponentType())
-        : "PartitionOffset object is not assignable to SparkPartitionOffset.";
+    Preconditions.checkState(
+        SparkPartitionOffset.class.isAssignableFrom(offsets.getClass().getComponentType()),
+        "PartitionOffset object is not assignable to SparkPartitionOffset.");
     return SparkSourceOffset.merge(
         Arrays.copyOf(offsets, offsets.length, SparkPartitionOffset[].class));
   }
@@ -78,8 +80,9 @@ public class PslContinuousReader implements ContinuousReader {
   @Override
   public void setStartOffset(Optional<Offset> start) {
     if (start.isPresent()) {
-      assert SparkSourceOffset.class.isAssignableFrom(start.get().getClass())
-          : "start offset is not assignable to PslSourceOffset.";
+      Preconditions.checkState(
+          SparkSourceOffset.class.isAssignableFrom(start.get().getClass()),
+          "start offset is not assignable to PslSourceOffset.");
       startOffset = (SparkSourceOffset) start.get();
       return;
     }
@@ -89,8 +92,9 @@ public class PslContinuousReader implements ContinuousReader {
 
   @Override
   public void commit(Offset end) {
-    assert SparkSourceOffset.class.isAssignableFrom(end.getClass())
-        : "end offset is not assignable to SparkSourceOffset.";
+    Preconditions.checkState(
+        SparkSourceOffset.class.isAssignableFrom(end.getClass()),
+        "end offset is not assignable to SparkSourceOffset.");
     committer.commit(PslSparkUtils.toPslSourceOffset((SparkSourceOffset) end));
   }
 

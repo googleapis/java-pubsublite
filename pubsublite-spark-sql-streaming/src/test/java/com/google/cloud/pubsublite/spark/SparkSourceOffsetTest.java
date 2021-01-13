@@ -88,7 +88,7 @@ public class SparkSourceOffsetTest {
     try {
       SparkSourceOffset.merge(offsets);
       fail();
-    } catch (AssertionError e) {
+    } catch (IllegalStateException e) {
       assertThat(e).hasMessageThat().contains("same partition");
     }
   }
@@ -123,7 +123,7 @@ public class SparkSourceOffsetTest {
               Partition.of(3L),
               SparkPartitionOffset.builder().partition(Partition.of(2L)).offset(10L).build()));
       fail();
-    } catch (AssertionError e) {
+    } catch (IllegalStateException e) {
       assertThat(e).hasMessageThat().contains("don't match");
     }
   }

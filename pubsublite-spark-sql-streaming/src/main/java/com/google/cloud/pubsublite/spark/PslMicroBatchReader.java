@@ -19,6 +19,7 @@ package com.google.cloud.pubsublite.spark;
 import com.google.cloud.pubsublite.SubscriptionPath;
 import com.google.cloud.pubsublite.cloudpubsub.FlowControlSettings;
 import com.google.cloud.pubsublite.internal.CursorClient;
+import com.google.common.base.Preconditions;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -62,16 +63,18 @@ public class PslMicroBatchReader implements MicroBatchReader {
   @Override
   public void setOffsetRange(Optional<Offset> start, Optional<Offset> end) {
     if (start.isPresent()) {
-      assert SparkSourceOffset.class.isAssignableFrom(start.get().getClass())
-          : "start offset is not assignable to PslSourceOffset.";
+      Preconditions.checkState(
+          SparkSourceOffset.class.isAssignableFrom(start.get().getClass()),
+          "start offset is not assignable to PslSourceOffset.");
       startOffset = (SparkSourceOffset) start.get();
     } else {
       startOffset =
           PslSparkUtils.getSparkStartOffset(cursorClient, subscriptionPath, topicPartitionCount);
     }
     if (end.isPresent()) {
-      assert SparkSourceOffset.class.isAssignableFrom(end.get().getClass())
-          : "start offset is not assignable to PslSourceOffset.";
+      Preconditions.checkState(
+          SparkSourceOffset.class.isAssignableFrom(end.get().getClass()),
+          "start offset is not assignable to PslSourceOffset.");
       endOffset = (SparkSourceOffset) end.get();
     } else {
       endOffset = PslSparkUtils.toSparkSourceOffset(headOffsetReader.getHeadOffset());
@@ -95,8 +98,9 @@ public class PslMicroBatchReader implements MicroBatchReader {
 
   @Override
   public void commit(Offset end) {
-    assert SparkSourceOffset.class.isAssignableFrom(end.getClass())
-        : "end offset is not assignable to SparkSourceOffset.";
+    Preconditions.checkState(
+        SparkSourceOffset.class.isAssignableFrom(end.getClass()),
+        "end offset is not assignable to SparkSourceOffset.");
     committer.commit(PslSparkUtils.toPslSourceOffset((SparkSourceOffset) end));
   }
 
@@ -112,7 +116,7 @@ public class PslMicroBatchReader implements MicroBatchReader {
 
   @Override
   public List<InputPartition<InternalRow>> planInputPartitions() {
-    assert startOffset != null;
+    Preconditions.checkState(startOffset != null);
     return startOffset.getPartitionOffsetMap().values().stream()
         .map(
             v -> {

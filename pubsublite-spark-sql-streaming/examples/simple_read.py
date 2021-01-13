@@ -28,9 +28,6 @@ spark \
     .writeStream \
     .format('console') \
     .outputMode('append') \
-    .trigger(continuous='1 second') \
+    .trigger(processingTime='1 second') \
     .start() \
     .awaitTermination()
-
-# .trigger(processingTime='1 second') \
-# .trigger(continuous='1 second') \

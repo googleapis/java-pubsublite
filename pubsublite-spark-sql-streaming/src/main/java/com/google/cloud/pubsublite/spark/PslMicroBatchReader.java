@@ -20,6 +20,8 @@ import com.google.cloud.pubsublite.SubscriptionPath;
 import com.google.cloud.pubsublite.cloudpubsub.FlowControlSettings;
 import com.google.cloud.pubsublite.internal.CursorClient;
 import com.google.cloud.pubsublite.internal.wire.SubscriberFactory;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -113,22 +115,22 @@ public class PslMicroBatchReader implements MicroBatchReader {
 
   @Override
   public List<InputPartition<InternalRow>> planInputPartitions() {
-    assert startOffset != null;
-    return startOffset.getPartitionOffsetMap().values().stream()
-        .map(
-            v -> {
-              SparkPartitionOffset endPartitionOffset =
-                  endOffset.getPartitionOffsetMap().get(v.partition());
-              if (v.equals(endPartitionOffset)) {
-                // There is no message to pull for this partition.
-                return null;
-              }
-              SubscriberFactory subscriberFactory =
-                  (consumer) -> partitionSubscriberFactory.newSubscriber(v.partition(), consumer);
-              return new PslMicroBatchInputPartition(
-                  subscriptionPath, flowControlSettings, endPartitionOffset, subscriberFactory);
-            })
-        .filter(Objects::nonNull)
-        .collect(Collectors.toList());
+    List<InputPartition<InternalRow>> list = new ArrayList<>();
+
+    for (SparkPartitionOffset offset : Objects.requireNonNull(startOffset).getPartitionOffsetMap().values()) {
+      SparkPartitionOffset endPartitionOffset =
+          endOffset.getPartitionOffsetMap().get(offset.partition());
+      if (offset.equals(endPartitionOffset)) {
+        // There is no message to pull for this partition.
+        continue;
+      }
+      PartitionSubscriberFactory partitionSubscriberFactory = this.partitionSubscriberFactory;
+      SubscriberFactory subscriberFactory =
+          (consumer) -> partitionSubscriberFactory.newSubscriber(offset.partition(), consumer);
+      list.add(
+          new PslMicroBatchInputPartition(
+              subscriptionPath, flowControlSettings, offset, endPartitionOffset, subscriberFactory));
+    }
+    return list;
   }
 }

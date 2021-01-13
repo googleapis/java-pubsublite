@@ -21,10 +21,11 @@ import com.google.cloud.pubsublite.cloudpubsub.FlowControlSettings;
 import com.google.cloud.pubsublite.internal.CursorClient;
 import com.google.cloud.pubsublite.internal.wire.SubscriberFactory;
 import com.google.common.annotations.VisibleForTesting;
+
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 import org.apache.spark.sql.catalyst.InternalRow;
 import org.apache.spark.sql.sources.v2.reader.InputPartition;
 import org.apache.spark.sql.sources.v2.reader.streaming.ContinuousReader;
@@ -108,21 +109,20 @@ public class PslContinuousReader implements ContinuousReader {
 
   @Override
   public List<InputPartition<InternalRow>> planInputPartitions() {
-
-    return startOffset.getPartitionOffsetMap().values().stream()
-        .map(
-            v -> {
-              SubscriberFactory subscriberFactory =
-                  (consumer) -> partitionSubscriberFactory.newSubscriber(v.partition(), consumer);
-              return new PslContinuousInputPartition(
-                  subscriberFactory,
-                  SparkPartitionOffset.builder()
-                      .partition(v.partition())
-                      .offset(v.offset())
+    List<InputPartition<InternalRow>> list = new ArrayList<>();
+    for (SparkPartitionOffset offset : startOffset.getPartitionOffsetMap().values()) {
+      PartitionSubscriberFactory partitionSubscriberFactory = this.partitionSubscriberFactory;
+      SubscriberFactory subscriberFactory =
+              (consumer) -> partitionSubscriberFactory.newSubscriber(offset.partition(), consumer);
+      list.add(new PslContinuousInputPartition(
+              subscriberFactory,
+              SparkPartitionOffset.builder()
+                      .partition(offset.partition())
+                      .offset(offset.offset())
                       .build(),
-                  subscriptionPath,
-                  flowControlSettings);
-            })
-        .collect(Collectors.toList());
+              subscriptionPath,
+              flowControlSettings));
+    }
+    return list;
   }
 }

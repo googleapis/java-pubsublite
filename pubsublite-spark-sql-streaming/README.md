@@ -1,11 +1,11 @@
-# Apache Spark SQL Streaming connector for Google PubSub Lite (Beta)
+# Apache Spark SQL Streaming connector for Google PubSub Lite (Unreleased)
 
 The connector is a custom implementation of [Spark Structured Streaming](https://spark.apache.org/docs/latest/structured-streaming-programming-guide.html) 
 that supports reading messages from [Google PubSub Lite](https://cloud.google.com/pubsub/lite/docs) subscriptions into Spark.
 
-## Beta Disclaimer
+## Disclaimer
 
-This connector is in Beta and are subject to change.
+This connector is still being worked on. Backwards-incompatible changes may be made until version 1.0.0 is released.
 
 ## Requirements
 

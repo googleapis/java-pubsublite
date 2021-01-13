@@ -16,18 +16,18 @@
 from pyspark.sql import SparkSession
 import sys
 
-full_subscription_path = sys.argv[0]
+full_subscription_path = sys.argv[1]
 
 spark = SparkSession.builder.appName('Simple PubSub Lite Read').master('yarn').getOrCreate()
 
 spark \
-    .readStream() \
+    .readStream \
     .format('pubsublite') \
     .option('pubsublite.subscription', full_subscription_path) \
     .load() \
     .writeStream \
     .format('console') \
     .outputMode('append') \
-    .trigger(processingTime='1 second') \
+    .trigger(continuous='1 second') \
     .start() \
     .awaitTermination()

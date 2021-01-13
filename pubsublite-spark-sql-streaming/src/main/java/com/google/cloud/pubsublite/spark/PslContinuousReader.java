@@ -21,7 +21,6 @@ import com.google.cloud.pubsublite.cloudpubsub.FlowControlSettings;
 import com.google.cloud.pubsublite.internal.CursorClient;
 import com.google.cloud.pubsublite.internal.wire.SubscriberFactory;
 import com.google.common.annotations.VisibleForTesting;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -113,13 +112,14 @@ public class PslContinuousReader implements ContinuousReader {
     for (SparkPartitionOffset offset : startOffset.getPartitionOffsetMap().values()) {
       PartitionSubscriberFactory partitionSubscriberFactory = this.partitionSubscriberFactory;
       SubscriberFactory subscriberFactory =
-              (consumer) -> partitionSubscriberFactory.newSubscriber(offset.partition(), consumer);
-      list.add(new PslContinuousInputPartition(
+          (consumer) -> partitionSubscriberFactory.newSubscriber(offset.partition(), consumer);
+      list.add(
+          new PslContinuousInputPartition(
               subscriberFactory,
               SparkPartitionOffset.builder()
-                      .partition(offset.partition())
-                      .offset(offset.offset())
-                      .build(),
+                  .partition(offset.partition())
+                  .offset(offset.offset())
+                  .build(),
               subscriptionPath,
               flowControlSettings));
     }

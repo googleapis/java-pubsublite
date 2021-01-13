@@ -20,12 +20,10 @@ import com.google.cloud.pubsublite.SubscriptionPath;
 import com.google.cloud.pubsublite.cloudpubsub.FlowControlSettings;
 import com.google.cloud.pubsublite.internal.CursorClient;
 import com.google.cloud.pubsublite.internal.wire.SubscriberFactory;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.stream.Collectors;
 import javax.annotation.Nullable;
 import org.apache.spark.sql.catalyst.InternalRow;
 import org.apache.spark.sql.sources.v2.reader.InputPartition;
@@ -117,7 +115,8 @@ public class PslMicroBatchReader implements MicroBatchReader {
   public List<InputPartition<InternalRow>> planInputPartitions() {
     List<InputPartition<InternalRow>> list = new ArrayList<>();
 
-    for (SparkPartitionOffset offset : Objects.requireNonNull(startOffset).getPartitionOffsetMap().values()) {
+    for (SparkPartitionOffset offset :
+        Objects.requireNonNull(startOffset).getPartitionOffsetMap().values()) {
       SparkPartitionOffset endPartitionOffset =
           endOffset.getPartitionOffsetMap().get(offset.partition());
       if (offset.equals(endPartitionOffset)) {
@@ -129,7 +128,11 @@ public class PslMicroBatchReader implements MicroBatchReader {
           (consumer) -> partitionSubscriberFactory.newSubscriber(offset.partition(), consumer);
       list.add(
           new PslMicroBatchInputPartition(
-              subscriptionPath, flowControlSettings, offset, endPartitionOffset, subscriberFactory));
+              subscriptionPath,
+              flowControlSettings,
+              offset,
+              endPartitionOffset,
+              subscriberFactory));
     }
     return list;
   }

@@ -58,8 +58,11 @@ public class PslMicroBatchInputPartition implements InputPartition<InternalRow> 
               subscriberFactory,
               flowControlSettings,
               SeekRequest.newBuilder()
-                  .setCursor(Cursor.newBuilder().setOffset(
-                          PslSparkUtils.toPslPartitionOffset(startOffset).offset().value()).build())
+                  .setCursor(
+                      Cursor.newBuilder()
+                          .setOffset(
+                              PslSparkUtils.toPslPartitionOffset(startOffset).offset().value())
+                          .build())
                   .build());
     } catch (CheckedApiException e) {
       throw new IllegalStateException(

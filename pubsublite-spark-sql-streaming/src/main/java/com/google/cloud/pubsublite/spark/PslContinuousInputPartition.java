@@ -16,6 +16,8 @@
 
 package com.google.cloud.pubsublite.spark;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.google.cloud.pubsublite.SubscriptionPath;
 import com.google.cloud.pubsublite.cloudpubsub.FlowControlSettings;
 import com.google.cloud.pubsublite.internal.BlockingPullSubscriberImpl;
@@ -50,8 +52,9 @@ public class PslContinuousInputPartition
 
   @Override
   public InputPartitionReader<InternalRow> createContinuousReader(PartitionOffset offset) {
-    assert SparkPartitionOffset.class.isAssignableFrom(offset.getClass())
-        : "offset is not assignable to SparkPartitionOffset";
+    checkArgument(
+        SparkPartitionOffset.class.isAssignableFrom(offset.getClass()),
+        "offset is not assignable to SparkPartitionOffset");
 
     SparkPartitionOffset sparkPartitionOffset = (SparkPartitionOffset) offset;
     PslPartitionOffset pslPartitionOffset =

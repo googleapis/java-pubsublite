@@ -16,6 +16,7 @@
 
 package com.google.cloud.pubsublite.spark;
 
+import static com.google.common.base.Preconditions.checkArgument;
 import static scala.collection.JavaConverters.asScalaBufferConverter;
 
 import com.google.cloud.pubsublite.Offset;
@@ -99,7 +100,7 @@ public class PslSparkUtils {
     Map<Partition, Offset> pslSourceOffsetMap = new HashMap<>();
     for (long i = 0; i < partitionCount; i++) {
       Partition p = Partition.of(i);
-      assert sparkSourceOffset.getPartitionOffsetMap().containsKey(p);
+      checkArgument(sparkSourceOffset.getPartitionOffsetMap().containsKey(p));
       pslSourceOffsetMap.put(
           p, Offset.of(sparkSourceOffset.getPartitionOffsetMap().get(p).offset() + 1));
     }

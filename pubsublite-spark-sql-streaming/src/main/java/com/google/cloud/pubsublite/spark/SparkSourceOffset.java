@@ -16,6 +16,8 @@
 
 package com.google.cloud.pubsublite.spark;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
@@ -44,10 +46,10 @@ public final class SparkSourceOffset
 
   private static void validateMap(Map<Partition, SparkPartitionOffset> map) {
     map.forEach(
-        (k, v) -> {
-          assert Objects.equals(k, v.partition())
-              : "Key(Partition) and value(SparkPartitionOffset)'s partition don't match.";
-        });
+        (k, v) ->
+            checkArgument(
+                Objects.equals(k, v.partition()),
+                "Key(Partition) and value(SparkPartitionOffset)'s partition don't match."));
   }
 
   public static SparkSourceOffset merge(SparkSourceOffset o1, SparkSourceOffset o2) {
@@ -68,7 +70,8 @@ public final class SparkSourceOffset
   public static SparkSourceOffset merge(SparkPartitionOffset[] offsets) {
     Map<Partition, SparkPartitionOffset> map = new HashMap<>();
     for (SparkPartitionOffset po : offsets) {
-      assert !map.containsKey(po.partition()) : "Multiple PslPartitionOffset has same partition.";
+      checkArgument(
+          !map.containsKey(po.partition()), "Multiple PslPartitionOffset has same partition.");
       map.put(
           po.partition(),
           SparkPartitionOffset.builder().partition(po.partition()).offset(po.offset()).build());

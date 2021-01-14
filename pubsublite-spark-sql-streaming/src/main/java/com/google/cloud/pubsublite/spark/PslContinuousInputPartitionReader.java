@@ -16,6 +16,8 @@
 
 package com.google.cloud.pubsublite.spark;
 
+import static com.google.common.base.Preconditions.checkState;
+
 import com.google.cloud.pubsublite.SequencedMessage;
 import com.google.cloud.pubsublite.SubscriptionPath;
 import com.google.cloud.pubsublite.internal.BlockingPullSubscriberImpl;
@@ -56,7 +58,7 @@ public class PslContinuousInputPartitionReader
       // since next() will not be called concurrently, we are sure that the message
       // is available to this thread.
       Optional<SequencedMessage> msg = subscriber.messageIfAvailable();
-      assert msg.isPresent();
+      checkState(msg.isPresent());
       currentMsg = msg.get();
       currentOffset =
           SparkPartitionOffset.builder()
@@ -71,7 +73,7 @@ public class PslContinuousInputPartitionReader
 
   @Override
   public InternalRow get() {
-    assert currentMsg != null;
+    checkState(currentMsg != null);
     return PslSparkUtils.toInternalRow(currentMsg, subscriptionPath, currentOffset.partition());
   }
 

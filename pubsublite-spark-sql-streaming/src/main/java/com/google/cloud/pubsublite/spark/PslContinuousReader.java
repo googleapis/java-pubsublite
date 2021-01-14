@@ -16,14 +16,17 @@
 
 package com.google.cloud.pubsublite.spark;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.google.cloud.pubsublite.SubscriptionPath;
 import com.google.cloud.pubsublite.cloudpubsub.FlowControlSettings;
 import com.google.cloud.pubsublite.internal.CursorClient;
+import com.google.cloud.pubsublite.internal.wire.SubscriberFactory;
 import com.google.common.annotations.VisibleForTesting;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 import org.apache.spark.sql.catalyst.InternalRow;
 import org.apache.spark.sql.sources.v2.reader.InputPartition;
 import org.apache.spark.sql.sources.v2.reader.streaming.ContinuousReader;
@@ -59,8 +62,9 @@ public class PslContinuousReader implements ContinuousReader {
 
   @Override
   public Offset mergeOffsets(PartitionOffset[] offsets) {
-    assert SparkPartitionOffset.class.isAssignableFrom(offsets.getClass().getComponentType())
-        : "PartitionOffset object is not assignable to SparkPartitionOffset.";
+    checkArgument(
+        SparkPartitionOffset.class.isAssignableFrom(offsets.getClass().getComponentType()),
+        "PartitionOffset object is not assignable to SparkPartitionOffset.");
     return SparkSourceOffset.merge(
         Arrays.copyOf(offsets, offsets.length, SparkPartitionOffset[].class));
   }
@@ -78,8 +82,9 @@ public class PslContinuousReader implements ContinuousReader {
   @Override
   public void setStartOffset(Optional<Offset> start) {
     if (start.isPresent()) {
-      assert SparkSourceOffset.class.isAssignableFrom(start.get().getClass())
-          : "start offset is not assignable to PslSourceOffset.";
+      checkArgument(
+          SparkSourceOffset.class.isAssignableFrom(start.get().getClass()),
+          "start offset is not assignable to PslSourceOffset.");
       startOffset = (SparkSourceOffset) start.get();
       return;
     }
@@ -89,8 +94,9 @@ public class PslContinuousReader implements ContinuousReader {
 
   @Override
   public void commit(Offset end) {
-    assert SparkSourceOffset.class.isAssignableFrom(end.getClass())
-        : "end offset is not assignable to SparkSourceOffset.";
+    checkArgument(
+        SparkSourceOffset.class.isAssignableFrom(end.getClass()),
+        "end offset is not assignable to SparkSourceOffset.");
     committer.commit(PslSparkUtils.toPslSourceOffset((SparkSourceOffset) end));
   }
 
@@ -107,18 +113,21 @@ public class PslContinuousReader implements ContinuousReader {
 
   @Override
   public List<InputPartition<InternalRow>> planInputPartitions() {
-
-    return startOffset.getPartitionOffsetMap().values().stream()
-        .map(
-            v ->
-                new PslContinuousInputPartition(
-                    (consumer) -> partitionSubscriberFactory.newSubscriber(v.partition(), consumer),
-                    SparkPartitionOffset.builder()
-                        .partition(v.partition())
-                        .offset(v.offset())
-                        .build(),
-                    subscriptionPath,
-                    flowControlSettings))
-        .collect(Collectors.toList());
+    List<InputPartition<InternalRow>> list = new ArrayList<>();
+    for (SparkPartitionOffset offset : startOffset.getPartitionOffsetMap().values()) {
+      PartitionSubscriberFactory partitionSubscriberFactory = this.partitionSubscriberFactory;
+      SubscriberFactory subscriberFactory =
+          (consumer) -> partitionSubscriberFactory.newSubscriber(offset.partition(), consumer);
+      list.add(
+          new PslContinuousInputPartition(
+              subscriberFactory,
+              SparkPartitionOffset.builder()
+                  .partition(offset.partition())
+                  .offset(offset.offset())
+                  .build(),
+              subscriptionPath,
+              flowControlSettings));
+    }
+    return list;
   }
 }

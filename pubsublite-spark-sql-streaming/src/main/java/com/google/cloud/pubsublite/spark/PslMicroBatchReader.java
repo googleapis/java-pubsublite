@@ -16,10 +16,12 @@
 
 package com.google.cloud.pubsublite.spark;
 
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkState;
+
 import com.google.cloud.pubsublite.SubscriptionPath;
 import com.google.cloud.pubsublite.cloudpubsub.FlowControlSettings;
 import com.google.cloud.pubsublite.internal.CursorClient;
-import com.google.common.base.Preconditions;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -63,7 +65,7 @@ public class PslMicroBatchReader implements MicroBatchReader {
   @Override
   public void setOffsetRange(Optional<Offset> start, Optional<Offset> end) {
     if (start.isPresent()) {
-      Preconditions.checkState(
+      checkArgument(
           SparkSourceOffset.class.isAssignableFrom(start.get().getClass()),
           "start offset is not assignable to PslSourceOffset.");
       startOffset = (SparkSourceOffset) start.get();
@@ -72,7 +74,7 @@ public class PslMicroBatchReader implements MicroBatchReader {
           PslSparkUtils.getSparkStartOffset(cursorClient, subscriptionPath, topicPartitionCount);
     }
     if (end.isPresent()) {
-      Preconditions.checkState(
+      checkArgument(
           SparkSourceOffset.class.isAssignableFrom(end.get().getClass()),
           "start offset is not assignable to PslSourceOffset.");
       endOffset = (SparkSourceOffset) end.get();
@@ -98,7 +100,7 @@ public class PslMicroBatchReader implements MicroBatchReader {
 
   @Override
   public void commit(Offset end) {
-    Preconditions.checkState(
+    checkArgument(
         SparkSourceOffset.class.isAssignableFrom(end.getClass()),
         "end offset is not assignable to SparkSourceOffset.");
     committer.commit(PslSparkUtils.toPslSourceOffset((SparkSourceOffset) end));
@@ -116,7 +118,7 @@ public class PslMicroBatchReader implements MicroBatchReader {
 
   @Override
   public List<InputPartition<InternalRow>> planInputPartitions() {
-    Preconditions.checkState(startOffset != null);
+    checkState(startOffset != null);
     return startOffset.getPartitionOffsetMap().values().stream()
         .map(
             v -> {

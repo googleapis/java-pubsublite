@@ -16,11 +16,12 @@
 
 package com.google.cloud.pubsublite.spark;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import com.google.cloud.pubsublite.SubscriptionPath;
 import com.google.cloud.pubsublite.cloudpubsub.FlowControlSettings;
 import com.google.cloud.pubsublite.internal.CursorClient;
 import com.google.common.annotations.VisibleForTesting;
-import com.google.common.base.Preconditions;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -60,7 +61,7 @@ public class PslContinuousReader implements ContinuousReader {
 
   @Override
   public Offset mergeOffsets(PartitionOffset[] offsets) {
-    Preconditions.checkState(
+    checkArgument(
         SparkPartitionOffset.class.isAssignableFrom(offsets.getClass().getComponentType()),
         "PartitionOffset object is not assignable to SparkPartitionOffset.");
     return SparkSourceOffset.merge(
@@ -80,7 +81,7 @@ public class PslContinuousReader implements ContinuousReader {
   @Override
   public void setStartOffset(Optional<Offset> start) {
     if (start.isPresent()) {
-      Preconditions.checkState(
+      checkArgument(
           SparkSourceOffset.class.isAssignableFrom(start.get().getClass()),
           "start offset is not assignable to PslSourceOffset.");
       startOffset = (SparkSourceOffset) start.get();
@@ -92,7 +93,7 @@ public class PslContinuousReader implements ContinuousReader {
 
   @Override
   public void commit(Offset end) {
-    Preconditions.checkState(
+    checkArgument(
         SparkSourceOffset.class.isAssignableFrom(end.getClass()),
         "end offset is not assignable to SparkSourceOffset.");
     committer.commit(PslSparkUtils.toPslSourceOffset((SparkSourceOffset) end));

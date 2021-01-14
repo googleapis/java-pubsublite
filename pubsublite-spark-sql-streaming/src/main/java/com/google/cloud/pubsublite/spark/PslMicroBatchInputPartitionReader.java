@@ -16,11 +16,12 @@
 
 package com.google.cloud.pubsublite.spark;
 
+import static com.google.common.base.Preconditions.checkState;
+
 import com.google.cloud.pubsublite.SequencedMessage;
 import com.google.cloud.pubsublite.SubscriptionPath;
 import com.google.cloud.pubsublite.internal.BlockingPullSubscriber;
 import com.google.common.annotations.VisibleForTesting;
-import com.google.common.base.Preconditions;
 import com.google.common.flogger.GoogleLogger;
 import java.time.Duration;
 import java.util.Optional;
@@ -70,7 +71,7 @@ public class PslMicroBatchInputPartitionReader implements InputPartitionReader<I
     }
     // since next() is only called on one thread at a time, we are sure that the message is
     // available to this thread.
-    Preconditions.checkState(msg.isPresent());
+    checkState(msg.isPresent());
     currentMsg = msg.get();
     if (currentMsg.offset().value() == endOffset.offset()) {
       // this is the last msg for the batch.
@@ -84,7 +85,7 @@ public class PslMicroBatchInputPartitionReader implements InputPartitionReader<I
 
   @Override
   public InternalRow get() {
-    Preconditions.checkState(currentMsg != null);
+    checkState(currentMsg != null);
     return PslSparkUtils.toInternalRow(currentMsg, subscriptionPath, endOffset.partition());
   }
 

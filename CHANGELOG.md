@@ -1,5 +1,52 @@
 # Changelog
 
+## [0.8.0](https://www.github.com/googleapis/java-pubsublite/compare/v0.7.0...v0.8.0) (2021-01-14)
+
+
+### Features
+
+* Add ComputeHeadCursor RPC for Pub/Sub Lite. ([#429](https://www.github.com/googleapis/java-pubsublite/issues/429)) ([34d8d02](https://www.github.com/googleapis/java-pubsublite/commit/34d8d0231237387a19dd36ebea6f338662fce917))
+* Add non google default creds provider to subscribers in Spark Connector ([#440](https://www.github.com/googleapis/java-pubsublite/issues/440)) ([2099751](https://www.github.com/googleapis/java-pubsublite/commit/209975135e27827376cced7ccab87ecd0e03a9e4))
+* Adds examples and fixes bugs in spark connector ([#456](https://www.github.com/googleapis/java-pubsublite/issues/456)) ([d1c2a24](https://www.github.com/googleapis/java-pubsublite/commit/d1c2a2434ced426b79c019744712980bf6a839fe))
+* BlockingPullSubscriber in Spark Continuous Processing ([#408](https://www.github.com/googleapis/java-pubsublite/issues/408)) ([36684c4](https://www.github.com/googleapis/java-pubsublite/commit/36684c4b52fa393afeecbe31edb5dd9a8e2d45da))
+* Changed assert to Preconditions check ([#457](https://www.github.com/googleapis/java-pubsublite/issues/457)) ([f6f1bc4](https://www.github.com/googleapis/java-pubsublite/commit/f6f1bc4077a609e6dec281295a76cb6f0763baf6))
+* Compute head offset for Spark connector micro batch mode. ([#439](https://www.github.com/googleapis/java-pubsublite/issues/439)) ([f484754](https://www.github.com/googleapis/java-pubsublite/commit/f4847547860ba8a8f3a2ec5a089666e07165b5ed))
+* fix bug where blockingpullsubscriber doesn't refill flowcontrol quota. ([#449](https://www.github.com/googleapis/java-pubsublite/issues/449)) ([109bd83](https://www.github.com/googleapis/java-pubsublite/commit/109bd832ce40488580d2307bb03cfc473f4d86cc))
+* Major classes for Spark continuous streaming ([#396](https://www.github.com/googleapis/java-pubsublite/issues/396)) ([0c0d928](https://www.github.com/googleapis/java-pubsublite/commit/0c0d9284dbdc492d8b07864c25bbfab642497892))
+* Multiple fixes to make continuous mode work ([#432](https://www.github.com/googleapis/java-pubsublite/issues/432)) ([9df4ccf](https://www.github.com/googleapis/java-pubsublite/commit/9df4ccf99c5f8d9eb1f49bd63c09bbd35becc5e9))
+* Separates Offsets from different context (Spark vs PSL) ([#404](https://www.github.com/googleapis/java-pubsublite/issues/404)) ([b745f58](https://www.github.com/googleapis/java-pubsublite/commit/b745f58722a43ac9811d6eaaf8966423e4db6231))
+* Spark connector readme ([#441](https://www.github.com/googleapis/java-pubsublite/issues/441)) ([2ab6e3e](https://www.github.com/googleapis/java-pubsublite/commit/2ab6e3ecd5c6e3f5b076b0a0327392a8dd4d07ed))
+* Spark micro batch processing ([#426](https://www.github.com/googleapis/java-pubsublite/issues/426)) ([86aecc9](https://www.github.com/googleapis/java-pubsublite/commit/86aecc90070c169c668893d872e24f86096e5b49))
+* Update spark connector pom.xml ([#445](https://www.github.com/googleapis/java-pubsublite/issues/445)) ([624b123](https://www.github.com/googleapis/java-pubsublite/commit/624b1236f89956d6a31930abbe23c3b28407b3ea))
+* Use the partition watching publisher in the cps client ([#409](https://www.github.com/googleapis/java-pubsublite/issues/409)) ([b85ceb4](https://www.github.com/googleapis/java-pubsublite/commit/b85ceb4499dcfb6c4a19d63348fa1c684245f1dc))
+
+
+### Bug Fixes
+
+* adding a method to the internal wire publisher that will attempt to cancel all outstanding publishes ([#434](https://www.github.com/googleapis/java-pubsublite/issues/434)) ([7b9776e](https://www.github.com/googleapis/java-pubsublite/commit/7b9776e98aecc172f1b90afb5b3f62b86b7547d1))
+* Attempt to start the publisher and publish in the  ITVPC test ([#420](https://www.github.com/googleapis/java-pubsublite/issues/420)) ([8ebc9f1](https://www.github.com/googleapis/java-pubsublite/commit/8ebc9f14763cb0de8c1a7ccdb5fc0f2365650b41))
+* Extract the rpc exception from IllegalStateExceptins in publish/subscribe ([#430](https://www.github.com/googleapis/java-pubsublite/issues/430)) ([ff05b1a](https://www.github.com/googleapis/java-pubsublite/commit/ff05b1a7e1aa06a8c3df2eaeb5de73bb0304b2cc))
+* Remove per-message byte limit in client ([#435](https://www.github.com/googleapis/java-pubsublite/issues/435)) ([f7f36eb](https://www.github.com/googleapis/java-pubsublite/commit/f7f36eb0872df93ad9a6afdf3fd3cd7063ba5d59))
+
+
+### Dependencies
+
+* update dependency com.google.cloud:google-cloud-pubsub to v1.110.1 ([#416](https://www.github.com/googleapis/java-pubsublite/issues/416)) ([92b4076](https://www.github.com/googleapis/java-pubsublite/commit/92b407610497847418ce05ba833f77cd99d1ef68))
+* update dependency com.google.cloud:google-cloud-pubsub to v1.110.3 ([#442](https://www.github.com/googleapis/java-pubsublite/issues/442)) ([cf78009](https://www.github.com/googleapis/java-pubsublite/commit/cf78009c13ade94ca09d0c6c3c43e5c28742f963))
+* update dependency com.google.cloud:google-cloud-pubsub-bom to v1.110.1 ([#417](https://www.github.com/googleapis/java-pubsublite/issues/417)) ([c90e506](https://www.github.com/googleapis/java-pubsublite/commit/c90e5065768c63beab0c4714af4a6acb4f505edf))
+* update dependency com.google.cloud:google-cloud-pubsub-bom to v1.110.3 ([#443](https://www.github.com/googleapis/java-pubsublite/issues/443)) ([594f79c](https://www.github.com/googleapis/java-pubsublite/commit/594f79c6d7c706932a79417223b4298858e7a0a0))
+* update dependency com.google.cloud:google-cloud-shared-dependencies to v0.16.1 ([19cae17](https://www.github.com/googleapis/java-pubsublite/commit/19cae17f5cb70c918d3e90deae43bf4170819c59))
+* update dependency com.google.cloud:google-cloud-shared-dependencies to v0.17.0 ([#428](https://www.github.com/googleapis/java-pubsublite/issues/428)) ([e56d2c2](https://www.github.com/googleapis/java-pubsublite/commit/e56d2c2d20a96b98aa64d6b513b840097347e5e8))
+* update dependency com.google.cloud:google-cloud-shared-dependencies to v0.17.1 ([#452](https://www.github.com/googleapis/java-pubsublite/issues/452)) ([ecdaef2](https://www.github.com/googleapis/java-pubsublite/commit/ecdaef218a6a2abc2ebd171e7e006c6dca18b247))
+* update dependency joda-time:joda-time to v2.10.9 ([#436](https://www.github.com/googleapis/java-pubsublite/issues/436)) ([a5a305b](https://www.github.com/googleapis/java-pubsublite/commit/a5a305b6de56be791a7a53f96ab9d83cfbaafad5))
+* update dependency org.slf4j:slf4j-api to v1.7.30 ([#401](https://www.github.com/googleapis/java-pubsublite/issues/401)) ([2d9803b](https://www.github.com/googleapis/java-pubsublite/commit/2d9803b2403150034b3f94d548b1077b21ebc323))
+* update jackson dependencies to v2.12.1 ([#447](https://www.github.com/googleapis/java-pubsublite/issues/447)) ([d62cd7f](https://www.github.com/googleapis/java-pubsublite/commit/d62cd7f69ee72c08470918cd1229e1f50c299391))
+
+
+### Documentation
+
+* correct beta to say unreleased ([#455](https://www.github.com/googleapis/java-pubsublite/issues/455)) ([48a19d7](https://www.github.com/googleapis/java-pubsublite/commit/48a19d7e66cd78798ded473ff0e0a4d1f97053b3))
+
 ## [0.7.0](https://www.github.com/googleapis/java-pubsublite/compare/v0.6.5...v0.7.0) (2020-12-08)
 
 

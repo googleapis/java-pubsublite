@@ -31,6 +31,7 @@ import org.apache.spark.sql.sources.v2.reader.InputPartitionReader;
 public class PslMicroBatchInputPartition implements InputPartition<InternalRow> {
 
   private final SubscriberFactory subscriberFactory;
+  private final SparkPartitionOffset startOffset;
   private final SparkPartitionOffset endOffset;
   private final SubscriptionPath subscriptionPath;
   private final FlowControlSettings flowControlSettings;
@@ -38,8 +39,10 @@ public class PslMicroBatchInputPartition implements InputPartition<InternalRow> 
   public PslMicroBatchInputPartition(
       SubscriptionPath subscriptionPath,
       FlowControlSettings flowControlSettings,
+      SparkPartitionOffset startOffset,
       SparkPartitionOffset endOffset,
       SubscriberFactory subscriberFactory) {
+    this.startOffset = startOffset;
     this.endOffset = endOffset;
     this.subscriptionPath = subscriptionPath;
     this.flowControlSettings = flowControlSettings;
@@ -55,7 +58,11 @@ public class PslMicroBatchInputPartition implements InputPartition<InternalRow> 
               subscriberFactory,
               flowControlSettings,
               SeekRequest.newBuilder()
-                  .setCursor(Cursor.newBuilder().setOffset(endOffset.offset()).build())
+                  .setCursor(
+                      Cursor.newBuilder()
+                          .setOffset(
+                              PslSparkUtils.toPslPartitionOffset(startOffset).offset().value())
+                          .build())
                   .build());
     } catch (CheckedApiException e) {
       throw new IllegalStateException(

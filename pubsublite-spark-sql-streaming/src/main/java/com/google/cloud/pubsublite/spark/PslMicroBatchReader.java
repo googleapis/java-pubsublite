@@ -120,8 +120,7 @@ public class PslMicroBatchReader implements MicroBatchReader {
   public List<InputPartition<InternalRow>> planInputPartitions() {
     checkState(startOffset != null);
     List<InputPartition<InternalRow>> list = new ArrayList<>();
-    for (SparkPartitionOffset offset :
-        startOffset.getPartitionOffsetMap().values()) {
+    for (SparkPartitionOffset offset : startOffset.getPartitionOffsetMap().values()) {
       SparkPartitionOffset endPartitionOffset =
           endOffset.getPartitionOffsetMap().get(offset.partition());
       if (offset.equals(endPartitionOffset)) {

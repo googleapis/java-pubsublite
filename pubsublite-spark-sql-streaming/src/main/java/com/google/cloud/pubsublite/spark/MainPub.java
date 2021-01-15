@@ -16,10 +16,18 @@
 
 package com.google.cloud.pubsublite.spark;
 
+import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Deque;
 import java.util.List;
+import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.atomic.AtomicLong;
 
 import com.google.api.core.ApiFuture;
+import com.google.api.core.ApiFutureCallback;
 import com.google.api.core.ApiFutures;
 import com.google.cloud.pubsublite.CloudRegion;
 import com.google.cloud.pubsublite.CloudZone;
@@ -31,17 +39,20 @@ import com.google.cloud.pubsublite.cloudpubsub.Publisher;
 import com.google.cloud.pubsublite.cloudpubsub.PublisherSettings;
 import com.google.protobuf.ByteString;
 import com.google.pubsub.v1.PubsubMessage;
+import org.apache.commons.lang.RandomStringUtils;
 
 
 public class MainPub {
 
     public static void main(String[] args) throws Exception {
 
+        ScheduledExecutorService receiptPool = Executors.newScheduledThreadPool(5);
+
         long projectNumber = 358307816737L;
         String cloudRegion = "us-central1";
         char zoneId = 'a';
         String topicId = "test-spark-jiangmichael";
-        int messageCount = 1000;
+        int messageCount = 50;
 
         TopicPath topicPath =
                 TopicPath.newBuilder()
@@ -50,42 +61,46 @@ public class MainPub {
                         .setName(TopicName.of(topicId))
                         .build();
         Publisher publisher = null;
-        List<ApiFuture<String>> futures = new ArrayList<>();
 
-        try {
-            PublisherSettings publisherSettings =
-                    PublisherSettings.newBuilder().setTopicPath(topicPath).build();
+        AtomicLong receiptConfirmed = new AtomicLong(0);
 
-            publisher = Publisher.create(publisherSettings);
+        PublisherSettings publisherSettings =
+                PublisherSettings.newBuilder().setTopicPath(topicPath).build();
 
-            // Start the publisher. Upon successful starting, its state will become RUNNING.
-            publisher.startAsync().awaitRunning();
+        publisher = Publisher.create(publisherSettings);
 
-            while (true) {
-                for (int i = 0; i < messageCount; i++) {
-                    String message = "message-" + i;
+        // Start the publisher. Upon successful starting, its state will become RUNNING.
+        publisher.startAsync().awaitRunning();
 
-                    // Convert the message to a byte string.
-                    ByteString data = ByteString.copyFromUtf8(message);
-                    PubsubMessage pubsubMessage =
-                            PubsubMessage.newBuilder().setData(data).build();
+        while (true) {
+            for (int i = 0; i < messageCount; i++) {
+                String message = RandomStringUtils.randomAlphanumeric(50000);
 
-                    // Publish a message. Messages are automatically batched.
-                    ApiFuture<String> future = publisher.publish(pubsubMessage);
-                    futures.add(future);
-                }
 
-                ArrayList<PublishMetadata> metadata = new ArrayList<>();
-                List<String> ackIds = ApiFutures.allAsList(futures).get();
-                for (String id : ackIds) {
-                    // Decoded metadata contains partition and offset.
-                    metadata.add(PublishMetadata.decode(id));
-                }
-                System.out.println("Published " + ackIds.size() + " messages.");
-                Thread.sleep(500);
+                // Convert the message to a byte string.
+                ByteString data = ByteString.copyFromUtf8(message);
+                PubsubMessage pubsubMessage =
+                        PubsubMessage.newBuilder().setData(data).build();
+
+                // Publish a message. Messages are automatically batched.
+                ApiFuture<String> future = publisher.publish(pubsubMessage);
+                ApiFutures.addCallback(future, new ApiFutureCallback<String>() {
+                    @Override
+                    public void onFailure(Throwable t) {
+                        System.out.println("Failed publishing msg");
+                    }
+
+                    @Override
+                    public void onSuccess(String result) {
+                        long total = receiptConfirmed.incrementAndGet();
+                        if (total % messageCount == 0) {
+                            System.out.println("Published " + total + " messages. Most recent offset: " +
+                                    PublishMetadata.decode(result));
+                        }
+                    }
+                }, receiptPool);
             }
-        } catch (Throwable t) {
-            throw t;
+            Thread.sleep(500);
         }
     }
 }

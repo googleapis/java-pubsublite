@@ -48,11 +48,11 @@ public class MainPub {
 
         ScheduledExecutorService receiptPool = Executors.newScheduledThreadPool(5);
 
-        long projectNumber = 358307816737L;
+        long projectNumber = 129988248131L;
         String cloudRegion = "us-central1";
         char zoneId = 'a';
         String topicId = "test-spark-jiangmichael";
-        int messageCount = 50;
+        int messageCount = 500;
 
         TopicPath topicPath =
                 TopicPath.newBuilder()
@@ -74,7 +74,7 @@ public class MainPub {
 
         while (true) {
             for (int i = 0; i < messageCount; i++) {
-                String message = RandomStringUtils.randomAlphanumeric(50000);
+                String message = RandomStringUtils.randomAlphanumeric(5000);
 
 
                 // Convert the message to a byte string.
@@ -100,7 +100,7 @@ public class MainPub {
                     }
                 }, receiptPool);
             }
-            Thread.sleep(500);
+            Thread.sleep(200);
         }
     }
 }

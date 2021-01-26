@@ -1,5 +1,13 @@
 # Changelog
 
+### [0.8.1](https://www.github.com/googleapis/java-pubsublite/compare/v0.8.0...v0.8.1) (2021-01-26)
+
+
+### Dependencies
+
+* update dependency com.google.cloud:google-cloud-shared-dependencies to v0.18.0 ([#458](https://www.github.com/googleapis/java-pubsublite/issues/458)) ([6642cc6](https://www.github.com/googleapis/java-pubsublite/commit/6642cc6eb7c25611ad4d59f93f4001d7de5ebb95))
+* update dependency com.google.errorprone:error_prone_annotations to v2.5.1 ([#454](https://www.github.com/googleapis/java-pubsublite/issues/454)) ([d1c7d33](https://www.github.com/googleapis/java-pubsublite/commit/d1c7d3339f9acca8ddbe787fdad23977b60cea5e))
+
 ## [0.8.0](https://www.github.com/googleapis/java-pubsublite/compare/v0.7.0...v0.8.0) (2021-01-14)
 
 

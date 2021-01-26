@@ -17,6 +17,20 @@
 package com.google.cloud.pubsublite.spark;
 
 import java.util.concurrent.TimeUnit;
+
+import com.google.cloud.pubsublite.CloudRegion;
+import com.google.cloud.pubsublite.CloudZone;
+import com.google.cloud.pubsublite.Offset;
+import com.google.cloud.pubsublite.Partition;
+import com.google.cloud.pubsublite.ProjectNumber;
+import com.google.cloud.pubsublite.SubscriptionName;
+import com.google.cloud.pubsublite.SubscriptionPath;
+import com.google.cloud.pubsublite.TopicName;
+import com.google.cloud.pubsublite.TopicPath;
+import com.google.cloud.pubsublite.internal.CursorClient;
+import com.google.cloud.pubsublite.internal.CursorClientSettings;
+import com.google.cloud.pubsublite.internal.TopicStatsClient;
+import com.google.cloud.pubsublite.internal.TopicStatsClientSettings;
 import org.apache.spark.sql.SparkSession;
 import org.apache.spark.sql.streaming.OutputMode;
 import org.apache.spark.sql.streaming.StreamingQueryException;
@@ -77,6 +91,43 @@ public class Main {
     //                }
     //            }, MoreExecutors.directExecutor());
     //        }
+    CursorClientSettings settings = CursorClientSettings.newBuilder()
+            .setRegion(CloudRegion.of("us-central1"))
+            .build();
+    CursorClient cursorClient = CursorClient.create(settings);
+
+    for (int i = 0; i < 10; i++) {
+      cursorClient.commitCursor(SubscriptionPath.newBuilder()
+              .setProject(ProjectNumber.of(129988248131L))
+              .setLocation(CloudZone.of(CloudRegion.of("us-central1"), 'b'))
+              .setName(SubscriptionName.of("test-spark-subscription-1-partition")).build(),
+              Partition.of(i), Offset.of(0L)).get();
+    }
+//
+//    cursorClient.listPartitionCursors(SubscriptionPath.newBuilder()
+//          .setProject(ProjectNumber.of(129988248131L))
+//          .setLocation(CloudZone.of(CloudRegion.of("us-central1"), 'a'))
+//          .setName(SubscriptionName.of("test-spark-subscription-1-partition-2")).build()).get().entrySet()
+//    .forEach((e) -> System.out.println("partition " + e.getKey().value() + ", offset " + e.getValue().value()));
+//
+//    System.out.println("size" + cursorClient.listPartitionCursors(SubscriptionPath.newBuilder()
+//            .setProject(ProjectNumber.of(129988248131L))
+//            .setLocation(CloudZone.of(CloudRegion.of("us-central1"), 'a'))
+//            .setName(SubscriptionName.of("test-spark-subscription-5-partition")).build()).get().size());
+
+
+//    TopicStatsClientSettings topicStatsClientSettings = TopicStatsClientSettings.newBuilder()
+//            .setRegion(CloudRegion.of("us-central1"))
+//            .build();
+//    TopicStatsClient topicStatsClient = TopicStatsClient.create(topicStatsClientSettings);
+//    long headOffsetPartition0 = topicStatsClient.computeHeadCursor(TopicPath.newBuilder()
+//            .setProject(ProjectNumber.of(129988248131L))
+//            .setLocation(CloudZone.of(CloudRegion.of("us-central1"), 'b'))
+//            .setName(TopicName.of("test-spark-jiangmichael"))
+//            .build(), Partition.of(0)).get().getOffset();
+//    System.out.println("headoffset partition 0:"+ headOffsetPartition0);
+
+
 
     //
     //        long projectNumber = 358307816737L;
@@ -131,27 +182,27 @@ public class Main {
     //            }
     //        }
 
-    SparkSession spark =
-        SparkSession.builder()
-            .master("yarn")
-            .appName("testapp")
-            .getOrCreate();
-    try {
-      spark
-          .readStream()
-          .format("pubsublite")
-          .option(
-              "pubsublite.subscription",
-              "projects/358307816737/locations/us-central1-a/subscriptions/test-spark-subscription")
-          .load()
-          .writeStream()
-          .format("console")
-          .outputMode(OutputMode.Append())
-          .trigger(Trigger.Continuous(1, TimeUnit.SECONDS))
-          .start()
-          .awaitTermination();
-    } catch (StreamingQueryException e) {
-      e.printStackTrace();
-    }
+//    SparkSession spark =
+//        SparkSession.builder()
+//            .master("yarn")
+//            .appName("testapp")
+//            .getOrCreate();
+//    try {
+//      spark
+//          .readStream()
+//          .format("pubsublite")
+//          .option(
+//              "pubsublite.subscription",
+//              "projects/358307816737/locations/us-central1-a/subscriptions/test-spark-subscription")
+//          .load()
+//          .writeStream()
+//          .format("console")
+//          .outputMode(OutputMode.Append())
+//          .trigger(Trigger.Continuous(1, TimeUnit.SECONDS))
+//          .start()
+//          .awaitTermination();
+//    } catch (StreamingQueryException e) {
+//      e.printStackTrace();
+//    }
   }
 }

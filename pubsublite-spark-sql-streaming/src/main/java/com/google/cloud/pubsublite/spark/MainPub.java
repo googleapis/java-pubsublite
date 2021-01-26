@@ -50,9 +50,10 @@ public class MainPub {
 
         long projectNumber = 129988248131L;
         String cloudRegion = "us-central1";
-        char zoneId = 'a';
-        String topicId = "test-spark-jiangmichael";
-        int messageCount = 500;
+//        char zoneId = 'a';
+        char zoneId = 'b';
+        String topicId = "test-spark-jiangmichael-1-partition";
+        int messageCount = 5000;
 
         TopicPath topicPath =
                 TopicPath.newBuilder()
@@ -99,8 +100,9 @@ public class MainPub {
                         }
                     }
                 }, receiptPool);
+
             }
-            Thread.sleep(200);
+//            Thread.sleep(100);
         }
     }
 }

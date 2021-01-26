@@ -75,7 +75,6 @@ import javax.annotation.Generated;
  *     partitionAssignmentServiceSettingsBuilder.build();
  * }</pre>
  */
-@BetaApi
 @Generated("by gapic-generator-java")
 public class PartitionAssignmentServiceStubSettings
     extends StubSettings<PartitionAssignmentServiceStubSettings> {

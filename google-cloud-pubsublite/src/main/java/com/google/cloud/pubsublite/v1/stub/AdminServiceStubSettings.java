@@ -102,7 +102,6 @@ import org.threeten.bp.Duration;
  * AdminServiceStubSettings adminServiceSettings = adminServiceSettingsBuilder.build();
  * }</pre>
  */
-@BetaApi
 @Generated("by gapic-generator-java")
 public class AdminServiceStubSettings extends StubSettings<AdminServiceStubSettings> {
   /** The default scopes of the service. */

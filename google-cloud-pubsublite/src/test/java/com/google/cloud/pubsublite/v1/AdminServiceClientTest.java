@@ -108,6 +108,8 @@ public class AdminServiceClientTest {
     Topic expectedResponse =
         Topic.newBuilder()
             .setName(TopicName.of("[PROJECT]", "[LOCATION]", "[TOPIC]").toString())
+            .setPartitionConfig(Topic.PartitionConfig.newBuilder().build())
+            .setRetentionConfig(Topic.RetentionConfig.newBuilder().build())
             .build();
     mockAdminService.addResponse(expectedResponse);
 
@@ -152,6 +154,8 @@ public class AdminServiceClientTest {
     Topic expectedResponse =
         Topic.newBuilder()
             .setName(TopicName.of("[PROJECT]", "[LOCATION]", "[TOPIC]").toString())
+            .setPartitionConfig(Topic.PartitionConfig.newBuilder().build())
+            .setRetentionConfig(Topic.RetentionConfig.newBuilder().build())
             .build();
     mockAdminService.addResponse(expectedResponse);
 
@@ -196,6 +200,8 @@ public class AdminServiceClientTest {
     Topic expectedResponse =
         Topic.newBuilder()
             .setName(TopicName.of("[PROJECT]", "[LOCATION]", "[TOPIC]").toString())
+            .setPartitionConfig(Topic.PartitionConfig.newBuilder().build())
+            .setRetentionConfig(Topic.RetentionConfig.newBuilder().build())
             .build();
     mockAdminService.addResponse(expectedResponse);
 
@@ -234,6 +240,8 @@ public class AdminServiceClientTest {
     Topic expectedResponse =
         Topic.newBuilder()
             .setName(TopicName.of("[PROJECT]", "[LOCATION]", "[TOPIC]").toString())
+            .setPartitionConfig(Topic.PartitionConfig.newBuilder().build())
+            .setRetentionConfig(Topic.RetentionConfig.newBuilder().build())
             .build();
     mockAdminService.addResponse(expectedResponse);
 
@@ -432,6 +440,8 @@ public class AdminServiceClientTest {
     Topic expectedResponse =
         Topic.newBuilder()
             .setName(TopicName.of("[PROJECT]", "[LOCATION]", "[TOPIC]").toString())
+            .setPartitionConfig(Topic.PartitionConfig.newBuilder().build())
+            .setRetentionConfig(Topic.RetentionConfig.newBuilder().build())
             .build();
     mockAdminService.addResponse(expectedResponse);
 
@@ -632,6 +642,7 @@ public class AdminServiceClientTest {
         Subscription.newBuilder()
             .setName(SubscriptionName.of("[PROJECT]", "[LOCATION]", "[SUBSCRIPTION]").toString())
             .setTopic(TopicName.of("[PROJECT]", "[LOCATION]", "[TOPIC]").toString())
+            .setDeliveryConfig(Subscription.DeliveryConfig.newBuilder().build())
             .build();
     mockAdminService.addResponse(expectedResponse);
 
@@ -677,6 +688,7 @@ public class AdminServiceClientTest {
         Subscription.newBuilder()
             .setName(SubscriptionName.of("[PROJECT]", "[LOCATION]", "[SUBSCRIPTION]").toString())
             .setTopic(TopicName.of("[PROJECT]", "[LOCATION]", "[TOPIC]").toString())
+            .setDeliveryConfig(Subscription.DeliveryConfig.newBuilder().build())
             .build();
     mockAdminService.addResponse(expectedResponse);
 
@@ -722,6 +734,7 @@ public class AdminServiceClientTest {
         Subscription.newBuilder()
             .setName(SubscriptionName.of("[PROJECT]", "[LOCATION]", "[SUBSCRIPTION]").toString())
             .setTopic(TopicName.of("[PROJECT]", "[LOCATION]", "[TOPIC]").toString())
+            .setDeliveryConfig(Subscription.DeliveryConfig.newBuilder().build())
             .build();
     mockAdminService.addResponse(expectedResponse);
 
@@ -761,6 +774,7 @@ public class AdminServiceClientTest {
         Subscription.newBuilder()
             .setName(SubscriptionName.of("[PROJECT]", "[LOCATION]", "[SUBSCRIPTION]").toString())
             .setTopic(TopicName.of("[PROJECT]", "[LOCATION]", "[TOPIC]").toString())
+            .setDeliveryConfig(Subscription.DeliveryConfig.newBuilder().build())
             .build();
     mockAdminService.addResponse(expectedResponse);
 
@@ -888,6 +902,7 @@ public class AdminServiceClientTest {
         Subscription.newBuilder()
             .setName(SubscriptionName.of("[PROJECT]", "[LOCATION]", "[SUBSCRIPTION]").toString())
             .setTopic(TopicName.of("[PROJECT]", "[LOCATION]", "[TOPIC]").toString())
+            .setDeliveryConfig(Subscription.DeliveryConfig.newBuilder().build())
             .build();
     mockAdminService.addResponse(expectedResponse);
 

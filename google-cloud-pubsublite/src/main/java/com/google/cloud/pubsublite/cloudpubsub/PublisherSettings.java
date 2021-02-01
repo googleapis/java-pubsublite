@@ -95,7 +95,7 @@ public abstract class PublisherSettings {
   /** Get a new builder for a PublisherSettings. */
   public static Builder newBuilder() {
     return new AutoValue_PublisherSettings.Builder()
-        .setCredentialsProvider(() -> GoogleCredentials.getApplicationDefault())
+        .setCredentialsProvider(PublisherServiceSettings.defaultCredentialsProviderBuilder().build())
         .setUnderlyingBuilder(SinglePartitionPublisherBuilder.newBuilder());
   }
 

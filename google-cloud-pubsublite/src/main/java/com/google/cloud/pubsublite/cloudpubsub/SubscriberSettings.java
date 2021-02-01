@@ -123,7 +123,7 @@ public abstract class SubscriberSettings {
   public static Builder newBuilder() {
     return new AutoValue_SubscriberSettings.Builder()
         .setPartitions(ImmutableList.of())
-        .setCredentialsProvider(GoogleCredentials::getApplicationDefault);
+        .setCredentialsProvider(SubscriberServiceSettings.defaultCredentialsProviderBuilder().build());
   }
 
   @AutoValue.Builder

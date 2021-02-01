@@ -161,9 +161,10 @@ public abstract class PublisherSettings {
           AdminClientSettings.newBuilder()
               .setServiceClient(
                   AdminServiceClient.create(
-                      AdminServiceSettings.newBuilder()
-                          .setCredentialsProvider(credentialsProvider())
-                          .build()))
+                      addDefaultSettings(
+                          topicPath().location().region(),
+                          AdminServiceSettings.newBuilder()
+                              .setCredentialsProvider(credentialsProvider()))))
               .setRegion(topicPath().location().region())
               .build());
     } catch (Throwable t) {

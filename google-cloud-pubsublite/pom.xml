@@ -93,6 +93,14 @@
       <groupId>io.grpc</groupId>
       <artifactId>grpc-protobuf</artifactId>
     </dependency>
+    <dependency>
+      <groupId>com.google.auth</groupId>
+      <artifactId>google-auth-library-oauth2-http</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.google.auth</groupId>
+      <artifactId>google-auth-library-credentials</artifactId>
+    </dependency>
 
     <!-- Add system backend as a default dependency. This can be excluded if a different backend is needed.-->
     <dependency>

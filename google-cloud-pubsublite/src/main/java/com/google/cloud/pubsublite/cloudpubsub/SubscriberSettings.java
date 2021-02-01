@@ -22,7 +22,6 @@ import static com.google.cloud.pubsublite.internal.wire.ServiceClients.addDefaul
 
 import com.google.api.gax.core.CredentialsProvider;
 import com.google.api.gax.rpc.ApiException;
-import com.google.auth.oauth2.GoogleCredentials;
 import com.google.auto.value.AutoValue;
 import com.google.cloud.pubsub.v1.MessageReceiver;
 import com.google.cloud.pubsublite.MessageTransformer;
@@ -123,7 +122,8 @@ public abstract class SubscriberSettings {
   public static Builder newBuilder() {
     return new AutoValue_SubscriberSettings.Builder()
         .setPartitions(ImmutableList.of())
-        .setCredentialsProvider(SubscriberServiceSettings.defaultCredentialsProviderBuilder().build());
+        .setCredentialsProvider(
+            SubscriberServiceSettings.defaultCredentialsProviderBuilder().build());
   }
 
   @AutoValue.Builder

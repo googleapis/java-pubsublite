@@ -183,9 +183,11 @@ public class SubscriberImplTest {
 
   @Test
   public void messagesEmpty_IsError() throws Exception {
+    Future<Void> failed = whenFailed(permanentErrorHandler);
     subscriber.allowFlow(bigFlowControlRequest());
     leakedResponseObserver.onResponse(Response.ofMessages(ImmutableList.of()));
     assertThrows(IllegalStateException.class, subscriber::awaitTerminated);
+    failed.get();
     verify(permanentErrorHandler)
         .failed(any(), argThat(new ApiExceptionMatcher(Code.INVALID_ARGUMENT)));
   }

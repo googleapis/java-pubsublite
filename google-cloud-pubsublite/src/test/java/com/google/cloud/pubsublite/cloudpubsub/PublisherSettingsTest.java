@@ -21,6 +21,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
+import com.google.cloud.pubsublite.AdminClient;
 import com.google.cloud.pubsublite.CloudZone;
 import com.google.cloud.pubsublite.ProjectNumber;
 import com.google.cloud.pubsublite.PublishMetadata;
@@ -64,6 +65,7 @@ public class PublisherSettingsTest {
     PublisherSettings.newBuilder()
         .setTopicPath(getPath())
         .setServiceClientSupplier(() -> mock(PublisherServiceClient.class))
+        .setAdminClient(mock(AdminClient.class))
         .setUnderlyingBuilder(mockBuilder)
         .build()
         .instantiate();

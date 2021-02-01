@@ -86,6 +86,9 @@ public abstract class PublisherSettings {
    */
   abstract Optional<Supplier<PublisherServiceClient>> serviceClientSupplier();
 
+  /** The AdminClient to use, if provided. */
+  abstract Optional<AdminClient> adminClient();
+
   // For testing.
   abstract SinglePartitionPublisherBuilder.Builder underlyingBuilder();
 
@@ -123,6 +126,9 @@ public abstract class PublisherSettings {
      */
     public abstract Builder setServiceClientSupplier(Supplier<PublisherServiceClient> supplier);
 
+    /** The AdminClient to use, if provided. */
+    public abstract Builder setAdminClient(AdminClient adminClient);
+
     // For testing.
     @VisibleForTesting
     abstract Builder setUnderlyingBuilder(
@@ -148,7 +154,8 @@ public abstract class PublisherSettings {
     }
   }
 
-  private AdminClient newAdminClient() throws ApiException {
+  private AdminClient getAdminClient() throws ApiException {
+    if (adminClient().isPresent()) return adminClient().get();
     try {
       return AdminClient.create(
           AdminClientSettings.newBuilder()
@@ -185,7 +192,7 @@ public abstract class PublisherSettings {
                           .setServiceClient(newServiceClient(partition));
                   return singlePartitionBuilder.build();
                 })
-            .setAdminClient(newAdminClient());
+            .setAdminClient(getAdminClient());
     return new WrappingPublisher(publisherSettings.build().instantiate(), messageTransformer);
   }
 }

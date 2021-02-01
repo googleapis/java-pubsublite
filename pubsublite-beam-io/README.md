@@ -3,17 +3,18 @@
 1. Add the following to your POM file to download the Pub/Sub Lite I/O.
 ```xml
 <dependency>
-  <groupId>com.google.cloud</groupId>
-  <artifactId>pubsublite-beam-io</artifactId>
-  <version>0.6.0</version>
+   <groupId>org.apache.beam</groupId>
+   <artifactId>beam-sdks-java-io-google-cloud-platform</artifactId>
+   <version>2.27.0</version>
 </dependency>
 ```
 1. Create a topic using `gcloud pubsub lite-topics create`
 1. Write some messages using:
 
     ```java
-    import com.google.cloud.pubsublite.beam.PubsubLiteIO;
-    import com.google.cloud.pubsublite.beam.PublisherOptions;
+    import org.apache.beam.sdk.io.gcp.pubsublite.PubsubLiteIO;
+    import org.apache.beam.sdk.io.gcp.pubsublite.PublisherOptions;
+    import com.google.cloud.pubsublite.proto.PubSubMessage;
     import com.google.cloud.pubsublite.*;
     
     ...
@@ -23,7 +24,7 @@
     
     ...
     
-    PCollection<Message> messages = ...;
+    PCollection<PubSubMessage> messages = ...;
     messages.apply("Write messages", PubsubLiteIO.write(
         PublisherOptions.newBuilder()
             .setTopicPath(TopicPath.newBuilder()
@@ -39,6 +40,7 @@
     ```java
     import com.google.cloud.pubsublite.beam.PubsubLiteIO;
     import com.google.cloud.pubsublite.beam.SubscriberOptions;
+    import com.google.cloud.pubsublite.proto.SequencedMessage;
     import com.google.cloud.pubsublite.*;
     import com.google.cloud.pubsublite.cloudpubsub.FlowControlSettings;
     

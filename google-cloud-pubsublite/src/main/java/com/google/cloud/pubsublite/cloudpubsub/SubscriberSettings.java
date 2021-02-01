@@ -272,7 +272,7 @@ public abstract class SubscriberSettings {
   Subscriber instantiate() throws ApiException {
     PartitionSubscriberFactory partitionSubscriberFactory = this::newPartitionSubscriber;
 
-    if (!partitions().isEmpty()) {
+    if (partitions().isEmpty()) {
       AssignerSettings.Builder assignerSettings =
           AssignerSettings.newBuilder()
               .setSubscriptionPath(subscriptionPath())

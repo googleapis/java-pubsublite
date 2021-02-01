@@ -16,15 +16,24 @@
 
 package com.google.cloud.pubsublite.beam;
 
+import static com.google.cloud.pubsublite.internal.ExtractStatus.toCanonical;
+import static com.google.cloud.pubsublite.internal.wire.ServiceClients.addDefaultMetadata;
+import static com.google.cloud.pubsublite.internal.wire.ServiceClients.addDefaultSettings;
+
+import com.google.api.gax.rpc.ApiException;
 import com.google.auto.value.AutoValue;
+import com.google.cloud.pubsublite.Partition;
 import com.google.cloud.pubsublite.PublishMetadata;
 import com.google.cloud.pubsublite.TopicPath;
+import com.google.cloud.pubsublite.cloudpubsub.PublisherSettings;
 import com.google.cloud.pubsublite.internal.Publisher;
 import com.google.cloud.pubsublite.internal.wire.PubsubContext;
 import com.google.cloud.pubsublite.internal.wire.PubsubContext.Framework;
+import com.google.cloud.pubsublite.internal.wire.RoutingMetadata;
 import com.google.cloud.pubsublite.internal.wire.RoutingPublisherBuilder;
 import com.google.cloud.pubsublite.internal.wire.SinglePartitionPublisherBuilder;
 import com.google.cloud.pubsublite.v1.PublisherServiceClient;
+import com.google.cloud.pubsublite.v1.PublisherServiceSettings;
 import java.io.Serializable;
 import javax.annotation.Nullable;
 
@@ -53,10 +62,26 @@ public abstract class PublisherOptions implements Serializable {
     return clientSupplier() == null;
   }
 
+  private PublisherServiceClient newServiceClient(Partition partition) throws ApiException {
+    if (clientSupplier() != null) return clientSupplier().get();
+    PublisherServiceSettings.Builder settingsBuilder = PublisherServiceSettings.newBuilder();
+    settingsBuilder =
+        addDefaultMetadata(
+            PubsubContext.of(FRAMEWORK),
+            RoutingMetadata.of(topicPath(), partition),
+            settingsBuilder);
+    try {
+      return PublisherServiceClient.create(
+          addDefaultSettings(topicPath().location().region(), settingsBuilder));
+    } catch (Throwable t) {
+      throw toCanonical(t).underlying;
+    }
+  }
+
   @SuppressWarnings("CheckReturnValue")
   Publisher<PublishMetadata> getPublisher() {
     SinglePartitionPublisherBuilder.Builder singlePartitionPublisherBuilder =
-        SinglePartitionPublisherBuilder.newBuilder().setContext(PubsubContext.of(FRAMEWORK));
+        SinglePartitionPublisherBuilder.newBuilder();
     if (clientSupplier() != null) {
       singlePartitionPublisherBuilder.setServiceClient(clientSupplier().get());
     }
@@ -64,9 +89,11 @@ public abstract class PublisherOptions implements Serializable {
         .setTopic(topicPath())
         .setPublisherFactory(
             partition ->
-                singlePartitionPublisherBuilder
+                SinglePartitionPublisherBuilder.newBuilder()
                     .setTopic(topicPath())
                     .setPartition(partition)
+                    .setServiceClient(newServiceClient(partition))
+                    .setBatchingSettings(PublisherSettings.DEFAULT_BATCHING_SETTINGS)
                     .build())
         .build();
   }

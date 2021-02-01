@@ -25,7 +25,11 @@ import com.google.api.core.ApiService;
 import com.google.cloud.pubsublite.Message;
 import com.google.cloud.pubsublite.Partition;
 import com.google.cloud.pubsublite.PublishMetadata;
-import com.google.cloud.pubsublite.internal.*;
+import com.google.cloud.pubsublite.internal.CheckedApiException;
+import com.google.cloud.pubsublite.internal.CloseableMonitor;
+import com.google.cloud.pubsublite.internal.ProxyService;
+import com.google.cloud.pubsublite.internal.Publisher;
+import com.google.cloud.pubsublite.internal.RoutingPolicy;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.flogger.GoogleLogger;
 import com.google.common.util.concurrent.MoreExecutors;
@@ -94,11 +98,13 @@ public class PartitionCountWatchingPublisher extends ProxyService
   @GuardedBy("monitor.monitor")
   private Optional<PartitionsWithRouting> partitionsWithRouting = Optional.empty();
 
-  public PartitionCountWatchingPublisher(PartitionCountWatchingPublisherSettings settings) {
-    this.publisherFactory = settings.publisherFactory();
-    this.policyFactory = settings.routingPolicyFactory();
-    PartitionCountWatcher configWatcher =
-        settings.configWatcherFactory().newWatcher(this::handleConfig);
+  PartitionCountWatchingPublisher(
+      PartitionPublisherFactory publisherFactory,
+      RoutingPolicy.Factory policyFactory,
+      PartitionCountWatcher.Factory configWatcherFactory) {
+    this.publisherFactory = publisherFactory;
+    this.policyFactory = policyFactory;
+    PartitionCountWatcher configWatcher = configWatcherFactory.newWatcher(this::handleConfig);
     addServices(configWatcher);
   }
 

@@ -29,10 +29,10 @@ import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
 @RunWith(JUnit4.class)
-public class AssignerBuilderTest {
+public class AssignerSettingsTest {
   @Test
   public void testBuilder() {
-    AssignerBuilder.newBuilder()
+    AssignerSettings.newBuilder()
         .setSubscriptionPath(
             SubscriptionPath.newBuilder()
                 .setLocation(CloudZone.of(CloudRegion.of("us-central1"), 'a'))

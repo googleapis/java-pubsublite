@@ -65,7 +65,6 @@ public class PublisherSettingsTest {
         .setTopicPath(getPath())
         .setServiceClientSupplier(() -> mock(PublisherServiceClient.class))
         .setUnderlyingBuilder(mockBuilder)
-        .setPartitionCountWatcherFactory((c) -> fakeWatcher)
         .build()
         .instantiate();
   }

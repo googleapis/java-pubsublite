@@ -90,17 +90,12 @@ public class PartitionCountWatchingPublisherTest {
         .startAsync();
     publisher =
         new PartitionCountWatchingPublisher(
-            PartitionCountWatchingPublisherSettings.newBuilder()
-                .setConfigWatcherFactory(
-                    c -> {
-                      leakedConsumer = c;
-                      return fakeConfigWatcher;
-                    })
-                .setTopic(path())
-                .setConfigPollPeriod(PERIOD)
-                .setPublisherFactory(mockPublisherFactory)
-                .setRoutingPolicyFactory(mockRoutingPolicyFactory)
-                .build());
+            mockPublisherFactory,
+            mockRoutingPolicyFactory,
+            c -> {
+              leakedConsumer = c;
+              return fakeConfigWatcher;
+            });
     publisher.startAsync();
     publisher.awaitRunning();
 

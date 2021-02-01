@@ -26,6 +26,7 @@ import static org.mockito.MockitoAnnotations.initMocks;
 
 import com.google.api.core.ApiFuture;
 import com.google.api.core.SettableApiFuture;
+import com.google.api.gax.batching.BatchingSettings;
 import com.google.cloud.pubsublite.CloudRegion;
 import com.google.cloud.pubsublite.CloudZone;
 import com.google.cloud.pubsublite.Message;
@@ -37,6 +38,7 @@ import com.google.cloud.pubsublite.TopicName;
 import com.google.cloud.pubsublite.TopicPath;
 import com.google.cloud.pubsublite.internal.Publisher;
 import com.google.cloud.pubsublite.internal.testing.FakeApiService;
+import com.google.cloud.pubsublite.v1.PublisherServiceClient;
 import com.google.protobuf.ByteString;
 import org.junit.Before;
 import org.junit.Test;
@@ -73,6 +75,8 @@ public class SinglePartitionPublisherTest {
             .setTopic(topic)
             .setPartition(partition)
             .setUnderlyingBuilder(mockBuilder)
+            .setBatchingSettings(BatchingSettings.newBuilder().setIsEnabled(false).build())
+            .setServiceClient(mock(PublisherServiceClient.class))
             .build();
     this.pub.startAsync().awaitRunning();
   }

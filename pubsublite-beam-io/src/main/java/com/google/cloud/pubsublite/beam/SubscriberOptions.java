@@ -16,6 +16,10 @@
 
 package com.google.cloud.pubsublite.beam;
 
+import static com.google.cloud.pubsublite.internal.ExtractStatus.toCanonical;
+import static com.google.cloud.pubsublite.internal.wire.ServiceClients.addDefaultMetadata;
+import static com.google.cloud.pubsublite.internal.wire.ServiceClients.addDefaultSettings;
+
 import com.google.api.gax.rpc.ApiException;
 import com.google.auto.value.AutoValue;
 import com.google.cloud.pubsublite.Partition;
@@ -23,13 +27,16 @@ import com.google.cloud.pubsublite.PartitionLookupUtils;
 import com.google.cloud.pubsublite.SubscriptionPath;
 import com.google.cloud.pubsublite.cloudpubsub.FlowControlSettings;
 import com.google.cloud.pubsublite.internal.wire.Committer;
-import com.google.cloud.pubsublite.internal.wire.CommitterBuilder;
+import com.google.cloud.pubsublite.internal.wire.CommitterSettings;
 import com.google.cloud.pubsublite.internal.wire.PubsubContext;
 import com.google.cloud.pubsublite.internal.wire.PubsubContext.Framework;
+import com.google.cloud.pubsublite.internal.wire.RoutingMetadata;
 import com.google.cloud.pubsublite.internal.wire.SubscriberBuilder;
 import com.google.cloud.pubsublite.internal.wire.SubscriberFactory;
 import com.google.cloud.pubsublite.v1.CursorServiceClient;
+import com.google.cloud.pubsublite.v1.CursorServiceSettings;
 import com.google.cloud.pubsublite.v1.SubscriberServiceClient;
+import com.google.cloud.pubsublite.v1.SubscriberServiceSettings;
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
@@ -79,6 +86,24 @@ public abstract class SubscriberOptions implements Serializable {
 
   public abstract Builder toBuilder();
 
+  private SubscriberServiceClient newSubscriberServiceClient(Partition partition)
+      throws ApiException {
+    if (subscriberClientSupplier().isPresent()) {
+      return subscriberClientSupplier().get().get();
+    }
+    try {
+      SubscriberServiceSettings.Builder settingsBuilder =
+          addDefaultMetadata(
+              PubsubContext.of(FRAMEWORK),
+              RoutingMetadata.of(subscriptionPath(), partition),
+              SubscriberServiceSettings.newBuilder());
+      return SubscriberServiceClient.create(
+          addDefaultSettings(subscriptionPath().location().region(), settingsBuilder));
+    } catch (Throwable t) {
+      throw toCanonical(t).underlying;
+    }
+  }
+
   @SuppressWarnings("CheckReturnValue")
   public ImmutableMap<Partition, SubscriberFactory> getSubscriberFactories() {
     ImmutableMap.Builder<Partition, SubscriberFactory> factories = ImmutableMap.builder();
@@ -87,19 +112,28 @@ public abstract class SubscriberOptions implements Serializable {
           partition,
           subscriberFactory()
               .or(
-                  consumer -> {
-                    SubscriberBuilder.Builder builder = SubscriberBuilder.newBuilder();
-                    builder.setMessageConsumer(consumer);
-                    builder.setSubscriptionPath(subscriptionPath());
-                    builder.setPartition(partition);
-                    builder.setContext(PubsubContext.of(FRAMEWORK));
-                    if (subscriberClientSupplier().isPresent()) {
-                      builder.setServiceClient(subscriberClientSupplier().get().get());
-                    }
-                    return builder.build();
-                  }));
+                  consumer ->
+                      SubscriberBuilder.newBuilder()
+                          .setMessageConsumer(consumer)
+                          .setSubscriptionPath(subscriptionPath())
+                          .setPartition(partition)
+                          .setServiceClient(newSubscriberServiceClient(partition))
+                          .build()));
     }
     return factories.build();
+  }
+
+  private CursorServiceClient newCursorServiceClient() throws ApiException {
+    if (committerClientSupplier().isPresent()) {
+      return committerClientSupplier().get().get();
+    }
+    try {
+      return CursorServiceClient.create(
+          addDefaultSettings(
+              subscriptionPath().location().region(), CursorServiceSettings.newBuilder()));
+    } catch (Throwable t) {
+      throw toCanonical(t).underlying;
+    }
   }
 
   @SuppressWarnings("CheckReturnValue")
@@ -109,13 +143,11 @@ public abstract class SubscriberOptions implements Serializable {
       if (committerSupplier().isPresent()) {
         committers.put(partition, committerSupplier().get().get());
       } else {
-        CommitterBuilder.Builder builder = CommitterBuilder.newBuilder();
+        CommitterSettings.Builder builder = CommitterSettings.newBuilder();
         builder.setSubscriptionPath(subscriptionPath());
         builder.setPartition(partition);
-        if (committerClientSupplier().isPresent()) {
-          builder.setServiceClient(committerClientSupplier().get().get());
-        }
-        committers.put(partition, builder.build());
+        builder.setServiceClient(newCursorServiceClient());
+        committers.put(partition, builder.build().instantiate());
       }
     }
     return committers.build();

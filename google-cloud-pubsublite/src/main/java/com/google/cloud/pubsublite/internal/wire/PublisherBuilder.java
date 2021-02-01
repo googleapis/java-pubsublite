@@ -16,10 +16,6 @@
 
 package com.google.cloud.pubsublite.internal.wire;
 
-import static com.google.cloud.pubsublite.internal.ExtractStatus.toCanonical;
-import static com.google.cloud.pubsublite.internal.wire.ServiceClients.addDefaultMetadata;
-import static com.google.cloud.pubsublite.internal.wire.ServiceClients.addDefaultSettings;
-
 import com.google.api.gax.batching.BatchingSettings;
 import com.google.api.gax.batching.FlowController.LimitExceededBehavior;
 import com.google.api.gax.rpc.ApiException;
@@ -31,10 +27,7 @@ import com.google.cloud.pubsublite.TopicPath;
 import com.google.cloud.pubsublite.internal.Publisher;
 import com.google.cloud.pubsublite.proto.InitialPublishRequest;
 import com.google.cloud.pubsublite.v1.PublisherServiceClient;
-import com.google.cloud.pubsublite.v1.PublisherServiceSettings;
 import com.google.common.base.Preconditions;
-import java.util.Optional;
-import org.threeten.bp.Duration;
 
 /**
  * A builder for a PubSub Lite Publisher. Basic usage:
@@ -55,13 +48,6 @@ import org.threeten.bp.Duration;
  */
 @AutoValue
 public abstract class PublisherBuilder {
-  public static final BatchingSettings DEFAULT_BATCHING_SETTINGS =
-      BatchingSettings.newBuilder()
-          .setDelayThreshold(Duration.ofMillis(50))
-          .setElementCountThreshold(1000L)
-          .setRequestByteThreshold(Constants.MAX_PUBLISH_BATCH_BYTES)
-          .setIsEnabled(true)
-          .build();
   public static final BatchingSettings DISABLED_BATCHING_SETTINGS =
       BatchingSettings.newBuilder()
           .setElementCountThreshold(1L)
@@ -74,16 +60,13 @@ public abstract class PublisherBuilder {
 
   abstract Partition partition();
 
-  // Optional parameters.
   abstract BatchingSettings batching();
 
-  abstract Optional<PublisherServiceClient> serviceClient();
+  abstract PublisherServiceClient serviceClient();
 
-  abstract PubsubContext context();
-
+  // Optional parameters.
   public static Builder builder() {
-    Builder impl = new AutoValue_PublisherBuilder.Builder();
-    return impl.setBatching(DEFAULT_BATCHING_SETTINGS).setContext(PubsubContext.of());
+    return new AutoValue_PublisherBuilder.Builder();
   }
 
   @AutoValue.Builder
@@ -93,36 +76,16 @@ public abstract class PublisherBuilder {
 
     public abstract Builder setPartition(Partition partition);
 
-    // Optional parameters.
     public abstract Builder setBatching(BatchingSettings batching);
 
     public abstract Builder setServiceClient(PublisherServiceClient client);
-
-    public abstract Builder setContext(PubsubContext context);
 
     abstract PublisherBuilder autoBuild();
 
     public Publisher<Offset> build() throws ApiException {
       PublisherBuilder autoBuilt = autoBuild();
-      PublisherServiceClient serviceClient;
-      if (autoBuilt.serviceClient().isPresent()) {
-        serviceClient = autoBuilt.serviceClient().get();
-      } else {
-        try {
-          PublisherServiceSettings.Builder settingsBuilder = PublisherServiceSettings.newBuilder();
-          addDefaultMetadata(
-              autoBuilt.context(),
-              RoutingMetadata.of(autoBuilt.topic(), autoBuilt.partition()),
-              settingsBuilder);
-          serviceClient =
-              PublisherServiceClient.create(
-                  addDefaultSettings(autoBuilt.topic().location().region(), settingsBuilder));
-        } catch (Throwable t) {
-          throw toCanonical(t).underlying;
-        }
-      }
       return new PublisherImpl(
-          serviceClient,
+          autoBuilt.serviceClient(),
           InitialPublishRequest.newBuilder()
               .setTopic(autoBuilt.topic().toString())
               .setPartition(autoBuilt.partition().value())

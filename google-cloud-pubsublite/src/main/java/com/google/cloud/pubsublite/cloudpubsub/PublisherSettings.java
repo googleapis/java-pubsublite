@@ -16,21 +16,33 @@
 
 package com.google.cloud.pubsublite.cloudpubsub;
 
+import static com.google.cloud.pubsublite.internal.ExtractStatus.toCanonical;
+import static com.google.cloud.pubsublite.internal.wire.ServiceClients.addDefaultMetadata;
+import static com.google.cloud.pubsublite.internal.wire.ServiceClients.addDefaultSettings;
+
 import com.google.api.gax.batching.BatchingSettings;
+import com.google.api.gax.core.CredentialsProvider;
 import com.google.api.gax.rpc.ApiException;
+import com.google.auth.oauth2.GoogleCredentials;
 import com.google.auto.value.AutoValue;
+import com.google.cloud.pubsublite.AdminClient;
+import com.google.cloud.pubsublite.AdminClientSettings;
 import com.google.cloud.pubsublite.Constants;
 import com.google.cloud.pubsublite.Message;
 import com.google.cloud.pubsublite.MessageTransformer;
+import com.google.cloud.pubsublite.Partition;
 import com.google.cloud.pubsublite.TopicPath;
 import com.google.cloud.pubsublite.cloudpubsub.internal.WrappingPublisher;
-import com.google.cloud.pubsublite.internal.wire.PartitionCountWatcher;
-import com.google.cloud.pubsublite.internal.wire.PartitionCountWatchingPublisher;
 import com.google.cloud.pubsublite.internal.wire.PartitionCountWatchingPublisherSettings;
 import com.google.cloud.pubsublite.internal.wire.PubsubContext;
 import com.google.cloud.pubsublite.internal.wire.PubsubContext.Framework;
+import com.google.cloud.pubsublite.internal.wire.RoutingMetadata;
 import com.google.cloud.pubsublite.internal.wire.SinglePartitionPublisherBuilder;
+import com.google.cloud.pubsublite.v1.AdminServiceClient;
+import com.google.cloud.pubsublite.v1.AdminServiceSettings;
 import com.google.cloud.pubsublite.v1.PublisherServiceClient;
+import com.google.cloud.pubsublite.v1.PublisherServiceSettings;
+import com.google.common.annotations.VisibleForTesting;
 import com.google.pubsub.v1.PubsubMessage;
 import java.util.Optional;
 import java.util.function.Supplier;
@@ -65,17 +77,22 @@ public abstract class PublisherSettings {
   /** Batching settings for this publisher to use. Apply per-partition. */
   abstract Optional<BatchingSettings> batchingSettings();
 
-  /** A supplier for new PublisherServiceClients. Should return a new client each time. */
+  /** A provider for credentials. */
+  abstract CredentialsProvider credentialsProvider();
+
+  /**
+   * A supplier for new PublisherServiceClients. Should return a new client each time. If present,
+   * ignores CredentialsProvider.
+   */
   abstract Optional<Supplier<PublisherServiceClient>> serviceClientSupplier();
 
   // For testing.
   abstract SinglePartitionPublisherBuilder.Builder underlyingBuilder();
 
-  abstract Optional<PartitionCountWatcher.Factory> partitionCountWatcherFactory();
-
   /** Get a new builder for a PublisherSettings. */
   public static Builder newBuilder() {
     return new AutoValue_PublisherSettings.Builder()
+        .setCredentialsProvider(() -> GoogleCredentials.getApplicationDefault())
         .setUnderlyingBuilder(SinglePartitionPublisherBuilder.newBuilder());
   }
 
@@ -97,16 +114,54 @@ public abstract class PublisherSettings {
     /** Batching settings for this publisher to use. Apply per-partition. */
     public abstract Builder setBatchingSettings(BatchingSettings batchingSettings);
 
-    /** A supplier for new PublisherServiceClients. Should return a new client each time. */
+    /** A provider for credentials. */
+    public abstract Builder setCredentialsProvider(CredentialsProvider credentialsProvider);
+
+    /**
+     * A supplier for new PublisherServiceClients. Should return a new client each time. If present,
+     * ignores CredentialsProvider.
+     */
     public abstract Builder setServiceClientSupplier(Supplier<PublisherServiceClient> supplier);
 
     // For testing.
+    @VisibleForTesting
     abstract Builder setUnderlyingBuilder(
         SinglePartitionPublisherBuilder.Builder underlyingBuilder);
 
-    abstract Builder setPartitionCountWatcherFactory(PartitionCountWatcher.Factory factory);
-
     public abstract PublisherSettings build();
+  }
+
+  private PublisherServiceClient newServiceClient(Partition partition) throws ApiException {
+    if (serviceClientSupplier().isPresent()) return serviceClientSupplier().get().get();
+    PublisherServiceSettings.Builder settingsBuilder = PublisherServiceSettings.newBuilder();
+    settingsBuilder = settingsBuilder.setCredentialsProvider(credentialsProvider());
+    settingsBuilder =
+        addDefaultMetadata(
+            PubsubContext.of(FRAMEWORK),
+            RoutingMetadata.of(topicPath(), partition),
+            settingsBuilder);
+    try {
+      return PublisherServiceClient.create(
+          addDefaultSettings(topicPath().location().region(), settingsBuilder));
+    } catch (Throwable t) {
+      throw toCanonical(t).underlying;
+    }
+  }
+
+  private AdminClient newAdminClient() throws ApiException {
+    try {
+      return AdminClient.create(
+          AdminClientSettings.newBuilder()
+              .setServiceClient(
+                  AdminServiceClient.create(
+                      AdminServiceSettings.newBuilder()
+                          .setCredentialsProvider(credentialsProvider())
+                          .build()))
+              .setRegion(topicPath().location().region())
+              .build());
+    } catch (Throwable t) {
+      throw toCanonical(t).underlying;
+    }
   }
 
   @SuppressWarnings("CheckReturnValue")
@@ -125,16 +180,12 @@ public abstract class PublisherSettings {
                   SinglePartitionPublisherBuilder.Builder singlePartitionBuilder =
                       underlyingBuilder()
                           .setBatchingSettings(batchingSettings)
-                          .setContext(PubsubContext.of(FRAMEWORK))
                           .setTopic(topicPath())
-                          .setPartition(partition);
-                  serviceClientSupplier()
-                      .ifPresent(
-                          supplier -> singlePartitionBuilder.setServiceClient(supplier.get()));
+                          .setPartition(partition)
+                          .setServiceClient(newServiceClient(partition));
                   return singlePartitionBuilder.build();
-                });
-    partitionCountWatcherFactory().ifPresent(publisherSettings::setConfigWatcherFactory);
-    return new WrappingPublisher(
-        new PartitionCountWatchingPublisher(publisherSettings.build()), messageTransformer);
+                })
+            .setAdminClient(newAdminClient());
+    return new WrappingPublisher(publisherSettings.build().instantiate(), messageTransformer);
   }
 }

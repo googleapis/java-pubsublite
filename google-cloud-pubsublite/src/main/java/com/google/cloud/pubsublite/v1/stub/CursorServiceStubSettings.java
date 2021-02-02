@@ -89,7 +89,6 @@ import org.threeten.bp.Duration;
  * CursorServiceStubSettings cursorServiceSettings = cursorServiceSettingsBuilder.build();
  * }</pre>
  */
-@BetaApi
 @Generated("by gapic-generator-java")
 public class CursorServiceStubSettings extends StubSettings<CursorServiceStubSettings> {
   /** The default scopes of the service. */

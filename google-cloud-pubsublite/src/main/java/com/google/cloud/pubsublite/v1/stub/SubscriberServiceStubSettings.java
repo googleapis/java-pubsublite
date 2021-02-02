@@ -75,7 +75,6 @@ import javax.annotation.Generated;
  *     subscriberServiceSettingsBuilder.build();
  * }</pre>
  */
-@BetaApi
 @Generated("by gapic-generator-java")
 public class SubscriberServiceStubSettings extends StubSettings<SubscriberServiceStubSettings> {
   /** The default scopes of the service. */

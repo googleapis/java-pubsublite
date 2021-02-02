@@ -22,6 +22,8 @@ import com.google.api.gax.rpc.ApiException;
 import com.google.api.gax.rpc.StatusCode.Code;
 import com.google.cloud.pubsublite.Message;
 import com.google.cloud.pubsublite.MessageTransformer;
+import com.google.cloud.pubsublite.Partition;
+import com.google.cloud.pubsublite.PublishMetadata;
 import com.google.cloud.pubsublite.SequencedMessage;
 import com.google.cloud.pubsublite.internal.CheckedApiException;
 import com.google.common.collect.ImmutableListMultimap;
@@ -72,15 +74,30 @@ public class MessageTransforms {
         "Received an unparseable message with multiple values for an attribute.");
     ByteString attribute = values.iterator().next();
     checkArgument(
-        attribute.isValidUtf8(), "Received an unparseable message with a non-utf8 attribute.");
+        attribute.isValidUtf8(),
+        String.format(
+            "Received an unparseable message with a non-utf8 attribute value: %s",
+            Base64.getEncoder().encodeToString(attribute.toByteArray())));
     return attribute.toStringUtf8();
+  }
+
+  static MessageTransformer<SequencedMessage, PubsubMessage> addIdCpsSubscribeTransformer(
+      Partition partition, MessageTransformer<SequencedMessage, PubsubMessage> toWrap) {
+    return message -> {
+      PubsubMessage out = toWrap.transform(message);
+      checkArgument(
+          out.getMessageId().isEmpty(),
+          String.format("Received non-empty message id for PubsubMessage: %s", out));
+      return out.toBuilder()
+          .setMessageId(PublishMetadata.of(partition, message.offset()).encode())
+          .build();
+    };
   }
 
   public static MessageTransformer<SequencedMessage, PubsubMessage> toCpsSubscribeTransformer() {
     return message -> {
       PubsubMessage.Builder outBuilder =
           toCpsPublishTransformer().transform(message.message()).toBuilder();
-      outBuilder.setMessageId(Long.toString(message.offset().value()));
       outBuilder.setPublishTime(message.publishTime());
       return outBuilder.build();
     };

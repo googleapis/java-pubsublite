@@ -40,7 +40,7 @@ import org.mockito.*;
 @RunWith(JUnit4.class)
 public class PartitionCountWatchingPublisherTest {
   abstract static class FakePublisher extends FakeApiService
-      implements Publisher<PublishMetadata> {}
+      implements Publisher<MessageMetadata> {}
 
   abstract static class FakeConfigWatcher extends FakeApiService implements PartitionCountWatcher {}
 
@@ -62,18 +62,18 @@ public class PartitionCountWatchingPublisherTest {
   Consumer<Long> leakedConsumer;
   @Spy FakeConfigWatcher fakeConfigWatcher;
 
-  Publisher<PublishMetadata> publisher;
+  Publisher<MessageMetadata> publisher;
 
   @Before
   public void setUp() {
     initMocks(this);
-    doReturn(ApiFutures.immediateFuture(PublishMetadata.of(Partition.of(0), Offset.of(0))))
+    doReturn(ApiFutures.immediateFuture(MessageMetadata.of(Partition.of(0), Offset.of(0))))
         .when(publisher0)
         .publish(any());
-    doReturn(ApiFutures.immediateFuture(PublishMetadata.of(Partition.of(1), Offset.of(0))))
+    doReturn(ApiFutures.immediateFuture(MessageMetadata.of(Partition.of(1), Offset.of(0))))
         .when(publisher1)
         .publish(any());
-    doReturn(ApiFutures.immediateFuture(PublishMetadata.of(Partition.of(2), Offset.of(0))))
+    doReturn(ApiFutures.immediateFuture(MessageMetadata.of(Partition.of(2), Offset.of(0))))
         .when(publisher2)
         .publish(any());
     when(mockPublisherFactory.newPublisher(Partition.of(0))).thenReturn(publisher0);

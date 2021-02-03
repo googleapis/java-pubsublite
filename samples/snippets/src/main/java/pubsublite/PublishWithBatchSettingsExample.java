@@ -24,7 +24,7 @@ import com.google.api.gax.rpc.ApiException;
 import com.google.cloud.pubsublite.CloudRegion;
 import com.google.cloud.pubsublite.CloudZone;
 import com.google.cloud.pubsublite.ProjectNumber;
-import com.google.cloud.pubsublite.PublishMetadata;
+import com.google.cloud.pubsublite.MessageMetadata;
 import com.google.cloud.pubsublite.TopicName;
 import com.google.cloud.pubsublite.TopicPath;
 import com.google.cloud.pubsublite.cloudpubsub.Publisher;
@@ -101,7 +101,7 @@ public class PublishWithBatchSettingsExample {
         futures.add(future);
       }
     } finally {
-      ArrayList<PublishMetadata> metadata = new ArrayList<>();
+      ArrayList<MessageMetadata> metadata = new ArrayList<>();
       List<String> ackIds = ApiFutures.allAsList(futures).get();
       System.out.println("Published " + ackIds.size() + " messages with batch settings.");
 

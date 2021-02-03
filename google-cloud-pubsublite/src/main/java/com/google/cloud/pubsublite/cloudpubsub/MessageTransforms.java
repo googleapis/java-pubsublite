@@ -21,9 +21,9 @@ import static com.google.cloud.pubsublite.internal.UncheckedApiPreconditions.che
 import com.google.api.gax.rpc.ApiException;
 import com.google.api.gax.rpc.StatusCode.Code;
 import com.google.cloud.pubsublite.Message;
+import com.google.cloud.pubsublite.MessageMetadata;
 import com.google.cloud.pubsublite.MessageTransformer;
 import com.google.cloud.pubsublite.Partition;
-import com.google.cloud.pubsublite.PublishMetadata;
 import com.google.cloud.pubsublite.SequencedMessage;
 import com.google.cloud.pubsublite.internal.CheckedApiException;
 import com.google.common.collect.ImmutableListMultimap;
@@ -89,7 +89,7 @@ public class MessageTransforms {
           out.getMessageId().isEmpty(),
           String.format("Received non-empty message id for PubsubMessage: %s", out));
       return out.toBuilder()
-          .setMessageId(PublishMetadata.of(partition, message.offset()).encode())
+          .setMessageId(MessageMetadata.of(partition, message.offset()).encode())
           .build();
     };
   }

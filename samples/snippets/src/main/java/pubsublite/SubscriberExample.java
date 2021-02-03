@@ -23,7 +23,7 @@ import com.google.cloud.pubsub.v1.MessageReceiver;
 import com.google.cloud.pubsublite.CloudRegion;
 import com.google.cloud.pubsublite.CloudZone;
 import com.google.cloud.pubsublite.ProjectNumber;
-import com.google.cloud.pubsublite.PublishMetadata;
+import com.google.cloud.pubsublite.MessageMetadata;
 import com.google.cloud.pubsublite.SubscriptionName;
 import com.google.cloud.pubsublite.SubscriptionPath;
 import com.google.cloud.pubsublite.cloudpubsub.FlowControlSettings;
@@ -69,7 +69,7 @@ public class SubscriberExample {
 
     MessageReceiver receiver =
         (PubsubMessage message, AckReplyConsumer consumer) -> {
-          System.out.println("Id : " + PublishMetadata.decode(message.getMessageId()));
+          System.out.println("Id : " + MessageMetadata.decode(message.getMessageId()));
           System.out.println("Data : " + message.getData().toStringUtf8());
           consumer.ack();
         };

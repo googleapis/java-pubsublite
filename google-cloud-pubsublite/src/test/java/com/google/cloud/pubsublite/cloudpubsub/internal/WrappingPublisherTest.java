@@ -27,9 +27,9 @@ import com.google.api.core.ApiFuture;
 import com.google.api.core.SettableApiFuture;
 import com.google.api.gax.rpc.StatusCode.Code;
 import com.google.cloud.pubsublite.Message;
+import com.google.cloud.pubsublite.MessageMetadata;
 import com.google.cloud.pubsublite.Offset;
 import com.google.cloud.pubsublite.Partition;
-import com.google.cloud.pubsublite.PublishMetadata;
 import com.google.cloud.pubsublite.cloudpubsub.KeyExtractor;
 import com.google.cloud.pubsublite.cloudpubsub.MessageTransforms;
 import com.google.cloud.pubsublite.internal.ApiExceptionMatcher;
@@ -48,7 +48,7 @@ import org.mockito.Spy;
 @RunWith(JUnit4.class)
 public class WrappingPublisherTest {
   abstract static class FakePublisher extends FakeApiService
-      implements Publisher<PublishMetadata> {}
+      implements Publisher<MessageMetadata> {}
 
   @Spy private FakePublisher underlying;
 
@@ -76,12 +76,12 @@ public class WrappingPublisherTest {
   public void validPublish() throws Exception {
     PubsubMessage message = PubsubMessage.newBuilder().setOrderingKey("abc").build();
     Message wireMessage = Message.builder().setKey(ByteString.copyFromUtf8("abc")).build();
-    SettableApiFuture<PublishMetadata> metadataFuture = SettableApiFuture.create();
+    SettableApiFuture<MessageMetadata> metadataFuture = SettableApiFuture.create();
     when(underlying.publish(wireMessage)).thenReturn(metadataFuture);
     ApiFuture<String> published = publisher.publish(message);
     verify(underlying).publish(wireMessage);
     assertThat(published.isDone()).isFalse();
-    PublishMetadata metadata = PublishMetadata.of(Partition.of(3), Offset.of(88));
+    MessageMetadata metadata = MessageMetadata.of(Partition.of(3), Offset.of(88));
     metadataFuture.set(metadata);
     assertThat(published.isDone()).isTrue();
     assertThat(published.get()).isEqualTo(metadata.encode());

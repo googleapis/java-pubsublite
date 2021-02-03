@@ -23,8 +23,8 @@ import static org.mockito.MockitoAnnotations.initMocks;
 
 import com.google.cloud.pubsublite.AdminClient;
 import com.google.cloud.pubsublite.CloudZone;
+import com.google.cloud.pubsublite.MessageMetadata;
 import com.google.cloud.pubsublite.ProjectNumber;
-import com.google.cloud.pubsublite.PublishMetadata;
 import com.google.cloud.pubsublite.TopicName;
 import com.google.cloud.pubsublite.TopicPath;
 import com.google.cloud.pubsublite.internal.CheckedApiException;
@@ -49,7 +49,7 @@ public class PublisherSettingsTest {
   }
 
   abstract static class FakePublisher extends FakeApiService
-      implements Publisher<PublishMetadata> {}
+      implements Publisher<MessageMetadata> {}
 
   abstract static class FakeConfigWatcher extends FakeApiService implements PartitionCountWatcher {}
 

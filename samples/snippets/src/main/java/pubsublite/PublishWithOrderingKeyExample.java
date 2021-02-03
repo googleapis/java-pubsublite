@@ -22,7 +22,7 @@ import com.google.api.gax.rpc.ApiException;
 import com.google.cloud.pubsublite.CloudRegion;
 import com.google.cloud.pubsublite.CloudZone;
 import com.google.cloud.pubsublite.ProjectNumber;
-import com.google.cloud.pubsublite.PublishMetadata;
+import com.google.cloud.pubsublite.MessageMetadata;
 import com.google.cloud.pubsublite.TopicName;
 import com.google.cloud.pubsublite.TopicPath;
 import com.google.cloud.pubsublite.cloudpubsub.Publisher;
@@ -83,7 +83,7 @@ public class PublishWithOrderingKeyExample {
     publisher.stopAsync().awaitTerminated();
 
     String ackId = future.get();
-    PublishMetadata metadata = PublishMetadata.decode(ackId);
+    MessageMetadata metadata = MessageMetadata.decode(ackId);
     System.out.println("Published a message with ordering key:\n" + metadata);
   }
 }

@@ -26,10 +26,10 @@ import static org.mockito.Mockito.when;
 import com.google.api.gax.rpc.ApiException;
 import com.google.api.gax.rpc.StatusCode.Code;
 import com.google.cloud.pubsublite.Message;
+import com.google.cloud.pubsublite.MessageMetadata;
 import com.google.cloud.pubsublite.MessageTransformer;
 import com.google.cloud.pubsublite.Offset;
 import com.google.cloud.pubsublite.Partition;
-import com.google.cloud.pubsublite.PublishMetadata;
 import com.google.cloud.pubsublite.SequencedMessage;
 import com.google.cloud.pubsublite.internal.CheckedApiException;
 import com.google.common.collect.ImmutableListMultimap;
@@ -212,7 +212,7 @@ public class MessageTransformsTest {
         PubsubMessage.newBuilder()
             .setData(message.message().data())
             .setMessageId(
-                PublishMetadata.of(example(Partition.class), example(Offset.class)).encode())
+                MessageMetadata.of(example(Partition.class), example(Offset.class)).encode())
             .setOrderingKey("some_key") // The key field
             .setPublishTime(message.publishTime())
             .putAttributes("abc", "")

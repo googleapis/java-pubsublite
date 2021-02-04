@@ -23,8 +23,8 @@ import com.google.api.core.ApiFuture;
 import com.google.api.core.ApiFutures;
 import com.google.api.gax.rpc.ApiException;
 import com.google.cloud.pubsublite.Message;
+import com.google.cloud.pubsublite.MessageMetadata;
 import com.google.cloud.pubsublite.Partition;
-import com.google.cloud.pubsublite.PublishMetadata;
 import com.google.cloud.pubsublite.internal.CheckedApiException;
 import com.google.cloud.pubsublite.internal.Publisher;
 import com.google.cloud.pubsublite.internal.RoutingPolicy;
@@ -32,12 +32,12 @@ import com.google.cloud.pubsublite.internal.TrivialProxyService;
 import java.io.IOException;
 import java.util.Map;
 
-public class RoutingPublisher extends TrivialProxyService implements Publisher<PublishMetadata> {
-  private final Map<Partition, Publisher<PublishMetadata>> partitionPublishers;
+public class RoutingPublisher extends TrivialProxyService implements Publisher<MessageMetadata> {
+  private final Map<Partition, Publisher<MessageMetadata>> partitionPublishers;
   private final RoutingPolicy policy;
 
   RoutingPublisher(
-      Map<Partition, Publisher<PublishMetadata>> partitionPublishers, RoutingPolicy policy)
+      Map<Partition, Publisher<MessageMetadata>> partitionPublishers, RoutingPolicy policy)
       throws ApiException {
     super(partitionPublishers.values());
     this.partitionPublishers = partitionPublishers;
@@ -46,7 +46,7 @@ public class RoutingPublisher extends TrivialProxyService implements Publisher<P
 
   // Publisher implementation.
   @Override
-  public ApiFuture<PublishMetadata> publish(Message message) {
+  public ApiFuture<MessageMetadata> publish(Message message) {
     try {
       Partition routedPartition =
           message.key().isEmpty() ? policy.routeWithoutKey() : policy.route(message.key());
@@ -65,14 +65,14 @@ public class RoutingPublisher extends TrivialProxyService implements Publisher<P
 
   @Override
   public void cancelOutstandingPublishes() {
-    for (Publisher<PublishMetadata> publisher : partitionPublishers.values()) {
+    for (Publisher<MessageMetadata> publisher : partitionPublishers.values()) {
       publisher.cancelOutstandingPublishes();
     }
   }
 
   @Override
   public void flush() throws IOException {
-    for (Publisher<PublishMetadata> publisher : partitionPublishers.values()) {
+    for (Publisher<MessageMetadata> publisher : partitionPublishers.values()) {
       publisher.flush();
     }
   }

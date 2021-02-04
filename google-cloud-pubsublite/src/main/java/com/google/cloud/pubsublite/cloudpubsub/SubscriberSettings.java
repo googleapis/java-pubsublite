@@ -88,7 +88,10 @@ public abstract class SubscriberSettings {
    */
   abstract List<Partition> partitions();
 
-  /** The MessageTransformer to get PubsubMessages from Pub/Sub Lite wire messages. */
+  /**
+   * The MessageTransformer to get PubsubMessages from Pub/Sub Lite wire messages. The messageId
+   * field must not be set on the returned message.
+   */
   abstract Optional<MessageTransformer<SequencedMessage, PubsubMessage>> transformer();
 
   /** A provider for credentials. */
@@ -155,7 +158,10 @@ public abstract class SubscriberSettings {
      */
     public abstract Builder setPartitions(List<Partition> partition);
 
-    /** The MessageTransformer to get PubsubMessages from Pub/Sub Lite wire messages. */
+    /**
+     * The MessageTransformer to get PubsubMessages from Pub/Sub Lite wire messages. The messageId
+     * field must not be set on the returned message.
+     */
     public abstract Builder setTransformer(
         MessageTransformer<SequencedMessage, PubsubMessage> transformer);
 
@@ -243,7 +249,8 @@ public abstract class SubscriberSettings {
 
       return new SinglePartitionSubscriber(
           receiver(),
-          transformer().orElse(MessageTransforms.toCpsSubscribeTransformer()),
+          MessageTransforms.addIdCpsSubscribeTransformer(
+              partition, transformer().orElse(MessageTransforms.toCpsSubscribeTransformer())),
           new AckSetTrackerImpl(wireCommitter),
           nackHandler().orElse(new NackHandler() {}),
           messageConsumer -> wireSubscriberBuilder.setMessageConsumer(messageConsumer).build(),

@@ -17,10 +17,10 @@
 package com.google.cloud.pubsublite.internal.wire;
 
 import com.google.api.gax.rpc.ApiException;
+import com.google.cloud.pubsublite.MessageMetadata;
 import com.google.cloud.pubsublite.Partition;
-import com.google.cloud.pubsublite.PublishMetadata;
 import com.google.cloud.pubsublite.internal.Publisher;
 
 public interface PartitionPublisherFactory {
-  Publisher<PublishMetadata> newPublisher(Partition partition) throws ApiException;
+  Publisher<MessageMetadata> newPublisher(Partition partition) throws ApiException;
 }

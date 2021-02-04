@@ -25,26 +25,26 @@ import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
 @RunWith(JUnit4.class)
-public final class PublishMetadataTest {
+public final class MessageMetadataTest {
   @Test
   public void roundTripThroughString() {
-    PublishMetadata metadata = PublishMetadata.of(Partition.of(10), Offset.of(20));
-    PublishMetadata metadata2 = PublishMetadata.decode(metadata.encode());
+    MessageMetadata metadata = MessageMetadata.of(Partition.of(10), Offset.of(20));
+    MessageMetadata metadata2 = MessageMetadata.decode(metadata.encode());
     assertThat(metadata2).isEqualTo(metadata);
   }
 
   @Test
   public void invalidString() {
-    assertThrows(ApiException.class, () -> PublishMetadata.decode("999"));
+    assertThrows(ApiException.class, () -> MessageMetadata.decode("999"));
   }
 
   @Test
   public void invalidPartition() {
-    assertThrows(ApiException.class, () -> PublishMetadata.decode("abc:999"));
+    assertThrows(ApiException.class, () -> MessageMetadata.decode("abc:999"));
   }
 
   @Test
   public void invalidOffset() {
-    assertThrows(ApiException.class, () -> PublishMetadata.decode("999:abc"));
+    assertThrows(ApiException.class, () -> MessageMetadata.decode("999:abc"));
   }
 }

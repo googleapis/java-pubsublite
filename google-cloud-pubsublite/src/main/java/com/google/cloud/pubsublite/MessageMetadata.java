@@ -24,32 +24,33 @@ import com.google.auto.value.AutoValue;
 import com.google.cloud.pubsublite.internal.CheckedApiException;
 
 /**
- * Information about a successful publish operation. Can be encoded in the string returned by the
- * Cloud Pub/Sub {@link com.google.cloud.pubsub.v1.Publisher#publish} api.
+ * Information about a message in Pub/Sub Lite. Can be encoded in the string returned by the Cloud
+ * Pub/Sub {@link com.google.cloud.pubsub.v1.Publisher#publish} api or the {@link
+ * com.google.pubsub.v1.PubsubMessage#getMessageId} field on received messages.
  */
 @AutoValue
-public abstract class PublishMetadata {
+public abstract class MessageMetadata {
   /** The partition a message was published to. */
   public abstract Partition partition();
 
   /** The offset a message was assigned. */
   public abstract Offset offset();
 
-  /** Construct a PublishMetadata from a Partition and Offset. */
-  public static PublishMetadata of(Partition partition, Offset offset) {
-    return new AutoValue_PublishMetadata(partition, offset);
+  /** Construct a MessageMetadata from a Partition and Offset. */
+  public static MessageMetadata of(Partition partition, Offset offset) {
+    return new AutoValue_MessageMetadata(partition, offset);
   }
 
-  /** Decode a PublishMetadata from the Cloud Pub/Sub ack id. */
-  public static PublishMetadata decode(String encoded) throws ApiException {
+  /** Decode a MessageMetadata from the Cloud Pub/Sub ack id. */
+  public static MessageMetadata decode(String encoded) throws ApiException {
     String[] split = encoded.split(":");
-    checkArgument(split.length == 2, "Invalid encoded PublishMetadata.");
+    checkArgument(split.length == 2, "Invalid encoded MessageMetadata.");
     try {
       Partition partition = Partition.of(Long.parseLong(split[0]));
       Offset offset = Offset.of(Long.parseLong(split[1]));
       return of(partition, offset);
     } catch (NumberFormatException e) {
-      throw new CheckedApiException("Invalid encoded PublishMetadata.", e, Code.INVALID_ARGUMENT)
+      throw new CheckedApiException("Invalid encoded MessageMetadata.", e, Code.INVALID_ARGUMENT)
           .underlying;
     }
   }

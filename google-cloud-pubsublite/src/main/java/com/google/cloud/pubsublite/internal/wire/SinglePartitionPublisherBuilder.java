@@ -19,8 +19,8 @@ package com.google.cloud.pubsublite.internal.wire;
 import com.google.api.gax.batching.BatchingSettings;
 import com.google.api.gax.rpc.ApiException;
 import com.google.auto.value.AutoValue;
+import com.google.cloud.pubsublite.MessageMetadata;
 import com.google.cloud.pubsublite.Partition;
-import com.google.cloud.pubsublite.PublishMetadata;
 import com.google.cloud.pubsublite.TopicPath;
 import com.google.cloud.pubsublite.internal.Publisher;
 import com.google.cloud.pubsublite.v1.PublisherServiceClient;
@@ -63,7 +63,7 @@ public abstract class SinglePartitionPublisherBuilder {
 
     abstract SinglePartitionPublisherBuilder autoBuild();
 
-    public Publisher<PublishMetadata> build() throws ApiException {
+    public Publisher<MessageMetadata> build() throws ApiException {
       SinglePartitionPublisherBuilder builder = autoBuild();
       PublisherBuilder.Builder publisherBuilder =
           builder

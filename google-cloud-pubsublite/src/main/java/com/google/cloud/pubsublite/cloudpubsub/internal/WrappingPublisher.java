@@ -22,8 +22,8 @@ import com.google.api.core.ApiFuture;
 import com.google.api.core.ApiFutures;
 import com.google.api.gax.rpc.ApiException;
 import com.google.cloud.pubsublite.Message;
+import com.google.cloud.pubsublite.MessageMetadata;
 import com.google.cloud.pubsublite.MessageTransformer;
-import com.google.cloud.pubsublite.PublishMetadata;
 import com.google.cloud.pubsublite.cloudpubsub.Publisher;
 import com.google.cloud.pubsublite.internal.CheckedApiException;
 import com.google.cloud.pubsublite.internal.TrivialProxyService;
@@ -31,13 +31,13 @@ import com.google.common.util.concurrent.MoreExecutors;
 import com.google.pubsub.v1.PubsubMessage;
 
 // A WrappingPublisher wraps the wire protocol client with a Cloud Pub/Sub api compliant
-// publisher. It encodes a PublishMetadata object in the response string.
+// publisher. It encodes a MessageMetadata object in the response string.
 public class WrappingPublisher extends TrivialProxyService implements Publisher {
-  private final com.google.cloud.pubsublite.internal.Publisher<PublishMetadata> wirePublisher;
+  private final com.google.cloud.pubsublite.internal.Publisher<MessageMetadata> wirePublisher;
   private final MessageTransformer<PubsubMessage, Message> transformer;
 
   public WrappingPublisher(
-      com.google.cloud.pubsublite.internal.Publisher<PublishMetadata> wirePublisher,
+      com.google.cloud.pubsublite.internal.Publisher<MessageMetadata> wirePublisher,
       MessageTransformer<PubsubMessage, Message> transformer)
       throws ApiException {
     super(wirePublisher);
@@ -58,7 +58,7 @@ public class WrappingPublisher extends TrivialProxyService implements Publisher 
     }
     return ApiFutures.transform(
         wirePublisher.publish(wireMessage),
-        PublishMetadata::encode,
+        MessageMetadata::encode,
         MoreExecutors.directExecutor());
   }
 }

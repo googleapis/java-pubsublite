@@ -188,11 +188,11 @@ try {
     futures.add(future);
   }
 } finally {
-  ArrayList<PublishMetadata> metadata = new ArrayList<>();
+  ArrayList<MessageMetadata> metadata = new ArrayList<>();
   List<String> ackIds = ApiFutures.allAsList(futures).get();
   for (String id : ackIds) {
     // Decoded metadata contains partition and offset.
-    metadata.add(PublishMetadata.decode(id));
+    metadata.add(MessageMetadata.decode(id));
   }
   System.out.println(metadata + "\nPublished " + ackIds.size() + " messages.");
 

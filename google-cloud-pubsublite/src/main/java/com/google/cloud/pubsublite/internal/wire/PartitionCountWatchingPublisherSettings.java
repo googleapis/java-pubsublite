@@ -54,7 +54,7 @@ public abstract class PartitionCountWatchingPublisherSettings {
     public abstract PartitionCountWatchingPublisherSettings build();
   }
 
-  public Publisher<PublishMetadata> instantiate() throws ApiException {
+  public Publisher<MessageMetadata> instantiate() throws ApiException {
     return new PartitionCountWatchingPublisher(
         publisherFactory(),
         DefaultRoutingPolicy::new,

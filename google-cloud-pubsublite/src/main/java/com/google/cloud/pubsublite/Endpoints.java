@@ -25,8 +25,8 @@ public final class Endpoints {
     //    System.out.println("equal? " + Objects.equals(strSuccess, strFail));
     //    return region.value() + "-staging-pubsublite.sandbox.googleapis.com:443";
     //    return strFail;
-//     return "us-central1-staging-pubsublite.sandbox.googleapis.com:443";
-    return region.value() + "-pubsublite.googleapis.com:443";
+    return "us-central1-staging-pubsublite.sandbox.googleapis.com:443";
+    //        return region.value() + "-pubsublite.googleapis.com:443";
   }
 
   private Endpoints() {}

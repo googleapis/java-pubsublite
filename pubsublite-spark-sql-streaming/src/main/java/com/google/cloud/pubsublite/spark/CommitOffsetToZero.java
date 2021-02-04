@@ -48,8 +48,8 @@ public class CommitOffsetToZero {
     for (int i = 0; i < 1; i++) {
       cursorClient.commitCursor(SubscriptionPath.newBuilder()
               .setProject(ProjectNumber.of(129988248131L))
-              .setLocation(CloudZone.of(CloudRegion.of("us-central1"), 'a'))
-              .setName(SubscriptionName.of("menzella5")).build(),
+              .setLocation(CloudZone.of(CloudRegion.of("us-central1"), 'c'))
+              .setName(SubscriptionName.of("test-spark-1-partition-new-sub")).build(),
               Partition.of(i), Offset.of(0L)).get();
     }
   }

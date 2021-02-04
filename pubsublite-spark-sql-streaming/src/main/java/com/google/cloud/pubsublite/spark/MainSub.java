@@ -34,11 +34,16 @@ public class MainSub {
         long projectNumber = 129988248131L;
         String cloudRegion = "us-central1";
 
-//        char zoneId = 'b';
-//        String subscriptionId = "test-spark-one-kb-sub";
+        char zoneId = 'b';
+        String subscriptionId = "test-spark-one-kb-sub";
 
-        char zoneId = 'a';
-        String subscriptionId = "menzella5";
+//        char zoneId = 'a';
+//        String subscriptionId = "menzella5";
+
+//        char zoneId = 'a';
+//        String subscriptionId = "menzella-large-messages";
+
+        System.out.println("Subscribing from " + subscriptionId);
 
         SubscriptionPath subscriptionPath = SubscriptionPath.newBuilder()
                 .setProject(ProjectNumber.of(projectNumber))

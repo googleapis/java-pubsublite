@@ -51,8 +51,8 @@ public class MainPub {
         long projectNumber = 129988248131L;
         String cloudRegion = "us-central1";
 //        char zoneId = 'a';
-        char zoneId = 'b';
-        String topicId = "test-spark-jiangmichael-1-partition-recent";
+        char zoneId = 'c';
+        String topicId = "test-spark-1-partition-new";
         int messageCount = 5000;
 
         TopicPath topicPath =
@@ -75,7 +75,7 @@ public class MainPub {
 
         while (true) {
             for (int i = 0; i < messageCount; i++) {
-                String message = RandomStringUtils.randomAlphanumeric(5000);
+                String message = RandomStringUtils.randomAlphanumeric(1000);
 
 
                 // Convert the message to a byte string.

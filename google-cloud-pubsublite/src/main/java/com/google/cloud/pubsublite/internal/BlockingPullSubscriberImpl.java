@@ -86,8 +86,8 @@ public class BlockingPullSubscriberImpl implements BlockingPullSubscriber {
 
   private synchronized void addMessages(Collection<SequencedMessage> new_messages) {
     messages.addAll(new_messages);
-    log.atWarning().log("[mj] added messages: " + new_messages.size()
-            + "; current cache size: " + messages.size());
+    log.atWarning().log(
+        "[mj] added messages: " + new_messages.size() + "; current cache size: " + messages.size());
     if (notification.isPresent()) {
       notification.get().set(null);
       notification = Optional.empty();

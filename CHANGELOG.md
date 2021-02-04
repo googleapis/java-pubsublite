@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.10.0](https://www.github.com/googleapis/java-pubsublite/compare/v0.9.0...v0.10.0) (2021-02-04)
+
+
+### Features
+
+* Change message id on PubsubMessages to be an encoded MessageMetadata and rename PublishMetadata to MessageMetadata ([#482](https://www.github.com/googleapis/java-pubsublite/issues/482)) ([a5cedf9](https://www.github.com/googleapis/java-pubsublite/commit/a5cedf9117889af477e4dc94bc6bccdbc5e976ca))
+* remove beam I/O from repo and redirect to beam ([#479](https://www.github.com/googleapis/java-pubsublite/issues/479)) ([246e4e7](https://www.github.com/googleapis/java-pubsublite/commit/246e4e782a17ade18d4b189e7753a3ed5d9da310))
+
+
+### Dependencies
+
+* update dependency com.google.cloud:google-cloud-pubsub to v1.111.0 ([#487](https://www.github.com/googleapis/java-pubsublite/issues/487)) ([7d41486](https://www.github.com/googleapis/java-pubsublite/commit/7d41486121f9c067547a54cbe7f20921e762efa1))
+* update dependency com.google.cloud:google-cloud-pubsub-bom to v1.111.0 ([#488](https://www.github.com/googleapis/java-pubsublite/issues/488)) ([fe29e70](https://www.github.com/googleapis/java-pubsublite/commit/fe29e70725910d9d4e0760233a191b030b51c806))
+
 ## [0.9.0](https://www.github.com/googleapis/java-pubsublite/compare/v0.8.0...v0.9.0) (2021-02-01)
 
 

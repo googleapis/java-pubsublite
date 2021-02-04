@@ -36,26 +36,21 @@ import org.apache.spark.sql.streaming.OutputMode;
 import org.apache.spark.sql.streaming.StreamingQueryException;
 import org.apache.spark.sql.streaming.Trigger;
 
-public class ListCommit {
+public class CommitOffsetToZero {
 
-    public static void main(String[] args) throws Exception {
-        CursorClientSettings settings = CursorClientSettings.newBuilder()
-                .setRegion(CloudRegion.of("us-central1"))
-                .build();
-        CursorClient cursorClient = CursorClient.create(settings);
+  public static void main(String[] args) throws Exception {
 
+    CursorClientSettings settings = CursorClientSettings.newBuilder()
+            .setRegion(CloudRegion.of("us-central1"))
+            .build();
+    CursorClient cursorClient = CursorClient.create(settings);
 
-        cursorClient.listPartitionCursors(SubscriptionPath.newBuilder()
-                .setProject(ProjectNumber.of(129988248131L))
-                .setLocation(CloudZone.of(CloudRegion.of("us-central1"), 'b'))
-                .setName(SubscriptionName.of("test-spark-subscription-1-partition")).build()).get().entrySet()
-                .forEach((e) -> System.out.println("partition " + e.getKey().value() + ", offset " + e.getValue().value()));
-
-//        System.out.println("size" + cursorClient.listPartitionCursors(SubscriptionPath.newBuilder()
-//                .setProject(ProjectNumber.of(129988248131L))
-//                .setLocation(CloudZone.of(CloudRegion.of("us-central1"), 'a'))
-//                .setName(SubscriptionName.of("test-spark-subscription-5-partition")).build()).get().size());
-
-
+    for (int i = 0; i < 1; i++) {
+      cursorClient.commitCursor(SubscriptionPath.newBuilder()
+              .setProject(ProjectNumber.of(129988248131L))
+              .setLocation(CloudZone.of(CloudRegion.of("us-central1"), 'a'))
+              .setName(SubscriptionName.of("menzella5")).build(),
+              Partition.of(i), Offset.of(0L)).get();
     }
+  }
 }

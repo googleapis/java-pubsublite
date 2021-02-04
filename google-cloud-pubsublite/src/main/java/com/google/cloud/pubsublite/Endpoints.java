@@ -16,19 +16,17 @@
 
 package com.google.cloud.pubsublite;
 
-import java.util.Objects;
-
 /** Constructs regional endpoints from a CloudRegion. */
 public final class Endpoints {
   /** Construct a regional endpoint from a CloudRegion. */
   public static String regionalEndpoint(CloudRegion region) {
-//    String strFail = "us-central1-staging-pubsublite.sandbox.googleapis.com:443";
-//    String strSuccess = region.value() + "-staging-pubsublite.sandbox.googleapis.com:443";
-//    System.out.println("equal? " + Objects.equals(strSuccess, strFail));
-//    return region.value() + "-staging-pubsublite.sandbox.googleapis.com:443";
-//    return strFail;
-    return "us-central1-staging-pubsublite.sandbox.googleapis.com:443";
-//    return region.value() + "-pubsublite.googleapis.com:443";
+    //    String strFail = "us-central1-staging-pubsublite.sandbox.googleapis.com:443";
+    //    String strSuccess = region.value() + "-staging-pubsublite.sandbox.googleapis.com:443";
+    //    System.out.println("equal? " + Objects.equals(strSuccess, strFail));
+    //    return region.value() + "-staging-pubsublite.sandbox.googleapis.com:443";
+    //    return strFail;
+//     return "us-central1-staging-pubsublite.sandbox.googleapis.com:443";
+    return region.value() + "-pubsublite.googleapis.com:443";
   }
 
   private Endpoints() {}

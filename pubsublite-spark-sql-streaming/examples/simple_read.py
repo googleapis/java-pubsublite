@@ -20,15 +20,16 @@ full_subscription_path = sys.argv[1]
 
 spark = SparkSession.builder.appName('Simple PubSub Lite Read')\
     .master('yarn')\
-    .config('spark.executor.instances', '9') \
-    .config('spark.executor.memory', '2000m') \
+    .config('spark.executor.instances', '1') \
+    .config('spark.executor.memory', '5000m') \
+    .config('spark.executor.cores', '8') \
     .getOrCreate()
 
 df = spark \
     .readStream \
     .format('pubsublite') \
     .option('pubsublite.subscription', full_subscription_path) \
-    .option('pubsublite.flowcontrol.byteoutstandingperpartition', 300_000_000) \
+    .option('pubsublite.flowcontrol.byteoutstandingperpartition', 2_000_000_000) \
     .load()
     # .option('pubsublite.flowcontrol.batchoffsetrange', 300000) \
     # .load()
@@ -47,8 +48,10 @@ df = spark \
 #         print(head)
 #     dataframe.unpersist()
 def process_row(row):
-    if row['offset'] % 5000 == 0:
-        print(row)
+    pass
+    # if row['offset'] % 5000 == 0:
+    #     pass
+        # print(row)
 
 # df.writeStream \
 #     .foreach(process_row) \

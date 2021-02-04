@@ -52,7 +52,7 @@ public class MainPub {
         String cloudRegion = "us-central1";
 //        char zoneId = 'a';
         char zoneId = 'b';
-        String topicId = "test-spark-jiangmichael-1-partition";
+        String topicId = "test-spark-jiangmichael-1-partition-recent";
         int messageCount = 5000;
 
         TopicPath topicPath =
@@ -88,7 +88,7 @@ public class MainPub {
                 ApiFutures.addCallback(future, new ApiFutureCallback<String>() {
                     @Override
                     public void onFailure(Throwable t) {
-                        System.out.println("Failed publishing msg");
+                        System.out.println("Failed publishing msg" + t);
                     }
 
                     @Override

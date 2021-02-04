@@ -28,6 +28,7 @@ import com.google.cloud.pubsublite.internal.wire.Subscriber;
 import com.google.cloud.pubsublite.internal.wire.SubscriberFactory;
 import com.google.cloud.pubsublite.proto.FlowControlRequest;
 import com.google.cloud.pubsublite.proto.SeekRequest;
+import com.google.common.flogger.GoogleLogger;
 import com.google.common.util.concurrent.MoreExecutors;
 import com.google.errorprone.annotations.concurrent.GuardedBy;
 import java.util.ArrayDeque;
@@ -37,6 +38,7 @@ import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 
 public class BlockingPullSubscriberImpl implements BlockingPullSubscriber {
+  private static final GoogleLogger log = GoogleLogger.forEnclosingClass();
 
   private final Subscriber underlying;
 
@@ -84,6 +86,8 @@ public class BlockingPullSubscriberImpl implements BlockingPullSubscriber {
 
   private synchronized void addMessages(Collection<SequencedMessage> new_messages) {
     messages.addAll(new_messages);
+    log.atWarning().log("[mj] added messages: " + new_messages.size()
+            + "; current cache size: " + messages.size());
     if (notification.isPresent()) {
       notification.get().set(null);
       notification = Optional.empty();

@@ -36,6 +36,19 @@ import javax.annotation.Generated;
  * <p>This class provides the ability to make remote calls to the backing service through method
  * calls that map to API methods. Sample code to get started:
  *
+ * <pre>{@code
+ * try (TopicStatsServiceClient topicStatsServiceClient = TopicStatsServiceClient.create()) {
+ *   ComputeMessageStatsRequest request =
+ *       ComputeMessageStatsRequest.newBuilder()
+ *           .setTopic(TopicName.of("[PROJECT]", "[LOCATION]", "[TOPIC]").toString())
+ *           .setPartition(-1799810326)
+ *           .setStartCursor(Cursor.newBuilder().build())
+ *           .setEndCursor(Cursor.newBuilder().build())
+ *           .build();
+ *   ComputeMessageStatsResponse response = topicStatsServiceClient.computeMessageStats(request);
+ * }
+ * }</pre>
+ *
  * <p>Note: close() needs to be called on the TopicStatsServiceClient object to clean up resources
  * such as threads. In the example above, try-with-resources is used, which automatically calls
  * close().
@@ -142,6 +155,21 @@ public class TopicStatsServiceClient implements BackgroundResource {
   /**
    * Compute statistics about a range of messages in a given topic and partition.
    *
+   * <p>Sample code:
+   *
+   * <pre>{@code
+   * try (TopicStatsServiceClient topicStatsServiceClient = TopicStatsServiceClient.create()) {
+   *   ComputeMessageStatsRequest request =
+   *       ComputeMessageStatsRequest.newBuilder()
+   *           .setTopic(TopicName.of("[PROJECT]", "[LOCATION]", "[TOPIC]").toString())
+   *           .setPartition(-1799810326)
+   *           .setStartCursor(Cursor.newBuilder().build())
+   *           .setEndCursor(Cursor.newBuilder().build())
+   *           .build();
+   *   ComputeMessageStatsResponse response = topicStatsServiceClient.computeMessageStats(request);
+   * }
+   * }</pre>
+   *
    * @param request The request object containing all of the parameters for the API call.
    * @throws com.google.api.gax.rpc.ApiException if the remote call fails
    */
@@ -154,6 +182,22 @@ public class TopicStatsServiceClient implements BackgroundResource {
    * Compute statistics about a range of messages in a given topic and partition.
    *
    * <p>Sample code:
+   *
+   * <pre>{@code
+   * try (TopicStatsServiceClient topicStatsServiceClient = TopicStatsServiceClient.create()) {
+   *   ComputeMessageStatsRequest request =
+   *       ComputeMessageStatsRequest.newBuilder()
+   *           .setTopic(TopicName.of("[PROJECT]", "[LOCATION]", "[TOPIC]").toString())
+   *           .setPartition(-1799810326)
+   *           .setStartCursor(Cursor.newBuilder().build())
+   *           .setEndCursor(Cursor.newBuilder().build())
+   *           .build();
+   *   ApiFuture<ComputeMessageStatsResponse> future =
+   *       topicStatsServiceClient.computeMessageStatsCallable().futureCall(request);
+   *   // Do something.
+   *   ComputeMessageStatsResponse response = future.get();
+   * }
+   * }</pre>
    */
   public final UnaryCallable<ComputeMessageStatsRequest, ComputeMessageStatsResponse>
       computeMessageStatsCallable() {
@@ -166,6 +210,19 @@ public class TopicStatsServiceClient implements BackgroundResource {
    * or equal to all messages which have not yet been acknowledged to be published, and greater than
    * the offset of any message whose publish has already been acknowledged. It is 0 if there have
    * never been messages on the partition.
+   *
+   * <p>Sample code:
+   *
+   * <pre>{@code
+   * try (TopicStatsServiceClient topicStatsServiceClient = TopicStatsServiceClient.create()) {
+   *   ComputeHeadCursorRequest request =
+   *       ComputeHeadCursorRequest.newBuilder()
+   *           .setTopic(TopicName.of("[PROJECT]", "[LOCATION]", "[TOPIC]").toString())
+   *           .setPartition(-1799810326)
+   *           .build();
+   *   ComputeHeadCursorResponse response = topicStatsServiceClient.computeHeadCursor(request);
+   * }
+   * }</pre>
    *
    * @param request The request object containing all of the parameters for the API call.
    * @throws com.google.api.gax.rpc.ApiException if the remote call fails
@@ -182,6 +239,20 @@ public class TopicStatsServiceClient implements BackgroundResource {
    * never been messages on the partition.
    *
    * <p>Sample code:
+   *
+   * <pre>{@code
+   * try (TopicStatsServiceClient topicStatsServiceClient = TopicStatsServiceClient.create()) {
+   *   ComputeHeadCursorRequest request =
+   *       ComputeHeadCursorRequest.newBuilder()
+   *           .setTopic(TopicName.of("[PROJECT]", "[LOCATION]", "[TOPIC]").toString())
+   *           .setPartition(-1799810326)
+   *           .build();
+   *   ApiFuture<ComputeHeadCursorResponse> future =
+   *       topicStatsServiceClient.computeHeadCursorCallable().futureCall(request);
+   *   // Do something.
+   *   ComputeHeadCursorResponse response = future.get();
+   * }
+   * }</pre>
    */
   public final UnaryCallable<ComputeHeadCursorRequest, ComputeHeadCursorResponse>
       computeHeadCursorCallable() {

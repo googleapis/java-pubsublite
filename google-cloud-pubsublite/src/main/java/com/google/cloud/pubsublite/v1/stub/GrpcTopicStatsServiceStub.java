@@ -163,11 +163,13 @@ public class GrpcTopicStatsServiceStub extends TopicStatsServiceStub {
     return operationsStub;
   }
 
+  @Override
   public UnaryCallable<ComputeMessageStatsRequest, ComputeMessageStatsResponse>
       computeMessageStatsCallable() {
     return computeMessageStatsCallable;
   }
 
+  @Override
   public UnaryCallable<ComputeHeadCursorRequest, ComputeHeadCursorResponse>
       computeHeadCursorCallable() {
     return computeHeadCursorCallable;

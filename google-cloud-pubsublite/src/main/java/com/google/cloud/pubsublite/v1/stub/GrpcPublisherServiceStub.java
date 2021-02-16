@@ -110,6 +110,7 @@ public class GrpcPublisherServiceStub extends PublisherServiceStub {
     return operationsStub;
   }
 
+  @Override
   public BidiStreamingCallable<PublishRequest, PublishResponse> publishCallable() {
     return publishCallable;
   }

@@ -87,7 +87,13 @@ public class MockAdminServiceImpl extends AdminServiceImplBase {
     } else if (response instanceof Exception) {
       responseObserver.onError(((Exception) response));
     } else {
-      responseObserver.onError(new IllegalArgumentException("Unrecognized response type"));
+      responseObserver.onError(
+          new IllegalArgumentException(
+              String.format(
+                  "Unrecognized response type %s for method CreateTopic, expected %s or %s",
+                  response.getClass().getName(),
+                  Topic.class.getName(),
+                  Exception.class.getName())));
     }
   }
 
@@ -101,7 +107,13 @@ public class MockAdminServiceImpl extends AdminServiceImplBase {
     } else if (response instanceof Exception) {
       responseObserver.onError(((Exception) response));
     } else {
-      responseObserver.onError(new IllegalArgumentException("Unrecognized response type"));
+      responseObserver.onError(
+          new IllegalArgumentException(
+              String.format(
+                  "Unrecognized response type %s for method GetTopic, expected %s or %s",
+                  response.getClass().getName(),
+                  Topic.class.getName(),
+                  Exception.class.getName())));
     }
   }
 
@@ -116,7 +128,13 @@ public class MockAdminServiceImpl extends AdminServiceImplBase {
     } else if (response instanceof Exception) {
       responseObserver.onError(((Exception) response));
     } else {
-      responseObserver.onError(new IllegalArgumentException("Unrecognized response type"));
+      responseObserver.onError(
+          new IllegalArgumentException(
+              String.format(
+                  "Unrecognized response type %s for method GetTopicPartitions, expected %s or %s",
+                  response.getClass().getName(),
+                  TopicPartitions.class.getName(),
+                  Exception.class.getName())));
     }
   }
 
@@ -131,7 +149,13 @@ public class MockAdminServiceImpl extends AdminServiceImplBase {
     } else if (response instanceof Exception) {
       responseObserver.onError(((Exception) response));
     } else {
-      responseObserver.onError(new IllegalArgumentException("Unrecognized response type"));
+      responseObserver.onError(
+          new IllegalArgumentException(
+              String.format(
+                  "Unrecognized response type %s for method ListTopics, expected %s or %s",
+                  response.getClass().getName(),
+                  ListTopicsResponse.class.getName(),
+                  Exception.class.getName())));
     }
   }
 
@@ -145,7 +169,13 @@ public class MockAdminServiceImpl extends AdminServiceImplBase {
     } else if (response instanceof Exception) {
       responseObserver.onError(((Exception) response));
     } else {
-      responseObserver.onError(new IllegalArgumentException("Unrecognized response type"));
+      responseObserver.onError(
+          new IllegalArgumentException(
+              String.format(
+                  "Unrecognized response type %s for method UpdateTopic, expected %s or %s",
+                  response.getClass().getName(),
+                  Topic.class.getName(),
+                  Exception.class.getName())));
     }
   }
 
@@ -159,7 +189,13 @@ public class MockAdminServiceImpl extends AdminServiceImplBase {
     } else if (response instanceof Exception) {
       responseObserver.onError(((Exception) response));
     } else {
-      responseObserver.onError(new IllegalArgumentException("Unrecognized response type"));
+      responseObserver.onError(
+          new IllegalArgumentException(
+              String.format(
+                  "Unrecognized response type %s for method DeleteTopic, expected %s or %s",
+                  response.getClass().getName(),
+                  Empty.class.getName(),
+                  Exception.class.getName())));
     }
   }
 
@@ -175,7 +211,13 @@ public class MockAdminServiceImpl extends AdminServiceImplBase {
     } else if (response instanceof Exception) {
       responseObserver.onError(((Exception) response));
     } else {
-      responseObserver.onError(new IllegalArgumentException("Unrecognized response type"));
+      responseObserver.onError(
+          new IllegalArgumentException(
+              String.format(
+                  "Unrecognized response type %s for method ListTopicSubscriptions, expected %s or %s",
+                  response.getClass().getName(),
+                  ListTopicSubscriptionsResponse.class.getName(),
+                  Exception.class.getName())));
     }
   }
 
@@ -190,7 +232,13 @@ public class MockAdminServiceImpl extends AdminServiceImplBase {
     } else if (response instanceof Exception) {
       responseObserver.onError(((Exception) response));
     } else {
-      responseObserver.onError(new IllegalArgumentException("Unrecognized response type"));
+      responseObserver.onError(
+          new IllegalArgumentException(
+              String.format(
+                  "Unrecognized response type %s for method CreateSubscription, expected %s or %s",
+                  response.getClass().getName(),
+                  Subscription.class.getName(),
+                  Exception.class.getName())));
     }
   }
 
@@ -205,7 +253,13 @@ public class MockAdminServiceImpl extends AdminServiceImplBase {
     } else if (response instanceof Exception) {
       responseObserver.onError(((Exception) response));
     } else {
-      responseObserver.onError(new IllegalArgumentException("Unrecognized response type"));
+      responseObserver.onError(
+          new IllegalArgumentException(
+              String.format(
+                  "Unrecognized response type %s for method GetSubscription, expected %s or %s",
+                  response.getClass().getName(),
+                  Subscription.class.getName(),
+                  Exception.class.getName())));
     }
   }
 
@@ -221,7 +275,13 @@ public class MockAdminServiceImpl extends AdminServiceImplBase {
     } else if (response instanceof Exception) {
       responseObserver.onError(((Exception) response));
     } else {
-      responseObserver.onError(new IllegalArgumentException("Unrecognized response type"));
+      responseObserver.onError(
+          new IllegalArgumentException(
+              String.format(
+                  "Unrecognized response type %s for method ListSubscriptions, expected %s or %s",
+                  response.getClass().getName(),
+                  ListSubscriptionsResponse.class.getName(),
+                  Exception.class.getName())));
     }
   }
 
@@ -236,7 +296,13 @@ public class MockAdminServiceImpl extends AdminServiceImplBase {
     } else if (response instanceof Exception) {
       responseObserver.onError(((Exception) response));
     } else {
-      responseObserver.onError(new IllegalArgumentException("Unrecognized response type"));
+      responseObserver.onError(
+          new IllegalArgumentException(
+              String.format(
+                  "Unrecognized response type %s for method UpdateSubscription, expected %s or %s",
+                  response.getClass().getName(),
+                  Subscription.class.getName(),
+                  Exception.class.getName())));
     }
   }
 
@@ -251,7 +317,13 @@ public class MockAdminServiceImpl extends AdminServiceImplBase {
     } else if (response instanceof Exception) {
       responseObserver.onError(((Exception) response));
     } else {
-      responseObserver.onError(new IllegalArgumentException("Unrecognized response type"));
+      responseObserver.onError(
+          new IllegalArgumentException(
+              String.format(
+                  "Unrecognized response type %s for method DeleteSubscription, expected %s or %s",
+                  response.getClass().getName(),
+                  Empty.class.getName(),
+                  Exception.class.getName())));
     }
   }
 }

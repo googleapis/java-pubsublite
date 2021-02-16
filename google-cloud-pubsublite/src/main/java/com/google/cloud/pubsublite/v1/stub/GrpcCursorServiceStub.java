@@ -183,20 +183,24 @@ public class GrpcCursorServiceStub extends CursorServiceStub {
     return operationsStub;
   }
 
+  @Override
   public BidiStreamingCallable<StreamingCommitCursorRequest, StreamingCommitCursorResponse>
       streamingCommitCursorCallable() {
     return streamingCommitCursorCallable;
   }
 
+  @Override
   public UnaryCallable<CommitCursorRequest, CommitCursorResponse> commitCursorCallable() {
     return commitCursorCallable;
   }
 
+  @Override
   public UnaryCallable<ListPartitionCursorsRequest, ListPartitionCursorsResponse>
       listPartitionCursorsCallable() {
     return listPartitionCursorsCallable;
   }
 
+  @Override
   public UnaryCallable<ListPartitionCursorsRequest, ListPartitionCursorsPagedResponse>
       listPartitionCursorsPagedCallable() {
     return listPartitionCursorsPagedCallable;

@@ -78,7 +78,13 @@ public class MockCursorServiceImpl extends CursorServiceImplBase {
             } else if (response instanceof Exception) {
               responseObserver.onError(((Exception) response));
             } else {
-              responseObserver.onError(new IllegalArgumentException("Unrecognized response type"));
+              responseObserver.onError(
+                  new IllegalArgumentException(
+                      String.format(
+                          "Unrecognized response type %s for method StreamingCommitCursor, expected %s or %s",
+                          response.getClass().getName(),
+                          StreamingCommitCursorResponse.class.getName(),
+                          Exception.class.getName())));
             }
           }
 
@@ -106,7 +112,13 @@ public class MockCursorServiceImpl extends CursorServiceImplBase {
     } else if (response instanceof Exception) {
       responseObserver.onError(((Exception) response));
     } else {
-      responseObserver.onError(new IllegalArgumentException("Unrecognized response type"));
+      responseObserver.onError(
+          new IllegalArgumentException(
+              String.format(
+                  "Unrecognized response type %s for method CommitCursor, expected %s or %s",
+                  response.getClass().getName(),
+                  CommitCursorResponse.class.getName(),
+                  Exception.class.getName())));
     }
   }
 
@@ -122,7 +134,13 @@ public class MockCursorServiceImpl extends CursorServiceImplBase {
     } else if (response instanceof Exception) {
       responseObserver.onError(((Exception) response));
     } else {
-      responseObserver.onError(new IllegalArgumentException("Unrecognized response type"));
+      responseObserver.onError(
+          new IllegalArgumentException(
+              String.format(
+                  "Unrecognized response type %s for method ListPartitionCursors, expected %s or %s",
+                  response.getClass().getName(),
+                  ListPartitionCursorsResponse.class.getName(),
+                  Exception.class.getName())));
     }
   }
 }

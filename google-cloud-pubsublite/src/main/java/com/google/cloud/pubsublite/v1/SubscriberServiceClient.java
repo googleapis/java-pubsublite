@@ -35,6 +35,18 @@ import javax.annotation.Generated;
  * <p>This class provides the ability to make remote calls to the backing service through method
  * calls that map to API methods. Sample code to get started:
  *
+ * <pre>{@code
+ * try (SubscriberServiceClient subscriberServiceClient = SubscriberServiceClient.create()) {
+ *   BidiStream<SubscribeRequest, SubscribeResponse> bidiStream =
+ *       subscriberServiceClient.subscribeCallable().call();
+ *   SubscribeRequest request = SubscribeRequest.newBuilder().build();
+ *   bidiStream.send(request);
+ *   for (SubscribeResponse response : bidiStream) {
+ *     // Do something when a response is received.
+ *   }
+ * }
+ * }</pre>
+ *
  * <p>Note: close() needs to be called on the SubscriberServiceClient object to clean up resources
  * such as threads. In the example above, try-with-resources is used, which automatically calls
  * close().
@@ -142,6 +154,18 @@ public class SubscriberServiceClient implements BackgroundResource {
    * Establishes a stream with the server for receiving messages.
    *
    * <p>Sample code:
+   *
+   * <pre>{@code
+   * try (SubscriberServiceClient subscriberServiceClient = SubscriberServiceClient.create()) {
+   *   BidiStream<SubscribeRequest, SubscribeResponse> bidiStream =
+   *       subscriberServiceClient.subscribeCallable().call();
+   *   SubscribeRequest request = SubscribeRequest.newBuilder().build();
+   *   bidiStream.send(request);
+   *   for (SubscribeResponse response : bidiStream) {
+   *     // Do something when a response is received.
+   *   }
+   * }
+   * }</pre>
    */
   public final BidiStreamingCallable<SubscribeRequest, SubscribeResponse> subscribeCallable() {
     return stub.subscribeCallable();

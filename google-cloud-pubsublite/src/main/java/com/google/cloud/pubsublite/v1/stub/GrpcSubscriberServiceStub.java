@@ -111,6 +111,7 @@ public class GrpcSubscriberServiceStub extends SubscriberServiceStub {
     return operationsStub;
   }
 
+  @Override
   public BidiStreamingCallable<SubscribeRequest, SubscribeResponse> subscribeCallable() {
     return subscribeCallable;
   }

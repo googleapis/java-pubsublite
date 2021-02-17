@@ -473,66 +473,81 @@ public class GrpcAdminServiceStub extends AdminServiceStub {
     return operationsStub;
   }
 
+  @Override
   public UnaryCallable<CreateTopicRequest, Topic> createTopicCallable() {
     return createTopicCallable;
   }
 
+  @Override
   public UnaryCallable<GetTopicRequest, Topic> getTopicCallable() {
     return getTopicCallable;
   }
 
+  @Override
   public UnaryCallable<GetTopicPartitionsRequest, TopicPartitions> getTopicPartitionsCallable() {
     return getTopicPartitionsCallable;
   }
 
+  @Override
   public UnaryCallable<ListTopicsRequest, ListTopicsResponse> listTopicsCallable() {
     return listTopicsCallable;
   }
 
+  @Override
   public UnaryCallable<ListTopicsRequest, ListTopicsPagedResponse> listTopicsPagedCallable() {
     return listTopicsPagedCallable;
   }
 
+  @Override
   public UnaryCallable<UpdateTopicRequest, Topic> updateTopicCallable() {
     return updateTopicCallable;
   }
 
+  @Override
   public UnaryCallable<DeleteTopicRequest, Empty> deleteTopicCallable() {
     return deleteTopicCallable;
   }
 
+  @Override
   public UnaryCallable<ListTopicSubscriptionsRequest, ListTopicSubscriptionsResponse>
       listTopicSubscriptionsCallable() {
     return listTopicSubscriptionsCallable;
   }
 
+  @Override
   public UnaryCallable<ListTopicSubscriptionsRequest, ListTopicSubscriptionsPagedResponse>
       listTopicSubscriptionsPagedCallable() {
     return listTopicSubscriptionsPagedCallable;
   }
 
+  @Override
   public UnaryCallable<CreateSubscriptionRequest, Subscription> createSubscriptionCallable() {
     return createSubscriptionCallable;
   }
 
+  @Override
   public UnaryCallable<GetSubscriptionRequest, Subscription> getSubscriptionCallable() {
     return getSubscriptionCallable;
   }
 
+  @Override
   public UnaryCallable<ListSubscriptionsRequest, ListSubscriptionsResponse>
       listSubscriptionsCallable() {
     return listSubscriptionsCallable;
   }
 
+  @Override
   public UnaryCallable<ListSubscriptionsRequest, ListSubscriptionsPagedResponse>
       listSubscriptionsPagedCallable() {
     return listSubscriptionsPagedCallable;
   }
 
+  @Override
   public UnaryCallable<UpdateSubscriptionRequest, Subscription> updateSubscriptionCallable() {
     return updateSubscriptionCallable;
   }
 
+  @Override
   public UnaryCallable<DeleteSubscriptionRequest, Empty> deleteSubscriptionCallable() {
     return deleteSubscriptionCallable;
   }

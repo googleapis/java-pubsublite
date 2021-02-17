@@ -52,6 +52,18 @@ import javax.annotation.Generated;
  * <p>This class provides the ability to make remote calls to the backing service through method
  * calls that map to API methods. Sample code to get started:
  *
+ * <pre>{@code
+ * try (CursorServiceClient cursorServiceClient = CursorServiceClient.create()) {
+ *   CommitCursorRequest request =
+ *       CommitCursorRequest.newBuilder()
+ *           .setSubscription("subscription341203229")
+ *           .setPartition(-1799810326)
+ *           .setCursor(Cursor.newBuilder().build())
+ *           .build();
+ *   CommitCursorResponse response = cursorServiceClient.commitCursor(request);
+ * }
+ * }</pre>
+ *
  * <p>Note: close() needs to be called on the CursorServiceClient object to clean up resources such
  * as threads. In the example above, try-with-resources is used, which automatically calls close().
  *
@@ -98,8 +110,7 @@ import javax.annotation.Generated;
  *
  * <p>Please refer to the GitHub repository's samples for more quickstart code snippets.
  */
-@BetaApi
-@Generated("by gapic-generator")
+@Generated("by gapic-generator-java")
 public class CursorServiceClient implements BackgroundResource {
   private final CursorServiceSettings settings;
   private final CursorServiceStub stub;
@@ -157,6 +168,18 @@ public class CursorServiceClient implements BackgroundResource {
    * Establishes a stream with the server for managing committed cursors.
    *
    * <p>Sample code:
+   *
+   * <pre>{@code
+   * try (CursorServiceClient cursorServiceClient = CursorServiceClient.create()) {
+   *   BidiStream<StreamingCommitCursorRequest, StreamingCommitCursorResponse> bidiStream =
+   *       cursorServiceClient.streamingCommitCursorCallable().call();
+   *   StreamingCommitCursorRequest request = StreamingCommitCursorRequest.newBuilder().build();
+   *   bidiStream.send(request);
+   *   for (StreamingCommitCursorResponse response : bidiStream) {
+   *     // Do something when a response is received.
+   *   }
+   * }
+   * }</pre>
    */
   public final BidiStreamingCallable<StreamingCommitCursorRequest, StreamingCommitCursorResponse>
       streamingCommitCursorCallable() {
@@ -166,6 +189,20 @@ public class CursorServiceClient implements BackgroundResource {
   // AUTO-GENERATED DOCUMENTATION AND METHOD.
   /**
    * Updates the committed cursor.
+   *
+   * <p>Sample code:
+   *
+   * <pre>{@code
+   * try (CursorServiceClient cursorServiceClient = CursorServiceClient.create()) {
+   *   CommitCursorRequest request =
+   *       CommitCursorRequest.newBuilder()
+   *           .setSubscription("subscription341203229")
+   *           .setPartition(-1799810326)
+   *           .setCursor(Cursor.newBuilder().build())
+   *           .build();
+   *   CommitCursorResponse response = cursorServiceClient.commitCursor(request);
+   * }
+   * }</pre>
    *
    * @param request The request object containing all of the parameters for the API call.
    * @throws com.google.api.gax.rpc.ApiException if the remote call fails
@@ -179,6 +216,21 @@ public class CursorServiceClient implements BackgroundResource {
    * Updates the committed cursor.
    *
    * <p>Sample code:
+   *
+   * <pre>{@code
+   * try (CursorServiceClient cursorServiceClient = CursorServiceClient.create()) {
+   *   CommitCursorRequest request =
+   *       CommitCursorRequest.newBuilder()
+   *           .setSubscription("subscription341203229")
+   *           .setPartition(-1799810326)
+   *           .setCursor(Cursor.newBuilder().build())
+   *           .build();
+   *   ApiFuture<CommitCursorResponse> future =
+   *       cursorServiceClient.commitCursorCallable().futureCall(request);
+   *   // Do something.
+   *   CommitCursorResponse response = future.get();
+   * }
+   * }</pre>
    */
   public final UnaryCallable<CommitCursorRequest, CommitCursorResponse> commitCursorCallable() {
     return stub.commitCursorCallable();
@@ -187,6 +239,18 @@ public class CursorServiceClient implements BackgroundResource {
   // AUTO-GENERATED DOCUMENTATION AND METHOD.
   /**
    * Returns all committed cursor information for a subscription.
+   *
+   * <p>Sample code:
+   *
+   * <pre>{@code
+   * try (CursorServiceClient cursorServiceClient = CursorServiceClient.create()) {
+   *   SubscriptionName parent = SubscriptionName.of("[PROJECT]", "[LOCATION]", "[SUBSCRIPTION]");
+   *   for (PartitionCursor element :
+   *       cursorServiceClient.listPartitionCursors(parent).iterateAll()) {
+   *     // doThingsWith(element);
+   *   }
+   * }
+   * }</pre>
    *
    * @param parent Required. The subscription for which to retrieve cursors. Structured like
    *     `projects/{project_number}/locations/{location}/subscriptions/{subscription_id}`.
@@ -204,6 +268,18 @@ public class CursorServiceClient implements BackgroundResource {
   /**
    * Returns all committed cursor information for a subscription.
    *
+   * <p>Sample code:
+   *
+   * <pre>{@code
+   * try (CursorServiceClient cursorServiceClient = CursorServiceClient.create()) {
+   *   String parent = SubscriptionName.of("[PROJECT]", "[LOCATION]", "[SUBSCRIPTION]").toString();
+   *   for (PartitionCursor element :
+   *       cursorServiceClient.listPartitionCursors(parent).iterateAll()) {
+   *     // doThingsWith(element);
+   *   }
+   * }
+   * }</pre>
+   *
    * @param parent Required. The subscription for which to retrieve cursors. Structured like
    *     `projects/{project_number}/locations/{location}/subscriptions/{subscription_id}`.
    * @throws com.google.api.gax.rpc.ApiException if the remote call fails
@@ -218,6 +294,24 @@ public class CursorServiceClient implements BackgroundResource {
   /**
    * Returns all committed cursor information for a subscription.
    *
+   * <p>Sample code:
+   *
+   * <pre>{@code
+   * try (CursorServiceClient cursorServiceClient = CursorServiceClient.create()) {
+   *   ListPartitionCursorsRequest request =
+   *       ListPartitionCursorsRequest.newBuilder()
+   *           .setParent(
+   *               SubscriptionName.of("[PROJECT]", "[LOCATION]", "[SUBSCRIPTION]").toString())
+   *           .setPageSize(883849137)
+   *           .setPageToken("pageToken873572522")
+   *           .build();
+   *   for (PartitionCursor element :
+   *       cursorServiceClient.listPartitionCursors(request).iterateAll()) {
+   *     // doThingsWith(element);
+   *   }
+   * }
+   * }</pre>
+   *
    * @param request The request object containing all of the parameters for the API call.
    * @throws com.google.api.gax.rpc.ApiException if the remote call fails
    */
@@ -231,6 +325,24 @@ public class CursorServiceClient implements BackgroundResource {
    * Returns all committed cursor information for a subscription.
    *
    * <p>Sample code:
+   *
+   * <pre>{@code
+   * try (CursorServiceClient cursorServiceClient = CursorServiceClient.create()) {
+   *   ListPartitionCursorsRequest request =
+   *       ListPartitionCursorsRequest.newBuilder()
+   *           .setParent(
+   *               SubscriptionName.of("[PROJECT]", "[LOCATION]", "[SUBSCRIPTION]").toString())
+   *           .setPageSize(883849137)
+   *           .setPageToken("pageToken873572522")
+   *           .build();
+   *   ApiFuture<PartitionCursor> future =
+   *       cursorServiceClient.listPartitionCursorsPagedCallable().futureCall(request);
+   *   // Do something.
+   *   for (PartitionCursor element : future.get().iterateAll()) {
+   *     // doThingsWith(element);
+   *   }
+   * }
+   * }</pre>
    */
   public final UnaryCallable<ListPartitionCursorsRequest, ListPartitionCursorsPagedResponse>
       listPartitionCursorsPagedCallable() {
@@ -242,6 +354,24 @@ public class CursorServiceClient implements BackgroundResource {
    * Returns all committed cursor information for a subscription.
    *
    * <p>Sample code:
+   *
+   * <pre>{@code
+   * try (CursorServiceClient cursorServiceClient = CursorServiceClient.create()) {
+   *   while (true) {
+   *     ListPartitionCursorsResponse response =
+   *         cursorServiceClient.listPartitionCursorsCallable().call(request);
+   *     for (PartitionCursor element : response.getResponsesList()) {
+   *       // doThingsWith(element);
+   *     }
+   *     String nextPageToken = response.getNextPageToken();
+   *     if (!Strings.isNullOrEmpty(nextPageToken)) {
+   *       request = request.toBuilder().setPageToken(nextPageToken).build();
+   *     } else {
+   *       break;
+   *     }
+   *   }
+   * }
+   * }</pre>
    */
   public final UnaryCallable<ListPartitionCursorsRequest, ListPartitionCursorsResponse>
       listPartitionCursorsCallable() {

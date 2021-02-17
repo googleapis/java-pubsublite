@@ -20,16 +20,16 @@ import com.google.api.core.ApiFuture;
 import com.google.api.core.ApiFutures;
 import com.google.api.gax.rpc.ApiException;
 import com.google.cloud.pubsublite.Message;
+import com.google.cloud.pubsublite.MessageMetadata;
 import com.google.cloud.pubsublite.Offset;
 import com.google.cloud.pubsublite.Partition;
-import com.google.cloud.pubsublite.PublishMetadata;
 import com.google.cloud.pubsublite.internal.Publisher;
 import com.google.cloud.pubsublite.internal.TrivialProxyService;
 import com.google.common.util.concurrent.MoreExecutors;
 import java.io.IOException;
 
 public class SinglePartitionPublisher extends TrivialProxyService
-    implements Publisher<PublishMetadata> {
+    implements Publisher<MessageMetadata> {
   private final Publisher<Offset> publisher;
   private final Partition partition;
 
@@ -41,10 +41,10 @@ public class SinglePartitionPublisher extends TrivialProxyService
 
   // Publisher implementation.
   @Override
-  public ApiFuture<PublishMetadata> publish(Message message) {
+  public ApiFuture<MessageMetadata> publish(Message message) {
     return ApiFutures.transform(
         publisher.publish(message),
-        offset -> PublishMetadata.of(partition, offset),
+        offset -> MessageMetadata.of(partition, offset),
         MoreExecutors.directExecutor());
   }
 

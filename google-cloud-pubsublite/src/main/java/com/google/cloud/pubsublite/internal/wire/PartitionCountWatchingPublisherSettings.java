@@ -15,12 +15,12 @@
  */
 package com.google.cloud.pubsublite.internal.wire;
 
+import com.google.api.gax.rpc.ApiException;
 import com.google.auto.value.AutoValue;
 import com.google.cloud.pubsublite.*;
 import com.google.cloud.pubsublite.internal.DefaultRoutingPolicy;
-import com.google.cloud.pubsublite.internal.RoutingPolicy;
+import com.google.cloud.pubsublite.internal.Publisher;
 import java.time.Duration;
-import java.util.Optional;
 
 @AutoValue
 public abstract class PartitionCountWatchingPublisherSettings {
@@ -29,11 +29,9 @@ public abstract class PartitionCountWatchingPublisherSettings {
 
   abstract PartitionPublisherFactory publisherFactory();
 
+  abstract AdminClient adminClient();
+
   // Optional parameters
-  abstract PartitionCountWatcher.Factory configWatcherFactory();
-
-  abstract RoutingPolicy.Factory routingPolicyFactory();
-
   abstract Duration configPollPeriod();
 
   public static Builder newBuilder() {
@@ -48,38 +46,18 @@ public abstract class PartitionCountWatchingPublisherSettings {
 
     public abstract Builder setPublisherFactory(PartitionPublisherFactory factory);
 
+    public abstract Builder setAdminClient(AdminClient client);
+
     // Optional parameters.
-    public abstract Builder setConfigWatcherFactory(PartitionCountWatcher.Factory factory);
-
-    public abstract Builder setRoutingPolicyFactory(RoutingPolicy.Factory factory);
-
     public abstract Builder setConfigPollPeriod(Duration period);
 
-    abstract Optional<PartitionCountWatcher.Factory> configWatcherFactory();
+    public abstract PartitionCountWatchingPublisherSettings build();
+  }
 
-    abstract Optional<RoutingPolicy.Factory> routingPolicyFactory();
-
-    abstract Duration configPollPeriod();
-
-    abstract TopicPath topic();
-
-    abstract PartitionCountWatchingPublisherSettings autoBuild();
-
-    public PartitionCountWatchingPublisherSettings build() {
-      if (!configWatcherFactory().isPresent()) {
-        setConfigWatcherFactory(
-            new PartitionCountWatcherImpl.Factory(
-                topic(),
-                AdminClient.create(
-                    AdminClientSettings.newBuilder()
-                        .setRegion(topic().location().region())
-                        .build()),
-                configPollPeriod()));
-      }
-      if (!routingPolicyFactory().isPresent()) {
-        setRoutingPolicyFactory(DefaultRoutingPolicy::new);
-      }
-      return autoBuild();
-    }
+  public Publisher<MessageMetadata> instantiate() throws ApiException {
+    return new PartitionCountWatchingPublisher(
+        publisherFactory(),
+        DefaultRoutingPolicy::new,
+        new PartitionCountWatcherImpl.Factory(topic(), adminClient(), configPollPeriod()));
   }
 }

@@ -74,7 +74,13 @@ public class MockSubscriberServiceImpl extends SubscriberServiceImplBase {
             } else if (response instanceof Exception) {
               responseObserver.onError(((Exception) response));
             } else {
-              responseObserver.onError(new IllegalArgumentException("Unrecognized response type"));
+              responseObserver.onError(
+                  new IllegalArgumentException(
+                      String.format(
+                          "Unrecognized response type %s for method Subscribe, expected %s or %s",
+                          response.getClass().getName(),
+                          SubscribeResponse.class.getName(),
+                          Exception.class.getName())));
             }
           }
 

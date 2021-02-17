@@ -35,6 +35,19 @@ import javax.annotation.Generated;
  * <p>This class provides the ability to make remote calls to the backing service through method
  * calls that map to API methods. Sample code to get started:
  *
+ * <pre>{@code
+ * try (PartitionAssignmentServiceClient partitionAssignmentServiceClient =
+ *     PartitionAssignmentServiceClient.create()) {
+ *   BidiStream<PartitionAssignmentRequest, PartitionAssignment> bidiStream =
+ *       partitionAssignmentServiceClient.assignPartitionsCallable().call();
+ *   PartitionAssignmentRequest request = PartitionAssignmentRequest.newBuilder().build();
+ *   bidiStream.send(request);
+ *   for (PartitionAssignment response : bidiStream) {
+ *     // Do something when a response is received.
+ *   }
+ * }
+ * }</pre>
+ *
  * <p>Note: close() needs to be called on the PartitionAssignmentServiceClient object to clean up
  * resources such as threads. In the example above, try-with-resources is used, which automatically
  * calls close().
@@ -84,8 +97,7 @@ import javax.annotation.Generated;
  *
  * <p>Please refer to the GitHub repository's samples for more quickstart code snippets.
  */
-@BetaApi
-@Generated("by gapic-generator")
+@Generated("by gapic-generator-java")
 public class PartitionAssignmentServiceClient implements BackgroundResource {
   private final PartitionAssignmentServiceSettings settings;
   private final PartitionAssignmentServiceStub stub;
@@ -150,6 +162,19 @@ public class PartitionAssignmentServiceClient implements BackgroundResource {
    * reflect the new assignment.
    *
    * <p>Sample code:
+   *
+   * <pre>{@code
+   * try (PartitionAssignmentServiceClient partitionAssignmentServiceClient =
+   *     PartitionAssignmentServiceClient.create()) {
+   *   BidiStream<PartitionAssignmentRequest, PartitionAssignment> bidiStream =
+   *       partitionAssignmentServiceClient.assignPartitionsCallable().call();
+   *   PartitionAssignmentRequest request = PartitionAssignmentRequest.newBuilder().build();
+   *   bidiStream.send(request);
+   *   for (PartitionAssignment response : bidiStream) {
+   *     // Do something when a response is received.
+   *   }
+   * }
+   * }</pre>
    */
   public final BidiStreamingCallable<PartitionAssignmentRequest, PartitionAssignment>
       assignPartitionsCallable() {

@@ -65,6 +65,15 @@ import javax.annotation.Generated;
  * <p>This class provides the ability to make remote calls to the backing service through method
  * calls that map to API methods. Sample code to get started:
  *
+ * <pre>{@code
+ * try (AdminServiceClient adminServiceClient = AdminServiceClient.create()) {
+ *   LocationName parent = LocationName.of("[PROJECT]", "[LOCATION]");
+ *   Topic topic = Topic.newBuilder().build();
+ *   String topicId = "topicId-1139259734";
+ *   Topic response = adminServiceClient.createTopic(parent, topic, topicId);
+ * }
+ * }</pre>
+ *
  * <p>Note: close() needs to be called on the AdminServiceClient object to clean up resources such
  * as threads. In the example above, try-with-resources is used, which automatically calls close().
  *
@@ -111,8 +120,7 @@ import javax.annotation.Generated;
  *
  * <p>Please refer to the GitHub repository's samples for more quickstart code snippets.
  */
-@BetaApi
-@Generated("by gapic-generator")
+@Generated("by gapic-generator-java")
 public class AdminServiceClient implements BackgroundResource {
   private final AdminServiceSettings settings;
   private final AdminServiceStub stub;
@@ -168,6 +176,17 @@ public class AdminServiceClient implements BackgroundResource {
   /**
    * Creates a new topic.
    *
+   * <p>Sample code:
+   *
+   * <pre>{@code
+   * try (AdminServiceClient adminServiceClient = AdminServiceClient.create()) {
+   *   LocationName parent = LocationName.of("[PROJECT]", "[LOCATION]");
+   *   Topic topic = Topic.newBuilder().build();
+   *   String topicId = "topicId-1139259734";
+   *   Topic response = adminServiceClient.createTopic(parent, topic, topicId);
+   * }
+   * }</pre>
+   *
    * @param parent Required. The parent location in which to create the topic. Structured like
    *     `projects/{project_number}/locations/{location}`.
    * @param topic Required. Configuration of the topic to create. Its `name` field is ignored.
@@ -189,6 +208,17 @@ public class AdminServiceClient implements BackgroundResource {
   // AUTO-GENERATED DOCUMENTATION AND METHOD.
   /**
    * Creates a new topic.
+   *
+   * <p>Sample code:
+   *
+   * <pre>{@code
+   * try (AdminServiceClient adminServiceClient = AdminServiceClient.create()) {
+   *   String parent = LocationName.of("[PROJECT]", "[LOCATION]").toString();
+   *   Topic topic = Topic.newBuilder().build();
+   *   String topicId = "topicId-1139259734";
+   *   Topic response = adminServiceClient.createTopic(parent, topic, topicId);
+   * }
+   * }</pre>
    *
    * @param parent Required. The parent location in which to create the topic. Structured like
    *     `projects/{project_number}/locations/{location}`.
@@ -212,6 +242,20 @@ public class AdminServiceClient implements BackgroundResource {
   /**
    * Creates a new topic.
    *
+   * <p>Sample code:
+   *
+   * <pre>{@code
+   * try (AdminServiceClient adminServiceClient = AdminServiceClient.create()) {
+   *   CreateTopicRequest request =
+   *       CreateTopicRequest.newBuilder()
+   *           .setParent(LocationName.of("[PROJECT]", "[LOCATION]").toString())
+   *           .setTopic(Topic.newBuilder().build())
+   *           .setTopicId("topicId-1139259734")
+   *           .build();
+   *   Topic response = adminServiceClient.createTopic(request);
+   * }
+   * }</pre>
+   *
    * @param request The request object containing all of the parameters for the API call.
    * @throws com.google.api.gax.rpc.ApiException if the remote call fails
    */
@@ -224,6 +268,20 @@ public class AdminServiceClient implements BackgroundResource {
    * Creates a new topic.
    *
    * <p>Sample code:
+   *
+   * <pre>{@code
+   * try (AdminServiceClient adminServiceClient = AdminServiceClient.create()) {
+   *   CreateTopicRequest request =
+   *       CreateTopicRequest.newBuilder()
+   *           .setParent(LocationName.of("[PROJECT]", "[LOCATION]").toString())
+   *           .setTopic(Topic.newBuilder().build())
+   *           .setTopicId("topicId-1139259734")
+   *           .build();
+   *   ApiFuture<Topic> future = adminServiceClient.createTopicCallable().futureCall(request);
+   *   // Do something.
+   *   Topic response = future.get();
+   * }
+   * }</pre>
    */
   public final UnaryCallable<CreateTopicRequest, Topic> createTopicCallable() {
     return stub.createTopicCallable();
@@ -232,6 +290,15 @@ public class AdminServiceClient implements BackgroundResource {
   // AUTO-GENERATED DOCUMENTATION AND METHOD.
   /**
    * Returns the topic configuration.
+   *
+   * <p>Sample code:
+   *
+   * <pre>{@code
+   * try (AdminServiceClient adminServiceClient = AdminServiceClient.create()) {
+   *   TopicName name = TopicName.of("[PROJECT]", "[LOCATION]", "[TOPIC]");
+   *   Topic response = adminServiceClient.getTopic(name);
+   * }
+   * }</pre>
    *
    * @param name Required. The name of the topic whose configuration to return.
    * @throws com.google.api.gax.rpc.ApiException if the remote call fails
@@ -246,6 +313,15 @@ public class AdminServiceClient implements BackgroundResource {
   /**
    * Returns the topic configuration.
    *
+   * <p>Sample code:
+   *
+   * <pre>{@code
+   * try (AdminServiceClient adminServiceClient = AdminServiceClient.create()) {
+   *   String name = TopicName.of("[PROJECT]", "[LOCATION]", "[TOPIC]").toString();
+   *   Topic response = adminServiceClient.getTopic(name);
+   * }
+   * }</pre>
+   *
    * @param name Required. The name of the topic whose configuration to return.
    * @throws com.google.api.gax.rpc.ApiException if the remote call fails
    */
@@ -257,6 +333,18 @@ public class AdminServiceClient implements BackgroundResource {
   // AUTO-GENERATED DOCUMENTATION AND METHOD.
   /**
    * Returns the topic configuration.
+   *
+   * <p>Sample code:
+   *
+   * <pre>{@code
+   * try (AdminServiceClient adminServiceClient = AdminServiceClient.create()) {
+   *   GetTopicRequest request =
+   *       GetTopicRequest.newBuilder()
+   *           .setName(TopicName.of("[PROJECT]", "[LOCATION]", "[TOPIC]").toString())
+   *           .build();
+   *   Topic response = adminServiceClient.getTopic(request);
+   * }
+   * }</pre>
    *
    * @param request The request object containing all of the parameters for the API call.
    * @throws com.google.api.gax.rpc.ApiException if the remote call fails
@@ -270,6 +358,18 @@ public class AdminServiceClient implements BackgroundResource {
    * Returns the topic configuration.
    *
    * <p>Sample code:
+   *
+   * <pre>{@code
+   * try (AdminServiceClient adminServiceClient = AdminServiceClient.create()) {
+   *   GetTopicRequest request =
+   *       GetTopicRequest.newBuilder()
+   *           .setName(TopicName.of("[PROJECT]", "[LOCATION]", "[TOPIC]").toString())
+   *           .build();
+   *   ApiFuture<Topic> future = adminServiceClient.getTopicCallable().futureCall(request);
+   *   // Do something.
+   *   Topic response = future.get();
+   * }
+   * }</pre>
    */
   public final UnaryCallable<GetTopicRequest, Topic> getTopicCallable() {
     return stub.getTopicCallable();
@@ -278,6 +378,15 @@ public class AdminServiceClient implements BackgroundResource {
   // AUTO-GENERATED DOCUMENTATION AND METHOD.
   /**
    * Returns the partition information for the requested topic.
+   *
+   * <p>Sample code:
+   *
+   * <pre>{@code
+   * try (AdminServiceClient adminServiceClient = AdminServiceClient.create()) {
+   *   TopicName name = TopicName.of("[PROJECT]", "[LOCATION]", "[TOPIC]");
+   *   TopicPartitions response = adminServiceClient.getTopicPartitions(name);
+   * }
+   * }</pre>
    *
    * @param name Required. The topic whose partition information to return.
    * @throws com.google.api.gax.rpc.ApiException if the remote call fails
@@ -294,6 +403,15 @@ public class AdminServiceClient implements BackgroundResource {
   /**
    * Returns the partition information for the requested topic.
    *
+   * <p>Sample code:
+   *
+   * <pre>{@code
+   * try (AdminServiceClient adminServiceClient = AdminServiceClient.create()) {
+   *   String name = TopicName.of("[PROJECT]", "[LOCATION]", "[TOPIC]").toString();
+   *   TopicPartitions response = adminServiceClient.getTopicPartitions(name);
+   * }
+   * }</pre>
+   *
    * @param name Required. The topic whose partition information to return.
    * @throws com.google.api.gax.rpc.ApiException if the remote call fails
    */
@@ -307,6 +425,18 @@ public class AdminServiceClient implements BackgroundResource {
   /**
    * Returns the partition information for the requested topic.
    *
+   * <p>Sample code:
+   *
+   * <pre>{@code
+   * try (AdminServiceClient adminServiceClient = AdminServiceClient.create()) {
+   *   GetTopicPartitionsRequest request =
+   *       GetTopicPartitionsRequest.newBuilder()
+   *           .setName(TopicName.of("[PROJECT]", "[LOCATION]", "[TOPIC]").toString())
+   *           .build();
+   *   TopicPartitions response = adminServiceClient.getTopicPartitions(request);
+   * }
+   * }</pre>
+   *
    * @param request The request object containing all of the parameters for the API call.
    * @throws com.google.api.gax.rpc.ApiException if the remote call fails
    */
@@ -319,6 +449,19 @@ public class AdminServiceClient implements BackgroundResource {
    * Returns the partition information for the requested topic.
    *
    * <p>Sample code:
+   *
+   * <pre>{@code
+   * try (AdminServiceClient adminServiceClient = AdminServiceClient.create()) {
+   *   GetTopicPartitionsRequest request =
+   *       GetTopicPartitionsRequest.newBuilder()
+   *           .setName(TopicName.of("[PROJECT]", "[LOCATION]", "[TOPIC]").toString())
+   *           .build();
+   *   ApiFuture<TopicPartitions> future =
+   *       adminServiceClient.getTopicPartitionsCallable().futureCall(request);
+   *   // Do something.
+   *   TopicPartitions response = future.get();
+   * }
+   * }</pre>
    */
   public final UnaryCallable<GetTopicPartitionsRequest, TopicPartitions>
       getTopicPartitionsCallable() {
@@ -328,6 +471,17 @@ public class AdminServiceClient implements BackgroundResource {
   // AUTO-GENERATED DOCUMENTATION AND METHOD.
   /**
    * Returns the list of topics for the given project.
+   *
+   * <p>Sample code:
+   *
+   * <pre>{@code
+   * try (AdminServiceClient adminServiceClient = AdminServiceClient.create()) {
+   *   LocationName parent = LocationName.of("[PROJECT]", "[LOCATION]");
+   *   for (Topic element : adminServiceClient.listTopics(parent).iterateAll()) {
+   *     // doThingsWith(element);
+   *   }
+   * }
+   * }</pre>
    *
    * @param parent Required. The parent whose topics are to be listed. Structured like
    *     `projects/{project_number}/locations/{location}`.
@@ -343,6 +497,17 @@ public class AdminServiceClient implements BackgroundResource {
   /**
    * Returns the list of topics for the given project.
    *
+   * <p>Sample code:
+   *
+   * <pre>{@code
+   * try (AdminServiceClient adminServiceClient = AdminServiceClient.create()) {
+   *   String parent = LocationName.of("[PROJECT]", "[LOCATION]").toString();
+   *   for (Topic element : adminServiceClient.listTopics(parent).iterateAll()) {
+   *     // doThingsWith(element);
+   *   }
+   * }
+   * }</pre>
+   *
    * @param parent Required. The parent whose topics are to be listed. Structured like
    *     `projects/{project_number}/locations/{location}`.
    * @throws com.google.api.gax.rpc.ApiException if the remote call fails
@@ -356,6 +521,22 @@ public class AdminServiceClient implements BackgroundResource {
   /**
    * Returns the list of topics for the given project.
    *
+   * <p>Sample code:
+   *
+   * <pre>{@code
+   * try (AdminServiceClient adminServiceClient = AdminServiceClient.create()) {
+   *   ListTopicsRequest request =
+   *       ListTopicsRequest.newBuilder()
+   *           .setParent(LocationName.of("[PROJECT]", "[LOCATION]").toString())
+   *           .setPageSize(883849137)
+   *           .setPageToken("pageToken873572522")
+   *           .build();
+   *   for (Topic element : adminServiceClient.listTopics(request).iterateAll()) {
+   *     // doThingsWith(element);
+   *   }
+   * }
+   * }</pre>
+   *
    * @param request The request object containing all of the parameters for the API call.
    * @throws com.google.api.gax.rpc.ApiException if the remote call fails
    */
@@ -368,6 +549,22 @@ public class AdminServiceClient implements BackgroundResource {
    * Returns the list of topics for the given project.
    *
    * <p>Sample code:
+   *
+   * <pre>{@code
+   * try (AdminServiceClient adminServiceClient = AdminServiceClient.create()) {
+   *   ListTopicsRequest request =
+   *       ListTopicsRequest.newBuilder()
+   *           .setParent(LocationName.of("[PROJECT]", "[LOCATION]").toString())
+   *           .setPageSize(883849137)
+   *           .setPageToken("pageToken873572522")
+   *           .build();
+   *   ApiFuture<Topic> future = adminServiceClient.listTopicsPagedCallable().futureCall(request);
+   *   // Do something.
+   *   for (Topic element : future.get().iterateAll()) {
+   *     // doThingsWith(element);
+   *   }
+   * }
+   * }</pre>
    */
   public final UnaryCallable<ListTopicsRequest, ListTopicsPagedResponse> listTopicsPagedCallable() {
     return stub.listTopicsPagedCallable();
@@ -378,6 +575,23 @@ public class AdminServiceClient implements BackgroundResource {
    * Returns the list of topics for the given project.
    *
    * <p>Sample code:
+   *
+   * <pre>{@code
+   * try (AdminServiceClient adminServiceClient = AdminServiceClient.create()) {
+   *   while (true) {
+   *     ListTopicsResponse response = adminServiceClient.listTopicsCallable().call(request);
+   *     for (Topic element : response.getResponsesList()) {
+   *       // doThingsWith(element);
+   *     }
+   *     String nextPageToken = response.getNextPageToken();
+   *     if (!Strings.isNullOrEmpty(nextPageToken)) {
+   *       request = request.toBuilder().setPageToken(nextPageToken).build();
+   *     } else {
+   *       break;
+   *     }
+   *   }
+   * }
+   * }</pre>
    */
   public final UnaryCallable<ListTopicsRequest, ListTopicsResponse> listTopicsCallable() {
     return stub.listTopicsCallable();
@@ -386,6 +600,16 @@ public class AdminServiceClient implements BackgroundResource {
   // AUTO-GENERATED DOCUMENTATION AND METHOD.
   /**
    * Updates properties of the specified topic.
+   *
+   * <p>Sample code:
+   *
+   * <pre>{@code
+   * try (AdminServiceClient adminServiceClient = AdminServiceClient.create()) {
+   *   Topic topic = Topic.newBuilder().build();
+   *   FieldMask updateMask = FieldMask.newBuilder().build();
+   *   Topic response = adminServiceClient.updateTopic(topic, updateMask);
+   * }
+   * }</pre>
    *
    * @param topic Required. The topic to update. Its `name` field must be populated.
    * @param updateMask Required. A mask specifying the topic fields to change.
@@ -401,6 +625,19 @@ public class AdminServiceClient implements BackgroundResource {
   /**
    * Updates properties of the specified topic.
    *
+   * <p>Sample code:
+   *
+   * <pre>{@code
+   * try (AdminServiceClient adminServiceClient = AdminServiceClient.create()) {
+   *   UpdateTopicRequest request =
+   *       UpdateTopicRequest.newBuilder()
+   *           .setTopic(Topic.newBuilder().build())
+   *           .setUpdateMask(FieldMask.newBuilder().build())
+   *           .build();
+   *   Topic response = adminServiceClient.updateTopic(request);
+   * }
+   * }</pre>
+   *
    * @param request The request object containing all of the parameters for the API call.
    * @throws com.google.api.gax.rpc.ApiException if the remote call fails
    */
@@ -413,6 +650,19 @@ public class AdminServiceClient implements BackgroundResource {
    * Updates properties of the specified topic.
    *
    * <p>Sample code:
+   *
+   * <pre>{@code
+   * try (AdminServiceClient adminServiceClient = AdminServiceClient.create()) {
+   *   UpdateTopicRequest request =
+   *       UpdateTopicRequest.newBuilder()
+   *           .setTopic(Topic.newBuilder().build())
+   *           .setUpdateMask(FieldMask.newBuilder().build())
+   *           .build();
+   *   ApiFuture<Topic> future = adminServiceClient.updateTopicCallable().futureCall(request);
+   *   // Do something.
+   *   Topic response = future.get();
+   * }
+   * }</pre>
    */
   public final UnaryCallable<UpdateTopicRequest, Topic> updateTopicCallable() {
     return stub.updateTopicCallable();
@@ -421,6 +671,15 @@ public class AdminServiceClient implements BackgroundResource {
   // AUTO-GENERATED DOCUMENTATION AND METHOD.
   /**
    * Deletes the specified topic.
+   *
+   * <p>Sample code:
+   *
+   * <pre>{@code
+   * try (AdminServiceClient adminServiceClient = AdminServiceClient.create()) {
+   *   TopicName name = TopicName.of("[PROJECT]", "[LOCATION]", "[TOPIC]");
+   *   adminServiceClient.deleteTopic(name);
+   * }
+   * }</pre>
    *
    * @param name Required. The name of the topic to delete.
    * @throws com.google.api.gax.rpc.ApiException if the remote call fails
@@ -435,6 +694,15 @@ public class AdminServiceClient implements BackgroundResource {
   /**
    * Deletes the specified topic.
    *
+   * <p>Sample code:
+   *
+   * <pre>{@code
+   * try (AdminServiceClient adminServiceClient = AdminServiceClient.create()) {
+   *   String name = TopicName.of("[PROJECT]", "[LOCATION]", "[TOPIC]").toString();
+   *   adminServiceClient.deleteTopic(name);
+   * }
+   * }</pre>
+   *
    * @param name Required. The name of the topic to delete.
    * @throws com.google.api.gax.rpc.ApiException if the remote call fails
    */
@@ -446,6 +714,18 @@ public class AdminServiceClient implements BackgroundResource {
   // AUTO-GENERATED DOCUMENTATION AND METHOD.
   /**
    * Deletes the specified topic.
+   *
+   * <p>Sample code:
+   *
+   * <pre>{@code
+   * try (AdminServiceClient adminServiceClient = AdminServiceClient.create()) {
+   *   DeleteTopicRequest request =
+   *       DeleteTopicRequest.newBuilder()
+   *           .setName(TopicName.of("[PROJECT]", "[LOCATION]", "[TOPIC]").toString())
+   *           .build();
+   *   adminServiceClient.deleteTopic(request);
+   * }
+   * }</pre>
    *
    * @param request The request object containing all of the parameters for the API call.
    * @throws com.google.api.gax.rpc.ApiException if the remote call fails
@@ -459,6 +739,18 @@ public class AdminServiceClient implements BackgroundResource {
    * Deletes the specified topic.
    *
    * <p>Sample code:
+   *
+   * <pre>{@code
+   * try (AdminServiceClient adminServiceClient = AdminServiceClient.create()) {
+   *   DeleteTopicRequest request =
+   *       DeleteTopicRequest.newBuilder()
+   *           .setName(TopicName.of("[PROJECT]", "[LOCATION]", "[TOPIC]").toString())
+   *           .build();
+   *   ApiFuture<Empty> future = adminServiceClient.deleteTopicCallable().futureCall(request);
+   *   // Do something.
+   *   future.get();
+   * }
+   * }</pre>
    */
   public final UnaryCallable<DeleteTopicRequest, Empty> deleteTopicCallable() {
     return stub.deleteTopicCallable();
@@ -467,6 +759,17 @@ public class AdminServiceClient implements BackgroundResource {
   // AUTO-GENERATED DOCUMENTATION AND METHOD.
   /**
    * Lists the subscriptions attached to the specified topic.
+   *
+   * <p>Sample code:
+   *
+   * <pre>{@code
+   * try (AdminServiceClient adminServiceClient = AdminServiceClient.create()) {
+   *   TopicName name = TopicName.of("[PROJECT]", "[LOCATION]", "[TOPIC]");
+   *   for (String element : adminServiceClient.listTopicSubscriptions(name).iterateAll()) {
+   *     // doThingsWith(element);
+   *   }
+   * }
+   * }</pre>
    *
    * @param name Required. The name of the topic whose subscriptions to list.
    * @throws com.google.api.gax.rpc.ApiException if the remote call fails
@@ -483,6 +786,17 @@ public class AdminServiceClient implements BackgroundResource {
   /**
    * Lists the subscriptions attached to the specified topic.
    *
+   * <p>Sample code:
+   *
+   * <pre>{@code
+   * try (AdminServiceClient adminServiceClient = AdminServiceClient.create()) {
+   *   String name = TopicName.of("[PROJECT]", "[LOCATION]", "[TOPIC]").toString();
+   *   for (String element : adminServiceClient.listTopicSubscriptions(name).iterateAll()) {
+   *     // doThingsWith(element);
+   *   }
+   * }
+   * }</pre>
+   *
    * @param name Required. The name of the topic whose subscriptions to list.
    * @throws com.google.api.gax.rpc.ApiException if the remote call fails
    */
@@ -495,6 +809,22 @@ public class AdminServiceClient implements BackgroundResource {
   // AUTO-GENERATED DOCUMENTATION AND METHOD.
   /**
    * Lists the subscriptions attached to the specified topic.
+   *
+   * <p>Sample code:
+   *
+   * <pre>{@code
+   * try (AdminServiceClient adminServiceClient = AdminServiceClient.create()) {
+   *   ListTopicSubscriptionsRequest request =
+   *       ListTopicSubscriptionsRequest.newBuilder()
+   *           .setName(TopicName.of("[PROJECT]", "[LOCATION]", "[TOPIC]").toString())
+   *           .setPageSize(883849137)
+   *           .setPageToken("pageToken873572522")
+   *           .build();
+   *   for (String element : adminServiceClient.listTopicSubscriptions(request).iterateAll()) {
+   *     // doThingsWith(element);
+   *   }
+   * }
+   * }</pre>
    *
    * @param request The request object containing all of the parameters for the API call.
    * @throws com.google.api.gax.rpc.ApiException if the remote call fails
@@ -509,6 +839,23 @@ public class AdminServiceClient implements BackgroundResource {
    * Lists the subscriptions attached to the specified topic.
    *
    * <p>Sample code:
+   *
+   * <pre>{@code
+   * try (AdminServiceClient adminServiceClient = AdminServiceClient.create()) {
+   *   ListTopicSubscriptionsRequest request =
+   *       ListTopicSubscriptionsRequest.newBuilder()
+   *           .setName(TopicName.of("[PROJECT]", "[LOCATION]", "[TOPIC]").toString())
+   *           .setPageSize(883849137)
+   *           .setPageToken("pageToken873572522")
+   *           .build();
+   *   ApiFuture<String> future =
+   *       adminServiceClient.listTopicSubscriptionsPagedCallable().futureCall(request);
+   *   // Do something.
+   *   for (String element : future.get().iterateAll()) {
+   *     // doThingsWith(element);
+   *   }
+   * }
+   * }</pre>
    */
   public final UnaryCallable<ListTopicSubscriptionsRequest, ListTopicSubscriptionsPagedResponse>
       listTopicSubscriptionsPagedCallable() {
@@ -520,6 +867,24 @@ public class AdminServiceClient implements BackgroundResource {
    * Lists the subscriptions attached to the specified topic.
    *
    * <p>Sample code:
+   *
+   * <pre>{@code
+   * try (AdminServiceClient adminServiceClient = AdminServiceClient.create()) {
+   *   while (true) {
+   *     ListTopicSubscriptionsResponse response =
+   *         adminServiceClient.listTopicSubscriptionsCallable().call(request);
+   *     for (String element : response.getResponsesList()) {
+   *       // doThingsWith(element);
+   *     }
+   *     String nextPageToken = response.getNextPageToken();
+   *     if (!Strings.isNullOrEmpty(nextPageToken)) {
+   *       request = request.toBuilder().setPageToken(nextPageToken).build();
+   *     } else {
+   *       break;
+   *     }
+   *   }
+   * }
+   * }</pre>
    */
   public final UnaryCallable<ListTopicSubscriptionsRequest, ListTopicSubscriptionsResponse>
       listTopicSubscriptionsCallable() {
@@ -529,6 +894,18 @@ public class AdminServiceClient implements BackgroundResource {
   // AUTO-GENERATED DOCUMENTATION AND METHOD.
   /**
    * Creates a new subscription.
+   *
+   * <p>Sample code:
+   *
+   * <pre>{@code
+   * try (AdminServiceClient adminServiceClient = AdminServiceClient.create()) {
+   *   LocationName parent = LocationName.of("[PROJECT]", "[LOCATION]");
+   *   Subscription subscription = Subscription.newBuilder().build();
+   *   String subscriptionId = "subscriptionId1478790936";
+   *   Subscription response =
+   *       adminServiceClient.createSubscription(parent, subscription, subscriptionId);
+   * }
+   * }</pre>
    *
    * @param parent Required. The parent location in which to create the subscription. Structured
    *     like `projects/{project_number}/locations/{location}`.
@@ -554,6 +931,18 @@ public class AdminServiceClient implements BackgroundResource {
   /**
    * Creates a new subscription.
    *
+   * <p>Sample code:
+   *
+   * <pre>{@code
+   * try (AdminServiceClient adminServiceClient = AdminServiceClient.create()) {
+   *   String parent = LocationName.of("[PROJECT]", "[LOCATION]").toString();
+   *   Subscription subscription = Subscription.newBuilder().build();
+   *   String subscriptionId = "subscriptionId1478790936";
+   *   Subscription response =
+   *       adminServiceClient.createSubscription(parent, subscription, subscriptionId);
+   * }
+   * }</pre>
+   *
    * @param parent Required. The parent location in which to create the subscription. Structured
    *     like `projects/{project_number}/locations/{location}`.
    * @param subscription Required. Configuration of the subscription to create. Its `name` field is
@@ -578,6 +967,20 @@ public class AdminServiceClient implements BackgroundResource {
   /**
    * Creates a new subscription.
    *
+   * <p>Sample code:
+   *
+   * <pre>{@code
+   * try (AdminServiceClient adminServiceClient = AdminServiceClient.create()) {
+   *   CreateSubscriptionRequest request =
+   *       CreateSubscriptionRequest.newBuilder()
+   *           .setParent(LocationName.of("[PROJECT]", "[LOCATION]").toString())
+   *           .setSubscription(Subscription.newBuilder().build())
+   *           .setSubscriptionId("subscriptionId1478790936")
+   *           .build();
+   *   Subscription response = adminServiceClient.createSubscription(request);
+   * }
+   * }</pre>
+   *
    * @param request The request object containing all of the parameters for the API call.
    * @throws com.google.api.gax.rpc.ApiException if the remote call fails
    */
@@ -590,6 +993,21 @@ public class AdminServiceClient implements BackgroundResource {
    * Creates a new subscription.
    *
    * <p>Sample code:
+   *
+   * <pre>{@code
+   * try (AdminServiceClient adminServiceClient = AdminServiceClient.create()) {
+   *   CreateSubscriptionRequest request =
+   *       CreateSubscriptionRequest.newBuilder()
+   *           .setParent(LocationName.of("[PROJECT]", "[LOCATION]").toString())
+   *           .setSubscription(Subscription.newBuilder().build())
+   *           .setSubscriptionId("subscriptionId1478790936")
+   *           .build();
+   *   ApiFuture<Subscription> future =
+   *       adminServiceClient.createSubscriptionCallable().futureCall(request);
+   *   // Do something.
+   *   Subscription response = future.get();
+   * }
+   * }</pre>
    */
   public final UnaryCallable<CreateSubscriptionRequest, Subscription> createSubscriptionCallable() {
     return stub.createSubscriptionCallable();
@@ -598,6 +1016,15 @@ public class AdminServiceClient implements BackgroundResource {
   // AUTO-GENERATED DOCUMENTATION AND METHOD.
   /**
    * Returns the subscription configuration.
+   *
+   * <p>Sample code:
+   *
+   * <pre>{@code
+   * try (AdminServiceClient adminServiceClient = AdminServiceClient.create()) {
+   *   SubscriptionName name = SubscriptionName.of("[PROJECT]", "[LOCATION]", "[SUBSCRIPTION]");
+   *   Subscription response = adminServiceClient.getSubscription(name);
+   * }
+   * }</pre>
    *
    * @param name Required. The name of the subscription whose configuration to return.
    * @throws com.google.api.gax.rpc.ApiException if the remote call fails
@@ -612,6 +1039,15 @@ public class AdminServiceClient implements BackgroundResource {
   /**
    * Returns the subscription configuration.
    *
+   * <p>Sample code:
+   *
+   * <pre>{@code
+   * try (AdminServiceClient adminServiceClient = AdminServiceClient.create()) {
+   *   String name = SubscriptionName.of("[PROJECT]", "[LOCATION]", "[SUBSCRIPTION]").toString();
+   *   Subscription response = adminServiceClient.getSubscription(name);
+   * }
+   * }</pre>
+   *
    * @param name Required. The name of the subscription whose configuration to return.
    * @throws com.google.api.gax.rpc.ApiException if the remote call fails
    */
@@ -623,6 +1059,18 @@ public class AdminServiceClient implements BackgroundResource {
   // AUTO-GENERATED DOCUMENTATION AND METHOD.
   /**
    * Returns the subscription configuration.
+   *
+   * <p>Sample code:
+   *
+   * <pre>{@code
+   * try (AdminServiceClient adminServiceClient = AdminServiceClient.create()) {
+   *   GetSubscriptionRequest request =
+   *       GetSubscriptionRequest.newBuilder()
+   *           .setName(SubscriptionName.of("[PROJECT]", "[LOCATION]", "[SUBSCRIPTION]").toString())
+   *           .build();
+   *   Subscription response = adminServiceClient.getSubscription(request);
+   * }
+   * }</pre>
    *
    * @param request The request object containing all of the parameters for the API call.
    * @throws com.google.api.gax.rpc.ApiException if the remote call fails
@@ -636,6 +1084,19 @@ public class AdminServiceClient implements BackgroundResource {
    * Returns the subscription configuration.
    *
    * <p>Sample code:
+   *
+   * <pre>{@code
+   * try (AdminServiceClient adminServiceClient = AdminServiceClient.create()) {
+   *   GetSubscriptionRequest request =
+   *       GetSubscriptionRequest.newBuilder()
+   *           .setName(SubscriptionName.of("[PROJECT]", "[LOCATION]", "[SUBSCRIPTION]").toString())
+   *           .build();
+   *   ApiFuture<Subscription> future =
+   *       adminServiceClient.getSubscriptionCallable().futureCall(request);
+   *   // Do something.
+   *   Subscription response = future.get();
+   * }
+   * }</pre>
    */
   public final UnaryCallable<GetSubscriptionRequest, Subscription> getSubscriptionCallable() {
     return stub.getSubscriptionCallable();
@@ -644,6 +1105,17 @@ public class AdminServiceClient implements BackgroundResource {
   // AUTO-GENERATED DOCUMENTATION AND METHOD.
   /**
    * Returns the list of subscriptions for the given project.
+   *
+   * <p>Sample code:
+   *
+   * <pre>{@code
+   * try (AdminServiceClient adminServiceClient = AdminServiceClient.create()) {
+   *   LocationName parent = LocationName.of("[PROJECT]", "[LOCATION]");
+   *   for (Subscription element : adminServiceClient.listSubscriptions(parent).iterateAll()) {
+   *     // doThingsWith(element);
+   *   }
+   * }
+   * }</pre>
    *
    * @param parent Required. The parent whose subscriptions are to be listed. Structured like
    *     `projects/{project_number}/locations/{location}`.
@@ -661,6 +1133,17 @@ public class AdminServiceClient implements BackgroundResource {
   /**
    * Returns the list of subscriptions for the given project.
    *
+   * <p>Sample code:
+   *
+   * <pre>{@code
+   * try (AdminServiceClient adminServiceClient = AdminServiceClient.create()) {
+   *   String parent = LocationName.of("[PROJECT]", "[LOCATION]").toString();
+   *   for (Subscription element : adminServiceClient.listSubscriptions(parent).iterateAll()) {
+   *     // doThingsWith(element);
+   *   }
+   * }
+   * }</pre>
+   *
    * @param parent Required. The parent whose subscriptions are to be listed. Structured like
    *     `projects/{project_number}/locations/{location}`.
    * @throws com.google.api.gax.rpc.ApiException if the remote call fails
@@ -675,6 +1158,22 @@ public class AdminServiceClient implements BackgroundResource {
   /**
    * Returns the list of subscriptions for the given project.
    *
+   * <p>Sample code:
+   *
+   * <pre>{@code
+   * try (AdminServiceClient adminServiceClient = AdminServiceClient.create()) {
+   *   ListSubscriptionsRequest request =
+   *       ListSubscriptionsRequest.newBuilder()
+   *           .setParent(LocationName.of("[PROJECT]", "[LOCATION]").toString())
+   *           .setPageSize(883849137)
+   *           .setPageToken("pageToken873572522")
+   *           .build();
+   *   for (Subscription element : adminServiceClient.listSubscriptions(request).iterateAll()) {
+   *     // doThingsWith(element);
+   *   }
+   * }
+   * }</pre>
+   *
    * @param request The request object containing all of the parameters for the API call.
    * @throws com.google.api.gax.rpc.ApiException if the remote call fails
    */
@@ -687,6 +1186,23 @@ public class AdminServiceClient implements BackgroundResource {
    * Returns the list of subscriptions for the given project.
    *
    * <p>Sample code:
+   *
+   * <pre>{@code
+   * try (AdminServiceClient adminServiceClient = AdminServiceClient.create()) {
+   *   ListSubscriptionsRequest request =
+   *       ListSubscriptionsRequest.newBuilder()
+   *           .setParent(LocationName.of("[PROJECT]", "[LOCATION]").toString())
+   *           .setPageSize(883849137)
+   *           .setPageToken("pageToken873572522")
+   *           .build();
+   *   ApiFuture<Subscription> future =
+   *       adminServiceClient.listSubscriptionsPagedCallable().futureCall(request);
+   *   // Do something.
+   *   for (Subscription element : future.get().iterateAll()) {
+   *     // doThingsWith(element);
+   *   }
+   * }
+   * }</pre>
    */
   public final UnaryCallable<ListSubscriptionsRequest, ListSubscriptionsPagedResponse>
       listSubscriptionsPagedCallable() {
@@ -698,6 +1214,24 @@ public class AdminServiceClient implements BackgroundResource {
    * Returns the list of subscriptions for the given project.
    *
    * <p>Sample code:
+   *
+   * <pre>{@code
+   * try (AdminServiceClient adminServiceClient = AdminServiceClient.create()) {
+   *   while (true) {
+   *     ListSubscriptionsResponse response =
+   *         adminServiceClient.listSubscriptionsCallable().call(request);
+   *     for (Subscription element : response.getResponsesList()) {
+   *       // doThingsWith(element);
+   *     }
+   *     String nextPageToken = response.getNextPageToken();
+   *     if (!Strings.isNullOrEmpty(nextPageToken)) {
+   *       request = request.toBuilder().setPageToken(nextPageToken).build();
+   *     } else {
+   *       break;
+   *     }
+   *   }
+   * }
+   * }</pre>
    */
   public final UnaryCallable<ListSubscriptionsRequest, ListSubscriptionsResponse>
       listSubscriptionsCallable() {
@@ -707,6 +1241,16 @@ public class AdminServiceClient implements BackgroundResource {
   // AUTO-GENERATED DOCUMENTATION AND METHOD.
   /**
    * Updates properties of the specified subscription.
+   *
+   * <p>Sample code:
+   *
+   * <pre>{@code
+   * try (AdminServiceClient adminServiceClient = AdminServiceClient.create()) {
+   *   Subscription subscription = Subscription.newBuilder().build();
+   *   FieldMask updateMask = FieldMask.newBuilder().build();
+   *   Subscription response = adminServiceClient.updateSubscription(subscription, updateMask);
+   * }
+   * }</pre>
    *
    * @param subscription Required. The subscription to update. Its `name` field must be populated.
    *     Topic field must not be populated.
@@ -726,6 +1270,19 @@ public class AdminServiceClient implements BackgroundResource {
   /**
    * Updates properties of the specified subscription.
    *
+   * <p>Sample code:
+   *
+   * <pre>{@code
+   * try (AdminServiceClient adminServiceClient = AdminServiceClient.create()) {
+   *   UpdateSubscriptionRequest request =
+   *       UpdateSubscriptionRequest.newBuilder()
+   *           .setSubscription(Subscription.newBuilder().build())
+   *           .setUpdateMask(FieldMask.newBuilder().build())
+   *           .build();
+   *   Subscription response = adminServiceClient.updateSubscription(request);
+   * }
+   * }</pre>
+   *
    * @param request The request object containing all of the parameters for the API call.
    * @throws com.google.api.gax.rpc.ApiException if the remote call fails
    */
@@ -738,6 +1295,20 @@ public class AdminServiceClient implements BackgroundResource {
    * Updates properties of the specified subscription.
    *
    * <p>Sample code:
+   *
+   * <pre>{@code
+   * try (AdminServiceClient adminServiceClient = AdminServiceClient.create()) {
+   *   UpdateSubscriptionRequest request =
+   *       UpdateSubscriptionRequest.newBuilder()
+   *           .setSubscription(Subscription.newBuilder().build())
+   *           .setUpdateMask(FieldMask.newBuilder().build())
+   *           .build();
+   *   ApiFuture<Subscription> future =
+   *       adminServiceClient.updateSubscriptionCallable().futureCall(request);
+   *   // Do something.
+   *   Subscription response = future.get();
+   * }
+   * }</pre>
    */
   public final UnaryCallable<UpdateSubscriptionRequest, Subscription> updateSubscriptionCallable() {
     return stub.updateSubscriptionCallable();
@@ -746,6 +1317,15 @@ public class AdminServiceClient implements BackgroundResource {
   // AUTO-GENERATED DOCUMENTATION AND METHOD.
   /**
    * Deletes the specified subscription.
+   *
+   * <p>Sample code:
+   *
+   * <pre>{@code
+   * try (AdminServiceClient adminServiceClient = AdminServiceClient.create()) {
+   *   SubscriptionName name = SubscriptionName.of("[PROJECT]", "[LOCATION]", "[SUBSCRIPTION]");
+   *   adminServiceClient.deleteSubscription(name);
+   * }
+   * }</pre>
    *
    * @param name Required. The name of the subscription to delete.
    * @throws com.google.api.gax.rpc.ApiException if the remote call fails
@@ -762,6 +1342,15 @@ public class AdminServiceClient implements BackgroundResource {
   /**
    * Deletes the specified subscription.
    *
+   * <p>Sample code:
+   *
+   * <pre>{@code
+   * try (AdminServiceClient adminServiceClient = AdminServiceClient.create()) {
+   *   String name = SubscriptionName.of("[PROJECT]", "[LOCATION]", "[SUBSCRIPTION]").toString();
+   *   adminServiceClient.deleteSubscription(name);
+   * }
+   * }</pre>
+   *
    * @param name Required. The name of the subscription to delete.
    * @throws com.google.api.gax.rpc.ApiException if the remote call fails
    */
@@ -775,6 +1364,18 @@ public class AdminServiceClient implements BackgroundResource {
   /**
    * Deletes the specified subscription.
    *
+   * <p>Sample code:
+   *
+   * <pre>{@code
+   * try (AdminServiceClient adminServiceClient = AdminServiceClient.create()) {
+   *   DeleteSubscriptionRequest request =
+   *       DeleteSubscriptionRequest.newBuilder()
+   *           .setName(SubscriptionName.of("[PROJECT]", "[LOCATION]", "[SUBSCRIPTION]").toString())
+   *           .build();
+   *   adminServiceClient.deleteSubscription(request);
+   * }
+   * }</pre>
+   *
    * @param request The request object containing all of the parameters for the API call.
    * @throws com.google.api.gax.rpc.ApiException if the remote call fails
    */
@@ -787,6 +1388,18 @@ public class AdminServiceClient implements BackgroundResource {
    * Deletes the specified subscription.
    *
    * <p>Sample code:
+   *
+   * <pre>{@code
+   * try (AdminServiceClient adminServiceClient = AdminServiceClient.create()) {
+   *   DeleteSubscriptionRequest request =
+   *       DeleteSubscriptionRequest.newBuilder()
+   *           .setName(SubscriptionName.of("[PROJECT]", "[LOCATION]", "[SUBSCRIPTION]").toString())
+   *           .build();
+   *   ApiFuture<Empty> future = adminServiceClient.deleteSubscriptionCallable().futureCall(request);
+   *   // Do something.
+   *   future.get();
+   * }
+   * }</pre>
    */
   public final UnaryCallable<DeleteSubscriptionRequest, Empty> deleteSubscriptionCallable() {
     return stub.deleteSubscriptionCallable();

@@ -16,14 +16,20 @@
 
 package com.google.cloud.pubsublite.cloudpubsub;
 
+import static com.google.cloud.pubsublite.internal.testing.UnitTestExamples.example;
 import static com.google.common.truth.Truth.assertThat;
 import static org.junit.Assert.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import com.google.api.gax.rpc.ApiException;
 import com.google.api.gax.rpc.StatusCode.Code;
 import com.google.cloud.pubsublite.Message;
+import com.google.cloud.pubsublite.MessageMetadata;
 import com.google.cloud.pubsublite.MessageTransformer;
 import com.google.cloud.pubsublite.Offset;
+import com.google.cloud.pubsublite.Partition;
 import com.google.cloud.pubsublite.SequencedMessage;
 import com.google.cloud.pubsublite.internal.CheckedApiException;
 import com.google.common.collect.ImmutableListMultimap;
@@ -141,7 +147,6 @@ public class MessageTransformsTest {
     PubsubMessage result =
         PubsubMessage.newBuilder()
             .setData(message.message().data())
-            .setMessageId("7") // The offset as a string
             .setOrderingKey("some_key") // The key field
             .setPublishTime(message.publishTime())
             .putAttributes("abc", "")
@@ -151,6 +156,72 @@ public class MessageTransformsTest {
                 MessageTransforms.encodeAttributeEventTime(message.message().eventTime().get()))
             .build();
     assertThat(subscribeTransformer.transform(message)).isEqualTo(result);
+  }
+
+  @Test
+  public void wrappedSubscribeTransformerSetsIdFailure() throws ApiException {
+    MessageTransformer<SequencedMessage, PubsubMessage> mockTransformer =
+        mock(MessageTransformer.class);
+    MessageTransformer<SequencedMessage, PubsubMessage> wrapped =
+        MessageTransforms.addIdCpsSubscribeTransformer(example(Partition.class), mockTransformer);
+    when(mockTransformer.transform(any()))
+        .thenReturn(PubsubMessage.newBuilder().setMessageId("3").build());
+    ApiException e =
+        assertThrows(
+            ApiException.class,
+            () ->
+                wrapped.transform(
+                    SequencedMessage.of(
+                        Message.builder()
+                            .setAttributes(
+                                ImmutableListMultimap.<String, ByteString>builder()
+                                    .put("abc", ByteString.EMPTY)
+                                    .put("def", ByteString.copyFromUtf8("hij"))
+                                    .build())
+                            .setData(ByteString.copyFrom(notUtf8Array))
+                            .setEventTime(Timestamps.fromNanos(10))
+                            .setKey(ByteString.copyFromUtf8("some_key"))
+                            .build(),
+                        Timestamps.fromSeconds(5),
+                        Offset.of(7),
+                        2)));
+    assertThat(e.getStatusCode().getCode()).isEqualTo(Code.INVALID_ARGUMENT);
+  }
+
+  @Test
+  public void wrappedSubscribeTransformerMetadataId() throws ApiException {
+    MessageTransformer<SequencedMessage, PubsubMessage> wrapped =
+        MessageTransforms.addIdCpsSubscribeTransformer(
+            example(Partition.class), subscribeTransformer);
+    SequencedMessage message =
+        SequencedMessage.of(
+            Message.builder()
+                .setAttributes(
+                    ImmutableListMultimap.<String, ByteString>builder()
+                        .put("abc", ByteString.EMPTY)
+                        .put("def", ByteString.copyFromUtf8("hij"))
+                        .build())
+                .setData(ByteString.copyFrom(notUtf8Array))
+                .setEventTime(Timestamps.fromNanos(10))
+                .setKey(ByteString.copyFromUtf8("some_key"))
+                .build(),
+            Timestamps.fromSeconds(5),
+            example(Offset.class),
+            2);
+    PubsubMessage result =
+        PubsubMessage.newBuilder()
+            .setData(message.message().data())
+            .setMessageId(
+                MessageMetadata.of(example(Partition.class), example(Offset.class)).encode())
+            .setOrderingKey("some_key") // The key field
+            .setPublishTime(message.publishTime())
+            .putAttributes("abc", "")
+            .putAttributes("def", "hij")
+            .putAttributes(
+                MessageTransforms.PUBSUB_LITE_EVENT_TIME_TIMESTAMP_PROTO,
+                MessageTransforms.encodeAttributeEventTime(message.message().eventTime().get()))
+            .build();
+    assertThat(wrapped.transform(message)).isEqualTo(result);
   }
 
   @Test

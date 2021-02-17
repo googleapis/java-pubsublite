@@ -24,6 +24,15 @@
  *
  * <p>Sample for AdminServiceClient:
  *
+ * <pre>{@code
+ * try (AdminServiceClient adminServiceClient = AdminServiceClient.create()) {
+ *   LocationName parent = LocationName.of("[PROJECT]", "[LOCATION]");
+ *   Topic topic = Topic.newBuilder().build();
+ *   String topicId = "topicId-1139259734";
+ *   Topic response = adminServiceClient.createTopic(parent, topic, topicId);
+ * }
+ * }</pre>
+ *
  * <p>======================= CursorServiceClient =======================
  *
  * <p>Service Description: The service that a subscriber client application uses to manage committed
@@ -31,6 +40,18 @@
  * partition for a given subscription.
  *
  * <p>Sample for CursorServiceClient:
+ *
+ * <pre>{@code
+ * try (CursorServiceClient cursorServiceClient = CursorServiceClient.create()) {
+ *   CommitCursorRequest request =
+ *       CommitCursorRequest.newBuilder()
+ *           .setSubscription("subscription341203229")
+ *           .setPartition(-1799810326)
+ *           .setCursor(Cursor.newBuilder().build())
+ *           .build();
+ *   CommitCursorResponse response = cursorServiceClient.commitCursor(request);
+ * }
+ * }</pre>
  *
  * <p>======================= PublisherServiceClient =======================
  *
@@ -41,12 +62,36 @@
  *
  * <p>Sample for PublisherServiceClient:
  *
+ * <pre>{@code
+ * try (PublisherServiceClient publisherServiceClient = PublisherServiceClient.create()) {
+ *   BidiStream<PublishRequest, PublishResponse> bidiStream =
+ *       publisherServiceClient.publishCallable().call();
+ *   PublishRequest request = PublishRequest.newBuilder().build();
+ *   bidiStream.send(request);
+ *   for (PublishResponse response : bidiStream) {
+ *     // Do something when a response is received.
+ *   }
+ * }
+ * }</pre>
+ *
  * <p>======================= SubscriberServiceClient =======================
  *
  * <p>Service Description: The service that a subscriber client application uses to receive messages
  * from subscriptions.
  *
  * <p>Sample for SubscriberServiceClient:
+ *
+ * <pre>{@code
+ * try (SubscriberServiceClient subscriberServiceClient = SubscriberServiceClient.create()) {
+ *   BidiStream<SubscribeRequest, SubscribeResponse> bidiStream =
+ *       subscriberServiceClient.subscribeCallable().call();
+ *   SubscribeRequest request = SubscribeRequest.newBuilder().build();
+ *   bidiStream.send(request);
+ *   for (SubscribeResponse response : bidiStream) {
+ *     // Do something when a response is received.
+ *   }
+ * }
+ * }</pre>
  *
  * <p>======================= PartitionAssignmentServiceClient =======================
  *
@@ -55,11 +100,37 @@
  *
  * <p>Sample for PartitionAssignmentServiceClient:
  *
+ * <pre>{@code
+ * try (PartitionAssignmentServiceClient partitionAssignmentServiceClient =
+ *     PartitionAssignmentServiceClient.create()) {
+ *   BidiStream<PartitionAssignmentRequest, PartitionAssignment> bidiStream =
+ *       partitionAssignmentServiceClient.assignPartitionsCallable().call();
+ *   PartitionAssignmentRequest request = PartitionAssignmentRequest.newBuilder().build();
+ *   bidiStream.send(request);
+ *   for (PartitionAssignment response : bidiStream) {
+ *     // Do something when a response is received.
+ *   }
+ * }
+ * }</pre>
+ *
  * <p>======================= TopicStatsServiceClient =======================
  *
  * <p>Service Description: This service allows users to get stats about messages in their topic.
  *
  * <p>Sample for TopicStatsServiceClient:
+ *
+ * <pre>{@code
+ * try (TopicStatsServiceClient topicStatsServiceClient = TopicStatsServiceClient.create()) {
+ *   ComputeMessageStatsRequest request =
+ *       ComputeMessageStatsRequest.newBuilder()
+ *           .setTopic(TopicName.of("[PROJECT]", "[LOCATION]", "[TOPIC]").toString())
+ *           .setPartition(-1799810326)
+ *           .setStartCursor(Cursor.newBuilder().build())
+ *           .setEndCursor(Cursor.newBuilder().build())
+ *           .build();
+ *   ComputeMessageStatsResponse response = topicStatsServiceClient.computeMessageStats(request);
+ * }
+ * }</pre>
  */
 @Generated("by gapic-generator-java")
 package com.google.cloud.pubsublite.v1;

@@ -22,6 +22,7 @@ import com.google.cloud.pubsublite.Offset;
 import com.google.cloud.pubsublite.Partition;
 import com.google.cloud.pubsublite.TopicPath;
 import com.google.cloud.pubsublite.proto.ComputeMessageStatsResponse;
+import com.google.cloud.pubsublite.proto.Cursor;
 
 public interface TopicStatsClient extends ApiBackgroundResource {
   static TopicStatsClient create(TopicStatsClientSettings settings) throws ApiException {
@@ -43,4 +44,17 @@ public interface TopicStatsClient extends ApiBackgroundResource {
    */
   ApiFuture<ComputeMessageStatsResponse> computeMessageStats(
       TopicPath path, Partition partition, Offset start, Offset end);
+
+  /**
+   * Compute the head cursor for the partition. The head cursor's offset is guaranteed to be before
+   * or equal to all messages which have not yet been acknowledged to be published, and greater than
+   * the offset of any message whose publish has already been acknowledged. It is 0 if there have
+   * never been messages on the partition.
+   *
+   * @param path The topic to compute head cursor on
+   * @param partition The partition to compute head cursor for
+   * @return A future that will have either an error {@link ApiException} or the head cursor on
+   *     success.
+   */
+  ApiFuture<Cursor> computeHeadCursor(TopicPath path, Partition partition);
 }

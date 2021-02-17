@@ -24,7 +24,6 @@ import com.google.cloud.pubsublite.Partition;
 import com.google.cloud.pubsublite.ProjectNumber;
 import com.google.cloud.pubsublite.SubscriptionName;
 import com.google.cloud.pubsublite.SubscriptionPath;
-import com.google.cloud.pubsublite.internal.CheckedApiException;
 import com.google.cloud.pubsublite.v1.CursorServiceClient;
 import com.google.cloud.pubsublite.v1.PartitionAssignmentServiceClient;
 import com.google.cloud.pubsublite.v1.SubscriberServiceClient;
@@ -35,7 +34,7 @@ import org.junit.runners.JUnit4;
 
 @RunWith(JUnit4.class)
 public class SubscriberSettingsTest {
-  SubscriptionPath getPath() throws CheckedApiException {
+  SubscriptionPath getPath() {
     return SubscriptionPath.newBuilder()
         .setProject(ProjectNumber.of(56))
         .setLocation(CloudZone.parse("us-central1-a"))
@@ -44,7 +43,7 @@ public class SubscriberSettingsTest {
   }
 
   @Test
-  public void testSettingsWithPartitons() throws CheckedApiException {
+  public void testSettingsWithPartitons() {
     SubscriberSettings.newBuilder()
         .setReceiver(mock(MessageReceiver.class))
         .setSubscriptionPath(getPath())
@@ -58,7 +57,7 @@ public class SubscriberSettingsTest {
   }
 
   @Test
-  public void testSettingsWithoutPartitons() throws CheckedApiException {
+  public void testSettingsWithoutPartitons() {
     SubscriberSettings.newBuilder()
         .setReceiver(mock(MessageReceiver.class))
         .setSubscriptionPath(getPath())

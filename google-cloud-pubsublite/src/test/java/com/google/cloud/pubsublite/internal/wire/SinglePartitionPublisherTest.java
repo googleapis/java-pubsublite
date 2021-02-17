@@ -26,17 +26,19 @@ import static org.mockito.MockitoAnnotations.initMocks;
 
 import com.google.api.core.ApiFuture;
 import com.google.api.core.SettableApiFuture;
+import com.google.api.gax.batching.BatchingSettings;
 import com.google.cloud.pubsublite.CloudRegion;
 import com.google.cloud.pubsublite.CloudZone;
 import com.google.cloud.pubsublite.Message;
+import com.google.cloud.pubsublite.MessageMetadata;
 import com.google.cloud.pubsublite.Offset;
 import com.google.cloud.pubsublite.Partition;
 import com.google.cloud.pubsublite.ProjectNumber;
-import com.google.cloud.pubsublite.PublishMetadata;
 import com.google.cloud.pubsublite.TopicName;
 import com.google.cloud.pubsublite.TopicPath;
 import com.google.cloud.pubsublite.internal.Publisher;
 import com.google.cloud.pubsublite.internal.testing.FakeApiService;
+import com.google.cloud.pubsublite.v1.PublisherServiceClient;
 import com.google.protobuf.ByteString;
 import org.junit.Before;
 import org.junit.Test;
@@ -50,7 +52,7 @@ public class SinglePartitionPublisherTest {
 
   @Spy private FakeOffsetPublisher underlying;
 
-  private Publisher<PublishMetadata> pub;
+  private Publisher<MessageMetadata> pub;
 
   @Before
   public void setUp() {
@@ -73,6 +75,8 @@ public class SinglePartitionPublisherTest {
             .setTopic(topic)
             .setPartition(partition)
             .setUnderlyingBuilder(mockBuilder)
+            .setBatchingSettings(BatchingSettings.newBuilder().setIsEnabled(false).build())
+            .setServiceClient(mock(PublisherServiceClient.class))
             .build();
     this.pub.startAsync().awaitRunning();
   }
@@ -82,11 +86,15 @@ public class SinglePartitionPublisherTest {
     SettableApiFuture<Offset> offsetFuture = SettableApiFuture.create();
     Message message = Message.builder().setData(ByteString.copyFromUtf8("xyz")).build();
     when(underlying.publish(message)).thenReturn(offsetFuture);
-    ApiFuture<PublishMetadata> metadataFuture = pub.publish(message);
+    ApiFuture<MessageMetadata> metadataFuture = pub.publish(message);
     assertThat(metadataFuture.isDone()).isFalse();
     offsetFuture.set(Offset.of(7));
     assertThat(metadataFuture.isDone()).isTrue();
+<<<<<<< HEAD
     assertThat(metadataFuture.get()).isEqualTo(PublishMetadata.of(Partition.of(3), Offset.of(7)));
+=======
+    assertThat(metadataFuture.get()).isEqualTo(MessageMetadata.of(Partition.of(3), Offset.of(7)));
+>>>>>>> a989b82b1664f3b1619a3519d56af140c73f71d4
     pub.stopAsync().awaitTerminated();
   }
 

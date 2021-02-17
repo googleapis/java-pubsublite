@@ -119,6 +119,7 @@ public class GrpcPartitionAssignmentServiceStub extends PartitionAssignmentServi
     return operationsStub;
   }
 
+  @Override
   public BidiStreamingCallable<PartitionAssignmentRequest, PartitionAssignment>
       assignPartitionsCallable() {
     return assignPartitionsCallable;

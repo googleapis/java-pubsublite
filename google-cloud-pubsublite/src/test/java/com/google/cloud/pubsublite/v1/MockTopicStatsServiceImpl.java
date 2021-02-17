@@ -74,7 +74,13 @@ public class MockTopicStatsServiceImpl extends TopicStatsServiceImplBase {
     } else if (response instanceof Exception) {
       responseObserver.onError(((Exception) response));
     } else {
-      responseObserver.onError(new IllegalArgumentException("Unrecognized response type"));
+      responseObserver.onError(
+          new IllegalArgumentException(
+              String.format(
+                  "Unrecognized response type %s for method ComputeMessageStats, expected %s or %s",
+                  response.getClass().getName(),
+                  ComputeMessageStatsResponse.class.getName(),
+                  Exception.class.getName())));
     }
   }
 
@@ -90,7 +96,13 @@ public class MockTopicStatsServiceImpl extends TopicStatsServiceImplBase {
     } else if (response instanceof Exception) {
       responseObserver.onError(((Exception) response));
     } else {
-      responseObserver.onError(new IllegalArgumentException("Unrecognized response type"));
+      responseObserver.onError(
+          new IllegalArgumentException(
+              String.format(
+                  "Unrecognized response type %s for method ComputeHeadCursor, expected %s or %s",
+                  response.getClass().getName(),
+                  ComputeHeadCursorResponse.class.getName(),
+                  Exception.class.getName())));
     }
   }
 }

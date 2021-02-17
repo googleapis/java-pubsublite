@@ -30,11 +30,11 @@ import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
 @RunWith(JUnit4.class)
-public class CommitterBuilderTest {
+public class CommitterSettingsTest {
   @Test
   public void testBuilder() {
     Committer unusedCommitter =
-        CommitterBuilder.newBuilder()
+        CommitterSettings.newBuilder()
             .setSubscriptionPath(
                 SubscriptionPath.newBuilder()
                     .setLocation(CloudZone.of(CloudRegion.of("us-central1"), 'a'))
@@ -43,6 +43,7 @@ public class CommitterBuilderTest {
                     .build())
             .setPartition(Partition.of(987))
             .setServiceClient(mock(CursorServiceClient.class))
-            .build();
+            .build()
+            .instantiate();
   }
 }

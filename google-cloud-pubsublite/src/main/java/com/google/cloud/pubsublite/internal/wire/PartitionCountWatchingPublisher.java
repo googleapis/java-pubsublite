@@ -23,9 +23,13 @@ import com.google.api.core.ApiFuture;
 import com.google.api.core.ApiFutures;
 import com.google.api.core.ApiService;
 import com.google.cloud.pubsublite.Message;
+import com.google.cloud.pubsublite.MessageMetadata;
 import com.google.cloud.pubsublite.Partition;
-import com.google.cloud.pubsublite.PublishMetadata;
-import com.google.cloud.pubsublite.internal.*;
+import com.google.cloud.pubsublite.internal.CheckedApiException;
+import com.google.cloud.pubsublite.internal.CloseableMonitor;
+import com.google.cloud.pubsublite.internal.ProxyService;
+import com.google.cloud.pubsublite.internal.Publisher;
+import com.google.cloud.pubsublite.internal.RoutingPolicy;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.flogger.GoogleLogger;
 import com.google.common.util.concurrent.MoreExecutors;
@@ -35,23 +39,23 @@ import java.util.Optional;
 import java.util.stream.LongStream;
 
 public class PartitionCountWatchingPublisher extends ProxyService
-    implements Publisher<PublishMetadata> {
+    implements Publisher<MessageMetadata> {
   private static final GoogleLogger log = GoogleLogger.forEnclosingClass();
   private final PartitionPublisherFactory publisherFactory;
   private final RoutingPolicy.Factory policyFactory;
 
   private static class PartitionsWithRouting {
-    public final ImmutableMap<Partition, Publisher<PublishMetadata>> publishers;
+    public final ImmutableMap<Partition, Publisher<MessageMetadata>> publishers;
     private final RoutingPolicy routingPolicy;
 
     private PartitionsWithRouting(
-        ImmutableMap<Partition, Publisher<PublishMetadata>> publishers,
+        ImmutableMap<Partition, Publisher<MessageMetadata>> publishers,
         RoutingPolicy routingPolicy) {
       this.publishers = publishers;
       this.routingPolicy = routingPolicy;
     }
 
-    public ApiFuture<PublishMetadata> publish(Message message) throws CheckedApiException {
+    public ApiFuture<MessageMetadata> publish(Message message) throws CheckedApiException {
       try {
         Partition routedPartition =
             message.key().isEmpty()
@@ -69,13 +73,13 @@ public class PartitionCountWatchingPublisher extends ProxyService
     }
 
     public void cancelOutstandingPublishes() {
-      for (Publisher<PublishMetadata> publisher : publishers.values()) {
+      for (Publisher<MessageMetadata> publisher : publishers.values()) {
         publisher.cancelOutstandingPublishes();
       }
     }
 
     public void flush() throws IOException {
-      for (Publisher<PublishMetadata> publisher : publishers.values()) {
+      for (Publisher<MessageMetadata> publisher : publishers.values()) {
         publisher.flush();
       }
     }
@@ -94,16 +98,18 @@ public class PartitionCountWatchingPublisher extends ProxyService
   @GuardedBy("monitor.monitor")
   private Optional<PartitionsWithRouting> partitionsWithRouting = Optional.empty();
 
-  public PartitionCountWatchingPublisher(PartitionCountWatchingPublisherSettings settings) {
-    this.publisherFactory = settings.publisherFactory();
-    this.policyFactory = settings.routingPolicyFactory();
-    PartitionCountWatcher configWatcher =
-        settings.configWatcherFactory().newWatcher(this::handleConfig);
+  PartitionCountWatchingPublisher(
+      PartitionPublisherFactory publisherFactory,
+      RoutingPolicy.Factory policyFactory,
+      PartitionCountWatcher.Factory configWatcherFactory) {
+    this.publisherFactory = publisherFactory;
+    this.policyFactory = policyFactory;
+    PartitionCountWatcher configWatcher = configWatcherFactory.newWatcher(this::handleConfig);
     addServices(configWatcher);
   }
 
   @Override
-  public ApiFuture<PublishMetadata> publish(Message message) {
+  public ApiFuture<MessageMetadata> publish(Message message) {
     Optional<PartitionsWithRouting> partitions;
     try (CloseableMonitor.Hold h = monitor.enter()) {
       partitions = partitionsWithRouting;
@@ -144,12 +150,12 @@ public class PartitionCountWatchingPublisher extends ProxyService
     partitions.get().flush();
   }
 
-  private ImmutableMap<Partition, Publisher<PublishMetadata>> getNewPartitionPublishers(
+  private ImmutableMap<Partition, Publisher<MessageMetadata>> getNewPartitionPublishers(
       LongStream newPartitions) {
-    ImmutableMap.Builder<Partition, Publisher<PublishMetadata>> mapBuilder = ImmutableMap.builder();
+    ImmutableMap.Builder<Partition, Publisher<MessageMetadata>> mapBuilder = ImmutableMap.builder();
     newPartitions.forEach(
         i -> {
-          Publisher<PublishMetadata> p = publisherFactory.newPublisher(Partition.of(i));
+          Publisher<MessageMetadata> p = publisherFactory.newPublisher(Partition.of(i));
           p.addListener(
               new Listener() {
                 @Override
@@ -161,7 +167,7 @@ public class PartitionCountWatchingPublisher extends ProxyService
           mapBuilder.put(Partition.of(i), p);
           p.startAsync();
         });
-    ImmutableMap<Partition, Publisher<PublishMetadata>> partitions = mapBuilder.build();
+    ImmutableMap<Partition, Publisher<MessageMetadata>> partitions = mapBuilder.build();
     partitions.values().forEach(ApiService::awaitRunning);
     return partitions;
   }
@@ -183,12 +189,12 @@ public class PartitionCountWatchingPublisher extends ProxyService
             partitionCount);
         return;
       }
-      ImmutableMap.Builder<Partition, Publisher<PublishMetadata>> mapBuilder =
+      ImmutableMap.Builder<Partition, Publisher<MessageMetadata>> mapBuilder =
           ImmutableMap.builder();
       current.ifPresent(p -> p.publishers.forEach(mapBuilder::put));
       getNewPartitionPublishers(LongStream.range(currentSize, partitionCount))
           .forEach(mapBuilder::put);
-      ImmutableMap<Partition, Publisher<PublishMetadata>> newMap = mapBuilder.build();
+      ImmutableMap<Partition, Publisher<MessageMetadata>> newMap = mapBuilder.build();
 
       partitionsWithRouting =
           Optional.of(

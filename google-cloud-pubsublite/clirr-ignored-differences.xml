@@ -1,10 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- see http://www.mojohaus.org/clirr-maven-plugin/examples/ignored-differences.html -->
 <differences>
-  <!-- Removed not needed API -->
+  <!-- TODO: Remove on next release -->
   <difference>
     <differenceType>8001</differenceType>
-    <className>com/google/cloud/pubsublite/ProjectLookupUtils</className>
+    <className>com/google/cloud/pubsublite/PublishMetadata</className>
+    <method>*</method>
+  </difference>
+  <!-- Added abstract method to AutoValue.Builder class (Always okay) -->
+  <difference>
+    <differenceType>7013</differenceType>
+    <className>**/*$Builder</className>
+    <method>*</method>
   </difference>
   <!-- Blanket ignored files -->
   <difference>
@@ -25,6 +32,7 @@
   <difference>
     <differenceType>6001</differenceType>
     <className>com/google/cloud/pubsublite/internal/**</className>
+    <field>*</field>
     <method>*</method>
   </difference>
   <difference>
@@ -108,6 +116,7 @@
   <difference>
     <differenceType>6001</differenceType>
     <className>com/google/cloud/pubsublite/cloudpubsub/internal/**</className>
+    <field>*</field>
     <method>*</method>
   </difference>
   <difference>
@@ -168,6 +177,7 @@
   <difference>
     <differenceType>6001</differenceType>
     <className>com/google/cloud/pubsublite/v1/**</className>
+    <field>*</field>
     <method>*</method>
   </difference>
   <difference>

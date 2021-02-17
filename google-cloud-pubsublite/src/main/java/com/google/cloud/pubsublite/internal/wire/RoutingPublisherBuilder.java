@@ -18,9 +18,9 @@ package com.google.cloud.pubsublite.internal.wire;
 
 import com.google.api.gax.rpc.ApiException;
 import com.google.auto.value.AutoValue;
+import com.google.cloud.pubsublite.MessageMetadata;
 import com.google.cloud.pubsublite.Partition;
 import com.google.cloud.pubsublite.PartitionLookupUtils;
-import com.google.cloud.pubsublite.PublishMetadata;
 import com.google.cloud.pubsublite.TopicPath;
 import com.google.cloud.pubsublite.internal.DefaultRoutingPolicy;
 import com.google.cloud.pubsublite.internal.Publisher;
@@ -53,7 +53,7 @@ public abstract class RoutingPublisherBuilder {
 
     abstract RoutingPublisherBuilder autoBuild();
 
-    public Publisher<PublishMetadata> build() throws ApiException {
+    public Publisher<MessageMetadata> build() throws ApiException {
       RoutingPublisherBuilder builder = autoBuild();
       int numPartitions;
       if (builder.numPartitions().isPresent()) {
@@ -62,7 +62,7 @@ public abstract class RoutingPublisherBuilder {
         numPartitions = PartitionLookupUtils.numPartitions(builder.topic());
       }
 
-      ImmutableMap.Builder<Partition, Publisher<PublishMetadata>> publisherMapBuilder =
+      ImmutableMap.Builder<Partition, Publisher<MessageMetadata>> publisherMapBuilder =
           ImmutableMap.builder();
       for (int i = 0; i < numPartitions; i++) {
         publisherMapBuilder.put(

@@ -20,23 +20,24 @@ If you are using Maven, add this to your pom.xml file:
 <dependency>
   <groupId>com.google.cloud</groupId>
   <artifactId>google-cloud-pubsublite</artifactId>
-  <version>0.7.0</version>
+  <version>0.10.0</version>
 </dependency>
 <dependency>
   <groupId>com.google.cloud</groupId>
   <artifactId>google-cloud-pubsub</artifactId>
-  <version>1.110.1</version>
+  <version>1.111.0</version>
 </dependency>
 
 ```
 
-If you are using Gradle, add this to your dependencies
+If you are using Gradle without BOM, add this to your dependencies
 ```Groovy
-compile 'com.google.cloud:google-cloud-pubsublite:0.7.0'
+compile 'com.google.cloud:google-cloud-pubsublite:0.10.0'
 ```
+
 If you are using SBT, add this to your dependencies
 ```Scala
-libraryDependencies += "com.google.cloud" % "google-cloud-pubsublite" % "0.7.0"
+libraryDependencies += "com.google.cloud" % "google-cloud-pubsublite" % "0.10.0"
 ```
 
 ## Authentication
@@ -187,11 +188,11 @@ try {
     futures.add(future);
   }
 } finally {
-  ArrayList<PublishMetadata> metadata = new ArrayList<>();
+  ArrayList<MessageMetadata> metadata = new ArrayList<>();
   List<String> ackIds = ApiFutures.allAsList(futures).get();
   for (String id : ackIds) {
     // Decoded metadata contains partition and offset.
-    metadata.add(PublishMetadata.decode(id));
+    metadata.add(MessageMetadata.decode(id));
   }
   System.out.println(metadata + "\nPublished " + ackIds.size() + " messages.");
 

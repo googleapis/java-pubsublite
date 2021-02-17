@@ -25,6 +25,7 @@ import com.google.cloud.pubsublite.Partition;
 import com.google.cloud.pubsublite.ProjectNumber;
 import com.google.cloud.pubsublite.TopicName;
 import com.google.cloud.pubsublite.TopicPath;
+import com.google.cloud.pubsublite.cloudpubsub.PublisherSettings;
 import com.google.cloud.pubsublite.internal.Publisher;
 import com.google.cloud.pubsublite.v1.PublisherServiceClient;
 import org.junit.Test;
@@ -37,7 +38,7 @@ public class PublisherBuilderTest {
   public void testBuilder() {
     Publisher<Offset> unusedPublisher =
         PublisherBuilder.builder()
-            .setBatching(PublisherBuilder.DEFAULT_BATCHING_SETTINGS)
+            .setBatching(PublisherSettings.DEFAULT_BATCHING_SETTINGS)
             .setTopic(
                 TopicPath.newBuilder()
                     .setLocation(CloudZone.of(CloudRegion.of("us-central1"), 'a'))

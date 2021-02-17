@@ -16,9 +16,6 @@
 
 package com.google.cloud.pubsublite.internal.wire;
 
-import static com.google.cloud.pubsublite.internal.ExtractStatus.toCanonical;
-import static com.google.cloud.pubsublite.internal.ServiceClients.addDefaultSettings;
-
 import com.google.api.gax.rpc.ApiException;
 import com.google.auto.value.AutoValue;
 import com.google.cloud.pubsublite.Partition;
@@ -26,11 +23,7 @@ import com.google.cloud.pubsublite.SequencedMessage;
 import com.google.cloud.pubsublite.SubscriptionPath;
 import com.google.cloud.pubsublite.proto.InitialSubscribeRequest;
 import com.google.cloud.pubsublite.v1.SubscriberServiceClient;
-import com.google.cloud.pubsublite.v1.SubscriberServiceSettings;
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
-import java.util.Map;
-import java.util.Optional;
 import java.util.function.Consumer;
 
 @AutoValue
@@ -42,13 +35,10 @@ public abstract class SubscriberBuilder {
 
   abstract Partition partition();
 
-  // Optional parameters.
-  abstract Optional<SubscriberServiceClient> serviceClient();
-
-  abstract PubsubContext context();
+  abstract SubscriberServiceClient serviceClient();
 
   public static Builder newBuilder() {
-    return new AutoValue_SubscriberBuilder.Builder().setContext(PubsubContext.of());
+    return new AutoValue_SubscriberBuilder.Builder();
   }
 
   @AutoValue.Builder
@@ -61,10 +51,7 @@ public abstract class SubscriberBuilder {
 
     public abstract Builder setPartition(Partition partition);
 
-    // Optional parameters.
     public abstract Builder setServiceClient(SubscriberServiceClient serviceClient);
-
-    public abstract Builder setContext(PubsubContext context);
 
     abstract SubscriberBuilder autoBuild();
 
@@ -72,36 +59,14 @@ public abstract class SubscriberBuilder {
     public Subscriber build() throws ApiException {
       SubscriberBuilder autoBuilt = autoBuild();
 
-      SubscriberServiceClient serviceClient;
-      if (autoBuilt.serviceClient().isPresent()) {
-        serviceClient = autoBuilt.serviceClient().get();
-      } else {
-        try {
-          Map<String, String> metadata = autoBuilt.context().getMetadata();
-          Map<String, String> routingMetadata =
-              RoutingMetadata.of(autoBuilt.subscriptionPath(), autoBuilt.partition());
-          Map<String, String> allMetadata =
-              ImmutableMap.<String, String>builder()
-                  .putAll(metadata)
-                  .putAll(routingMetadata)
-                  .build();
-          serviceClient =
-              SubscriberServiceClient.create(
-                  addDefaultSettings(
-                      autoBuilt.subscriptionPath().location().region(),
-                      SubscriberServiceSettings.newBuilder().setHeaderProvider(() -> allMetadata)));
-        } catch (Throwable t) {
-          throw toCanonical(t).underlying;
-        }
-      }
-
       InitialSubscribeRequest initialSubscribeRequest =
           InitialSubscribeRequest.newBuilder()
               .setSubscription(autoBuilt.subscriptionPath().toString())
               .setPartition(autoBuilt.partition().value())
               .build();
       return new ApiExceptionSubscriber(
-          new SubscriberImpl(serviceClient, initialSubscribeRequest, autoBuilt.messageConsumer()));
+          new SubscriberImpl(
+              autoBuilt.serviceClient(), initialSubscribeRequest, autoBuilt.messageConsumer()));
     }
   }
 }

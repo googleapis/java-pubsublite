@@ -37,6 +37,18 @@ import javax.annotation.Generated;
  * <p>This class provides the ability to make remote calls to the backing service through method
  * calls that map to API methods. Sample code to get started:
  *
+ * <pre>{@code
+ * try (PublisherServiceClient publisherServiceClient = PublisherServiceClient.create()) {
+ *   BidiStream<PublishRequest, PublishResponse> bidiStream =
+ *       publisherServiceClient.publishCallable().call();
+ *   PublishRequest request = PublishRequest.newBuilder().build();
+ *   bidiStream.send(request);
+ *   for (PublishResponse response : bidiStream) {
+ *     // Do something when a response is received.
+ *   }
+ * }
+ * }</pre>
+ *
  * <p>Note: close() needs to be called on the PublisherServiceClient object to clean up resources
  * such as threads. In the example above, try-with-resources is used, which automatically calls
  * close().
@@ -86,8 +98,7 @@ import javax.annotation.Generated;
  *
  * <p>Please refer to the GitHub repository's samples for more quickstart code snippets.
  */
-@BetaApi
-@Generated("by gapic-generator")
+@Generated("by gapic-generator-java")
 public class PublisherServiceClient implements BackgroundResource {
   private final PublisherServiceSettings settings;
   private final PublisherServiceStub stub;
@@ -150,6 +161,18 @@ public class PublisherServiceClient implements BackgroundResource {
    * stream.
    *
    * <p>Sample code:
+   *
+   * <pre>{@code
+   * try (PublisherServiceClient publisherServiceClient = PublisherServiceClient.create()) {
+   *   BidiStream<PublishRequest, PublishResponse> bidiStream =
+   *       publisherServiceClient.publishCallable().call();
+   *   PublishRequest request = PublishRequest.newBuilder().build();
+   *   bidiStream.send(request);
+   *   for (PublishResponse response : bidiStream) {
+   *     // Do something when a response is received.
+   *   }
+   * }
+   * }</pre>
    */
   public final BidiStreamingCallable<PublishRequest, PublishResponse> publishCallable() {
     return stub.publishCallable();

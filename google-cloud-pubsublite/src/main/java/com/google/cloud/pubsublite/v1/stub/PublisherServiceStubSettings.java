@@ -74,7 +74,6 @@ import javax.annotation.Generated;
  * PublisherServiceStubSettings publisherServiceSettings = publisherServiceSettingsBuilder.build();
  * }</pre>
  */
-@BetaApi
 @Generated("by gapic-generator-java")
 public class PublisherServiceStubSettings extends StubSettings<PublisherServiceStubSettings> {
   /** The default scopes of the service. */

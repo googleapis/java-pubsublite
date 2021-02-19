@@ -29,6 +29,7 @@ import com.google.api.core.ApiFuture;
 import com.google.api.core.ApiFutures;
 import com.google.api.gax.rpc.StatusCode.Code;
 import com.google.api.gax.rpc.UnaryCallable;
+import com.google.cloud.pubsublite.AdminClient.CursorLocation;
 import com.google.cloud.pubsublite.CloudRegion;
 import com.google.cloud.pubsublite.CloudZone;
 import com.google.cloud.pubsublite.LocationPath;
@@ -372,6 +373,7 @@ public class AdminClientImplTest {
             .setParent(subscriptionPath().locationPath().toString())
             .setSubscription(SUBSCRIPTION)
             .setSubscriptionId(subscriptionName().value())
+            .setSkipBacklog(false)
             .build();
 
     when(createSubscriptionCallable.futureCall(request))
@@ -387,11 +389,45 @@ public class AdminClientImplTest {
             .setParent(subscriptionPath().locationPath().toString())
             .setSubscription(SUBSCRIPTION)
             .setSubscriptionId(subscriptionName().value())
+            .setSkipBacklog(false)
             .build();
 
     when(createSubscriptionCallable.futureCall(request)).thenReturn(failedPreconditionFuture());
 
     assertFutureThrowsCode(client.createSubscription(SUBSCRIPTION), Code.FAILED_PRECONDITION);
+  }
+
+  @Test
+  public void createSubscriptionAtHead_Ok() throws Exception {
+    CreateSubscriptionRequest request =
+        CreateSubscriptionRequest.newBuilder()
+            .setParent(subscriptionPath().locationPath().toString())
+            .setSubscription(SUBSCRIPTION)
+            .setSubscriptionId(subscriptionName().value())
+            .setSkipBacklog(true)
+            .build();
+
+    when(createSubscriptionCallable.futureCall(request))
+        .thenReturn(immediateFuture(SUBSCRIPTION_2));
+
+    assertThat(client.createSubscription(SUBSCRIPTION, CursorLocation.END).get())
+        .isEqualTo(SUBSCRIPTION_2);
+  }
+
+  @Test
+  public void createSubscriptionAtHead_Error() throws Exception {
+    CreateSubscriptionRequest request =
+        CreateSubscriptionRequest.newBuilder()
+            .setParent(subscriptionPath().locationPath().toString())
+            .setSubscription(SUBSCRIPTION)
+            .setSubscriptionId(subscriptionName().value())
+            .setSkipBacklog(true)
+            .build();
+
+    when(createSubscriptionCallable.futureCall(request)).thenReturn(failedPreconditionFuture());
+
+    assertFutureThrowsCode(
+        client.createSubscription(SUBSCRIPTION, CursorLocation.END), Code.FAILED_PRECONDITION);
   }
 
   @Test

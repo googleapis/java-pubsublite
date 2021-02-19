@@ -30,6 +30,12 @@ public interface AdminClient extends ApiBackgroundResource {
     return settings.instantiate();
   }
 
+  /** The location of the cusor on a subscription. */
+  public enum CursorLocation {
+    BEGINNING,
+    END
+  }
+
   /** The Google Cloud region this client operates on. */
   CloudRegion region();
 
@@ -107,6 +113,16 @@ public interface AdminClient extends ApiBackgroundResource {
    *     the subscription on success.
    */
   ApiFuture<Subscription> createSubscription(Subscription subscription);
+
+  /**
+   * Create the provided subscription and initialize the cursor at the given location.
+   *
+   * @param subscription The subscription to create.
+   * @param location The cursor location at which to create the subscription.
+   * @return A future that will have either an error {@link com.google.api.gax.rpc.ApiException} or
+   *     the subscription on success.
+   */
+  ApiFuture<Subscription> createSubscription(Subscription subscription, CursorLocation location);
 
   /**
    * Get the subscription with id {@code id} if it exists.

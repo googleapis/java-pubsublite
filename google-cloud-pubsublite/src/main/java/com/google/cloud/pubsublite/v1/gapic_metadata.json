@@ -1,0 +1,123 @@
+{
+  "schema": "1.0",
+  "comment": "This file maps proto services/RPCs to the corresponding library clients/methods",
+  "language": "java",
+  "protoPackage": "google.cloud.pubsublite.v1",
+  "libraryPackage": "com.google.cloud.pubsublite.v1",
+  "services": {
+    "AdminService": {
+      "clients": {
+        "grpc": {
+          "libraryClient": "AdminServiceClient",
+          "rpcs": {
+            "CreateSubscription": {
+              "methods": ["createSubscription", "createSubscription", "createSubscription", "createSubscriptionCallable"]
+            },
+            "CreateTopic": {
+              "methods": ["createTopic", "createTopic", "createTopic", "createTopicCallable"]
+            },
+            "DeleteSubscription": {
+              "methods": ["deleteSubscription", "deleteSubscription", "deleteSubscription", "deleteSubscriptionCallable"]
+            },
+            "DeleteTopic": {
+              "methods": ["deleteTopic", "deleteTopic", "deleteTopic", "deleteTopicCallable"]
+            },
+            "GetSubscription": {
+              "methods": ["getSubscription", "getSubscription", "getSubscription", "getSubscriptionCallable"]
+            },
+            "GetTopic": {
+              "methods": ["getTopic", "getTopic", "getTopic", "getTopicCallable"]
+            },
+            "GetTopicPartitions": {
+              "methods": ["getTopicPartitions", "getTopicPartitions", "getTopicPartitions", "getTopicPartitionsCallable"]
+            },
+            "ListSubscriptions": {
+              "methods": ["listSubscriptions", "listSubscriptions", "listSubscriptions", "listSubscriptionsPagedCallable", "listSubscriptionsCallable"]
+            },
+            "ListTopicSubscriptions": {
+              "methods": ["listTopicSubscriptions", "listTopicSubscriptions", "listTopicSubscriptions", "listTopicSubscriptionsPagedCallable", "listTopicSubscriptionsCallable"]
+            },
+            "ListTopics": {
+              "methods": ["listTopics", "listTopics", "listTopics", "listTopicsPagedCallable", "listTopicsCallable"]
+            },
+            "UpdateSubscription": {
+              "methods": ["updateSubscription", "updateSubscription", "updateSubscriptionCallable"]
+            },
+            "UpdateTopic": {
+              "methods": ["updateTopic", "updateTopic", "updateTopicCallable"]
+            }
+          }
+        }
+      }
+    },
+    "CursorService": {
+      "clients": {
+        "grpc": {
+          "libraryClient": "CursorServiceClient",
+          "rpcs": {
+            "CommitCursor": {
+              "methods": ["commitCursor", "commitCursorCallable"]
+            },
+            "ListPartitionCursors": {
+              "methods": ["listPartitionCursors", "listPartitionCursors", "listPartitionCursors", "listPartitionCursorsPagedCallable", "listPartitionCursorsCallable"]
+            },
+            "StreamingCommitCursor": {
+              "methods": ["streamingCommitCursorCallable"]
+            }
+          }
+        }
+      }
+    },
+    "PublisherService": {
+      "clients": {
+        "grpc": {
+          "libraryClient": "PublisherServiceClient",
+          "rpcs": {
+            "Publish": {
+              "methods": ["publishCallable"]
+            }
+          }
+        }
+      }
+    },
+    "SubscriberService": {
+      "clients": {
+        "grpc": {
+          "libraryClient": "SubscriberServiceClient",
+          "rpcs": {
+            "Subscribe": {
+              "methods": ["subscribeCallable"]
+            }
+          }
+        }
+      }
+    },
+    "PartitionAssignmentService": {
+      "clients": {
+        "grpc": {
+          "libraryClient": "PartitionAssignmentServiceClient",
+          "rpcs": {
+            "AssignPartitions": {
+              "methods": ["assignPartitionsCallable"]
+            }
+          }
+        }
+      }
+    },
+    "TopicStatsService": {
+      "clients": {
+        "grpc": {
+          "libraryClient": "TopicStatsServiceClient",
+          "rpcs": {
+            "ComputeHeadCursor": {
+              "methods": ["computeHeadCursor", "computeHeadCursorCallable"]
+            },
+            "ComputeMessageStats": {
+              "methods": ["computeMessageStats", "computeMessageStatsCallable"]
+            }
+          }
+        }
+      }
+    }
+  }
+}

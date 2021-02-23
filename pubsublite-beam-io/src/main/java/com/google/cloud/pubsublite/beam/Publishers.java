@@ -36,7 +36,7 @@ import com.google.cloud.pubsublite.v1.AdminServiceClient;
 import com.google.cloud.pubsublite.v1.AdminServiceSettings;
 import com.google.cloud.pubsublite.v1.PublisherServiceClient;
 import com.google.cloud.pubsublite.v1.PublisherServiceSettings;
-import org.apache.beam.vendor.guava.v26_0_jre.com.google.common.reflect.TypeToken;
+import com.google.common.reflect.TypeToken;
 
 class Publishers {
   private static final Framework FRAMEWORK = Framework.of("BEAM");

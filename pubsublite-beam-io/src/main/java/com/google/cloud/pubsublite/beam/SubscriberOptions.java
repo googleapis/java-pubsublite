@@ -133,8 +133,7 @@ public abstract class SubscriberOptions implements Serializable {
     try {
       return CursorServiceClient.create(
           addDefaultSettings(
-              subscriptionPath().location().region(),
-              CursorServiceSettings.newBuilder()));
+              subscriptionPath().location().region(), CursorServiceSettings.newBuilder()));
     } catch (Throwable t) {
       throw toCanonical(t).underlying;
     }

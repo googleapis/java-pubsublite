@@ -137,6 +137,9 @@
           <ignoredUnusedDeclaredDependencies>
             org.apache.beam:beam-runners-direct-java
           </ignoredUnusedDeclaredDependencies>
+          <ignoredUnusedDeclaredDependencies>
+            javax.annotation:javax.annotation-api
+          </ignoredUnusedDeclaredDependencies>
         </configuration>
       </plugin>
     </plugins>

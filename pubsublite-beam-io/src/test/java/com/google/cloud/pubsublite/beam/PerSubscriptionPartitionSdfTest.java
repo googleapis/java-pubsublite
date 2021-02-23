@@ -143,8 +143,7 @@ public class PerSubscriptionPartitionSdfTest {
             });
     doReturn(Optional.of(example(Offset.class))).when(processor).lastClaimed();
     when(committer.commitOffset(any())).thenReturn(ApiFutures.immediateFuture(null));
-    assertEquals(
-        ProcessContinuation.resume(), sdf.processElement(tracker, PARTITION, output));
+    assertEquals(ProcessContinuation.resume(), sdf.processElement(tracker, PARTITION, output));
     verify(processorFactory).newProcessor(eq(PARTITION), any(), eq(output));
     InOrder order = inOrder(processor);
     order.verify(processor).start();

@@ -80,16 +80,16 @@ class PerSubscriptionPartitionSdf extends DoFn<SubscriptionPartition, SequencedM
           .lastClaimed()
           .ifPresent(
               lastClaimedOffset -> {
-                        Committer committer = committerFactory.apply(subscriptionPartition);
-                        committer.startAsync().awaitRunning();
-                        // Commit the next-to-deliver offset.
-                        try {
-                          committer.commitOffset(Offset.of(lastClaimedOffset.value() + 1)).get();
-                        } catch (Exception e) {
-                          throw ExtractStatus.toCanonical(e).underlying;
-                        }
-                        committer.stopAsync().awaitTerminated();
-                      });
+                Committer committer = committerFactory.apply(subscriptionPartition);
+                committer.startAsync().awaitRunning();
+                // Commit the next-to-deliver offset.
+                try {
+                  committer.commitOffset(Offset.of(lastClaimedOffset.value() + 1)).get();
+                } catch (Exception e) {
+                  throw ExtractStatus.toCanonical(e).underlying;
+                }
+                committer.stopAsync().awaitTerminated();
+              });
       return result;
     }
   }

@@ -3,19 +3,18 @@
 1. Add the following to your POM file to download the Pub/Sub Lite I/O.
 ```xml
 <dependency>
-   <groupId>org.apache.beam</groupId>
-   <artifactId>beam-sdks-java-io-google-cloud-platform</artifactId>
-   <version>2.27.0</version>
+   <groupId>com.google.cloud.pubsublite</groupId>
+   <artifactId>pubsublite-beam-io</artifactId>
+   <version>0.11.0</version>
 </dependency>
 ```
 1. Create a topic using `gcloud pubsub lite-topics create`
 1. Write some messages using:
 
     ```java
-    import org.apache.beam.sdk.io.gcp.pubsublite.PubsubLiteIO;
-    import org.apache.beam.sdk.io.gcp.pubsublite.PublisherOptions;
+    import com.google.cloud.pubsublite.beam.PubsubLiteIO;
+    import com.google.cloud.pubsublite.beam.PublisherOptions;
     import com.google.cloud.pubsublite.proto.PubSubMessage;
-    import com.google.cloud.pubsublite.*;
     
     ...
     
@@ -42,7 +41,6 @@
     import com.google.cloud.pubsublite.beam.SubscriberOptions;
     import com.google.cloud.pubsublite.proto.SequencedMessage;
     import com.google.cloud.pubsublite.*;
-    import com.google.cloud.pubsublite.cloudpubsub.FlowControlSettings;
     
     ...
     
@@ -58,10 +56,6 @@
                 .setLocation(CloudZone.parse(ZONE))
                 .setProject(ProjectNumber.of(PROJECT_NUM))
                 .setName(SubscriptionName.of("my-sub"))
-                .build())
-            .setFlowControlSettings(FlowControlSettings.builder()
-                .setBytesOutstanding(100_000_000)  // 100 MB
-                .setMessagesOutstanding(Long.MAX_VALUE)
                 .build())
             .build()));
     ```

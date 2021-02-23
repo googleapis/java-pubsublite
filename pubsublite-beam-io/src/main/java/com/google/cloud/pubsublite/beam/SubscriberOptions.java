@@ -34,6 +34,8 @@ import com.google.cloud.pubsublite.internal.wire.PubsubContext.Framework;
 import com.google.cloud.pubsublite.internal.wire.RoutingMetadata;
 import com.google.cloud.pubsublite.internal.wire.SubscriberBuilder;
 import com.google.cloud.pubsublite.internal.wire.SubscriberFactory;
+import com.google.cloud.pubsublite.v1.CursorServiceClient;
+import com.google.cloud.pubsublite.v1.CursorServiceSettings;
 import com.google.cloud.pubsublite.v1.SubscriberServiceClient;
 import com.google.cloud.pubsublite.v1.SubscriberServiceSettings;
 import com.google.common.collect.ImmutableSet;
@@ -127,6 +129,17 @@ public abstract class SubscriberOptions implements Serializable {
             .build();
   }
 
+  private CursorServiceClient newCursorServiceClient() throws ApiException {
+    try {
+      return CursorServiceClient.create(
+          addDefaultSettings(
+              subscriptionPath().location().region(),
+              CursorServiceSettings.newBuilder()));
+    } catch (Throwable t) {
+      throw toCanonical(t).underlying;
+    }
+  }
+
   Committer getCommitter(Partition partition) {
     SerializableSupplier<Committer> supplier = committerSupplier();
     if (supplier != null) {
@@ -135,6 +148,7 @@ public abstract class SubscriberOptions implements Serializable {
     return CommitterSettings.newBuilder()
         .setSubscriptionPath(subscriptionPath())
         .setPartition(partition)
+        .setServiceClient(newCursorServiceClient())
         .build()
         .instantiate();
   }

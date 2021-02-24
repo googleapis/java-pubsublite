@@ -135,16 +135,18 @@
         <artifactId>maven-dependency-plugin</artifactId>
         <executions>
           <execution>
-            <id>analyze-dep</id>
+            <id>analyze</id>
             <goals>
               <goal>analyze-only</goal>
             </goals>
             <configuration>
               <ignoredUnusedDeclaredDependencies>
-                org.apache.beam:beam-runners-direct-java
-              </ignoredUnusedDeclaredDependencies>
-              <ignoredUnusedDeclaredDependencies>
-                javax.annotation:javax.annotation-api
+                <ignoredUnusedDeclaredDependency>
+                  org.apache.beam:beam-runners-direct-java
+                </ignoredUnusedDeclaredDependency>
+                <ignoredUnusedDeclaredDependency>
+                  javax.annotation:javax.annotation-api
+                </ignoredUnusedDeclaredDependency>
               </ignoredUnusedDeclaredDependencies>
             </configuration>
           </execution>

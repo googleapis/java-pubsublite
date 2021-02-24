@@ -142,10 +142,7 @@
             <configuration>
               <ignoredUnusedDeclaredDependencies>
                 <ignoredUnusedDeclaredDependency>
-                  org.apache.beam:beam-runners-direct-java
-                </ignoredUnusedDeclaredDependency>
-                <ignoredUnusedDeclaredDependency>
-                  javax.annotation:javax.annotation-api
+                  org.apache.beam:beam-runners-direct-java:jar:2.28.0:test
                 </ignoredUnusedDeclaredDependency>
               </ignoredUnusedDeclaredDependencies>
             </configuration>

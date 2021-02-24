@@ -133,14 +133,22 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-dependency-plugin</artifactId>
-        <configuration>
-          <ignoredUnusedDeclaredDependencies>
-            org.apache.beam:beam-runners-direct-java
-          </ignoredUnusedDeclaredDependencies>
-          <ignoredUnusedDeclaredDependencies>
-            javax.annotation:javax.annotation-api
-          </ignoredUnusedDeclaredDependencies>
-        </configuration>
+        <executions>
+          <execution>
+            <id>analyze-dep</id>
+            <goals>
+              <goal>analyze-only</goal>
+            </goals>
+            <configuration>
+              <ignoredUnusedDeclaredDependencies>
+                org.apache.beam:beam-runners-direct-java
+              </ignoredUnusedDeclaredDependencies>
+              <ignoredUnusedDeclaredDependencies>
+                javax.annotation:javax.annotation-api
+              </ignoredUnusedDeclaredDependencies>
+            </configuration>
+          </execution>
+        </executions>
       </plugin>
     </plugins>
   </build>

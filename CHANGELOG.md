@@ -1,5 +1,29 @@
 # Changelog
 
+## [0.11.0](https://www.github.com/googleapis/java-pubsublite/compare/v0.10.0...v0.11.0) (2021-02-24)
+
+
+### Features
+
+* Re-fork the beam repo from upstream ([#513](https://www.github.com/googleapis/java-pubsublite/issues/513)) ([041b3a5](https://www.github.com/googleapis/java-pubsublite/commit/041b3a567bd1dce87824db7ea87da7c1c0920b53))
+
+
+### Bug Fixes
+
+* Fix bundle finalizers ([#514](https://www.github.com/googleapis/java-pubsublite/issues/514)) ([9d71415](https://www.github.com/googleapis/java-pubsublite/commit/9d71415883bbce38de2f62d1e54d33081fae365d))
+* Rebatch messages when restarting a publish stream ([#496](https://www.github.com/googleapis/java-pubsublite/issues/496)) ([dbf19c9](https://www.github.com/googleapis/java-pubsublite/commit/dbf19c9df100327ee26b5cf82bdf201b9637101c))
+* update repo name ([#493](https://www.github.com/googleapis/java-pubsublite/issues/493)) ([f0727d4](https://www.github.com/googleapis/java-pubsublite/commit/f0727d46e6d235a3298e6c7977ddc552700ae9b5))
+
+
+### Documentation
+
+* generate sample code in the Java microgenerator ([#498](https://www.github.com/googleapis/java-pubsublite/issues/498)) ([b42165e](https://www.github.com/googleapis/java-pubsublite/commit/b42165e31c870f44e3c5728b4b4c377ca55a903f))
+
+
+### Dependencies
+
+* update dependency com.google.cloud:google-cloud-shared-dependencies to v0.19.0 ([#508](https://www.github.com/googleapis/java-pubsublite/issues/508)) ([2ea9e1a](https://www.github.com/googleapis/java-pubsublite/commit/2ea9e1aaeff1e99bf466e5c264c8baa8d44b6afb))
+
 ## [0.10.0](https://www.github.com/googleapis/java-pubsublite/compare/v0.9.0...v0.10.0) (2021-02-04)
 
 

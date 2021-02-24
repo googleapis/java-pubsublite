@@ -136,9 +136,6 @@
         <executions>
           <execution>
             <id>analyze</id>
-            <goals>
-              <goal>analyze-only</goal>
-            </goals>
             <configuration>
               <ignoredUnusedDeclaredDependencies>
                 <ignoredUnusedDeclaredDependency>

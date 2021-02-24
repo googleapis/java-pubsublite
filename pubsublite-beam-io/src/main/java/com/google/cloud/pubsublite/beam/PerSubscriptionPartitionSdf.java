@@ -17,6 +17,7 @@
 package com.google.cloud.pubsublite.beam;
 
 import com.google.cloud.pubsublite.Offset;
+import com.google.cloud.pubsublite.internal.ExtractStatus;
 import com.google.cloud.pubsublite.internal.wire.Committer;
 import com.google.cloud.pubsublite.proto.SequencedMessage;
 import org.apache.beam.sdk.io.range.OffsetRange;
@@ -69,8 +70,7 @@ class PerSubscriptionPartitionSdf extends DoFn<SubscriptionPartition, SequencedM
   public ProcessContinuation processElement(
       RestrictionTracker<OffsetRange, OffsetByteProgress> tracker,
       @Element SubscriptionPartition subscriptionPartition,
-      OutputReceiver<SequencedMessage> receiver,
-      BundleFinalizer finalizer)
+      OutputReceiver<SequencedMessage> receiver)
       throws Exception {
     try (SubscriptionPartitionProcessor processor =
         processorFactory.newProcessor(subscriptionPartition, tracker, receiver)) {
@@ -79,16 +79,17 @@ class PerSubscriptionPartitionSdf extends DoFn<SubscriptionPartition, SequencedM
       processor
           .lastClaimed()
           .ifPresent(
-              lastClaimedOffset ->
-                  finalizer.afterBundleCommit(
-                      Instant.ofEpochMilli(Long.MAX_VALUE),
-                      () -> {
-                        Committer committer = committerFactory.apply(subscriptionPartition);
-                        committer.startAsync().awaitRunning();
-                        // Commit the next-to-deliver offset.
-                        committer.commitOffset(Offset.of(lastClaimedOffset.value() + 1)).get();
-                        committer.stopAsync().awaitTerminated();
-                      }));
+              lastClaimedOffset -> {
+                Committer committer = committerFactory.apply(subscriptionPartition);
+                committer.startAsync().awaitRunning();
+                // Commit the next-to-deliver offset.
+                try {
+                  committer.commitOffset(Offset.of(lastClaimedOffset.value() + 1)).get();
+                } catch (Exception e) {
+                  throw ExtractStatus.toCanonical(e).underlying;
+                }
+                committer.stopAsync().awaitTerminated();
+              });
       return result;
     }
   }

@@ -16,7 +16,7 @@
 
 package com.google.cloud.pubsublite.beam;
 
-import static org.apache.beam.vendor.guava.v26_0_jre.com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.base.Preconditions.checkNotNull;
 
 import com.google.api.gax.rpc.ApiException;
 import com.google.auto.value.AutoValue;
@@ -28,10 +28,10 @@ import com.google.cloud.pubsublite.TopicPath;
 import com.google.cloud.pubsublite.internal.ExtractStatus;
 import com.google.cloud.pubsublite.internal.TopicStatsClient;
 import com.google.cloud.pubsublite.internal.TopicStatsClientSettings;
+import com.google.common.base.Ticker;
 import java.io.Serializable;
 import java.util.concurrent.ExecutionException;
 import javax.annotation.Nonnull;
-import org.apache.beam.vendor.guava.v26_0_jre.com.google.common.base.Ticker;
 
 @AutoValue
 abstract class TopicBacklogReaderSettings implements Serializable {

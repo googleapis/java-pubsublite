@@ -4,7 +4,7 @@
       "git": {
         "name": ".",
         "remote": "https://github.com/googleapis/java-pubsublite.git",
-        "sha": "2ea9e1aaeff1e99bf466e5c264c8baa8d44b6afb"
+        "sha": "c08af1a85740cb9bf24e4e721b9bebea14c0cdf6"
       }
     },
     {
@@ -99,6 +99,7 @@
     "CONTRIBUTING.md",
     "LICENSE",
     "codecov.yaml",
+    "google-cloud-pubsublite/src/main/java/com/google/cloud/pubsublite/Constants.java",
     "google-cloud-pubsublite/src/main/java/com/google/cloud/pubsublite/v1/AdminServiceClient.java",
     "google-cloud-pubsublite/src/main/java/com/google/cloud/pubsublite/v1/AdminServiceSettings.java",
     "google-cloud-pubsublite/src/main/java/com/google/cloud/pubsublite/v1/CursorServiceClient.java",

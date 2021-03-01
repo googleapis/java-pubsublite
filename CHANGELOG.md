@@ -1,5 +1,19 @@
 # Changelog
 
+### [0.11.1](https://www.github.com/googleapis/java-pubsublite/compare/v0.11.0...v0.11.1) (2021-03-01)
+
+
+### Dependencies
+
+* update dependency com.google.cloud:google-cloud-pubsub to v1.111.3 ([#511](https://www.github.com/googleapis/java-pubsublite/issues/511)) ([29b696f](https://www.github.com/googleapis/java-pubsublite/commit/29b696f220dc9bd2dd1dcd706f136339e5edb652))
+* update dependency com.google.cloud:google-cloud-pubsub to v1.111.4 ([#530](https://www.github.com/googleapis/java-pubsublite/issues/530)) ([69e60cd](https://www.github.com/googleapis/java-pubsublite/commit/69e60cd64fdea937eb67f05b8c6c0921fa27eb38))
+* update dependency com.google.cloud:google-cloud-pubsub-bom to v1.111.3 ([#512](https://www.github.com/googleapis/java-pubsublite/issues/512)) ([795dab3](https://www.github.com/googleapis/java-pubsublite/commit/795dab32d4fbb5c419439652540a9b51a34e72ce))
+* update dependency com.google.cloud:google-cloud-pubsub-bom to v1.111.4 ([#531](https://www.github.com/googleapis/java-pubsublite/issues/531)) ([c082672](https://www.github.com/googleapis/java-pubsublite/commit/c082672de3b87bd758690db50f01fdf3f095320c))
+* update dependency com.google.cloud:google-cloud-shared-dependencies to v0.20.0 ([#526](https://www.github.com/googleapis/java-pubsublite/issues/526)) ([58fbc1c](https://www.github.com/googleapis/java-pubsublite/commit/58fbc1c6b6e553b035404d36f25dd233d69f520c))
+* update dependency joda-time:joda-time to v2.10.10 ([#515](https://www.github.com/googleapis/java-pubsublite/issues/515)) ([b6890ec](https://www.github.com/googleapis/java-pubsublite/commit/b6890ecc6096eb85e7a99b2d00a43bc230207106))
+* update dependency org.checkerframework:checker-qual to v3.11.0 ([#516](https://www.github.com/googleapis/java-pubsublite/issues/516)) ([756fd2b](https://www.github.com/googleapis/java-pubsublite/commit/756fd2b560515d545edc6e603aa00e353b4b1604))
+* update dependency org.hamcrest:hamcrest-core to v2 ([#518](https://www.github.com/googleapis/java-pubsublite/issues/518)) ([c9c3d2d](https://www.github.com/googleapis/java-pubsublite/commit/c9c3d2dae26d4d19ec2543cbb611bf82b4b94732))
+
 ## [0.11.0](https://www.github.com/googleapis/java-pubsublite/compare/v0.10.0...v0.11.0) (2021-02-24)
 
 

@@ -32,6 +32,18 @@ public interface SeekRequestOrBuilder
    *
    * <code>.google.cloud.pubsublite.v1.SeekRequest.NamedTarget named_target = 1;</code>
    *
+   * @return Whether the namedTarget field is set.
+   */
+  boolean hasNamedTarget();
+  /**
+   *
+   *
+   * <pre>
+   * A named target.
+   * </pre>
+   *
+   * <code>.google.cloud.pubsublite.v1.SeekRequest.NamedTarget named_target = 1;</code>
+   *
    * @return The enum numeric value on the wire for namedTarget.
    */
   int getNamedTargetValue();

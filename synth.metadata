@@ -99,7 +99,6 @@
     "CONTRIBUTING.md",
     "LICENSE",
     "codecov.yaml",
-    "google-cloud-pubsublite/src/main/java/com/google/cloud/pubsublite/Constants.java",
     "google-cloud-pubsublite/src/main/java/com/google/cloud/pubsublite/v1/AdminServiceClient.java",
     "google-cloud-pubsublite/src/main/java/com/google/cloud/pubsublite/v1/AdminServiceSettings.java",
     "google-cloud-pubsublite/src/main/java/com/google/cloud/pubsublite/v1/CursorServiceClient.java",

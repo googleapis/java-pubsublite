@@ -16,9 +16,6 @@
 package com.google.cloud.pubsublite.proto;
 
 import static io.grpc.MethodDescriptor.generateFullMethodName;
-import static io.grpc.stub.ClientCalls.asyncBidiStreamingCall;
-import static io.grpc.stub.ServerCalls.asyncBidiStreamingCall;
-import static io.grpc.stub.ServerCalls.asyncUnimplementedStreamingCall;
 
 /**
  *
@@ -155,7 +152,8 @@ public final class PublisherServiceGrpc {
     public io.grpc.stub.StreamObserver<com.google.cloud.pubsublite.proto.PublishRequest> publish(
         io.grpc.stub.StreamObserver<com.google.cloud.pubsublite.proto.PublishResponse>
             responseObserver) {
-      return asyncUnimplementedStreamingCall(getPublishMethod(), responseObserver);
+      return io.grpc.stub.ServerCalls.asyncUnimplementedStreamingCall(
+          getPublishMethod(), responseObserver);
     }
 
     @java.lang.Override
@@ -163,7 +161,7 @@ public final class PublisherServiceGrpc {
       return io.grpc.ServerServiceDefinition.builder(getServiceDescriptor())
           .addMethod(
               getPublishMethod(),
-              asyncBidiStreamingCall(
+              io.grpc.stub.ServerCalls.asyncBidiStreamingCall(
                   new MethodHandlers<
                       com.google.cloud.pubsublite.proto.PublishRequest,
                       com.google.cloud.pubsublite.proto.PublishResponse>(this, METHODID_PUBLISH)))
@@ -208,7 +206,7 @@ public final class PublisherServiceGrpc {
     public io.grpc.stub.StreamObserver<com.google.cloud.pubsublite.proto.PublishRequest> publish(
         io.grpc.stub.StreamObserver<com.google.cloud.pubsublite.proto.PublishResponse>
             responseObserver) {
-      return asyncBidiStreamingCall(
+      return io.grpc.stub.ClientCalls.asyncBidiStreamingCall(
           getChannel().newCall(getPublishMethod(), getCallOptions()), responseObserver);
     }
   }

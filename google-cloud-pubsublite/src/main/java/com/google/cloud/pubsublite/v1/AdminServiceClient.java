@@ -976,6 +976,7 @@ public class AdminServiceClient implements BackgroundResource {
    *           .setParent(LocationName.of("[PROJECT]", "[LOCATION]").toString())
    *           .setSubscription(Subscription.newBuilder().build())
    *           .setSubscriptionId("subscriptionId1478790936")
+   *           .setSkipBacklog(true)
    *           .build();
    *   Subscription response = adminServiceClient.createSubscription(request);
    * }
@@ -1001,6 +1002,7 @@ public class AdminServiceClient implements BackgroundResource {
    *           .setParent(LocationName.of("[PROJECT]", "[LOCATION]").toString())
    *           .setSubscription(Subscription.newBuilder().build())
    *           .setSubscriptionId("subscriptionId1478790936")
+   *           .setSkipBacklog(true)
    *           .build();
    *   ApiFuture<Subscription> future =
    *       adminServiceClient.createSubscriptionCallable().futureCall(request);

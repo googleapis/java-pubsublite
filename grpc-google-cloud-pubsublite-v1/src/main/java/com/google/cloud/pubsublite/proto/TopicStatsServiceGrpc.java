@@ -16,11 +16,6 @@
 package com.google.cloud.pubsublite.proto;
 
 import static io.grpc.MethodDescriptor.generateFullMethodName;
-import static io.grpc.stub.ClientCalls.asyncUnaryCall;
-import static io.grpc.stub.ClientCalls.blockingUnaryCall;
-import static io.grpc.stub.ClientCalls.futureUnaryCall;
-import static io.grpc.stub.ServerCalls.asyncUnaryCall;
-import static io.grpc.stub.ServerCalls.asyncUnimplementedUnaryCall;
 
 /**
  *
@@ -199,7 +194,8 @@ public final class TopicStatsServiceGrpc {
         com.google.cloud.pubsublite.proto.ComputeMessageStatsRequest request,
         io.grpc.stub.StreamObserver<com.google.cloud.pubsublite.proto.ComputeMessageStatsResponse>
             responseObserver) {
-      asyncUnimplementedUnaryCall(getComputeMessageStatsMethod(), responseObserver);
+      io.grpc.stub.ServerCalls.asyncUnimplementedUnaryCall(
+          getComputeMessageStatsMethod(), responseObserver);
     }
 
     /**
@@ -207,10 +203,10 @@ public final class TopicStatsServiceGrpc {
      *
      * <pre>
      * Compute the head cursor for the partition.
-     * The head cursor’s offset is guaranteed to be before or equal to all
-     * messages which have not yet been acknowledged to be published, and
+     * The head cursor's offset is guaranteed to be less than or equal to all
+     * messages which have not yet been acknowledged as published, and
      * greater than the offset of any message whose publish has already
-     * been acknowledged. It is 0 if there have never been messages on the
+     * been acknowledged. It is zero if there have never been messages in the
      * partition.
      * </pre>
      */
@@ -218,7 +214,8 @@ public final class TopicStatsServiceGrpc {
         com.google.cloud.pubsublite.proto.ComputeHeadCursorRequest request,
         io.grpc.stub.StreamObserver<com.google.cloud.pubsublite.proto.ComputeHeadCursorResponse>
             responseObserver) {
-      asyncUnimplementedUnaryCall(getComputeHeadCursorMethod(), responseObserver);
+      io.grpc.stub.ServerCalls.asyncUnimplementedUnaryCall(
+          getComputeHeadCursorMethod(), responseObserver);
     }
 
     @java.lang.Override
@@ -226,14 +223,14 @@ public final class TopicStatsServiceGrpc {
       return io.grpc.ServerServiceDefinition.builder(getServiceDescriptor())
           .addMethod(
               getComputeMessageStatsMethod(),
-              asyncUnaryCall(
+              io.grpc.stub.ServerCalls.asyncUnaryCall(
                   new MethodHandlers<
                       com.google.cloud.pubsublite.proto.ComputeMessageStatsRequest,
                       com.google.cloud.pubsublite.proto.ComputeMessageStatsResponse>(
                       this, METHODID_COMPUTE_MESSAGE_STATS)))
           .addMethod(
               getComputeHeadCursorMethod(),
-              asyncUnaryCall(
+              io.grpc.stub.ServerCalls.asyncUnaryCall(
                   new MethodHandlers<
                       com.google.cloud.pubsublite.proto.ComputeHeadCursorRequest,
                       com.google.cloud.pubsublite.proto.ComputeHeadCursorResponse>(
@@ -273,7 +270,7 @@ public final class TopicStatsServiceGrpc {
         com.google.cloud.pubsublite.proto.ComputeMessageStatsRequest request,
         io.grpc.stub.StreamObserver<com.google.cloud.pubsublite.proto.ComputeMessageStatsResponse>
             responseObserver) {
-      asyncUnaryCall(
+      io.grpc.stub.ClientCalls.asyncUnaryCall(
           getChannel().newCall(getComputeMessageStatsMethod(), getCallOptions()),
           request,
           responseObserver);
@@ -284,10 +281,10 @@ public final class TopicStatsServiceGrpc {
      *
      * <pre>
      * Compute the head cursor for the partition.
-     * The head cursor’s offset is guaranteed to be before or equal to all
-     * messages which have not yet been acknowledged to be published, and
+     * The head cursor's offset is guaranteed to be less than or equal to all
+     * messages which have not yet been acknowledged as published, and
      * greater than the offset of any message whose publish has already
-     * been acknowledged. It is 0 if there have never been messages on the
+     * been acknowledged. It is zero if there have never been messages in the
      * partition.
      * </pre>
      */
@@ -295,7 +292,7 @@ public final class TopicStatsServiceGrpc {
         com.google.cloud.pubsublite.proto.ComputeHeadCursorRequest request,
         io.grpc.stub.StreamObserver<com.google.cloud.pubsublite.proto.ComputeHeadCursorResponse>
             responseObserver) {
-      asyncUnaryCall(
+      io.grpc.stub.ClientCalls.asyncUnaryCall(
           getChannel().newCall(getComputeHeadCursorMethod(), getCallOptions()),
           request,
           responseObserver);
@@ -332,7 +329,7 @@ public final class TopicStatsServiceGrpc {
      */
     public com.google.cloud.pubsublite.proto.ComputeMessageStatsResponse computeMessageStats(
         com.google.cloud.pubsublite.proto.ComputeMessageStatsRequest request) {
-      return blockingUnaryCall(
+      return io.grpc.stub.ClientCalls.blockingUnaryCall(
           getChannel(), getComputeMessageStatsMethod(), getCallOptions(), request);
     }
 
@@ -341,16 +338,16 @@ public final class TopicStatsServiceGrpc {
      *
      * <pre>
      * Compute the head cursor for the partition.
-     * The head cursor’s offset is guaranteed to be before or equal to all
-     * messages which have not yet been acknowledged to be published, and
+     * The head cursor's offset is guaranteed to be less than or equal to all
+     * messages which have not yet been acknowledged as published, and
      * greater than the offset of any message whose publish has already
-     * been acknowledged. It is 0 if there have never been messages on the
+     * been acknowledged. It is zero if there have never been messages in the
      * partition.
      * </pre>
      */
     public com.google.cloud.pubsublite.proto.ComputeHeadCursorResponse computeHeadCursor(
         com.google.cloud.pubsublite.proto.ComputeHeadCursorRequest request) {
-      return blockingUnaryCall(
+      return io.grpc.stub.ClientCalls.blockingUnaryCall(
           getChannel(), getComputeHeadCursorMethod(), getCallOptions(), request);
     }
   }
@@ -385,7 +382,7 @@ public final class TopicStatsServiceGrpc {
     public com.google.common.util.concurrent.ListenableFuture<
             com.google.cloud.pubsublite.proto.ComputeMessageStatsResponse>
         computeMessageStats(com.google.cloud.pubsublite.proto.ComputeMessageStatsRequest request) {
-      return futureUnaryCall(
+      return io.grpc.stub.ClientCalls.futureUnaryCall(
           getChannel().newCall(getComputeMessageStatsMethod(), getCallOptions()), request);
     }
 
@@ -394,17 +391,17 @@ public final class TopicStatsServiceGrpc {
      *
      * <pre>
      * Compute the head cursor for the partition.
-     * The head cursor’s offset is guaranteed to be before or equal to all
-     * messages which have not yet been acknowledged to be published, and
+     * The head cursor's offset is guaranteed to be less than or equal to all
+     * messages which have not yet been acknowledged as published, and
      * greater than the offset of any message whose publish has already
-     * been acknowledged. It is 0 if there have never been messages on the
+     * been acknowledged. It is zero if there have never been messages in the
      * partition.
      * </pre>
      */
     public com.google.common.util.concurrent.ListenableFuture<
             com.google.cloud.pubsublite.proto.ComputeHeadCursorResponse>
         computeHeadCursor(com.google.cloud.pubsublite.proto.ComputeHeadCursorRequest request) {
-      return futureUnaryCall(
+      return io.grpc.stub.ClientCalls.futureUnaryCall(
           getChannel().newCall(getComputeHeadCursorMethod(), getCallOptions()), request);
     }
   }

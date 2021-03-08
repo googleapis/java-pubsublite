@@ -123,4 +123,19 @@ public interface CreateSubscriptionRequestOrBuilder
    * @return The bytes for subscriptionId.
    */
   com.google.protobuf.ByteString getSubscriptionIdBytes();
+
+  /**
+   *
+   *
+   * <pre>
+   * If true, the newly created subscription will only receive messages
+   * published after the subscription was created. Otherwise, the entire
+   * message backlog will be received on the subscription. Defaults to false.
+   * </pre>
+   *
+   * <code>bool skip_backlog = 4;</code>
+   *
+   * @return The skipBacklog.
+   */
+  boolean getSkipBacklog();
 }

@@ -346,6 +346,20 @@ public final class SeekRequest extends com.google.protobuf.GeneratedMessageV3
    *
    * <code>.google.cloud.pubsublite.v1.SeekRequest.NamedTarget named_target = 1;</code>
    *
+   * @return Whether the namedTarget field is set.
+   */
+  public boolean hasNamedTarget() {
+    return targetCase_ == 1;
+  }
+  /**
+   *
+   *
+   * <pre>
+   * A named target.
+   * </pre>
+   *
+   * <code>.google.cloud.pubsublite.v1.SeekRequest.NamedTarget named_target = 1;</code>
+   *
    * @return The enum numeric value on the wire for namedTarget.
    */
   public int getNamedTargetValue() {
@@ -816,6 +830,21 @@ public final class SeekRequest extends com.google.protobuf.GeneratedMessageV3
       return this;
     }
 
+    /**
+     *
+     *
+     * <pre>
+     * A named target.
+     * </pre>
+     *
+     * <code>.google.cloud.pubsublite.v1.SeekRequest.NamedTarget named_target = 1;</code>
+     *
+     * @return Whether the namedTarget field is set.
+     */
+    @java.lang.Override
+    public boolean hasNamedTarget() {
+      return targetCase_ == 1;
+    }
     /**
      *
      *

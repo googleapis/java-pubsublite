@@ -101,6 +101,11 @@ public final class CreateSubscriptionRequest extends com.google.protobuf.Generat
               subscriptionId_ = s;
               break;
             }
+          case 32:
+            {
+              skipBacklog_ = input.readBool();
+              break;
+            }
           default:
             {
               if (!parseUnknownField(input, unknownFields, extensionRegistry, tag)) {
@@ -297,6 +302,26 @@ public final class CreateSubscriptionRequest extends com.google.protobuf.Generat
     }
   }
 
+  public static final int SKIP_BACKLOG_FIELD_NUMBER = 4;
+  private boolean skipBacklog_;
+  /**
+   *
+   *
+   * <pre>
+   * If true, the newly created subscription will only receive messages
+   * published after the subscription was created. Otherwise, the entire
+   * message backlog will be received on the subscription. Defaults to false.
+   * </pre>
+   *
+   * <code>bool skip_backlog = 4;</code>
+   *
+   * @return The skipBacklog.
+   */
+  @java.lang.Override
+  public boolean getSkipBacklog() {
+    return skipBacklog_;
+  }
+
   private byte memoizedIsInitialized = -1;
 
   @java.lang.Override
@@ -320,6 +345,9 @@ public final class CreateSubscriptionRequest extends com.google.protobuf.Generat
     if (!getSubscriptionIdBytes().isEmpty()) {
       com.google.protobuf.GeneratedMessageV3.writeString(output, 3, subscriptionId_);
     }
+    if (skipBacklog_ != false) {
+      output.writeBool(4, skipBacklog_);
+    }
     unknownFields.writeTo(output);
   }
 
@@ -337,6 +365,9 @@ public final class CreateSubscriptionRequest extends com.google.protobuf.Generat
     }
     if (!getSubscriptionIdBytes().isEmpty()) {
       size += com.google.protobuf.GeneratedMessageV3.computeStringSize(3, subscriptionId_);
+    }
+    if (skipBacklog_ != false) {
+      size += com.google.protobuf.CodedOutputStream.computeBoolSize(4, skipBacklog_);
     }
     size += unknownFields.getSerializedSize();
     memoizedSize = size;
@@ -360,6 +391,7 @@ public final class CreateSubscriptionRequest extends com.google.protobuf.Generat
       if (!getSubscription().equals(other.getSubscription())) return false;
     }
     if (!getSubscriptionId().equals(other.getSubscriptionId())) return false;
+    if (getSkipBacklog() != other.getSkipBacklog()) return false;
     if (!unknownFields.equals(other.unknownFields)) return false;
     return true;
   }
@@ -379,6 +411,8 @@ public final class CreateSubscriptionRequest extends com.google.protobuf.Generat
     }
     hash = (37 * hash) + SUBSCRIPTION_ID_FIELD_NUMBER;
     hash = (53 * hash) + getSubscriptionId().hashCode();
+    hash = (37 * hash) + SKIP_BACKLOG_FIELD_NUMBER;
+    hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(getSkipBacklog());
     hash = (29 * hash) + unknownFields.hashCode();
     memoizedHashCode = hash;
     return hash;
@@ -535,6 +569,8 @@ public final class CreateSubscriptionRequest extends com.google.protobuf.Generat
       }
       subscriptionId_ = "";
 
+      skipBacklog_ = false;
+
       return this;
     }
 
@@ -569,6 +605,7 @@ public final class CreateSubscriptionRequest extends com.google.protobuf.Generat
         result.subscription_ = subscriptionBuilder_.build();
       }
       result.subscriptionId_ = subscriptionId_;
+      result.skipBacklog_ = skipBacklog_;
       onBuilt();
       return result;
     }
@@ -629,6 +666,9 @@ public final class CreateSubscriptionRequest extends com.google.protobuf.Generat
       if (!other.getSubscriptionId().isEmpty()) {
         subscriptionId_ = other.subscriptionId_;
         onChanged();
+      }
+      if (other.getSkipBacklog() != false) {
+        setSkipBacklog(other.getSkipBacklog());
       }
       this.mergeUnknownFields(other.unknownFields);
       onChanged();
@@ -1097,6 +1137,64 @@ public final class CreateSubscriptionRequest extends com.google.protobuf.Generat
       checkByteStringIsUtf8(value);
 
       subscriptionId_ = value;
+      onChanged();
+      return this;
+    }
+
+    private boolean skipBacklog_;
+    /**
+     *
+     *
+     * <pre>
+     * If true, the newly created subscription will only receive messages
+     * published after the subscription was created. Otherwise, the entire
+     * message backlog will be received on the subscription. Defaults to false.
+     * </pre>
+     *
+     * <code>bool skip_backlog = 4;</code>
+     *
+     * @return The skipBacklog.
+     */
+    @java.lang.Override
+    public boolean getSkipBacklog() {
+      return skipBacklog_;
+    }
+    /**
+     *
+     *
+     * <pre>
+     * If true, the newly created subscription will only receive messages
+     * published after the subscription was created. Otherwise, the entire
+     * message backlog will be received on the subscription. Defaults to false.
+     * </pre>
+     *
+     * <code>bool skip_backlog = 4;</code>
+     *
+     * @param value The skipBacklog to set.
+     * @return This builder for chaining.
+     */
+    public Builder setSkipBacklog(boolean value) {
+
+      skipBacklog_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     *
+     *
+     * <pre>
+     * If true, the newly created subscription will only receive messages
+     * published after the subscription was created. Otherwise, the entire
+     * message backlog will be received on the subscription. Defaults to false.
+     * </pre>
+     *
+     * <code>bool skip_backlog = 4;</code>
+     *
+     * @return This builder for chaining.
+     */
+    public Builder clearSkipBacklog() {
+
+      skipBacklog_ = false;
       onChanged();
       return this;
     }

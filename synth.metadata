@@ -4,22 +4,22 @@
       "git": {
         "name": ".",
         "remote": "https://github.com/googleapis/java-pubsublite.git",
-        "sha": "250503cf6365f1136696f17202cdb784c960e2b7"
+        "sha": "5c4de7599eade57007b879d2eaba9931ac908a5c"
       }
     },
     {
       "git": {
         "name": "googleapis",
         "remote": "https://github.com/googleapis/googleapis.git",
-        "sha": "e8bc4471a88ac5f60defe3ed436f517174e59ba0",
-        "internalRef": "357800868"
+        "sha": "0e915217fb5261c1e57bfaf0e16ee5c7feaaba89",
+        "internalRef": "361377784"
       }
     },
     {
       "git": {
         "name": "synthtool",
         "remote": "https://github.com/googleapis/synthtool.git",
-        "sha": "6946fd71ae9215b0e7ae188f5057df765ee6d7d2"
+        "sha": "d0bdade9a962042dc0f770cf631086f3db59b5b0"
       }
     }
   ],
@@ -111,6 +111,7 @@
     "google-cloud-pubsublite/src/main/java/com/google/cloud/pubsublite/v1/SubscriberServiceSettings.java",
     "google-cloud-pubsublite/src/main/java/com/google/cloud/pubsublite/v1/TopicStatsServiceClient.java",
     "google-cloud-pubsublite/src/main/java/com/google/cloud/pubsublite/v1/TopicStatsServiceSettings.java",
+    "google-cloud-pubsublite/src/main/java/com/google/cloud/pubsublite/v1/gapic_metadata.json",
     "google-cloud-pubsublite/src/main/java/com/google/cloud/pubsublite/v1/package-info.java",
     "google-cloud-pubsublite/src/main/java/com/google/cloud/pubsublite/v1/stub/AdminServiceStub.java",
     "google-cloud-pubsublite/src/main/java/com/google/cloud/pubsublite/v1/stub/AdminServiceStubSettings.java",

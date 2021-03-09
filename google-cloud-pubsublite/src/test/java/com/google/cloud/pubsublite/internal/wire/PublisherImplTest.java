@@ -19,11 +19,13 @@ package com.google.cloud.pubsublite.internal.wire;
 import static com.google.cloud.pubsublite.internal.wire.RetryingConnectionHelpers.whenFailed;
 import static com.google.common.truth.Truth.assertThat;
 import static org.hamcrest.CoreMatchers.hasItems;
+import static org.hamcrest.Matchers.contains;
 import static org.junit.Assert.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -37,6 +39,7 @@ import com.google.api.gax.batching.BatchingSettings;
 import com.google.api.gax.rpc.ApiException;
 import com.google.api.gax.rpc.ResponseObserver;
 import com.google.api.gax.rpc.StatusCode.Code;
+import com.google.cloud.pubsublite.Constants;
 import com.google.cloud.pubsublite.Message;
 import com.google.cloud.pubsublite.Offset;
 import com.google.cloud.pubsublite.internal.CheckedApiException;
@@ -45,17 +48,24 @@ import com.google.cloud.pubsublite.proto.InitialPublishRequest;
 import com.google.cloud.pubsublite.proto.PubSubMessage;
 import com.google.cloud.pubsublite.proto.PublishRequest;
 import com.google.cloud.pubsublite.proto.PublishResponse;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Iterables;
 import com.google.common.util.concurrent.MoreExecutors;
 import com.google.protobuf.ByteString;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 import org.mockito.ArgumentMatchers;
+import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.stubbing.Answer;
 import org.threeten.bp.Duration;
@@ -226,8 +236,14 @@ public class PublisherImplTest {
   @Test
   public void retryableError_RecreatesAndRetriesAll() throws Exception {
     startPublisher();
-    Message message1 = Message.builder().setData(ByteString.copyFromUtf8("message1")).build();
-    Message message2 = Message.builder().setData(ByteString.copyFromUtf8("message2")).build();
+    Message message1 =
+        Message.builder()
+            .setData(ByteString.copyFrom(new byte[(int) Constants.MAX_PUBLISH_BATCH_BYTES - 20]))
+            .build();
+    Message message2 =
+        Message.builder()
+            .setData(ByteString.copyFromUtf8(String.join("", Collections.nCopies(21, "a"))))
+            .build();
     Future<Offset> future1 = publisher.publish(message1);
     publisher.flushToStream();
     verify(mockBatchPublisher)
@@ -271,6 +287,119 @@ public class PublisherImplTest {
     assertThat(future2.get()).isEqualTo(Offset.of(50));
 
     verifyNoMoreInteractions(mockBatchPublisher, mockBatchPublisher2);
+  }
+
+  @Test
+  public void retryableError_RebatchesProperly() throws Exception {
+    startPublisher();
+    Message message1 = Message.builder().setData(ByteString.copyFromUtf8("message1")).build();
+    Message message2 = Message.builder().setData(ByteString.copyFromUtf8("message2")).build();
+    Message message3 =
+        Message.builder()
+            .setData(ByteString.copyFrom(new byte[(int) Constants.MAX_PUBLISH_BATCH_BYTES - 20]))
+            .build();
+    Message message4 =
+        Message.builder()
+            .setData(ByteString.copyFromUtf8(String.join("", Collections.nCopies(21, "a"))))
+            .build();
+    List<Message> remaining =
+        IntStream.range(0, (int) Constants.MAX_PUBLISH_BATCH_COUNT)
+            .mapToObj(x -> Message.builder().setData(ByteString.copyFromUtf8("clone-" + x)).build())
+            .collect(Collectors.toList());
+
+    Future<Offset> future1 = publisher.publish(message1);
+    Future<Offset> future2 = publisher.publish(message2);
+    publisher.flushToStream();
+    verify(mockBatchPublisher)
+        .publish(
+            (Collection<PubSubMessage>) argThat(hasItems(message1.toProto(), message2.toProto())));
+    publisher.flushToStream();
+    Future<Offset> future3 = publisher.publish(message3);
+    publisher.flushToStream();
+    verify(mockBatchPublisher)
+        .publish((Collection<PubSubMessage>) argThat(hasItems(message3.toProto())));
+    Future<Offset> future4 = publisher.publish(message4);
+    publisher.flushToStream();
+    verify(mockBatchPublisher)
+        .publish((Collection<PubSubMessage>) argThat(hasItems(message4.toProto())));
+    List<Future<Offset>> remainingFutures =
+        remaining.stream().map(publisher::publish).collect(Collectors.toList());
+    publisher.flushToStream();
+
+    assertThat(future1.isDone()).isFalse();
+    assertThat(future2.isDone()).isFalse();
+    assertThat(future3.isDone()).isFalse();
+    assertThat(future4.isDone()).isFalse();
+    for (Future<Offset> future : remainingFutures) {
+      assertThat(future.isDone()).isFalse();
+    }
+
+    BatchPublisher mockBatchPublisher2 = mock(BatchPublisher.class);
+    doReturn(mockBatchPublisher2)
+        .when(mockPublisherFactory)
+        .New(any(), any(), eq(INITIAL_PUBLISH_REQUEST));
+    leakedOffsetStream.onError(new CheckedApiException(Code.UNKNOWN));
+
+    // wait for retry to complete
+    Thread.sleep(500);
+
+    verify(mockBatchPublisher).close();
+    verify(mockPublisherFactory, times(2)).New(any(), any(), eq(INITIAL_PUBLISH_REQUEST));
+    InOrder order = inOrder(mockBatchPublisher2);
+    order
+        .verify(mockBatchPublisher2)
+        .publish(
+            (Collection<PubSubMessage>) argThat(hasItems(message1.toProto(), message2.toProto())));
+    order
+        .verify(mockBatchPublisher2)
+        .publish((Collection<PubSubMessage>) argThat(hasItems(message3.toProto())));
+    ImmutableList.Builder<PubSubMessage> expectedRebatch = ImmutableList.builder();
+    expectedRebatch.add(message4.toProto());
+    for (int i = 0; i < (Constants.MAX_PUBLISH_BATCH_COUNT - 1); ++i) {
+      expectedRebatch.add(remaining.get(i).toProto());
+    }
+    order
+        .verify(mockBatchPublisher2)
+        .publish((Collection<PubSubMessage>) argThat(contains(expectedRebatch.build().toArray())));
+    order
+        .verify(mockBatchPublisher2)
+        .publish(
+            (Collection<PubSubMessage>) argThat(hasItems(Iterables.getLast(remaining).toProto())));
+
+    assertThat(future1.isDone()).isFalse();
+    assertThat(future2.isDone()).isFalse();
+    assertThat(future3.isDone()).isFalse();
+    assertThat(future4.isDone()).isFalse();
+    for (Future<Offset> future : remainingFutures) {
+      assertThat(future.isDone()).isFalse();
+    }
+
+    leakedOffsetStream.onResponse(Offset.of(10));
+    assertThat(future1.isDone()).isTrue();
+    assertThat(future1.get()).isEqualTo(Offset.of(10));
+    assertThat(future2.isDone()).isTrue();
+    assertThat(future2.get()).isEqualTo(Offset.of(11));
+    assertThat(future3.isDone()).isFalse();
+
+    leakedOffsetStream.onResponse(Offset.of(50));
+    assertThat(future3.isDone()).isTrue();
+    assertThat(future3.get()).isEqualTo(Offset.of(50));
+    assertThat(future4.isDone()).isFalse();
+
+    leakedOffsetStream.onResponse(Offset.of(100));
+    assertThat(future4.isDone()).isTrue();
+    assertThat(future4.get()).isEqualTo(Offset.of(100));
+    for (int i = 0; i < (Constants.MAX_PUBLISH_BATCH_COUNT - 1); ++i) {
+      Future<Offset> future = remainingFutures.get(i);
+      assertThat(future.isDone()).isTrue();
+      assertThat(future.get()).isEqualTo(Offset.of(100 + 1 + i));
+    }
+    Future<Offset> lastFuture = Iterables.getLast(remainingFutures);
+    assertThat(lastFuture.isDone()).isFalse();
+
+    leakedOffsetStream.onResponse(Offset.of(10000));
+    assertThat(lastFuture.isDone()).isTrue();
+    assertThat(lastFuture.get()).isEqualTo(Offset.of(10000));
   }
 
   @Test

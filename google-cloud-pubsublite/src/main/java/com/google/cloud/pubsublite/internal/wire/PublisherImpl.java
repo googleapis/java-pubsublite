@@ -26,6 +26,7 @@ import com.google.api.core.SettableApiFuture;
 import com.google.api.gax.batching.BatchingSettings;
 import com.google.api.gax.rpc.ApiException;
 import com.google.api.gax.rpc.StatusCode.Code;
+import com.google.cloud.pubsublite.Constants;
 import com.google.cloud.pubsublite.Message;
 import com.google.cloud.pubsublite.Offset;
 import com.google.cloud.pubsublite.internal.CheckedApiException;
@@ -85,12 +86,8 @@ public final class PublisherImpl extends ProxyService
     final List<SettableApiFuture<Offset>> messageFutures;
 
     InFlightBatch(Collection<UnbatchedMessage> toBatch) {
-      messages =
-          toBatch.stream()
-              .map(SerialBatcher.UnbatchedMessage::message)
-              .collect(Collectors.toList());
-      messageFutures =
-          toBatch.stream().map(SerialBatcher.UnbatchedMessage::future).collect(Collectors.toList());
+      messages = toBatch.stream().map(UnbatchedMessage::message).collect(Collectors.toList());
+      messageFutures = toBatch.stream().map(UnbatchedMessage::future).collect(Collectors.toList());
     }
   }
 
@@ -136,10 +133,43 @@ public final class PublisherImpl extends ProxyService
     addServices(backgroundResourceAsApiService(client));
   }
 
+  @GuardedBy("monitor.monitor")
+  private void rebatchForRestart() {
+    Queue<UnbatchedMessage> messages = new ArrayDeque<>();
+    for (InFlightBatch batch : batchesInFlight) {
+      for (int i = 0; i < batch.messages.size(); ++i) {
+        messages.add(UnbatchedMessage.of(batch.messages.get(i), batch.messageFutures.get(i)));
+      }
+    }
+    long size = 0;
+    int count = 0;
+    Queue<UnbatchedMessage> currentBatch = new ArrayDeque<>();
+    batchesInFlight.clear();
+    for (UnbatchedMessage message : messages) {
+      long messageSize = message.message().getSerializedSize();
+      if (size + messageSize > Constants.MAX_PUBLISH_BATCH_BYTES
+          || count + 1 > Constants.MAX_PUBLISH_BATCH_COUNT) {
+        if (!currentBatch.isEmpty()) {
+          batchesInFlight.add(new InFlightBatch(currentBatch));
+          currentBatch = new ArrayDeque<>();
+          count = 0;
+          size = 0;
+        }
+      }
+      currentBatch.add(message);
+      size = size + messageSize;
+      count += 1;
+    }
+    if (!currentBatch.isEmpty()) {
+      batchesInFlight.add(new InFlightBatch(currentBatch));
+    }
+  }
+
   @Override
   public void triggerReinitialize() {
     try (CloseableMonitor.Hold h = monitor.enter()) {
       connection.reinitialize();
+      rebatchForRestart();
       Collection<InFlightBatch> batches = batchesInFlight;
       connection.modifyConnection(
           connectionOr -> {

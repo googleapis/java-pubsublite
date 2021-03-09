@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Google LLC
+ * Copyright 2021 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -206,10 +206,10 @@ public class TopicStatsServiceClient implements BackgroundResource {
 
   // AUTO-GENERATED DOCUMENTATION AND METHOD.
   /**
-   * Compute the head cursor for the partition. The head cursor?s offset is guaranteed to be before
-   * or equal to all messages which have not yet been acknowledged to be published, and greater than
-   * the offset of any message whose publish has already been acknowledged. It is 0 if there have
-   * never been messages on the partition.
+   * Compute the head cursor for the partition. The head cursor's offset is guaranteed to be less
+   * than or equal to all messages which have not yet been acknowledged as published, and greater
+   * than the offset of any message whose publish has already been acknowledged. It is zero if there
+   * have never been messages in the partition.
    *
    * <p>Sample code:
    *
@@ -233,10 +233,10 @@ public class TopicStatsServiceClient implements BackgroundResource {
 
   // AUTO-GENERATED DOCUMENTATION AND METHOD.
   /**
-   * Compute the head cursor for the partition. The head cursor?s offset is guaranteed to be before
-   * or equal to all messages which have not yet been acknowledged to be published, and greater than
-   * the offset of any message whose publish has already been acknowledged. It is 0 if there have
-   * never been messages on the partition.
+   * Compute the head cursor for the partition. The head cursor's offset is guaranteed to be less
+   * than or equal to all messages which have not yet been acknowledged as published, and greater
+   * than the offset of any message whose publish has already been acknowledged. It is zero if there
+   * have never been messages in the partition.
    *
    * <p>Sample code:
    *

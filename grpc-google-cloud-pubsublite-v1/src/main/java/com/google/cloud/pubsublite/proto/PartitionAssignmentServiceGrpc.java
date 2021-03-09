@@ -16,9 +16,6 @@
 package com.google.cloud.pubsublite.proto;
 
 import static io.grpc.MethodDescriptor.generateFullMethodName;
-import static io.grpc.stub.ClientCalls.asyncBidiStreamingCall;
-import static io.grpc.stub.ServerCalls.asyncBidiStreamingCall;
-import static io.grpc.stub.ServerCalls.asyncUnimplementedStreamingCall;
 
 /**
  *
@@ -156,7 +153,8 @@ public final class PartitionAssignmentServiceGrpc {
         assignPartitions(
             io.grpc.stub.StreamObserver<com.google.cloud.pubsublite.proto.PartitionAssignment>
                 responseObserver) {
-      return asyncUnimplementedStreamingCall(getAssignPartitionsMethod(), responseObserver);
+      return io.grpc.stub.ServerCalls.asyncUnimplementedStreamingCall(
+          getAssignPartitionsMethod(), responseObserver);
     }
 
     @java.lang.Override
@@ -164,7 +162,7 @@ public final class PartitionAssignmentServiceGrpc {
       return io.grpc.ServerServiceDefinition.builder(getServiceDescriptor())
           .addMethod(
               getAssignPartitionsMethod(),
-              asyncBidiStreamingCall(
+              io.grpc.stub.ServerCalls.asyncBidiStreamingCall(
                   new MethodHandlers<
                       com.google.cloud.pubsublite.proto.PartitionAssignmentRequest,
                       com.google.cloud.pubsublite.proto.PartitionAssignment>(
@@ -210,7 +208,7 @@ public final class PartitionAssignmentServiceGrpc {
         assignPartitions(
             io.grpc.stub.StreamObserver<com.google.cloud.pubsublite.proto.PartitionAssignment>
                 responseObserver) {
-      return asyncBidiStreamingCall(
+      return io.grpc.stub.ClientCalls.asyncBidiStreamingCall(
           getChannel().newCall(getAssignPartitionsMethod(), getCallOptions()), responseObserver);
     }
   }

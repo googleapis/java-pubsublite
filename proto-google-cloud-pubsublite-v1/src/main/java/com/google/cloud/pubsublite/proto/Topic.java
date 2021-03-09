@@ -155,6 +155,10 @@ public final class Topic extends com.google.protobuf.GeneratedMessageV3
      *
      * <pre>
      * The number of partitions in the topic. Must be at least 1.
+     * Once a topic has been created the number of partitions can be increased
+     * but not decreased. Message ordering is not guaranteed across a topic
+     * resize. For more information see
+     * https://cloud.google.com/pubsub/lite/docs/topics#scaling_capacity
      * </pre>
      *
      * <code>int64 count = 1;</code>
@@ -163,6 +167,25 @@ public final class Topic extends com.google.protobuf.GeneratedMessageV3
      */
     long getCount();
 
+    /**
+     *
+     *
+     * <pre>
+     * DEPRECATED: Use capacity instead which can express a superset of
+     * configurations.
+     * Every partition in the topic is allocated throughput equivalent to
+     * `scale` times the standard partition throughput (4 MiB/s). This is also
+     * reflected in the cost of this topic; a topic with `scale` of 2 and
+     * count of 10 is charged for 20 partitions. This value must be in the
+     * range [1,4].
+     * </pre>
+     *
+     * <code>int32 scale = 2 [deprecated = true];</code>
+     *
+     * @return Whether the scale field is set.
+     */
+    @java.lang.Deprecated
+    boolean hasScale();
     /**
      *
      *
@@ -1071,6 +1094,10 @@ public final class Topic extends com.google.protobuf.GeneratedMessageV3
      *
      * <pre>
      * The number of partitions in the topic. Must be at least 1.
+     * Once a topic has been created the number of partitions can be increased
+     * but not decreased. Message ordering is not guaranteed across a topic
+     * resize. For more information see
+     * https://cloud.google.com/pubsub/lite/docs/topics#scaling_capacity
      * </pre>
      *
      * <code>int64 count = 1;</code>
@@ -1083,6 +1110,28 @@ public final class Topic extends com.google.protobuf.GeneratedMessageV3
     }
 
     public static final int SCALE_FIELD_NUMBER = 2;
+    /**
+     *
+     *
+     * <pre>
+     * DEPRECATED: Use capacity instead which can express a superset of
+     * configurations.
+     * Every partition in the topic is allocated throughput equivalent to
+     * `scale` times the standard partition throughput (4 MiB/s). This is also
+     * reflected in the cost of this topic; a topic with `scale` of 2 and
+     * count of 10 is charged for 20 partitions. This value must be in the
+     * range [1,4].
+     * </pre>
+     *
+     * <code>int32 scale = 2 [deprecated = true];</code>
+     *
+     * @return Whether the scale field is set.
+     */
+    @java.lang.Override
+    @java.lang.Deprecated
+    public boolean hasScale() {
+      return dimensionCase_ == 2;
+    }
     /**
      *
      *
@@ -1572,6 +1621,10 @@ public final class Topic extends com.google.protobuf.GeneratedMessageV3
        *
        * <pre>
        * The number of partitions in the topic. Must be at least 1.
+       * Once a topic has been created the number of partitions can be increased
+       * but not decreased. Message ordering is not guaranteed across a topic
+       * resize. For more information see
+       * https://cloud.google.com/pubsub/lite/docs/topics#scaling_capacity
        * </pre>
        *
        * <code>int64 count = 1;</code>
@@ -1587,6 +1640,10 @@ public final class Topic extends com.google.protobuf.GeneratedMessageV3
        *
        * <pre>
        * The number of partitions in the topic. Must be at least 1.
+       * Once a topic has been created the number of partitions can be increased
+       * but not decreased. Message ordering is not guaranteed across a topic
+       * resize. For more information see
+       * https://cloud.google.com/pubsub/lite/docs/topics#scaling_capacity
        * </pre>
        *
        * <code>int64 count = 1;</code>
@@ -1605,6 +1662,10 @@ public final class Topic extends com.google.protobuf.GeneratedMessageV3
        *
        * <pre>
        * The number of partitions in the topic. Must be at least 1.
+       * Once a topic has been created the number of partitions can be increased
+       * but not decreased. Message ordering is not guaranteed across a topic
+       * resize. For more information see
+       * https://cloud.google.com/pubsub/lite/docs/topics#scaling_capacity
        * </pre>
        *
        * <code>int64 count = 1;</code>
@@ -1618,6 +1679,27 @@ public final class Topic extends com.google.protobuf.GeneratedMessageV3
         return this;
       }
 
+      /**
+       *
+       *
+       * <pre>
+       * DEPRECATED: Use capacity instead which can express a superset of
+       * configurations.
+       * Every partition in the topic is allocated throughput equivalent to
+       * `scale` times the standard partition throughput (4 MiB/s). This is also
+       * reflected in the cost of this topic; a topic with `scale` of 2 and
+       * count of 10 is charged for 20 partitions. This value must be in the
+       * range [1,4].
+       * </pre>
+       *
+       * <code>int32 scale = 2 [deprecated = true];</code>
+       *
+       * @return Whether the scale field is set.
+       */
+      @java.lang.Deprecated
+      public boolean hasScale() {
+        return dimensionCase_ == 2;
+      }
       /**
        *
        *

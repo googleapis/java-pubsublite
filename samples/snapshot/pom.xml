@@ -45,13 +45,13 @@
     <dependency>
       <groupId>com.google.cloud</groupId>
       <artifactId>google-cloud-pubsublite</artifactId>
-      <version>0.10.1-SNAPSHOT</version>
+      <version>0.11.2-SNAPSHOT</version>
     </dependency>
     <!-- {x-version-update-end} -->
     <dependency>
       <groupId>com.google.cloud</groupId>
       <artifactId>google-cloud-pubsub</artifactId>
-      <version>1.111.0</version>
+      <version>1.111.4</version>
     </dependency>
 
     <dependency>

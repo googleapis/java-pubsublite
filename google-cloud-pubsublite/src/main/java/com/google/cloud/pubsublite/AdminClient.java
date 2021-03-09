@@ -100,6 +100,15 @@ public interface AdminClient extends ApiBackgroundResource {
   ApiFuture<List<SubscriptionPath>> listTopicSubscriptions(TopicPath path);
 
   /**
+   * Create the provided subscription if it does not yet exist.
+   *
+   * @param subscription The subscription to create.
+   * @return A future that will have either an error {@link com.google.api.gax.rpc.ApiException} or
+   *     the subscription on success.
+   */
+  ApiFuture<Subscription> createSubscription(Subscription subscription);
+
+  /**
    * The offset at which a newly created subscription will start receiving messages.
    *
    * <p>BEGINNING refers to the offset of the oldest retained message. END refers to the current
@@ -111,16 +120,7 @@ public interface AdminClient extends ApiBackgroundResource {
   }
 
   /**
-   * Create the provided subscription if it does not yet exist.
-   *
-   * @param subscription The subscription to create.
-   * @return A future that will have either an error {@link com.google.api.gax.rpc.ApiException} or
-   *     the subscription on success.
-   */
-  ApiFuture<Subscription> createSubscription(Subscription subscription);
-
-  /**
-   * Create the provided subscription and initialize the cursor at the given location.
+   * Create the provided subscription at the given starting offset if it does not yet exist.
    *
    * @param subscription The subscription to create.
    * @param startingOffset The offset at which the new subscription will start receiving messages.

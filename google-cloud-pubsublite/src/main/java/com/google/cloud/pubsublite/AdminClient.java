@@ -30,12 +30,6 @@ public interface AdminClient extends ApiBackgroundResource {
     return settings.instantiate();
   }
 
-  /** The location of the cusor on a subscription. */
-  public enum CursorLocation {
-    BEGINNING,
-    END
-  }
-
   /** The Google Cloud region this client operates on. */
   CloudRegion region();
 
@@ -106,6 +100,17 @@ public interface AdminClient extends ApiBackgroundResource {
   ApiFuture<List<SubscriptionPath>> listTopicSubscriptions(TopicPath path);
 
   /**
+   * The offset at which a newly created subscription will start receiving messages.
+   *
+   * <p>BEGINNING refers to the offset of the oldest retained message. END refers to the current
+   * HEAD offset.
+   */
+  public enum StartingOffset {
+    BEGINNING,
+    END
+  }
+
+  /**
    * Create the provided subscription if it does not yet exist.
    *
    * @param subscription The subscription to create.
@@ -118,11 +123,12 @@ public interface AdminClient extends ApiBackgroundResource {
    * Create the provided subscription and initialize the cursor at the given location.
    *
    * @param subscription The subscription to create.
-   * @param location The cursor location at which to create the subscription.
+   * @param startingOffset The offset at which the new subscription will start receiving messages.
    * @return A future that will have either an error {@link com.google.api.gax.rpc.ApiException} or
    *     the subscription on success.
    */
-  ApiFuture<Subscription> createSubscription(Subscription subscription, CursorLocation location);
+  ApiFuture<Subscription> createSubscription(
+      Subscription subscription, StartingOffset startingOffset);
 
   /**
    * Get the subscription with id {@code id} if it exists.

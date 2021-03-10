@@ -415,7 +415,7 @@ public class AdminClientImplTest {
   }
 
   @Test
-  public void createSubscriptionAtHead_Error() throws Exception {
+  public void createSubscriptionAtBeginning_Error() throws Exception {
     CreateSubscriptionRequest request =
         CreateSubscriptionRequest.newBuilder()
             .setParent(subscriptionPath().locationPath().toString())

@@ -138,7 +138,7 @@ public class AdminClientImpl extends ApiResourceAggregation implements AdminClie
 
   @Override
   public ApiFuture<Subscription> createSubscription(Subscription subscription) {
-    return createSubscription(subscription, StartingOffset.BEGINNING);
+    return createSubscription(subscription, StartingOffset.END);
   }
 
   @Override

@@ -373,7 +373,7 @@ public class AdminClientImplTest {
             .setParent(subscriptionPath().locationPath().toString())
             .setSubscription(SUBSCRIPTION)
             .setSubscriptionId(subscriptionName().value())
-            .setSkipBacklog(false)
+            .setSkipBacklog(true)
             .build();
 
     when(createSubscriptionCallable.futureCall(request))
@@ -389,7 +389,7 @@ public class AdminClientImplTest {
             .setParent(subscriptionPath().locationPath().toString())
             .setSubscription(SUBSCRIPTION)
             .setSubscriptionId(subscriptionName().value())
-            .setSkipBacklog(false)
+            .setSkipBacklog(true)
             .build();
 
     when(createSubscriptionCallable.futureCall(request)).thenReturn(failedPreconditionFuture());
@@ -398,19 +398,19 @@ public class AdminClientImplTest {
   }
 
   @Test
-  public void createSubscriptionAtHead_Ok() throws Exception {
+  public void createSubscriptionAtBeginning_Ok() throws Exception {
     CreateSubscriptionRequest request =
         CreateSubscriptionRequest.newBuilder()
             .setParent(subscriptionPath().locationPath().toString())
             .setSubscription(SUBSCRIPTION)
             .setSubscriptionId(subscriptionName().value())
-            .setSkipBacklog(true)
+            .setSkipBacklog(false)
             .build();
 
     when(createSubscriptionCallable.futureCall(request))
         .thenReturn(immediateFuture(SUBSCRIPTION_2));
 
-    assertThat(client.createSubscription(SUBSCRIPTION, StartingOffset.END).get())
+    assertThat(client.createSubscription(SUBSCRIPTION, StartingOffset.BEGINNING).get())
         .isEqualTo(SUBSCRIPTION_2);
   }
 
@@ -421,13 +421,14 @@ public class AdminClientImplTest {
             .setParent(subscriptionPath().locationPath().toString())
             .setSubscription(SUBSCRIPTION)
             .setSubscriptionId(subscriptionName().value())
-            .setSkipBacklog(true)
+            .setSkipBacklog(false)
             .build();
 
     when(createSubscriptionCallable.futureCall(request)).thenReturn(failedPreconditionFuture());
 
     assertFutureThrowsCode(
-        client.createSubscription(SUBSCRIPTION, StartingOffset.END), Code.FAILED_PRECONDITION);
+        client.createSubscription(SUBSCRIPTION, StartingOffset.BEGINNING),
+        Code.FAILED_PRECONDITION);
   }
 
   @Test

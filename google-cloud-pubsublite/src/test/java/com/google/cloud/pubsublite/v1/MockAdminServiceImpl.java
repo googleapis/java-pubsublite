@@ -79,7 +79,7 @@ public class MockAdminServiceImpl extends AdminServiceImplBase {
 
   @Override
   public void createTopic(CreateTopicRequest request, StreamObserver<Topic> responseObserver) {
-    Object response = responses.remove();
+    Object response = responses.poll();
     if (response instanceof Topic) {
       requests.add(request);
       responseObserver.onNext(((Topic) response));
@@ -91,7 +91,7 @@ public class MockAdminServiceImpl extends AdminServiceImplBase {
           new IllegalArgumentException(
               String.format(
                   "Unrecognized response type %s for method CreateTopic, expected %s or %s",
-                  response.getClass().getName(),
+                  response == null ? "null" : response.getClass().getName(),
                   Topic.class.getName(),
                   Exception.class.getName())));
     }
@@ -99,7 +99,7 @@ public class MockAdminServiceImpl extends AdminServiceImplBase {
 
   @Override
   public void getTopic(GetTopicRequest request, StreamObserver<Topic> responseObserver) {
-    Object response = responses.remove();
+    Object response = responses.poll();
     if (response instanceof Topic) {
       requests.add(request);
       responseObserver.onNext(((Topic) response));
@@ -111,7 +111,7 @@ public class MockAdminServiceImpl extends AdminServiceImplBase {
           new IllegalArgumentException(
               String.format(
                   "Unrecognized response type %s for method GetTopic, expected %s or %s",
-                  response.getClass().getName(),
+                  response == null ? "null" : response.getClass().getName(),
                   Topic.class.getName(),
                   Exception.class.getName())));
     }
@@ -120,7 +120,7 @@ public class MockAdminServiceImpl extends AdminServiceImplBase {
   @Override
   public void getTopicPartitions(
       GetTopicPartitionsRequest request, StreamObserver<TopicPartitions> responseObserver) {
-    Object response = responses.remove();
+    Object response = responses.poll();
     if (response instanceof TopicPartitions) {
       requests.add(request);
       responseObserver.onNext(((TopicPartitions) response));
@@ -132,7 +132,7 @@ public class MockAdminServiceImpl extends AdminServiceImplBase {
           new IllegalArgumentException(
               String.format(
                   "Unrecognized response type %s for method GetTopicPartitions, expected %s or %s",
-                  response.getClass().getName(),
+                  response == null ? "null" : response.getClass().getName(),
                   TopicPartitions.class.getName(),
                   Exception.class.getName())));
     }
@@ -141,7 +141,7 @@ public class MockAdminServiceImpl extends AdminServiceImplBase {
   @Override
   public void listTopics(
       ListTopicsRequest request, StreamObserver<ListTopicsResponse> responseObserver) {
-    Object response = responses.remove();
+    Object response = responses.poll();
     if (response instanceof ListTopicsResponse) {
       requests.add(request);
       responseObserver.onNext(((ListTopicsResponse) response));
@@ -153,7 +153,7 @@ public class MockAdminServiceImpl extends AdminServiceImplBase {
           new IllegalArgumentException(
               String.format(
                   "Unrecognized response type %s for method ListTopics, expected %s or %s",
-                  response.getClass().getName(),
+                  response == null ? "null" : response.getClass().getName(),
                   ListTopicsResponse.class.getName(),
                   Exception.class.getName())));
     }
@@ -161,7 +161,7 @@ public class MockAdminServiceImpl extends AdminServiceImplBase {
 
   @Override
   public void updateTopic(UpdateTopicRequest request, StreamObserver<Topic> responseObserver) {
-    Object response = responses.remove();
+    Object response = responses.poll();
     if (response instanceof Topic) {
       requests.add(request);
       responseObserver.onNext(((Topic) response));
@@ -173,7 +173,7 @@ public class MockAdminServiceImpl extends AdminServiceImplBase {
           new IllegalArgumentException(
               String.format(
                   "Unrecognized response type %s for method UpdateTopic, expected %s or %s",
-                  response.getClass().getName(),
+                  response == null ? "null" : response.getClass().getName(),
                   Topic.class.getName(),
                   Exception.class.getName())));
     }
@@ -181,7 +181,7 @@ public class MockAdminServiceImpl extends AdminServiceImplBase {
 
   @Override
   public void deleteTopic(DeleteTopicRequest request, StreamObserver<Empty> responseObserver) {
-    Object response = responses.remove();
+    Object response = responses.poll();
     if (response instanceof Empty) {
       requests.add(request);
       responseObserver.onNext(((Empty) response));
@@ -193,7 +193,7 @@ public class MockAdminServiceImpl extends AdminServiceImplBase {
           new IllegalArgumentException(
               String.format(
                   "Unrecognized response type %s for method DeleteTopic, expected %s or %s",
-                  response.getClass().getName(),
+                  response == null ? "null" : response.getClass().getName(),
                   Empty.class.getName(),
                   Exception.class.getName())));
     }
@@ -203,7 +203,7 @@ public class MockAdminServiceImpl extends AdminServiceImplBase {
   public void listTopicSubscriptions(
       ListTopicSubscriptionsRequest request,
       StreamObserver<ListTopicSubscriptionsResponse> responseObserver) {
-    Object response = responses.remove();
+    Object response = responses.poll();
     if (response instanceof ListTopicSubscriptionsResponse) {
       requests.add(request);
       responseObserver.onNext(((ListTopicSubscriptionsResponse) response));
@@ -215,7 +215,7 @@ public class MockAdminServiceImpl extends AdminServiceImplBase {
           new IllegalArgumentException(
               String.format(
                   "Unrecognized response type %s for method ListTopicSubscriptions, expected %s or %s",
-                  response.getClass().getName(),
+                  response == null ? "null" : response.getClass().getName(),
                   ListTopicSubscriptionsResponse.class.getName(),
                   Exception.class.getName())));
     }
@@ -224,7 +224,7 @@ public class MockAdminServiceImpl extends AdminServiceImplBase {
   @Override
   public void createSubscription(
       CreateSubscriptionRequest request, StreamObserver<Subscription> responseObserver) {
-    Object response = responses.remove();
+    Object response = responses.poll();
     if (response instanceof Subscription) {
       requests.add(request);
       responseObserver.onNext(((Subscription) response));
@@ -236,7 +236,7 @@ public class MockAdminServiceImpl extends AdminServiceImplBase {
           new IllegalArgumentException(
               String.format(
                   "Unrecognized response type %s for method CreateSubscription, expected %s or %s",
-                  response.getClass().getName(),
+                  response == null ? "null" : response.getClass().getName(),
                   Subscription.class.getName(),
                   Exception.class.getName())));
     }
@@ -245,7 +245,7 @@ public class MockAdminServiceImpl extends AdminServiceImplBase {
   @Override
   public void getSubscription(
       GetSubscriptionRequest request, StreamObserver<Subscription> responseObserver) {
-    Object response = responses.remove();
+    Object response = responses.poll();
     if (response instanceof Subscription) {
       requests.add(request);
       responseObserver.onNext(((Subscription) response));
@@ -257,7 +257,7 @@ public class MockAdminServiceImpl extends AdminServiceImplBase {
           new IllegalArgumentException(
               String.format(
                   "Unrecognized response type %s for method GetSubscription, expected %s or %s",
-                  response.getClass().getName(),
+                  response == null ? "null" : response.getClass().getName(),
                   Subscription.class.getName(),
                   Exception.class.getName())));
     }
@@ -267,7 +267,7 @@ public class MockAdminServiceImpl extends AdminServiceImplBase {
   public void listSubscriptions(
       ListSubscriptionsRequest request,
       StreamObserver<ListSubscriptionsResponse> responseObserver) {
-    Object response = responses.remove();
+    Object response = responses.poll();
     if (response instanceof ListSubscriptionsResponse) {
       requests.add(request);
       responseObserver.onNext(((ListSubscriptionsResponse) response));
@@ -279,7 +279,7 @@ public class MockAdminServiceImpl extends AdminServiceImplBase {
           new IllegalArgumentException(
               String.format(
                   "Unrecognized response type %s for method ListSubscriptions, expected %s or %s",
-                  response.getClass().getName(),
+                  response == null ? "null" : response.getClass().getName(),
                   ListSubscriptionsResponse.class.getName(),
                   Exception.class.getName())));
     }
@@ -288,7 +288,7 @@ public class MockAdminServiceImpl extends AdminServiceImplBase {
   @Override
   public void updateSubscription(
       UpdateSubscriptionRequest request, StreamObserver<Subscription> responseObserver) {
-    Object response = responses.remove();
+    Object response = responses.poll();
     if (response instanceof Subscription) {
       requests.add(request);
       responseObserver.onNext(((Subscription) response));
@@ -300,7 +300,7 @@ public class MockAdminServiceImpl extends AdminServiceImplBase {
           new IllegalArgumentException(
               String.format(
                   "Unrecognized response type %s for method UpdateSubscription, expected %s or %s",
-                  response.getClass().getName(),
+                  response == null ? "null" : response.getClass().getName(),
                   Subscription.class.getName(),
                   Exception.class.getName())));
     }
@@ -309,7 +309,7 @@ public class MockAdminServiceImpl extends AdminServiceImplBase {
   @Override
   public void deleteSubscription(
       DeleteSubscriptionRequest request, StreamObserver<Empty> responseObserver) {
-    Object response = responses.remove();
+    Object response = responses.poll();
     if (response instanceof Empty) {
       requests.add(request);
       responseObserver.onNext(((Empty) response));
@@ -321,7 +321,7 @@ public class MockAdminServiceImpl extends AdminServiceImplBase {
           new IllegalArgumentException(
               String.format(
                   "Unrecognized response type %s for method DeleteSubscription, expected %s or %s",
-                  response.getClass().getName(),
+                  response == null ? "null" : response.getClass().getName(),
                   Empty.class.getName(),
                   Exception.class.getName())));
     }

@@ -78,7 +78,7 @@ public class MockPublisherServiceImpl extends PublisherServiceImplBase {
                   new IllegalArgumentException(
                       String.format(
                           "Unrecognized response type %s for method Publish, expected %s or %s",
-                          response.getClass().getName(),
+                          response == null ? "null" : response.getClass().getName(),
                           PublishResponse.class.getName(),
                           Exception.class.getName())));
             }

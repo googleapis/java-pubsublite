@@ -82,7 +82,7 @@ public class MockCursorServiceImpl extends CursorServiceImplBase {
                   new IllegalArgumentException(
                       String.format(
                           "Unrecognized response type %s for method StreamingCommitCursor, expected %s or %s",
-                          response.getClass().getName(),
+                          response == null ? "null" : response.getClass().getName(),
                           StreamingCommitCursorResponse.class.getName(),
                           Exception.class.getName())));
             }
@@ -104,7 +104,7 @@ public class MockCursorServiceImpl extends CursorServiceImplBase {
   @Override
   public void commitCursor(
       CommitCursorRequest request, StreamObserver<CommitCursorResponse> responseObserver) {
-    Object response = responses.remove();
+    Object response = responses.poll();
     if (response instanceof CommitCursorResponse) {
       requests.add(request);
       responseObserver.onNext(((CommitCursorResponse) response));
@@ -116,7 +116,7 @@ public class MockCursorServiceImpl extends CursorServiceImplBase {
           new IllegalArgumentException(
               String.format(
                   "Unrecognized response type %s for method CommitCursor, expected %s or %s",
-                  response.getClass().getName(),
+                  response == null ? "null" : response.getClass().getName(),
                   CommitCursorResponse.class.getName(),
                   Exception.class.getName())));
     }
@@ -126,7 +126,7 @@ public class MockCursorServiceImpl extends CursorServiceImplBase {
   public void listPartitionCursors(
       ListPartitionCursorsRequest request,
       StreamObserver<ListPartitionCursorsResponse> responseObserver) {
-    Object response = responses.remove();
+    Object response = responses.poll();
     if (response instanceof ListPartitionCursorsResponse) {
       requests.add(request);
       responseObserver.onNext(((ListPartitionCursorsResponse) response));
@@ -138,7 +138,7 @@ public class MockCursorServiceImpl extends CursorServiceImplBase {
           new IllegalArgumentException(
               String.format(
                   "Unrecognized response type %s for method ListPartitionCursors, expected %s or %s",
-                  response.getClass().getName(),
+                  response == null ? "null" : response.getClass().getName(),
                   ListPartitionCursorsResponse.class.getName(),
                   Exception.class.getName())));
     }

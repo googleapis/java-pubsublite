@@ -66,7 +66,7 @@ public class MockTopicStatsServiceImpl extends TopicStatsServiceImplBase {
   public void computeMessageStats(
       ComputeMessageStatsRequest request,
       StreamObserver<ComputeMessageStatsResponse> responseObserver) {
-    Object response = responses.remove();
+    Object response = responses.poll();
     if (response instanceof ComputeMessageStatsResponse) {
       requests.add(request);
       responseObserver.onNext(((ComputeMessageStatsResponse) response));
@@ -78,7 +78,7 @@ public class MockTopicStatsServiceImpl extends TopicStatsServiceImplBase {
           new IllegalArgumentException(
               String.format(
                   "Unrecognized response type %s for method ComputeMessageStats, expected %s or %s",
-                  response.getClass().getName(),
+                  response == null ? "null" : response.getClass().getName(),
                   ComputeMessageStatsResponse.class.getName(),
                   Exception.class.getName())));
     }
@@ -88,7 +88,7 @@ public class MockTopicStatsServiceImpl extends TopicStatsServiceImplBase {
   public void computeHeadCursor(
       ComputeHeadCursorRequest request,
       StreamObserver<ComputeHeadCursorResponse> responseObserver) {
-    Object response = responses.remove();
+    Object response = responses.poll();
     if (response instanceof ComputeHeadCursorResponse) {
       requests.add(request);
       responseObserver.onNext(((ComputeHeadCursorResponse) response));
@@ -100,7 +100,7 @@ public class MockTopicStatsServiceImpl extends TopicStatsServiceImplBase {
           new IllegalArgumentException(
               String.format(
                   "Unrecognized response type %s for method ComputeHeadCursor, expected %s or %s",
-                  response.getClass().getName(),
+                  response == null ? "null" : response.getClass().getName(),
                   ComputeHeadCursorResponse.class.getName(),
                   Exception.class.getName())));
     }

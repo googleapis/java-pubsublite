@@ -357,6 +357,13 @@ public class CursorServiceClient implements BackgroundResource {
    *
    * <pre>{@code
    * try (CursorServiceClient cursorServiceClient = CursorServiceClient.create()) {
+   *   ListPartitionCursorsRequest request =
+   *       ListPartitionCursorsRequest.newBuilder()
+   *           .setParent(
+   *               SubscriptionName.of("[PROJECT]", "[LOCATION]", "[SUBSCRIPTION]").toString())
+   *           .setPageSize(883849137)
+   *           .setPageToken("pageToken873572522")
+   *           .build();
    *   while (true) {
    *     ListPartitionCursorsResponse response =
    *         cursorServiceClient.listPartitionCursorsCallable().call(request);

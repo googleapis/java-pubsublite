@@ -78,7 +78,7 @@ public class MockPartitionAssignmentServiceImpl extends PartitionAssignmentServi
                   new IllegalArgumentException(
                       String.format(
                           "Unrecognized response type %s for method AssignPartitions, expected %s or %s",
-                          response.getClass().getName(),
+                          response == null ? "null" : response.getClass().getName(),
                           PartitionAssignment.class.getName(),
                           Exception.class.getName())));
             }

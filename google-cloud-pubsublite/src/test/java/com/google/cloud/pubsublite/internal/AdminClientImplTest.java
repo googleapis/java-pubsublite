@@ -29,7 +29,7 @@ import com.google.api.core.ApiFuture;
 import com.google.api.core.ApiFutures;
 import com.google.api.gax.rpc.StatusCode.Code;
 import com.google.api.gax.rpc.UnaryCallable;
-import com.google.cloud.pubsublite.AdminClient.StartingOffset;
+import com.google.cloud.pubsublite.AdminClient.OffsetLocation;
 import com.google.cloud.pubsublite.CloudRegion;
 import com.google.cloud.pubsublite.CloudZone;
 import com.google.cloud.pubsublite.LocationPath;
@@ -410,7 +410,7 @@ public class AdminClientImplTest {
     when(createSubscriptionCallable.futureCall(request))
         .thenReturn(immediateFuture(SUBSCRIPTION_2));
 
-    assertThat(client.createSubscription(SUBSCRIPTION, StartingOffset.BEGINNING).get())
+    assertThat(client.createSubscription(SUBSCRIPTION, OffsetLocation.BEGINNING).get())
         .isEqualTo(SUBSCRIPTION_2);
   }
 
@@ -427,7 +427,7 @@ public class AdminClientImplTest {
     when(createSubscriptionCallable.futureCall(request)).thenReturn(failedPreconditionFuture());
 
     assertFutureThrowsCode(
-        client.createSubscription(SUBSCRIPTION, StartingOffset.BEGINNING),
+        client.createSubscription(SUBSCRIPTION, OffsetLocation.BEGINNING),
         Code.FAILED_PRECONDITION);
   }
 

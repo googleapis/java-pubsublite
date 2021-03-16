@@ -19,7 +19,7 @@ package com.google.cloud.pubsublite.internal;
 import com.google.api.core.ApiFuture;
 import com.google.api.core.ApiFutures;
 import com.google.cloud.pubsublite.AdminClient;
-import com.google.cloud.pubsublite.AdminClient.StartingOffset;
+import com.google.cloud.pubsublite.AdminClient.OffsetLocation;
 import com.google.cloud.pubsublite.CloudRegion;
 import com.google.cloud.pubsublite.LocationPath;
 import com.google.cloud.pubsublite.SubscriptionPath;
@@ -138,12 +138,12 @@ public class AdminClientImpl extends ApiResourceAggregation implements AdminClie
 
   @Override
   public ApiFuture<Subscription> createSubscription(Subscription subscription) {
-    return createSubscription(subscription, StartingOffset.END);
+    return createSubscription(subscription, OffsetLocation.END);
   }
 
   @Override
   public ApiFuture<Subscription> createSubscription(
-      Subscription subscription, StartingOffset startingOffset) {
+      Subscription subscription, OffsetLocation startingOffset) {
     SubscriptionPath path = SubscriptionPath.parse(subscription.getName());
     return serviceClient
         .createSubscriptionCallable()
@@ -152,7 +152,7 @@ public class AdminClientImpl extends ApiResourceAggregation implements AdminClie
                 .setParent(path.locationPath().toString())
                 .setSubscription(subscription)
                 .setSubscriptionId(path.name().toString())
-                .setSkipBacklog(startingOffset == StartingOffset.END)
+                .setSkipBacklog(startingOffset == OffsetLocation.END)
                 .build());
   }
 

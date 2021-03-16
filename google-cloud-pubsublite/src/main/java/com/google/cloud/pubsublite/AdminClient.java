@@ -30,6 +30,17 @@ public interface AdminClient extends ApiBackgroundResource {
     return settings.instantiate();
   }
 
+  /**
+   * OffsetLocation refers to an offset location with respect to the message backlog.
+   *
+   * <p>BEGINNING refers to the offset of the oldest retained message. END refers to the current
+   * HEAD offset.
+   */
+  public enum OffsetLocation {
+    BEGINNING,
+    END
+  }
+
   /** The Google Cloud region this client operates on. */
   CloudRegion region();
 
@@ -109,17 +120,6 @@ public interface AdminClient extends ApiBackgroundResource {
   ApiFuture<Subscription> createSubscription(Subscription subscription);
 
   /**
-   * The offset at which a newly created subscription will start receiving messages.
-   *
-   * <p>BEGINNING refers to the offset of the oldest retained message. END refers to the current
-   * HEAD offset.
-   */
-  public enum StartingOffset {
-    BEGINNING,
-    END
-  }
-
-  /**
    * Create the provided subscription at the given starting offset if it does not yet exist.
    *
    * @param subscription The subscription to create.
@@ -128,7 +128,7 @@ public interface AdminClient extends ApiBackgroundResource {
    *     the subscription on success.
    */
   ApiFuture<Subscription> createSubscription(
-      Subscription subscription, StartingOffset startingOffset);
+      Subscription subscription, OffsetLocation startingOffset);
 
   /**
    * Get the subscription with id {@code id} if it exists.

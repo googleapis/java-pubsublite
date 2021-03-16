@@ -113,11 +113,16 @@ public interface AdminClient extends ApiBackgroundResource {
   /**
    * Create the provided subscription if it does not yet exist.
    *
+   * <p>By default, a new subscription will only receive messages published after the subscription
+   * was created.
+   *
    * @param subscription The subscription to create.
    * @return A future that will have either an error {@link com.google.api.gax.rpc.ApiException} or
    *     the subscription on success.
    */
-  ApiFuture<Subscription> createSubscription(Subscription subscription);
+  default ApiFuture<Subscription> createSubscription(Subscription subscription) {
+    return createSubscription(subscription, OffsetLocation.END);
+  }
 
   /**
    * Create the provided subscription at the given starting offset if it does not yet exist.

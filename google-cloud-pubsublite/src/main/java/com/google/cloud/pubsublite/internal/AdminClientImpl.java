@@ -137,11 +137,6 @@ public class AdminClientImpl extends ApiResourceAggregation implements AdminClie
   }
 
   @Override
-  public ApiFuture<Subscription> createSubscription(Subscription subscription) {
-    return createSubscription(subscription, OffsetLocation.END);
-  }
-
-  @Override
   public ApiFuture<Subscription> createSubscription(
       Subscription subscription, OffsetLocation startingOffset) {
     SubscriptionPath path = SubscriptionPath.parse(subscription.getName());

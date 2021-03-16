@@ -31,7 +31,7 @@ public interface AdminClient extends ApiBackgroundResource {
   }
 
   /**
-   * OffsetLocation refers to an offset location with respect to the message backlog.
+   * OffsetLocation refers to the location of an offset with respect to the message backlog.
    *
    * <p>BEGINNING refers to the offset of the oldest retained message. END refers to the current
    * HEAD offset.

@@ -78,7 +78,7 @@ public class MockSubscriberServiceImpl extends SubscriberServiceImplBase {
                   new IllegalArgumentException(
                       String.format(
                           "Unrecognized response type %s for method Subscribe, expected %s or %s",
-                          response.getClass().getName(),
+                          response == null ? "null" : response.getClass().getName(),
                           SubscribeResponse.class.getName(),
                           Exception.class.getName())));
             }

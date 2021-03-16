@@ -578,6 +578,12 @@ public class AdminServiceClient implements BackgroundResource {
    *
    * <pre>{@code
    * try (AdminServiceClient adminServiceClient = AdminServiceClient.create()) {
+   *   ListTopicsRequest request =
+   *       ListTopicsRequest.newBuilder()
+   *           .setParent(LocationName.of("[PROJECT]", "[LOCATION]").toString())
+   *           .setPageSize(883849137)
+   *           .setPageToken("pageToken873572522")
+   *           .build();
    *   while (true) {
    *     ListTopicsResponse response = adminServiceClient.listTopicsCallable().call(request);
    *     for (Topic element : response.getResponsesList()) {
@@ -870,6 +876,12 @@ public class AdminServiceClient implements BackgroundResource {
    *
    * <pre>{@code
    * try (AdminServiceClient adminServiceClient = AdminServiceClient.create()) {
+   *   ListTopicSubscriptionsRequest request =
+   *       ListTopicSubscriptionsRequest.newBuilder()
+   *           .setName(TopicName.of("[PROJECT]", "[LOCATION]", "[TOPIC]").toString())
+   *           .setPageSize(883849137)
+   *           .setPageToken("pageToken873572522")
+   *           .build();
    *   while (true) {
    *     ListTopicSubscriptionsResponse response =
    *         adminServiceClient.listTopicSubscriptionsCallable().call(request);
@@ -1219,6 +1231,12 @@ public class AdminServiceClient implements BackgroundResource {
    *
    * <pre>{@code
    * try (AdminServiceClient adminServiceClient = AdminServiceClient.create()) {
+   *   ListSubscriptionsRequest request =
+   *       ListSubscriptionsRequest.newBuilder()
+   *           .setParent(LocationName.of("[PROJECT]", "[LOCATION]").toString())
+   *           .setPageSize(883849137)
+   *           .setPageToken("pageToken873572522")
+   *           .build();
    *   while (true) {
    *     ListSubscriptionsResponse response =
    *         adminServiceClient.listSubscriptionsCallable().call(request);

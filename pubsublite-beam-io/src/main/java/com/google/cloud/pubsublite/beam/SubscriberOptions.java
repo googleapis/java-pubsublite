@@ -42,6 +42,7 @@ import com.google.common.collect.ImmutableSet;
 import java.io.Serializable;
 import java.util.Set;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.joda.time.Duration;
 
 @AutoValue
 public abstract class SubscriberOptions implements Serializable {
@@ -50,6 +51,8 @@ public abstract class SubscriberOptions implements Serializable {
   private static final Framework FRAMEWORK = Framework.of("BEAM");
 
   private static final long MEBIBYTE = 1L << 20;
+
+  private static final Duration MIN_BUNDLE_TIMEOUT = Duration.standardMinutes(1);
 
   public static final FlowControlSettings DEFAULT_FLOW_CONTROL =
       FlowControlSettings.builder()
@@ -70,12 +73,12 @@ public abstract class SubscriberOptions implements Serializable {
   public abstract Set<Partition> partitions();
 
   /**
-   * FOR TESTING ONLY.
+   * The minimum wall time to pass before allowing bundle closure.
    *
-   * <p>Allow smaller bundles to be generated. Note that this tears down the client each time and
-   * will lead to significantly lower overall throughput.
+   * <p>Setting this to too small of a value will result in increased compute costs and lower
+   * throughput per byte. Immediate timeouts (Duration.ZERO) may be useful for testing.
    */
-  public abstract boolean allowSmallBundlesForTesting();
+  public abstract Duration minBundleTimeout();
 
   /**
    * A factory to override subscriber creation entirely and delegate to another method. Primarily
@@ -106,7 +109,7 @@ public abstract class SubscriberOptions implements Serializable {
     return builder
         .setPartitions(ImmutableSet.of())
         .setFlowControlSettings(DEFAULT_FLOW_CONTROL)
-        .setAllowSmallBundlesForTesting(false);
+        .setMinBundleTimeout(MIN_BUNDLE_TIMEOUT);
   }
 
   public abstract Builder toBuilder();
@@ -199,7 +202,7 @@ public abstract class SubscriberOptions implements Serializable {
 
     public abstract Builder setFlowControlSettings(FlowControlSettings flowControlSettings);
 
-    public abstract Builder setAllowSmallBundlesForTesting(boolean allowSmallBundlesForTesting);
+    public abstract Builder setMinBundleTimeout(Duration minBundleTimeout);
 
     // Used in unit tests
     abstract Builder setSubscriberFactory(SubscriberFactory subscriberFactory);

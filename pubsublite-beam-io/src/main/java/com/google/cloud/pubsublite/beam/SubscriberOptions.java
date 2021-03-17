@@ -70,6 +70,14 @@ public abstract class SubscriberOptions implements Serializable {
   public abstract Set<Partition> partitions();
 
   /**
+   * FOR TESTING ONLY.
+   *
+   * <p>Allow smaller bundles to be generated. Note that this tears down the client each time and
+   * will lead to significantly lower overall throughput.
+   */
+  public abstract boolean allowSmallBundlesForTesting();
+
+  /**
    * A factory to override subscriber creation entirely and delegate to another method. Primarily
    * useful for testing.
    */
@@ -95,7 +103,10 @@ public abstract class SubscriberOptions implements Serializable {
 
   public static Builder newBuilder() {
     Builder builder = new AutoValue_SubscriberOptions.Builder();
-    return builder.setPartitions(ImmutableSet.of()).setFlowControlSettings(DEFAULT_FLOW_CONTROL);
+    return builder
+        .setPartitions(ImmutableSet.of())
+        .setFlowControlSettings(DEFAULT_FLOW_CONTROL)
+        .setAllowSmallBundlesForTesting(false);
   }
 
   public abstract Builder toBuilder();
@@ -187,6 +198,8 @@ public abstract class SubscriberOptions implements Serializable {
     public abstract Builder setPartitions(Set<Partition> partitions);
 
     public abstract Builder setFlowControlSettings(FlowControlSettings flowControlSettings);
+
+    public abstract Builder setAllowSmallBundlesForTesting(boolean allowSmallBundlesForTesting);
 
     // Used in unit tests
     abstract Builder setSubscriberFactory(SubscriberFactory subscriberFactory);

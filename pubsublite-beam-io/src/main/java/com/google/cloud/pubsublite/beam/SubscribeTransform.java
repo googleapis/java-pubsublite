@@ -86,6 +86,14 @@ class SubscribeTransform extends PTransform<PBegin, PCollection<SequencedMessage
   private RestrictionTracker<OffsetRange, OffsetByteProgress> newRestrictionTracker(
       SubscriptionPartition subscriptionPartition, OffsetRange initial) {
     checkSubscription(subscriptionPartition);
+    if (options.allowSmallBundlesForTesting()) {
+      return new OffsetByteRangeTracker(
+          initial,
+          options.getBacklogReader(subscriptionPartition.partition()),
+          Stopwatch.createUnstarted(),
+          Duration.ZERO,
+          0);
+    }
     return new OffsetByteRangeTracker(
         initial,
         options.getBacklogReader(subscriptionPartition.partition()),

@@ -31,12 +31,12 @@ public interface AdminClient extends ApiBackgroundResource {
   }
 
   /**
-   * OffsetLocation refers to the location of an offset with respect to the message backlog.
+   * BacklogLoction refers to a location with respect to the message backlog.
    *
-   * <p>BEGINNING refers to the offset of the oldest retained message. END refers to the current
-   * HEAD offset.
+   * <p>BEGINNING refers to the location of the oldest retained message. END refers to the location
+   * past all currently published messages, skipping the entire message backlog.
    */
-  public enum OffsetLocation {
+  public enum BacklogLocation {
     BEGINNING,
     END
   }
@@ -121,7 +121,7 @@ public interface AdminClient extends ApiBackgroundResource {
    *     the subscription on success.
    */
   default ApiFuture<Subscription> createSubscription(Subscription subscription) {
-    return createSubscription(subscription, OffsetLocation.END);
+    return createSubscription(subscription, BacklogLocation.END);
   }
 
   /**
@@ -133,7 +133,7 @@ public interface AdminClient extends ApiBackgroundResource {
    *     the subscription on success.
    */
   ApiFuture<Subscription> createSubscription(
-      Subscription subscription, OffsetLocation startingOffset);
+      Subscription subscription, BacklogLocation startingOffset);
 
   /**
    * Get the subscription with id {@code id} if it exists.

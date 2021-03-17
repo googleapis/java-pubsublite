@@ -43,8 +43,6 @@ import org.apache.beam.sdk.values.PCollection;
 import org.joda.time.Duration;
 
 class SubscribeTransform extends PTransform<PBegin, PCollection<SequencedMessage>> {
-  private static final Duration MAX_SLEEP_TIME = Duration.standardMinutes(1);
-
   private final SubscriberOptions options;
 
   SubscribeTransform(SubscriberOptions options) {
@@ -90,7 +88,7 @@ class SubscribeTransform extends PTransform<PBegin, PCollection<SequencedMessage
         initial,
         options.getBacklogReader(subscriptionPartition.partition()),
         Stopwatch.createUnstarted(),
-        MAX_SLEEP_TIME.multipliedBy(3).dividedBy(4),
+        options.minBundleTimeout(),
         LongMath.saturatedMultiply(options.flowControlSettings().bytesOutstanding(), 10));
   }
 
@@ -136,7 +134,8 @@ class SubscribeTransform extends PTransform<PBegin, PCollection<SequencedMessage
     return subscriptionPartitions.apply(
         ParDo.of(
             new PerSubscriptionPartitionSdf(
-                MAX_SLEEP_TIME,
+                // Ensure we read for at least 5 seconds more than the bundle timeout.
+                options.minBundleTimeout().plus(Duration.standardSeconds(5)),
                 this::newInitialOffsetReader,
                 this::newRestrictionTracker,
                 this::newPartitionProcessor,

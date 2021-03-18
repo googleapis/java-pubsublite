@@ -1,5 +1,8 @@
 # Instructions for PubsubLiteIO usage.
 
+NOTE: Only Dataflow runner v2 supports drain on PubsubLiteIO. Please contact dataflow customer support to request adding projects
+into the allowlist and launch the pipeline with --experiments=use_runner_v2. Using runner v2 requires 2.29.0 or above.
+
 1. Add the following to your POM file to download the Pub/Sub Lite I/O.
 ```xml
 <dependency>

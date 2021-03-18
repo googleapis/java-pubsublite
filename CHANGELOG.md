@@ -1,5 +1,24 @@
 # Changelog
 
+## [0.12.0](https://www.github.com/googleapis/java-pubsublite/compare/v0.11.1...v0.12.0) (2021-03-18)
+
+
+### Features
+
+* add skip_backlog field to allow subscriptions to be created at HEAD ([#543](https://www.github.com/googleapis/java-pubsublite/issues/543)) ([f0190db](https://www.github.com/googleapis/java-pubsublite/commit/f0190dbc1d4e837349a7220ef84f511663e39eda))
+
+
+### Bug Fixes
+
+* Two QOL issues with PubsubLiteIO ([#552](https://www.github.com/googleapis/java-pubsublite/issues/552)) ([d4682b6](https://www.github.com/googleapis/java-pubsublite/commit/d4682b68b65f4eaebb851bac74015b63f3f9c2c0))
+
+
+### Dependencies
+
+* update dependency com.google.cloud:google-cloud-pubsub to v1.112.0 ([#550](https://www.github.com/googleapis/java-pubsublite/issues/550)) ([9f53f6a](https://www.github.com/googleapis/java-pubsublite/commit/9f53f6a6699acdd64e1c5ed7cc0b7495209e2548))
+* update dependency com.google.cloud:google-cloud-pubsub-bom to v1.112.0 ([#551](https://www.github.com/googleapis/java-pubsublite/issues/551)) ([0593aca](https://www.github.com/googleapis/java-pubsublite/commit/0593aca248f32e1262880d1fee5097cc9daacfc3))
+* update dependency com.google.cloud:google-cloud-shared-dependencies to v0.20.1 ([#546](https://www.github.com/googleapis/java-pubsublite/issues/546)) ([261ae47](https://www.github.com/googleapis/java-pubsublite/commit/261ae47f92273eee633d62579bcedef76233af43))
+
 ### [0.11.1](https://www.github.com/googleapis/java-pubsublite/compare/v0.11.0...v0.11.1) (2021-03-01)
 
 

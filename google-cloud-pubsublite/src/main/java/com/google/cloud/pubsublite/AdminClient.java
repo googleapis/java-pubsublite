@@ -30,6 +30,17 @@ public interface AdminClient extends ApiBackgroundResource {
     return settings.instantiate();
   }
 
+  /**
+   * BacklogLoction refers to a location with respect to the message backlog.
+   *
+   * <p>BEGINNING refers to the location of the oldest retained message. END refers to the location
+   * past all currently published messages, skipping the entire message backlog.
+   */
+  public enum BacklogLocation {
+    BEGINNING,
+    END
+  }
+
   /** The Google Cloud region this client operates on. */
   CloudRegion region();
 
@@ -102,11 +113,27 @@ public interface AdminClient extends ApiBackgroundResource {
   /**
    * Create the provided subscription if it does not yet exist.
    *
+   * <p>By default, a new subscription will only receive messages published after the subscription
+   * was created.
+   *
    * @param subscription The subscription to create.
    * @return A future that will have either an error {@link com.google.api.gax.rpc.ApiException} or
    *     the subscription on success.
    */
-  ApiFuture<Subscription> createSubscription(Subscription subscription);
+  default ApiFuture<Subscription> createSubscription(Subscription subscription) {
+    return createSubscription(subscription, BacklogLocation.END);
+  }
+
+  /**
+   * Create the provided subscription at the given starting offset if it does not yet exist.
+   *
+   * @param subscription The subscription to create.
+   * @param startingOffset The offset at which the new subscription will start receiving messages.
+   * @return A future that will have either an error {@link com.google.api.gax.rpc.ApiException} or
+   *     the subscription on success.
+   */
+  ApiFuture<Subscription> createSubscription(
+      Subscription subscription, BacklogLocation startingOffset);
 
   /**
    * Get the subscription with id {@code id} if it exists.

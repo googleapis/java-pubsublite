@@ -26,6 +26,7 @@ import com.google.cloud.pubsublite.AdminClient;
 import com.google.cloud.pubsublite.AdminClientSettings;
 import com.google.cloud.pubsublite.MessageMetadata;
 import com.google.cloud.pubsublite.Partition;
+import com.google.cloud.pubsublite.cloudpubsub.PublisherSettings;
 import com.google.cloud.pubsublite.internal.Publisher;
 import com.google.cloud.pubsublite.internal.wire.PartitionCountWatchingPublisherSettings;
 import com.google.cloud.pubsublite.internal.wire.PubsubContext;
@@ -92,6 +93,7 @@ class Publishers {
                     .setTopic(options.topicPath())
                     .setPartition(partition)
                     .setServiceClient(newServiceClient(options, partition))
+                    .setBatchingSettings(PublisherSettings.DEFAULT_BATCHING_SETTINGS)
                     .build())
         .setAdminClient(newAdminClient(options))
         .build()

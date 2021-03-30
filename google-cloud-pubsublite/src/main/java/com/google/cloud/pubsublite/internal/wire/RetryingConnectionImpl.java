@@ -29,8 +29,6 @@ import com.google.cloud.pubsublite.internal.ExtractStatus;
 import com.google.common.flogger.GoogleLogger;
 import java.time.Duration;
 import java.util.Optional;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import javax.annotation.concurrent.GuardedBy;
 
@@ -57,7 +55,6 @@ class RetryingConnectionImpl<
       connectionFactory;
   private final StreamRequestT initialRequest;
   private final RetryingConnectionObserver<ClientResponseT> observer;
-  private final ScheduledExecutorService systemExecutor;
 
   // connectionMonitor will not be held in any upcalls.
   private final CloseableMonitor connectionMonitor = new CloseableMonitor();
@@ -81,16 +78,16 @@ class RetryingConnectionImpl<
     this.connectionFactory = connectionFactory;
     this.initialRequest = initialRequest;
     this.observer = observer;
-    this.systemExecutor = Executors.newSingleThreadScheduledExecutor();
   }
 
   @Override
   protected void doStart() {
-    this.systemExecutor.execute(
-        () -> {
-          reinitialize();
-          notifyStarted();
-        });
+    SystemExecutors.getAlarmExecutor()
+        .execute(
+            () -> {
+              reinitialize();
+              notifyStarted();
+            });
   }
 
   // Reinitialize the stream. Must be called in a downcall to prevent deadlock.
@@ -119,7 +116,6 @@ class RetryingConnectionImpl<
     }
     logger.atFine().log(
         String.format("Terminated connection with initial request %s.", initialRequest));
-    systemExecutor.shutdownNow();
     notifyStopped();
   }
 
@@ -195,17 +191,18 @@ class RetryingConnectionImpl<
     logger.atFine().withCause(t).log(
         "Stream disconnected attempting retry, after %s milliseconds", backoffTime);
     ScheduledFuture<?> retry =
-        systemExecutor.schedule(
-            () -> {
-              try {
-                observer.triggerReinitialize();
-              } catch (Throwable t2) {
-                logger.atWarning().withCause(t2).log("Error occurred in triggerReinitialize.");
-                onError(t2);
-              }
-            },
-            backoffTime,
-            MILLISECONDS);
+        SystemExecutors.getAlarmExecutor()
+            .schedule(
+                () -> {
+                  try {
+                    observer.triggerReinitialize();
+                  } catch (Throwable t2) {
+                    logger.atWarning().withCause(t2).log("Error occurred in triggerReinitialize.");
+                    onError(t2);
+                  }
+                },
+                backoffTime,
+                MILLISECONDS);
   }
 
   @Override

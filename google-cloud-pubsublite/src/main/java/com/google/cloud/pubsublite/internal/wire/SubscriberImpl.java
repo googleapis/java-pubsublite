@@ -41,9 +41,7 @@ import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.ImmutableList;
 import com.google.common.util.concurrent.Monitor;
 import java.util.Optional;
-import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
-import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 import javax.annotation.concurrent.GuardedBy;
@@ -56,7 +54,6 @@ public class SubscriberImpl extends ProxyService
 
   private final CloseableMonitor monitor = new CloseableMonitor();
 
-  private final ScheduledExecutorService executorService;
   private Future<?> alarmFuture;
 
   @GuardedBy("monitor.monitor")
@@ -101,7 +98,6 @@ public class SubscriberImpl extends ProxyService
             factory,
             SubscribeRequest.newBuilder().setInitial(initialRequest).build(),
             this);
-    this.executorService = Executors.newSingleThreadScheduledExecutor();
     addServices(this.connection);
   }
 
@@ -133,18 +129,18 @@ public class SubscriberImpl extends ProxyService
   protected void start() {
     try (CloseableMonitor.Hold h = monitor.enter()) {
       alarmFuture =
-          executorService.scheduleWithFixedDelay(
-              this::processBatchFlowRequest,
-              FLOW_REQUESTS_FLUSH_INTERVAL_MS,
-              FLOW_REQUESTS_FLUSH_INTERVAL_MS,
-              TimeUnit.MILLISECONDS);
+          SystemExecutors.getAlarmExecutor()
+              .scheduleWithFixedDelay(
+                  this::processBatchFlowRequest,
+                  FLOW_REQUESTS_FLUSH_INTERVAL_MS,
+                  FLOW_REQUESTS_FLUSH_INTERVAL_MS,
+                  TimeUnit.MILLISECONDS);
     }
   }
 
   @Override
   protected void stop() {
     alarmFuture.cancel(false /* mayInterruptIfRunning */);
-    executorService.shutdown();
     try (CloseableMonitor.Hold h = monitor.enter()) {
       shutdown = true;
       inFlightSeek.ifPresent(

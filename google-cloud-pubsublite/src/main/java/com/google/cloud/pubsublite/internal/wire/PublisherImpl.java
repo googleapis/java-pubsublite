@@ -47,9 +47,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.Queue;
-import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
-import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import javax.annotation.concurrent.GuardedBy;
@@ -59,7 +57,6 @@ public final class PublisherImpl extends ProxyService
   @GuardedBy("monitor.monitor")
   private final RetryingConnection<BatchPublisher> connection;
 
-  private final ScheduledExecutorService executorService;
   private final BatchingSettings batchingSettings;
   private Future<?> alarmFuture;
 
@@ -115,7 +112,6 @@ public final class PublisherImpl extends ProxyService
         new SerialBatcher(
             batchingSettings.getRequestByteThreshold(),
             batchingSettings.getElementCountThreshold());
-    this.executorService = Executors.newSingleThreadScheduledExecutor();
     this.batchingSettings = batchingSettings;
     addServices(connection);
   }
@@ -195,18 +191,18 @@ public final class PublisherImpl extends ProxyService
       // After initialize, the stream can have an error and try to cancel the future, but the
       // future can call into the stream, so this needs to be created under lock.
       this.alarmFuture =
-          this.executorService.scheduleWithFixedDelay(
-              this::flushToStream,
-              batchingSettings.getDelayThreshold().toNanos(),
-              batchingSettings.getDelayThreshold().toNanos(),
-              TimeUnit.NANOSECONDS);
+          SystemExecutors.getAlarmExecutor()
+              .scheduleWithFixedDelay(
+                  this::flushToStream,
+                  batchingSettings.getDelayThreshold().toNanos(),
+                  batchingSettings.getDelayThreshold().toNanos(),
+                  TimeUnit.NANOSECONDS);
     }
   }
 
   @Override
   protected void stop() {
     alarmFuture.cancel(false /* mayInterruptIfRunning */);
-    executorService.shutdown();
     flush(); // Flush any outstanding messages that were batched.
     try (CloseableMonitor.Hold h = monitor.enter()) {
       shutdown = true;

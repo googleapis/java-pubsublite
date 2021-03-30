@@ -30,7 +30,6 @@ public class PartitionCountWatcherImpl extends AbstractApiService implements Par
   private final Duration period;
   private final TopicPath topicPath;
   private final AdminClient adminClient;
-  private final ScheduledExecutorService executorService;
   private final Consumer<Long> partitionCountReceiver;
 
   private ScheduledFuture<?> partitionCountPoll;
@@ -59,7 +58,6 @@ public class PartitionCountWatcherImpl extends AbstractApiService implements Par
     this.topicPath = topicPath;
     this.adminClient = adminClient;
     this.partitionCountReceiver = receiver;
-    this.executorService = Executors.newSingleThreadScheduledExecutor();
   }
 
   private void pollTopicConfig() {
@@ -96,8 +94,9 @@ public class PartitionCountWatcherImpl extends AbstractApiService implements Par
   @Override
   protected void doStart() {
     partitionCountPoll =
-        executorService.scheduleAtFixedRate(
-            this::pollTopicConfig, 0, period.toMillis(), TimeUnit.MILLISECONDS);
+        SystemExecutors.getAlarmExecutor()
+            .scheduleAtFixedRate(
+                this::pollTopicConfig, 0, period.toMillis(), TimeUnit.MILLISECONDS);
   }
 
   @Override

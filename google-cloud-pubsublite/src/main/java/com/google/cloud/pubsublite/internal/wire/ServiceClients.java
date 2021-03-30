@@ -27,8 +27,6 @@ import com.google.cloud.pubsublite.CloudRegion;
 import com.google.cloud.pubsublite.Endpoints;
 import com.google.cloud.pubsublite.internal.Lazy;
 import com.google.common.collect.ImmutableMap;
-import com.google.common.util.concurrent.MoreExecutors;
-import java.util.concurrent.ScheduledThreadPoolExecutor;
 import org.threeten.bp.Duration;
 
 public final class ServiceClients {
@@ -38,9 +36,7 @@ public final class ServiceClients {
       new Lazy<>(
           () ->
               FixedExecutorProvider.create(
-                  MoreExecutors.getExitingScheduledExecutorService(
-                      new ScheduledThreadPoolExecutor(
-                          Math.max(4, Runtime.getRuntime().availableProcessors())))));
+                  SystemExecutors.newDaemonExecutor("pubsub-lite-service-clients")));
 
   public static <
           Settings extends ClientSettings<Settings>,

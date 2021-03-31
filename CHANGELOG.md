@@ -1,5 +1,23 @@
 # Changelog
 
+## [0.13.0](https://www.github.com/googleapis/java-pubsublite/compare/v0.12.0...v0.13.0) (2021-03-30)
+
+
+### Features
+
+* Adding ability to create a subscription at HEAD ([#545](https://www.github.com/googleapis/java-pubsublite/issues/545)) ([c526235](https://www.github.com/googleapis/java-pubsublite/commit/c526235cae4c28a0b94375a2791da80a58069573))
+
+
+### Bug Fixes
+
+* Centralize alarm executor creation for Pub/Sub Lite ([#565](https://www.github.com/googleapis/java-pubsublite/issues/565)) ([5f73967](https://www.github.com/googleapis/java-pubsublite/commit/5f73967edb71f4c1a5ce23a078ff91faba36a0c8))
+* Set batching settings on SinglePartitionPublisher ([#563](https://www.github.com/googleapis/java-pubsublite/issues/563)) ([3b099d0](https://www.github.com/googleapis/java-pubsublite/commit/3b099d079a12231cb2601336fce9232bfbe0896b))
+
+
+### Dependencies
+
+* update dependency com.google.auto.value:auto-value to v1.7.5 ([#560](https://www.github.com/googleapis/java-pubsublite/issues/560)) ([37f6da5](https://www.github.com/googleapis/java-pubsublite/commit/37f6da5920c807024258367fe07c32ae62a40e9c))
+
 ## [0.12.0](https://www.github.com/googleapis/java-pubsublite/compare/v0.11.1...v0.12.0) (2021-03-18)
 
 

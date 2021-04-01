@@ -1,5 +1,18 @@
 # Changelog
 
+### [0.13.1](https://www.github.com/googleapis/java-pubsublite/compare/v0.13.0...v0.13.1) (2021-04-01)
+
+
+### Bug Fixes
+
+* Allow setting framework tags on cloud pubsub shim. ([#571](https://www.github.com/googleapis/java-pubsublite/issues/571)) ([2231fbd](https://www.github.com/googleapis/java-pubsublite/commit/2231fbddd90a445281d22988f69cb6c693623de1))
+
+
+### Dependencies
+
+* update dependency com.google.errorprone:error_prone_annotations to v2.6.0 ([#570](https://www.github.com/googleapis/java-pubsublite/issues/570)) ([0ea0415](https://www.github.com/googleapis/java-pubsublite/commit/0ea04159112a0f2807720b019b1c8c072ec8035e))
+* update dependency com.google.flogger:google-extensions to v0.6 ([#569](https://www.github.com/googleapis/java-pubsublite/issues/569)) ([583a37b](https://www.github.com/googleapis/java-pubsublite/commit/583a37b416cd1fa38a9c547ebf0cdde289c99819))
+
 ## [0.13.0](https://www.github.com/googleapis/java-pubsublite/compare/v0.12.0...v0.13.0) (2021-03-30)
 
 

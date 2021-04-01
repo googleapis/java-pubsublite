@@ -9,7 +9,7 @@ into the allowlist and launch the pipeline with --experiments=use_runner_v2.
 <dependency>
    <groupId>com.google.cloud.pubsublite</groupId>
    <artifactId>pubsublite-beam-io</artifactId>
-   <version>0.11.0</version>
+   <version>0.13.1</version>
 </dependency>
 ```
 1. Create a topic using `gcloud pubsub lite-topics create`

@@ -1,5 +1,21 @@
 # Changelog
 
+### [0.13.2](https://www.github.com/googleapis/java-pubsublite/compare/v0.13.1...v0.13.2) (2021-04-12)
+
+
+### Documentation
+
+* improve PubsubLiteIO readme ([#586](https://www.github.com/googleapis/java-pubsublite/issues/586)) ([ea2cca0](https://www.github.com/googleapis/java-pubsublite/commit/ea2cca0ad741459d54cd7ac1a7ffe756a115f4e9))
+
+
+### Dependencies
+
+* update dependency com.google.auto.service:auto-service to v1.0 ([#583](https://www.github.com/googleapis/java-pubsublite/issues/583)) ([b567402](https://www.github.com/googleapis/java-pubsublite/commit/b56740298cae28c28d3fd85f24fa456fbd0943d4))
+* update dependency com.google.auto.service:auto-service-annotations to v1.0 ([#584](https://www.github.com/googleapis/java-pubsublite/issues/584)) ([b146c37](https://www.github.com/googleapis/java-pubsublite/commit/b146c37af70331b218f435d216e19b423630bae9))
+* update dependency com.google.auto.value:auto-value to v1.8 ([#585](https://www.github.com/googleapis/java-pubsublite/issues/585)) ([d15db39](https://www.github.com/googleapis/java-pubsublite/commit/d15db398423a04fd85917c31e090eaf85289ce98))
+* update dependency com.google.cloud:google-cloud-shared-dependencies to v0.21.0 ([#588](https://www.github.com/googleapis/java-pubsublite/issues/588)) ([0601f66](https://www.github.com/googleapis/java-pubsublite/commit/0601f66c58e89052e853bf03a1c52df6c133e5fb))
+* update dependency org.checkerframework:checker-qual to v3.12.0 ([#577](https://www.github.com/googleapis/java-pubsublite/issues/577)) ([643849b](https://www.github.com/googleapis/java-pubsublite/commit/643849be1fe7860c5aaf47d4904deb3551e02bef))
+
 ### [0.13.1](https://www.github.com/googleapis/java-pubsublite/compare/v0.13.0...v0.13.1) (2021-04-01)
 
 

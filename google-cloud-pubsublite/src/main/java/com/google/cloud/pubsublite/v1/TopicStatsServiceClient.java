@@ -23,6 +23,8 @@ import com.google.cloud.pubsublite.proto.ComputeHeadCursorRequest;
 import com.google.cloud.pubsublite.proto.ComputeHeadCursorResponse;
 import com.google.cloud.pubsublite.proto.ComputeMessageStatsRequest;
 import com.google.cloud.pubsublite.proto.ComputeMessageStatsResponse;
+import com.google.cloud.pubsublite.proto.ComputeTimeCursorRequest;
+import com.google.cloud.pubsublite.proto.ComputeTimeCursorResponse;
 import com.google.cloud.pubsublite.v1.stub.TopicStatsServiceStub;
 import com.google.cloud.pubsublite.v1.stub.TopicStatsServiceStubSettings;
 import java.io.IOException;
@@ -257,6 +259,57 @@ public class TopicStatsServiceClient implements BackgroundResource {
   public final UnaryCallable<ComputeHeadCursorRequest, ComputeHeadCursorResponse>
       computeHeadCursorCallable() {
     return stub.computeHeadCursorCallable();
+  }
+
+  // AUTO-GENERATED DOCUMENTATION AND METHOD.
+  /**
+   * Compute the corresponding cursor for a publish or event time in a topic partition.
+   *
+   * <p>Sample code:
+   *
+   * <pre>{@code
+   * try (TopicStatsServiceClient topicStatsServiceClient = TopicStatsServiceClient.create()) {
+   *   ComputeTimeCursorRequest request =
+   *       ComputeTimeCursorRequest.newBuilder()
+   *           .setTopic(TopicName.of("[PROJECT]", "[LOCATION]", "[TOPIC]").toString())
+   *           .setPartition(-1799810326)
+   *           .setTarget(TimeTarget.newBuilder().build())
+   *           .build();
+   *   ComputeTimeCursorResponse response = topicStatsServiceClient.computeTimeCursor(request);
+   * }
+   * }</pre>
+   *
+   * @param request The request object containing all of the parameters for the API call.
+   * @throws com.google.api.gax.rpc.ApiException if the remote call fails
+   */
+  public final ComputeTimeCursorResponse computeTimeCursor(ComputeTimeCursorRequest request) {
+    return computeTimeCursorCallable().call(request);
+  }
+
+  // AUTO-GENERATED DOCUMENTATION AND METHOD.
+  /**
+   * Compute the corresponding cursor for a publish or event time in a topic partition.
+   *
+   * <p>Sample code:
+   *
+   * <pre>{@code
+   * try (TopicStatsServiceClient topicStatsServiceClient = TopicStatsServiceClient.create()) {
+   *   ComputeTimeCursorRequest request =
+   *       ComputeTimeCursorRequest.newBuilder()
+   *           .setTopic(TopicName.of("[PROJECT]", "[LOCATION]", "[TOPIC]").toString())
+   *           .setPartition(-1799810326)
+   *           .setTarget(TimeTarget.newBuilder().build())
+   *           .build();
+   *   ApiFuture<ComputeTimeCursorResponse> future =
+   *       topicStatsServiceClient.computeTimeCursorCallable().futureCall(request);
+   *   // Do something.
+   *   ComputeTimeCursorResponse response = future.get();
+   * }
+   * }</pre>
+   */
+  public final UnaryCallable<ComputeTimeCursorRequest, ComputeTimeCursorResponse>
+      computeTimeCursorCallable() {
+    return stub.computeTimeCursorCallable();
   }
 
   @Override

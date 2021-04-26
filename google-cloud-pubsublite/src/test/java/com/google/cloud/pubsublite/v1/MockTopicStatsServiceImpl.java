@@ -21,6 +21,8 @@ import com.google.cloud.pubsublite.proto.ComputeHeadCursorRequest;
 import com.google.cloud.pubsublite.proto.ComputeHeadCursorResponse;
 import com.google.cloud.pubsublite.proto.ComputeMessageStatsRequest;
 import com.google.cloud.pubsublite.proto.ComputeMessageStatsResponse;
+import com.google.cloud.pubsublite.proto.ComputeTimeCursorRequest;
+import com.google.cloud.pubsublite.proto.ComputeTimeCursorResponse;
 import com.google.cloud.pubsublite.proto.TopicStatsServiceGrpc.TopicStatsServiceImplBase;
 import com.google.protobuf.AbstractMessage;
 import io.grpc.stub.StreamObserver;
@@ -102,6 +104,28 @@ public class MockTopicStatsServiceImpl extends TopicStatsServiceImplBase {
                   "Unrecognized response type %s for method ComputeHeadCursor, expected %s or %s",
                   response == null ? "null" : response.getClass().getName(),
                   ComputeHeadCursorResponse.class.getName(),
+                  Exception.class.getName())));
+    }
+  }
+
+  @Override
+  public void computeTimeCursor(
+      ComputeTimeCursorRequest request,
+      StreamObserver<ComputeTimeCursorResponse> responseObserver) {
+    Object response = responses.poll();
+    if (response instanceof ComputeTimeCursorResponse) {
+      requests.add(request);
+      responseObserver.onNext(((ComputeTimeCursorResponse) response));
+      responseObserver.onCompleted();
+    } else if (response instanceof Exception) {
+      responseObserver.onError(((Exception) response));
+    } else {
+      responseObserver.onError(
+          new IllegalArgumentException(
+              String.format(
+                  "Unrecognized response type %s for method ComputeTimeCursor, expected %s or %s",
+                  response == null ? "null" : response.getClass().getName(),
+                  ComputeTimeCursorResponse.class.getName(),
                   Exception.class.getName())));
     }
   }

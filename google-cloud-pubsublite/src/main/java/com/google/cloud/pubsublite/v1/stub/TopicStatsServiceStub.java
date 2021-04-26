@@ -22,6 +22,8 @@ import com.google.cloud.pubsublite.proto.ComputeHeadCursorRequest;
 import com.google.cloud.pubsublite.proto.ComputeHeadCursorResponse;
 import com.google.cloud.pubsublite.proto.ComputeMessageStatsRequest;
 import com.google.cloud.pubsublite.proto.ComputeMessageStatsResponse;
+import com.google.cloud.pubsublite.proto.ComputeTimeCursorRequest;
+import com.google.cloud.pubsublite.proto.ComputeTimeCursorResponse;
 import javax.annotation.Generated;
 
 // AUTO-GENERATED DOCUMENTATION AND CLASS.
@@ -41,6 +43,11 @@ public abstract class TopicStatsServiceStub implements BackgroundResource {
   public UnaryCallable<ComputeHeadCursorRequest, ComputeHeadCursorResponse>
       computeHeadCursorCallable() {
     throw new UnsupportedOperationException("Not implemented: computeHeadCursorCallable()");
+  }
+
+  public UnaryCallable<ComputeTimeCursorRequest, ComputeTimeCursorResponse>
+      computeTimeCursorCallable() {
+    throw new UnsupportedOperationException("Not implemented: computeTimeCursorCallable()");
   }
 
   @Override

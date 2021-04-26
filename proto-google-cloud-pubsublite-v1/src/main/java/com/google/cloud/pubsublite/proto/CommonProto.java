@@ -71,6 +71,10 @@ public final class CommonProto {
       internal_static_google_cloud_pubsublite_v1_Subscription_DeliveryConfig_descriptor;
   static final com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_google_cloud_pubsublite_v1_Subscription_DeliveryConfig_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+      internal_static_google_cloud_pubsublite_v1_TimeTarget_descriptor;
+  static final com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_google_cloud_pubsublite_v1_TimeTarget_fieldAccessorTable;
 
   public static com.google.protobuf.Descriptors.FileDescriptor getDescriptor() {
     return descriptor;
@@ -124,13 +128,16 @@ public final class CommonProto {
           + "R_IMMEDIATELY\020\001\022\030\n\024DELIVER_AFTER_STORED\020"
           + "\002:q\352An\n&pubsublite.googleapis.com/Subscr"
           + "iption\022Dprojects/{project}/locations/{lo"
-          + "cation}/subscriptions/{subscription}B\325\001\n"
-          + "!com.google.cloud.pubsublite.protoB\013Comm"
-          + "onProtoP\001ZDgoogle.golang.org/genproto/go"
-          + "ogleapis/cloud/pubsublite/v1;pubsublite\370"
-          + "\001\001\252\002\032Google.Cloud.PubSubLite.V1\312\002\032Google"
-          + "\\Cloud\\PubSubLite\\V1\352\002\035Google::Cloud::Pu"
-          + "bSubLite::V1b\006proto3"
+          + "cation}/subscriptions/{subscription}\"z\n\n"
+          + "TimeTarget\0222\n\014publish_time\030\001 \001(\0132\032.googl"
+          + "e.protobuf.TimestampH\000\0220\n\nevent_time\030\002 \001"
+          + "(\0132\032.google.protobuf.TimestampH\000B\006\n\004time"
+          + "B\325\001\n!com.google.cloud.pubsublite.protoB\013"
+          + "CommonProtoP\001ZDgoogle.golang.org/genprot"
+          + "o/googleapis/cloud/pubsublite/v1;pubsubl"
+          + "ite\370\001\001\252\002\032Google.Cloud.PubSubLite.V1\312\002\032Go"
+          + "ogle\\Cloud\\PubSubLite\\V1\352\002\035Google::Cloud"
+          + "::PubSubLite::V1b\006proto3"
     };
     descriptor =
         com.google.protobuf.Descriptors.FileDescriptor.internalBuildGeneratedFileFrom(
@@ -229,6 +236,14 @@ public final class CommonProto {
             internal_static_google_cloud_pubsublite_v1_Subscription_DeliveryConfig_descriptor,
             new java.lang.String[] {
               "DeliveryRequirement",
+            });
+    internal_static_google_cloud_pubsublite_v1_TimeTarget_descriptor =
+        getDescriptor().getMessageTypes().get(6);
+    internal_static_google_cloud_pubsublite_v1_TimeTarget_fieldAccessorTable =
+        new com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+            internal_static_google_cloud_pubsublite_v1_TimeTarget_descriptor,
+            new java.lang.String[] {
+              "PublishTime", "EventTime", "Time",
             });
     com.google.protobuf.ExtensionRegistry registry =
         com.google.protobuf.ExtensionRegistry.newInstance();

@@ -30,6 +30,8 @@ import com.google.cloud.pubsublite.proto.ComputeHeadCursorRequest;
 import com.google.cloud.pubsublite.proto.ComputeHeadCursorResponse;
 import com.google.cloud.pubsublite.proto.ComputeMessageStatsRequest;
 import com.google.cloud.pubsublite.proto.ComputeMessageStatsResponse;
+import com.google.cloud.pubsublite.proto.ComputeTimeCursorRequest;
+import com.google.cloud.pubsublite.proto.ComputeTimeCursorResponse;
 import com.google.cloud.pubsublite.v1.stub.TopicStatsServiceStubSettings;
 import java.io.IOException;
 import java.util.List;
@@ -80,6 +82,12 @@ public class TopicStatsServiceSettings extends ClientSettings<TopicStatsServiceS
   public UnaryCallSettings<ComputeHeadCursorRequest, ComputeHeadCursorResponse>
       computeHeadCursorSettings() {
     return ((TopicStatsServiceStubSettings) getStubSettings()).computeHeadCursorSettings();
+  }
+
+  /** Returns the object with the settings used for calls to computeTimeCursor. */
+  public UnaryCallSettings<ComputeTimeCursorRequest, ComputeTimeCursorResponse>
+      computeTimeCursorSettings() {
+    return ((TopicStatsServiceStubSettings) getStubSettings()).computeTimeCursorSettings();
   }
 
   public static final TopicStatsServiceSettings create(TopicStatsServiceStubSettings stub)
@@ -190,6 +198,12 @@ public class TopicStatsServiceSettings extends ClientSettings<TopicStatsServiceS
     public UnaryCallSettings.Builder<ComputeHeadCursorRequest, ComputeHeadCursorResponse>
         computeHeadCursorSettings() {
       return getStubSettingsBuilder().computeHeadCursorSettings();
+    }
+
+    /** Returns the builder for the settings used for calls to computeTimeCursor. */
+    public UnaryCallSettings.Builder<ComputeTimeCursorRequest, ComputeTimeCursorResponse>
+        computeTimeCursorSettings() {
+      return getStubSettingsBuilder().computeTimeCursorSettings();
     }
 
     @Override

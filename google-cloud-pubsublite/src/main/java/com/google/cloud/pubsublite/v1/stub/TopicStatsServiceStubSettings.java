@@ -35,6 +35,8 @@ import com.google.cloud.pubsublite.proto.ComputeHeadCursorRequest;
 import com.google.cloud.pubsublite.proto.ComputeHeadCursorResponse;
 import com.google.cloud.pubsublite.proto.ComputeMessageStatsRequest;
 import com.google.cloud.pubsublite.proto.ComputeMessageStatsResponse;
+import com.google.cloud.pubsublite.proto.ComputeTimeCursorRequest;
+import com.google.cloud.pubsublite.proto.ComputeTimeCursorResponse;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
@@ -87,6 +89,8 @@ public class TopicStatsServiceStubSettings extends StubSettings<TopicStatsServic
       computeMessageStatsSettings;
   private final UnaryCallSettings<ComputeHeadCursorRequest, ComputeHeadCursorResponse>
       computeHeadCursorSettings;
+  private final UnaryCallSettings<ComputeTimeCursorRequest, ComputeTimeCursorResponse>
+      computeTimeCursorSettings;
 
   /** Returns the object with the settings used for calls to computeMessageStats. */
   public UnaryCallSettings<ComputeMessageStatsRequest, ComputeMessageStatsResponse>
@@ -98,6 +102,12 @@ public class TopicStatsServiceStubSettings extends StubSettings<TopicStatsServic
   public UnaryCallSettings<ComputeHeadCursorRequest, ComputeHeadCursorResponse>
       computeHeadCursorSettings() {
     return computeHeadCursorSettings;
+  }
+
+  /** Returns the object with the settings used for calls to computeTimeCursor. */
+  public UnaryCallSettings<ComputeTimeCursorRequest, ComputeTimeCursorResponse>
+      computeTimeCursorSettings() {
+    return computeTimeCursorSettings;
   }
 
   @BetaApi("A restructuring of stub classes is planned, so this may break in the future")
@@ -171,6 +181,7 @@ public class TopicStatsServiceStubSettings extends StubSettings<TopicStatsServic
 
     computeMessageStatsSettings = settingsBuilder.computeMessageStatsSettings().build();
     computeHeadCursorSettings = settingsBuilder.computeHeadCursorSettings().build();
+    computeTimeCursorSettings = settingsBuilder.computeTimeCursorSettings().build();
   }
 
   /** Builder for TopicStatsServiceStubSettings. */
@@ -180,6 +191,8 @@ public class TopicStatsServiceStubSettings extends StubSettings<TopicStatsServic
         computeMessageStatsSettings;
     private final UnaryCallSettings.Builder<ComputeHeadCursorRequest, ComputeHeadCursorResponse>
         computeHeadCursorSettings;
+    private final UnaryCallSettings.Builder<ComputeTimeCursorRequest, ComputeTimeCursorResponse>
+        computeTimeCursorSettings;
     private static final ImmutableMap<String, ImmutableSet<StatusCode.Code>>
         RETRYABLE_CODE_DEFINITIONS;
 
@@ -195,7 +208,6 @@ public class TopicStatsServiceStubSettings extends StubSettings<TopicStatsServic
                   StatusCode.Code.ABORTED,
                   StatusCode.Code.INTERNAL,
                   StatusCode.Code.UNKNOWN)));
-      definitions.put("no_retry_codes", ImmutableSet.copyOf(Lists.<StatusCode.Code>newArrayList()));
       RETRYABLE_CODE_DEFINITIONS = definitions.build();
     }
 
@@ -215,8 +227,6 @@ public class TopicStatsServiceStubSettings extends StubSettings<TopicStatsServic
               .setTotalTimeout(Duration.ofMillis(600000L))
               .build();
       definitions.put("retry_policy_0_params", settings);
-      settings = RetrySettings.newBuilder().setRpcTimeoutMultiplier(1.0).build();
-      definitions.put("no_retry_params", settings);
       RETRY_PARAM_DEFINITIONS = definitions.build();
     }
 
@@ -229,10 +239,11 @@ public class TopicStatsServiceStubSettings extends StubSettings<TopicStatsServic
 
       computeMessageStatsSettings = UnaryCallSettings.newUnaryCallSettingsBuilder();
       computeHeadCursorSettings = UnaryCallSettings.newUnaryCallSettingsBuilder();
+      computeTimeCursorSettings = UnaryCallSettings.newUnaryCallSettingsBuilder();
 
       unaryMethodSettingsBuilders =
           ImmutableList.<UnaryCallSettings.Builder<?, ?>>of(
-              computeMessageStatsSettings, computeHeadCursorSettings);
+              computeMessageStatsSettings, computeHeadCursorSettings, computeTimeCursorSettings);
       initDefaults(this);
     }
 
@@ -241,10 +252,11 @@ public class TopicStatsServiceStubSettings extends StubSettings<TopicStatsServic
 
       computeMessageStatsSettings = settings.computeMessageStatsSettings.toBuilder();
       computeHeadCursorSettings = settings.computeHeadCursorSettings.toBuilder();
+      computeTimeCursorSettings = settings.computeTimeCursorSettings.toBuilder();
 
       unaryMethodSettingsBuilders =
           ImmutableList.<UnaryCallSettings.Builder<?, ?>>of(
-              computeMessageStatsSettings, computeHeadCursorSettings);
+              computeMessageStatsSettings, computeHeadCursorSettings, computeTimeCursorSettings);
     }
 
     private static Builder createDefault() {
@@ -266,8 +278,13 @@ public class TopicStatsServiceStubSettings extends StubSettings<TopicStatsServic
 
       builder
           .computeHeadCursorSettings()
-          .setRetryableCodes(RETRYABLE_CODE_DEFINITIONS.get("no_retry_codes"))
-          .setRetrySettings(RETRY_PARAM_DEFINITIONS.get("no_retry_params"));
+          .setRetryableCodes(RETRYABLE_CODE_DEFINITIONS.get("retry_policy_0_codes"))
+          .setRetrySettings(RETRY_PARAM_DEFINITIONS.get("retry_policy_0_params"));
+
+      builder
+          .computeTimeCursorSettings()
+          .setRetryableCodes(RETRYABLE_CODE_DEFINITIONS.get("retry_policy_0_codes"))
+          .setRetrySettings(RETRY_PARAM_DEFINITIONS.get("retry_policy_0_params"));
 
       return builder;
     }
@@ -298,6 +315,12 @@ public class TopicStatsServiceStubSettings extends StubSettings<TopicStatsServic
     public UnaryCallSettings.Builder<ComputeHeadCursorRequest, ComputeHeadCursorResponse>
         computeHeadCursorSettings() {
       return computeHeadCursorSettings;
+    }
+
+    /** Returns the builder for the settings used for calls to computeTimeCursor. */
+    public UnaryCallSettings.Builder<ComputeTimeCursorRequest, ComputeTimeCursorResponse>
+        computeTimeCursorSettings() {
+      return computeTimeCursorSettings;
     }
 
     @Override

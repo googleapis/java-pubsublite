@@ -114,6 +114,9 @@
             },
             "ComputeMessageStats": {
               "methods": ["computeMessageStats", "computeMessageStatsCallable"]
+            },
+            "ComputeTimeCursor": {
+              "methods": ["computeTimeCursor", "computeTimeCursorCallable"]
             }
           }
         }

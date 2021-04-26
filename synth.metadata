@@ -4,15 +4,15 @@
       "git": {
         "name": ".",
         "remote": "https://github.com/googleapis/java-pubsublite.git",
-        "sha": "802db9e096d7bf5566b2f0797c768d3737f2c357"
+        "sha": "25585d992b9adb6292461227b9c17764a4dcfd28"
       }
     },
     {
       "git": {
         "name": "googleapis",
         "remote": "https://github.com/googleapis/googleapis.git",
-        "sha": "1305ca41d554eb0725237561e34129373bb8cbc1",
-        "internalRef": "362856902"
+        "sha": "ae5fb2884a296832c39867e8e8c81bbc72a32ce8",
+        "internalRef": "370536460"
       }
     },
     {
@@ -180,6 +180,10 @@
     "proto-google-cloud-pubsublite-v1/src/main/java/com/google/cloud/pubsublite/proto/ComputeMessageStatsRequestOrBuilder.java",
     "proto-google-cloud-pubsublite-v1/src/main/java/com/google/cloud/pubsublite/proto/ComputeMessageStatsResponse.java",
     "proto-google-cloud-pubsublite-v1/src/main/java/com/google/cloud/pubsublite/proto/ComputeMessageStatsResponseOrBuilder.java",
+    "proto-google-cloud-pubsublite-v1/src/main/java/com/google/cloud/pubsublite/proto/ComputeTimeCursorRequest.java",
+    "proto-google-cloud-pubsublite-v1/src/main/java/com/google/cloud/pubsublite/proto/ComputeTimeCursorRequestOrBuilder.java",
+    "proto-google-cloud-pubsublite-v1/src/main/java/com/google/cloud/pubsublite/proto/ComputeTimeCursorResponse.java",
+    "proto-google-cloud-pubsublite-v1/src/main/java/com/google/cloud/pubsublite/proto/ComputeTimeCursorResponseOrBuilder.java",
     "proto-google-cloud-pubsublite-v1/src/main/java/com/google/cloud/pubsublite/proto/CreateSubscriptionRequest.java",
     "proto-google-cloud-pubsublite-v1/src/main/java/com/google/cloud/pubsublite/proto/CreateSubscriptionRequestOrBuilder.java",
     "proto-google-cloud-pubsublite-v1/src/main/java/com/google/cloud/pubsublite/proto/CreateTopicRequest.java",
@@ -273,6 +277,8 @@
     "proto-google-cloud-pubsublite-v1/src/main/java/com/google/cloud/pubsublite/proto/Subscription.java",
     "proto-google-cloud-pubsublite-v1/src/main/java/com/google/cloud/pubsublite/proto/SubscriptionName.java",
     "proto-google-cloud-pubsublite-v1/src/main/java/com/google/cloud/pubsublite/proto/SubscriptionOrBuilder.java",
+    "proto-google-cloud-pubsublite-v1/src/main/java/com/google/cloud/pubsublite/proto/TimeTarget.java",
+    "proto-google-cloud-pubsublite-v1/src/main/java/com/google/cloud/pubsublite/proto/TimeTargetOrBuilder.java",
     "proto-google-cloud-pubsublite-v1/src/main/java/com/google/cloud/pubsublite/proto/Topic.java",
     "proto-google-cloud-pubsublite-v1/src/main/java/com/google/cloud/pubsublite/proto/TopicName.java",
     "proto-google-cloud-pubsublite-v1/src/main/java/com/google/cloud/pubsublite/proto/TopicOrBuilder.java",

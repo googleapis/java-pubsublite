@@ -27,7 +27,10 @@ import com.google.cloud.pubsublite.proto.ComputeHeadCursorRequest;
 import com.google.cloud.pubsublite.proto.ComputeHeadCursorResponse;
 import com.google.cloud.pubsublite.proto.ComputeMessageStatsRequest;
 import com.google.cloud.pubsublite.proto.ComputeMessageStatsResponse;
+import com.google.cloud.pubsublite.proto.ComputeTimeCursorRequest;
+import com.google.cloud.pubsublite.proto.ComputeTimeCursorResponse;
 import com.google.cloud.pubsublite.proto.Cursor;
+import com.google.cloud.pubsublite.proto.TimeTarget;
 import com.google.cloud.pubsublite.proto.TopicName;
 import com.google.protobuf.AbstractMessage;
 import com.google.protobuf.Timestamp;
@@ -177,6 +180,54 @@ public class TopicStatsServiceClientTest {
               .setPartition(-1799810326)
               .build();
       client.computeHeadCursor(request);
+      Assert.fail("No exception raised");
+    } catch (InvalidArgumentException e) {
+      // Expected exception.
+    }
+  }
+
+  @Test
+  public void computeTimeCursorTest() throws Exception {
+    ComputeTimeCursorResponse expectedResponse =
+        ComputeTimeCursorResponse.newBuilder().setCursor(Cursor.newBuilder().build()).build();
+    mockTopicStatsService.addResponse(expectedResponse);
+
+    ComputeTimeCursorRequest request =
+        ComputeTimeCursorRequest.newBuilder()
+            .setTopic(TopicName.of("[PROJECT]", "[LOCATION]", "[TOPIC]").toString())
+            .setPartition(-1799810326)
+            .setTarget(TimeTarget.newBuilder().build())
+            .build();
+
+    ComputeTimeCursorResponse actualResponse = client.computeTimeCursor(request);
+    Assert.assertEquals(expectedResponse, actualResponse);
+
+    List<AbstractMessage> actualRequests = mockTopicStatsService.getRequests();
+    Assert.assertEquals(1, actualRequests.size());
+    ComputeTimeCursorRequest actualRequest = ((ComputeTimeCursorRequest) actualRequests.get(0));
+
+    Assert.assertEquals(request.getTopic(), actualRequest.getTopic());
+    Assert.assertEquals(request.getPartition(), actualRequest.getPartition());
+    Assert.assertEquals(request.getTarget(), actualRequest.getTarget());
+    Assert.assertTrue(
+        channelProvider.isHeaderSent(
+            ApiClientHeaderProvider.getDefaultApiClientHeaderKey(),
+            GaxGrpcProperties.getDefaultApiClientHeaderPattern()));
+  }
+
+  @Test
+  public void computeTimeCursorExceptionTest() throws Exception {
+    StatusRuntimeException exception = new StatusRuntimeException(io.grpc.Status.INVALID_ARGUMENT);
+    mockTopicStatsService.addException(exception);
+
+    try {
+      ComputeTimeCursorRequest request =
+          ComputeTimeCursorRequest.newBuilder()
+              .setTopic(TopicName.of("[PROJECT]", "[LOCATION]", "[TOPIC]").toString())
+              .setPartition(-1799810326)
+              .setTarget(TimeTarget.newBuilder().build())
+              .build();
+      client.computeTimeCursor(request);
       Assert.fail("No exception raised");
     } catch (InvalidArgumentException e) {
       // Expected exception.

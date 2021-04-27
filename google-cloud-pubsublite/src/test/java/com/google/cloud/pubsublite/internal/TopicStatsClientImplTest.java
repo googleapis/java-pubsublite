@@ -33,6 +33,8 @@ import com.google.cloud.pubsublite.Partition;
 import com.google.cloud.pubsublite.ProjectNumber;
 import com.google.cloud.pubsublite.TopicName;
 import com.google.cloud.pubsublite.TopicPath;
+import com.google.cloud.pubsublite.proto.ComputeHeadCursorRequest;
+import com.google.cloud.pubsublite.proto.ComputeHeadCursorResponse;
 import com.google.cloud.pubsublite.proto.ComputeMessageStatsRequest;
 import com.google.cloud.pubsublite.proto.ComputeMessageStatsResponse;
 import com.google.cloud.pubsublite.proto.ComputeTimeCursorRequest;
@@ -79,7 +81,7 @@ public class TopicStatsClientImplTest {
     return Timestamp.newBuilder().setSeconds(1).setNanos(2).build();
   }
 
-  private static Cursor timeCursor() {
+  private static Cursor cursor() {
     return Cursor.newBuilder().setOffset(45).build();
   }
 
@@ -94,6 +96,17 @@ public class TopicStatsClientImplTest {
 
   private static ComputeMessageStatsResponse messageStatsResponse() {
     return ComputeMessageStatsResponse.newBuilder().setMessageBytes(1).setMessageCount(2).build();
+  }
+
+  private static ComputeHeadCursorRequest headCursorRequest() {
+    return ComputeHeadCursorRequest.newBuilder()
+        .setTopic(path().toString())
+        .setPartition(partition().value())
+        .build();
+  }
+
+  private static ComputeHeadCursorResponse headCursorResponse() {
+    return ComputeHeadCursorResponse.newBuilder().setHeadCursor(cursor()).build();
   }
 
   private static ComputeTimeCursorRequest publishTimeCursorRequest() {
@@ -117,11 +130,14 @@ public class TopicStatsClientImplTest {
   }
 
   private static ComputeTimeCursorResponse timeCursorResponse() {
-    return ComputeTimeCursorResponse.newBuilder().setCursor(timeCursor()).build();
+    return ComputeTimeCursorResponse.newBuilder().setCursor(cursor()).build();
   }
 
   @Mock TopicStatsServiceStub stub;
   @Mock UnaryCallable<ComputeMessageStatsRequest, ComputeMessageStatsResponse> computeStatsCallable;
+
+  @Mock
+  UnaryCallable<ComputeHeadCursorRequest, ComputeHeadCursorResponse> computeHeadCursorCallable;
 
   @Mock
   UnaryCallable<ComputeTimeCursorRequest, ComputeTimeCursorResponse> computeTimeCursorCallable;
@@ -132,6 +148,7 @@ public class TopicStatsClientImplTest {
   public void setUp() throws IOException {
     initMocks(this);
     when(stub.computeMessageStatsCallable()).thenReturn(computeStatsCallable);
+    when(stub.computeHeadCursorCallable()).thenReturn(computeHeadCursorCallable);
     when(stub.computeTimeCursorCallable()).thenReturn(computeTimeCursorCallable);
     client = new TopicStatsClientImpl(REGION, TopicStatsServiceClient.create(stub));
   }
@@ -166,11 +183,27 @@ public class TopicStatsClientImplTest {
   }
 
   @Test
+  public void computeHeadCursor_Ok() throws Exception {
+    when(computeHeadCursorCallable.futureCall(headCursorRequest()))
+        .thenReturn(ApiFutures.immediateFuture(headCursorResponse()));
+    assertThat(client.computeHeadCursor(path(), partition()).get()).isEqualTo(cursor());
+  }
+
+  @Test
+  public void computeHeadCursor_Error() {
+    when(computeHeadCursorCallable.futureCall(headCursorRequest()))
+        .thenReturn(
+            ApiFutures.immediateFailedFuture(
+                new CheckedApiException(Code.FAILED_PRECONDITION).underlying));
+    assertFutureThrowsCode(client.computeHeadCursor(path(), partition()), Code.FAILED_PRECONDITION);
+  }
+
+  @Test
   public void computeCursorForPublishTime_OkPresent() throws Exception {
     when(computeTimeCursorCallable.futureCall(publishTimeCursorRequest()))
         .thenReturn(ApiFutures.immediateFuture(timeCursorResponse()));
     assertThat(client.computeCursorForPublishTime(path(), partition(), timestamp()).get())
-        .isEqualTo(Optional.of(timeCursor()));
+        .isEqualTo(Optional.of(cursor()));
   }
 
   @Test
@@ -195,7 +228,7 @@ public class TopicStatsClientImplTest {
     when(computeTimeCursorCallable.futureCall(eventTimeCursorRequest()))
         .thenReturn(ApiFutures.immediateFuture(timeCursorResponse()));
     assertThat(client.computeCursorForEventTime(path(), partition(), timestamp()).get())
-        .isEqualTo(Optional.of(timeCursor()));
+        .isEqualTo(Optional.of(cursor()));
   }
 
   @Test

@@ -25,9 +25,13 @@ import com.google.cloud.pubsublite.proto.ComputeHeadCursorRequest;
 import com.google.cloud.pubsublite.proto.ComputeHeadCursorResponse;
 import com.google.cloud.pubsublite.proto.ComputeMessageStatsRequest;
 import com.google.cloud.pubsublite.proto.ComputeMessageStatsResponse;
+import com.google.cloud.pubsublite.proto.ComputeTimeCursorRequest;
 import com.google.cloud.pubsublite.proto.Cursor;
+import com.google.cloud.pubsublite.proto.TimeTarget;
 import com.google.cloud.pubsublite.v1.TopicStatsServiceClient;
 import com.google.common.util.concurrent.MoreExecutors;
+import com.google.protobuf.Timestamp;
+import java.util.Optional;
 
 public class TopicStatsClientImpl extends ApiResourceAggregation implements TopicStatsClient {
   private final CloudRegion region;
@@ -69,6 +73,40 @@ public class TopicStatsClientImpl extends ApiResourceAggregation implements Topi
                     .setPartition(partition.value())
                     .build()),
         ComputeHeadCursorResponse::getHeadCursor,
+        MoreExecutors.directExecutor());
+  }
+
+  @Override
+  public ApiFuture<Optional<Cursor>> computeCursorForPublishTime(
+      TopicPath path, Partition partition, Timestamp publishTime) {
+    return computeTimeCursor(
+        path, partition, TimeTarget.newBuilder().setPublishTime(publishTime).build());
+  }
+
+  @Override
+  public ApiFuture<Optional<Cursor>> computeCursorForEventTime(
+      TopicPath path, Partition partition, Timestamp eventTime) {
+    return computeTimeCursor(
+        path, partition, TimeTarget.newBuilder().setEventTime(eventTime).build());
+  }
+
+  private ApiFuture<Optional<Cursor>> computeTimeCursor(
+      TopicPath path, Partition partition, TimeTarget target) {
+    return ApiFutures.transform(
+        serviceClient
+            .computeTimeCursorCallable()
+            .futureCall(
+                ComputeTimeCursorRequest.newBuilder()
+                    .setTopic(path.toString())
+                    .setPartition(partition.value())
+                    .setTarget(target)
+                    .build()),
+        response -> {
+          if (response.hasCursor()) {
+            return Optional.of(response.getCursor());
+          }
+          return Optional.empty();
+        },
         MoreExecutors.directExecutor());
   }
 }

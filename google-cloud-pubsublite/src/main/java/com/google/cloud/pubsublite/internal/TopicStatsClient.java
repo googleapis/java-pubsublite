@@ -23,6 +23,8 @@ import com.google.cloud.pubsublite.Partition;
 import com.google.cloud.pubsublite.TopicPath;
 import com.google.cloud.pubsublite.proto.ComputeMessageStatsResponse;
 import com.google.cloud.pubsublite.proto.Cursor;
+import com.google.protobuf.Timestamp;
+import java.util.Optional;
 
 public interface TopicStatsClient extends ApiBackgroundResource {
   static TopicStatsClient create(TopicStatsClientSettings settings) throws ApiException {
@@ -57,4 +59,37 @@ public interface TopicStatsClient extends ApiBackgroundResource {
    *     success.
    */
   ApiFuture<Cursor> computeHeadCursor(TopicPath path, Partition partition);
+
+  /**
+   * Compute the cursor of the first message with publish time greater than or equal to the
+   * specified publish time, for a topic partition. All messages thereafter are guaranteed to have
+   * publish times greater than or equal to the specified publish time.
+   *
+   * <p>If such a message cannot be found, the returned Optional will be empty.
+   *
+   * @param path The topic to compute cursor for
+   * @param partition The partition to compute cursor for
+   * @param publishTime The target publish time
+   * @return A future that will have either an error {@link ApiException}, an empty Optional or a
+   *     non-null {@link Cursor}.
+   */
+  ApiFuture<Optional<Cursor>> computeCursorForPublishTime(
+      TopicPath path, Partition partition, Timestamp publishTime);
+
+  /**
+   * Compute the cursor of the first message with event time greater than or equal to the specified
+   * event time, for a topic partition. If messages are missing an event time, the publish time is
+   * used as a fallback. As event times are user supplied, subsequent messages may have event times
+   * less than the specified event time and should be filtered by the client, if necessary.
+   *
+   * <p>If such a message cannot be found, the returned Optional will be empty.
+   *
+   * @param path The topic to compute cursor for
+   * @param partition The partition to compute cursor for
+   * @param eventTime The target event time
+   * @return A future that will have either an error {@link ApiException}, an empty Optional or a
+   *     non-null {@link Cursor}.
+   */
+  ApiFuture<Optional<Cursor>> computeCursorForEventTime(
+      TopicPath path, Partition partition, Timestamp eventTime);
 }

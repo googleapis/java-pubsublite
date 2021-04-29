@@ -32,12 +32,12 @@ If you are using Maven, add this to your pom.xml file:
 
 If you are using Gradle without BOM, add this to your dependencies
 ```Groovy
-compile 'com.google.cloud:google-cloud-pubsublite:0.13.2'
+compile 'com.google.cloud:google-cloud-pubsublite:0.14.0'
 ```
 
 If you are using SBT, add this to your dependencies
 ```Scala
-libraryDependencies += "com.google.cloud" % "google-cloud-pubsublite" % "0.13.2"
+libraryDependencies += "com.google.cloud" % "google-cloud-pubsublite" % "0.14.0"
 ```
 
 ## Authentication

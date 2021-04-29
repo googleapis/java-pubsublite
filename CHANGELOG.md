@@ -1,5 +1,30 @@
 # Changelog
 
+## [0.14.0](https://www.github.com/googleapis/java-pubsublite/compare/v0.13.2...v0.14.0) (2021-04-28)
+
+
+### Features
+
+* Compute cursors for publish and event timestamps ([#618](https://www.github.com/googleapis/java-pubsublite/issues/618)) ([ded756e](https://www.github.com/googleapis/java-pubsublite/commit/ded756e3fae46b3dff926ecb376f1744cd212c13))
+* ComputeTimeCursor RPC for Pub/Sub Lite ([#615](https://www.github.com/googleapis/java-pubsublite/issues/615)) ([f74b73c](https://www.github.com/googleapis/java-pubsublite/commit/f74b73cfc291668059caa3eeecff6df1c1538f82))
+
+
+### Bug Fixes
+
+* release scripts from issuing overlapping phases ([#600](https://www.github.com/googleapis/java-pubsublite/issues/600)) ([ef0819b](https://www.github.com/googleapis/java-pubsublite/commit/ef0819bdf416aaa00ca7be5d6502b03f60ef268c))
+* typo ([#595](https://www.github.com/googleapis/java-pubsublite/issues/595)) ([36cd8ae](https://www.github.com/googleapis/java-pubsublite/commit/36cd8ae4d20a95b1c42da434a866ead47466553c))
+
+
+### Dependencies
+
+* update dependency com.google.cloud:google-cloud-pubsub to v1.112.1 ([#593](https://www.github.com/googleapis/java-pubsublite/issues/593)) ([a546cfd](https://www.github.com/googleapis/java-pubsublite/commit/a546cfd780fda8102625bdc84b66eec5398dae56))
+* update dependency com.google.cloud:google-cloud-pubsub to v1.112.3 ([#613](https://www.github.com/googleapis/java-pubsublite/issues/613)) ([4a3307f](https://www.github.com/googleapis/java-pubsublite/commit/4a3307f409c23643635ff7220e838cf6cce49b98))
+* update dependency com.google.cloud:google-cloud-pubsub-bom to v1.112.1 ([#594](https://www.github.com/googleapis/java-pubsublite/issues/594)) ([4fccc65](https://www.github.com/googleapis/java-pubsublite/commit/4fccc65b2329947de787a3e80ab9fc75efcfd1bb))
+* update dependency com.google.cloud:google-cloud-pubsub-bom to v1.112.3 ([#614](https://www.github.com/googleapis/java-pubsublite/issues/614)) ([c025599](https://www.github.com/googleapis/java-pubsublite/commit/c0255998b41ce7a87f1ae12fdc7961b9c6894d7e))
+* update dependency com.google.cloud:google-cloud-shared-dependencies to v0.21.1 ([#602](https://www.github.com/googleapis/java-pubsublite/issues/602)) ([0e7eeba](https://www.github.com/googleapis/java-pubsublite/commit/0e7eeba6b7d7785e200de01f638539a20c593aaf))
+* update dependency com.google.cloud:google-cloud-shared-dependencies to v1 ([#609](https://www.github.com/googleapis/java-pubsublite/issues/609)) ([25585d9](https://www.github.com/googleapis/java-pubsublite/commit/25585d992b9adb6292461227b9c17764a4dcfd28))
+* update dependency org.apache.beam:beam-sdks-java-core to v2.29.0 ([#611](https://www.github.com/googleapis/java-pubsublite/issues/611)) ([f5e9cb9](https://www.github.com/googleapis/java-pubsublite/commit/f5e9cb9aab39201e507951e3948e8038d70d3de1))
+
 ### [0.13.2](https://www.github.com/googleapis/java-pubsublite/compare/v0.13.1...v0.13.2) (2021-04-12)
 
 

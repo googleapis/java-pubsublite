@@ -1,5 +1,12 @@
 # Changelog
 
+### [0.14.1](https://www.github.com/googleapis/java-pubsublite/compare/v0.14.0...v0.14.1) (2021-05-03)
+
+
+### Dependencies
+
+* update dependency com.google.flogger:flogger-system-backend to v0.6 ([#568](https://www.github.com/googleapis/java-pubsublite/issues/568)) ([ccec87a](https://www.github.com/googleapis/java-pubsublite/commit/ccec87a0aaa69748b7889397fa53a22ee886901c))
+
 ## [0.14.0](https://www.github.com/googleapis/java-pubsublite/compare/v0.13.2...v0.14.0) (2021-04-28)
 
 

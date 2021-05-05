@@ -140,6 +140,15 @@ public class GrpcCursorServiceStub extends CursorServiceStub {
     GrpcCallSettings<CommitCursorRequest, CommitCursorResponse> commitCursorTransportSettings =
         GrpcCallSettings.<CommitCursorRequest, CommitCursorResponse>newBuilder()
             .setMethodDescriptor(commitCursorMethodDescriptor)
+            .setParamsExtractor(
+                new RequestParamsExtractor<CommitCursorRequest>() {
+                  @Override
+                  public Map<String, String> extract(CommitCursorRequest request) {
+                    ImmutableMap.Builder<String, String> params = ImmutableMap.builder();
+                    params.put("subscription", String.valueOf(request.getSubscription()));
+                    return params.build();
+                  }
+                })
             .build();
     GrpcCallSettings<ListPartitionCursorsRequest, ListPartitionCursorsResponse>
         listPartitionCursorsTransportSettings =

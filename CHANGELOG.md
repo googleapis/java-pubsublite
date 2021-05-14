@@ -1,5 +1,18 @@
 # Changelog
 
+### [0.14.2](https://www.github.com/googleapis/java-pubsublite/compare/v0.14.1...v0.14.2) (2021-05-14)
+
+
+### Dependencies
+
+* update dependency com.google.auto.value:auto-value to v1.8.1 ([#605](https://www.github.com/googleapis/java-pubsublite/issues/605)) ([1a07c89](https://www.github.com/googleapis/java-pubsublite/commit/1a07c89b92515b287436e0699b7dd768e4792354))
+* update dependency com.google.cloud:google-cloud-pubsub to v1.112.5 ([#636](https://www.github.com/googleapis/java-pubsublite/issues/636)) ([c8dd3a2](https://www.github.com/googleapis/java-pubsublite/commit/c8dd3a23f80ac4effe96a22075a5a90755ee3932))
+* update dependency com.google.cloud:google-cloud-pubsub-bom to v1.112.5 ([#637](https://www.github.com/googleapis/java-pubsublite/issues/637)) ([38c4054](https://www.github.com/googleapis/java-pubsublite/commit/38c405499d49348d45350e1ff2da7643abf44827))
+* update dependency com.google.cloud:google-cloud-shared-dependencies to v1.1.0 ([#631](https://www.github.com/googleapis/java-pubsublite/issues/631)) ([b6263e6](https://www.github.com/googleapis/java-pubsublite/commit/b6263e669887f1eea9ca20181800971510a50884))
+* update dependency org.apache.beam:beam-runners-direct-java to v2.29.0 ([#610](https://www.github.com/googleapis/java-pubsublite/issues/610)) ([92b298c](https://www.github.com/googleapis/java-pubsublite/commit/92b298c128c8dbc7eb4a93275b56a6726c0151a0))
+* update dependency org.apache.beam:beam-sdks-java-extensions-protobuf to v2.29.0 ([#612](https://www.github.com/googleapis/java-pubsublite/issues/612)) ([723f602](https://www.github.com/googleapis/java-pubsublite/commit/723f602f33066371b92efa4383bded7beee7ace3))
+* update dependency org.checkerframework:checker-qual to v3.13.0 ([#625](https://www.github.com/googleapis/java-pubsublite/issues/625)) ([bd4d59b](https://www.github.com/googleapis/java-pubsublite/commit/bd4d59b5197e69f79d375ab7ba6a3952b85cfc7c))
+
 ### [0.14.1](https://www.github.com/googleapis/java-pubsublite/compare/v0.14.0...v0.14.1) (2021-05-03)
 
 

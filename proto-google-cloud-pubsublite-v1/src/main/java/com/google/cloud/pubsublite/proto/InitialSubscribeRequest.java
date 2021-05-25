@@ -83,18 +83,18 @@ public final class InitialSubscribeRequest extends com.google.protobuf.Generated
               partition_ = input.readInt64();
               break;
             }
-          case 26:
+          case 34:
             {
-              com.google.cloud.pubsublite.proto.Cursor.Builder subBuilder = null;
-              if (initialCursor_ != null) {
-                subBuilder = initialCursor_.toBuilder();
+              com.google.cloud.pubsublite.proto.SeekRequest.Builder subBuilder = null;
+              if (initialLocation_ != null) {
+                subBuilder = initialLocation_.toBuilder();
               }
-              initialCursor_ =
+              initialLocation_ =
                   input.readMessage(
-                      com.google.cloud.pubsublite.proto.Cursor.parser(), extensionRegistry);
+                      com.google.cloud.pubsublite.proto.SeekRequest.parser(), extensionRegistry);
               if (subBuilder != null) {
-                subBuilder.mergeFrom(initialCursor_);
-                initialCursor_ = subBuilder.buildPartial();
+                subBuilder.mergeFrom(initialLocation_);
+                initialLocation_ = subBuilder.buildPartial();
               }
 
               break;
@@ -201,67 +201,64 @@ public final class InitialSubscribeRequest extends com.google.protobuf.Generated
     return partition_;
   }
 
-  public static final int INITIAL_CURSOR_FIELD_NUMBER = 3;
-  private com.google.cloud.pubsublite.proto.Cursor initialCursor_;
+  public static final int INITIAL_LOCATION_FIELD_NUMBER = 4;
+  private com.google.cloud.pubsublite.proto.SeekRequest initialLocation_;
   /**
    *
    *
    * <pre>
-   * Optional. Initial stream delivery cursor, pointing to anywhere in the topic
-   * partition. Cursors past head result in stream breakage. If not set,
+   * Optional. Initial target location within the message backlog. If not set,
    * messages will be delivered from the commit cursor for the given
    * subscription and partition.
    * </pre>
    *
    * <code>
-   * .google.cloud.pubsublite.v1.Cursor initial_cursor = 3 [(.google.api.field_behavior) = OPTIONAL];
+   * .google.cloud.pubsublite.v1.SeekRequest initial_location = 4 [(.google.api.field_behavior) = OPTIONAL];
    * </code>
    *
-   * @return Whether the initialCursor field is set.
+   * @return Whether the initialLocation field is set.
    */
   @java.lang.Override
-  public boolean hasInitialCursor() {
-    return initialCursor_ != null;
+  public boolean hasInitialLocation() {
+    return initialLocation_ != null;
   }
   /**
    *
    *
    * <pre>
-   * Optional. Initial stream delivery cursor, pointing to anywhere in the topic
-   * partition. Cursors past head result in stream breakage. If not set,
+   * Optional. Initial target location within the message backlog. If not set,
    * messages will be delivered from the commit cursor for the given
    * subscription and partition.
    * </pre>
    *
    * <code>
-   * .google.cloud.pubsublite.v1.Cursor initial_cursor = 3 [(.google.api.field_behavior) = OPTIONAL];
+   * .google.cloud.pubsublite.v1.SeekRequest initial_location = 4 [(.google.api.field_behavior) = OPTIONAL];
    * </code>
    *
-   * @return The initialCursor.
+   * @return The initialLocation.
    */
   @java.lang.Override
-  public com.google.cloud.pubsublite.proto.Cursor getInitialCursor() {
-    return initialCursor_ == null
-        ? com.google.cloud.pubsublite.proto.Cursor.getDefaultInstance()
-        : initialCursor_;
+  public com.google.cloud.pubsublite.proto.SeekRequest getInitialLocation() {
+    return initialLocation_ == null
+        ? com.google.cloud.pubsublite.proto.SeekRequest.getDefaultInstance()
+        : initialLocation_;
   }
   /**
    *
    *
    * <pre>
-   * Optional. Initial stream delivery cursor, pointing to anywhere in the topic
-   * partition. Cursors past head result in stream breakage. If not set,
+   * Optional. Initial target location within the message backlog. If not set,
    * messages will be delivered from the commit cursor for the given
    * subscription and partition.
    * </pre>
    *
    * <code>
-   * .google.cloud.pubsublite.v1.Cursor initial_cursor = 3 [(.google.api.field_behavior) = OPTIONAL];
+   * .google.cloud.pubsublite.v1.SeekRequest initial_location = 4 [(.google.api.field_behavior) = OPTIONAL];
    * </code>
    */
   @java.lang.Override
-  public com.google.cloud.pubsublite.proto.CursorOrBuilder getInitialCursorOrBuilder() {
-    return getInitialCursor();
+  public com.google.cloud.pubsublite.proto.SeekRequestOrBuilder getInitialLocationOrBuilder() {
+    return getInitialLocation();
   }
 
   private byte memoizedIsInitialized = -1;
@@ -284,8 +281,8 @@ public final class InitialSubscribeRequest extends com.google.protobuf.Generated
     if (partition_ != 0L) {
       output.writeInt64(2, partition_);
     }
-    if (initialCursor_ != null) {
-      output.writeMessage(3, getInitialCursor());
+    if (initialLocation_ != null) {
+      output.writeMessage(4, getInitialLocation());
     }
     unknownFields.writeTo(output);
   }
@@ -302,8 +299,8 @@ public final class InitialSubscribeRequest extends com.google.protobuf.Generated
     if (partition_ != 0L) {
       size += com.google.protobuf.CodedOutputStream.computeInt64Size(2, partition_);
     }
-    if (initialCursor_ != null) {
-      size += com.google.protobuf.CodedOutputStream.computeMessageSize(3, getInitialCursor());
+    if (initialLocation_ != null) {
+      size += com.google.protobuf.CodedOutputStream.computeMessageSize(4, getInitialLocation());
     }
     size += unknownFields.getSerializedSize();
     memoizedSize = size;
@@ -323,9 +320,9 @@ public final class InitialSubscribeRequest extends com.google.protobuf.Generated
 
     if (!getSubscription().equals(other.getSubscription())) return false;
     if (getPartition() != other.getPartition()) return false;
-    if (hasInitialCursor() != other.hasInitialCursor()) return false;
-    if (hasInitialCursor()) {
-      if (!getInitialCursor().equals(other.getInitialCursor())) return false;
+    if (hasInitialLocation() != other.hasInitialLocation()) return false;
+    if (hasInitialLocation()) {
+      if (!getInitialLocation().equals(other.getInitialLocation())) return false;
     }
     if (!unknownFields.equals(other.unknownFields)) return false;
     return true;
@@ -342,9 +339,9 @@ public final class InitialSubscribeRequest extends com.google.protobuf.Generated
     hash = (53 * hash) + getSubscription().hashCode();
     hash = (37 * hash) + PARTITION_FIELD_NUMBER;
     hash = (53 * hash) + com.google.protobuf.Internal.hashLong(getPartition());
-    if (hasInitialCursor()) {
-      hash = (37 * hash) + INITIAL_CURSOR_FIELD_NUMBER;
-      hash = (53 * hash) + getInitialCursor().hashCode();
+    if (hasInitialLocation()) {
+      hash = (37 * hash) + INITIAL_LOCATION_FIELD_NUMBER;
+      hash = (53 * hash) + getInitialLocation().hashCode();
     }
     hash = (29 * hash) + unknownFields.hashCode();
     memoizedHashCode = hash;
@@ -497,11 +494,11 @@ public final class InitialSubscribeRequest extends com.google.protobuf.Generated
 
       partition_ = 0L;
 
-      if (initialCursorBuilder_ == null) {
-        initialCursor_ = null;
+      if (initialLocationBuilder_ == null) {
+        initialLocation_ = null;
       } else {
-        initialCursor_ = null;
-        initialCursorBuilder_ = null;
+        initialLocation_ = null;
+        initialLocationBuilder_ = null;
       }
       return this;
     }
@@ -532,10 +529,10 @@ public final class InitialSubscribeRequest extends com.google.protobuf.Generated
           new com.google.cloud.pubsublite.proto.InitialSubscribeRequest(this);
       result.subscription_ = subscription_;
       result.partition_ = partition_;
-      if (initialCursorBuilder_ == null) {
-        result.initialCursor_ = initialCursor_;
+      if (initialLocationBuilder_ == null) {
+        result.initialLocation_ = initialLocation_;
       } else {
-        result.initialCursor_ = initialCursorBuilder_.build();
+        result.initialLocation_ = initialLocationBuilder_.build();
       }
       onBuilt();
       return result;
@@ -594,8 +591,8 @@ public final class InitialSubscribeRequest extends com.google.protobuf.Generated
       if (other.getPartition() != 0L) {
         setPartition(other.getPartition());
       }
-      if (other.hasInitialCursor()) {
-        mergeInitialCursor(other.getInitialCursor());
+      if (other.hasInitialLocation()) {
+        mergeInitialLocation(other.getInitialLocation());
       }
       this.mergeUnknownFields(other.unknownFields);
       onChanged();
@@ -788,79 +785,76 @@ public final class InitialSubscribeRequest extends com.google.protobuf.Generated
       return this;
     }
 
-    private com.google.cloud.pubsublite.proto.Cursor initialCursor_;
+    private com.google.cloud.pubsublite.proto.SeekRequest initialLocation_;
     private com.google.protobuf.SingleFieldBuilderV3<
-            com.google.cloud.pubsublite.proto.Cursor,
-            com.google.cloud.pubsublite.proto.Cursor.Builder,
-            com.google.cloud.pubsublite.proto.CursorOrBuilder>
-        initialCursorBuilder_;
+            com.google.cloud.pubsublite.proto.SeekRequest,
+            com.google.cloud.pubsublite.proto.SeekRequest.Builder,
+            com.google.cloud.pubsublite.proto.SeekRequestOrBuilder>
+        initialLocationBuilder_;
     /**
      *
      *
      * <pre>
-     * Optional. Initial stream delivery cursor, pointing to anywhere in the topic
-     * partition. Cursors past head result in stream breakage. If not set,
+     * Optional. Initial target location within the message backlog. If not set,
      * messages will be delivered from the commit cursor for the given
      * subscription and partition.
      * </pre>
      *
      * <code>
-     * .google.cloud.pubsublite.v1.Cursor initial_cursor = 3 [(.google.api.field_behavior) = OPTIONAL];
+     * .google.cloud.pubsublite.v1.SeekRequest initial_location = 4 [(.google.api.field_behavior) = OPTIONAL];
      * </code>
      *
-     * @return Whether the initialCursor field is set.
+     * @return Whether the initialLocation field is set.
      */
-    public boolean hasInitialCursor() {
-      return initialCursorBuilder_ != null || initialCursor_ != null;
+    public boolean hasInitialLocation() {
+      return initialLocationBuilder_ != null || initialLocation_ != null;
     }
     /**
      *
      *
      * <pre>
-     * Optional. Initial stream delivery cursor, pointing to anywhere in the topic
-     * partition. Cursors past head result in stream breakage. If not set,
+     * Optional. Initial target location within the message backlog. If not set,
      * messages will be delivered from the commit cursor for the given
      * subscription and partition.
      * </pre>
      *
      * <code>
-     * .google.cloud.pubsublite.v1.Cursor initial_cursor = 3 [(.google.api.field_behavior) = OPTIONAL];
+     * .google.cloud.pubsublite.v1.SeekRequest initial_location = 4 [(.google.api.field_behavior) = OPTIONAL];
      * </code>
      *
-     * @return The initialCursor.
+     * @return The initialLocation.
      */
-    public com.google.cloud.pubsublite.proto.Cursor getInitialCursor() {
-      if (initialCursorBuilder_ == null) {
-        return initialCursor_ == null
-            ? com.google.cloud.pubsublite.proto.Cursor.getDefaultInstance()
-            : initialCursor_;
+    public com.google.cloud.pubsublite.proto.SeekRequest getInitialLocation() {
+      if (initialLocationBuilder_ == null) {
+        return initialLocation_ == null
+            ? com.google.cloud.pubsublite.proto.SeekRequest.getDefaultInstance()
+            : initialLocation_;
       } else {
-        return initialCursorBuilder_.getMessage();
+        return initialLocationBuilder_.getMessage();
       }
     }
     /**
      *
      *
      * <pre>
-     * Optional. Initial stream delivery cursor, pointing to anywhere in the topic
-     * partition. Cursors past head result in stream breakage. If not set,
+     * Optional. Initial target location within the message backlog. If not set,
      * messages will be delivered from the commit cursor for the given
      * subscription and partition.
      * </pre>
      *
      * <code>
-     * .google.cloud.pubsublite.v1.Cursor initial_cursor = 3 [(.google.api.field_behavior) = OPTIONAL];
+     * .google.cloud.pubsublite.v1.SeekRequest initial_location = 4 [(.google.api.field_behavior) = OPTIONAL];
      * </code>
      */
-    public Builder setInitialCursor(com.google.cloud.pubsublite.proto.Cursor value) {
-      if (initialCursorBuilder_ == null) {
+    public Builder setInitialLocation(com.google.cloud.pubsublite.proto.SeekRequest value) {
+      if (initialLocationBuilder_ == null) {
         if (value == null) {
           throw new NullPointerException();
         }
-        initialCursor_ = value;
+        initialLocation_ = value;
         onChanged();
       } else {
-        initialCursorBuilder_.setMessage(value);
+        initialLocationBuilder_.setMessage(value);
       }
 
       return this;
@@ -869,23 +863,22 @@ public final class InitialSubscribeRequest extends com.google.protobuf.Generated
      *
      *
      * <pre>
-     * Optional. Initial stream delivery cursor, pointing to anywhere in the topic
-     * partition. Cursors past head result in stream breakage. If not set,
+     * Optional. Initial target location within the message backlog. If not set,
      * messages will be delivered from the commit cursor for the given
      * subscription and partition.
      * </pre>
      *
      * <code>
-     * .google.cloud.pubsublite.v1.Cursor initial_cursor = 3 [(.google.api.field_behavior) = OPTIONAL];
+     * .google.cloud.pubsublite.v1.SeekRequest initial_location = 4 [(.google.api.field_behavior) = OPTIONAL];
      * </code>
      */
-    public Builder setInitialCursor(
-        com.google.cloud.pubsublite.proto.Cursor.Builder builderForValue) {
-      if (initialCursorBuilder_ == null) {
-        initialCursor_ = builderForValue.build();
+    public Builder setInitialLocation(
+        com.google.cloud.pubsublite.proto.SeekRequest.Builder builderForValue) {
+      if (initialLocationBuilder_ == null) {
+        initialLocation_ = builderForValue.build();
         onChanged();
       } else {
-        initialCursorBuilder_.setMessage(builderForValue.build());
+        initialLocationBuilder_.setMessage(builderForValue.build());
       }
 
       return this;
@@ -894,29 +887,28 @@ public final class InitialSubscribeRequest extends com.google.protobuf.Generated
      *
      *
      * <pre>
-     * Optional. Initial stream delivery cursor, pointing to anywhere in the topic
-     * partition. Cursors past head result in stream breakage. If not set,
+     * Optional. Initial target location within the message backlog. If not set,
      * messages will be delivered from the commit cursor for the given
      * subscription and partition.
      * </pre>
      *
      * <code>
-     * .google.cloud.pubsublite.v1.Cursor initial_cursor = 3 [(.google.api.field_behavior) = OPTIONAL];
+     * .google.cloud.pubsublite.v1.SeekRequest initial_location = 4 [(.google.api.field_behavior) = OPTIONAL];
      * </code>
      */
-    public Builder mergeInitialCursor(com.google.cloud.pubsublite.proto.Cursor value) {
-      if (initialCursorBuilder_ == null) {
-        if (initialCursor_ != null) {
-          initialCursor_ =
-              com.google.cloud.pubsublite.proto.Cursor.newBuilder(initialCursor_)
+    public Builder mergeInitialLocation(com.google.cloud.pubsublite.proto.SeekRequest value) {
+      if (initialLocationBuilder_ == null) {
+        if (initialLocation_ != null) {
+          initialLocation_ =
+              com.google.cloud.pubsublite.proto.SeekRequest.newBuilder(initialLocation_)
                   .mergeFrom(value)
                   .buildPartial();
         } else {
-          initialCursor_ = value;
+          initialLocation_ = value;
         }
         onChanged();
       } else {
-        initialCursorBuilder_.mergeFrom(value);
+        initialLocationBuilder_.mergeFrom(value);
       }
 
       return this;
@@ -925,23 +917,22 @@ public final class InitialSubscribeRequest extends com.google.protobuf.Generated
      *
      *
      * <pre>
-     * Optional. Initial stream delivery cursor, pointing to anywhere in the topic
-     * partition. Cursors past head result in stream breakage. If not set,
+     * Optional. Initial target location within the message backlog. If not set,
      * messages will be delivered from the commit cursor for the given
      * subscription and partition.
      * </pre>
      *
      * <code>
-     * .google.cloud.pubsublite.v1.Cursor initial_cursor = 3 [(.google.api.field_behavior) = OPTIONAL];
+     * .google.cloud.pubsublite.v1.SeekRequest initial_location = 4 [(.google.api.field_behavior) = OPTIONAL];
      * </code>
      */
-    public Builder clearInitialCursor() {
-      if (initialCursorBuilder_ == null) {
-        initialCursor_ = null;
+    public Builder clearInitialLocation() {
+      if (initialLocationBuilder_ == null) {
+        initialLocation_ = null;
         onChanged();
       } else {
-        initialCursor_ = null;
-        initialCursorBuilder_ = null;
+        initialLocation_ = null;
+        initialLocationBuilder_ = null;
       }
 
       return this;
@@ -950,73 +941,70 @@ public final class InitialSubscribeRequest extends com.google.protobuf.Generated
      *
      *
      * <pre>
-     * Optional. Initial stream delivery cursor, pointing to anywhere in the topic
-     * partition. Cursors past head result in stream breakage. If not set,
+     * Optional. Initial target location within the message backlog. If not set,
      * messages will be delivered from the commit cursor for the given
      * subscription and partition.
      * </pre>
      *
      * <code>
-     * .google.cloud.pubsublite.v1.Cursor initial_cursor = 3 [(.google.api.field_behavior) = OPTIONAL];
+     * .google.cloud.pubsublite.v1.SeekRequest initial_location = 4 [(.google.api.field_behavior) = OPTIONAL];
      * </code>
      */
-    public com.google.cloud.pubsublite.proto.Cursor.Builder getInitialCursorBuilder() {
+    public com.google.cloud.pubsublite.proto.SeekRequest.Builder getInitialLocationBuilder() {
 
       onChanged();
-      return getInitialCursorFieldBuilder().getBuilder();
+      return getInitialLocationFieldBuilder().getBuilder();
     }
     /**
      *
      *
      * <pre>
-     * Optional. Initial stream delivery cursor, pointing to anywhere in the topic
-     * partition. Cursors past head result in stream breakage. If not set,
+     * Optional. Initial target location within the message backlog. If not set,
      * messages will be delivered from the commit cursor for the given
      * subscription and partition.
      * </pre>
      *
      * <code>
-     * .google.cloud.pubsublite.v1.Cursor initial_cursor = 3 [(.google.api.field_behavior) = OPTIONAL];
+     * .google.cloud.pubsublite.v1.SeekRequest initial_location = 4 [(.google.api.field_behavior) = OPTIONAL];
      * </code>
      */
-    public com.google.cloud.pubsublite.proto.CursorOrBuilder getInitialCursorOrBuilder() {
-      if (initialCursorBuilder_ != null) {
-        return initialCursorBuilder_.getMessageOrBuilder();
+    public com.google.cloud.pubsublite.proto.SeekRequestOrBuilder getInitialLocationOrBuilder() {
+      if (initialLocationBuilder_ != null) {
+        return initialLocationBuilder_.getMessageOrBuilder();
       } else {
-        return initialCursor_ == null
-            ? com.google.cloud.pubsublite.proto.Cursor.getDefaultInstance()
-            : initialCursor_;
+        return initialLocation_ == null
+            ? com.google.cloud.pubsublite.proto.SeekRequest.getDefaultInstance()
+            : initialLocation_;
       }
     }
     /**
      *
      *
      * <pre>
-     * Optional. Initial stream delivery cursor, pointing to anywhere in the topic
-     * partition. Cursors past head result in stream breakage. If not set,
+     * Optional. Initial target location within the message backlog. If not set,
      * messages will be delivered from the commit cursor for the given
      * subscription and partition.
      * </pre>
      *
      * <code>
-     * .google.cloud.pubsublite.v1.Cursor initial_cursor = 3 [(.google.api.field_behavior) = OPTIONAL];
+     * .google.cloud.pubsublite.v1.SeekRequest initial_location = 4 [(.google.api.field_behavior) = OPTIONAL];
      * </code>
      */
     private com.google.protobuf.SingleFieldBuilderV3<
-            com.google.cloud.pubsublite.proto.Cursor,
-            com.google.cloud.pubsublite.proto.Cursor.Builder,
-            com.google.cloud.pubsublite.proto.CursorOrBuilder>
-        getInitialCursorFieldBuilder() {
-      if (initialCursorBuilder_ == null) {
-        initialCursorBuilder_ =
+            com.google.cloud.pubsublite.proto.SeekRequest,
+            com.google.cloud.pubsublite.proto.SeekRequest.Builder,
+            com.google.cloud.pubsublite.proto.SeekRequestOrBuilder>
+        getInitialLocationFieldBuilder() {
+      if (initialLocationBuilder_ == null) {
+        initialLocationBuilder_ =
             new com.google.protobuf.SingleFieldBuilderV3<
-                com.google.cloud.pubsublite.proto.Cursor,
-                com.google.cloud.pubsublite.proto.Cursor.Builder,
-                com.google.cloud.pubsublite.proto.CursorOrBuilder>(
-                getInitialCursor(), getParentForChildren(), isClean());
-        initialCursor_ = null;
+                com.google.cloud.pubsublite.proto.SeekRequest,
+                com.google.cloud.pubsublite.proto.SeekRequest.Builder,
+                com.google.cloud.pubsublite.proto.SeekRequestOrBuilder>(
+                getInitialLocation(), getParentForChildren(), isClean());
+        initialLocation_ = null;
       }
-      return initialCursorBuilder_;
+      return initialLocationBuilder_;
     }
 
     @java.lang.Override

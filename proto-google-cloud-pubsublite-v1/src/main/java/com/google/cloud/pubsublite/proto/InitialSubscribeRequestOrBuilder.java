@@ -61,4 +61,51 @@ public interface InitialSubscribeRequestOrBuilder
    * @return The partition.
    */
   long getPartition();
+
+  /**
+   *
+   *
+   * <pre>
+   * Optional. Initial target location within the message backlog. If not set,
+   * messages will be delivered from the commit cursor for the given
+   * subscription and partition.
+   * </pre>
+   *
+   * <code>
+   * .google.cloud.pubsublite.v1.SeekRequest initial_location = 4 [(.google.api.field_behavior) = OPTIONAL];
+   * </code>
+   *
+   * @return Whether the initialLocation field is set.
+   */
+  boolean hasInitialLocation();
+  /**
+   *
+   *
+   * <pre>
+   * Optional. Initial target location within the message backlog. If not set,
+   * messages will be delivered from the commit cursor for the given
+   * subscription and partition.
+   * </pre>
+   *
+   * <code>
+   * .google.cloud.pubsublite.v1.SeekRequest initial_location = 4 [(.google.api.field_behavior) = OPTIONAL];
+   * </code>
+   *
+   * @return The initialLocation.
+   */
+  com.google.cloud.pubsublite.proto.SeekRequest getInitialLocation();
+  /**
+   *
+   *
+   * <pre>
+   * Optional. Initial target location within the message backlog. If not set,
+   * messages will be delivered from the commit cursor for the given
+   * subscription and partition.
+   * </pre>
+   *
+   * <code>
+   * .google.cloud.pubsublite.v1.SeekRequest initial_location = 4 [(.google.api.field_behavior) = OPTIONAL];
+   * </code>
+   */
+  com.google.cloud.pubsublite.proto.SeekRequestOrBuilder getInitialLocationOrBuilder();
 }

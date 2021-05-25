@@ -23,9 +23,10 @@ package com.google.cloud.pubsublite.proto;
  *
  * <pre>
  * Request to update the stream's delivery cursor based on the given target.
- * Resets the server available tokens to 0. SeekRequests may not be sent while
- * another SeekRequest is outstanding (i.e., has not received a SeekResponse) on
- * the same stream. SeekRequests past head result in stream breakage.
+ * Resets the server available tokens to 0. SeekRequests past head result in
+ * stream breakage.
+ * SeekRequests may not be sent while another SeekRequest is outstanding (i.e.,
+ * has not received a SeekResponse) on the same stream.
  * </pre>
  *
  * Protobuf type {@code google.cloud.pubsublite.v1.SeekRequest}
@@ -639,9 +640,10 @@ public final class SeekRequest extends com.google.protobuf.GeneratedMessageV3
    *
    * <pre>
    * Request to update the stream's delivery cursor based on the given target.
-   * Resets the server available tokens to 0. SeekRequests may not be sent while
-   * another SeekRequest is outstanding (i.e., has not received a SeekResponse) on
-   * the same stream. SeekRequests past head result in stream breakage.
+   * Resets the server available tokens to 0. SeekRequests past head result in
+   * stream breakage.
+   * SeekRequests may not be sent while another SeekRequest is outstanding (i.e.,
+   * has not received a SeekResponse) on the same stream.
    * </pre>
    *
    * Protobuf type {@code google.cloud.pubsublite.v1.SeekRequest}

@@ -96,8 +96,10 @@ public class SubscriberImpl extends ProxyService
         new RetryingConnectionImpl<>(
             streamFactory,
             factory,
-            SubscribeRequest.newBuilder().setInitial(initialRequest).build(),
-            this);
+            InitialRequestProvider.of(
+                SubscribeRequest.newBuilder().setInitial(initialRequest).build()),
+            this,
+            ResetHandler::noop);
     addServices(this.connection);
   }
 

@@ -63,8 +63,10 @@ public class CommitterImpl extends ProxyService
         new RetryingConnectionImpl<>(
             streamFactory,
             factory,
-            StreamingCommitCursorRequest.newBuilder().setInitial(initialRequest).build(),
-            this);
+            InitialRequestProvider.of(
+                StreamingCommitCursorRequest.newBuilder().setInitial(initialRequest).build()),
+            this,
+            ResetHandler::noop);
     addServices(this.connection);
   }
 

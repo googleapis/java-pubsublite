@@ -106,8 +106,10 @@ public final class PublisherImpl extends ProxyService
         new RetryingConnectionImpl<>(
             streamFactory,
             publisherFactory,
-            PublishRequest.newBuilder().setInitialRequest(initialRequest).build(),
-            this);
+            InitialRequestProvider.of(
+                PublishRequest.newBuilder().setInitialRequest(initialRequest).build()),
+            this,
+            ResetHandler::noop);
     this.batcher =
         new SerialBatcher(
             batchingSettings.getRequestByteThreshold(),

@@ -54,8 +54,10 @@ public class AssignerImpl extends TrivialProxyService
         new RetryingConnectionImpl<>(
             streamFactory,
             factory,
-            PartitionAssignmentRequest.newBuilder().setInitial(initialRequest).build(),
-            this);
+            InitialRequestProvider.of(
+                PartitionAssignmentRequest.newBuilder().setInitial(initialRequest).build()),
+            this,
+            ResetHandler::noop);
     addServices(this.connection);
   }
 

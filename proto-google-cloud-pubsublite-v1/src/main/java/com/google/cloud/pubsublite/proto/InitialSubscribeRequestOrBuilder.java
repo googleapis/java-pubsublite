@@ -61,4 +61,54 @@ public interface InitialSubscribeRequestOrBuilder
    * @return The partition.
    */
   long getPartition();
+
+  /**
+   *
+   *
+   * <pre>
+   * Optional. Initial stream delivery cursor, pointing to anywhere in the topic
+   * partition. Cursors past head result in stream breakage. If not set,
+   * messages will be delivered from the commit cursor for the given
+   * subscription and partition.
+   * </pre>
+   *
+   * <code>
+   * .google.cloud.pubsublite.v1.Cursor initial_cursor = 3 [(.google.api.field_behavior) = OPTIONAL];
+   * </code>
+   *
+   * @return Whether the initialCursor field is set.
+   */
+  boolean hasInitialCursor();
+  /**
+   *
+   *
+   * <pre>
+   * Optional. Initial stream delivery cursor, pointing to anywhere in the topic
+   * partition. Cursors past head result in stream breakage. If not set,
+   * messages will be delivered from the commit cursor for the given
+   * subscription and partition.
+   * </pre>
+   *
+   * <code>
+   * .google.cloud.pubsublite.v1.Cursor initial_cursor = 3 [(.google.api.field_behavior) = OPTIONAL];
+   * </code>
+   *
+   * @return The initialCursor.
+   */
+  com.google.cloud.pubsublite.proto.Cursor getInitialCursor();
+  /**
+   *
+   *
+   * <pre>
+   * Optional. Initial stream delivery cursor, pointing to anywhere in the topic
+   * partition. Cursors past head result in stream breakage. If not set,
+   * messages will be delivered from the commit cursor for the given
+   * subscription and partition.
+   * </pre>
+   *
+   * <code>
+   * .google.cloud.pubsublite.v1.Cursor initial_cursor = 3 [(.google.api.field_behavior) = OPTIONAL];
+   * </code>
+   */
+  com.google.cloud.pubsublite.proto.CursorOrBuilder getInitialCursorOrBuilder();
 }

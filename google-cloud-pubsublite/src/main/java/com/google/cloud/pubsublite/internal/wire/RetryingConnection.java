@@ -20,9 +20,9 @@ import com.google.api.core.ApiService;
 import com.google.cloud.pubsublite.internal.CheckedApiException;
 import java.util.Optional;
 
-interface RetryingConnection<ConnectionT> extends ApiService {
+interface RetryingConnection<StreamRequestT, ConnectionT> extends ApiService {
   // Reinitialize the stream. Must be called in a downcall to prevent deadlock.
-  void reinitialize();
+  void reinitialize(StreamRequestT initialRequest);
 
   interface Modifier<ConnectionT> {
     void modify(Optional<ConnectionT> connectionOr) throws CheckedApiException;

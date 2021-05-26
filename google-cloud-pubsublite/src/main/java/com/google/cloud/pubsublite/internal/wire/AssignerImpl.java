@@ -22,7 +22,7 @@ import com.google.api.gax.rpc.ApiException;
 import com.google.cloud.pubsublite.Partition;
 import com.google.cloud.pubsublite.internal.CheckedApiException;
 import com.google.cloud.pubsublite.internal.CloseableMonitor;
-import com.google.cloud.pubsublite.internal.TrivialProxyService;
+import com.google.cloud.pubsublite.internal.ProxyService;
 import com.google.cloud.pubsublite.proto.InitialPartitionAssignmentRequest;
 import com.google.cloud.pubsublite.proto.PartitionAssignment;
 import com.google.cloud.pubsublite.proto.PartitionAssignmentRequest;
@@ -32,15 +32,17 @@ import com.google.errorprone.annotations.concurrent.GuardedBy;
 import java.util.HashSet;
 import java.util.Set;
 
-public class AssignerImpl extends TrivialProxyService
+public class AssignerImpl extends ProxyService
     implements Assigner, RetryingConnectionObserver<PartitionAssignment> {
+  private final PartitionAssignmentRequest initialRequest;
+
+  private final CloseableMonitor monitor = new CloseableMonitor();
+
   @GuardedBy("monitor.monitor")
-  private final RetryingConnection<ConnectedAssigner> connection;
+  private final RetryingConnection<PartitionAssignmentRequest, ConnectedAssigner> connection;
 
   @GuardedBy("monitor.monitor")
   private final PartitionAssignmentReceiver receiver;
-
-  private final CloseableMonitor monitor = new CloseableMonitor();
 
   @VisibleForTesting
   AssignerImpl(
@@ -49,15 +51,10 @@ public class AssignerImpl extends TrivialProxyService
       InitialPartitionAssignmentRequest initialRequest,
       PartitionAssignmentReceiver receiver)
       throws ApiException {
+    this.initialRequest =
+        PartitionAssignmentRequest.newBuilder().setInitial(initialRequest).build();
     this.receiver = receiver;
-    this.connection =
-        new RetryingConnectionImpl<>(
-            streamFactory,
-            factory,
-            InitialRequestProvider.of(
-                PartitionAssignmentRequest.newBuilder().setInitial(initialRequest).build()),
-            this,
-            ResetHandler::noop);
+    this.connection = new RetryingConnectionImpl<>(streamFactory, factory, this);
     addServices(this.connection);
   }
 
@@ -74,10 +71,25 @@ public class AssignerImpl extends TrivialProxyService
     addServices(backgroundResourceAsApiService(client));
   }
 
+  // ProxyService implementation.
   @Override
-  public void triggerReinitialize() {
+  protected void start() {
     try (CloseableMonitor.Hold h = monitor.enter()) {
-      connection.reinitialize();
+      connection.reinitialize(initialRequest);
+    }
+  }
+
+  @Override
+  protected void stop() {}
+
+  @Override
+  protected void handlePermanentError(CheckedApiException error) {}
+
+  // RetryingConnectionObserver implementation.
+  @Override
+  public void triggerReinitialize(CheckedApiException streamError) {
+    try (CloseableMonitor.Hold h = monitor.enter()) {
+      connection.reinitialize(initialRequest);
     }
   }
 

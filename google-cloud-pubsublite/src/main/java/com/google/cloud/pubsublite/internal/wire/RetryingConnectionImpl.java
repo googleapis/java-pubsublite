@@ -43,7 +43,7 @@ import javax.annotation.concurrent.GuardedBy;
 class RetryingConnectionImpl<
         StreamRequestT, StreamResponseT, ClientResponseT, ConnectionT extends AutoCloseable>
     extends AbstractApiService
-    implements RetryingConnection<ConnectionT>, ResponseObserver<ClientResponseT> {
+    implements RetryingConnection<StreamRequestT, ConnectionT>, ResponseObserver<ClientResponseT> {
   private static final GoogleLogger logger = GoogleLogger.forEnclosingClass();
 
   private static final Duration INITIAL_RECONNECT_BACKOFF_TIME = Duration.ofMillis(10);
@@ -53,9 +53,7 @@ class RetryingConnectionImpl<
   private final SingleConnectionFactory<
           StreamRequestT, StreamResponseT, ClientResponseT, ConnectionT>
       connectionFactory;
-  private final InitialRequestProvider<StreamRequestT> initialRequestProvider;
   private final RetryingConnectionObserver<ClientResponseT> observer;
-  private final ResetHandler resetHandler;
 
   // connectionMonitor will not be held in any upcalls.
   private final CloseableMonitor connectionMonitor = new CloseableMonitor();
@@ -76,32 +74,23 @@ class RetryingConnectionImpl<
       StreamFactory<StreamRequestT, StreamResponseT> streamFactory,
       SingleConnectionFactory<StreamRequestT, StreamResponseT, ClientResponseT, ConnectionT>
           connectionFactory,
-      InitialRequestProvider<StreamRequestT> initialRequestProvider,
-      RetryingConnectionObserver<ClientResponseT> observer,
-      ResetHandler resetHandler) {
+      RetryingConnectionObserver<ClientResponseT> observer) {
     this.streamFactory = streamFactory;
     this.connectionFactory = connectionFactory;
-    this.initialRequestProvider = initialRequestProvider;
     this.observer = observer;
-    this.resetHandler = resetHandler;
   }
 
   @Override
   protected void doStart() {
-    SystemExecutors.getAlarmExecutor()
-        .execute(
-            () -> {
-              reinitialize();
-              notifyStarted();
-            });
+    notifyStarted();
   }
 
   // Reinitialize the stream. Must be called in a downcall to prevent deadlock.
   @Override
-  public void reinitialize() {
+  public void reinitialize(StreamRequestT initialRequest) {
     try (CloseableMonitor.Hold h = connectionMonitor.enter()) {
       if (completed) return;
-      lastInitialRequest = initialRequestProvider.getInitialRequest();
+      lastInitialRequest = initialRequest;
       currentConnection = connectionFactory.New(streamFactory, this, lastInitialRequest);
     }
   }
@@ -178,14 +167,6 @@ class RetryingConnectionImpl<
       setPermanentError(statusOr.get());
       return;
     }
-    if (ResetSignal.isResetSignal(statusOr.get())) {
-      try {
-        resetHandler.onReset();
-      } catch (Throwable rt) {
-        setPermanentError(rt);
-        return;
-      }
-    }
     Optional<Throwable> throwable = Optional.empty();
     long backoffTime = 0;
     try (CloseableMonitor.Hold h = connectionMonitor.enter()) {
@@ -210,7 +191,7 @@ class RetryingConnectionImpl<
             .schedule(
                 () -> {
                   try {
-                    observer.triggerReinitialize();
+                    observer.triggerReinitialize(statusOr.get());
                   } catch (Throwable t2) {
                     logger.atWarning().withCause(t2).log("Error occurred in triggerReinitialize.");
                     onError(t2);

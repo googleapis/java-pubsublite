@@ -266,7 +266,7 @@ public class SubscriberImplTest {
     ApiFuture<Offset> future = subscriber.seek(seekRequest);
     assertThat(subscriber.seekInFlight()).isTrue();
 
-    subscriber.triggerReinitialize();
+    subscriber.triggerReinitialize(new CheckedApiException(Code.ABORTED));
     verify(mockConnectedSubscriber, times(2)).seek(seekRequest);
 
     leakedResponseObserver.onResponse(Response.ofSeekOffset(offset));
@@ -284,7 +284,7 @@ public class SubscriberImplTest {
     leakedResponseObserver.onResponse(Response.ofMessages(messages));
     verify(mockMessageConsumer).accept(messages);
 
-    subscriber.triggerReinitialize();
+    subscriber.triggerReinitialize(new CheckedApiException(Code.ABORTED));
     verify(mockConnectedSubscriber)
         .seek(SeekRequest.newBuilder().setCursor(Cursor.newBuilder().setOffset(2)).build());
     assertThat(subscriber.seekInFlight()).isFalse();

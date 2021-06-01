@@ -23,6 +23,7 @@ import com.google.cloud.pubsublite.internal.CheckedApiException;
 import com.google.cloud.pubsublite.internal.testing.TestResetSignal;
 import com.google.protobuf.Any;
 import com.google.rpc.ErrorInfo;
+import com.google.rpc.ResourceInfo;
 import com.google.rpc.Status;
 import io.grpc.protobuf.StatusProto;
 import org.junit.Test;
@@ -81,6 +82,18 @@ public class ResetSignalTest {
     CheckedApiException exception =
         new CheckedApiException(
             StatusProto.toStatusRuntimeException(status), Code.FAILED_PRECONDITION);
+    assertThat(ResetSignal.isResetSignal(exception)).isFalse();
+  }
+
+  @Test
+  public void isResetSignal_notErrorInfo() {
+    Status status =
+        Status.newBuilder()
+            .setCode(Code.ABORTED.ordinal())
+            .addDetails(Any.pack(ResourceInfo.getDefaultInstance()))
+            .build();
+    CheckedApiException exception =
+        new CheckedApiException(StatusProto.toStatusRuntimeException(status), Code.ABORTED);
     assertThat(ResetSignal.isResetSignal(exception)).isFalse();
   }
 }

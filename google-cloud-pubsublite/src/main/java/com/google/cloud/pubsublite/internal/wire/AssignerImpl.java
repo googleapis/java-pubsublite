@@ -22,7 +22,7 @@ import com.google.api.gax.rpc.ApiException;
 import com.google.cloud.pubsublite.Partition;
 import com.google.cloud.pubsublite.internal.CheckedApiException;
 import com.google.cloud.pubsublite.internal.CloseableMonitor;
-import com.google.cloud.pubsublite.internal.ProxyService;
+import com.google.cloud.pubsublite.internal.TrivialProxyService;
 import com.google.cloud.pubsublite.proto.InitialPartitionAssignmentRequest;
 import com.google.cloud.pubsublite.proto.PartitionAssignment;
 import com.google.cloud.pubsublite.proto.PartitionAssignmentRequest;
@@ -32,7 +32,7 @@ import com.google.errorprone.annotations.concurrent.GuardedBy;
 import java.util.HashSet;
 import java.util.Set;
 
-public class AssignerImpl extends ProxyService
+public class AssignerImpl extends TrivialProxyService
     implements Assigner, RetryingConnectionObserver<PartitionAssignment> {
   private final PartitionAssignmentRequest initialRequest;
 
@@ -54,7 +54,8 @@ public class AssignerImpl extends ProxyService
     this.initialRequest =
         PartitionAssignmentRequest.newBuilder().setInitial(initialRequest).build();
     this.receiver = receiver;
-    this.connection = new RetryingConnectionImpl<>(streamFactory, factory, this);
+    this.connection =
+        new RetryingConnectionImpl<>(streamFactory, factory, this, this.initialRequest);
     addServices(this.connection);
   }
 
@@ -71,21 +72,6 @@ public class AssignerImpl extends ProxyService
     addServices(backgroundResourceAsApiService(client));
   }
 
-  // ProxyService implementation.
-  @Override
-  protected void start() {
-    try (CloseableMonitor.Hold h = monitor.enter()) {
-      connection.reinitialize(initialRequest);
-    }
-  }
-
-  @Override
-  protected void stop() {}
-
-  @Override
-  protected void handlePermanentError(CheckedApiException error) {}
-
-  // RetryingConnectionObserver implementation.
   @Override
   public void triggerReinitialize(CheckedApiException streamError) {
     try (CloseableMonitor.Hold h = monitor.enter()) {

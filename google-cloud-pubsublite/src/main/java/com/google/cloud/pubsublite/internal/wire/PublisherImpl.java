@@ -105,7 +105,8 @@ public final class PublisherImpl extends ProxyService
     Preconditions.checkNotNull(batchingSettings.getElementCountThreshold());
     this.batchingSettings = batchingSettings;
     this.initialRequest = PublishRequest.newBuilder().setInitialRequest(initialRequest).build();
-    this.connection = new RetryingConnectionImpl<>(streamFactory, publisherFactory, this);
+    this.connection =
+        new RetryingConnectionImpl<>(streamFactory, publisherFactory, this, this.initialRequest);
     this.batcher =
         new SerialBatcher(
             batchingSettings.getRequestByteThreshold(),
@@ -185,8 +186,6 @@ public final class PublisherImpl extends ProxyService
   @Override
   protected void start() {
     try (CloseableMonitor.Hold h = monitor.enter()) {
-      connection.reinitialize(initialRequest);
-
       // After initialize, the stream can have an error and try to cancel the future, but the
       // future can call into the stream, so this needs to be created under lock.
       this.alarmFuture =

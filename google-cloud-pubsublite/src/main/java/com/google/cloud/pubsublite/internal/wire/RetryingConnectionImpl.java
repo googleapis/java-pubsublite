@@ -74,15 +74,22 @@ class RetryingConnectionImpl<
       StreamFactory<StreamRequestT, StreamResponseT> streamFactory,
       SingleConnectionFactory<StreamRequestT, StreamResponseT, ClientResponseT, ConnectionT>
           connectionFactory,
-      RetryingConnectionObserver<ClientResponseT> observer) {
+      RetryingConnectionObserver<ClientResponseT> observer,
+      StreamRequestT initialRequest) {
     this.streamFactory = streamFactory;
     this.connectionFactory = connectionFactory;
     this.observer = observer;
+    this.lastInitialRequest = initialRequest;
   }
 
   @Override
   protected void doStart() {
-    notifyStarted();
+    SystemExecutors.getAlarmExecutor()
+        .execute(
+            () -> {
+              reinitialize(lastInitialRequest);
+              notifyStarted();
+            });
   }
 
   // Reinitialize the stream. Must be called in a downcall to prevent deadlock.
@@ -216,10 +223,7 @@ class RetryingConnectionImpl<
 
   private String streamDescription() {
     try (CloseableMonitor.Hold h = connectionMonitor.enter()) {
-      if (lastInitialRequest != null) {
-        return lastInitialRequest.toString();
-      }
-      return "";
+      return lastInitialRequest.toString();
     }
   }
 }

@@ -70,7 +70,8 @@ public class CommitterImpl extends ProxyService
       throws ApiException {
     this.initialRequest =
         StreamingCommitCursorRequest.newBuilder().setInitial(initialRequest).build();
-    this.connection = new RetryingConnectionImpl<>(streamFactory, factory, this);
+    this.connection =
+        new RetryingConnectionImpl<>(streamFactory, factory, this, this.initialRequest);
     addServices(this.connection);
   }
 
@@ -94,11 +95,7 @@ public class CommitterImpl extends ProxyService
   }
 
   @Override
-  protected void start() {
-    try (CloseableMonitor.Hold h = monitor.enter()) {
-      connection.reinitialize(initialRequest);
-    }
-  }
+  protected void start() {}
 
   @Override
   protected void stop() {

@@ -95,7 +95,8 @@ public class SubscriberImpl extends ProxyService
       throws ApiException {
     this.messageConsumer = messageConsumer;
     this.initialRequest = SubscribeRequest.newBuilder().setInitial(initialRequest).build();
-    this.connection = new RetryingConnectionImpl<>(streamFactory, factory, this);
+    this.connection =
+        new RetryingConnectionImpl<>(streamFactory, factory, this, this.initialRequest);
     addServices(this.connection);
   }
 
@@ -126,8 +127,6 @@ public class SubscriberImpl extends ProxyService
   @Override
   protected void start() {
     try (CloseableMonitor.Hold h = monitor.enter()) {
-      connection.reinitialize(initialRequest);
-
       alarmFuture =
           SystemExecutors.getAlarmExecutor()
               .scheduleWithFixedDelay(

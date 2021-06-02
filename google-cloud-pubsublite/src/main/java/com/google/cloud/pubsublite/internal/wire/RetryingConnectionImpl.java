@@ -43,7 +43,7 @@ import javax.annotation.concurrent.GuardedBy;
 class RetryingConnectionImpl<
         StreamRequestT, StreamResponseT, ClientResponseT, ConnectionT extends AutoCloseable>
     extends AbstractApiService
-    implements RetryingConnection<ConnectionT>, ResponseObserver<ClientResponseT> {
+    implements RetryingConnection<StreamRequestT, ConnectionT>, ResponseObserver<ClientResponseT> {
   private static final GoogleLogger logger = GoogleLogger.forEnclosingClass();
 
   private static final Duration INITIAL_RECONNECT_BACKOFF_TIME = Duration.ofMillis(10);
@@ -53,7 +53,6 @@ class RetryingConnectionImpl<
   private final SingleConnectionFactory<
           StreamRequestT, StreamResponseT, ClientResponseT, ConnectionT>
       connectionFactory;
-  private final StreamRequestT initialRequest;
   private final RetryingConnectionObserver<ClientResponseT> observer;
 
   // connectionMonitor will not be held in any upcalls.
@@ -61,6 +60,9 @@ class RetryingConnectionImpl<
 
   @GuardedBy("connectionMonitor.monitor")
   private long nextRetryBackoffDuration = INITIAL_RECONNECT_BACKOFF_TIME.toMillis();
+
+  @GuardedBy("connectionMonitor.monitor")
+  private StreamRequestT lastInitialRequest;
 
   @GuardedBy("connectionMonitor.monitor")
   private ConnectionT currentConnection;
@@ -72,12 +74,12 @@ class RetryingConnectionImpl<
       StreamFactory<StreamRequestT, StreamResponseT> streamFactory,
       SingleConnectionFactory<StreamRequestT, StreamResponseT, ClientResponseT, ConnectionT>
           connectionFactory,
-      StreamRequestT initialRequest,
-      RetryingConnectionObserver<ClientResponseT> observer) {
+      RetryingConnectionObserver<ClientResponseT> observer,
+      StreamRequestT initialRequest) {
     this.streamFactory = streamFactory;
     this.connectionFactory = connectionFactory;
-    this.initialRequest = initialRequest;
     this.observer = observer;
+    this.lastInitialRequest = initialRequest;
   }
 
   @Override
@@ -85,17 +87,18 @@ class RetryingConnectionImpl<
     SystemExecutors.getAlarmExecutor()
         .execute(
             () -> {
-              reinitialize();
+              reinitialize(lastInitialRequest);
               notifyStarted();
             });
   }
 
   // Reinitialize the stream. Must be called in a downcall to prevent deadlock.
   @Override
-  public void reinitialize() {
+  public void reinitialize(StreamRequestT initialRequest) {
     try (CloseableMonitor.Hold h = connectionMonitor.enter()) {
       if (completed) return;
-      currentConnection = connectionFactory.New(streamFactory, this, initialRequest);
+      lastInitialRequest = initialRequest;
+      currentConnection = connectionFactory.New(streamFactory, this, lastInitialRequest);
     }
   }
 
@@ -105,17 +108,17 @@ class RetryingConnectionImpl<
       if (completed) return;
       completed = true;
       logger.atFine().log(
-          String.format("Terminating connection with initial request %s.", initialRequest));
+          String.format("Terminating connection with initial request %s.", streamDescription()));
       currentConnection.close();
     } catch (Throwable t) {
       logger.atWarning().withCause(t).log(
           String.format(
-              "Failed while terminating connection with initial request %s.", initialRequest));
+              "Failed while terminating connection with initial request %s.", streamDescription()));
       notifyFailed(t);
       return;
     }
     logger.atFine().log(
-        String.format("Terminated connection with initial request %s.", initialRequest));
+        String.format("Terminated connection with initial request %s.", streamDescription()));
     notifyStopped();
   }
 
@@ -195,7 +198,7 @@ class RetryingConnectionImpl<
             .schedule(
                 () -> {
                   try {
-                    observer.triggerReinitialize();
+                    observer.triggerReinitialize(statusOr.get());
                   } catch (Throwable t2) {
                     logger.atWarning().withCause(t2).log("Error occurred in triggerReinitialize.");
                     onError(t2);
@@ -207,7 +210,7 @@ class RetryingConnectionImpl<
 
   @Override
   public final void onComplete() {
-    logger.atFine().log("Stream completed for %s.", initialRequest);
+    logger.atFine().log("Stream completed for %s.", streamDescription());
     boolean expectedCompletion;
     try (CloseableMonitor.Hold h = connectionMonitor.enter()) {
       expectedCompletion = completed;
@@ -215,6 +218,12 @@ class RetryingConnectionImpl<
     if (!expectedCompletion) {
       setPermanentError(
           new CheckedApiException("Server unexpectedly closed stream.", Code.FAILED_PRECONDITION));
+    }
+  }
+
+  private String streamDescription() {
+    try (CloseableMonitor.Hold h = connectionMonitor.enter()) {
+      return lastInitialRequest.toString();
     }
   }
 }

@@ -34,13 +34,15 @@ import java.util.Set;
 
 public class AssignerImpl extends TrivialProxyService
     implements Assigner, RetryingConnectionObserver<PartitionAssignment> {
+  private final PartitionAssignmentRequest initialRequest;
+
+  private final CloseableMonitor monitor = new CloseableMonitor();
+
   @GuardedBy("monitor.monitor")
-  private final RetryingConnection<ConnectedAssigner> connection;
+  private final RetryingConnection<PartitionAssignmentRequest, ConnectedAssigner> connection;
 
   @GuardedBy("monitor.monitor")
   private final PartitionAssignmentReceiver receiver;
-
-  private final CloseableMonitor monitor = new CloseableMonitor();
 
   @VisibleForTesting
   AssignerImpl(
@@ -49,13 +51,11 @@ public class AssignerImpl extends TrivialProxyService
       InitialPartitionAssignmentRequest initialRequest,
       PartitionAssignmentReceiver receiver)
       throws ApiException {
+    this.initialRequest =
+        PartitionAssignmentRequest.newBuilder().setInitial(initialRequest).build();
     this.receiver = receiver;
     this.connection =
-        new RetryingConnectionImpl<>(
-            streamFactory,
-            factory,
-            PartitionAssignmentRequest.newBuilder().setInitial(initialRequest).build(),
-            this);
+        new RetryingConnectionImpl<>(streamFactory, factory, this, this.initialRequest);
     addServices(this.connection);
   }
 
@@ -73,9 +73,9 @@ public class AssignerImpl extends TrivialProxyService
   }
 
   @Override
-  public void triggerReinitialize() {
+  public void triggerReinitialize(CheckedApiException streamError) {
     try (CloseableMonitor.Hold h = monitor.enter()) {
-      connection.reinitialize();
+      connection.reinitialize(initialRequest);
     }
   }
 

@@ -52,12 +52,14 @@ public class SubscriberImpl extends ProxyService
 
   private final Consumer<ImmutableList<SequencedMessage>> messageConsumer;
 
+  private final SubscribeRequest initialRequest;
+
   private final CloseableMonitor monitor = new CloseableMonitor();
 
   private Future<?> alarmFuture;
 
   @GuardedBy("monitor.monitor")
-  private final RetryingConnection<ConnectedSubscriber> connection;
+  private final RetryingConnection<SubscribeRequest, ConnectedSubscriber> connection;
 
   @GuardedBy("monitor.monitor")
   private final NextOffsetTracker nextOffsetTracker = new NextOffsetTracker();
@@ -92,12 +94,9 @@ public class SubscriberImpl extends ProxyService
       Consumer<ImmutableList<SequencedMessage>> messageConsumer)
       throws ApiException {
     this.messageConsumer = messageConsumer;
+    this.initialRequest = SubscribeRequest.newBuilder().setInitial(initialRequest).build();
     this.connection =
-        new RetryingConnectionImpl<>(
-            streamFactory,
-            factory,
-            SubscribeRequest.newBuilder().setInitial(initialRequest).build(),
-            this);
+        new RetryingConnectionImpl<>(streamFactory, factory, this, this.initialRequest);
     addServices(this.connection);
   }
 
@@ -199,10 +198,10 @@ public class SubscriberImpl extends ProxyService
 
   @Override
   @SuppressWarnings("GuardedBy")
-  public void triggerReinitialize() {
+  public void triggerReinitialize(CheckedApiException streamError) {
     try (CloseableMonitor.Hold h = monitor.enter()) {
       if (shutdown) return;
-      connection.reinitialize();
+      connection.reinitialize(initialRequest);
       connection.modifyConnection(
           connectedSubscriber -> {
             checkArgument(monitor.monitor.isOccupiedByCurrentThread());

@@ -24,7 +24,9 @@ public interface RetryingConnectionObserver<ClientResponseT> {
   // created and the client initialization occurring. It cannot be called with connectionMonitor
   // held since all locks need to be acquired in concrete then abstract class order to avoid
   // deadlocks.
-  void triggerReinitialize();
+  //
+  // `streamError` is the error that caused the connection to break.
+  void triggerReinitialize(CheckedApiException streamError);
 
   void onClientResponse(ClientResponseT value) throws CheckedApiException;
 }

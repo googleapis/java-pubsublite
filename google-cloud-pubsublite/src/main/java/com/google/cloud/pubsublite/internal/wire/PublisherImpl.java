@@ -54,10 +54,8 @@ import javax.annotation.concurrent.GuardedBy;
 
 public final class PublisherImpl extends ProxyService
     implements Publisher<Offset>, RetryingConnectionObserver<Offset> {
-  @GuardedBy("monitor.monitor")
-  private final RetryingConnection<BatchPublisher> connection;
-
   private final BatchingSettings batchingSettings;
+  private final PublishRequest initialRequest;
   private Future<?> alarmFuture;
 
   private final CloseableMonitor monitor = new CloseableMonitor();
@@ -68,6 +66,9 @@ public final class PublisherImpl extends ProxyService
           return batchesInFlight.isEmpty() || shutdown;
         }
       };
+
+  @GuardedBy("monitor.monitor")
+  private final RetryingConnection<PublishRequest, BatchPublisher> connection;
 
   @GuardedBy("monitor.monitor")
   private boolean shutdown = false;
@@ -102,17 +103,14 @@ public final class PublisherImpl extends ProxyService
     Preconditions.checkNotNull(batchingSettings.getDelayThreshold());
     Preconditions.checkNotNull(batchingSettings.getRequestByteThreshold());
     Preconditions.checkNotNull(batchingSettings.getElementCountThreshold());
+    this.batchingSettings = batchingSettings;
+    this.initialRequest = PublishRequest.newBuilder().setInitialRequest(initialRequest).build();
     this.connection =
-        new RetryingConnectionImpl<>(
-            streamFactory,
-            publisherFactory,
-            PublishRequest.newBuilder().setInitialRequest(initialRequest).build(),
-            this);
+        new RetryingConnectionImpl<>(streamFactory, publisherFactory, this, this.initialRequest);
     this.batcher =
         new SerialBatcher(
             batchingSettings.getRequestByteThreshold(),
             batchingSettings.getElementCountThreshold());
-    this.batchingSettings = batchingSettings;
     addServices(connection);
   }
 
@@ -162,9 +160,9 @@ public final class PublisherImpl extends ProxyService
   }
 
   @Override
-  public void triggerReinitialize() {
+  public void triggerReinitialize(CheckedApiException streamError) {
     try (CloseableMonitor.Hold h = monitor.enter()) {
-      connection.reinitialize();
+      connection.reinitialize(initialRequest);
       rebatchForRestart();
       Collection<InFlightBatch> batches = batchesInFlight;
       connection.modifyConnection(

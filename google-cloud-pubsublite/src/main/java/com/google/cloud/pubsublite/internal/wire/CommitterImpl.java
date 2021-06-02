@@ -39,10 +39,19 @@ import java.util.Optional;
 
 public class CommitterImpl extends ProxyService
     implements Committer, RetryingConnectionObserver<SequencedCommitCursorResponse> {
-  @GuardedBy("monitor.monitor")
-  private final RetryingConnection<ConnectedCommitter> connection;
+  private final StreamingCommitCursorRequest initialRequest;
 
   private final CloseableMonitor monitor = new CloseableMonitor();
+  private final Guard isEmptyOrError =
+      new Guard(monitor.monitor) {
+        public boolean isSatisfied() {
+          // Wait until the state is empty or a permanent error occurred.
+          return state.isEmpty() || hadPermanentError;
+        }
+      };
+
+  @GuardedBy("monitor.monitor")
+  private final RetryingConnection<StreamingCommitCursorRequest, ConnectedCommitter> connection;
 
   @GuardedBy("monitor.monitor")
   private boolean shutdown = false;
@@ -59,12 +68,10 @@ public class CommitterImpl extends ProxyService
       ConnectedCommitterFactory factory,
       InitialCommitCursorRequest initialRequest)
       throws ApiException {
+    this.initialRequest =
+        StreamingCommitCursorRequest.newBuilder().setInitial(initialRequest).build();
     this.connection =
-        new RetryingConnectionImpl<>(
-            streamFactory,
-            factory,
-            StreamingCommitCursorRequest.newBuilder().setInitial(initialRequest).build(),
-            this);
+        new RetryingConnectionImpl<>(streamFactory, factory, this, this.initialRequest);
     addServices(this.connection);
   }
 
@@ -95,22 +102,14 @@ public class CommitterImpl extends ProxyService
     try (CloseableMonitor.Hold h = monitor.enter()) {
       shutdown = true;
     }
-    try (CloseableMonitor.Hold h =
-        monitor.enterWhenUninterruptibly(
-            new Guard(monitor.monitor) {
-              @Override
-              public boolean isSatisfied() {
-                // Wait until the state is empty or a permanent error occurred.
-                return state.isEmpty() || hadPermanentError;
-              }
-            })) {}
+    try (CloseableMonitor.Hold h = monitor.enterWhenUninterruptibly(isEmptyOrError)) {}
   }
 
   // RetryingConnectionObserver implementation.
   @Override
-  public void triggerReinitialize() {
+  public void triggerReinitialize(CheckedApiException streamError) {
     try (CloseableMonitor.Hold h = monitor.enter()) {
-      connection.reinitialize();
+      connection.reinitialize(initialRequest);
       Optional<Offset> offsetOr = state.reinitializeAndReturnToSend();
       if (!offsetOr.isPresent()) return; // There are no outstanding commit requests.
       connection.modifyConnection(
@@ -120,6 +119,14 @@ public class CommitterImpl extends ProxyService
           });
     } catch (CheckedApiException e) {
       onPermanentError(e);
+    }
+  }
+
+  @Override
+  public void onClientResponse(SequencedCommitCursorResponse value) throws CheckedApiException {
+    Preconditions.checkArgument(value.getAcknowledgedCommits() > 0);
+    try (CloseableMonitor.Hold h = monitor.enter()) {
+      state.complete(value.getAcknowledgedCommits());
     }
   }
 
@@ -135,14 +142,6 @@ public class CommitterImpl extends ProxyService
     } catch (CheckedApiException e) {
       onPermanentError(e);
       return ApiFutures.immediateFailedFuture(e);
-    }
-  }
-
-  @Override
-  public void onClientResponse(SequencedCommitCursorResponse value) throws CheckedApiException {
-    Preconditions.checkArgument(value.getAcknowledgedCommits() > 0);
-    try (CloseableMonitor.Hold h = monitor.enter()) {
-      state.complete(value.getAcknowledgedCommits());
     }
   }
 }

@@ -43,9 +43,9 @@ import org.junit.Test;
 
 @Generated("by gapic-generator-java")
 public class PublisherServiceClientTest {
+  private static MockPublisherService mockPublisherService;
   private static MockServiceHelper mockServiceHelper;
   private PublisherServiceClient client;
-  private static MockPublisherService mockPublisherService;
   private LocalChannelProvider channelProvider;
 
   @BeforeClass

@@ -79,9 +79,9 @@ import org.junit.Test;
 
 @Generated("by gapic-generator-java")
 public class AdminServiceClientTest {
+  private static MockAdminService mockAdminService;
   private static MockServiceHelper mockServiceHelper;
   private AdminServiceClient client;
-  private static MockAdminService mockAdminService;
   private LocalChannelProvider channelProvider;
 
   @BeforeClass

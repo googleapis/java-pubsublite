@@ -16,6 +16,8 @@
 
 package com.google.cloud.pubsublite.v1;
 
+import static com.google.cloud.pubsublite.v1.AdminServiceClient.ListReservationTopicsPagedResponse;
+import static com.google.cloud.pubsublite.v1.AdminServiceClient.ListReservationsPagedResponse;
 import static com.google.cloud.pubsublite.v1.AdminServiceClient.ListSubscriptionsPagedResponse;
 import static com.google.cloud.pubsublite.v1.AdminServiceClient.ListTopicSubscriptionsPagedResponse;
 import static com.google.cloud.pubsublite.v1.AdminServiceClient.ListTopicsPagedResponse;
@@ -27,13 +29,20 @@ import com.google.api.gax.grpc.testing.MockGrpcService;
 import com.google.api.gax.grpc.testing.MockServiceHelper;
 import com.google.api.gax.rpc.ApiClientHeaderProvider;
 import com.google.api.gax.rpc.InvalidArgumentException;
+import com.google.cloud.pubsublite.proto.CreateReservationRequest;
 import com.google.cloud.pubsublite.proto.CreateSubscriptionRequest;
 import com.google.cloud.pubsublite.proto.CreateTopicRequest;
+import com.google.cloud.pubsublite.proto.DeleteReservationRequest;
 import com.google.cloud.pubsublite.proto.DeleteSubscriptionRequest;
 import com.google.cloud.pubsublite.proto.DeleteTopicRequest;
+import com.google.cloud.pubsublite.proto.GetReservationRequest;
 import com.google.cloud.pubsublite.proto.GetSubscriptionRequest;
 import com.google.cloud.pubsublite.proto.GetTopicPartitionsRequest;
 import com.google.cloud.pubsublite.proto.GetTopicRequest;
+import com.google.cloud.pubsublite.proto.ListReservationTopicsRequest;
+import com.google.cloud.pubsublite.proto.ListReservationTopicsResponse;
+import com.google.cloud.pubsublite.proto.ListReservationsRequest;
+import com.google.cloud.pubsublite.proto.ListReservationsResponse;
 import com.google.cloud.pubsublite.proto.ListSubscriptionsRequest;
 import com.google.cloud.pubsublite.proto.ListSubscriptionsResponse;
 import com.google.cloud.pubsublite.proto.ListTopicSubscriptionsRequest;
@@ -41,11 +50,14 @@ import com.google.cloud.pubsublite.proto.ListTopicSubscriptionsResponse;
 import com.google.cloud.pubsublite.proto.ListTopicsRequest;
 import com.google.cloud.pubsublite.proto.ListTopicsResponse;
 import com.google.cloud.pubsublite.proto.LocationName;
+import com.google.cloud.pubsublite.proto.Reservation;
+import com.google.cloud.pubsublite.proto.ReservationName;
 import com.google.cloud.pubsublite.proto.Subscription;
 import com.google.cloud.pubsublite.proto.SubscriptionName;
 import com.google.cloud.pubsublite.proto.Topic;
 import com.google.cloud.pubsublite.proto.TopicName;
 import com.google.cloud.pubsublite.proto.TopicPartitions;
+import com.google.cloud.pubsublite.proto.UpdateReservationRequest;
 import com.google.cloud.pubsublite.proto.UpdateSubscriptionRequest;
 import com.google.cloud.pubsublite.proto.UpdateTopicRequest;
 import com.google.common.collect.Lists;
@@ -110,6 +122,7 @@ public class AdminServiceClientTest {
             .setName(TopicName.of("[PROJECT]", "[LOCATION]", "[TOPIC]").toString())
             .setPartitionConfig(Topic.PartitionConfig.newBuilder().build())
             .setRetentionConfig(Topic.RetentionConfig.newBuilder().build())
+            .setReservationConfig(Topic.ReservationConfig.newBuilder().build())
             .build();
     mockAdminService.addResponse(expectedResponse);
 
@@ -156,6 +169,7 @@ public class AdminServiceClientTest {
             .setName(TopicName.of("[PROJECT]", "[LOCATION]", "[TOPIC]").toString())
             .setPartitionConfig(Topic.PartitionConfig.newBuilder().build())
             .setRetentionConfig(Topic.RetentionConfig.newBuilder().build())
+            .setReservationConfig(Topic.ReservationConfig.newBuilder().build())
             .build();
     mockAdminService.addResponse(expectedResponse);
 
@@ -202,6 +216,7 @@ public class AdminServiceClientTest {
             .setName(TopicName.of("[PROJECT]", "[LOCATION]", "[TOPIC]").toString())
             .setPartitionConfig(Topic.PartitionConfig.newBuilder().build())
             .setRetentionConfig(Topic.RetentionConfig.newBuilder().build())
+            .setReservationConfig(Topic.ReservationConfig.newBuilder().build())
             .build();
     mockAdminService.addResponse(expectedResponse);
 
@@ -242,6 +257,7 @@ public class AdminServiceClientTest {
             .setName(TopicName.of("[PROJECT]", "[LOCATION]", "[TOPIC]").toString())
             .setPartitionConfig(Topic.PartitionConfig.newBuilder().build())
             .setRetentionConfig(Topic.RetentionConfig.newBuilder().build())
+            .setReservationConfig(Topic.ReservationConfig.newBuilder().build())
             .build();
     mockAdminService.addResponse(expectedResponse);
 
@@ -442,6 +458,7 @@ public class AdminServiceClientTest {
             .setName(TopicName.of("[PROJECT]", "[LOCATION]", "[TOPIC]").toString())
             .setPartitionConfig(Topic.PartitionConfig.newBuilder().build())
             .setRetentionConfig(Topic.RetentionConfig.newBuilder().build())
+            .setReservationConfig(Topic.ReservationConfig.newBuilder().build())
             .build();
     mockAdminService.addResponse(expectedResponse);
 
@@ -1001,6 +1018,462 @@ public class AdminServiceClientTest {
     try {
       String name = "name3373707";
       client.deleteSubscription(name);
+      Assert.fail("No exception raised");
+    } catch (InvalidArgumentException e) {
+      // Expected exception.
+    }
+  }
+
+  @Test
+  public void createReservationTest() throws Exception {
+    Reservation expectedResponse =
+        Reservation.newBuilder()
+            .setName(ReservationName.of("[PROJECT]", "[LOCATION]", "[RESERVATION]").toString())
+            .setThroughputCapacity(-1174790353)
+            .build();
+    mockAdminService.addResponse(expectedResponse);
+
+    LocationName parent = LocationName.of("[PROJECT]", "[LOCATION]");
+    Reservation reservation = Reservation.newBuilder().build();
+    String reservationId = "reservationId1116965383";
+
+    Reservation actualResponse = client.createReservation(parent, reservation, reservationId);
+    Assert.assertEquals(expectedResponse, actualResponse);
+
+    List<AbstractMessage> actualRequests = mockAdminService.getRequests();
+    Assert.assertEquals(1, actualRequests.size());
+    CreateReservationRequest actualRequest = ((CreateReservationRequest) actualRequests.get(0));
+
+    Assert.assertEquals(parent.toString(), actualRequest.getParent());
+    Assert.assertEquals(reservation, actualRequest.getReservation());
+    Assert.assertEquals(reservationId, actualRequest.getReservationId());
+    Assert.assertTrue(
+        channelProvider.isHeaderSent(
+            ApiClientHeaderProvider.getDefaultApiClientHeaderKey(),
+            GaxGrpcProperties.getDefaultApiClientHeaderPattern()));
+  }
+
+  @Test
+  public void createReservationExceptionTest() throws Exception {
+    StatusRuntimeException exception = new StatusRuntimeException(io.grpc.Status.INVALID_ARGUMENT);
+    mockAdminService.addException(exception);
+
+    try {
+      LocationName parent = LocationName.of("[PROJECT]", "[LOCATION]");
+      Reservation reservation = Reservation.newBuilder().build();
+      String reservationId = "reservationId1116965383";
+      client.createReservation(parent, reservation, reservationId);
+      Assert.fail("No exception raised");
+    } catch (InvalidArgumentException e) {
+      // Expected exception.
+    }
+  }
+
+  @Test
+  public void createReservationTest2() throws Exception {
+    Reservation expectedResponse =
+        Reservation.newBuilder()
+            .setName(ReservationName.of("[PROJECT]", "[LOCATION]", "[RESERVATION]").toString())
+            .setThroughputCapacity(-1174790353)
+            .build();
+    mockAdminService.addResponse(expectedResponse);
+
+    String parent = "parent-995424086";
+    Reservation reservation = Reservation.newBuilder().build();
+    String reservationId = "reservationId1116965383";
+
+    Reservation actualResponse = client.createReservation(parent, reservation, reservationId);
+    Assert.assertEquals(expectedResponse, actualResponse);
+
+    List<AbstractMessage> actualRequests = mockAdminService.getRequests();
+    Assert.assertEquals(1, actualRequests.size());
+    CreateReservationRequest actualRequest = ((CreateReservationRequest) actualRequests.get(0));
+
+    Assert.assertEquals(parent, actualRequest.getParent());
+    Assert.assertEquals(reservation, actualRequest.getReservation());
+    Assert.assertEquals(reservationId, actualRequest.getReservationId());
+    Assert.assertTrue(
+        channelProvider.isHeaderSent(
+            ApiClientHeaderProvider.getDefaultApiClientHeaderKey(),
+            GaxGrpcProperties.getDefaultApiClientHeaderPattern()));
+  }
+
+  @Test
+  public void createReservationExceptionTest2() throws Exception {
+    StatusRuntimeException exception = new StatusRuntimeException(io.grpc.Status.INVALID_ARGUMENT);
+    mockAdminService.addException(exception);
+
+    try {
+      String parent = "parent-995424086";
+      Reservation reservation = Reservation.newBuilder().build();
+      String reservationId = "reservationId1116965383";
+      client.createReservation(parent, reservation, reservationId);
+      Assert.fail("No exception raised");
+    } catch (InvalidArgumentException e) {
+      // Expected exception.
+    }
+  }
+
+  @Test
+  public void getReservationTest() throws Exception {
+    Reservation expectedResponse =
+        Reservation.newBuilder()
+            .setName(ReservationName.of("[PROJECT]", "[LOCATION]", "[RESERVATION]").toString())
+            .setThroughputCapacity(-1174790353)
+            .build();
+    mockAdminService.addResponse(expectedResponse);
+
+    ReservationName name = ReservationName.of("[PROJECT]", "[LOCATION]", "[RESERVATION]");
+
+    Reservation actualResponse = client.getReservation(name);
+    Assert.assertEquals(expectedResponse, actualResponse);
+
+    List<AbstractMessage> actualRequests = mockAdminService.getRequests();
+    Assert.assertEquals(1, actualRequests.size());
+    GetReservationRequest actualRequest = ((GetReservationRequest) actualRequests.get(0));
+
+    Assert.assertEquals(name.toString(), actualRequest.getName());
+    Assert.assertTrue(
+        channelProvider.isHeaderSent(
+            ApiClientHeaderProvider.getDefaultApiClientHeaderKey(),
+            GaxGrpcProperties.getDefaultApiClientHeaderPattern()));
+  }
+
+  @Test
+  public void getReservationExceptionTest() throws Exception {
+    StatusRuntimeException exception = new StatusRuntimeException(io.grpc.Status.INVALID_ARGUMENT);
+    mockAdminService.addException(exception);
+
+    try {
+      ReservationName name = ReservationName.of("[PROJECT]", "[LOCATION]", "[RESERVATION]");
+      client.getReservation(name);
+      Assert.fail("No exception raised");
+    } catch (InvalidArgumentException e) {
+      // Expected exception.
+    }
+  }
+
+  @Test
+  public void getReservationTest2() throws Exception {
+    Reservation expectedResponse =
+        Reservation.newBuilder()
+            .setName(ReservationName.of("[PROJECT]", "[LOCATION]", "[RESERVATION]").toString())
+            .setThroughputCapacity(-1174790353)
+            .build();
+    mockAdminService.addResponse(expectedResponse);
+
+    String name = "name3373707";
+
+    Reservation actualResponse = client.getReservation(name);
+    Assert.assertEquals(expectedResponse, actualResponse);
+
+    List<AbstractMessage> actualRequests = mockAdminService.getRequests();
+    Assert.assertEquals(1, actualRequests.size());
+    GetReservationRequest actualRequest = ((GetReservationRequest) actualRequests.get(0));
+
+    Assert.assertEquals(name, actualRequest.getName());
+    Assert.assertTrue(
+        channelProvider.isHeaderSent(
+            ApiClientHeaderProvider.getDefaultApiClientHeaderKey(),
+            GaxGrpcProperties.getDefaultApiClientHeaderPattern()));
+  }
+
+  @Test
+  public void getReservationExceptionTest2() throws Exception {
+    StatusRuntimeException exception = new StatusRuntimeException(io.grpc.Status.INVALID_ARGUMENT);
+    mockAdminService.addException(exception);
+
+    try {
+      String name = "name3373707";
+      client.getReservation(name);
+      Assert.fail("No exception raised");
+    } catch (InvalidArgumentException e) {
+      // Expected exception.
+    }
+  }
+
+  @Test
+  public void listReservationsTest() throws Exception {
+    Reservation responsesElement = Reservation.newBuilder().build();
+    ListReservationsResponse expectedResponse =
+        ListReservationsResponse.newBuilder()
+            .setNextPageToken("")
+            .addAllReservations(Arrays.asList(responsesElement))
+            .build();
+    mockAdminService.addResponse(expectedResponse);
+
+    LocationName parent = LocationName.of("[PROJECT]", "[LOCATION]");
+
+    ListReservationsPagedResponse pagedListResponse = client.listReservations(parent);
+
+    List<Reservation> resources = Lists.newArrayList(pagedListResponse.iterateAll());
+
+    Assert.assertEquals(1, resources.size());
+    Assert.assertEquals(expectedResponse.getReservationsList().get(0), resources.get(0));
+
+    List<AbstractMessage> actualRequests = mockAdminService.getRequests();
+    Assert.assertEquals(1, actualRequests.size());
+    ListReservationsRequest actualRequest = ((ListReservationsRequest) actualRequests.get(0));
+
+    Assert.assertEquals(parent.toString(), actualRequest.getParent());
+    Assert.assertTrue(
+        channelProvider.isHeaderSent(
+            ApiClientHeaderProvider.getDefaultApiClientHeaderKey(),
+            GaxGrpcProperties.getDefaultApiClientHeaderPattern()));
+  }
+
+  @Test
+  public void listReservationsExceptionTest() throws Exception {
+    StatusRuntimeException exception = new StatusRuntimeException(io.grpc.Status.INVALID_ARGUMENT);
+    mockAdminService.addException(exception);
+
+    try {
+      LocationName parent = LocationName.of("[PROJECT]", "[LOCATION]");
+      client.listReservations(parent);
+      Assert.fail("No exception raised");
+    } catch (InvalidArgumentException e) {
+      // Expected exception.
+    }
+  }
+
+  @Test
+  public void listReservationsTest2() throws Exception {
+    Reservation responsesElement = Reservation.newBuilder().build();
+    ListReservationsResponse expectedResponse =
+        ListReservationsResponse.newBuilder()
+            .setNextPageToken("")
+            .addAllReservations(Arrays.asList(responsesElement))
+            .build();
+    mockAdminService.addResponse(expectedResponse);
+
+    String parent = "parent-995424086";
+
+    ListReservationsPagedResponse pagedListResponse = client.listReservations(parent);
+
+    List<Reservation> resources = Lists.newArrayList(pagedListResponse.iterateAll());
+
+    Assert.assertEquals(1, resources.size());
+    Assert.assertEquals(expectedResponse.getReservationsList().get(0), resources.get(0));
+
+    List<AbstractMessage> actualRequests = mockAdminService.getRequests();
+    Assert.assertEquals(1, actualRequests.size());
+    ListReservationsRequest actualRequest = ((ListReservationsRequest) actualRequests.get(0));
+
+    Assert.assertEquals(parent, actualRequest.getParent());
+    Assert.assertTrue(
+        channelProvider.isHeaderSent(
+            ApiClientHeaderProvider.getDefaultApiClientHeaderKey(),
+            GaxGrpcProperties.getDefaultApiClientHeaderPattern()));
+  }
+
+  @Test
+  public void listReservationsExceptionTest2() throws Exception {
+    StatusRuntimeException exception = new StatusRuntimeException(io.grpc.Status.INVALID_ARGUMENT);
+    mockAdminService.addException(exception);
+
+    try {
+      String parent = "parent-995424086";
+      client.listReservations(parent);
+      Assert.fail("No exception raised");
+    } catch (InvalidArgumentException e) {
+      // Expected exception.
+    }
+  }
+
+  @Test
+  public void updateReservationTest() throws Exception {
+    Reservation expectedResponse =
+        Reservation.newBuilder()
+            .setName(ReservationName.of("[PROJECT]", "[LOCATION]", "[RESERVATION]").toString())
+            .setThroughputCapacity(-1174790353)
+            .build();
+    mockAdminService.addResponse(expectedResponse);
+
+    Reservation reservation = Reservation.newBuilder().build();
+    FieldMask updateMask = FieldMask.newBuilder().build();
+
+    Reservation actualResponse = client.updateReservation(reservation, updateMask);
+    Assert.assertEquals(expectedResponse, actualResponse);
+
+    List<AbstractMessage> actualRequests = mockAdminService.getRequests();
+    Assert.assertEquals(1, actualRequests.size());
+    UpdateReservationRequest actualRequest = ((UpdateReservationRequest) actualRequests.get(0));
+
+    Assert.assertEquals(reservation, actualRequest.getReservation());
+    Assert.assertEquals(updateMask, actualRequest.getUpdateMask());
+    Assert.assertTrue(
+        channelProvider.isHeaderSent(
+            ApiClientHeaderProvider.getDefaultApiClientHeaderKey(),
+            GaxGrpcProperties.getDefaultApiClientHeaderPattern()));
+  }
+
+  @Test
+  public void updateReservationExceptionTest() throws Exception {
+    StatusRuntimeException exception = new StatusRuntimeException(io.grpc.Status.INVALID_ARGUMENT);
+    mockAdminService.addException(exception);
+
+    try {
+      Reservation reservation = Reservation.newBuilder().build();
+      FieldMask updateMask = FieldMask.newBuilder().build();
+      client.updateReservation(reservation, updateMask);
+      Assert.fail("No exception raised");
+    } catch (InvalidArgumentException e) {
+      // Expected exception.
+    }
+  }
+
+  @Test
+  public void deleteReservationTest() throws Exception {
+    Empty expectedResponse = Empty.newBuilder().build();
+    mockAdminService.addResponse(expectedResponse);
+
+    ReservationName name = ReservationName.of("[PROJECT]", "[LOCATION]", "[RESERVATION]");
+
+    client.deleteReservation(name);
+
+    List<AbstractMessage> actualRequests = mockAdminService.getRequests();
+    Assert.assertEquals(1, actualRequests.size());
+    DeleteReservationRequest actualRequest = ((DeleteReservationRequest) actualRequests.get(0));
+
+    Assert.assertEquals(name.toString(), actualRequest.getName());
+    Assert.assertTrue(
+        channelProvider.isHeaderSent(
+            ApiClientHeaderProvider.getDefaultApiClientHeaderKey(),
+            GaxGrpcProperties.getDefaultApiClientHeaderPattern()));
+  }
+
+  @Test
+  public void deleteReservationExceptionTest() throws Exception {
+    StatusRuntimeException exception = new StatusRuntimeException(io.grpc.Status.INVALID_ARGUMENT);
+    mockAdminService.addException(exception);
+
+    try {
+      ReservationName name = ReservationName.of("[PROJECT]", "[LOCATION]", "[RESERVATION]");
+      client.deleteReservation(name);
+      Assert.fail("No exception raised");
+    } catch (InvalidArgumentException e) {
+      // Expected exception.
+    }
+  }
+
+  @Test
+  public void deleteReservationTest2() throws Exception {
+    Empty expectedResponse = Empty.newBuilder().build();
+    mockAdminService.addResponse(expectedResponse);
+
+    String name = "name3373707";
+
+    client.deleteReservation(name);
+
+    List<AbstractMessage> actualRequests = mockAdminService.getRequests();
+    Assert.assertEquals(1, actualRequests.size());
+    DeleteReservationRequest actualRequest = ((DeleteReservationRequest) actualRequests.get(0));
+
+    Assert.assertEquals(name, actualRequest.getName());
+    Assert.assertTrue(
+        channelProvider.isHeaderSent(
+            ApiClientHeaderProvider.getDefaultApiClientHeaderKey(),
+            GaxGrpcProperties.getDefaultApiClientHeaderPattern()));
+  }
+
+  @Test
+  public void deleteReservationExceptionTest2() throws Exception {
+    StatusRuntimeException exception = new StatusRuntimeException(io.grpc.Status.INVALID_ARGUMENT);
+    mockAdminService.addException(exception);
+
+    try {
+      String name = "name3373707";
+      client.deleteReservation(name);
+      Assert.fail("No exception raised");
+    } catch (InvalidArgumentException e) {
+      // Expected exception.
+    }
+  }
+
+  @Test
+  public void listReservationTopicsTest() throws Exception {
+    String responsesElement = "responsesElement-318365110";
+    ListReservationTopicsResponse expectedResponse =
+        ListReservationTopicsResponse.newBuilder()
+            .setNextPageToken("")
+            .addAllTopics(Arrays.asList(responsesElement))
+            .build();
+    mockAdminService.addResponse(expectedResponse);
+
+    ReservationName name = ReservationName.of("[PROJECT]", "[LOCATION]", "[RESERVATION]");
+
+    ListReservationTopicsPagedResponse pagedListResponse = client.listReservationTopics(name);
+
+    List<String> resources = Lists.newArrayList(pagedListResponse.iterateAll());
+
+    Assert.assertEquals(1, resources.size());
+    Assert.assertEquals(expectedResponse.getTopicsList().get(0), resources.get(0));
+
+    List<AbstractMessage> actualRequests = mockAdminService.getRequests();
+    Assert.assertEquals(1, actualRequests.size());
+    ListReservationTopicsRequest actualRequest =
+        ((ListReservationTopicsRequest) actualRequests.get(0));
+
+    Assert.assertEquals(name.toString(), actualRequest.getName());
+    Assert.assertTrue(
+        channelProvider.isHeaderSent(
+            ApiClientHeaderProvider.getDefaultApiClientHeaderKey(),
+            GaxGrpcProperties.getDefaultApiClientHeaderPattern()));
+  }
+
+  @Test
+  public void listReservationTopicsExceptionTest() throws Exception {
+    StatusRuntimeException exception = new StatusRuntimeException(io.grpc.Status.INVALID_ARGUMENT);
+    mockAdminService.addException(exception);
+
+    try {
+      ReservationName name = ReservationName.of("[PROJECT]", "[LOCATION]", "[RESERVATION]");
+      client.listReservationTopics(name);
+      Assert.fail("No exception raised");
+    } catch (InvalidArgumentException e) {
+      // Expected exception.
+    }
+  }
+
+  @Test
+  public void listReservationTopicsTest2() throws Exception {
+    String responsesElement = "responsesElement-318365110";
+    ListReservationTopicsResponse expectedResponse =
+        ListReservationTopicsResponse.newBuilder()
+            .setNextPageToken("")
+            .addAllTopics(Arrays.asList(responsesElement))
+            .build();
+    mockAdminService.addResponse(expectedResponse);
+
+    String name = "name3373707";
+
+    ListReservationTopicsPagedResponse pagedListResponse = client.listReservationTopics(name);
+
+    List<String> resources = Lists.newArrayList(pagedListResponse.iterateAll());
+
+    Assert.assertEquals(1, resources.size());
+    Assert.assertEquals(expectedResponse.getTopicsList().get(0), resources.get(0));
+
+    List<AbstractMessage> actualRequests = mockAdminService.getRequests();
+    Assert.assertEquals(1, actualRequests.size());
+    ListReservationTopicsRequest actualRequest =
+        ((ListReservationTopicsRequest) actualRequests.get(0));
+
+    Assert.assertEquals(name, actualRequest.getName());
+    Assert.assertTrue(
+        channelProvider.isHeaderSent(
+            ApiClientHeaderProvider.getDefaultApiClientHeaderKey(),
+            GaxGrpcProperties.getDefaultApiClientHeaderPattern()));
+  }
+
+  @Test
+  public void listReservationTopicsExceptionTest2() throws Exception {
+    StatusRuntimeException exception = new StatusRuntimeException(io.grpc.Status.INVALID_ARGUMENT);
+    mockAdminService.addException(exception);
+
+    try {
+      String name = "name3373707";
+      client.listReservationTopics(name);
       Assert.fail("No exception raised");
     } catch (InvalidArgumentException e) {
       // Expected exception.

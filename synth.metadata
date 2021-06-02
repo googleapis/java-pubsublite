@@ -4,15 +4,15 @@
       "git": {
         "name": ".",
         "remote": "https://github.com/googleapis/java-pubsublite.git",
-        "sha": "1f2a089fc2abfc689120eccf6e7061298fb58323"
+        "sha": "a142d13090a66d174a34f2b25079a067d9b88331"
       }
     },
     {
       "git": {
         "name": "googleapis",
         "remote": "https://github.com/googleapis/googleapis.git",
-        "sha": "c71311c3e48450d2c9bb2c0e67bed283a29233d5",
-        "internalRef": "375562697"
+        "sha": "51d99df0295d5cebed2b0ba41ce629c42ea8ca65",
+        "internalRef": "377060979"
       }
     },
     {
@@ -184,6 +184,8 @@
     "proto-google-cloud-pubsublite-v1/src/main/java/com/google/cloud/pubsublite/proto/ComputeTimeCursorRequestOrBuilder.java",
     "proto-google-cloud-pubsublite-v1/src/main/java/com/google/cloud/pubsublite/proto/ComputeTimeCursorResponse.java",
     "proto-google-cloud-pubsublite-v1/src/main/java/com/google/cloud/pubsublite/proto/ComputeTimeCursorResponseOrBuilder.java",
+    "proto-google-cloud-pubsublite-v1/src/main/java/com/google/cloud/pubsublite/proto/CreateReservationRequest.java",
+    "proto-google-cloud-pubsublite-v1/src/main/java/com/google/cloud/pubsublite/proto/CreateReservationRequestOrBuilder.java",
     "proto-google-cloud-pubsublite-v1/src/main/java/com/google/cloud/pubsublite/proto/CreateSubscriptionRequest.java",
     "proto-google-cloud-pubsublite-v1/src/main/java/com/google/cloud/pubsublite/proto/CreateSubscriptionRequestOrBuilder.java",
     "proto-google-cloud-pubsublite-v1/src/main/java/com/google/cloud/pubsublite/proto/CreateTopicRequest.java",
@@ -191,12 +193,16 @@
     "proto-google-cloud-pubsublite-v1/src/main/java/com/google/cloud/pubsublite/proto/Cursor.java",
     "proto-google-cloud-pubsublite-v1/src/main/java/com/google/cloud/pubsublite/proto/CursorOrBuilder.java",
     "proto-google-cloud-pubsublite-v1/src/main/java/com/google/cloud/pubsublite/proto/CursorProto.java",
+    "proto-google-cloud-pubsublite-v1/src/main/java/com/google/cloud/pubsublite/proto/DeleteReservationRequest.java",
+    "proto-google-cloud-pubsublite-v1/src/main/java/com/google/cloud/pubsublite/proto/DeleteReservationRequestOrBuilder.java",
     "proto-google-cloud-pubsublite-v1/src/main/java/com/google/cloud/pubsublite/proto/DeleteSubscriptionRequest.java",
     "proto-google-cloud-pubsublite-v1/src/main/java/com/google/cloud/pubsublite/proto/DeleteSubscriptionRequestOrBuilder.java",
     "proto-google-cloud-pubsublite-v1/src/main/java/com/google/cloud/pubsublite/proto/DeleteTopicRequest.java",
     "proto-google-cloud-pubsublite-v1/src/main/java/com/google/cloud/pubsublite/proto/DeleteTopicRequestOrBuilder.java",
     "proto-google-cloud-pubsublite-v1/src/main/java/com/google/cloud/pubsublite/proto/FlowControlRequest.java",
     "proto-google-cloud-pubsublite-v1/src/main/java/com/google/cloud/pubsublite/proto/FlowControlRequestOrBuilder.java",
+    "proto-google-cloud-pubsublite-v1/src/main/java/com/google/cloud/pubsublite/proto/GetReservationRequest.java",
+    "proto-google-cloud-pubsublite-v1/src/main/java/com/google/cloud/pubsublite/proto/GetReservationRequestOrBuilder.java",
     "proto-google-cloud-pubsublite-v1/src/main/java/com/google/cloud/pubsublite/proto/GetSubscriptionRequest.java",
     "proto-google-cloud-pubsublite-v1/src/main/java/com/google/cloud/pubsublite/proto/GetSubscriptionRequestOrBuilder.java",
     "proto-google-cloud-pubsublite-v1/src/main/java/com/google/cloud/pubsublite/proto/GetTopicPartitionsRequest.java",
@@ -221,6 +227,14 @@
     "proto-google-cloud-pubsublite-v1/src/main/java/com/google/cloud/pubsublite/proto/ListPartitionCursorsRequestOrBuilder.java",
     "proto-google-cloud-pubsublite-v1/src/main/java/com/google/cloud/pubsublite/proto/ListPartitionCursorsResponse.java",
     "proto-google-cloud-pubsublite-v1/src/main/java/com/google/cloud/pubsublite/proto/ListPartitionCursorsResponseOrBuilder.java",
+    "proto-google-cloud-pubsublite-v1/src/main/java/com/google/cloud/pubsublite/proto/ListReservationTopicsRequest.java",
+    "proto-google-cloud-pubsublite-v1/src/main/java/com/google/cloud/pubsublite/proto/ListReservationTopicsRequestOrBuilder.java",
+    "proto-google-cloud-pubsublite-v1/src/main/java/com/google/cloud/pubsublite/proto/ListReservationTopicsResponse.java",
+    "proto-google-cloud-pubsublite-v1/src/main/java/com/google/cloud/pubsublite/proto/ListReservationTopicsResponseOrBuilder.java",
+    "proto-google-cloud-pubsublite-v1/src/main/java/com/google/cloud/pubsublite/proto/ListReservationsRequest.java",
+    "proto-google-cloud-pubsublite-v1/src/main/java/com/google/cloud/pubsublite/proto/ListReservationsRequestOrBuilder.java",
+    "proto-google-cloud-pubsublite-v1/src/main/java/com/google/cloud/pubsublite/proto/ListReservationsResponse.java",
+    "proto-google-cloud-pubsublite-v1/src/main/java/com/google/cloud/pubsublite/proto/ListReservationsResponseOrBuilder.java",
     "proto-google-cloud-pubsublite-v1/src/main/java/com/google/cloud/pubsublite/proto/ListSubscriptionsRequest.java",
     "proto-google-cloud-pubsublite-v1/src/main/java/com/google/cloud/pubsublite/proto/ListSubscriptionsRequestOrBuilder.java",
     "proto-google-cloud-pubsublite-v1/src/main/java/com/google/cloud/pubsublite/proto/ListSubscriptionsResponse.java",
@@ -255,6 +269,9 @@
     "proto-google-cloud-pubsublite-v1/src/main/java/com/google/cloud/pubsublite/proto/PublishResponse.java",
     "proto-google-cloud-pubsublite-v1/src/main/java/com/google/cloud/pubsublite/proto/PublishResponseOrBuilder.java",
     "proto-google-cloud-pubsublite-v1/src/main/java/com/google/cloud/pubsublite/proto/PublisherProto.java",
+    "proto-google-cloud-pubsublite-v1/src/main/java/com/google/cloud/pubsublite/proto/Reservation.java",
+    "proto-google-cloud-pubsublite-v1/src/main/java/com/google/cloud/pubsublite/proto/ReservationName.java",
+    "proto-google-cloud-pubsublite-v1/src/main/java/com/google/cloud/pubsublite/proto/ReservationOrBuilder.java",
     "proto-google-cloud-pubsublite-v1/src/main/java/com/google/cloud/pubsublite/proto/SeekRequest.java",
     "proto-google-cloud-pubsublite-v1/src/main/java/com/google/cloud/pubsublite/proto/SeekRequestOrBuilder.java",
     "proto-google-cloud-pubsublite-v1/src/main/java/com/google/cloud/pubsublite/proto/SeekResponse.java",
@@ -285,6 +302,8 @@
     "proto-google-cloud-pubsublite-v1/src/main/java/com/google/cloud/pubsublite/proto/TopicPartitions.java",
     "proto-google-cloud-pubsublite-v1/src/main/java/com/google/cloud/pubsublite/proto/TopicPartitionsOrBuilder.java",
     "proto-google-cloud-pubsublite-v1/src/main/java/com/google/cloud/pubsublite/proto/TopicStatsProto.java",
+    "proto-google-cloud-pubsublite-v1/src/main/java/com/google/cloud/pubsublite/proto/UpdateReservationRequest.java",
+    "proto-google-cloud-pubsublite-v1/src/main/java/com/google/cloud/pubsublite/proto/UpdateReservationRequestOrBuilder.java",
     "proto-google-cloud-pubsublite-v1/src/main/java/com/google/cloud/pubsublite/proto/UpdateSubscriptionRequest.java",
     "proto-google-cloud-pubsublite-v1/src/main/java/com/google/cloud/pubsublite/proto/UpdateSubscriptionRequestOrBuilder.java",
     "proto-google-cloud-pubsublite-v1/src/main/java/com/google/cloud/pubsublite/proto/UpdateTopicRequest.java",

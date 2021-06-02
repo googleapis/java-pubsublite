@@ -16,6 +16,8 @@
 
 package com.google.cloud.pubsublite.v1.stub;
 
+import static com.google.cloud.pubsublite.v1.AdminServiceClient.ListReservationTopicsPagedResponse;
+import static com.google.cloud.pubsublite.v1.AdminServiceClient.ListReservationsPagedResponse;
 import static com.google.cloud.pubsublite.v1.AdminServiceClient.ListSubscriptionsPagedResponse;
 import static com.google.cloud.pubsublite.v1.AdminServiceClient.ListTopicSubscriptionsPagedResponse;
 import static com.google.cloud.pubsublite.v1.AdminServiceClient.ListTopicsPagedResponse;
@@ -27,22 +29,31 @@ import com.google.api.gax.grpc.GrpcStubCallableFactory;
 import com.google.api.gax.rpc.ClientContext;
 import com.google.api.gax.rpc.RequestParamsExtractor;
 import com.google.api.gax.rpc.UnaryCallable;
+import com.google.cloud.pubsublite.proto.CreateReservationRequest;
 import com.google.cloud.pubsublite.proto.CreateSubscriptionRequest;
 import com.google.cloud.pubsublite.proto.CreateTopicRequest;
+import com.google.cloud.pubsublite.proto.DeleteReservationRequest;
 import com.google.cloud.pubsublite.proto.DeleteSubscriptionRequest;
 import com.google.cloud.pubsublite.proto.DeleteTopicRequest;
+import com.google.cloud.pubsublite.proto.GetReservationRequest;
 import com.google.cloud.pubsublite.proto.GetSubscriptionRequest;
 import com.google.cloud.pubsublite.proto.GetTopicPartitionsRequest;
 import com.google.cloud.pubsublite.proto.GetTopicRequest;
+import com.google.cloud.pubsublite.proto.ListReservationTopicsRequest;
+import com.google.cloud.pubsublite.proto.ListReservationTopicsResponse;
+import com.google.cloud.pubsublite.proto.ListReservationsRequest;
+import com.google.cloud.pubsublite.proto.ListReservationsResponse;
 import com.google.cloud.pubsublite.proto.ListSubscriptionsRequest;
 import com.google.cloud.pubsublite.proto.ListSubscriptionsResponse;
 import com.google.cloud.pubsublite.proto.ListTopicSubscriptionsRequest;
 import com.google.cloud.pubsublite.proto.ListTopicSubscriptionsResponse;
 import com.google.cloud.pubsublite.proto.ListTopicsRequest;
 import com.google.cloud.pubsublite.proto.ListTopicsResponse;
+import com.google.cloud.pubsublite.proto.Reservation;
 import com.google.cloud.pubsublite.proto.Subscription;
 import com.google.cloud.pubsublite.proto.Topic;
 import com.google.cloud.pubsublite.proto.TopicPartitions;
+import com.google.cloud.pubsublite.proto.UpdateReservationRequest;
 import com.google.cloud.pubsublite.proto.UpdateSubscriptionRequest;
 import com.google.cloud.pubsublite.proto.UpdateTopicRequest;
 import com.google.common.collect.ImmutableMap;
@@ -178,6 +189,68 @@ public class GrpcAdminServiceStub extends AdminServiceStub {
               .setResponseMarshaller(ProtoUtils.marshaller(Empty.getDefaultInstance()))
               .build();
 
+  private static final MethodDescriptor<CreateReservationRequest, Reservation>
+      createReservationMethodDescriptor =
+          MethodDescriptor.<CreateReservationRequest, Reservation>newBuilder()
+              .setType(MethodDescriptor.MethodType.UNARY)
+              .setFullMethodName("google.cloud.pubsublite.v1.AdminService/CreateReservation")
+              .setRequestMarshaller(
+                  ProtoUtils.marshaller(CreateReservationRequest.getDefaultInstance()))
+              .setResponseMarshaller(ProtoUtils.marshaller(Reservation.getDefaultInstance()))
+              .build();
+
+  private static final MethodDescriptor<GetReservationRequest, Reservation>
+      getReservationMethodDescriptor =
+          MethodDescriptor.<GetReservationRequest, Reservation>newBuilder()
+              .setType(MethodDescriptor.MethodType.UNARY)
+              .setFullMethodName("google.cloud.pubsublite.v1.AdminService/GetReservation")
+              .setRequestMarshaller(
+                  ProtoUtils.marshaller(GetReservationRequest.getDefaultInstance()))
+              .setResponseMarshaller(ProtoUtils.marshaller(Reservation.getDefaultInstance()))
+              .build();
+
+  private static final MethodDescriptor<ListReservationsRequest, ListReservationsResponse>
+      listReservationsMethodDescriptor =
+          MethodDescriptor.<ListReservationsRequest, ListReservationsResponse>newBuilder()
+              .setType(MethodDescriptor.MethodType.UNARY)
+              .setFullMethodName("google.cloud.pubsublite.v1.AdminService/ListReservations")
+              .setRequestMarshaller(
+                  ProtoUtils.marshaller(ListReservationsRequest.getDefaultInstance()))
+              .setResponseMarshaller(
+                  ProtoUtils.marshaller(ListReservationsResponse.getDefaultInstance()))
+              .build();
+
+  private static final MethodDescriptor<UpdateReservationRequest, Reservation>
+      updateReservationMethodDescriptor =
+          MethodDescriptor.<UpdateReservationRequest, Reservation>newBuilder()
+              .setType(MethodDescriptor.MethodType.UNARY)
+              .setFullMethodName("google.cloud.pubsublite.v1.AdminService/UpdateReservation")
+              .setRequestMarshaller(
+                  ProtoUtils.marshaller(UpdateReservationRequest.getDefaultInstance()))
+              .setResponseMarshaller(ProtoUtils.marshaller(Reservation.getDefaultInstance()))
+              .build();
+
+  private static final MethodDescriptor<DeleteReservationRequest, Empty>
+      deleteReservationMethodDescriptor =
+          MethodDescriptor.<DeleteReservationRequest, Empty>newBuilder()
+              .setType(MethodDescriptor.MethodType.UNARY)
+              .setFullMethodName("google.cloud.pubsublite.v1.AdminService/DeleteReservation")
+              .setRequestMarshaller(
+                  ProtoUtils.marshaller(DeleteReservationRequest.getDefaultInstance()))
+              .setResponseMarshaller(ProtoUtils.marshaller(Empty.getDefaultInstance()))
+              .build();
+
+  private static final MethodDescriptor<ListReservationTopicsRequest, ListReservationTopicsResponse>
+      listReservationTopicsMethodDescriptor =
+          MethodDescriptor.<ListReservationTopicsRequest, ListReservationTopicsResponse>newBuilder()
+              .setType(MethodDescriptor.MethodType.UNARY)
+              .setFullMethodName("google.cloud.pubsublite.v1.AdminService/ListReservationTopics")
+              .setRequestMarshaller(
+                  ProtoUtils.marshaller(ListReservationTopicsRequest.getDefaultInstance()))
+              .setResponseMarshaller(
+                  ProtoUtils.marshaller(ListReservationTopicsResponse.getDefaultInstance()))
+              .build();
+
   private final UnaryCallable<CreateTopicRequest, Topic> createTopicCallable;
   private final UnaryCallable<GetTopicRequest, Topic> getTopicCallable;
   private final UnaryCallable<GetTopicPartitionsRequest, TopicPartitions>
@@ -198,6 +271,18 @@ public class GrpcAdminServiceStub extends AdminServiceStub {
       listSubscriptionsPagedCallable;
   private final UnaryCallable<UpdateSubscriptionRequest, Subscription> updateSubscriptionCallable;
   private final UnaryCallable<DeleteSubscriptionRequest, Empty> deleteSubscriptionCallable;
+  private final UnaryCallable<CreateReservationRequest, Reservation> createReservationCallable;
+  private final UnaryCallable<GetReservationRequest, Reservation> getReservationCallable;
+  private final UnaryCallable<ListReservationsRequest, ListReservationsResponse>
+      listReservationsCallable;
+  private final UnaryCallable<ListReservationsRequest, ListReservationsPagedResponse>
+      listReservationsPagedCallable;
+  private final UnaryCallable<UpdateReservationRequest, Reservation> updateReservationCallable;
+  private final UnaryCallable<DeleteReservationRequest, Empty> deleteReservationCallable;
+  private final UnaryCallable<ListReservationTopicsRequest, ListReservationTopicsResponse>
+      listReservationTopicsCallable;
+  private final UnaryCallable<ListReservationTopicsRequest, ListReservationTopicsPagedResponse>
+      listReservationTopicsPagedCallable;
 
   private final BackgroundResource backgroundResources;
   private final GrpcOperationsStub operationsStub;
@@ -402,6 +487,88 @@ public class GrpcAdminServiceStub extends AdminServiceStub {
                   }
                 })
             .build();
+    GrpcCallSettings<CreateReservationRequest, Reservation> createReservationTransportSettings =
+        GrpcCallSettings.<CreateReservationRequest, Reservation>newBuilder()
+            .setMethodDescriptor(createReservationMethodDescriptor)
+            .setParamsExtractor(
+                new RequestParamsExtractor<CreateReservationRequest>() {
+                  @Override
+                  public Map<String, String> extract(CreateReservationRequest request) {
+                    ImmutableMap.Builder<String, String> params = ImmutableMap.builder();
+                    params.put("parent", String.valueOf(request.getParent()));
+                    return params.build();
+                  }
+                })
+            .build();
+    GrpcCallSettings<GetReservationRequest, Reservation> getReservationTransportSettings =
+        GrpcCallSettings.<GetReservationRequest, Reservation>newBuilder()
+            .setMethodDescriptor(getReservationMethodDescriptor)
+            .setParamsExtractor(
+                new RequestParamsExtractor<GetReservationRequest>() {
+                  @Override
+                  public Map<String, String> extract(GetReservationRequest request) {
+                    ImmutableMap.Builder<String, String> params = ImmutableMap.builder();
+                    params.put("name", String.valueOf(request.getName()));
+                    return params.build();
+                  }
+                })
+            .build();
+    GrpcCallSettings<ListReservationsRequest, ListReservationsResponse>
+        listReservationsTransportSettings =
+            GrpcCallSettings.<ListReservationsRequest, ListReservationsResponse>newBuilder()
+                .setMethodDescriptor(listReservationsMethodDescriptor)
+                .setParamsExtractor(
+                    new RequestParamsExtractor<ListReservationsRequest>() {
+                      @Override
+                      public Map<String, String> extract(ListReservationsRequest request) {
+                        ImmutableMap.Builder<String, String> params = ImmutableMap.builder();
+                        params.put("parent", String.valueOf(request.getParent()));
+                        return params.build();
+                      }
+                    })
+                .build();
+    GrpcCallSettings<UpdateReservationRequest, Reservation> updateReservationTransportSettings =
+        GrpcCallSettings.<UpdateReservationRequest, Reservation>newBuilder()
+            .setMethodDescriptor(updateReservationMethodDescriptor)
+            .setParamsExtractor(
+                new RequestParamsExtractor<UpdateReservationRequest>() {
+                  @Override
+                  public Map<String, String> extract(UpdateReservationRequest request) {
+                    ImmutableMap.Builder<String, String> params = ImmutableMap.builder();
+                    params.put(
+                        "reservation.name", String.valueOf(request.getReservation().getName()));
+                    return params.build();
+                  }
+                })
+            .build();
+    GrpcCallSettings<DeleteReservationRequest, Empty> deleteReservationTransportSettings =
+        GrpcCallSettings.<DeleteReservationRequest, Empty>newBuilder()
+            .setMethodDescriptor(deleteReservationMethodDescriptor)
+            .setParamsExtractor(
+                new RequestParamsExtractor<DeleteReservationRequest>() {
+                  @Override
+                  public Map<String, String> extract(DeleteReservationRequest request) {
+                    ImmutableMap.Builder<String, String> params = ImmutableMap.builder();
+                    params.put("name", String.valueOf(request.getName()));
+                    return params.build();
+                  }
+                })
+            .build();
+    GrpcCallSettings<ListReservationTopicsRequest, ListReservationTopicsResponse>
+        listReservationTopicsTransportSettings =
+            GrpcCallSettings
+                .<ListReservationTopicsRequest, ListReservationTopicsResponse>newBuilder()
+                .setMethodDescriptor(listReservationTopicsMethodDescriptor)
+                .setParamsExtractor(
+                    new RequestParamsExtractor<ListReservationTopicsRequest>() {
+                      @Override
+                      public Map<String, String> extract(ListReservationTopicsRequest request) {
+                        ImmutableMap.Builder<String, String> params = ImmutableMap.builder();
+                        params.put("name", String.valueOf(request.getName()));
+                        return params.build();
+                      }
+                    })
+                .build();
 
     this.createTopicCallable =
         callableFactory.createUnaryCallable(
@@ -463,6 +630,40 @@ public class GrpcAdminServiceStub extends AdminServiceStub {
         callableFactory.createUnaryCallable(
             deleteSubscriptionTransportSettings,
             settings.deleteSubscriptionSettings(),
+            clientContext);
+    this.createReservationCallable =
+        callableFactory.createUnaryCallable(
+            createReservationTransportSettings,
+            settings.createReservationSettings(),
+            clientContext);
+    this.getReservationCallable =
+        callableFactory.createUnaryCallable(
+            getReservationTransportSettings, settings.getReservationSettings(), clientContext);
+    this.listReservationsCallable =
+        callableFactory.createUnaryCallable(
+            listReservationsTransportSettings, settings.listReservationsSettings(), clientContext);
+    this.listReservationsPagedCallable =
+        callableFactory.createPagedCallable(
+            listReservationsTransportSettings, settings.listReservationsSettings(), clientContext);
+    this.updateReservationCallable =
+        callableFactory.createUnaryCallable(
+            updateReservationTransportSettings,
+            settings.updateReservationSettings(),
+            clientContext);
+    this.deleteReservationCallable =
+        callableFactory.createUnaryCallable(
+            deleteReservationTransportSettings,
+            settings.deleteReservationSettings(),
+            clientContext);
+    this.listReservationTopicsCallable =
+        callableFactory.createUnaryCallable(
+            listReservationTopicsTransportSettings,
+            settings.listReservationTopicsSettings(),
+            clientContext);
+    this.listReservationTopicsPagedCallable =
+        callableFactory.createPagedCallable(
+            listReservationTopicsTransportSettings,
+            settings.listReservationTopicsSettings(),
             clientContext);
 
     this.backgroundResources =
@@ -550,6 +751,50 @@ public class GrpcAdminServiceStub extends AdminServiceStub {
   @Override
   public UnaryCallable<DeleteSubscriptionRequest, Empty> deleteSubscriptionCallable() {
     return deleteSubscriptionCallable;
+  }
+
+  @Override
+  public UnaryCallable<CreateReservationRequest, Reservation> createReservationCallable() {
+    return createReservationCallable;
+  }
+
+  @Override
+  public UnaryCallable<GetReservationRequest, Reservation> getReservationCallable() {
+    return getReservationCallable;
+  }
+
+  @Override
+  public UnaryCallable<ListReservationsRequest, ListReservationsResponse>
+      listReservationsCallable() {
+    return listReservationsCallable;
+  }
+
+  @Override
+  public UnaryCallable<ListReservationsRequest, ListReservationsPagedResponse>
+      listReservationsPagedCallable() {
+    return listReservationsPagedCallable;
+  }
+
+  @Override
+  public UnaryCallable<UpdateReservationRequest, Reservation> updateReservationCallable() {
+    return updateReservationCallable;
+  }
+
+  @Override
+  public UnaryCallable<DeleteReservationRequest, Empty> deleteReservationCallable() {
+    return deleteReservationCallable;
+  }
+
+  @Override
+  public UnaryCallable<ListReservationTopicsRequest, ListReservationTopicsResponse>
+      listReservationTopicsCallable() {
+    return listReservationTopicsCallable;
+  }
+
+  @Override
+  public UnaryCallable<ListReservationTopicsRequest, ListReservationTopicsPagedResponse>
+      listReservationTopicsPagedCallable() {
+    return listReservationTopicsPagedCallable;
   }
 
   @Override

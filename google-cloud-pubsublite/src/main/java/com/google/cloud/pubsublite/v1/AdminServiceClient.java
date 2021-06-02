@@ -26,13 +26,20 @@ import com.google.api.gax.paging.AbstractPage;
 import com.google.api.gax.paging.AbstractPagedListResponse;
 import com.google.api.gax.rpc.PageContext;
 import com.google.api.gax.rpc.UnaryCallable;
+import com.google.cloud.pubsublite.proto.CreateReservationRequest;
 import com.google.cloud.pubsublite.proto.CreateSubscriptionRequest;
 import com.google.cloud.pubsublite.proto.CreateTopicRequest;
+import com.google.cloud.pubsublite.proto.DeleteReservationRequest;
 import com.google.cloud.pubsublite.proto.DeleteSubscriptionRequest;
 import com.google.cloud.pubsublite.proto.DeleteTopicRequest;
+import com.google.cloud.pubsublite.proto.GetReservationRequest;
 import com.google.cloud.pubsublite.proto.GetSubscriptionRequest;
 import com.google.cloud.pubsublite.proto.GetTopicPartitionsRequest;
 import com.google.cloud.pubsublite.proto.GetTopicRequest;
+import com.google.cloud.pubsublite.proto.ListReservationTopicsRequest;
+import com.google.cloud.pubsublite.proto.ListReservationTopicsResponse;
+import com.google.cloud.pubsublite.proto.ListReservationsRequest;
+import com.google.cloud.pubsublite.proto.ListReservationsResponse;
 import com.google.cloud.pubsublite.proto.ListSubscriptionsRequest;
 import com.google.cloud.pubsublite.proto.ListSubscriptionsResponse;
 import com.google.cloud.pubsublite.proto.ListTopicSubscriptionsRequest;
@@ -40,11 +47,14 @@ import com.google.cloud.pubsublite.proto.ListTopicSubscriptionsResponse;
 import com.google.cloud.pubsublite.proto.ListTopicsRequest;
 import com.google.cloud.pubsublite.proto.ListTopicsResponse;
 import com.google.cloud.pubsublite.proto.LocationName;
+import com.google.cloud.pubsublite.proto.Reservation;
+import com.google.cloud.pubsublite.proto.ReservationName;
 import com.google.cloud.pubsublite.proto.Subscription;
 import com.google.cloud.pubsublite.proto.SubscriptionName;
 import com.google.cloud.pubsublite.proto.Topic;
 import com.google.cloud.pubsublite.proto.TopicName;
 import com.google.cloud.pubsublite.proto.TopicPartitions;
+import com.google.cloud.pubsublite.proto.UpdateReservationRequest;
 import com.google.cloud.pubsublite.proto.UpdateSubscriptionRequest;
 import com.google.cloud.pubsublite.proto.UpdateTopicRequest;
 import com.google.cloud.pubsublite.v1.stub.AdminServiceStub;
@@ -1425,6 +1435,671 @@ public class AdminServiceClient implements BackgroundResource {
     return stub.deleteSubscriptionCallable();
   }
 
+  // AUTO-GENERATED DOCUMENTATION AND METHOD.
+  /**
+   * Creates a new reservation.
+   *
+   * <p>Sample code:
+   *
+   * <pre>{@code
+   * try (AdminServiceClient adminServiceClient = AdminServiceClient.create()) {
+   *   LocationName parent = LocationName.of("[PROJECT]", "[LOCATION]");
+   *   Reservation reservation = Reservation.newBuilder().build();
+   *   String reservationId = "reservationId1116965383";
+   *   Reservation response =
+   *       adminServiceClient.createReservation(parent, reservation, reservationId);
+   * }
+   * }</pre>
+   *
+   * @param parent Required. The parent location in which to create the reservation. Structured like
+   *     `projects/{project_number}/locations/{location}`.
+   * @param reservation Required. Configuration of the reservation to create. Its `name` field is
+   *     ignored.
+   * @param reservationId Required. The ID to use for the reservation, which will become the final
+   *     component of the reservation's name.
+   *     <p>This value is structured like: `my-reservation-name`.
+   * @throws com.google.api.gax.rpc.ApiException if the remote call fails
+   */
+  public final Reservation createReservation(
+      LocationName parent, Reservation reservation, String reservationId) {
+    CreateReservationRequest request =
+        CreateReservationRequest.newBuilder()
+            .setParent(parent == null ? null : parent.toString())
+            .setReservation(reservation)
+            .setReservationId(reservationId)
+            .build();
+    return createReservation(request);
+  }
+
+  // AUTO-GENERATED DOCUMENTATION AND METHOD.
+  /**
+   * Creates a new reservation.
+   *
+   * <p>Sample code:
+   *
+   * <pre>{@code
+   * try (AdminServiceClient adminServiceClient = AdminServiceClient.create()) {
+   *   String parent = LocationName.of("[PROJECT]", "[LOCATION]").toString();
+   *   Reservation reservation = Reservation.newBuilder().build();
+   *   String reservationId = "reservationId1116965383";
+   *   Reservation response =
+   *       adminServiceClient.createReservation(parent, reservation, reservationId);
+   * }
+   * }</pre>
+   *
+   * @param parent Required. The parent location in which to create the reservation. Structured like
+   *     `projects/{project_number}/locations/{location}`.
+   * @param reservation Required. Configuration of the reservation to create. Its `name` field is
+   *     ignored.
+   * @param reservationId Required. The ID to use for the reservation, which will become the final
+   *     component of the reservation's name.
+   *     <p>This value is structured like: `my-reservation-name`.
+   * @throws com.google.api.gax.rpc.ApiException if the remote call fails
+   */
+  public final Reservation createReservation(
+      String parent, Reservation reservation, String reservationId) {
+    CreateReservationRequest request =
+        CreateReservationRequest.newBuilder()
+            .setParent(parent)
+            .setReservation(reservation)
+            .setReservationId(reservationId)
+            .build();
+    return createReservation(request);
+  }
+
+  // AUTO-GENERATED DOCUMENTATION AND METHOD.
+  /**
+   * Creates a new reservation.
+   *
+   * <p>Sample code:
+   *
+   * <pre>{@code
+   * try (AdminServiceClient adminServiceClient = AdminServiceClient.create()) {
+   *   CreateReservationRequest request =
+   *       CreateReservationRequest.newBuilder()
+   *           .setParent(LocationName.of("[PROJECT]", "[LOCATION]").toString())
+   *           .setReservation(Reservation.newBuilder().build())
+   *           .setReservationId("reservationId1116965383")
+   *           .build();
+   *   Reservation response = adminServiceClient.createReservation(request);
+   * }
+   * }</pre>
+   *
+   * @param request The request object containing all of the parameters for the API call.
+   * @throws com.google.api.gax.rpc.ApiException if the remote call fails
+   */
+  public final Reservation createReservation(CreateReservationRequest request) {
+    return createReservationCallable().call(request);
+  }
+
+  // AUTO-GENERATED DOCUMENTATION AND METHOD.
+  /**
+   * Creates a new reservation.
+   *
+   * <p>Sample code:
+   *
+   * <pre>{@code
+   * try (AdminServiceClient adminServiceClient = AdminServiceClient.create()) {
+   *   CreateReservationRequest request =
+   *       CreateReservationRequest.newBuilder()
+   *           .setParent(LocationName.of("[PROJECT]", "[LOCATION]").toString())
+   *           .setReservation(Reservation.newBuilder().build())
+   *           .setReservationId("reservationId1116965383")
+   *           .build();
+   *   ApiFuture<Reservation> future =
+   *       adminServiceClient.createReservationCallable().futureCall(request);
+   *   // Do something.
+   *   Reservation response = future.get();
+   * }
+   * }</pre>
+   */
+  public final UnaryCallable<CreateReservationRequest, Reservation> createReservationCallable() {
+    return stub.createReservationCallable();
+  }
+
+  // AUTO-GENERATED DOCUMENTATION AND METHOD.
+  /**
+   * Returns the reservation configuration.
+   *
+   * <p>Sample code:
+   *
+   * <pre>{@code
+   * try (AdminServiceClient adminServiceClient = AdminServiceClient.create()) {
+   *   ReservationName name = ReservationName.of("[PROJECT]", "[LOCATION]", "[RESERVATION]");
+   *   Reservation response = adminServiceClient.getReservation(name);
+   * }
+   * }</pre>
+   *
+   * @param name Required. The name of the reservation whose configuration to return. Structured
+   *     like: projects/{project_number}/locations/{location}/reservations/{reservation_id}
+   * @throws com.google.api.gax.rpc.ApiException if the remote call fails
+   */
+  public final Reservation getReservation(ReservationName name) {
+    GetReservationRequest request =
+        GetReservationRequest.newBuilder().setName(name == null ? null : name.toString()).build();
+    return getReservation(request);
+  }
+
+  // AUTO-GENERATED DOCUMENTATION AND METHOD.
+  /**
+   * Returns the reservation configuration.
+   *
+   * <p>Sample code:
+   *
+   * <pre>{@code
+   * try (AdminServiceClient adminServiceClient = AdminServiceClient.create()) {
+   *   String name = ReservationName.of("[PROJECT]", "[LOCATION]", "[RESERVATION]").toString();
+   *   Reservation response = adminServiceClient.getReservation(name);
+   * }
+   * }</pre>
+   *
+   * @param name Required. The name of the reservation whose configuration to return. Structured
+   *     like: projects/{project_number}/locations/{location}/reservations/{reservation_id}
+   * @throws com.google.api.gax.rpc.ApiException if the remote call fails
+   */
+  public final Reservation getReservation(String name) {
+    GetReservationRequest request = GetReservationRequest.newBuilder().setName(name).build();
+    return getReservation(request);
+  }
+
+  // AUTO-GENERATED DOCUMENTATION AND METHOD.
+  /**
+   * Returns the reservation configuration.
+   *
+   * <p>Sample code:
+   *
+   * <pre>{@code
+   * try (AdminServiceClient adminServiceClient = AdminServiceClient.create()) {
+   *   GetReservationRequest request =
+   *       GetReservationRequest.newBuilder()
+   *           .setName(ReservationName.of("[PROJECT]", "[LOCATION]", "[RESERVATION]").toString())
+   *           .build();
+   *   Reservation response = adminServiceClient.getReservation(request);
+   * }
+   * }</pre>
+   *
+   * @param request The request object containing all of the parameters for the API call.
+   * @throws com.google.api.gax.rpc.ApiException if the remote call fails
+   */
+  public final Reservation getReservation(GetReservationRequest request) {
+    return getReservationCallable().call(request);
+  }
+
+  // AUTO-GENERATED DOCUMENTATION AND METHOD.
+  /**
+   * Returns the reservation configuration.
+   *
+   * <p>Sample code:
+   *
+   * <pre>{@code
+   * try (AdminServiceClient adminServiceClient = AdminServiceClient.create()) {
+   *   GetReservationRequest request =
+   *       GetReservationRequest.newBuilder()
+   *           .setName(ReservationName.of("[PROJECT]", "[LOCATION]", "[RESERVATION]").toString())
+   *           .build();
+   *   ApiFuture<Reservation> future =
+   *       adminServiceClient.getReservationCallable().futureCall(request);
+   *   // Do something.
+   *   Reservation response = future.get();
+   * }
+   * }</pre>
+   */
+  public final UnaryCallable<GetReservationRequest, Reservation> getReservationCallable() {
+    return stub.getReservationCallable();
+  }
+
+  // AUTO-GENERATED DOCUMENTATION AND METHOD.
+  /**
+   * Returns the list of reservations for the given project.
+   *
+   * <p>Sample code:
+   *
+   * <pre>{@code
+   * try (AdminServiceClient adminServiceClient = AdminServiceClient.create()) {
+   *   LocationName parent = LocationName.of("[PROJECT]", "[LOCATION]");
+   *   for (Reservation element : adminServiceClient.listReservations(parent).iterateAll()) {
+   *     // doThingsWith(element);
+   *   }
+   * }
+   * }</pre>
+   *
+   * @param parent Required. The parent whose reservations are to be listed. Structured like
+   *     `projects/{project_number}/locations/{location}`.
+   * @throws com.google.api.gax.rpc.ApiException if the remote call fails
+   */
+  public final ListReservationsPagedResponse listReservations(LocationName parent) {
+    ListReservationsRequest request =
+        ListReservationsRequest.newBuilder()
+            .setParent(parent == null ? null : parent.toString())
+            .build();
+    return listReservations(request);
+  }
+
+  // AUTO-GENERATED DOCUMENTATION AND METHOD.
+  /**
+   * Returns the list of reservations for the given project.
+   *
+   * <p>Sample code:
+   *
+   * <pre>{@code
+   * try (AdminServiceClient adminServiceClient = AdminServiceClient.create()) {
+   *   String parent = LocationName.of("[PROJECT]", "[LOCATION]").toString();
+   *   for (Reservation element : adminServiceClient.listReservations(parent).iterateAll()) {
+   *     // doThingsWith(element);
+   *   }
+   * }
+   * }</pre>
+   *
+   * @param parent Required. The parent whose reservations are to be listed. Structured like
+   *     `projects/{project_number}/locations/{location}`.
+   * @throws com.google.api.gax.rpc.ApiException if the remote call fails
+   */
+  public final ListReservationsPagedResponse listReservations(String parent) {
+    ListReservationsRequest request =
+        ListReservationsRequest.newBuilder().setParent(parent).build();
+    return listReservations(request);
+  }
+
+  // AUTO-GENERATED DOCUMENTATION AND METHOD.
+  /**
+   * Returns the list of reservations for the given project.
+   *
+   * <p>Sample code:
+   *
+   * <pre>{@code
+   * try (AdminServiceClient adminServiceClient = AdminServiceClient.create()) {
+   *   ListReservationsRequest request =
+   *       ListReservationsRequest.newBuilder()
+   *           .setParent(LocationName.of("[PROJECT]", "[LOCATION]").toString())
+   *           .setPageSize(883849137)
+   *           .setPageToken("pageToken873572522")
+   *           .build();
+   *   for (Reservation element : adminServiceClient.listReservations(request).iterateAll()) {
+   *     // doThingsWith(element);
+   *   }
+   * }
+   * }</pre>
+   *
+   * @param request The request object containing all of the parameters for the API call.
+   * @throws com.google.api.gax.rpc.ApiException if the remote call fails
+   */
+  public final ListReservationsPagedResponse listReservations(ListReservationsRequest request) {
+    return listReservationsPagedCallable().call(request);
+  }
+
+  // AUTO-GENERATED DOCUMENTATION AND METHOD.
+  /**
+   * Returns the list of reservations for the given project.
+   *
+   * <p>Sample code:
+   *
+   * <pre>{@code
+   * try (AdminServiceClient adminServiceClient = AdminServiceClient.create()) {
+   *   ListReservationsRequest request =
+   *       ListReservationsRequest.newBuilder()
+   *           .setParent(LocationName.of("[PROJECT]", "[LOCATION]").toString())
+   *           .setPageSize(883849137)
+   *           .setPageToken("pageToken873572522")
+   *           .build();
+   *   ApiFuture<Reservation> future =
+   *       adminServiceClient.listReservationsPagedCallable().futureCall(request);
+   *   // Do something.
+   *   for (Reservation element : future.get().iterateAll()) {
+   *     // doThingsWith(element);
+   *   }
+   * }
+   * }</pre>
+   */
+  public final UnaryCallable<ListReservationsRequest, ListReservationsPagedResponse>
+      listReservationsPagedCallable() {
+    return stub.listReservationsPagedCallable();
+  }
+
+  // AUTO-GENERATED DOCUMENTATION AND METHOD.
+  /**
+   * Returns the list of reservations for the given project.
+   *
+   * <p>Sample code:
+   *
+   * <pre>{@code
+   * try (AdminServiceClient adminServiceClient = AdminServiceClient.create()) {
+   *   ListReservationsRequest request =
+   *       ListReservationsRequest.newBuilder()
+   *           .setParent(LocationName.of("[PROJECT]", "[LOCATION]").toString())
+   *           .setPageSize(883849137)
+   *           .setPageToken("pageToken873572522")
+   *           .build();
+   *   while (true) {
+   *     ListReservationsResponse response =
+   *         adminServiceClient.listReservationsCallable().call(request);
+   *     for (Reservation element : response.getResponsesList()) {
+   *       // doThingsWith(element);
+   *     }
+   *     String nextPageToken = response.getNextPageToken();
+   *     if (!Strings.isNullOrEmpty(nextPageToken)) {
+   *       request = request.toBuilder().setPageToken(nextPageToken).build();
+   *     } else {
+   *       break;
+   *     }
+   *   }
+   * }
+   * }</pre>
+   */
+  public final UnaryCallable<ListReservationsRequest, ListReservationsResponse>
+      listReservationsCallable() {
+    return stub.listReservationsCallable();
+  }
+
+  // AUTO-GENERATED DOCUMENTATION AND METHOD.
+  /**
+   * Updates properties of the specified reservation.
+   *
+   * <p>Sample code:
+   *
+   * <pre>{@code
+   * try (AdminServiceClient adminServiceClient = AdminServiceClient.create()) {
+   *   Reservation reservation = Reservation.newBuilder().build();
+   *   FieldMask updateMask = FieldMask.newBuilder().build();
+   *   Reservation response = adminServiceClient.updateReservation(reservation, updateMask);
+   * }
+   * }</pre>
+   *
+   * @param reservation Required. The reservation to update. Its `name` field must be populated.
+   * @param updateMask Required. A mask specifying the reservation fields to change.
+   * @throws com.google.api.gax.rpc.ApiException if the remote call fails
+   */
+  public final Reservation updateReservation(Reservation reservation, FieldMask updateMask) {
+    UpdateReservationRequest request =
+        UpdateReservationRequest.newBuilder()
+            .setReservation(reservation)
+            .setUpdateMask(updateMask)
+            .build();
+    return updateReservation(request);
+  }
+
+  // AUTO-GENERATED DOCUMENTATION AND METHOD.
+  /**
+   * Updates properties of the specified reservation.
+   *
+   * <p>Sample code:
+   *
+   * <pre>{@code
+   * try (AdminServiceClient adminServiceClient = AdminServiceClient.create()) {
+   *   UpdateReservationRequest request =
+   *       UpdateReservationRequest.newBuilder()
+   *           .setReservation(Reservation.newBuilder().build())
+   *           .setUpdateMask(FieldMask.newBuilder().build())
+   *           .build();
+   *   Reservation response = adminServiceClient.updateReservation(request);
+   * }
+   * }</pre>
+   *
+   * @param request The request object containing all of the parameters for the API call.
+   * @throws com.google.api.gax.rpc.ApiException if the remote call fails
+   */
+  public final Reservation updateReservation(UpdateReservationRequest request) {
+    return updateReservationCallable().call(request);
+  }
+
+  // AUTO-GENERATED DOCUMENTATION AND METHOD.
+  /**
+   * Updates properties of the specified reservation.
+   *
+   * <p>Sample code:
+   *
+   * <pre>{@code
+   * try (AdminServiceClient adminServiceClient = AdminServiceClient.create()) {
+   *   UpdateReservationRequest request =
+   *       UpdateReservationRequest.newBuilder()
+   *           .setReservation(Reservation.newBuilder().build())
+   *           .setUpdateMask(FieldMask.newBuilder().build())
+   *           .build();
+   *   ApiFuture<Reservation> future =
+   *       adminServiceClient.updateReservationCallable().futureCall(request);
+   *   // Do something.
+   *   Reservation response = future.get();
+   * }
+   * }</pre>
+   */
+  public final UnaryCallable<UpdateReservationRequest, Reservation> updateReservationCallable() {
+    return stub.updateReservationCallable();
+  }
+
+  // AUTO-GENERATED DOCUMENTATION AND METHOD.
+  /**
+   * Deletes the specified reservation.
+   *
+   * <p>Sample code:
+   *
+   * <pre>{@code
+   * try (AdminServiceClient adminServiceClient = AdminServiceClient.create()) {
+   *   ReservationName name = ReservationName.of("[PROJECT]", "[LOCATION]", "[RESERVATION]");
+   *   adminServiceClient.deleteReservation(name);
+   * }
+   * }</pre>
+   *
+   * @param name Required. The name of the reservation to delete. Structured like:
+   *     projects/{project_number}/locations/{location}/reservations/{reservation_id}
+   * @throws com.google.api.gax.rpc.ApiException if the remote call fails
+   */
+  public final void deleteReservation(ReservationName name) {
+    DeleteReservationRequest request =
+        DeleteReservationRequest.newBuilder()
+            .setName(name == null ? null : name.toString())
+            .build();
+    deleteReservation(request);
+  }
+
+  // AUTO-GENERATED DOCUMENTATION AND METHOD.
+  /**
+   * Deletes the specified reservation.
+   *
+   * <p>Sample code:
+   *
+   * <pre>{@code
+   * try (AdminServiceClient adminServiceClient = AdminServiceClient.create()) {
+   *   String name = ReservationName.of("[PROJECT]", "[LOCATION]", "[RESERVATION]").toString();
+   *   adminServiceClient.deleteReservation(name);
+   * }
+   * }</pre>
+   *
+   * @param name Required. The name of the reservation to delete. Structured like:
+   *     projects/{project_number}/locations/{location}/reservations/{reservation_id}
+   * @throws com.google.api.gax.rpc.ApiException if the remote call fails
+   */
+  public final void deleteReservation(String name) {
+    DeleteReservationRequest request = DeleteReservationRequest.newBuilder().setName(name).build();
+    deleteReservation(request);
+  }
+
+  // AUTO-GENERATED DOCUMENTATION AND METHOD.
+  /**
+   * Deletes the specified reservation.
+   *
+   * <p>Sample code:
+   *
+   * <pre>{@code
+   * try (AdminServiceClient adminServiceClient = AdminServiceClient.create()) {
+   *   DeleteReservationRequest request =
+   *       DeleteReservationRequest.newBuilder()
+   *           .setName(ReservationName.of("[PROJECT]", "[LOCATION]", "[RESERVATION]").toString())
+   *           .build();
+   *   adminServiceClient.deleteReservation(request);
+   * }
+   * }</pre>
+   *
+   * @param request The request object containing all of the parameters for the API call.
+   * @throws com.google.api.gax.rpc.ApiException if the remote call fails
+   */
+  public final void deleteReservation(DeleteReservationRequest request) {
+    deleteReservationCallable().call(request);
+  }
+
+  // AUTO-GENERATED DOCUMENTATION AND METHOD.
+  /**
+   * Deletes the specified reservation.
+   *
+   * <p>Sample code:
+   *
+   * <pre>{@code
+   * try (AdminServiceClient adminServiceClient = AdminServiceClient.create()) {
+   *   DeleteReservationRequest request =
+   *       DeleteReservationRequest.newBuilder()
+   *           .setName(ReservationName.of("[PROJECT]", "[LOCATION]", "[RESERVATION]").toString())
+   *           .build();
+   *   ApiFuture<Empty> future = adminServiceClient.deleteReservationCallable().futureCall(request);
+   *   // Do something.
+   *   future.get();
+   * }
+   * }</pre>
+   */
+  public final UnaryCallable<DeleteReservationRequest, Empty> deleteReservationCallable() {
+    return stub.deleteReservationCallable();
+  }
+
+  // AUTO-GENERATED DOCUMENTATION AND METHOD.
+  /**
+   * Lists the topics attached to the specified reservation.
+   *
+   * <p>Sample code:
+   *
+   * <pre>{@code
+   * try (AdminServiceClient adminServiceClient = AdminServiceClient.create()) {
+   *   ReservationName name = ReservationName.of("[PROJECT]", "[LOCATION]", "[RESERVATION]");
+   *   for (String element : adminServiceClient.listReservationTopics(name).iterateAll()) {
+   *     // doThingsWith(element);
+   *   }
+   * }
+   * }</pre>
+   *
+   * @param name Required. The name of the reservation whose topics to list. Structured like:
+   *     projects/{project_number}/locations/{location}/reservations/{reservation_id}
+   * @throws com.google.api.gax.rpc.ApiException if the remote call fails
+   */
+  public final ListReservationTopicsPagedResponse listReservationTopics(ReservationName name) {
+    ListReservationTopicsRequest request =
+        ListReservationTopicsRequest.newBuilder()
+            .setName(name == null ? null : name.toString())
+            .build();
+    return listReservationTopics(request);
+  }
+
+  // AUTO-GENERATED DOCUMENTATION AND METHOD.
+  /**
+   * Lists the topics attached to the specified reservation.
+   *
+   * <p>Sample code:
+   *
+   * <pre>{@code
+   * try (AdminServiceClient adminServiceClient = AdminServiceClient.create()) {
+   *   String name = ReservationName.of("[PROJECT]", "[LOCATION]", "[RESERVATION]").toString();
+   *   for (String element : adminServiceClient.listReservationTopics(name).iterateAll()) {
+   *     // doThingsWith(element);
+   *   }
+   * }
+   * }</pre>
+   *
+   * @param name Required. The name of the reservation whose topics to list. Structured like:
+   *     projects/{project_number}/locations/{location}/reservations/{reservation_id}
+   * @throws com.google.api.gax.rpc.ApiException if the remote call fails
+   */
+  public final ListReservationTopicsPagedResponse listReservationTopics(String name) {
+    ListReservationTopicsRequest request =
+        ListReservationTopicsRequest.newBuilder().setName(name).build();
+    return listReservationTopics(request);
+  }
+
+  // AUTO-GENERATED DOCUMENTATION AND METHOD.
+  /**
+   * Lists the topics attached to the specified reservation.
+   *
+   * <p>Sample code:
+   *
+   * <pre>{@code
+   * try (AdminServiceClient adminServiceClient = AdminServiceClient.create()) {
+   *   ListReservationTopicsRequest request =
+   *       ListReservationTopicsRequest.newBuilder()
+   *           .setName(ReservationName.of("[PROJECT]", "[LOCATION]", "[RESERVATION]").toString())
+   *           .setPageSize(883849137)
+   *           .setPageToken("pageToken873572522")
+   *           .build();
+   *   for (String element : adminServiceClient.listReservationTopics(request).iterateAll()) {
+   *     // doThingsWith(element);
+   *   }
+   * }
+   * }</pre>
+   *
+   * @param request The request object containing all of the parameters for the API call.
+   * @throws com.google.api.gax.rpc.ApiException if the remote call fails
+   */
+  public final ListReservationTopicsPagedResponse listReservationTopics(
+      ListReservationTopicsRequest request) {
+    return listReservationTopicsPagedCallable().call(request);
+  }
+
+  // AUTO-GENERATED DOCUMENTATION AND METHOD.
+  /**
+   * Lists the topics attached to the specified reservation.
+   *
+   * <p>Sample code:
+   *
+   * <pre>{@code
+   * try (AdminServiceClient adminServiceClient = AdminServiceClient.create()) {
+   *   ListReservationTopicsRequest request =
+   *       ListReservationTopicsRequest.newBuilder()
+   *           .setName(ReservationName.of("[PROJECT]", "[LOCATION]", "[RESERVATION]").toString())
+   *           .setPageSize(883849137)
+   *           .setPageToken("pageToken873572522")
+   *           .build();
+   *   ApiFuture<String> future =
+   *       adminServiceClient.listReservationTopicsPagedCallable().futureCall(request);
+   *   // Do something.
+   *   for (String element : future.get().iterateAll()) {
+   *     // doThingsWith(element);
+   *   }
+   * }
+   * }</pre>
+   */
+  public final UnaryCallable<ListReservationTopicsRequest, ListReservationTopicsPagedResponse>
+      listReservationTopicsPagedCallable() {
+    return stub.listReservationTopicsPagedCallable();
+  }
+
+  // AUTO-GENERATED DOCUMENTATION AND METHOD.
+  /**
+   * Lists the topics attached to the specified reservation.
+   *
+   * <p>Sample code:
+   *
+   * <pre>{@code
+   * try (AdminServiceClient adminServiceClient = AdminServiceClient.create()) {
+   *   ListReservationTopicsRequest request =
+   *       ListReservationTopicsRequest.newBuilder()
+   *           .setName(ReservationName.of("[PROJECT]", "[LOCATION]", "[RESERVATION]").toString())
+   *           .setPageSize(883849137)
+   *           .setPageToken("pageToken873572522")
+   *           .build();
+   *   while (true) {
+   *     ListReservationTopicsResponse response =
+   *         adminServiceClient.listReservationTopicsCallable().call(request);
+   *     for (String element : response.getResponsesList()) {
+   *       // doThingsWith(element);
+   *     }
+   *     String nextPageToken = response.getNextPageToken();
+   *     if (!Strings.isNullOrEmpty(nextPageToken)) {
+   *       request = request.toBuilder().setPageToken(nextPageToken).build();
+   *     } else {
+   *       break;
+   *     }
+   *   }
+   * }
+   * }</pre>
+   */
+  public final UnaryCallable<ListReservationTopicsRequest, ListReservationTopicsResponse>
+      listReservationTopicsCallable() {
+    return stub.listReservationTopicsCallable();
+  }
+
   @Override
   public final void close() {
     stub.close();
@@ -1702,6 +2377,173 @@ public class AdminServiceClient implements BackgroundResource {
     protected ListSubscriptionsFixedSizeCollection createCollection(
         List<ListSubscriptionsPage> pages, int collectionSize) {
       return new ListSubscriptionsFixedSizeCollection(pages, collectionSize);
+    }
+  }
+
+  public static class ListReservationsPagedResponse
+      extends AbstractPagedListResponse<
+          ListReservationsRequest,
+          ListReservationsResponse,
+          Reservation,
+          ListReservationsPage,
+          ListReservationsFixedSizeCollection> {
+
+    public static ApiFuture<ListReservationsPagedResponse> createAsync(
+        PageContext<ListReservationsRequest, ListReservationsResponse, Reservation> context,
+        ApiFuture<ListReservationsResponse> futureResponse) {
+      ApiFuture<ListReservationsPage> futurePage =
+          ListReservationsPage.createEmptyPage().createPageAsync(context, futureResponse);
+      return ApiFutures.transform(
+          futurePage,
+          new ApiFunction<ListReservationsPage, ListReservationsPagedResponse>() {
+            @Override
+            public ListReservationsPagedResponse apply(ListReservationsPage input) {
+              return new ListReservationsPagedResponse(input);
+            }
+          },
+          MoreExecutors.directExecutor());
+    }
+
+    private ListReservationsPagedResponse(ListReservationsPage page) {
+      super(page, ListReservationsFixedSizeCollection.createEmptyCollection());
+    }
+  }
+
+  public static class ListReservationsPage
+      extends AbstractPage<
+          ListReservationsRequest, ListReservationsResponse, Reservation, ListReservationsPage> {
+
+    private ListReservationsPage(
+        PageContext<ListReservationsRequest, ListReservationsResponse, Reservation> context,
+        ListReservationsResponse response) {
+      super(context, response);
+    }
+
+    private static ListReservationsPage createEmptyPage() {
+      return new ListReservationsPage(null, null);
+    }
+
+    @Override
+    protected ListReservationsPage createPage(
+        PageContext<ListReservationsRequest, ListReservationsResponse, Reservation> context,
+        ListReservationsResponse response) {
+      return new ListReservationsPage(context, response);
+    }
+
+    @Override
+    public ApiFuture<ListReservationsPage> createPageAsync(
+        PageContext<ListReservationsRequest, ListReservationsResponse, Reservation> context,
+        ApiFuture<ListReservationsResponse> futureResponse) {
+      return super.createPageAsync(context, futureResponse);
+    }
+  }
+
+  public static class ListReservationsFixedSizeCollection
+      extends AbstractFixedSizeCollection<
+          ListReservationsRequest,
+          ListReservationsResponse,
+          Reservation,
+          ListReservationsPage,
+          ListReservationsFixedSizeCollection> {
+
+    private ListReservationsFixedSizeCollection(
+        List<ListReservationsPage> pages, int collectionSize) {
+      super(pages, collectionSize);
+    }
+
+    private static ListReservationsFixedSizeCollection createEmptyCollection() {
+      return new ListReservationsFixedSizeCollection(null, 0);
+    }
+
+    @Override
+    protected ListReservationsFixedSizeCollection createCollection(
+        List<ListReservationsPage> pages, int collectionSize) {
+      return new ListReservationsFixedSizeCollection(pages, collectionSize);
+    }
+  }
+
+  public static class ListReservationTopicsPagedResponse
+      extends AbstractPagedListResponse<
+          ListReservationTopicsRequest,
+          ListReservationTopicsResponse,
+          String,
+          ListReservationTopicsPage,
+          ListReservationTopicsFixedSizeCollection> {
+
+    public static ApiFuture<ListReservationTopicsPagedResponse> createAsync(
+        PageContext<ListReservationTopicsRequest, ListReservationTopicsResponse, String> context,
+        ApiFuture<ListReservationTopicsResponse> futureResponse) {
+      ApiFuture<ListReservationTopicsPage> futurePage =
+          ListReservationTopicsPage.createEmptyPage().createPageAsync(context, futureResponse);
+      return ApiFutures.transform(
+          futurePage,
+          new ApiFunction<ListReservationTopicsPage, ListReservationTopicsPagedResponse>() {
+            @Override
+            public ListReservationTopicsPagedResponse apply(ListReservationTopicsPage input) {
+              return new ListReservationTopicsPagedResponse(input);
+            }
+          },
+          MoreExecutors.directExecutor());
+    }
+
+    private ListReservationTopicsPagedResponse(ListReservationTopicsPage page) {
+      super(page, ListReservationTopicsFixedSizeCollection.createEmptyCollection());
+    }
+  }
+
+  public static class ListReservationTopicsPage
+      extends AbstractPage<
+          ListReservationTopicsRequest,
+          ListReservationTopicsResponse,
+          String,
+          ListReservationTopicsPage> {
+
+    private ListReservationTopicsPage(
+        PageContext<ListReservationTopicsRequest, ListReservationTopicsResponse, String> context,
+        ListReservationTopicsResponse response) {
+      super(context, response);
+    }
+
+    private static ListReservationTopicsPage createEmptyPage() {
+      return new ListReservationTopicsPage(null, null);
+    }
+
+    @Override
+    protected ListReservationTopicsPage createPage(
+        PageContext<ListReservationTopicsRequest, ListReservationTopicsResponse, String> context,
+        ListReservationTopicsResponse response) {
+      return new ListReservationTopicsPage(context, response);
+    }
+
+    @Override
+    public ApiFuture<ListReservationTopicsPage> createPageAsync(
+        PageContext<ListReservationTopicsRequest, ListReservationTopicsResponse, String> context,
+        ApiFuture<ListReservationTopicsResponse> futureResponse) {
+      return super.createPageAsync(context, futureResponse);
+    }
+  }
+
+  public static class ListReservationTopicsFixedSizeCollection
+      extends AbstractFixedSizeCollection<
+          ListReservationTopicsRequest,
+          ListReservationTopicsResponse,
+          String,
+          ListReservationTopicsPage,
+          ListReservationTopicsFixedSizeCollection> {
+
+    private ListReservationTopicsFixedSizeCollection(
+        List<ListReservationTopicsPage> pages, int collectionSize) {
+      super(pages, collectionSize);
+    }
+
+    private static ListReservationTopicsFixedSizeCollection createEmptyCollection() {
+      return new ListReservationTopicsFixedSizeCollection(null, 0);
+    }
+
+    @Override
+    protected ListReservationTopicsFixedSizeCollection createCollection(
+        List<ListReservationTopicsPage> pages, int collectionSize) {
+      return new ListReservationTopicsFixedSizeCollection(pages, collectionSize);
     }
   }
 }

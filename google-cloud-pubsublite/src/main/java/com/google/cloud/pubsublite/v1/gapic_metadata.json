@@ -10,17 +10,26 @@
         "grpc": {
           "libraryClient": "AdminServiceClient",
           "rpcs": {
+            "CreateReservation": {
+              "methods": ["createReservation", "createReservation", "createReservation", "createReservationCallable"]
+            },
             "CreateSubscription": {
               "methods": ["createSubscription", "createSubscription", "createSubscription", "createSubscriptionCallable"]
             },
             "CreateTopic": {
               "methods": ["createTopic", "createTopic", "createTopic", "createTopicCallable"]
             },
+            "DeleteReservation": {
+              "methods": ["deleteReservation", "deleteReservation", "deleteReservation", "deleteReservationCallable"]
+            },
             "DeleteSubscription": {
               "methods": ["deleteSubscription", "deleteSubscription", "deleteSubscription", "deleteSubscriptionCallable"]
             },
             "DeleteTopic": {
               "methods": ["deleteTopic", "deleteTopic", "deleteTopic", "deleteTopicCallable"]
+            },
+            "GetReservation": {
+              "methods": ["getReservation", "getReservation", "getReservation", "getReservationCallable"]
             },
             "GetSubscription": {
               "methods": ["getSubscription", "getSubscription", "getSubscription", "getSubscriptionCallable"]
@@ -31,6 +40,12 @@
             "GetTopicPartitions": {
               "methods": ["getTopicPartitions", "getTopicPartitions", "getTopicPartitions", "getTopicPartitionsCallable"]
             },
+            "ListReservationTopics": {
+              "methods": ["listReservationTopics", "listReservationTopics", "listReservationTopics", "listReservationTopicsPagedCallable", "listReservationTopicsCallable"]
+            },
+            "ListReservations": {
+              "methods": ["listReservations", "listReservations", "listReservations", "listReservationsPagedCallable", "listReservationsCallable"]
+            },
             "ListSubscriptions": {
               "methods": ["listSubscriptions", "listSubscriptions", "listSubscriptions", "listSubscriptionsPagedCallable", "listSubscriptionsCallable"]
             },
@@ -39,6 +54,9 @@
             },
             "ListTopics": {
               "methods": ["listTopics", "listTopics", "listTopics", "listTopicsPagedCallable", "listTopicsCallable"]
+            },
+            "UpdateReservation": {
+              "methods": ["updateReservation", "updateReservation", "updateReservationCallable"]
             },
             "UpdateSubscription": {
               "methods": ["updateSubscription", "updateSubscription", "updateSubscriptionCallable"]

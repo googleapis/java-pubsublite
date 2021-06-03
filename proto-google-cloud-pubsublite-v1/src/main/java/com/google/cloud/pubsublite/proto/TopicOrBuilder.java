@@ -121,4 +121,40 @@ public interface TopicOrBuilder
    * <code>.google.cloud.pubsublite.v1.Topic.RetentionConfig retention_config = 3;</code>
    */
   com.google.cloud.pubsublite.proto.Topic.RetentionConfigOrBuilder getRetentionConfigOrBuilder();
+
+  /**
+   *
+   *
+   * <pre>
+   * The settings for this topic's Reservation usage.
+   * </pre>
+   *
+   * <code>.google.cloud.pubsublite.v1.Topic.ReservationConfig reservation_config = 4;</code>
+   *
+   * @return Whether the reservationConfig field is set.
+   */
+  boolean hasReservationConfig();
+  /**
+   *
+   *
+   * <pre>
+   * The settings for this topic's Reservation usage.
+   * </pre>
+   *
+   * <code>.google.cloud.pubsublite.v1.Topic.ReservationConfig reservation_config = 4;</code>
+   *
+   * @return The reservationConfig.
+   */
+  com.google.cloud.pubsublite.proto.Topic.ReservationConfig getReservationConfig();
+  /**
+   *
+   *
+   * <pre>
+   * The settings for this topic's Reservation usage.
+   * </pre>
+   *
+   * <code>.google.cloud.pubsublite.v1.Topic.ReservationConfig reservation_config = 4;</code>
+   */
+  com.google.cloud.pubsublite.proto.Topic.ReservationConfigOrBuilder
+      getReservationConfigOrBuilder();
 }

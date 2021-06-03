@@ -18,22 +18,31 @@ package com.google.cloud.pubsublite.v1;
 
 import com.google.api.core.BetaApi;
 import com.google.cloud.pubsublite.proto.AdminServiceGrpc.AdminServiceImplBase;
+import com.google.cloud.pubsublite.proto.CreateReservationRequest;
 import com.google.cloud.pubsublite.proto.CreateSubscriptionRequest;
 import com.google.cloud.pubsublite.proto.CreateTopicRequest;
+import com.google.cloud.pubsublite.proto.DeleteReservationRequest;
 import com.google.cloud.pubsublite.proto.DeleteSubscriptionRequest;
 import com.google.cloud.pubsublite.proto.DeleteTopicRequest;
+import com.google.cloud.pubsublite.proto.GetReservationRequest;
 import com.google.cloud.pubsublite.proto.GetSubscriptionRequest;
 import com.google.cloud.pubsublite.proto.GetTopicPartitionsRequest;
 import com.google.cloud.pubsublite.proto.GetTopicRequest;
+import com.google.cloud.pubsublite.proto.ListReservationTopicsRequest;
+import com.google.cloud.pubsublite.proto.ListReservationTopicsResponse;
+import com.google.cloud.pubsublite.proto.ListReservationsRequest;
+import com.google.cloud.pubsublite.proto.ListReservationsResponse;
 import com.google.cloud.pubsublite.proto.ListSubscriptionsRequest;
 import com.google.cloud.pubsublite.proto.ListSubscriptionsResponse;
 import com.google.cloud.pubsublite.proto.ListTopicSubscriptionsRequest;
 import com.google.cloud.pubsublite.proto.ListTopicSubscriptionsResponse;
 import com.google.cloud.pubsublite.proto.ListTopicsRequest;
 import com.google.cloud.pubsublite.proto.ListTopicsResponse;
+import com.google.cloud.pubsublite.proto.Reservation;
 import com.google.cloud.pubsublite.proto.Subscription;
 import com.google.cloud.pubsublite.proto.Topic;
 import com.google.cloud.pubsublite.proto.TopicPartitions;
+import com.google.cloud.pubsublite.proto.UpdateReservationRequest;
 import com.google.cloud.pubsublite.proto.UpdateSubscriptionRequest;
 import com.google.cloud.pubsublite.proto.UpdateTopicRequest;
 import com.google.protobuf.AbstractMessage;
@@ -323,6 +332,133 @@ public class MockAdminServiceImpl extends AdminServiceImplBase {
                   "Unrecognized response type %s for method DeleteSubscription, expected %s or %s",
                   response == null ? "null" : response.getClass().getName(),
                   Empty.class.getName(),
+                  Exception.class.getName())));
+    }
+  }
+
+  @Override
+  public void createReservation(
+      CreateReservationRequest request, StreamObserver<Reservation> responseObserver) {
+    Object response = responses.poll();
+    if (response instanceof Reservation) {
+      requests.add(request);
+      responseObserver.onNext(((Reservation) response));
+      responseObserver.onCompleted();
+    } else if (response instanceof Exception) {
+      responseObserver.onError(((Exception) response));
+    } else {
+      responseObserver.onError(
+          new IllegalArgumentException(
+              String.format(
+                  "Unrecognized response type %s for method CreateReservation, expected %s or %s",
+                  response == null ? "null" : response.getClass().getName(),
+                  Reservation.class.getName(),
+                  Exception.class.getName())));
+    }
+  }
+
+  @Override
+  public void getReservation(
+      GetReservationRequest request, StreamObserver<Reservation> responseObserver) {
+    Object response = responses.poll();
+    if (response instanceof Reservation) {
+      requests.add(request);
+      responseObserver.onNext(((Reservation) response));
+      responseObserver.onCompleted();
+    } else if (response instanceof Exception) {
+      responseObserver.onError(((Exception) response));
+    } else {
+      responseObserver.onError(
+          new IllegalArgumentException(
+              String.format(
+                  "Unrecognized response type %s for method GetReservation, expected %s or %s",
+                  response == null ? "null" : response.getClass().getName(),
+                  Reservation.class.getName(),
+                  Exception.class.getName())));
+    }
+  }
+
+  @Override
+  public void listReservations(
+      ListReservationsRequest request, StreamObserver<ListReservationsResponse> responseObserver) {
+    Object response = responses.poll();
+    if (response instanceof ListReservationsResponse) {
+      requests.add(request);
+      responseObserver.onNext(((ListReservationsResponse) response));
+      responseObserver.onCompleted();
+    } else if (response instanceof Exception) {
+      responseObserver.onError(((Exception) response));
+    } else {
+      responseObserver.onError(
+          new IllegalArgumentException(
+              String.format(
+                  "Unrecognized response type %s for method ListReservations, expected %s or %s",
+                  response == null ? "null" : response.getClass().getName(),
+                  ListReservationsResponse.class.getName(),
+                  Exception.class.getName())));
+    }
+  }
+
+  @Override
+  public void updateReservation(
+      UpdateReservationRequest request, StreamObserver<Reservation> responseObserver) {
+    Object response = responses.poll();
+    if (response instanceof Reservation) {
+      requests.add(request);
+      responseObserver.onNext(((Reservation) response));
+      responseObserver.onCompleted();
+    } else if (response instanceof Exception) {
+      responseObserver.onError(((Exception) response));
+    } else {
+      responseObserver.onError(
+          new IllegalArgumentException(
+              String.format(
+                  "Unrecognized response type %s for method UpdateReservation, expected %s or %s",
+                  response == null ? "null" : response.getClass().getName(),
+                  Reservation.class.getName(),
+                  Exception.class.getName())));
+    }
+  }
+
+  @Override
+  public void deleteReservation(
+      DeleteReservationRequest request, StreamObserver<Empty> responseObserver) {
+    Object response = responses.poll();
+    if (response instanceof Empty) {
+      requests.add(request);
+      responseObserver.onNext(((Empty) response));
+      responseObserver.onCompleted();
+    } else if (response instanceof Exception) {
+      responseObserver.onError(((Exception) response));
+    } else {
+      responseObserver.onError(
+          new IllegalArgumentException(
+              String.format(
+                  "Unrecognized response type %s for method DeleteReservation, expected %s or %s",
+                  response == null ? "null" : response.getClass().getName(),
+                  Empty.class.getName(),
+                  Exception.class.getName())));
+    }
+  }
+
+  @Override
+  public void listReservationTopics(
+      ListReservationTopicsRequest request,
+      StreamObserver<ListReservationTopicsResponse> responseObserver) {
+    Object response = responses.poll();
+    if (response instanceof ListReservationTopicsResponse) {
+      requests.add(request);
+      responseObserver.onNext(((ListReservationTopicsResponse) response));
+      responseObserver.onCompleted();
+    } else if (response instanceof Exception) {
+      responseObserver.onError(((Exception) response));
+    } else {
+      responseObserver.onError(
+          new IllegalArgumentException(
+              String.format(
+                  "Unrecognized response type %s for method ListReservationTopics, expected %s or %s",
+                  response == null ? "null" : response.getClass().getName(),
+                  ListReservationTopicsResponse.class.getName(),
                   Exception.class.getName())));
     }
   }

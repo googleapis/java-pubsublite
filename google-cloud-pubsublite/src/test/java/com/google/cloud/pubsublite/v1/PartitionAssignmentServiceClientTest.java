@@ -44,8 +44,8 @@ import org.junit.Test;
 
 @Generated("by gapic-generator-java")
 public class PartitionAssignmentServiceClientTest {
-  private static MockServiceHelper mockServiceHelper;
   private static MockPartitionAssignmentService mockPartitionAssignmentService;
+  private static MockServiceHelper mockServiceHelper;
   private PartitionAssignmentServiceClient client;
   private LocalChannelProvider channelProvider;
 

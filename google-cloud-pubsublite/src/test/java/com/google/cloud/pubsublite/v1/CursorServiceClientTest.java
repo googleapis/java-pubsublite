@@ -56,9 +56,9 @@ import org.junit.Test;
 
 @Generated("by gapic-generator-java")
 public class CursorServiceClientTest {
+  private static MockCursorService mockCursorService;
   private static MockServiceHelper mockServiceHelper;
   private CursorServiceClient client;
-  private static MockCursorService mockCursorService;
   private LocalChannelProvider channelProvider;
 
   @BeforeClass

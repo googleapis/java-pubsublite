@@ -3,14 +3,22 @@
 <differences>
   <!-- TODO: Remove on next release -->
   <difference>
-    <differenceType>8001</differenceType>
-    <className>com/google/cloud/pubsublite/PublishMetadata</className>
-    <method>*</method>
+    <differenceType>7006</differenceType>
+    <className>com/google/cloud/pubsublite/LocationPath</className>
+    <method>location</method>
+    <to>*</to>
   </difference>
   <difference>
     <differenceType>7012</differenceType>
     <className>com/google/cloud/pubsublite/AdminClient</className>
     <method>*</method>
+  </difference>
+  <difference>
+    <!-- This one is actually a clirr bug: It doesn't handle CRTP well. -->
+    <differenceType>7006</differenceType>
+    <className>com/google/cloud/pubsublite/LocationPath$Builder</className>
+    <method>setLocation</method>
+    <to>*</to>
   </difference>
   <!-- Added abstract method to AutoValue.Builder class (Always okay) -->
   <difference>

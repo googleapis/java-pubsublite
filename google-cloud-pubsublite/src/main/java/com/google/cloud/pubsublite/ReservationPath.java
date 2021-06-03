@@ -25,17 +25,17 @@ import java.io.Serializable;
 import java.util.Arrays;
 
 /**
- * A string wrapper representing a topic. Should be structured like:
+ * A string wrapper representing a reservation. Should be structured like:
  *
- * <p>projects/&lt;project number&gt;/locations/&lt;cloud zone&gt;/topics/&lt;id&gt;
+ * <p>projects/&lt;project number&gt;/locations/&lt;cloud region&gt;/reservations/&lt;id&gt;
  */
 @AutoValue
-public abstract class TopicPath implements Serializable {
+public abstract class ReservationPath implements Serializable {
   public abstract ProjectIdOrNumber project();
 
-  public abstract CloudZone location();
+  public abstract CloudRegion location();
 
-  public abstract TopicName name();
+  public abstract ReservationName name();
 
   public LocationPath locationPath() {
     return LocationPath.newBuilder().setProject(project()).setLocation(location()).build();
@@ -43,37 +43,38 @@ public abstract class TopicPath implements Serializable {
 
   @Override
   public String toString() {
-    return locationPath() + "/topics/" + name();
+    return locationPath() + "/reservations/" + name();
   }
 
-  /** Create a new TopicPath builder. */
+  /** Create a new ReservationPath builder. */
   public static Builder newBuilder() {
-    return new AutoValue_TopicPath.Builder();
+    return new AutoValue_ReservationPath.Builder();
   }
 
   public abstract Builder toBuilder();
 
   @AutoValue.Builder
   public abstract static class Builder extends ProjectBuilderHelper<Builder> {
-    public abstract Builder setLocation(CloudZone zone);
+    public abstract Builder setLocation(CloudRegion region);
 
-    public abstract Builder setName(TopicName name);
+    public abstract Builder setName(ReservationName name);
 
-    /** Build a new TopicPath. */
-    public abstract TopicPath build();
+    /** Build a new ReservationPath. */
+    public abstract ReservationPath build();
   }
 
-  public static TopicPath parse(String path) throws ApiException {
+  public static ReservationPath parse(String path) throws ApiException {
     String[] splits = path.split("/");
-    checkArgument(splits.length == 6);
-    checkArgument(splits[4].equals("topics"));
+    checkArgument(splits.length == 6, "Not a valid reservation path: " + path);
+    checkArgument(splits[4].equals("reservations"), "Not a valid reservation path: " + path);
     LocationPath location = LocationPath.parse(String.join("/", Arrays.copyOf(splits, 4)));
     checkArgument(
-        location.location().getKind() == Kind.ZONE, "Topic location must be a valid cloud zone.");
-    return TopicPath.newBuilder()
+        location.location().getKind() == Kind.REGION,
+        "Reservation location must be a valid cloud region.");
+    return ReservationPath.newBuilder()
         .setProject(location.project())
-        .setLocation(location.location().zone())
-        .setName(TopicName.of(splits[5]))
+        .setLocation(location.location().region())
+        .setName(ReservationName.of(splits[5]))
         .build();
   }
 }

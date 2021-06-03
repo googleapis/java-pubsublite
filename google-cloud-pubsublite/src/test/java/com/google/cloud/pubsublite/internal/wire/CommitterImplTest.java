@@ -19,6 +19,7 @@ package com.google.cloud.pubsublite.internal.wire;
 import static com.google.cloud.pubsublite.internal.ApiExceptionMatcher.assertFutureThrowsCode;
 import static com.google.cloud.pubsublite.internal.wire.RetryingConnectionHelpers.whenFailed;
 import static com.google.common.truth.Truth.assertThat;
+import static org.junit.Assert.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.ArgumentMatchers.eq;
@@ -51,6 +52,7 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -82,6 +84,7 @@ public class CommitterImplTest {
   @Mock private ConnectedCommitterFactory mockCommitterFactory;
 
   private final Listener permanentErrorHandler = mock(Listener.class);
+  private final ExecutorService executorService = Executors.newCachedThreadPool();
 
   private Committer committer;
   private ResponseObserver<SequencedCommitCursorResponse> leakedResponseObserver;
@@ -119,10 +122,9 @@ public class CommitterImplTest {
     ApiFuture<Void> future = committer.commitOffset(commitOffset);
     verify(mockConnectedCommitter).commit(commitOffset);
 
-    ExecutorService executor = Executors.newSingleThreadExecutor();
     CountDownLatch latch = new CountDownLatch(1);
     Future<?> closeFuture =
-        executor.submit(
+        executorService.submit(
             () -> {
               latch.countDown();
               committer.stopAsync();
@@ -183,5 +185,79 @@ public class CommitterImplTest {
     failed.get();
     verify(permanentErrorHandler)
         .failed(any(), argThat(new ApiExceptionMatcher(Code.FAILED_PRECONDITION)));
+  }
+
+  @Test
+  public void waitUntilEmptyReturnsWhenEmpty() throws Exception {
+    ApiFuture<Void> future1 = committer.commitOffset(Offset.of(10));
+    ApiFuture<Void> future2 = committer.commitOffset(Offset.of(1));
+
+    Future<?> waitFuture =
+        executorService.submit(
+            () -> {
+              try {
+                committer.waitUntilEmpty();
+              } catch (Throwable e) {
+                throw new IllegalStateException(e);
+              }
+            });
+    assertThat(waitFuture.isDone()).isFalse();
+
+    // Still not done after 1 commit response.
+    leakedResponseObserver.onResponse(ResponseWithCount(1));
+    assertThat(waitFuture.isDone()).isFalse();
+    assertThat(future1.isDone()).isTrue();
+    assertThat(future2.isDone()).isFalse();
+
+    leakedResponseObserver.onResponse(ResponseWithCount(1));
+    assertThat(future1.isDone()).isTrue();
+    assertThat(future2.isDone()).isTrue();
+    waitFuture.get(30, TimeUnit.SECONDS);
+  }
+
+  @Test
+  public void waitUntilEmptyThrowsOnShutdown() throws Exception {
+    committer.commitOffset(Offset.of(10));
+
+    CountDownLatch latch = new CountDownLatch(1);
+    Future<?> waitFuture =
+        executorService.submit(
+            () -> {
+              try {
+                latch.await();
+                assertThrows(CheckedApiException.class, () -> committer.waitUntilEmpty());
+              } catch (InterruptedException e) {
+                throw new IllegalStateException(e);
+              }
+            });
+    assertThat(waitFuture.isDone()).isFalse();
+
+    Future<?> closeFuture =
+        executorService.submit(
+            () -> {
+              latch.countDown();
+              committer.stopAsync().awaitTerminated();
+            });
+
+    waitFuture.get(30, TimeUnit.SECONDS);
+
+    leakedResponseObserver.onResponse(ResponseWithCount(1));
+    closeFuture.get(30, TimeUnit.SECONDS);
+  }
+
+  @Test
+  public void waitUntilEmptyThrowsOnPermanentError() throws Exception {
+    committer.commitOffset(Offset.of(10));
+
+    Future<?> waitFuture =
+        executorService.submit(
+            () -> assertThrows(CheckedApiException.class, () -> committer.waitUntilEmpty()));
+    assertThat(waitFuture.isDone()).isFalse();
+
+    Future<Void> failed = whenFailed(permanentErrorHandler);
+    leakedResponseObserver.onResponse(ResponseWithCount(2));
+    failed.get(30, TimeUnit.SECONDS);
+
+    waitFuture.get(30, TimeUnit.SECONDS);
   }
 }

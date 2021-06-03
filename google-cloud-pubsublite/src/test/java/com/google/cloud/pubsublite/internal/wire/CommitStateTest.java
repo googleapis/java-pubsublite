@@ -16,7 +16,6 @@
 
 package com.google.cloud.pubsublite.internal.wire;
 
-import static com.google.cloud.pubsublite.internal.ApiExceptionMatcher.assertFutureThrowsCode;
 import static com.google.common.truth.Truth.assertThat;
 import static com.google.common.truth.Truth8.assertThat;
 import static org.junit.Assert.assertThrows;
@@ -63,8 +62,6 @@ public class CommitStateTest {
 
     CheckedApiException e = assertThrows(CheckedApiException.class, () -> state.complete(2));
     assertThat(e.code()).isEqualTo(Code.FAILED_PRECONDITION);
-
-    assertFutureThrowsCode(future, Code.FAILED_PRECONDITION);
   }
 
   @Test
@@ -101,8 +98,5 @@ public class CommitStateTest {
 
     CheckedApiException e = assertThrows(CheckedApiException.class, () -> state.complete(2));
     assertThat(e.code()).isEqualTo(Code.FAILED_PRECONDITION);
-
-    assertFutureThrowsCode(future1, Code.FAILED_PRECONDITION);
-    assertFutureThrowsCode(future2, Code.FAILED_PRECONDITION);
   }
 }

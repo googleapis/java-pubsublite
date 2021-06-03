@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Google LLC
+ * Copyright 2021 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,16 +16,17 @@
 
 package com.google.cloud.pubsublite.cloudpubsub.internal;
 
-import com.google.api.core.ApiService;
+import com.google.api.gax.rpc.ApiException;
 import com.google.cloud.pubsublite.SequencedMessage;
-import com.google.cloud.pubsublite.internal.CheckedApiException;
+import com.google.cloud.pubsublite.internal.wire.Subscriber;
+import com.google.cloud.pubsublite.internal.wire.SubscriberResetHandler;
+import com.google.common.collect.ImmutableList;
+import java.io.Serializable;
+import java.util.function.Consumer;
 
-interface AckSetTracker extends ApiService {
-  // Track the given message. Returns a Runnable to ack this message if the message is a valid one
-  // to add to the ack set. Must be called with strictly increasing offset messages.
-  Runnable track(SequencedMessage message) throws CheckedApiException;
-
-  // Wait until all messages have been acked and the commit offset has been acknowledged by the
-  // server. Throws an exception if the committer has shut down.
-  void waitUntilEmpty() throws CheckedApiException;
+public interface ResettableSubscriberFactory extends Serializable {
+  Subscriber newSubscriber(
+      Consumer<ImmutableList<SequencedMessage>> messageConsumer,
+      SubscriberResetHandler resetHandler)
+      throws ApiException;
 }

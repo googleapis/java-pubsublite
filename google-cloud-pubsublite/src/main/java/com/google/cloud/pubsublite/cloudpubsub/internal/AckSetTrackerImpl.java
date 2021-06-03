@@ -28,6 +28,7 @@ import com.google.cloud.pubsublite.internal.CloseableMonitor;
 import com.google.cloud.pubsublite.internal.ExtractStatus;
 import com.google.cloud.pubsublite.internal.TrivialProxyService;
 import com.google.cloud.pubsublite.internal.wire.Committer;
+import com.google.common.util.concurrent.Monitor.Guard;
 import com.google.errorprone.annotations.concurrent.GuardedBy;
 import java.util.ArrayDeque;
 import java.util.Deque;
@@ -37,6 +38,13 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 public class AckSetTrackerImpl extends TrivialProxyService implements AckSetTracker {
   private final CloseableMonitor monitor = new CloseableMonitor();
+
+  private final Guard isEmptyOrShutdown =
+      new Guard(monitor.monitor) {
+        public boolean isSatisfied() {
+          return (receipts.isEmpty() && acks.isEmpty()) || !isRunning();
+        }
+      };
 
   @GuardedBy("monitor.monitor")
   private final Committer committer;
@@ -74,6 +82,12 @@ public class AckSetTrackerImpl extends TrivialProxyService implements AckSetTrac
         onAck(messageOffset);
       }
     };
+  }
+
+  @Override
+  public void waitUntilEmpty() throws CheckedApiException {
+    try (CloseableMonitor.Hold h = monitor.enterWhenUninterruptibly(isEmptyOrShutdown)) {}
+    committer.waitUntilEmpty();
   }
 
   private void onAck(Offset offset) {

@@ -59,15 +59,13 @@ class CommitState {
 
   void complete(long numComplete) throws CheckedApiException {
     if (numComplete > currentConnectionFutures.size()) {
-      CheckedApiException error =
-          new CheckedApiException(
-              String.format(
-                  "Received %s completions, which is more than the commits outstanding for this"
-                      + " stream.",
-                  numComplete),
-              Code.FAILED_PRECONDITION);
-      abort(error);
-      throw error;
+      // Note: Throw here to permanently shut down CommitterImpl, which will later call abort().
+      throw new CheckedApiException(
+          String.format(
+              "Received %s completions, which is more than the commits outstanding for this"
+                  + " stream.",
+              numComplete),
+          Code.FAILED_PRECONDITION);
     }
     while (!pastConnectionFutures.isEmpty()) {
       // Past futures refer to commits sent chronologically before the current stream, and thus they

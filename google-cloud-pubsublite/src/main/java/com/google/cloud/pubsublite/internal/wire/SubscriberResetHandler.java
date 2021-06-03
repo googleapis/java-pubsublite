@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Google LLC
+ * Copyright 2021 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,16 +16,16 @@
 
 package com.google.cloud.pubsublite.internal.wire;
 
-import com.google.api.core.ApiFuture;
-import com.google.api.core.ApiService;
-import com.google.cloud.pubsublite.Offset;
 import com.google.cloud.pubsublite.internal.CheckedApiException;
 
-public interface Committer extends ApiService {
-  // Commit a given offset. Clean shutdown waits for all outstanding commits to complete.
-  ApiFuture<Void> commitOffset(Offset offset);
+public interface SubscriberResetHandler {
+  // Called when the server instructs the subscriber to reset its state in order to handle an out of
+  // band seek. The implementation should return false if reset is not handled by this type of
+  // subscriber client. If an exception is thrown, the subscriber is shut down.
+  boolean handleReset() throws CheckedApiException;
 
-  // Waits until all commits have been sent and acknowledged by the server. Throws an exception if
-  // the committer has shut down.
-  void waitUntilEmpty() throws CheckedApiException;
+  // Use SubscriberResetHandler::unhandled to disable reset handling.
+  static boolean unhandled() {
+    return false;
+  }
 }

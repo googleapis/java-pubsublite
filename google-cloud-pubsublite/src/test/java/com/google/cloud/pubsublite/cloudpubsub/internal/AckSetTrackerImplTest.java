@@ -16,6 +16,7 @@
 
 package com.google.cloud.pubsublite.cloudpubsub.internal;
 
+import static com.google.api.core.ApiFutures.immediateFuture;
 import static com.google.common.truth.Truth.assertThat;
 import static org.junit.Assert.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
@@ -37,6 +38,10 @@ import com.google.cloud.pubsublite.internal.testing.FakeApiService;
 import com.google.cloud.pubsublite.internal.wire.Committer;
 import com.google.cloud.pubsublite.proto.Cursor;
 import com.google.common.util.concurrent.MoreExecutors;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -52,6 +57,8 @@ public class AckSetTrackerImplTest {
   @Spy private FakeCommitter committer;
 
   @Mock private Listener permanentErrorHandler;
+
+  private final ExecutorService executorService = Executors.newCachedThreadPool();
 
   AckSetTracker tracker;
 
@@ -120,5 +127,50 @@ public class AckSetTrackerImplTest {
     assertThrows(ApiException.class, ack1::run);
     verify(permanentErrorHandler)
         .failed(any(), argThat(new ApiExceptionMatcher(Code.FAILED_PRECONDITION)));
+  }
+
+  @Test
+  public void waitUntilEmptyReturnsWhenEmpty() throws Exception {
+    Runnable ack = tracker.track(messageForOffset(1));
+
+    Future<?> waitFuture =
+        executorService.submit(
+            () -> {
+              try {
+                tracker.waitUntilEmpty();
+              } catch (Throwable e) {
+                throw new IllegalStateException(e);
+              }
+            });
+    assertThat(waitFuture.isDone()).isFalse();
+
+    when(committer.commitOffset(Offset.of(2))).thenReturn(immediateFuture(null));
+    ack.run();
+    verify(committer).commitOffset(Offset.of(2));
+
+    waitFuture.get(30, TimeUnit.SECONDS);
+    verify(committer).waitUntilEmpty();
+  }
+
+  @Test
+  public void waitUntilEmptyReturnsOnShutdown() throws Exception {
+    tracker.track(messageForOffset(1));
+
+    Future<?> waitFuture =
+        executorService.submit(
+            () -> {
+              try {
+                tracker.waitUntilEmpty();
+              } catch (Throwable e) {
+                throw new IllegalStateException(e);
+              }
+            });
+    assertThat(waitFuture.isDone()).isFalse();
+
+    tracker.stopAsync();
+    verify(committer).stopAsync();
+
+    waitFuture.get(30, TimeUnit.SECONDS);
+    verify(committer).waitUntilEmpty();
   }
 }

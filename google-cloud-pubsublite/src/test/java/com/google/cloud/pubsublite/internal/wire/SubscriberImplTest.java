@@ -25,12 +25,16 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.verifyZeroInteractions;
+import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
 import com.google.api.core.ApiFuture;
@@ -47,6 +51,7 @@ import com.google.cloud.pubsublite.SubscriptionName;
 import com.google.cloud.pubsublite.SubscriptionPath;
 import com.google.cloud.pubsublite.internal.ApiExceptionMatcher;
 import com.google.cloud.pubsublite.internal.CheckedApiException;
+import com.google.cloud.pubsublite.internal.testing.TestResetSignal;
 import com.google.cloud.pubsublite.internal.wire.ConnectedSubscriber.Response;
 import com.google.cloud.pubsublite.proto.Cursor;
 import com.google.cloud.pubsublite.proto.FlowControlRequest;
@@ -89,6 +94,7 @@ public class SubscriberImplTest {
   @Mock private ConnectedSubscriberFactory mockSubscriberFactory;
 
   @Mock Consumer<ImmutableList<SequencedMessage>> mockMessageConsumer;
+  @Mock SubscriberResetHandler mockResetHandler;
 
   private final Listener permanentErrorHandler = mock(Listener.class);
 
@@ -110,7 +116,8 @@ public class SubscriberImplTest {
             unusedStreamFactory,
             mockSubscriberFactory,
             initialRequest().getInitial(),
-            mockMessageConsumer);
+            mockMessageConsumer,
+            mockResetHandler);
     subscriber.addListener(permanentErrorHandler, MoreExecutors.directExecutor());
     subscriber.startAsync().awaitRunning();
     verify(mockSubscriberFactory).New(any(), any(), eq(initialRequest()));
@@ -289,5 +296,68 @@ public class SubscriberImplTest {
         .seek(SeekRequest.newBuilder().setCursor(Cursor.newBuilder().setOffset(2)).build());
     assertThat(subscriber.seekInFlight()).isFalse();
     leakedResponseObserver.onResponse(Response.ofSeekOffset(Offset.of(2)));
+  }
+
+  @Test
+  public void reinitialize_handlesSuccessfulReset() throws Exception {
+    subscriber.allowFlow(bigFlowControlRequest());
+    ImmutableList<SequencedMessage> messages =
+        ImmutableList.of(
+            SequencedMessage.of(Message.builder().build(), Timestamps.EPOCH, Offset.of(0), 10),
+            SequencedMessage.of(Message.builder().build(), Timestamps.EPOCH, Offset.of(1), 10));
+    leakedResponseObserver.onResponse(Response.ofMessages(messages));
+    verify(mockMessageConsumer).accept(messages);
+
+    // If the RESET signal is received and subscriber reset is handled, the subscriber should read
+    // from the committed cursor upon reconnect.
+    when(mockResetHandler.handleReset()).thenReturn(true);
+    subscriber.triggerReinitialize(TestResetSignal.newCheckedException());
+    verify(mockConnectedSubscriber, never()).seek(any());
+  }
+
+  @Test
+  public void reinitialize_resetCancelsClientSeek() throws Exception {
+    SeekRequest seekRequest =
+        SeekRequest.newBuilder().setCursor(Cursor.newBuilder().setOffset(2)).build();
+    ApiFuture<Offset> seekFuture = subscriber.seek(seekRequest);
+    assertThat(subscriber.seekInFlight()).isTrue();
+    verify(mockConnectedSubscriber, times(1)).seek(seekRequest);
+
+    // If the RESET signal is received and subscriber reset is handled, the subscriber should cancel
+    // client seeks.
+    when(mockResetHandler.handleReset()).thenReturn(true);
+    subscriber.triggerReinitialize(TestResetSignal.newCheckedException());
+    assertThat(subscriber.seekInFlight()).isFalse();
+    assertFutureThrowsCode(seekFuture, Code.ABORTED);
+  }
+
+  @Test
+  public void reinitialize_handlesIgnoredReset() throws Exception {
+    subscriber.allowFlow(bigFlowControlRequest());
+    ImmutableList<SequencedMessage> messages =
+        ImmutableList.of(
+            SequencedMessage.of(Message.builder().build(), Timestamps.EPOCH, Offset.of(0), 10),
+            SequencedMessage.of(Message.builder().build(), Timestamps.EPOCH, Offset.of(1), 10));
+    leakedResponseObserver.onResponse(Response.ofMessages(messages));
+    verify(mockMessageConsumer).accept(messages);
+
+    // If the RESET signal is received and subscriber reset is ignored, the subscriber should read
+    // from the next offset upon reconnect.
+    when(mockResetHandler.handleReset()).thenReturn(false);
+    subscriber.triggerReinitialize(TestResetSignal.newCheckedException());
+    verify(mockConnectedSubscriber)
+        .seek(SeekRequest.newBuilder().setCursor(Cursor.newBuilder().setOffset(2)).build());
+    leakedResponseObserver.onResponse(Response.ofSeekOffset(Offset.of(2)));
+  }
+
+  @Test
+  public void reinitialize_handlesResetFailure() throws Exception {
+    Future<Void> failed = whenFailed(permanentErrorHandler);
+    // If the RESET signal is received and subscriber reset fails, the subscriber should permanently
+    // shut down.
+    doThrow(new CheckedApiException(Code.UNAVAILABLE)).when(mockResetHandler).handleReset();
+    subscriber.triggerReinitialize(TestResetSignal.newCheckedException());
+    failed.get();
+    verify(permanentErrorHandler).failed(any(), argThat(new ApiExceptionMatcher(Code.UNAVAILABLE)));
   }
 }

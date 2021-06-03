@@ -21,6 +21,7 @@ import static com.google.cloud.pubsublite.internal.ExtractStatus.toClientFuture;
 import com.google.api.core.ApiFuture;
 import com.google.api.gax.rpc.ApiException;
 import com.google.cloud.pubsublite.Offset;
+import com.google.cloud.pubsublite.internal.CheckedApiException;
 import com.google.cloud.pubsublite.internal.TrivialProxyService;
 
 class ApiExceptionCommitter extends TrivialProxyService implements Committer {
@@ -34,5 +35,10 @@ class ApiExceptionCommitter extends TrivialProxyService implements Committer {
   @Override
   public ApiFuture<Void> commitOffset(Offset offset) {
     return toClientFuture(committer.commitOffset(offset));
+  }
+
+  @Override
+  public void waitUntilEmpty() throws CheckedApiException {
+    committer.waitUntilEmpty();
   }
 }

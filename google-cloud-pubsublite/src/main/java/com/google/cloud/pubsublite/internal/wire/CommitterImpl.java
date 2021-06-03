@@ -22,6 +22,7 @@ import static com.google.cloud.pubsublite.internal.wire.ApiServiceUtils.backgrou
 import com.google.api.core.ApiFuture;
 import com.google.api.core.ApiFutures;
 import com.google.api.gax.rpc.ApiException;
+import com.google.api.gax.rpc.StatusCode.Code;
 import com.google.cloud.pubsublite.Offset;
 import com.google.cloud.pubsublite.internal.CheckedApiException;
 import com.google.cloud.pubsublite.internal.CloseableMonitor;
@@ -47,6 +48,12 @@ public class CommitterImpl extends ProxyService
         public boolean isSatisfied() {
           // Wait until the state is empty or a permanent error occurred.
           return state.isEmpty() || hadPermanentError;
+        }
+      };
+  private final Guard isEmptyOrShutdown =
+      new Guard(monitor.monitor) {
+        public boolean isSatisfied() {
+          return state.isEmpty() || shutdown;
         }
       };
 
@@ -142,6 +149,15 @@ public class CommitterImpl extends ProxyService
     } catch (CheckedApiException e) {
       onPermanentError(e);
       return ApiFutures.immediateFailedFuture(e);
+    }
+  }
+
+  @Override
+  public void waitUntilEmpty() throws CheckedApiException {
+    try (CloseableMonitor.Hold h = monitor.enterWhenUninterruptibly(isEmptyOrShutdown)) {
+      if (shutdown) {
+        throw new CheckedApiException("Shutting down.", Code.UNAVAILABLE);
+      }
     }
   }
 }

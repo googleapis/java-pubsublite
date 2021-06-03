@@ -16,6 +16,7 @@
 
 package com.google.cloud.pubsublite.cloudpubsub.internal;
 
+import static com.google.common.truth.Truth.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.ArgumentMatchers.eq;
@@ -39,7 +40,6 @@ import com.google.cloud.pubsublite.internal.ApiExceptionMatcher;
 import com.google.cloud.pubsublite.internal.CheckedApiException;
 import com.google.cloud.pubsublite.internal.testing.FakeApiService;
 import com.google.cloud.pubsublite.internal.wire.Subscriber;
-import com.google.cloud.pubsublite.internal.wire.SubscriberFactory;
 import com.google.cloud.pubsublite.proto.Cursor;
 import com.google.cloud.pubsublite.proto.FlowControlRequest;
 import com.google.common.collect.ImmutableList;
@@ -68,7 +68,7 @@ public class SinglePartitionSubscriberTest {
 
   @Spy private AckSetTrackerFakeService ackSetTracker;
   @Mock private NackHandler nackHandler;
-  @Mock private SubscriberFactory subscriberFactory;
+  @Mock private ResettableSubscriberFactory subscriberFactory;
 
   abstract static class SubscriberFakeService extends FakeApiService implements Subscriber {}
 
@@ -88,7 +88,7 @@ public class SinglePartitionSubscriberTest {
   @Before
   public void setUp() throws Exception {
     MockitoAnnotations.initMocks(this);
-    when(subscriberFactory.newSubscriber(any())).thenReturn(wireSubscriber);
+    when(subscriberFactory.newSubscriber(any(), any())).thenReturn(wireSubscriber);
     subscriber =
         new SinglePartitionSubscriber(
             receiver,
@@ -101,7 +101,7 @@ public class SinglePartitionSubscriberTest {
                 .setBytesOutstanding(1000000)
                 .build());
     subscriber.startAsync().awaitRunning();
-    verify(subscriberFactory).newSubscriber(any());
+    verify(subscriberFactory).newSubscriber(any(), any());
     verify(ackSetTracker).startAsync();
     verify(wireSubscriber).startAsync();
     subscriber.addListener(permanentErrorHandler, MoreExecutors.directExecutor());
@@ -220,5 +220,11 @@ public class SinglePartitionSubscriberTest {
     verify(wireSubscriber).stopAsync();
     verify(permanentErrorHandler)
         .failed(any(), argThat(new ApiExceptionMatcher(Code.INVALID_ARGUMENT)));
+  }
+
+  @Test
+  public void onSubscriberResetWaitsForAckSetTracker() throws CheckedApiException {
+    assertThat(subscriber.onSubscriberReset()).isTrue();
+    verify(ackSetTracker).waitUntilEmpty();
   }
 }

@@ -216,7 +216,7 @@ public class CommitterImplTest {
   }
 
   @Test
-  public void waitUntilEmptyThrowsOnShutdown() throws Exception {
+  public void waitUntilEmptyReturnsOnShutdown() throws Exception {
     committer.commitOffset(Offset.of(10));
 
     CountDownLatch latch = new CountDownLatch(1);
@@ -225,24 +225,23 @@ public class CommitterImplTest {
             () -> {
               try {
                 latch.await();
-                assertThrows(CheckedApiException.class, () -> committer.waitUntilEmpty());
-              } catch (InterruptedException e) {
+                committer.waitUntilEmpty();
+              } catch (Throwable e) {
                 throw new IllegalStateException(e);
               }
             });
     assertThat(waitFuture.isDone()).isFalse();
 
-    Future<?> closeFuture =
+    Future<?> stopFuture =
         executorService.submit(
             () -> {
               latch.countDown();
               committer.stopAsync().awaitTerminated();
             });
 
-    waitFuture.get(30, TimeUnit.SECONDS);
-
     leakedResponseObserver.onResponse(ResponseWithCount(1));
-    closeFuture.get(30, TimeUnit.SECONDS);
+    stopFuture.get(30, TimeUnit.SECONDS);
+    waitFuture.get(30, TimeUnit.SECONDS);
   }
 
   @Test

@@ -22,7 +22,6 @@ import static com.google.cloud.pubsublite.internal.wire.ApiServiceUtils.backgrou
 import com.google.api.core.ApiFuture;
 import com.google.api.core.ApiFutures;
 import com.google.api.gax.rpc.ApiException;
-import com.google.api.gax.rpc.StatusCode.Code;
 import com.google.cloud.pubsublite.Offset;
 import com.google.cloud.pubsublite.internal.CheckedApiException;
 import com.google.cloud.pubsublite.internal.CloseableMonitor;
@@ -47,13 +46,7 @@ public class CommitterImpl extends ProxyService
       new Guard(monitor.monitor) {
         public boolean isSatisfied() {
           // Wait until the state is empty or a permanent error occurred.
-          return state.isEmpty() || hadPermanentError;
-        }
-      };
-  private final Guard isEmptyOrShutdown =
-      new Guard(monitor.monitor) {
-        public boolean isSatisfied() {
-          return state.isEmpty() || shutdown;
+          return state.isEmpty() || permanentError.isPresent();
         }
       };
 
@@ -64,7 +57,7 @@ public class CommitterImpl extends ProxyService
   private boolean shutdown = false;
 
   @GuardedBy("monitor.monitor")
-  private boolean hadPermanentError = false;
+  private Optional<CheckedApiException> permanentError = Optional.empty();
 
   @GuardedBy("monitor.monitor")
   private final CommitState state = new CommitState();
@@ -95,7 +88,7 @@ public class CommitterImpl extends ProxyService
   @Override
   protected void handlePermanentError(CheckedApiException error) {
     try (CloseableMonitor.Hold h = monitor.enter()) {
-      hadPermanentError = true;
+      permanentError = Optional.of(error);
       shutdown = true;
       state.abort(error);
     }
@@ -154,9 +147,9 @@ public class CommitterImpl extends ProxyService
 
   @Override
   public void waitUntilEmpty() throws CheckedApiException {
-    try (CloseableMonitor.Hold h = monitor.enterWhenUninterruptibly(isEmptyOrShutdown)) {
-      if (shutdown) {
-        throw new CheckedApiException("Shutting down.", Code.UNAVAILABLE);
+    try (CloseableMonitor.Hold h = monitor.enterWhenUninterruptibly(isEmptyOrError)) {
+      if (permanentError.isPresent()) {
+        throw permanentError.get();
       }
     }
   }

@@ -54,7 +54,8 @@ class SubscribeTransform extends PTransform<PBegin, PCollection<SequencedMessage
     checkArgument(subscriptionPartition.subscription().equals(options.subscriptionPath()));
   }
 
-  private Subscriber newSubscriber(Partition partition, Offset initialOffset, Consumer<List<SequencedMessage>> consumer) {
+  private Subscriber newSubscriber(
+      Partition partition, Offset initialOffset, Consumer<List<SequencedMessage>> consumer) {
     try {
       return options
           .getSubscriberFactory(partition, initialOffset)
@@ -78,7 +79,11 @@ class SubscribeTransform extends PTransform<PBegin, PCollection<SequencedMessage
     return new SubscriptionPartitionProcessorImpl(
         tracker,
         receiver,
-        consumer -> newSubscriber(subscriptionPartition.partition(), Offset.of(tracker.currentRestriction().getFrom()), consumer),
+        consumer ->
+            newSubscriber(
+                subscriptionPartition.partition(),
+                Offset.of(tracker.currentRestriction().getFrom()),
+                consumer),
         options.flowControlSettings());
   }
 

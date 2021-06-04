@@ -143,7 +143,10 @@ public abstract class SubscriberOptions implements Serializable {
             .setSubscriptionPath(subscriptionPath())
             .setPartition(partition)
             .setServiceClient(newSubscriberServiceClient(partition))
-            .setInitialLocation(SeekRequest.newBuilder().setCursor(Cursor.newBuilder().setOffset(initialOffset.value())).build())
+            .setInitialLocation(
+                SeekRequest.newBuilder()
+                    .setCursor(Cursor.newBuilder().setOffset(initialOffset.value()))
+                    .build())
             .build();
   }
 

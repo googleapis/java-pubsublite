@@ -26,6 +26,6 @@ public interface Committer extends ApiService {
   ApiFuture<Void> commitOffset(Offset offset);
 
   // Waits until all commits have been sent and acknowledged by the server. Throws an exception if
-  // the committer has shut down.
+  // the committer shut down due to a permanent error.
   void waitUntilEmpty() throws CheckedApiException;
 }

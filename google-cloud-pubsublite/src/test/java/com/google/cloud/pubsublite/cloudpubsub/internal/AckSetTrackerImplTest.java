@@ -39,8 +39,6 @@ import com.google.cloud.pubsublite.internal.testing.FakeApiService;
 import com.google.cloud.pubsublite.internal.wire.Committer;
 import com.google.cloud.pubsublite.proto.Cursor;
 import com.google.common.util.concurrent.MoreExecutors;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -56,8 +54,6 @@ public class AckSetTrackerImplTest {
   @Spy private FakeCommitter committer;
 
   @Mock private Listener permanentErrorHandler;
-
-  private final ExecutorService executorService = Executors.newCachedThreadPool();
 
   AckSetTracker tracker;
 

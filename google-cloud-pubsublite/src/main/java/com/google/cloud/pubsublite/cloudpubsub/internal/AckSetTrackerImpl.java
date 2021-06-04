@@ -113,6 +113,7 @@ public class AckSetTrackerImpl extends TrivialProxyService implements AckSetTrac
     try (CloseableMonitor.Hold h = monitor.enter()) {
       receiptsCopy = ImmutableList.copyOf(receipts);
     }
+    // Clearing receipts here avoids deadlocks due to locks acquired in different order.
     receiptsCopy.forEach(Receipt::clear);
     try (CloseableMonitor.Hold h = monitor.enter()) {
       receipts.clear();

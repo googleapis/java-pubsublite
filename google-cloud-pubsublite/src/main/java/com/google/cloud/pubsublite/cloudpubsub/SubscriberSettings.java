@@ -260,7 +260,11 @@ public abstract class SubscriberSettings {
               partition, transformer().orElse(MessageTransforms.toCpsSubscribeTransformer())),
           new AckSetTrackerImpl(wireCommitter),
           nackHandler().orElse(new NackHandler() {}),
-          messageConsumer -> wireSubscriberBuilder.setMessageConsumer(messageConsumer).build(),
+          (messageConsumer, resetHandler) ->
+              wireSubscriberBuilder
+                  .setMessageConsumer(messageConsumer)
+                  .setResetHandler(resetHandler)
+                  .build(),
           perPartitionFlowControlSettings());
     } catch (Throwable t) {
       throw toCanonical(t);

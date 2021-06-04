@@ -52,6 +52,8 @@ public class SubscriberImpl extends ProxyService
 
   private final Consumer<ImmutableList<SequencedMessage>> messageConsumer;
 
+  private final SubscriberResetHandler resetHandler;
+
   private final SubscribeRequest initialRequest;
 
   private final CloseableMonitor monitor = new CloseableMonitor();
@@ -91,9 +93,11 @@ public class SubscriberImpl extends ProxyService
       StreamFactory<SubscribeRequest, SubscribeResponse> streamFactory,
       ConnectedSubscriberFactory factory,
       InitialSubscribeRequest initialRequest,
-      Consumer<ImmutableList<SequencedMessage>> messageConsumer)
+      Consumer<ImmutableList<SequencedMessage>> messageConsumer,
+      SubscriberResetHandler resetHandler)
       throws ApiException {
     this.messageConsumer = messageConsumer;
+    this.resetHandler = resetHandler;
     this.initialRequest = SubscribeRequest.newBuilder().setInitial(initialRequest).build();
     this.connection =
         new RetryingConnectionImpl<>(streamFactory, factory, this, this.initialRequest);
@@ -103,13 +107,15 @@ public class SubscriberImpl extends ProxyService
   public SubscriberImpl(
       SubscriberServiceClient client,
       InitialSubscribeRequest initialRequest,
-      Consumer<ImmutableList<SequencedMessage>> messageConsumer)
+      Consumer<ImmutableList<SequencedMessage>> messageConsumer,
+      SubscriberResetHandler resetHandler)
       throws ApiException {
     this(
         stream -> client.subscribeCallable().splitCall(stream),
         new ConnectedSubscriberImpl.Factory(),
         initialRequest,
-        messageConsumer);
+        messageConsumer,
+        resetHandler);
     addServices(backgroundResourceAsApiService(client));
   }
 
@@ -196,9 +202,32 @@ public class SubscriberImpl extends ProxyService
     }
   }
 
+  public void reset() {
+    try (CloseableMonitor.Hold h = monitor.enter()) {
+      if (shutdown) return;
+      inFlightSeek.ifPresent(
+          inFlight ->
+              inFlight.seekFuture.setException(
+                  new CheckedApiException("Aborted due to out of band seek.", Code.ABORTED)));
+      inFlightSeek = Optional.empty();
+      nextOffsetTracker.reset();
+    }
+  }
+
   @Override
   @SuppressWarnings("GuardedBy")
   public void triggerReinitialize(CheckedApiException streamError) {
+    if (ResetSignal.isResetSignal(streamError)) {
+      try {
+        if (resetHandler.handleReset()) {
+          reset();
+        }
+      } catch (CheckedApiException e) {
+        onPermanentError(e);
+        return;
+      }
+    }
+
     try (CloseableMonitor.Hold h = monitor.enter()) {
       if (shutdown) return;
       connection.reinitialize(initialRequest);

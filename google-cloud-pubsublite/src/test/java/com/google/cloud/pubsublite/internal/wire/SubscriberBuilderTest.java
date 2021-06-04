@@ -29,6 +29,7 @@ import com.google.cloud.pubsublite.SubscriptionPath;
 import com.google.cloud.pubsublite.v1.SubscriberServiceClient;
 import com.google.common.collect.ImmutableList;
 import java.util.function.Consumer;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -38,9 +39,30 @@ import org.mockito.Mock;
 public class SubscriberBuilderTest {
   @Mock public Consumer<ImmutableList<SequencedMessage>> mockConsumer;
 
-  @Test
-  public void testBuilder() {
+  @Before
+  public void setUp() {
     initMocks(this);
+  }
+
+  @Test
+  public void testBuilder_setAll() {
+    Subscriber unusedSubscriber =
+        SubscriberBuilder.newBuilder()
+            .setSubscriptionPath(
+                SubscriptionPath.newBuilder()
+                    .setLocation(CloudZone.of(CloudRegion.of("us-central1"), 'a'))
+                    .setProject(ProjectNumber.of(3))
+                    .setName(SubscriptionName.of("abc"))
+                    .build())
+            .setMessageConsumer(mockConsumer)
+            .setPartition(Partition.of(3))
+            .setServiceClient(mock(SubscriberServiceClient.class))
+            .setResetHandler(SubscriberResetHandler::unhandled)
+            .build();
+  }
+
+  @Test
+  public void testBuilder_omitOptionalFields() {
     Subscriber unusedSubscriber =
         SubscriberBuilder.newBuilder()
             .setSubscriptionPath(

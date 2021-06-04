@@ -20,6 +20,8 @@ import static com.google.common.truth.Truth.assertThat;
 import static org.junit.Assert.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.argThat;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -120,5 +122,17 @@ public class AckSetTrackerImplTest {
     assertThrows(ApiException.class, ack1::run);
     verify(permanentErrorHandler)
         .failed(any(), argThat(new ApiExceptionMatcher(Code.FAILED_PRECONDITION)));
+  }
+
+  @Test
+  public void waitUntilCommittedDiscardsPendingAcks() throws Exception {
+    Runnable ack = tracker.track(messageForOffset(1));
+
+    tracker.waitUntilCommitted();
+    verify(committer).waitUntilEmpty();
+
+    // Ack is ineffective.
+    ack.run();
+    verify(committer, never()).commitOffset(any());
   }
 }

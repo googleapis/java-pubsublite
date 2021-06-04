@@ -28,21 +28,63 @@ import com.google.cloud.pubsublite.internal.CloseableMonitor;
 import com.google.cloud.pubsublite.internal.ExtractStatus;
 import com.google.cloud.pubsublite.internal.TrivialProxyService;
 import com.google.cloud.pubsublite.internal.wire.Committer;
+import com.google.common.collect.ImmutableList;
 import com.google.errorprone.annotations.concurrent.GuardedBy;
 import java.util.ArrayDeque;
 import java.util.Deque;
+import java.util.List;
 import java.util.Optional;
 import java.util.PriorityQueue;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 public class AckSetTrackerImpl extends TrivialProxyService implements AckSetTracker {
+  // Receipt represents an unacked message. It can be cleared, which will cause the ack to be
+  // ignored.
+  private static class Receipt {
+    final Offset offset;
+
+    private final CloseableMonitor m = new CloseableMonitor();
+
+    @GuardedBy("m.monitor")
+    private boolean wasAcked = false;
+
+    @GuardedBy("m.monitor")
+    private Optional<AckSetTrackerImpl> tracker;
+
+    Receipt(Offset offset, AckSetTrackerImpl tracker) {
+      this.offset = offset;
+      this.tracker = Optional.of(tracker);
+    }
+
+    void clear() {
+      try (CloseableMonitor.Hold h = m.enter()) {
+        tracker = Optional.empty();
+      }
+    }
+
+    void onAck() {
+      try (CloseableMonitor.Hold h = m.enter()) {
+        if (!tracker.isPresent()) {
+          return;
+        }
+        if (wasAcked) {
+          CheckedApiException e =
+              new CheckedApiException("Duplicate acks are not allowed.", Code.FAILED_PRECONDITION);
+          tracker.get().onPermanentError(e);
+          throw e.underlying;
+        }
+        wasAcked = true;
+        tracker.get().onAck(offset);
+      }
+    }
+  }
+
   private final CloseableMonitor monitor = new CloseableMonitor();
 
   @GuardedBy("monitor.monitor")
   private final Committer committer;
 
   @GuardedBy("monitor.monitor")
-  private final Deque<Offset> receipts = new ArrayDeque<>();
+  private final Deque<Receipt> receipts = new ArrayDeque<>();
 
   @GuardedBy("monitor.monitor")
   private final PriorityQueue<Offset> acks = new PriorityQueue<>();
@@ -57,23 +99,27 @@ public class AckSetTrackerImpl extends TrivialProxyService implements AckSetTrac
   public Runnable track(SequencedMessage message) throws CheckedApiException {
     final Offset messageOffset = message.offset();
     try (CloseableMonitor.Hold h = monitor.enter()) {
-      checkArgument(receipts.isEmpty() || receipts.peekLast().value() < messageOffset.value());
-      receipts.addLast(messageOffset);
+      checkArgument(
+          receipts.isEmpty() || receipts.peekLast().offset.value() < messageOffset.value());
+      Receipt receipt = new Receipt(messageOffset, this);
+      receipts.addLast(receipt);
+      return receipt::onAck;
     }
-    return new Runnable() {
-      private final AtomicBoolean wasAcked = new AtomicBoolean(false);
+  }
 
-      @Override
-      public void run() {
-        if (wasAcked.getAndSet(true)) {
-          CheckedApiException e =
-              new CheckedApiException("Duplicate acks are not allowed.", Code.FAILED_PRECONDITION);
-          onPermanentError(e);
-          throw e.underlying;
-        }
-        onAck(messageOffset);
-      }
-    };
+  @Override
+  public void waitUntilCommitted() throws CheckedApiException {
+    List<Receipt> receiptsCopy;
+    try (CloseableMonitor.Hold h = monitor.enter()) {
+      receiptsCopy = ImmutableList.copyOf(receipts);
+    }
+    // Clearing receipts here avoids deadlocks due to locks acquired in different order.
+    receiptsCopy.forEach(Receipt::clear);
+    try (CloseableMonitor.Hold h = monitor.enter()) {
+      receipts.clear();
+      acks.clear();
+      committer.waitUntilEmpty();
+    }
   }
 
   private void onAck(Offset offset) {
@@ -82,7 +128,7 @@ public class AckSetTrackerImpl extends TrivialProxyService implements AckSetTrac
       Optional<Offset> prefixAckedOffset = Optional.empty();
       while (!receipts.isEmpty()
           && !acks.isEmpty()
-          && receipts.peekFirst().value() == acks.peek().value()) {
+          && receipts.peekFirst().offset.value() == acks.peek().value()) {
         prefixAckedOffset = Optional.of(acks.remove());
         receipts.removeFirst();
       }

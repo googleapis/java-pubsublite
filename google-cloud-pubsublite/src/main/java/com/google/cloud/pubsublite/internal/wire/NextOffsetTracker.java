@@ -59,4 +59,9 @@ public class NextOffsetTracker {
                 .setCursor(Cursor.newBuilder().setOffset(offset.value()))
                 .build());
   }
+
+  // Resets the offset tracker to its initial state.
+  void reset() {
+    nextOffset = Optional.empty();
+  }
 }

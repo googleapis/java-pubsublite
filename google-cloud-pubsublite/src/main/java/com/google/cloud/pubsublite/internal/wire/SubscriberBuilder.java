@@ -37,8 +37,12 @@ public abstract class SubscriberBuilder {
 
   abstract SubscriberServiceClient serviceClient();
 
+  // Optional parameters.
+  abstract SubscriberResetHandler resetHandler();
+
   public static Builder newBuilder() {
-    return new AutoValue_SubscriberBuilder.Builder();
+    return new AutoValue_SubscriberBuilder.Builder()
+        .setResetHandler(SubscriberResetHandler::unhandled);
   }
 
   @AutoValue.Builder
@@ -53,6 +57,9 @@ public abstract class SubscriberBuilder {
 
     public abstract Builder setServiceClient(SubscriberServiceClient serviceClient);
 
+    // Optional parameters.
+    public abstract Builder setResetHandler(SubscriberResetHandler resetHandler);
+
     abstract SubscriberBuilder autoBuild();
 
     @SuppressWarnings("CheckReturnValue")
@@ -66,7 +73,10 @@ public abstract class SubscriberBuilder {
               .build();
       return new ApiExceptionSubscriber(
           new SubscriberImpl(
-              autoBuilt.serviceClient(), initialSubscribeRequest, autoBuilt.messageConsumer()));
+              autoBuilt.serviceClient(),
+              initialSubscribeRequest,
+              autoBuilt.messageConsumer(),
+              autoBuilt.resetHandler()));
     }
   }
 }

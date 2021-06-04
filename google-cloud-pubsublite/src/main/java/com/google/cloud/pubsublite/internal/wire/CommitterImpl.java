@@ -46,7 +46,7 @@ public class CommitterImpl extends ProxyService
       new Guard(monitor.monitor) {
         public boolean isSatisfied() {
           // Wait until the state is empty or a permanent error occurred.
-          return state.isEmpty() || hadPermanentError;
+          return state.isEmpty() || permanentError.isPresent();
         }
       };
 
@@ -57,7 +57,7 @@ public class CommitterImpl extends ProxyService
   private boolean shutdown = false;
 
   @GuardedBy("monitor.monitor")
-  private boolean hadPermanentError = false;
+  private Optional<CheckedApiException> permanentError = Optional.empty();
 
   @GuardedBy("monitor.monitor")
   private final CommitState state = new CommitState();
@@ -88,7 +88,7 @@ public class CommitterImpl extends ProxyService
   @Override
   protected void handlePermanentError(CheckedApiException error) {
     try (CloseableMonitor.Hold h = monitor.enter()) {
-      hadPermanentError = true;
+      permanentError = Optional.of(error);
       shutdown = true;
       state.abort(error);
     }
@@ -142,6 +142,15 @@ public class CommitterImpl extends ProxyService
     } catch (CheckedApiException e) {
       onPermanentError(e);
       return ApiFutures.immediateFailedFuture(e);
+    }
+  }
+
+  @Override
+  public void waitUntilEmpty() throws CheckedApiException {
+    try (CloseableMonitor.Hold h = monitor.enterWhenUninterruptibly(isEmptyOrError)) {
+      if (permanentError.isPresent()) {
+        throw permanentError.get();
+      }
     }
   }
 }

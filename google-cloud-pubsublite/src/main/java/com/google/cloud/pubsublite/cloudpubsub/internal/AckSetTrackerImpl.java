@@ -38,7 +38,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class AckSetTrackerImpl extends TrivialProxyService implements AckSetTracker {
   // Receipt represents an unacked message. It can be cleared, which will cause the ack to be
   // ignored.
-  private static class Receipt implements Runnable {
+  private static class Receipt {
     private final CloseableMonitor m = new CloseableMonitor();
     private final AtomicBoolean wasAcked = new AtomicBoolean(false);
     final Offset offset;
@@ -57,8 +57,7 @@ public class AckSetTrackerImpl extends TrivialProxyService implements AckSetTrac
       }
     }
 
-    @Override
-    public void run() {
+    void onAck() {
       try (CloseableMonitor.Hold h = m.enter()) {
         if (!tracker.isPresent()) {
           return;
@@ -99,7 +98,7 @@ public class AckSetTrackerImpl extends TrivialProxyService implements AckSetTrac
           receipts.isEmpty() || receipts.peekLast().offset.value() < messageOffset.value());
       Receipt receipt = new Receipt(messageOffset, this);
       receipts.addLast(receipt);
-      return receipt;
+      return receipt::onAck;
     }
   }
 

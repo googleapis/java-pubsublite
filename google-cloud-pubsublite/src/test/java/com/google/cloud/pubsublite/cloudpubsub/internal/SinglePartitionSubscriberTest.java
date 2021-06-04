@@ -225,6 +225,6 @@ public class SinglePartitionSubscriberTest {
   @Test
   public void onSubscriberResetWaitsForAckSetTracker() throws CheckedApiException {
     assertThat(subscriber.onSubscriberReset()).isTrue();
-    verify(ackSetTracker).waitUntilEmpty();
+    verify(ackSetTracker).waitUntilCommitted();
   }
 }

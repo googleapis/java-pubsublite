@@ -109,8 +109,8 @@ public class AckSetTrackerImpl extends TrivialProxyService implements AckSetTrac
       receipts.forEach(Receipt::clear);
       receipts.clear();
       acks.clear();
+      committer.waitUntilEmpty();
     }
-    committer.waitUntilEmpty();
   }
 
   private void onAck(Offset offset) {

@@ -129,7 +129,7 @@ public class SinglePartitionSubscriber extends ProxyService implements Subscribe
 
   @VisibleForTesting
   boolean onSubscriberReset() throws CheckedApiException {
-    ackSetTracker.waitUntilCommitted();
-    return true;
+    // TODO: handle reset.
+    return false;
   }
 }

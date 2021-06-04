@@ -28,20 +28,24 @@ import com.google.cloud.pubsublite.internal.CloseableMonitor;
 import com.google.cloud.pubsublite.internal.ExtractStatus;
 import com.google.cloud.pubsublite.internal.TrivialProxyService;
 import com.google.cloud.pubsublite.internal.wire.Committer;
+import com.google.common.collect.ImmutableList;
 import com.google.errorprone.annotations.concurrent.GuardedBy;
 import java.util.ArrayDeque;
 import java.util.Deque;
+import java.util.List;
 import java.util.Optional;
 import java.util.PriorityQueue;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 public class AckSetTrackerImpl extends TrivialProxyService implements AckSetTracker {
   // Receipt represents an unacked message. It can be cleared, which will cause the ack to be
   // ignored.
   private static class Receipt {
-    private final CloseableMonitor m = new CloseableMonitor();
-    private final AtomicBoolean wasAcked = new AtomicBoolean(false);
     final Offset offset;
+
+    private final CloseableMonitor m = new CloseableMonitor();
+
+    @GuardedBy("m.monitor")
+    private boolean wasAcked = false;
 
     @GuardedBy("m.monitor")
     private Optional<AckSetTrackerImpl> tracker;
@@ -62,14 +66,15 @@ public class AckSetTrackerImpl extends TrivialProxyService implements AckSetTrac
         if (!tracker.isPresent()) {
           return;
         }
+        if (wasAcked) {
+          CheckedApiException e =
+              new CheckedApiException("Duplicate acks are not allowed.", Code.FAILED_PRECONDITION);
+          tracker.get().onPermanentError(e);
+          throw e.underlying;
+        }
+        wasAcked = true;
+        tracker.get().onAck(offset);
       }
-      if (wasAcked.getAndSet(true)) {
-        CheckedApiException e =
-            new CheckedApiException("Duplicate acks are not allowed.", Code.FAILED_PRECONDITION);
-        tracker.get().onPermanentError(e);
-        throw e.underlying;
-      }
-      tracker.get().onAck(offset);
     }
   }
 
@@ -104,8 +109,12 @@ public class AckSetTrackerImpl extends TrivialProxyService implements AckSetTrac
 
   @Override
   public void waitUntilCommitted() throws CheckedApiException {
+    List<Receipt> receiptsCopy;
     try (CloseableMonitor.Hold h = monitor.enter()) {
-      receipts.forEach(Receipt::clear);
+      receiptsCopy = ImmutableList.copyOf(receipts);
+    }
+    receiptsCopy.forEach(Receipt::clear);
+    try (CloseableMonitor.Hold h = monitor.enter()) {
       receipts.clear();
       acks.clear();
       committer.waitUntilEmpty();

@@ -26,6 +26,8 @@ import com.google.cloud.pubsublite.ProjectNumber;
 import com.google.cloud.pubsublite.SequencedMessage;
 import com.google.cloud.pubsublite.SubscriptionName;
 import com.google.cloud.pubsublite.SubscriptionPath;
+import com.google.cloud.pubsublite.proto.SeekRequest;
+import com.google.cloud.pubsublite.proto.SeekRequest.NamedTarget;
 import com.google.cloud.pubsublite.v1.SubscriberServiceClient;
 import com.google.common.collect.ImmutableList;
 import java.util.function.Consumer;
@@ -57,6 +59,8 @@ public class SubscriberBuilderTest {
             .setMessageConsumer(mockConsumer)
             .setPartition(Partition.of(3))
             .setServiceClient(mock(SubscriberServiceClient.class))
+            .setInitialLocation(
+                SeekRequest.newBuilder().setNamedTarget(NamedTarget.COMMITTED_CURSOR).build())
             .setResetHandler(SubscriberResetHandler::unhandled)
             .build();
   }
@@ -74,6 +78,8 @@ public class SubscriberBuilderTest {
             .setMessageConsumer(mockConsumer)
             .setPartition(Partition.of(3))
             .setServiceClient(mock(SubscriberServiceClient.class))
+            .setInitialLocation(
+                SeekRequest.newBuilder().setNamedTarget(NamedTarget.COMMITTED_CURSOR).build())
             .build();
   }
 }

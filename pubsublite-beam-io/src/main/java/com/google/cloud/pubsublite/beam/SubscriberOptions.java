@@ -22,6 +22,7 @@ import static com.google.cloud.pubsublite.internal.wire.ServiceClients.addDefaul
 
 import com.google.api.gax.rpc.ApiException;
 import com.google.auto.value.AutoValue;
+import com.google.cloud.pubsublite.Offset;
 import com.google.cloud.pubsublite.Partition;
 import com.google.cloud.pubsublite.SubscriptionPath;
 import com.google.cloud.pubsublite.cloudpubsub.FlowControlSettings;
@@ -34,6 +35,8 @@ import com.google.cloud.pubsublite.internal.wire.PubsubContext.Framework;
 import com.google.cloud.pubsublite.internal.wire.RoutingMetadata;
 import com.google.cloud.pubsublite.internal.wire.SubscriberBuilder;
 import com.google.cloud.pubsublite.internal.wire.SubscriberFactory;
+import com.google.cloud.pubsublite.proto.Cursor;
+import com.google.cloud.pubsublite.proto.SeekRequest;
 import com.google.cloud.pubsublite.v1.CursorServiceClient;
 import com.google.cloud.pubsublite.v1.CursorServiceSettings;
 import com.google.cloud.pubsublite.v1.SubscriberServiceClient;
@@ -129,7 +132,7 @@ public abstract class SubscriberOptions implements Serializable {
     }
   }
 
-  SubscriberFactory getSubscriberFactory(Partition partition) {
+  SubscriberFactory getSubscriberFactory(Partition partition, Offset initialOffset) {
     SubscriberFactory factory = subscriberFactory();
     if (factory != null) {
       return factory;
@@ -140,6 +143,7 @@ public abstract class SubscriberOptions implements Serializable {
             .setSubscriptionPath(subscriptionPath())
             .setPartition(partition)
             .setServiceClient(newSubscriberServiceClient(partition))
+            .setInitialLocation(SeekRequest.newBuilder().setCursor(Cursor.newBuilder().setOffset(initialOffset.value())).build())
             .build();
   }
 

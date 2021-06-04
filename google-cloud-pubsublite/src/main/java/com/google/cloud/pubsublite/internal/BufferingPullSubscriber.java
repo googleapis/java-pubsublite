@@ -24,8 +24,6 @@ import com.google.cloud.pubsublite.cloudpubsub.FlowControlSettings;
 import com.google.cloud.pubsublite.internal.wire.Subscriber;
 import com.google.cloud.pubsublite.internal.wire.SubscriberFactory;
 import com.google.cloud.pubsublite.proto.FlowControlRequest;
-import com.google.cloud.pubsublite.proto.SeekRequest;
-import com.google.cloud.pubsublite.proto.SeekRequest.NamedTarget;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 import com.google.common.util.concurrent.MoreExecutors;
@@ -35,7 +33,6 @@ import java.util.Collection;
 import java.util.Deque;
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.ExecutionException;
 
 public class BufferingPullSubscriber implements PullSubscriber<SequencedMessage> {
   private final Subscriber underlying;
@@ -51,15 +48,6 @@ public class BufferingPullSubscriber implements PullSubscriber<SequencedMessage>
 
   public BufferingPullSubscriber(SubscriberFactory factory, FlowControlSettings settings)
       throws CheckedApiException {
-    this(
-        factory,
-        settings,
-        SeekRequest.newBuilder().setNamedTarget(NamedTarget.COMMITTED_CURSOR).build());
-  }
-
-  public BufferingPullSubscriber(
-      SubscriberFactory factory, FlowControlSettings settings, SeekRequest initialSeek)
-      throws CheckedApiException {
     underlying = factory.newSubscriber(this::addMessages);
     underlying.addListener(
         new Listener() {
@@ -70,11 +58,6 @@ public class BufferingPullSubscriber implements PullSubscriber<SequencedMessage>
         },
         MoreExecutors.directExecutor());
     underlying.startAsync().awaitRunning();
-    try {
-      underlying.seek(initialSeek).get();
-    } catch (InterruptedException | ExecutionException e) {
-      throw ExtractStatus.toCanonical(e);
-    }
     underlying.allowFlow(
         FlowControlRequest.newBuilder()
             .setAllowedMessages(settings.messagesOutstanding())

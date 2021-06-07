@@ -22,12 +22,21 @@ import com.google.cloud.pubsublite.LocationPath;
 import com.google.cloud.pubsublite.Offset;
 import com.google.cloud.pubsublite.Partition;
 import com.google.cloud.pubsublite.ProjectNumber;
+import com.google.cloud.pubsublite.ReservationName;
+import com.google.cloud.pubsublite.ReservationPath;
 import com.google.cloud.pubsublite.SubscriptionName;
 import com.google.cloud.pubsublite.SubscriptionPath;
 import com.google.cloud.pubsublite.TopicName;
 import com.google.cloud.pubsublite.TopicPath;
+import com.google.cloud.pubsublite.proto.Reservation;
+import com.google.cloud.pubsublite.proto.Subscription;
+import com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig;
+import com.google.cloud.pubsublite.proto.Topic;
+import com.google.cloud.pubsublite.proto.Topic.PartitionConfig;
+import com.google.cloud.pubsublite.proto.Topic.RetentionConfig;
 import com.google.common.base.Preconditions;
 import com.google.common.reflect.ImmutableTypeToInstanceMap;
+import com.google.protobuf.util.Durations;
 
 public final class UnitTestExamples {
   private UnitTestExamples() {}
@@ -40,8 +49,13 @@ public final class UnitTestExamples {
           .put(ProjectNumber.class, exampleProjectNumber())
           .put(TopicName.class, exampleTopicName())
           .put(TopicPath.class, exampleTopicPath())
+          .put(Topic.class, exampleTopic())
           .put(SubscriptionName.class, exampleSubscriptionName())
           .put(SubscriptionPath.class, exampleSubscriptionPath())
+          .put(Subscription.class, exampleSubscription())
+          .put(ReservationName.class, exampleReservationName())
+          .put(ReservationPath.class, exampleReservationPath())
+          .put(Reservation.class, exampleReservation())
           .put(LocationPath.class, exampleLocationPath())
           .put(Offset.class, exampleOffset())
           .build();
@@ -80,6 +94,14 @@ public final class UnitTestExamples {
         .build();
   }
 
+  public static Topic exampleTopic() {
+    return Topic.newBuilder()
+        .setName(exampleTopicPath().toString())
+        .setPartitionConfig(PartitionConfig.newBuilder().setCount(10))
+        .setRetentionConfig(RetentionConfig.newBuilder().setPeriod(Durations.fromDays(1)))
+        .build();
+  }
+
   public static SubscriptionName exampleSubscriptionName() {
     return SubscriptionName.of("example-subscription");
   }
@@ -89,6 +111,35 @@ public final class UnitTestExamples {
         .setProject(exampleProjectNumber())
         .setLocation(exampleZone())
         .setName(exampleSubscriptionName())
+        .build();
+  }
+
+  public static Subscription exampleSubscription() {
+    return Subscription.newBuilder()
+        .setDeliveryConfig(
+            DeliveryConfig.newBuilder()
+                .setDeliveryRequirement(DeliveryConfig.DeliveryRequirement.DELIVER_AFTER_STORED))
+        .setName(exampleSubscriptionPath().toString())
+        .setTopic(exampleTopicPath().toString())
+        .build();
+  }
+
+  public static ReservationName exampleReservationName() {
+    return ReservationName.of("example-reservation");
+  }
+
+  public static ReservationPath exampleReservationPath() {
+    return ReservationPath.newBuilder()
+        .setProject(exampleProjectNumber())
+        .setLocation(exampleRegion())
+        .setName(exampleReservationName())
+        .build();
+  }
+
+  public static Reservation exampleReservation() {
+    return Reservation.newBuilder()
+        .setName(exampleReservationPath().toString())
+        .setThroughputCapacity(423597)
         .build();
   }
 

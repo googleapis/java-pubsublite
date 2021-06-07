@@ -28,7 +28,7 @@ import java.util.Arrays;
 public abstract class LocationPath implements Serializable {
   public abstract ProjectIdOrNumber project();
 
-  public abstract CloudZone location();
+  public abstract CloudRegionOrZone location();
 
   public ProjectPath projectPath() {
     return ProjectPath.newBuilder().setProject(project()).build();
@@ -47,9 +47,7 @@ public abstract class LocationPath implements Serializable {
   public abstract Builder toBuilder();
 
   @AutoValue.Builder
-  public abstract static class Builder extends ProjectBuilderHelper<Builder> {
-    public abstract Builder setLocation(CloudZone zone);
-
+  public abstract static class Builder extends ProjectLocationBuilderHelper<Builder> {
     public abstract LocationPath build();
   }
 
@@ -65,7 +63,7 @@ public abstract class LocationPath implements Serializable {
     ProjectPath project = ProjectPath.parse(String.join("/", Arrays.copyOf(splits, 2)));
     return LocationPath.newBuilder()
         .setProject(project.project())
-        .setLocation(CloudZone.parse(splits[3]))
+        .setLocation(CloudRegionOrZone.parse(splits[3]))
         .build();
   }
 }

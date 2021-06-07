@@ -20,6 +20,7 @@ import static com.google.cloud.pubsublite.internal.UncheckedApiPreconditions.che
 
 import com.google.api.gax.rpc.ApiException;
 import com.google.auto.value.AutoValue;
+import com.google.cloud.pubsublite.CloudRegionOrZone.Kind;
 import java.io.Serializable;
 import java.util.Arrays;
 
@@ -67,9 +68,12 @@ public abstract class SubscriptionPath implements Serializable {
     checkArgument(splits.length == 6);
     checkArgument(splits[4].equals("subscriptions"));
     LocationPath location = LocationPath.parse(String.join("/", Arrays.copyOf(splits, 4)));
+    checkArgument(
+        location.location().getKind() == Kind.ZONE,
+        "Subscription location must be a valid cloud zone.");
     return SubscriptionPath.newBuilder()
         .setProject(location.project())
-        .setLocation(location.location())
+        .setLocation(location.location().zone())
         .setName(SubscriptionName.of(splits[5]))
         .build();
   }

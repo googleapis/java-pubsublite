@@ -4,7 +4,7 @@
       "git": {
         "name": ".",
         "remote": "https://github.com/googleapis/java-pubsublite.git",
-        "sha": "a142d13090a66d174a34f2b25079a067d9b88331"
+        "sha": "da98b0f8212d33ace2e3f9d034f7a923ef05c43a"
       }
     },
     {
@@ -100,6 +100,7 @@
     "CONTRIBUTING.md",
     "LICENSE",
     "codecov.yaml",
+    "google-cloud-pubsublite/src/main/java/com/google/cloud/pubsublite/internal/wire/PartitionCountWatchingPublisher.java",
     "google-cloud-pubsublite/src/main/java/com/google/cloud/pubsublite/v1/AdminServiceClient.java",
     "google-cloud-pubsublite/src/main/java/com/google/cloud/pubsublite/v1/AdminServiceSettings.java",
     "google-cloud-pubsublite/src/main/java/com/google/cloud/pubsublite/v1/CursorServiceClient.java",

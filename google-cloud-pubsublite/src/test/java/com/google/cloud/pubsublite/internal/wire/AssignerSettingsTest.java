@@ -32,7 +32,7 @@ import org.junit.runners.JUnit4;
 public class AssignerSettingsTest {
   @Test
   public void testBuilder() {
-    AssignerSetttings unusedAssigner = AssignerSettings.newBuilder()
+    AssignerSettings unusedAssigner = AssignerSettings.newBuilder()
         .setSubscriptionPath(
             SubscriptionPath.newBuilder()
                 .setLocation(CloudZone.of(CloudRegion.of("us-central1"), 'a'))

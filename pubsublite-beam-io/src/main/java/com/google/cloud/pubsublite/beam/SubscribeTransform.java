@@ -81,7 +81,7 @@ class SubscribeTransform extends PTransform<PBegin, PCollection<SequencedMessage
         consumer ->
             newSubscriber(
                 subscriptionPartition.partition(),
-                Offset.of(tracker.currentRestriction().getFrom()),
+                Offset.of(tracker.currentRestriction().getRange().getFrom()),
                 consumer),
         options.flowControlSettings());
   }

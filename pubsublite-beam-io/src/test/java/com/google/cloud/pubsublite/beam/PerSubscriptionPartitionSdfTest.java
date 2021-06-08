@@ -184,7 +184,9 @@ public class PerSubscriptionPartitionSdfTest {
   public void getProgressBoundedReturnsBytes() {
     assertTrue(
         DoubleMath.fuzzyEquals(
-            123.0, sdf.getSize(PARTITION, OffsetByteRange.of(RESTRICTION.getRange(), 123)), .0001));
+            123.0,
+            sdf.getSize(PARTITION, OffsetByteRange.of(new OffsetRange(87, 8000), 123)),
+            .0001));
     verifyNoInteractions(tracker);
   }
 }

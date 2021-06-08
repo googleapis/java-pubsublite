@@ -27,6 +27,7 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
@@ -40,6 +41,7 @@ import com.google.cloud.pubsublite.internal.CheckedApiException;
 import com.google.cloud.pubsublite.internal.testing.FakeApiService;
 import com.google.cloud.pubsublite.internal.wire.Committer;
 import com.google.cloud.pubsublite.proto.SequencedMessage;
+import com.google.common.math.DoubleMath;
 import java.io.ByteArrayOutputStream;
 import java.io.ObjectOutputStream;
 import java.util.Optional;
@@ -50,6 +52,7 @@ import org.apache.beam.sdk.transforms.DoFn.ProcessContinuation;
 import org.apache.beam.sdk.transforms.SerializableBiFunction;
 import org.apache.beam.sdk.transforms.SerializableFunction;
 import org.apache.beam.sdk.transforms.splittabledofn.RestrictionTracker;
+import org.apache.beam.sdk.transforms.splittabledofn.RestrictionTracker.Progress;
 import org.joda.time.Duration;
 import org.junit.Before;
 import org.junit.Test;
@@ -64,22 +67,22 @@ import org.mockito.Spy;
 public class PerSubscriptionPartitionSdfTest {
   private static final Duration MAX_SLEEP_TIME =
       Duration.standardMinutes(10).plus(Duration.millis(10));
-  private static final OffsetRange RESTRICTION = new OffsetRange(1, Long.MAX_VALUE);
+  private static final OffsetByteRange RESTRICTION =
+      OffsetByteRange.of(new OffsetRange(1, Long.MAX_VALUE), 0);
   private static final SubscriptionPartition PARTITION =
       SubscriptionPartition.of(example(SubscriptionPath.class), example(Partition.class));
 
   @Mock SerializableFunction<SubscriptionPartition, InitialOffsetReader> offsetReaderFactory;
 
   @Mock
-  SerializableBiFunction<
-          SubscriptionPartition, OffsetRange, RestrictionTracker<OffsetRange, OffsetByteProgress>>
+  SerializableBiFunction<SubscriptionPartition, OffsetByteRange, TrackerWithProgress>
       trackerFactory;
 
   @Mock SubscriptionPartitionProcessorFactory processorFactory;
   @Mock SerializableFunction<SubscriptionPartition, Committer> committerFactory;
 
   @Mock InitialOffsetReader initialOffsetReader;
-  @Spy RestrictionTracker<OffsetRange, OffsetByteProgress> tracker;
+  @Spy TrackerWithProgress tracker;
   @Mock OutputReceiver<SequencedMessage> output;
   @Mock SubscriptionPartitionProcessor processor;
 
@@ -165,5 +168,23 @@ public class PerSubscriptionPartitionSdfTest {
     output.writeObject(
         new PerSubscriptionPartitionSdf(
             MAX_SLEEP_TIME, x -> null, (x, y) -> null, (x, y, z) -> null, (x) -> null));
+  }
+
+  @Test
+  public void getProgressUnboundedRangeDelegates() {
+    Progress progress = Progress.from(0, 0.2);
+    when(tracker.getProgress()).thenReturn(progress);
+    assertTrue(
+        DoubleMath.fuzzyEquals(
+            progress.getWorkRemaining(), sdf.getSize(PARTITION, RESTRICTION), .0001));
+    verify(tracker).getProgress();
+  }
+
+  @Test
+  public void getProgressBoundedReturnsBytes() {
+    assertTrue(
+        DoubleMath.fuzzyEquals(
+            123.0, sdf.getSize(PARTITION, OffsetByteRange.of(RESTRICTION.getRange(), 123)), .0001));
+    verifyNoInteractions(tracker);
   }
 }

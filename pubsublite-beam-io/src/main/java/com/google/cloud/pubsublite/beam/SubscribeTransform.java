@@ -33,7 +33,7 @@ import com.google.common.math.LongMath;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
-import org.apache.beam.sdk.io.range.OffsetRange;
+import org.apache.beam.sdk.transforms.Create;
 import org.apache.beam.sdk.transforms.DoFn.OutputReceiver;
 import org.apache.beam.sdk.transforms.PTransform;
 import org.apache.beam.sdk.transforms.ParDo;
@@ -71,7 +71,7 @@ class SubscribeTransform extends PTransform<PBegin, PCollection<SequencedMessage
 
   private SubscriptionPartitionProcessor newPartitionProcessor(
       SubscriptionPartition subscriptionPartition,
-      RestrictionTracker<OffsetRange, OffsetByteProgress> tracker,
+      RestrictionTracker<OffsetByteRange, OffsetByteProgress> tracker,
       OutputReceiver<SequencedMessage> receiver)
       throws ApiException {
     checkSubscription(subscriptionPartition);
@@ -86,8 +86,8 @@ class SubscribeTransform extends PTransform<PBegin, PCollection<SequencedMessage
         options.flowControlSettings());
   }
 
-  private RestrictionTracker<OffsetRange, OffsetByteProgress> newRestrictionTracker(
-      SubscriptionPartition subscriptionPartition, OffsetRange initial) {
+  private TrackerWithProgress newRestrictionTracker(
+      SubscriptionPartition subscriptionPartition, OffsetByteRange initial) {
     checkSubscription(subscriptionPartition);
     return new OffsetByteRangeTracker(
         initial,

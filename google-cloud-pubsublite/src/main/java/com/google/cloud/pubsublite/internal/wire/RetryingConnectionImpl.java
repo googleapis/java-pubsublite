@@ -84,10 +84,14 @@ class RetryingConnectionImpl<
 
   @Override
   protected void doStart() {
+    StreamRequestT initialInitialRequest;
+    try (CloseableMonitor.Hold h = connectionMonitor.enter()) {
+      initialInitialRequest = lastInitialRequest;
+    }
     SystemExecutors.getAlarmExecutor()
         .execute(
             () -> {
-              reinitialize(lastInitialRequest);
+              reinitialize(initialInitialRequest);
               notifyStarted();
             });
   }

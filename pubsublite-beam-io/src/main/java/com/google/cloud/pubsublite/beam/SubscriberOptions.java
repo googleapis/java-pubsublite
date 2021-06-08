@@ -113,10 +113,11 @@ public abstract class SubscriberOptions implements Serializable {
       throws ApiException {
     try {
       SubscriberServiceSettings.Builder settingsBuilder = SubscriberServiceSettings.newBuilder();
-      addDefaultMetadata(
-          PubsubContext.of(FRAMEWORK),
-          RoutingMetadata.of(subscriptionPath(), partition),
-          settingsBuilder);
+      settingsBuilder =
+          addDefaultMetadata(
+              PubsubContext.of(FRAMEWORK),
+              RoutingMetadata.of(subscriptionPath(), partition),
+              settingsBuilder);
       return SubscriberServiceClient.create(
           addDefaultSettings(subscriptionPath().location().region(), settingsBuilder));
     } catch (Throwable t) {

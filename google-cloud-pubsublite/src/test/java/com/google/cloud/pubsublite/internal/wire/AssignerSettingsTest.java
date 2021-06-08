@@ -32,15 +32,16 @@ import org.junit.runners.JUnit4;
 public class AssignerSettingsTest {
   @Test
   public void testBuilder() {
-    AssignerSettings.newBuilder()
-        .setSubscriptionPath(
-            SubscriptionPath.newBuilder()
-                .setLocation(CloudZone.of(CloudRegion.of("us-central1"), 'a'))
-                .setProject(ProjectNumber.of(3))
-                .setName(SubscriptionName.of("abc"))
-                .build())
-        .setReceiver(mock(PartitionAssignmentReceiver.class))
-        .setServiceClient(mock(PartitionAssignmentServiceClient.class))
-        .build();
+    AssignerSettings unusedSettings =
+        AssignerSettings.newBuilder()
+            .setSubscriptionPath(
+                SubscriptionPath.newBuilder()
+                    .setLocation(CloudZone.of(CloudRegion.of("us-central1"), 'a'))
+                    .setProject(ProjectNumber.of(3))
+                    .setName(SubscriptionName.of("abc"))
+                    .build())
+            .setReceiver(mock(PartitionAssignmentReceiver.class))
+            .setServiceClient(mock(PartitionAssignmentServiceClient.class))
+            .build();
   }
 }

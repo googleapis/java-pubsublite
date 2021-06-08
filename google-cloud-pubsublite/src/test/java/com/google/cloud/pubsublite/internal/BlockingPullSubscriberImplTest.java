@@ -44,9 +44,12 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 import org.mockito.InOrder;
 import org.mockito.stubbing.Answer;
 
+@RunWith(JUnit4.class)
 public class BlockingPullSubscriberImplTest {
   private final SubscriberFactory underlyingFactory = mock(SubscriberFactory.class);
   private final Subscriber underlying = mock(Subscriber.class);

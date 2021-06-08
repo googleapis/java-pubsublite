@@ -16,33 +16,24 @@
 
 package com.google.cloud.pubsublite;
 
+import static com.google.cloud.pubsublite.internal.UncheckedApiPreconditions.checkArgument;
+
 import com.google.api.gax.rpc.ApiException;
-import com.google.api.gax.rpc.StatusCode.Code;
 import com.google.auto.value.AutoValue;
-import com.google.cloud.pubsublite.internal.CheckedApiException;
 import java.io.Serializable;
 
-/** A wrapped string representing a Google Cloud region. */
+/** A string wrapper for the name of a reservation. */
 @AutoValue
-public abstract class CloudRegion implements Serializable {
-  private static final long serialVersionUID = 6814654654L;
-
-  /** Construct a CloudRegion from a string. */
-  public static CloudRegion of(String value) throws ApiException {
-    String[] splits = value.split("-", -1);
-    if (splits.length != 2) {
-      throw new CheckedApiException("Invalid region name: " + value, Code.INVALID_ARGUMENT)
-          .underlying;
-    }
-    return new AutoValue_CloudRegion(value);
-  }
-
-  /** The string representing this region. */
+public abstract class ReservationName implements Serializable {
   public abstract String value();
 
-  /** {@inheritDoc} */
   @Override
   public String toString() {
     return value();
+  }
+
+  public static ReservationName of(String value) throws ApiException {
+    checkArgument(!value.isEmpty());
+    return new AutoValue_ReservationName(value);
   }
 }

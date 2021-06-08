@@ -22,23 +22,32 @@ import com.google.cloud.pubsublite.AdminClient;
 import com.google.cloud.pubsublite.AdminClient.BacklogLocation;
 import com.google.cloud.pubsublite.CloudRegion;
 import com.google.cloud.pubsublite.LocationPath;
+import com.google.cloud.pubsublite.ReservationPath;
 import com.google.cloud.pubsublite.SubscriptionPath;
 import com.google.cloud.pubsublite.TopicPath;
+import com.google.cloud.pubsublite.proto.CreateReservationRequest;
 import com.google.cloud.pubsublite.proto.CreateSubscriptionRequest;
 import com.google.cloud.pubsublite.proto.CreateTopicRequest;
+import com.google.cloud.pubsublite.proto.DeleteReservationRequest;
 import com.google.cloud.pubsublite.proto.DeleteSubscriptionRequest;
 import com.google.cloud.pubsublite.proto.DeleteTopicRequest;
+import com.google.cloud.pubsublite.proto.GetReservationRequest;
 import com.google.cloud.pubsublite.proto.GetSubscriptionRequest;
 import com.google.cloud.pubsublite.proto.GetTopicPartitionsRequest;
 import com.google.cloud.pubsublite.proto.GetTopicRequest;
+import com.google.cloud.pubsublite.proto.ListReservationTopicsRequest;
+import com.google.cloud.pubsublite.proto.ListReservationsRequest;
+import com.google.cloud.pubsublite.proto.ListReservationsResponse;
 import com.google.cloud.pubsublite.proto.ListSubscriptionsRequest;
 import com.google.cloud.pubsublite.proto.ListSubscriptionsResponse;
 import com.google.cloud.pubsublite.proto.ListTopicSubscriptionsRequest;
 import com.google.cloud.pubsublite.proto.ListTopicsRequest;
 import com.google.cloud.pubsublite.proto.ListTopicsResponse;
+import com.google.cloud.pubsublite.proto.Reservation;
 import com.google.cloud.pubsublite.proto.Subscription;
 import com.google.cloud.pubsublite.proto.Topic;
 import com.google.cloud.pubsublite.proto.TopicPartitions;
+import com.google.cloud.pubsublite.proto.UpdateReservationRequest;
 import com.google.cloud.pubsublite.proto.UpdateSubscriptionRequest;
 import com.google.cloud.pubsublite.proto.UpdateTopicRequest;
 import com.google.cloud.pubsublite.v1.AdminServiceClient;
@@ -186,6 +195,73 @@ public class AdminClientImpl extends ApiResourceAggregation implements AdminClie
             .deleteSubscriptionCallable()
             .futureCall(DeleteSubscriptionRequest.newBuilder().setName(path.toString()).build()),
         x -> null,
+        MoreExecutors.directExecutor());
+  }
+
+  @Override
+  public ApiFuture<Reservation> createReservation(Reservation reservation) {
+    ReservationPath path = ReservationPath.parse(reservation.getName());
+    return serviceClient
+        .createReservationCallable()
+        .futureCall(
+            CreateReservationRequest.newBuilder()
+                .setParent(path.locationPath().toString())
+                .setReservation(reservation)
+                .setReservationId(path.name().value())
+                .build());
+  }
+
+  @Override
+  public ApiFuture<Reservation> getReservation(ReservationPath path) {
+    return serviceClient
+        .getReservationCallable()
+        .futureCall(GetReservationRequest.newBuilder().setName(path.toString()).build());
+  }
+
+  @Override
+  public ApiFuture<List<Reservation>> listReservations(LocationPath path) {
+    return ApiFutures.transform(
+        serviceClient
+            .listReservationsCallable()
+            .futureCall(ListReservationsRequest.newBuilder().setParent(path.toString()).build()),
+        ListReservationsResponse::getReservationsList,
+        MoreExecutors.directExecutor());
+  }
+
+  @Override
+  public ApiFuture<Reservation> updateReservation(Reservation reservation, FieldMask mask) {
+    return serviceClient
+        .updateReservationCallable()
+        .futureCall(
+            UpdateReservationRequest.newBuilder()
+                .setReservation(reservation)
+                .setUpdateMask(mask)
+                .build());
+  }
+
+  @Override
+  public ApiFuture<Void> deleteReservation(ReservationPath path) {
+    return ApiFutures.transform(
+        serviceClient
+            .deleteReservationCallable()
+            .futureCall(DeleteReservationRequest.newBuilder().setName(path.toString()).build()),
+        x -> null,
+        MoreExecutors.directExecutor());
+  }
+
+  @Override
+  public ApiFuture<List<TopicPath>> listReservationTopics(ReservationPath path) {
+    return ApiFutures.transform(
+        serviceClient
+            .listReservationTopicsCallable()
+            .futureCall(ListReservationTopicsRequest.newBuilder().setName(path.toString()).build()),
+        result -> {
+          ImmutableList.Builder<TopicPath> builder = ImmutableList.builder();
+          for (String subscription : result.getTopicsList()) {
+            builder.add(TopicPath.parse(subscription));
+          }
+          return builder.build();
+        },
         MoreExecutors.directExecutor());
   }
 }

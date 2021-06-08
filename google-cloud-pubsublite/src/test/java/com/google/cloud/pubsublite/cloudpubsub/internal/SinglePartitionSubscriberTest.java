@@ -223,7 +223,8 @@ public class SinglePartitionSubscriberTest {
   }
 
   @Test
-  public void onSubscriberResetNotHandled() throws CheckedApiException {
-    assertThat(subscriber.onSubscriberReset()).isFalse();
+  public void onSubscriberResetWaitsForAckSetTracker() throws CheckedApiException {
+    assertThat(subscriber.onSubscriberReset()).isTrue();
+    verify(ackSetTracker).waitUntilCommitted();
   }
 }

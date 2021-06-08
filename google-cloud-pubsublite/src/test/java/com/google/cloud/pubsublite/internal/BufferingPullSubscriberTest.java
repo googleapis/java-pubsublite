@@ -26,7 +26,6 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import com.google.api.core.ApiFutures;
 import com.google.api.core.ApiService.Listener;
 import com.google.api.gax.rpc.StatusCode.Code;
 import com.google.cloud.pubsublite.Message;
@@ -35,9 +34,7 @@ import com.google.cloud.pubsublite.SequencedMessage;
 import com.google.cloud.pubsublite.cloudpubsub.FlowControlSettings;
 import com.google.cloud.pubsublite.internal.wire.Subscriber;
 import com.google.cloud.pubsublite.internal.wire.SubscriberFactory;
-import com.google.cloud.pubsublite.proto.Cursor;
 import com.google.cloud.pubsublite.proto.FlowControlRequest;
-import com.google.cloud.pubsublite.proto.SeekRequest;
 import com.google.common.collect.ImmutableList;
 import com.google.protobuf.util.Timestamps;
 import java.util.function.Consumer;
@@ -52,11 +49,6 @@ import org.mockito.stubbing.Answer;
 public class BufferingPullSubscriberTest {
   private final SubscriberFactory underlyingFactory = mock(SubscriberFactory.class);
   private final Subscriber underlying = mock(Subscriber.class);
-  private final Offset initialOffset = Offset.of(5);
-  private final SeekRequest initialSeek =
-      SeekRequest.newBuilder()
-          .setCursor(Cursor.newBuilder().setOffset(initialOffset.value()))
-          .build();
   private final FlowControlSettings flowControlSettings =
       FlowControlSettings.builder().setBytesOutstanding(10).setMessagesOutstanding(20).build();
   // Initialized in setUp.
@@ -67,11 +59,6 @@ public class BufferingPullSubscriberTest {
   @Before
   public void setUp() throws Exception {
     when(underlying.startAsync()).thenReturn(underlying);
-    SeekRequest seek =
-        SeekRequest.newBuilder()
-            .setCursor(Cursor.newBuilder().setOffset(initialOffset.value()).build())
-            .build();
-    when(underlying.seek(seek)).thenReturn(ApiFutures.immediateFuture(initialOffset));
     FlowControlRequest flow =
         FlowControlRequest.newBuilder()
             .setAllowedBytes(flowControlSettings.bytesOutstanding())
@@ -92,14 +79,13 @@ public class BufferingPullSubscriberTest {
         .when(underlying)
         .addListener(any(), any());
 
-    subscriber = new BufferingPullSubscriber(underlyingFactory, flowControlSettings, initialSeek);
+    subscriber = new BufferingPullSubscriber(underlyingFactory, flowControlSettings);
 
     InOrder inOrder = inOrder(underlyingFactory, underlying);
     inOrder.verify(underlyingFactory).newSubscriber(any());
     inOrder.verify(underlying).addListener(any(), any());
     inOrder.verify(underlying).startAsync();
     inOrder.verify(underlying).awaitRunning();
-    inOrder.verify(underlying).seek(seek);
     inOrder.verify(underlying).allowFlow(flow);
 
     assertThat(messageConsumer).isNotNull();

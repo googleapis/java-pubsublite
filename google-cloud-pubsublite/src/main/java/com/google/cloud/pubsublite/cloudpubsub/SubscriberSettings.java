@@ -42,6 +42,8 @@ import com.google.cloud.pubsublite.internal.wire.PubsubContext;
 import com.google.cloud.pubsublite.internal.wire.PubsubContext.Framework;
 import com.google.cloud.pubsublite.internal.wire.RoutingMetadata;
 import com.google.cloud.pubsublite.internal.wire.SubscriberBuilder;
+import com.google.cloud.pubsublite.proto.SeekRequest;
+import com.google.cloud.pubsublite.proto.SeekRequest.NamedTarget;
 import com.google.cloud.pubsublite.v1.CursorServiceClient;
 import com.google.cloud.pubsublite.v1.CursorServiceSettings;
 import com.google.cloud.pubsublite.v1.PartitionAssignmentServiceClient;
@@ -244,7 +246,9 @@ public abstract class SubscriberSettings {
           SubscriberBuilder.newBuilder()
               .setPartition(partition)
               .setSubscriptionPath(subscriptionPath())
-              .setServiceClient(newSubscriberServiceClient(partition));
+              .setServiceClient(newSubscriberServiceClient(partition))
+              .setInitialLocation(
+                  SeekRequest.newBuilder().setNamedTarget(NamedTarget.COMMITTED_CURSOR).build());
 
       Committer wireCommitter =
           CommitterSettings.newBuilder()

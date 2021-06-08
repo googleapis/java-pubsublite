@@ -27,14 +27,12 @@ import com.google.cloud.pubsublite.cloudpubsub.FlowControlSettings;
 import com.google.cloud.pubsublite.internal.wire.Subscriber;
 import com.google.cloud.pubsublite.internal.wire.SubscriberFactory;
 import com.google.cloud.pubsublite.proto.FlowControlRequest;
-import com.google.cloud.pubsublite.proto.SeekRequest;
 import com.google.common.util.concurrent.MoreExecutors;
 import com.google.errorprone.annotations.concurrent.GuardedBy;
 import java.util.ArrayDeque;
 import java.util.Collection;
 import java.util.Deque;
 import java.util.Optional;
-import java.util.concurrent.ExecutionException;
 
 public class BlockingPullSubscriberImpl implements BlockingPullSubscriber {
 
@@ -49,8 +47,7 @@ public class BlockingPullSubscriberImpl implements BlockingPullSubscriber {
   @GuardedBy("this")
   private Optional<SettableApiFuture<Void>> notification = Optional.empty();
 
-  public BlockingPullSubscriberImpl(
-      SubscriberFactory factory, FlowControlSettings settings, SeekRequest initialSeek)
+  public BlockingPullSubscriberImpl(SubscriberFactory factory, FlowControlSettings settings)
       throws CheckedApiException {
     underlying = factory.newSubscriber(this::addMessages);
     underlying.addListener(
@@ -62,11 +59,6 @@ public class BlockingPullSubscriberImpl implements BlockingPullSubscriber {
         },
         MoreExecutors.directExecutor());
     underlying.startAsync().awaitRunning();
-    try {
-      underlying.seek(initialSeek).get();
-    } catch (InterruptedException | ExecutionException e) {
-      throw ExtractStatus.toCanonical(e);
-    }
     underlying.allowFlow(
         FlowControlRequest.newBuilder()
             .setAllowedMessages(settings.messagesOutstanding())

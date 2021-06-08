@@ -185,8 +185,7 @@ public class PartitionCountWatchingPublisher extends ProxyService
       if (partitionCount < currentSize) {
         log.atWarning().log(
             "Received an unexpected decrease in partition count. Previous partition count %s, new count %s",
-            currentSize,
-            partitionCount);
+            currentSize, partitionCount);
         return;
       }
       ImmutableMap.Builder<Partition, Publisher<MessageMetadata>> mapBuilder =

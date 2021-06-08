@@ -171,6 +171,8 @@ public class SubscriberImpl extends ProxyService
       connection.modifyConnection(
           connectedSubscriber ->
               connectedSubscriber.ifPresent(subscriber -> subscriber.seek(request)));
+      // Note: next offset and flow control tokens should be reset upon seek response. Pre-seek
+      // messages may still be received until the server receives the seek request.
       return future;
     } catch (CheckedApiException e) {
       onPermanentError(e);
@@ -248,6 +250,9 @@ public class SubscriberImpl extends ProxyService
             if (inFlightSeek.isPresent()) {
               connectedSubscriber.get().seek(inFlightSeek.get().seekRequest);
             } else {
+              // Flow control tokens should be cleared after the seek response is received, thus
+              // they are not sent after the subscribe stream is reconnected when there is an
+              // in-flight seek.
               flowControlBatcher
                   .requestForRestart()
                   .ifPresent(request -> connectedSubscriber.get().allowFlow(request));

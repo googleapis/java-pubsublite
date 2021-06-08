@@ -217,7 +217,7 @@ public class CommitterImplTest {
 
   @Test
   public void waitUntilEmptyReturnsOnShutdown() throws Exception {
-    committer.commitOffset(Offset.of(10));
+    Future<?> unusedFuture = committer.commitOffset(Offset.of(10));
 
     CountDownLatch latch = new CountDownLatch(1);
     Future<?> waitFuture =
@@ -246,7 +246,7 @@ public class CommitterImplTest {
 
   @Test
   public void waitUntilEmptyThrowsOnPermanentError() throws Exception {
-    committer.commitOffset(Offset.of(10));
+    Future<?> unusedFuture = committer.commitOffset(Offset.of(10));
 
     Future<?> waitFuture =
         executorService.submit(

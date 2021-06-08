@@ -30,6 +30,7 @@ import com.google.cloud.pubsublite.internal.RoutingPolicy;
 import com.google.cloud.pubsublite.internal.testing.FakeApiService;
 import com.google.protobuf.ByteString;
 import java.time.Duration;
+import java.util.concurrent.Future;
 import java.util.function.Consumer;
 import org.junit.Before;
 import org.junit.Test;
@@ -109,8 +110,8 @@ public class PartitionCountWatchingPublisherTest {
     when(mockRoutingPolicy.route(message0.key())).thenReturn(Partition.of(0));
     when(mockRoutingPolicy.route(message1.key())).thenReturn(Partition.of(1));
 
-    publisher.publish(message0);
-    publisher.publish(message1);
+    Future<?> unusedFuture0 = publisher.publish(message0);
+    Future<?> unusedFuture1 = publisher.publish(message1);
 
     verify(publisher0).publish(message0);
     verify(publisher1).publish(message1);
@@ -125,8 +126,8 @@ public class PartitionCountWatchingPublisherTest {
         .thenReturn(Partition.of(0))
         .thenReturn(Partition.of(1));
 
-    publisher.publish(messageA);
-    publisher.publish(messageB);
+    Future<?> unusedFutureA = publisher.publish(messageA);
+    Future<?> unusedFutureB = publisher.publish(messageB);
 
     verify(publisher0).publish(messageA);
     verify(publisher1).publish(messageB);
@@ -137,7 +138,7 @@ public class PartitionCountWatchingPublisherTest {
     Message message = Message.builder().build();
 
     when(mockRoutingPolicy.routeWithoutKey()).thenReturn(Partition.of(4));
-    publisher.publish(message);
+    Future<?> unusedFuture = publisher.publish(message);
 
     ApiExceptionMatcher.assertThrowableMatches(
         publisher.failureCause(), StatusCode.Code.FAILED_PRECONDITION);
@@ -181,9 +182,9 @@ public class PartitionCountWatchingPublisherTest {
     when(mockRoutingPolicy.route(message1.key())).thenReturn(Partition.of(1));
     when(mockRoutingPolicy.route(message2.key())).thenReturn(Partition.of(2));
 
-    publisher.publish(message0);
-    publisher.publish(message1);
-    publisher.publish(message2);
+    Future<?> unusedFuture0 = publisher.publish(message0);
+    Future<?> unusedFuture1 = publisher.publish(message1);
+    Future<?> unusedFuture2 = publisher.publish(message2);
 
     verify(publisher0).publish(message0);
     verify(publisher1).publish(message1);
@@ -199,8 +200,8 @@ public class PartitionCountWatchingPublisherTest {
     when(mockRoutingPolicy.route(message0.key())).thenReturn(Partition.of(0));
     when(mockRoutingPolicy.route(message1.key())).thenReturn(Partition.of(1));
 
-    publisher.publish(message0);
-    publisher.publish(message1);
+    Future<?> unusedFuture0 = publisher.publish(message0);
+    Future<?> unusedFuture1 = publisher.publish(message1);
 
     verify(publisher0).publish(message0);
     verify(publisher1).publish(message1);
@@ -216,8 +217,8 @@ public class PartitionCountWatchingPublisherTest {
     when(mockRoutingPolicy.route(message0.key())).thenReturn(Partition.of(0));
     when(mockRoutingPolicy.route(message1.key())).thenReturn(Partition.of(1));
 
-    publisher.publish(message0);
-    publisher.publish(message1);
+    Future<?> unusedFuture0 = publisher.publish(message0);
+    Future<?> unusedFuture1 = publisher.publish(message1);
 
     verify(publisher0).publish(message0);
     verify(publisher1).publish(message1);

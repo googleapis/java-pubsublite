@@ -1,5 +1,43 @@
 # Changelog
 
+## [0.15.0](https://www.github.com/googleapis/java-pubsublite/compare/v0.14.2...v0.15.0) (2021-06-08)
+
+
+### Features
+
+* Ability to reset subscriber upon out of band seek ([#662](https://www.github.com/googleapis/java-pubsublite/issues/662)) ([2d89341](https://www.github.com/googleapis/java-pubsublite/commit/2d8934117e3939d36cfbe2f567459fa27a47d51d))
+* add `gcf-owl-bot[bot]` to `ignoreAuthors` ([#645](https://www.github.com/googleapis/java-pubsublite/issues/645)) ([13ff53b](https://www.github.com/googleapis/java-pubsublite/commit/13ff53bfe691def556e95a182f12e4dd38b9440a))
+* Add InitialSubscribeRequest.initial_location field ([#649](https://www.github.com/googleapis/java-pubsublite/issues/649)) ([b5fe795](https://www.github.com/googleapis/java-pubsublite/commit/b5fe795fa3cb6a6bf606e37eb0f9929e2d6d3ae9))
+* Add reservation support. ([#661](https://www.github.com/googleapis/java-pubsublite/issues/661)) ([79bb58c](https://www.github.com/googleapis/java-pubsublite/commit/79bb58cac71d247c8a1f98fdc862ae5781a5bb21))
+* Set initial location when connecting subscribe streams ([#664](https://www.github.com/googleapis/java-pubsublite/issues/664)) ([65ced46](https://www.github.com/googleapis/java-pubsublite/commit/65ced466598f2b91209e1d578c92240d2c04a680))
+
+
+### Bug Fixes
+
+* Add RunWith annotation ([#678](https://www.github.com/googleapis/java-pubsublite/issues/678)) ([ef85581](https://www.github.com/googleapis/java-pubsublite/commit/ef855816e99871582c8fdef24543934e0f84d947))
+* Remove explicit partitions which are not particularly useful and add Watch workaround. ([#675](https://www.github.com/googleapis/java-pubsublite/issues/675)) ([587c91c](https://www.github.com/googleapis/java-pubsublite/commit/587c91c6642caaa35a4eefb9a43c0b7e01f20da2))
+* Respect lock annotations in RetryingConnection ([#669](https://www.github.com/googleapis/java-pubsublite/issues/669)) ([d583623](https://www.github.com/googleapis/java-pubsublite/commit/d58362380e2c79836480f78c37bbff69738ba281))
+* Update POMs to run errorprone analyzers and fix found issues ([#677](https://www.github.com/googleapis/java-pubsublite/issues/677)) ([fb1cab4](https://www.github.com/googleapis/java-pubsublite/commit/fb1cab4f31403c7c47b3c491eccaba5cbf5649d0))
+* Use correct string formatting for log message ([#668](https://www.github.com/googleapis/java-pubsublite/issues/668)) ([da98b0f](https://www.github.com/googleapis/java-pubsublite/commit/da98b0f8212d33ace2e3f9d034f7a923ef05c43a))
+
+
+### Dependencies
+
+* update dependency com.google.cloud:google-cloud-pubsub to v1.113.0 ([#655](https://www.github.com/googleapis/java-pubsublite/issues/655)) ([fa59973](https://www.github.com/googleapis/java-pubsublite/commit/fa59973a06b4eea914e5b15f3c7fd5004ffb9f2e))
+* update dependency com.google.cloud:google-cloud-pubsub to v1.113.1 ([#672](https://www.github.com/googleapis/java-pubsublite/issues/672)) ([d9e265b](https://www.github.com/googleapis/java-pubsublite/commit/d9e265b11dd9e6fa425d9a58f5d1f75aa2ca89d9))
+* update dependency com.google.cloud:google-cloud-pubsub-bom to v1.113.0 ([#656](https://www.github.com/googleapis/java-pubsublite/issues/656)) ([ed53f16](https://www.github.com/googleapis/java-pubsublite/commit/ed53f160436baf843fb87b20b278db6d55ef3ec8))
+* update dependency com.google.cloud:google-cloud-pubsub-bom to v1.113.1 ([#673](https://www.github.com/googleapis/java-pubsublite/issues/673)) ([d679411](https://www.github.com/googleapis/java-pubsublite/commit/d679411547770c2f6c5752f5c99fc2c4b0c511af))
+* update dependency com.google.cloud:google-cloud-shared-dependencies to v1.2.0 ([#644](https://www.github.com/googleapis/java-pubsublite/issues/644)) ([505f545](https://www.github.com/googleapis/java-pubsublite/commit/505f545f06b050e343389c8de11d28181d049765))
+* update dependency com.google.cloud:google-cloud-shared-dependencies to v1.3.0 ([#663](https://www.github.com/googleapis/java-pubsublite/issues/663)) ([06573d1](https://www.github.com/googleapis/java-pubsublite/commit/06573d1d9e433e352dd7d05097f8080fe2b29226))
+* update dependency com.google.errorprone:error_prone_annotations to v2.7.1 ([#641](https://www.github.com/googleapis/java-pubsublite/issues/641)) ([12cbed0](https://www.github.com/googleapis/java-pubsublite/commit/12cbed03db5478df3774b479146954a96acdecd4))
+* update dependency com.google.truth.extensions:truth-java8-extension to v1.1.3 ([#651](https://www.github.com/googleapis/java-pubsublite/issues/651)) ([5fc9d65](https://www.github.com/googleapis/java-pubsublite/commit/5fc9d65250e6b89d0cb384410a6de4ca1f46447d))
+* update dependency org.checkerframework:checker-qual to v3.14.0 ([#657](https://www.github.com/googleapis/java-pubsublite/issues/657)) ([f20ae9c](https://www.github.com/googleapis/java-pubsublite/commit/f20ae9c28fea539fba799486653cd4033b38da3d))
+
+
+### Documentation
+
+* bump version in PubsubLiteIO readme ([#665](https://www.github.com/googleapis/java-pubsublite/issues/665)) ([5eef903](https://www.github.com/googleapis/java-pubsublite/commit/5eef903727fdd984b879787ba8b4311b63834f4c))
+
 ### [0.14.2](https://www.github.com/googleapis/java-pubsublite/compare/v0.14.1...v0.14.2) (2021-05-14)
 
 

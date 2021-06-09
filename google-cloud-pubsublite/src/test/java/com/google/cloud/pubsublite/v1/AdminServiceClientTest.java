@@ -81,8 +81,8 @@ import org.junit.Test;
 public class AdminServiceClientTest {
   private static MockAdminService mockAdminService;
   private static MockServiceHelper mockServiceHelper;
-  private AdminServiceClient client;
   private LocalChannelProvider channelProvider;
+  private AdminServiceClient client;
 
   @BeforeClass
   public static void startStaticServer() {

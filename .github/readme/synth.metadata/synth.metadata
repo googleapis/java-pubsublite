@@ -4,7 +4,7 @@
       "git": {
         "name": ".",
         "remote": "https://github.com/googleapis/java-pubsublite.git",
-        "sha": "5eef903727fdd984b879787ba8b4311b63834f4c"
+        "sha": "e04d27cbbd7d03df28314a314e1aa3f1d41662c7"
       }
     },
     {

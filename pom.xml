@@ -1,5 +1,7 @@
 <?xml version="1.0"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <parent>
     <groupId>com.google.cloud</groupId>
     <artifactId>google-cloud-shared-config</artifactId>
@@ -8,7 +10,8 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.google.cloud</groupId>
   <artifactId>google-cloud-pubsublite-parent</artifactId>
-  <version>0.15.1-SNAPSHOT</version><!-- {x-version-update:google-cloud-pubsublite:current} -->
+  <version>0.15.1-SNAPSHOT
+  </version><!-- {x-version-update:google-cloud-pubsublite:current} -->
   <packaging>pom</packaging>
   <name>Google Cloud Pub/Sub Lite Parent</name>
   <url>https://github.com/googleapis/java-pubsublite</url>
@@ -77,62 +80,44 @@
   </dependencyManagement>
 
   <build>
-    <pluginManagement>
-      <plugins>
-        <plugin>
-          <groupId>com.coveo</groupId>
-          <artifactId>fmt-maven-plugin</artifactId>
-          <version>2.9</version>
-          <executions>
-            <execution>
-              <goals>
-                <goal>format</goal>
-              </goals>
-            </execution>
-          </executions>
-        </plugin>
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-dependency-plugin</artifactId>
-          <version>3.1.2</version>
-        </plugin>
-        <plugin>
-          <artifactId>maven-compiler-plugin</artifactId>
-          <version>3.8.1</version>
-          <configuration>
-            <source>1.8</source>
-            <target>1.8</target>
-            <encoding>UTF-8</encoding>
-            <compilerArgs>
-              <arg>-Xlint:all</arg>
-              <!-- UNCOMMENT FOR ERRORPRONE>
-              <arg>-XDcompilePolicy=simple</arg>
-              <arg>-Xplugin:ErrorProne</arg>
-              </!-->
-            </compilerArgs>
-            <annotationProcessorPaths>
-              <path>
-                <groupId>com.google.auto.value</groupId>
-                <artifactId>auto-value</artifactId>
-                <version>1.8.1</version>
-              </path>
-              <path>
-                <groupId>com.google.auto.service</groupId>
-                <artifactId>auto-service</artifactId>
-                <version>1.0</version>
-              </path>
-              <!-- UNCOMMENT FOR ERRORPRONE>
-              <path>
-                <groupId>com.google.errorprone</groupId>
-                <artifactId>error_prone_core</artifactId>
-                <version>2.7.1</version>
-              </path>
-              </!-->
-            </annotationProcessorPaths>
-          </configuration>
-        </plugin>
-      </plugins>
-    </pluginManagement>
+    <plugins>
+      <plugin>
+        <groupId>com.coveo</groupId>
+        <artifactId>fmt-maven-plugin</artifactId>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-dependency-plugin</artifactId>
+      </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>flatten-maven-plugin</artifactId>
+      </plugin>
+      <plugin>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.8.1</version>
+        <configuration>
+          <source>1.8</source>
+          <target>1.8</target>
+          <encoding>UTF-8</encoding>
+          <compilerArgs>
+            <arg>-Xlint:all</arg>
+          </compilerArgs>
+          <annotationProcessorPaths>
+            <path>
+              <groupId>com.google.auto.value</groupId>
+              <artifactId>auto-value</artifactId>
+              <version>1.8.1</version>
+            </path>
+            <path>
+              <groupId>com.google.auto.service</groupId>
+              <artifactId>auto-service</artifactId>
+              <version>1.0</version>
+            </path>
+          </annotationProcessorPaths>
+        </configuration>
+      </plugin>
+    </plugins>
   </build>
 
   <modules>
@@ -148,6 +133,32 @@
       <modules>
         <module>samples</module>
       </modules>
+    </profile>
+    <profile>
+      <id>jdk9</id>
+      <activation>
+        <jdk>[1.9,)</jdk>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <artifactId>maven-compiler-plugin</artifactId>
+            <configuration>
+              <compilerArgs combine.children="append">
+                <arg>-XDcompilePolicy=simple</arg>
+                <arg>-Xplugin:ErrorProne</arg>
+              </compilerArgs>
+              <annotationProcessorPaths combine.children="append">
+                <path>
+                  <groupId>com.google.errorprone</groupId>
+                  <artifactId>error_prone_core</artifactId>
+                  <version>2.7.1</version>
+                </path>
+              </annotationProcessorPaths>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
     </profile>
   </profiles>
 </project>

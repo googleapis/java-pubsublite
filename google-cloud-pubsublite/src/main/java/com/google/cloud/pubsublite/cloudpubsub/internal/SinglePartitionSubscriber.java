@@ -32,9 +32,9 @@ import com.google.cloud.pubsublite.internal.ExtractStatus;
 import com.google.cloud.pubsublite.internal.ProxyService;
 import com.google.cloud.pubsublite.proto.FlowControlRequest;
 import com.google.common.annotations.VisibleForTesting;
-import com.google.common.collect.ImmutableList;
 import com.google.common.util.concurrent.MoreExecutors;
 import com.google.pubsub.v1.PubsubMessage;
+import java.util.List;
 
 public class SinglePartitionSubscriber extends ProxyService implements Subscriber {
   private final MessageReceiver receiver;
@@ -79,7 +79,7 @@ public class SinglePartitionSubscriber extends ProxyService implements Subscribe
   protected void stop() {}
 
   @VisibleForTesting
-  void onMessages(ImmutableList<SequencedMessage> sequencedMessages) {
+  void onMessages(List<SequencedMessage> sequencedMessages) {
     try {
       for (SequencedMessage message : sequencedMessages) {
         PubsubMessage userMessage = transformer.transform(message);

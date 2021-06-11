@@ -18,11 +18,10 @@ package com.google.cloud.pubsublite.internal.wire;
 
 import com.google.api.gax.rpc.ApiException;
 import com.google.cloud.pubsublite.SequencedMessage;
-import com.google.common.collect.ImmutableList;
 import java.io.Serializable;
+import java.util.List;
 import java.util.function.Consumer;
 
 public interface SubscriberFactory extends Serializable {
-  Subscriber newSubscriber(Consumer<ImmutableList<SequencedMessage>> message_consumer)
-      throws ApiException;
+  Subscriber newSubscriber(Consumer<List<SequencedMessage>> message_consumer) throws ApiException;
 }

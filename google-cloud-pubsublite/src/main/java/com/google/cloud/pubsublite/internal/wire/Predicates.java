@@ -17,7 +17,6 @@
 package com.google.cloud.pubsublite.internal.wire;
 
 import com.google.cloud.pubsublite.SequencedMessage;
-import com.google.cloud.pubsublite.proto.SeekRequest;
 import com.google.common.collect.Ordering;
 import java.util.Comparator;
 
@@ -25,23 +24,6 @@ public final class Predicates {
   public static boolean isOrdered(Iterable<SequencedMessage> messages) {
     return Ordering.from(Comparator.comparingLong((SequencedMessage m) -> m.offset().value()))
         .isStrictlyOrdered(messages);
-  }
-
-  public static boolean isValidSeekRequest(SeekRequest request) {
-    switch (request.getTargetCase()) {
-      case CURSOR:
-        return request.getCursor().getOffset() >= 0;
-      case NAMED_TARGET:
-        switch (request.getNamedTarget()) {
-          case HEAD:
-          case COMMITTED_CURSOR:
-            return true;
-          default:
-            return false;
-        }
-      default:
-        return false;
-    }
   }
 
   private Predicates() {}

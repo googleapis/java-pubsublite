@@ -20,7 +20,6 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
@@ -31,28 +30,28 @@ import com.google.api.gax.rpc.ResponseObserver;
 import com.google.api.gax.rpc.StatusCode.Code;
 import com.google.cloud.pubsublite.CloudRegion;
 import com.google.cloud.pubsublite.CloudZone;
+import com.google.cloud.pubsublite.Message;
 import com.google.cloud.pubsublite.Offset;
 import com.google.cloud.pubsublite.ProjectNumber;
+import com.google.cloud.pubsublite.SequencedMessage;
 import com.google.cloud.pubsublite.SubscriptionName;
 import com.google.cloud.pubsublite.SubscriptionPath;
 import com.google.cloud.pubsublite.internal.ApiExceptionMatcher;
 import com.google.cloud.pubsublite.internal.CheckedApiException;
-import com.google.cloud.pubsublite.internal.wire.ConnectedSubscriber.Response;
 import com.google.cloud.pubsublite.proto.Cursor;
 import com.google.cloud.pubsublite.proto.FlowControlRequest;
 import com.google.cloud.pubsublite.proto.InitialSubscribeRequest;
 import com.google.cloud.pubsublite.proto.InitialSubscribeResponse;
 import com.google.cloud.pubsublite.proto.MessageResponse;
-import com.google.cloud.pubsublite.proto.PubSubMessage;
-import com.google.cloud.pubsublite.proto.SeekRequest;
 import com.google.cloud.pubsublite.proto.SeekResponse;
-import com.google.cloud.pubsublite.proto.SequencedMessage;
 import com.google.cloud.pubsublite.proto.SubscribeRequest;
 import com.google.cloud.pubsublite.proto.SubscribeResponse;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
 import com.google.protobuf.ByteString;
+import com.google.protobuf.util.Timestamps;
 import java.io.IOException;
+import java.util.List;
 import java.util.Optional;
 import org.junit.After;
 import org.junit.Before;
@@ -88,7 +87,7 @@ public class ConnectedSubscriberImplTest {
 
   @Mock private ClientStream<SubscribeRequest> mockRequestStream;
 
-  @Mock private ResponseObserver<Response> mockOutputStream;
+  @Mock private ResponseObserver<List<SequencedMessage>> mockOutputStream;
 
   private Optional<ResponseObserver<SubscribeResponse>> leakedResponseStream = Optional.empty();
 
@@ -205,7 +204,14 @@ public class ConnectedSubscriberImplTest {
     initialize();
     subscriber.close();
     verify(mockRequestStream).closeSend();
-    subscriber.seek(SeekRequest.newBuilder().setNamedTarget(SeekRequest.NamedTarget.HEAD).build());
+    leakedResponseStream
+        .get()
+        .onResponse(
+            SubscribeResponse.newBuilder()
+                .setMessages(
+                    MessageResponse.newBuilder()
+                        .addMessages(messageWithOffset(Offset.of(20)).toProto()))
+                .build());
     verify(mockOutputStream, never()).onResponse(any());
   }
 
@@ -230,18 +236,19 @@ public class ConnectedSubscriberImplTest {
   }
 
   private SequencedMessage messageWithOffset(Offset offset) {
-    return SequencedMessage.newBuilder()
-        .setMessage(PubSubMessage.newBuilder().setData(ByteString.copyFromUtf8("abc")))
-        .setCursor(Cursor.newBuilder().setOffset(offset.value()))
-        .build();
+    return SequencedMessage.of(
+        Message.builder().setData(ByteString.copyFromUtf8("abc")).build(),
+        Timestamps.EPOCH,
+        offset,
+        123L);
   }
 
   @Test
   public void outOfOrderMessagesResponse_Abort() {
     initialize();
     SubscribeResponse.Builder builder = SubscribeResponse.newBuilder();
-    builder.getMessagesBuilder().addMessages(messageWithOffset(Offset.of(10)));
-    builder.getMessagesBuilder().addMessages(messageWithOffset(Offset.of(10)));
+    builder.getMessagesBuilder().addMessages(messageWithOffset(Offset.of(10)).toProto());
+    builder.getMessagesBuilder().addMessages(messageWithOffset(Offset.of(10)).toProto());
     leakedResponseStream.get().onResponse(builder.build());
     verify(mockOutputStream).onError(argThat(new ApiExceptionMatcher(Code.FAILED_PRECONDITION)));
     leakedResponseStream = Optional.empty();
@@ -251,17 +258,12 @@ public class ConnectedSubscriberImplTest {
   public void validMessagesResponse() {
     initialize();
     SubscribeResponse.Builder builder = SubscribeResponse.newBuilder();
-    builder.getMessagesBuilder().addMessages(messageWithOffset(Offset.of(10)));
-    builder.getMessagesBuilder().addMessages(messageWithOffset(Offset.of(11)));
+    builder.getMessagesBuilder().addMessages(messageWithOffset(Offset.of(10)).toProto());
+    builder.getMessagesBuilder().addMessages(messageWithOffset(Offset.of(11)).toProto());
     leakedResponseStream.get().onResponse(builder.build());
     verify(mockOutputStream)
         .onResponse(
-            Response.ofMessages(
-                ImmutableList.of(
-                    com.google.cloud.pubsublite.SequencedMessage.fromProto(
-                        messageWithOffset(Offset.of(10))),
-                    com.google.cloud.pubsublite.SequencedMessage.fromProto(
-                        messageWithOffset(Offset.of(11))))));
+            ImmutableList.of(messageWithOffset(Offset.of(10)), messageWithOffset(Offset.of(11))));
   }
 
   @Test
@@ -274,101 +276,7 @@ public class ConnectedSubscriberImplTest {
   }
 
   @Test
-  public void seekToOffsetRequest() {
-    initialize();
-    SeekRequest request =
-        SeekRequest.newBuilder().setCursor(Cursor.newBuilder().setOffset(10)).build();
-    subscriber.seek(request);
-    verify(mockRequestStream).send(SubscribeRequest.newBuilder().setSeek(request).build());
-  }
-
-  @Test
-  public void seekToHeadRequest() {
-    initialize();
-    SeekRequest request =
-        SeekRequest.newBuilder().setNamedTarget(SeekRequest.NamedTarget.HEAD).build();
-    subscriber.seek(request);
-    verify(mockRequestStream).send(SubscribeRequest.newBuilder().setSeek(request).build());
-  }
-
-  @Test
-  public void seekToCommitRequest() {
-    initialize();
-    SeekRequest request =
-        SeekRequest.newBuilder().setNamedTarget(SeekRequest.NamedTarget.COMMITTED_CURSOR).build();
-    subscriber.seek(request);
-    verify(mockRequestStream).send(SubscribeRequest.newBuilder().setSeek(request).build());
-  }
-
-  SeekRequest validSeekRequest() {
-    return SeekRequest.newBuilder().setNamedTarget(SeekRequest.NamedTarget.HEAD).build();
-  }
-
-  @Test
-  public void seekRequestWhileSeekInFlight() {
-    initialize();
-    subscriber.seek(validSeekRequest());
-    verify(mockRequestStream)
-        .send(SubscribeRequest.newBuilder().setSeek(validSeekRequest()).build());
-    subscriber.seek(validSeekRequest());
-    verify(mockOutputStream).onError(argThat(new ApiExceptionMatcher(Code.FAILED_PRECONDITION)));
-    verify(mockRequestStream)
-        .closeSendWithError(argThat(new ApiExceptionMatcher(Code.FAILED_PRECONDITION)));
-    leakedResponseStream = Optional.empty();
-  }
-
-  @Test
-  public void seekRequestResponseRequest() {
-    initialize();
-    SubscribeRequest request = SubscribeRequest.newBuilder().setSeek(validSeekRequest()).build();
-    doAnswer(
-            AnswerWith(
-                SubscribeResponse.newBuilder()
-                    .setSeek(SeekResponse.newBuilder().setCursor(Cursor.newBuilder().setOffset(10)))
-                    .build()))
-        .when(mockRequestStream)
-        .send(request);
-    subscriber.seek(validSeekRequest());
-    verify(mockRequestStream).send(request);
-    verify(mockOutputStream).onResponse(Response.ofSeekOffset(Offset.of(10)));
-    subscriber.seek(
-        SeekRequest.newBuilder().setNamedTarget(SeekRequest.NamedTarget.COMMITTED_CURSOR).build());
-    verify(mockRequestStream)
-        .send(
-            SubscribeRequest.newBuilder()
-                .setSeek(
-                    SeekRequest.newBuilder()
-                        .setNamedTarget(SeekRequest.NamedTarget.COMMITTED_CURSOR)
-                        .build())
-                .build());
-  }
-
-  @Test
-  public void messagesWithOutstandingSeekDropped() {
-    initialize();
-    SubscribeRequest request = SubscribeRequest.newBuilder().setSeek(validSeekRequest()).build();
-    doAnswer(
-            AnswerWith(
-                SubscribeResponse.newBuilder()
-                    .setMessages(
-                        MessageResponse.newBuilder()
-                            .addMessages(messageWithOffset(Offset.of(11)))
-                            .build())
-                    .build()))
-        .when(mockRequestStream)
-        .send(request);
-    subscriber.seek(validSeekRequest());
-    verify(mockRequestStream).send(request);
-    verify(mockOutputStream, times(0))
-        .onResponse(
-            Response.ofMessages(
-                ImmutableList.of(
-                    com.google.cloud.pubsublite.SequencedMessage.fromProto(
-                        messageWithOffset(Offset.of(11))))));
-  }
-
-  @Test
-  public void seekResponseWithoutRequest_Aborts() {
+  public void seekResponse_Aborts() {
     initialize();
     leakedResponseStream
         .get()

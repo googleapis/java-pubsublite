@@ -16,41 +16,8 @@
 
 package com.google.cloud.pubsublite.internal.wire;
 
-import com.google.auto.value.AutoOneOf;
-import com.google.cloud.pubsublite.Offset;
-import com.google.cloud.pubsublite.SequencedMessage;
 import com.google.cloud.pubsublite.proto.FlowControlRequest;
-import com.google.cloud.pubsublite.proto.SeekRequest;
-import com.google.common.collect.ImmutableList;
-import java.util.Collection;
 
 interface ConnectedSubscriber extends AutoCloseable {
-  // seek may not be called while another seek is outstanding.
-  void seek(SeekRequest request);
-
   void allowFlow(FlowControlRequest request);
-
-  // A Response either holds messages or a seek offset. getKind() must be checked before using.
-  @AutoOneOf(Response.Kind.class)
-  abstract class Response {
-    enum Kind {
-      MESSAGES,
-      SEEK_OFFSET
-    }
-
-    abstract Kind getKind();
-
-    // messages() is guranteed to be sorted.
-    abstract ImmutableList<SequencedMessage> messages();
-
-    abstract Offset seekOffset();
-
-    static Response ofMessages(Collection<SequencedMessage> messages) {
-      return AutoOneOf_ConnectedSubscriber_Response.messages(ImmutableList.copyOf(messages));
-    }
-
-    static Response ofSeekOffset(Offset seekOffset) {
-      return AutoOneOf_ConnectedSubscriber_Response.seekOffset(seekOffset);
-    }
-  }
 }

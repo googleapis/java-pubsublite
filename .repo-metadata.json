@@ -12,6 +12,6 @@
   "repo": "googleapis/java-pubsublite",
   "repo_short": "java-pubsublite",
   "distribution_name": "com.google.cloud:google-cloud-pubsublite",
-  "codeowner_team": "@googleapis/api-pubsub",
+  "codeowner_team": "@googleapis/api-pubsublite",
   "api_id": "pubsublite.googleapis.com"
 }

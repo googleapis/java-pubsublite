@@ -16,16 +16,23 @@
 
 package com.google.cloud.pubsublite.beam;
 
-import com.google.cloud.pubsublite.proto.SequencedMessage;
-import java.io.Serializable;
-import org.apache.beam.sdk.transforms.DoFn.OutputReceiver;
-import org.apache.beam.sdk.transforms.splittabledofn.RestrictionTracker;
+import com.google.auto.value.AutoValue;
+import org.apache.beam.sdk.io.range.OffsetRange;
+import org.apache.beam.sdk.schemas.AutoValueSchema;
+import org.apache.beam.sdk.schemas.annotations.DefaultSchema;
 
-interface SubscriptionPartitionProcessorFactory extends Serializable {
-  long serialVersionUID = 765145146544654L;
+@AutoValue
+@DefaultSchema(AutoValueSchema.class)
+abstract class OffsetByteRange {
+  abstract OffsetRange getRange();
 
-  SubscriptionPartitionProcessor newProcessor(
-      SubscriptionPartition subscriptionPartition,
-      RestrictionTracker<OffsetByteRange, OffsetByteProgress> tracker,
-      OutputReceiver<SequencedMessage> receiver);
+  abstract long getByteCount();
+
+  static OffsetByteRange of(OffsetRange range, long byteCount) {
+    return new AutoValue_OffsetByteRange(range, byteCount);
+  }
+
+  static OffsetByteRange of(OffsetRange range) {
+    return of(range, 0);
+  }
 }

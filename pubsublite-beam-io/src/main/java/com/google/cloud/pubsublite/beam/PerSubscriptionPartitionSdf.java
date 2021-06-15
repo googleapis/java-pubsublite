@@ -34,18 +34,14 @@ class PerSubscriptionPartitionSdf extends DoFn<SubscriptionPartition, SequencedM
   private final SubscriptionPartitionProcessorFactory processorFactory;
   private final SerializableFunction<SubscriptionPartition, InitialOffsetReader>
       offsetReaderFactory;
-  private final SerializableBiFunction<
-          SubscriptionPartition, OffsetRange, RestrictionTracker<OffsetRange, OffsetByteProgress>>
+  private final SerializableBiFunction<SubscriptionPartition, OffsetByteRange, TrackerWithProgress>
       trackerFactory;
   private final SerializableFunction<SubscriptionPartition, Committer> committerFactory;
 
   PerSubscriptionPartitionSdf(
       Duration maxSleepTime,
       SerializableFunction<SubscriptionPartition, InitialOffsetReader> offsetReaderFactory,
-      SerializableBiFunction<
-              SubscriptionPartition,
-              OffsetRange,
-              RestrictionTracker<OffsetRange, OffsetByteProgress>>
+      SerializableBiFunction<SubscriptionPartition, OffsetByteRange, TrackerWithProgress>
           trackerFactory,
       SubscriptionPartitionProcessorFactory processorFactory,
       SerializableFunction<SubscriptionPartition, Committer> committerFactory) {
@@ -68,7 +64,7 @@ class PerSubscriptionPartitionSdf extends DoFn<SubscriptionPartition, SequencedM
 
   @ProcessElement
   public ProcessContinuation processElement(
-      RestrictionTracker<OffsetRange, OffsetByteProgress> tracker,
+      RestrictionTracker<OffsetByteRange, OffsetByteProgress> tracker,
       @Element SubscriptionPartition subscriptionPartition,
       OutputReceiver<SequencedMessage> receiver)
       throws Exception {
@@ -103,8 +99,18 @@ class PerSubscriptionPartitionSdf extends DoFn<SubscriptionPartition, SequencedM
   }
 
   @NewTracker
-  public RestrictionTracker<OffsetRange, OffsetByteProgress> newTracker(
-      @Element SubscriptionPartition subscriptionPartition, @Restriction OffsetRange range) {
+  public TrackerWithProgress newTracker(
+      @Element SubscriptionPartition subscriptionPartition, @Restriction OffsetByteRange range) {
     return trackerFactory.apply(subscriptionPartition, range);
+  }
+
+  @GetSize
+  public double getSize(
+      @Element SubscriptionPartition subscriptionPartition,
+      @Restriction OffsetByteRange restriction) {
+    if (restriction.getRange().getTo() != Long.MAX_VALUE) {
+      return restriction.getByteCount();
+    }
+    return newTracker(subscriptionPartition, restriction).getProgress().getWorkRemaining();
   }
 }

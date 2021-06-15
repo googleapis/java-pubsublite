@@ -42,7 +42,7 @@ import org.joda.time.Duration;
  * would return ProcessContinuation.resume().
  */
 class OffsetByteRangeTracker extends TrackerWithProgress {
-  private final TopicBacklogReader backlogReader;
+  private final TopicBacklogReader unownedBacklogReader;
   private final Duration minTrackingTime;
   private final long minBytesReceived;
   private final Stopwatch stopwatch;
@@ -51,7 +51,7 @@ class OffsetByteRangeTracker extends TrackerWithProgress {
 
   public OffsetByteRangeTracker(
       OffsetByteRange range,
-      TopicBacklogReader backlogReader,
+      TopicBacklogReader unownedBacklogReader,
       Stopwatch stopwatch,
       Duration minTrackingTime,
       long minBytesReceived) {
@@ -61,16 +61,11 @@ class OffsetByteRangeTracker extends TrackerWithProgress {
     checkArgument(
         range.getByteCount() == 0L,
         "May only construct OffsetByteRangeTracker with an unbounded range with no progress.");
-    this.backlogReader = backlogReader;
+    this.unownedBacklogReader = unownedBacklogReader;
     this.minTrackingTime = minTrackingTime;
     this.minBytesReceived = minBytesReceived;
     this.stopwatch = stopwatch.reset().start();
     this.range = range;
-  }
-
-  @Override
-  public void finalize() {
-    this.backlogReader.close();
   }
 
   @Override
@@ -170,7 +165,7 @@ class OffsetByteRangeTracker extends TrackerWithProgress {
   @Override
   public Progress getProgress() {
     ComputeMessageStatsResponse stats =
-        this.backlogReader.computeMessageStats(Offset.of(nextOffset()));
+        this.unownedBacklogReader.computeMessageStats(Offset.of(nextOffset()));
     return Progress.from(range.getByteCount(), stats.getMessageBytes());
   }
 }

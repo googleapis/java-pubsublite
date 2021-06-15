@@ -17,12 +17,11 @@
 package com.google.cloud.pubsublite.beam;
 
 import com.google.auto.value.AutoValue;
+import org.apache.beam.sdk.coders.DefaultCoder;
 import org.apache.beam.sdk.io.range.OffsetRange;
-import org.apache.beam.sdk.schemas.AutoValueSchema;
-import org.apache.beam.sdk.schemas.annotations.DefaultSchema;
 
 @AutoValue
-@DefaultSchema(AutoValueSchema.class)
+@DefaultCoder(OffsetByteRangeCoder.class)
 abstract class OffsetByteRange {
   abstract OffsetRange getRange();
 

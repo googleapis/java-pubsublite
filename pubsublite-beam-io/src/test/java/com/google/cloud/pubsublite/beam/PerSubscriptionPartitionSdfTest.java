@@ -112,9 +112,10 @@ public class PerSubscriptionPartitionSdfTest {
   @Test
   public void getInitialRestrictionReadSuccess() {
     when(initialOffsetReader.read()).thenReturn(example(Offset.class));
-    OffsetRange range = sdf.getInitialRestriction(PARTITION);
-    assertEquals(example(Offset.class).value(), range.getFrom());
-    assertEquals(Long.MAX_VALUE, range.getTo());
+    OffsetByteRange range = sdf.getInitialRestriction(PARTITION);
+    assertEquals(example(Offset.class).value(), range.getRange().getFrom());
+    assertEquals(Long.MAX_VALUE, range.getRange().getTo());
+    assertEquals(0, range.getByteCount());
     verify(offsetReaderFactory).apply(PARTITION);
   }
 

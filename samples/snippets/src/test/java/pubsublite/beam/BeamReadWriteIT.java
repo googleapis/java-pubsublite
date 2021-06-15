@@ -171,8 +171,8 @@ public class BeamReadWriteIT {
       System.err.printf("Performing comparison round %s.\n", round);
       boolean done = true;
       for (int id = 0; id < messageCount; id++) {
-        int id_count = receivedCounts.getOrDefault(id, 0);
-        if (id_count != 1) {
+        int idCount = receivedCounts.getOrDefault(id, 0);
+        if (idCount != 1) {
           System.err.printf("Still missing message %s.\n", id);
           done = false;
         }

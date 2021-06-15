@@ -24,13 +24,13 @@ import com.google.cloud.pubsublite.SubscriptionPath;
 import com.google.cloud.pubsublite.proto.InitialSubscribeRequest;
 import com.google.cloud.pubsublite.proto.SeekRequest;
 import com.google.cloud.pubsublite.v1.SubscriberServiceClient;
-import com.google.common.collect.ImmutableList;
+import java.util.List;
 import java.util.function.Consumer;
 
 @AutoValue
 public abstract class SubscriberBuilder {
   // Required parameters.
-  abstract Consumer<ImmutableList<SequencedMessage>> messageConsumer();
+  abstract Consumer<List<SequencedMessage>> messageConsumer();
 
   abstract SubscriptionPath subscriptionPath();
 
@@ -51,8 +51,7 @@ public abstract class SubscriberBuilder {
   @AutoValue.Builder
   public abstract static class Builder {
     // Required parameters.
-    public abstract Builder setMessageConsumer(
-        Consumer<ImmutableList<SequencedMessage>> messageConsumer);
+    public abstract Builder setMessageConsumer(Consumer<List<SequencedMessage>> messageConsumer);
 
     public abstract Builder setSubscriptionPath(SubscriptionPath path);
 
@@ -76,13 +75,12 @@ public abstract class SubscriberBuilder {
               .setSubscription(autoBuilt.subscriptionPath().toString())
               .setPartition(autoBuilt.partition().value())
               .build();
-      return new ApiExceptionSubscriber(
-          new SubscriberImpl(
-              autoBuilt.serviceClient(),
-              initialSubscribeRequest,
-              autoBuilt.initialLocation(),
-              autoBuilt.messageConsumer(),
-              autoBuilt.resetHandler()));
+      return new SubscriberImpl(
+          autoBuilt.serviceClient(),
+          initialSubscribeRequest,
+          autoBuilt.initialLocation(),
+          autoBuilt.messageConsumer(),
+          autoBuilt.resetHandler());
     }
   }
 }

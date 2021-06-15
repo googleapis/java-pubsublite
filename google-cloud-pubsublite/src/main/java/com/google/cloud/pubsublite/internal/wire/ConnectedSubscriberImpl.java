@@ -16,45 +16,34 @@
 
 package com.google.cloud.pubsublite.internal.wire;
 
-import static com.google.cloud.pubsublite.internal.CheckedApiPreconditions.checkArgument;
 import static com.google.cloud.pubsublite.internal.CheckedApiPreconditions.checkState;
 
 import com.google.api.gax.rpc.ResponseObserver;
 import com.google.api.gax.rpc.StatusCode.Code;
-import com.google.cloud.pubsublite.Offset;
 import com.google.cloud.pubsublite.SequencedMessage;
 import com.google.cloud.pubsublite.internal.CheckedApiException;
-import com.google.cloud.pubsublite.internal.CloseableMonitor;
-import com.google.cloud.pubsublite.internal.wire.ConnectedSubscriber.Response;
 import com.google.cloud.pubsublite.proto.FlowControlRequest;
 import com.google.cloud.pubsublite.proto.MessageResponse;
-import com.google.cloud.pubsublite.proto.SeekRequest;
-import com.google.cloud.pubsublite.proto.SeekResponse;
 import com.google.cloud.pubsublite.proto.SubscribeRequest;
 import com.google.cloud.pubsublite.proto.SubscribeResponse;
 import com.google.common.base.Preconditions;
 import com.google.common.flogger.GoogleLogger;
-import com.google.errorprone.annotations.concurrent.GuardedBy;
 import java.util.List;
 import java.util.stream.Collectors;
 
 class ConnectedSubscriberImpl
-    extends SingleConnection<SubscribeRequest, SubscribeResponse, Response>
+    extends SingleConnection<SubscribeRequest, SubscribeResponse, List<SequencedMessage>>
     implements ConnectedSubscriber {
   private static final GoogleLogger log = GoogleLogger.forEnclosingClass();
 
   private final SubscribeRequest initialRequest;
-  private final CloseableMonitor monitor = new CloseableMonitor();
-
-  @GuardedBy("monitor.monitor")
-  private boolean seekInFlight = false;
 
   static class Factory implements ConnectedSubscriberFactory {
 
     @Override
     public ConnectedSubscriberImpl New(
         StreamFactory<SubscribeRequest, SubscribeResponse> streamFactory,
-        ResponseObserver<Response> clientStream,
+        ResponseObserver<List<SequencedMessage>> clientStream,
         SubscribeRequest initialRequest) {
       return new ConnectedSubscriberImpl(streamFactory, clientStream, initialRequest);
     }
@@ -62,7 +51,7 @@ class ConnectedSubscriberImpl
 
   private ConnectedSubscriberImpl(
       StreamFactory<SubscribeRequest, SubscribeResponse> streamFactory,
-      ResponseObserver<Response> clientStream,
+      ResponseObserver<List<SequencedMessage>> clientStream,
       SubscribeRequest initialRequest) {
     super(streamFactory, clientStream);
     this.initialRequest = initialRequest;
@@ -71,33 +60,10 @@ class ConnectedSubscriberImpl
 
   // ConnectedSubscriber implementation.
   @Override
-  public void seek(SeekRequest request) {
-    try (CloseableMonitor.Hold h = monitor.enter()) {
-      checkArgument(Predicates.isValidSeekRequest(request));
-      seekLockHeld(request);
-    } catch (CheckedApiException e) {
-      setError(e);
-    }
-  }
-
-  @Override
   public void allowFlow(FlowControlRequest request) {
     Preconditions.checkArgument(request.getAllowedBytes() >= 0);
     Preconditions.checkArgument(request.getAllowedMessages() >= 0);
-    try (CloseableMonitor.Hold h = monitor.enter()) {
-      sendToStream(SubscribeRequest.newBuilder().setFlowControl(request).build());
-    }
-  }
-
-  @GuardedBy("monitor.monitor")
-  private void seekLockHeld(SeekRequest request) throws CheckedApiException {
-    checkState(
-        !seekInFlight,
-        String.format(
-            "Sent second seek while seek in flight on stream with initial request %s.",
-            initialRequest));
-    seekInFlight = true;
-    sendToStream(SubscribeRequest.newBuilder().setSeek(request).build());
+    sendToStream(SubscribeRequest.newBuilder().setFlowControl(request).build());
   }
 
   @Override
@@ -122,8 +88,11 @@ class ConnectedSubscriberImpl
         onMessages(response.getMessages());
         return;
       case SEEK:
-        onSeekResponse(response.getSeek());
-        return;
+        throw new CheckedApiException(
+            String.format(
+                "Received seek response from client which never sends seek requests %s.",
+                initialRequest),
+            Code.FAILED_PRECONDITION);
       default:
         throw new CheckedApiException(
             "Received a message on the stream with no case set.", Code.FAILED_PRECONDITION);
@@ -131,18 +100,10 @@ class ConnectedSubscriberImpl
   }
 
   private void onMessages(MessageResponse response) throws CheckedApiException {
-    try (CloseableMonitor.Hold h = monitor.enter()) {
-      if (seekInFlight) {
-        log.atInfo().log(
-            "Dropping %s messages due to outstanding seek on stream with initial request %s.",
-            response.getMessagesCount(), initialRequest);
-        return;
-      }
-    }
     checkState(
         response.getMessagesCount() > 0,
         String.format(
-            "Received an empty PullResponse on stream with initial request %s.", initialRequest));
+            "Received an empty MessageResponse on stream with initial request %s.", initialRequest));
     List<SequencedMessage> messages =
         response.getMessagesList().stream()
             .map(SequencedMessage::fromProto)
@@ -152,19 +113,6 @@ class ConnectedSubscriberImpl
         String.format(
             "Received out of order messages on the stream with initial request %s.",
             initialRequest));
-    sendToClient(Response.ofMessages(messages));
-  }
-
-  private void onSeekResponse(SeekResponse response) throws CheckedApiException {
-    try (CloseableMonitor.Hold h = monitor.enter()) {
-      checkState(
-          seekInFlight,
-          String.format(
-              "Received a SeekResponse when no seeks were in flight on stream with initial"
-                  + " request %s.",
-              initialRequest));
-      seekInFlight = false;
-    }
-    sendToClient(Response.ofSeekOffset(Offset.of(response.getCursor().getOffset())));
+    sendToClient(messages);
   }
 }

@@ -16,28 +16,15 @@
 
 package com.google.cloud.pubsublite.internal.wire;
 
-import com.google.api.core.ApiFuture;
 import com.google.api.core.ApiService;
-import com.google.cloud.pubsublite.Offset;
 import com.google.cloud.pubsublite.internal.CheckedApiException;
 import com.google.cloud.pubsublite.proto.FlowControlRequest;
-import com.google.cloud.pubsublite.proto.SeekRequest;
 
 /**
  * A generic PubSub Lite subscriber. Errors are handled out of band. Messages are sent out of band.
- * Thread compatible, as synchronization is required between seek calls.
+ * Thread safe.
  */
 public interface Subscriber extends ApiService {
-  // Seek the subscriber using the given SeekRequest. Requires that no seeks are outstanding.
-  // Returns the seeked-to offset.
-  //
-  // Flow control tokens are reset when the seek response is received from the server and should be
-  // refilled after the future completes.
-  ApiFuture<Offset> seek(SeekRequest request);
-  // Whether or not a seek is in flight for this subscriber. If a seek is in flight, any further
-  // seek requests will result in a permanent error.
-  boolean seekInFlight();
-
   // Allow the provided amount of messages and bytes to be sent by the server.
   void allowFlow(FlowControlRequest request) throws CheckedApiException;
 }

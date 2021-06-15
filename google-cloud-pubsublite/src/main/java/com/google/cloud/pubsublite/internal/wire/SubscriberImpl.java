@@ -17,20 +17,13 @@
 package com.google.cloud.pubsublite.internal.wire;
 
 import static com.google.cloud.pubsublite.internal.CheckedApiPreconditions.checkArgument;
-import static com.google.cloud.pubsublite.internal.CheckedApiPreconditions.checkState;
 import static com.google.cloud.pubsublite.internal.wire.ApiServiceUtils.backgroundResourceAsApiService;
 
-import com.google.api.core.ApiFuture;
-import com.google.api.core.ApiFutures;
-import com.google.api.core.SettableApiFuture;
 import com.google.api.gax.rpc.ApiException;
-import com.google.api.gax.rpc.StatusCode.Code;
-import com.google.cloud.pubsublite.Offset;
 import com.google.cloud.pubsublite.SequencedMessage;
 import com.google.cloud.pubsublite.internal.CheckedApiException;
 import com.google.cloud.pubsublite.internal.CloseableMonitor;
 import com.google.cloud.pubsublite.internal.ProxyService;
-import com.google.cloud.pubsublite.internal.wire.ConnectedSubscriber.Response;
 import com.google.cloud.pubsublite.proto.FlowControlRequest;
 import com.google.cloud.pubsublite.proto.InitialSubscribeRequest;
 import com.google.cloud.pubsublite.proto.SeekRequest;
@@ -39,18 +32,17 @@ import com.google.cloud.pubsublite.proto.SubscribeRequest;
 import com.google.cloud.pubsublite.proto.SubscribeResponse;
 import com.google.cloud.pubsublite.v1.SubscriberServiceClient;
 import com.google.common.annotations.VisibleForTesting;
-import com.google.common.collect.ImmutableList;
-import java.util.Optional;
+import java.util.List;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 import javax.annotation.concurrent.GuardedBy;
 
 public class SubscriberImpl extends ProxyService
-    implements Subscriber, RetryingConnectionObserver<Response> {
+    implements Subscriber, RetryingConnectionObserver<List<SequencedMessage>> {
   @VisibleForTesting static final long FLOW_REQUESTS_FLUSH_INTERVAL_MS = 100;
 
-  private final Consumer<ImmutableList<SequencedMessage>> messageConsumer;
+  private final Consumer<List<SequencedMessage>> messageConsumer;
 
   private final SubscriberResetHandler resetHandler;
 
@@ -70,23 +62,10 @@ public class SubscriberImpl extends ProxyService
   private final FlowControlBatcher flowControlBatcher = new FlowControlBatcher();
 
   @GuardedBy("monitor.monitor")
-  private Optional<InFlightSeek> inFlightSeek = Optional.empty();
-
-  @GuardedBy("monitor.monitor")
   private SeekRequest initialLocation;
 
   @GuardedBy("monitor.monitor")
   private boolean shutdown = false;
-
-  private static class InFlightSeek {
-    final SeekRequest seekRequest;
-    final SettableApiFuture<Offset> seekFuture;
-
-    InFlightSeek(SeekRequest request, SettableApiFuture<Offset> future) {
-      seekRequest = request;
-      seekFuture = future;
-    }
-  }
 
   @VisibleForTesting
   SubscriberImpl(
@@ -94,7 +73,7 @@ public class SubscriberImpl extends ProxyService
       ConnectedSubscriberFactory factory,
       InitialSubscribeRequest baseInitialRequest,
       SeekRequest initialLocation,
-      Consumer<ImmutableList<SequencedMessage>> messageConsumer,
+      Consumer<List<SequencedMessage>> messageConsumer,
       SubscriberResetHandler resetHandler)
       throws ApiException {
     this.messageConsumer = messageConsumer;
@@ -110,7 +89,7 @@ public class SubscriberImpl extends ProxyService
       SubscriberServiceClient client,
       InitialSubscribeRequest baseInitialRequest,
       SeekRequest initialLocation,
-      Consumer<ImmutableList<SequencedMessage>> messageConsumer,
+      Consumer<List<SequencedMessage>> messageConsumer,
       SubscriberResetHandler resetHandler)
       throws ApiException {
     this(
@@ -128,8 +107,6 @@ public class SubscriberImpl extends ProxyService
   protected void handlePermanentError(CheckedApiException error) {
     try (CloseableMonitor.Hold h = monitor.enter()) {
       shutdown = true;
-      inFlightSeek.ifPresent(inFlight -> inFlight.seekFuture.setException(error));
-      inFlightSeek = Optional.empty();
       onPermanentError(error);
     }
   }
@@ -152,38 +129,6 @@ public class SubscriberImpl extends ProxyService
     alarmFuture.cancel(false /* mayInterruptIfRunning */);
     try (CloseableMonitor.Hold h = monitor.enter()) {
       shutdown = true;
-      inFlightSeek.ifPresent(
-          inFlight ->
-              inFlight.seekFuture.setException(
-                  new CheckedApiException("Client stopped while seek in flight.", Code.ABORTED)));
-    }
-  }
-
-  @Override
-  public ApiFuture<Offset> seek(SeekRequest request) {
-    try (CloseableMonitor.Hold h = monitor.enter()) {
-      checkArgument(
-          Predicates.isValidSeekRequest(request), "Sent SeekRequest with no location set.");
-      checkState(!shutdown, "Seeked after the stream shut down.");
-      checkState(!inFlightSeek.isPresent(), "Seeked while seek is already in flight.");
-      SettableApiFuture<Offset> future = SettableApiFuture.create();
-      inFlightSeek = Optional.of(new InFlightSeek(request, future));
-      connection.modifyConnection(
-          connectedSubscriber ->
-              connectedSubscriber.ifPresent(subscriber -> subscriber.seek(request)));
-      // Note: next offset and flow control tokens should be reset upon seek response. Pre-seek
-      // messages may still be received until the server receives the seek request.
-      return future;
-    } catch (CheckedApiException e) {
-      onPermanentError(e);
-      return ApiFutures.immediateFailedFuture(e);
-    }
-  }
-
-  @Override
-  public boolean seekInFlight() {
-    try (CloseableMonitor.Hold h = monitor.enter()) {
-      return inFlightSeek.isPresent();
     }
   }
 
@@ -215,11 +160,6 @@ public class SubscriberImpl extends ProxyService
   public void reset() {
     try (CloseableMonitor.Hold h = monitor.enter()) {
       if (shutdown) return;
-      inFlightSeek.ifPresent(
-          inFlight ->
-              inFlight.seekFuture.setException(
-                  new CheckedApiException("Aborted due to out of band seek.", Code.ABORTED)));
-      inFlightSeek = Optional.empty();
       nextOffsetTracker.reset();
       initialLocation =
           SeekRequest.newBuilder().setNamedTarget(NamedTarget.COMMITTED_CURSOR).build();
@@ -247,16 +187,9 @@ public class SubscriberImpl extends ProxyService
           connectedSubscriber -> {
             checkArgument(monitor.monitor.isOccupiedByCurrentThread());
             checkArgument(connectedSubscriber.isPresent());
-            if (inFlightSeek.isPresent()) {
-              connectedSubscriber.get().seek(inFlightSeek.get().seekRequest);
-            } else {
-              // Flow control tokens should be cleared after the seek response is received, thus
-              // they are not sent after the subscribe stream is reconnected when there is an
-              // in-flight seek.
-              flowControlBatcher
-                  .requestForRestart()
-                  .ifPresent(request -> connectedSubscriber.get().allowFlow(request));
-            }
+            flowControlBatcher
+                .requestForRestart()
+                .ifPresent(request -> connectedSubscriber.get().allowFlow(request));
           });
     } catch (CheckedApiException e) {
       onPermanentError(e);
@@ -264,38 +197,13 @@ public class SubscriberImpl extends ProxyService
   }
 
   @Override
-  public void onClientResponse(Response value) throws CheckedApiException {
-    switch (value.getKind()) {
-      case MESSAGES:
-        onMessageResponse(value.messages());
-        return;
-      case SEEK_OFFSET:
-        onSeekResponse(value.seekOffset());
-        return;
-    }
-    throw new CheckedApiException(
-        "Invalid switch case: " + value.getKind(), Code.FAILED_PRECONDITION);
-  }
-
-  private void onMessageResponse(ImmutableList<SequencedMessage> messages)
-      throws CheckedApiException {
+  public void onClientResponse(List<SequencedMessage> messages) throws CheckedApiException {
     try (CloseableMonitor.Hold h = monitor.enter()) {
       if (shutdown) return;
       nextOffsetTracker.onMessages(messages);
       flowControlBatcher.onMessages(messages);
     }
     messageConsumer.accept(messages);
-  }
-
-  private void onSeekResponse(Offset seekOffset) throws CheckedApiException {
-    try (CloseableMonitor.Hold h = monitor.enter()) {
-      if (shutdown) return;
-      checkState(inFlightSeek.isPresent(), "No in flight seek, but received a seek response.");
-      nextOffsetTracker.onClientSeek(seekOffset);
-      flowControlBatcher.onClientSeek();
-      inFlightSeek.get().seekFuture.set(seekOffset);
-      inFlightSeek = Optional.empty();
-    }
   }
 
   @VisibleForTesting

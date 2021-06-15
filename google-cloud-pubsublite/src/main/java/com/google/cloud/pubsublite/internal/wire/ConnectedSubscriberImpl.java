@@ -103,7 +103,7 @@ class ConnectedSubscriberImpl
     checkState(
         response.getMessagesCount() > 0,
         String.format(
-            "Received an empty PullResponse on stream with initial request %s.", initialRequest));
+            "Received an empty MessageResponse on stream with initial request %s.", initialRequest));
     List<SequencedMessage> messages =
         response.getMessagesList().stream()
             .map(SequencedMessage::fromProto)

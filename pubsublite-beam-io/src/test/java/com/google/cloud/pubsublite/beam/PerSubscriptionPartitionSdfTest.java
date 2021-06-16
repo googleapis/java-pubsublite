@@ -74,9 +74,11 @@ public class PerSubscriptionPartitionSdfTest {
 
   @Mock SerializableFunction<SubscriptionPartition, InitialOffsetReader> offsetReaderFactory;
 
+  @Mock ManagedBacklogReaderFactory backlogReaderFactory;
+  @Mock TopicBacklogReader backlogReader;
+
   @Mock
-  SerializableBiFunction<SubscriptionPartition, OffsetByteRange, TrackerWithProgress>
-      trackerFactory;
+  SerializableBiFunction<TopicBacklogReader, OffsetByteRange, TrackerWithProgress> trackerFactory;
 
   @Mock SubscriptionPartitionProcessorFactory processorFactory;
   @Mock SerializableFunction<SubscriptionPartition, Committer> committerFactory;
@@ -100,9 +102,11 @@ public class PerSubscriptionPartitionSdfTest {
     when(trackerFactory.apply(any(), any())).thenReturn(tracker);
     when(committerFactory.apply(any())).thenReturn(committer);
     when(tracker.currentRestriction()).thenReturn(RESTRICTION);
+    when(backlogReaderFactory.newReader(any())).thenReturn(backlogReader);
     sdf =
         new PerSubscriptionPartitionSdf(
             MAX_SLEEP_TIME,
+            backlogReaderFactory,
             offsetReaderFactory,
             trackerFactory,
             processorFactory,
@@ -128,7 +132,13 @@ public class PerSubscriptionPartitionSdfTest {
   @Test
   public void newTrackerCallsFactory() {
     assertSame(tracker, sdf.newTracker(PARTITION, RESTRICTION));
-    verify(trackerFactory).apply(PARTITION, RESTRICTION);
+    verify(trackerFactory).apply(backlogReader, RESTRICTION);
+  }
+
+  @Test
+  public void tearDownClosesBacklogReaderFactory() {
+    sdf.teardown();
+    verify(backlogReaderFactory).close();
   }
 
   @Test
@@ -162,13 +172,29 @@ public class PerSubscriptionPartitionSdfTest {
     order2.verify(committer).awaitTerminated();
   }
 
+  private static final class NoopManagedBacklogReaderFactory
+      implements ManagedBacklogReaderFactory {
+    @Override
+    public TopicBacklogReader newReader(SubscriptionPartition subscriptionPartition) {
+      return null;
+    }
+
+    @Override
+    public void close() {}
+  }
+
   @Test
   @SuppressWarnings("return.type.incompatible")
   public void dofnIsSerializable() throws Exception {
     ObjectOutputStream output = new ObjectOutputStream(new ByteArrayOutputStream());
     output.writeObject(
         new PerSubscriptionPartitionSdf(
-            MAX_SLEEP_TIME, x -> null, (x, y) -> null, (x, y, z) -> null, (x) -> null));
+            MAX_SLEEP_TIME,
+            new NoopManagedBacklogReaderFactory(),
+            x -> null,
+            (x, y) -> null,
+            (x, y, z) -> null,
+            (x) -> null));
   }
 
   @Test

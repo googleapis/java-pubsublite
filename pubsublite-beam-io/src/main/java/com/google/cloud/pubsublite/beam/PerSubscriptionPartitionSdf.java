@@ -31,25 +31,33 @@ import org.joda.time.Instant;
 
 class PerSubscriptionPartitionSdf extends DoFn<SubscriptionPartition, SequencedMessage> {
   private final Duration maxSleepTime;
+  private final ManagedBacklogReaderFactory backlogReaderFactory;
   private final SubscriptionPartitionProcessorFactory processorFactory;
   private final SerializableFunction<SubscriptionPartition, InitialOffsetReader>
       offsetReaderFactory;
-  private final SerializableBiFunction<SubscriptionPartition, OffsetByteRange, TrackerWithProgress>
+  private final SerializableBiFunction<TopicBacklogReader, OffsetByteRange, TrackerWithProgress>
       trackerFactory;
   private final SerializableFunction<SubscriptionPartition, Committer> committerFactory;
 
   PerSubscriptionPartitionSdf(
       Duration maxSleepTime,
+      ManagedBacklogReaderFactory backlogReaderFactory,
       SerializableFunction<SubscriptionPartition, InitialOffsetReader> offsetReaderFactory,
-      SerializableBiFunction<SubscriptionPartition, OffsetByteRange, TrackerWithProgress>
+      SerializableBiFunction<TopicBacklogReader, OffsetByteRange, TrackerWithProgress>
           trackerFactory,
       SubscriptionPartitionProcessorFactory processorFactory,
       SerializableFunction<SubscriptionPartition, Committer> committerFactory) {
     this.maxSleepTime = maxSleepTime;
+    this.backlogReaderFactory = backlogReaderFactory;
     this.processorFactory = processorFactory;
     this.offsetReaderFactory = offsetReaderFactory;
     this.trackerFactory = trackerFactory;
     this.committerFactory = committerFactory;
+  }
+
+  @Teardown
+  public void teardown() {
+    backlogReaderFactory.close();
   }
 
   @GetInitialWatermarkEstimatorState
@@ -103,7 +111,7 @@ class PerSubscriptionPartitionSdf extends DoFn<SubscriptionPartition, SequencedM
   @NewTracker
   public TrackerWithProgress newTracker(
       @Element SubscriptionPartition subscriptionPartition, @Restriction OffsetByteRange range) {
-    return trackerFactory.apply(subscriptionPartition, range);
+    return trackerFactory.apply(backlogReaderFactory.newReader(subscriptionPartition), range);
   }
 
   @GetSize

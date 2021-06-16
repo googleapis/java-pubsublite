@@ -48,7 +48,7 @@ public class OffsetByteRangeTrackerTest {
   private static final double IGNORED_FRACTION = -10000000.0;
   private static final long MIN_BYTES = 1000;
   private static final OffsetRange RANGE = new OffsetRange(123L, Long.MAX_VALUE);
-  private final TopicBacklogReader reader = mock(TopicBacklogReader.class);
+  private final TopicBacklogReader unownedBacklogReader = mock(TopicBacklogReader.class);
 
   @Spy Ticker ticker;
   private OffsetByteRangeTracker tracker;
@@ -60,7 +60,7 @@ public class OffsetByteRangeTrackerTest {
     tracker =
         new OffsetByteRangeTracker(
             OffsetByteRange.of(RANGE, 0),
-            reader,
+            unownedBacklogReader,
             Stopwatch.createUnstarted(ticker),
             Duration.millis(500),
             MIN_BYTES);
@@ -70,7 +70,7 @@ public class OffsetByteRangeTrackerTest {
   public void progressTracked() {
     assertTrue(tracker.tryClaim(OffsetByteProgress.of(Offset.of(123), 10)));
     assertTrue(tracker.tryClaim(OffsetByteProgress.of(Offset.of(124), 11)));
-    when(reader.computeMessageStats(Offset.of(125)))
+    when(unownedBacklogReader.computeMessageStats(Offset.of(125)))
         .thenReturn(ComputeMessageStatsResponse.newBuilder().setMessageBytes(1000).build());
     Progress progress = tracker.getProgress();
     assertEquals(21, progress.getWorkCompleted(), .0001);
@@ -79,7 +79,7 @@ public class OffsetByteRangeTrackerTest {
 
   @Test
   public void getProgressStatsFailure() {
-    when(reader.computeMessageStats(Offset.of(123)))
+    when(unownedBacklogReader.computeMessageStats(Offset.of(123)))
         .thenThrow(new CheckedApiException(Code.INTERNAL).underlying);
     assertThrows(ApiException.class, tracker::getProgress);
   }

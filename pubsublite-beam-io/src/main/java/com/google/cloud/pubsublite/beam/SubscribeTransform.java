@@ -85,12 +85,16 @@ class SubscribeTransform extends PTransform<PBegin, PCollection<SequencedMessage
         options.flowControlSettings());
   }
 
-  private TrackerWithProgress newRestrictionTracker(
-      SubscriptionPartition subscriptionPartition, OffsetByteRange initial) {
+  private TopicBacklogReader newBacklogReader(SubscriptionPartition subscriptionPartition) {
     checkSubscription(subscriptionPartition);
+    return options.getBacklogReader(subscriptionPartition.partition());
+  }
+
+  private TrackerWithProgress newRestrictionTracker(
+      TopicBacklogReader backlogReader, OffsetByteRange initial) {
     return new OffsetByteRangeTracker(
         initial,
-        options.getBacklogReader(subscriptionPartition.partition()),
+        backlogReader,
         Stopwatch.createUnstarted(),
         options.minBundleTimeout(),
         LongMath.saturatedMultiply(options.flowControlSettings().bytesOutstanding(), 10));
@@ -129,6 +133,7 @@ class SubscribeTransform extends PTransform<PBegin, PCollection<SequencedMessage
             new PerSubscriptionPartitionSdf(
                 // Ensure we read for at least 5 seconds more than the bundle timeout.
                 options.minBundleTimeout().plus(Duration.standardSeconds(5)),
+                new ManagedBacklogReaderFactoryImpl(this::newBacklogReader),
                 this::newInitialOffsetReader,
                 this::newRestrictionTracker,
                 this::newPartitionProcessor,

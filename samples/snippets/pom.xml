@@ -51,21 +51,22 @@
     </dependency>
     <dependency>
       <groupId>com.google.cloud</groupId>
-      <artifactId>pubsublite-beam-io</artifactId>
-      <version>0.16.0</version>
-    </dependency>
-    <dependency>
-      <groupId>com.google.cloud</groupId>
       <artifactId>google-cloud-pubsub</artifactId>
       <version>1.113.3</version>
+    </dependency>
+    <!-- [END pubsublite_java_dependencies] -->
+    <!-- [END pubsublite_install_without_bom] -->
+
+    <dependency>
+      <groupId>com.google.cloud</groupId>
+      <artifactId>pubsublite-beam-io</artifactId>
+      <version>0.16.0</version>
     </dependency>
     <dependency>
       <groupId>org.apache.beam</groupId>
       <artifactId>beam-model-pipeline</artifactId>
       <version>${beam.version}</version>
     </dependency>
-    <!-- [END pubsublite_java_dependencies] -->
-    <!-- [END pubsublite_install_without_bom] -->
 
     <dependency>
       <groupId>junit</groupId>

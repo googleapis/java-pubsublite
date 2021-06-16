@@ -14,14 +14,10 @@
  * limitations under the License.
  */
 
-package com.google.cloud.pubsublite.internal.wire;
+package com.google.cloud.pubsublite.beam;
 
-import com.google.api.gax.rpc.ApiException;
-import com.google.cloud.pubsublite.SequencedMessage;
-import java.io.Serializable;
-import java.util.List;
-import java.util.function.Consumer;
+import org.apache.beam.sdk.transforms.splittabledofn.RestrictionTracker;
+import org.apache.beam.sdk.transforms.splittabledofn.RestrictionTracker.HasProgress;
 
-public interface SubscriberFactory extends Serializable {
-  Subscriber newSubscriber(Consumer<List<SequencedMessage>> message_consumer) throws ApiException;
-}
+public abstract class TrackerWithProgress
+    extends RestrictionTracker<OffsetByteRange, OffsetByteProgress> implements HasProgress {}

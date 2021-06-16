@@ -44,11 +44,6 @@ class FlowControlBatcher {
     clientTokens.sub(byteSize, received.size());
   }
 
-  void onClientSeek() {
-    clientTokens.reset();
-    pendingTokens.reset();
-  }
-
   // The caller must send the FlowControlRequest to the stream, as pending tokens are reset.
   Optional<FlowControlRequest> requestForRestart() {
     pendingTokens.reset();

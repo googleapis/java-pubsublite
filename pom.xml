@@ -10,8 +10,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.google.cloud</groupId>
   <artifactId>google-cloud-pubsublite-parent</artifactId>
-  <version>0.15.1-SNAPSHOT
-  </version><!-- {x-version-update:google-cloud-pubsublite:current} -->
+  <version>0.16.1-SNAPSHOT</version><!-- {x-version-update:google-cloud-pubsublite:current} -->
   <packaging>pom</packaging>
   <name>Google Cloud Pub/Sub Lite Parent</name>
   <url>https://github.com/googleapis/java-pubsublite</url>
@@ -67,7 +66,7 @@
       <dependency>
         <groupId>org.mockito</groupId>
         <artifactId>mockito-core</artifactId>
-        <version>3.11.0</version>
+        <version>3.11.1</version>
         <scope>test</scope>
       </dependency>
       <dependency>

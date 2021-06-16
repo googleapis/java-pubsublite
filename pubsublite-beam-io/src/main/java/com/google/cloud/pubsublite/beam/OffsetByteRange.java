@@ -14,14 +14,24 @@
  * limitations under the License.
  */
 
-package com.google.cloud.pubsublite.internal.wire;
+package com.google.cloud.pubsublite.beam;
 
-import com.google.api.gax.rpc.ApiException;
-import com.google.cloud.pubsublite.SequencedMessage;
-import java.io.Serializable;
-import java.util.List;
-import java.util.function.Consumer;
+import com.google.auto.value.AutoValue;
+import org.apache.beam.sdk.coders.DefaultCoder;
+import org.apache.beam.sdk.io.range.OffsetRange;
 
-public interface SubscriberFactory extends Serializable {
-  Subscriber newSubscriber(Consumer<List<SequencedMessage>> message_consumer) throws ApiException;
+@AutoValue
+@DefaultCoder(OffsetByteRangeCoder.class)
+abstract class OffsetByteRange {
+  abstract OffsetRange getRange();
+
+  abstract long getByteCount();
+
+  static OffsetByteRange of(OffsetRange range, long byteCount) {
+    return new AutoValue_OffsetByteRange(range, byteCount);
+  }
+
+  static OffsetByteRange of(OffsetRange range) {
+    return of(range, 0);
+  }
 }

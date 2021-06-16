@@ -5,15 +5,13 @@
   <parent>
     <groupId>com.google.cloud</groupId>
     <artifactId>google-cloud-pubsublite-parent</artifactId>
-    <version>0.15.1-SNAPSHOT
-    </version><!-- {x-version-update:google-cloud-pubsublite:current} -->
+    <version>0.16.1-SNAPSHOT</version><!-- {x-version-update:google-cloud-pubsublite:current} -->
     <relativePath>../pom.xml</relativePath>
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.google.cloud</groupId>
   <artifactId>pubsublite-beam-io</artifactId>
-  <version>0.15.1-SNAPSHOT
-  </version><!-- {x-version-update:google-cloud-pubsublite:current} -->
+  <version>0.16.1-SNAPSHOT</version><!-- {x-version-update:google-cloud-pubsublite:current} -->
   <packaging>jar</packaging>
   <name>Pub/Sub Lite IO</name>
   <url>https://github.com/googleapis/java-pubsublite</url>
@@ -22,14 +20,12 @@
     <dependency>
       <groupId>com.google.cloud</groupId>
       <artifactId>google-cloud-pubsublite</artifactId>
-      <version>0.15.1-SNAPSHOT
-      </version><!-- {x-version-update:google-cloud-pubsublite:current} -->
+      <version>0.16.1-SNAPSHOT</version><!-- {x-version-update:google-cloud-pubsublite:current} -->
     </dependency>
     <dependency>
       <groupId>com.google.api.grpc</groupId>
       <artifactId>proto-google-cloud-pubsublite-v1</artifactId>
-      <version>0.15.1-SNAPSHOT
-      </version><!-- {x-version-update:google-cloud-pubsublite:current} -->
+      <version>0.16.1-SNAPSHOT</version><!-- {x-version-update:google-cloud-pubsublite:current} -->
     </dependency>
     <dependency>
       <groupId>com.google.auto.service</groupId>

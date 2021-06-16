@@ -29,14 +29,10 @@ import com.google.common.collect.Iterables;
 import java.util.Collection;
 import java.util.Optional;
 
-// Tracks the next offset to be received if such an offset exists. Reset on client initiated seeks.
+// Tracks the next offset to be received if such an offset exists.
 // Checks message ordering.
 public class NextOffsetTracker {
   private Optional<Offset> nextOffset = Optional.empty();
-
-  void onClientSeek(Offset clientSeekOffset) {
-    nextOffset = Optional.of(clientSeekOffset);
-  }
 
   void onMessages(Collection<SequencedMessage> messages) throws CheckedApiException {
     checkArgument(!messages.isEmpty());
@@ -51,7 +47,7 @@ public class NextOffsetTracker {
   }
 
   // Gives the SeekRequest that should be sent on restart, or empty if none should be sent because
-  // the client has never received a message or seeked.
+  // the client has never received a message.
   Optional<SeekRequest> requestForRestart() {
     return nextOffset.map(
         offset ->

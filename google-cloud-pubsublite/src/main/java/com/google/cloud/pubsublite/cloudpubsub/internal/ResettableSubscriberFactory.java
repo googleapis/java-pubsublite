@@ -20,13 +20,12 @@ import com.google.api.gax.rpc.ApiException;
 import com.google.cloud.pubsublite.SequencedMessage;
 import com.google.cloud.pubsublite.internal.wire.Subscriber;
 import com.google.cloud.pubsublite.internal.wire.SubscriberResetHandler;
-import com.google.common.collect.ImmutableList;
 import java.io.Serializable;
+import java.util.List;
 import java.util.function.Consumer;
 
 public interface ResettableSubscriberFactory extends Serializable {
   Subscriber newSubscriber(
-      Consumer<ImmutableList<SequencedMessage>> messageConsumer,
-      SubscriberResetHandler resetHandler)
+      Consumer<List<SequencedMessage>> messageConsumer, SubscriberResetHandler resetHandler)
       throws ApiException;
 }

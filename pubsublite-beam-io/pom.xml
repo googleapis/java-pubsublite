@@ -16,6 +16,9 @@
   <name>Pub/Sub Lite IO</name>
   <url>https://github.com/googleapis/java-pubsublite</url>
   <description>Beam IO for Google Cloud Pub/Sub Lite</description>
+  <properties>
+    <beam.version>2.30.0</beam.version>
+  </properties>
   <dependencies>
     <dependency>
       <groupId>com.google.cloud</groupId>
@@ -85,12 +88,12 @@
     <dependency>
       <groupId>org.apache.beam</groupId>
       <artifactId>beam-sdks-java-core</artifactId>
-      <version>2.29.0</version>
+      <version>${beam.version}</version>
     </dependency>
     <dependency>
       <groupId>org.apache.beam</groupId>
       <artifactId>beam-sdks-java-extensions-protobuf</artifactId>
-      <version>2.29.0</version>
+      <version>${beam.version}</version>
     </dependency>
     <dependency>
       <groupId>com.google.flogger</groupId>
@@ -124,7 +127,7 @@
     <dependency>
       <groupId>org.apache.beam</groupId>
       <artifactId>beam-runners-direct-java</artifactId>
-      <version>2.29.0</version>
+      <version>${beam.version}</version>
       <scope>test</scope>
     </dependency>
   </dependencies>

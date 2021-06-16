@@ -78,8 +78,7 @@ public class PerSubscriptionPartitionSdfTest {
   @Mock TopicBacklogReader backlogReader;
 
   @Mock
-  SerializableBiFunction<TopicBacklogReader, OffsetByteRange, TrackerWithProgress>
-      trackerFactory;
+  SerializableBiFunction<TopicBacklogReader, OffsetByteRange, TrackerWithProgress> trackerFactory;
 
   @Mock SubscriptionPartitionProcessorFactory processorFactory;
   @Mock SerializableFunction<SubscriptionPartition, Committer> committerFactory;

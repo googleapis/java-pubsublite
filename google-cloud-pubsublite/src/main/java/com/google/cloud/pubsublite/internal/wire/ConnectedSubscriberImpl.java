@@ -34,6 +34,7 @@ import java.util.stream.Collectors;
 class ConnectedSubscriberImpl
     extends SingleConnection<SubscribeRequest, SubscribeResponse, List<SequencedMessage>>
     implements ConnectedSubscriber {
+
   private static final GoogleLogger log = GoogleLogger.forEnclosingClass();
 
   private final SubscribeRequest initialRequest;

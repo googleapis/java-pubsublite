@@ -1,5 +1,29 @@
 # Changelog
 
+## [0.16.0](https://www.github.com/googleapis/java-pubsublite/compare/v0.15.0...v0.16.0) (2021-06-16)
+
+
+### Features
+
+* Change restriction to OffsetByteRange to allow functioning with runnerv2. ([#674](https://www.github.com/googleapis/java-pubsublite/issues/674)) ([1749ca9](https://www.github.com/googleapis/java-pubsublite/commit/1749ca9bc5bbfcbb05f465c528e34a441b03936b))
+
+
+### Bug Fixes
+
+* ManagedChannel shutdown issues ([#700](https://www.github.com/googleapis/java-pubsublite/issues/700)) ([2d0cbde](https://www.github.com/googleapis/java-pubsublite/commit/2d0cbde558c20f3c4eb7d217d4573e592e353f64))
+* update codeowner team in repo metadata ([#699](https://www.github.com/googleapis/java-pubsublite/issues/699)) ([eead488](https://www.github.com/googleapis/java-pubsublite/commit/eead48863c872cd6f6a01cb450063c770cdbf7ed))
+
+
+### Dependencies
+
+* update dependency com.google.cloud:google-cloud-pubsub to v1.113.3 ([#689](https://www.github.com/googleapis/java-pubsublite/issues/689)) ([b5bd126](https://www.github.com/googleapis/java-pubsublite/commit/b5bd126e8475f5bea049a662372225f92a4affc4))
+* update dependency com.google.cloud:google-cloud-pubsub-bom to v1.113.3 ([#690](https://www.github.com/googleapis/java-pubsublite/issues/690)) ([3d05801](https://www.github.com/googleapis/java-pubsublite/commit/3d058010eb375bc77d8a4f8ff8ba52421b434592))
+
+
+### Documentation
+
+* Update readme ([#698](https://www.github.com/googleapis/java-pubsublite/issues/698)) ([92e9893](https://www.github.com/googleapis/java-pubsublite/commit/92e9893e4e7706160d848a1ed28199d12dc09f75))
+
 ## [0.15.0](https://www.github.com/googleapis/java-pubsublite/compare/v0.14.2...v0.15.0) (2021-06-08)
 
 

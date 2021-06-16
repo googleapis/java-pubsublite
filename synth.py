@@ -29,4 +29,6 @@ java.common_templates(excludes=[
   '.kokoro/*/samples.cfg',
   # TODO: allow when pubsublite is available in libraries-bom
   'samples/install-without-bom/*',
+  # TODO: remove when the library is GA   
+  '.github/workflows/samples.yaml',
 ])

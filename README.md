@@ -25,7 +25,7 @@ If you are using Maven, add this to your pom.xml file:
 <dependency>
   <groupId>com.google.cloud</groupId>
   <artifactId>pubsublite-beam-io</artifactId>
-  <version>0.15.0</version>
+  <version>0.16.0</version>
 </dependency>
 <dependency>
   <groupId>com.google.cloud</groupId>
@@ -42,12 +42,12 @@ If you are using Maven, add this to your pom.xml file:
 
 If you are using Gradle without BOM, add this to your dependencies
 ```Groovy
-compile 'com.google.cloud:google-cloud-pubsublite:0.15.0'
+compile 'com.google.cloud:google-cloud-pubsublite:0.16.0'
 ```
 
 If you are using SBT, add this to your dependencies
 ```Scala
-libraryDependencies += "com.google.cloud" % "google-cloud-pubsublite" % "0.15.0"
+libraryDependencies += "com.google.cloud" % "google-cloud-pubsublite" % "0.16.0"
 ```
 
 ## Authentication

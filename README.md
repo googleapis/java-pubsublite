@@ -20,7 +20,7 @@ If you are using Maven, add this to your pom.xml file:
 <dependency>
   <groupId>com.google.cloud</groupId>
   <artifactId>google-cloud-pubsublite</artifactId>
-  <version>0.15.0</version>
+  <version>0.16.0</version>
 </dependency>
 <dependency>
   <groupId>com.google.cloud</groupId>

@@ -1,5 +1,17 @@
 # Changelog
 
+### [0.16.1](https://www.github.com/googleapis/java-pubsublite/compare/v0.16.0...v0.16.1) (2021-06-17)
+
+
+### Bug Fixes
+
+* Make PubsubLiteIO not final and have protected constructor ([#715](https://www.github.com/googleapis/java-pubsublite/issues/715)) ([a6a7fc2](https://www.github.com/googleapis/java-pubsublite/commit/a6a7fc2bb3c92a94a1d78bdf1c0b08c1c11ed3b1))
+
+
+### Dependencies
+
+* update dependency com.google.cloud:pubsublite-beam-io to v0.16.0 ([#709](https://www.github.com/googleapis/java-pubsublite/issues/709)) ([5050dfa](https://www.github.com/googleapis/java-pubsublite/commit/5050dfac9456d2f7a37b7298d2c248c8f2664259))
+
 ## [0.16.0](https://www.github.com/googleapis/java-pubsublite/compare/v0.15.0...v0.16.0) (2021-06-16)
 
 

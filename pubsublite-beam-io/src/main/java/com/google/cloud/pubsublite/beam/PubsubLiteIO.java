@@ -18,7 +18,6 @@ package com.google.cloud.pubsublite.beam;
 
 import com.google.cloud.pubsublite.proto.PubSubMessage;
 import com.google.cloud.pubsublite.proto.SequencedMessage;
-import org.apache.beam.sdk.annotations.Experimental;
 import org.apache.beam.sdk.transforms.PTransform;
 import org.apache.beam.sdk.transforms.ParDo;
 import org.apache.beam.sdk.values.PBegin;
@@ -31,9 +30,9 @@ import org.apache.beam.sdk.values.PDone;
  * <p>For the differences between this and Google Pub/Sub, please refer to the <a
  * href="https://cloud.google.com/pubsub/docs/choosing-pubsub-or-lite">product documentation</a>.
  */
-@Experimental
-public final class PubsubLiteIO {
-  private PubsubLiteIO() {}
+public class PubsubLiteIO {
+  // Not final for aliasing in apache beam repo.
+  protected PubsubLiteIO() {}
 
   /**
    * Read messages from Pub/Sub Lite. These messages may contain duplicates if the publisher

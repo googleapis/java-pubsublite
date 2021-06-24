@@ -220,7 +220,7 @@ public abstract class SubscriberSettings {
               RoutingMetadata.of(subscriptionPath(), partition),
               settingsBuilder);
       return SubscriberServiceClient.create(
-          addDefaultSettings(subscriptionPath().location().region(), settingsBuilder));
+          addDefaultSettings(subscriptionPath().location().extractRegion(), settingsBuilder));
     } catch (Throwable t) {
       throw toCanonical(t).underlying;
     }
@@ -233,7 +233,7 @@ public abstract class SubscriberSettings {
     try {
       return CursorServiceClient.create(
           addDefaultSettings(
-              subscriptionPath().location().region(),
+              subscriptionPath().location().extractRegion(),
               CursorServiceSettings.newBuilder().setCredentialsProvider(credentialsProvider())));
     } catch (Throwable t) {
       throw toCanonical(t).underlying;
@@ -282,7 +282,7 @@ public abstract class SubscriberSettings {
     try {
       return PartitionAssignmentServiceClient.create(
           addDefaultSettings(
-              subscriptionPath().location().region(),
+              subscriptionPath().location().extractRegion(),
               PartitionAssignmentServiceSettings.newBuilder()
                   .setCredentialsProvider(credentialsProvider())));
     } catch (Throwable t) {

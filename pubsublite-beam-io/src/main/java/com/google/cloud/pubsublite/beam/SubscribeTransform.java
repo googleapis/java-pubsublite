@@ -114,7 +114,7 @@ class SubscribeTransform extends PTransform<PBegin, PCollection<SequencedMessage
     try (AdminClient admin =
         AdminClient.create(
             AdminClientSettings.newBuilder()
-                .setRegion(options.subscriptionPath().location().region())
+                .setRegion(options.subscriptionPath().location().extractRegion())
                 .build())) {
       return TopicPath.parse(admin.getSubscription(options.subscriptionPath()).get().getTopic());
     } catch (Throwable t) {

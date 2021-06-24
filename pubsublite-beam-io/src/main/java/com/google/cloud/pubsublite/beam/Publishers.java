@@ -51,9 +51,9 @@ class Publishers {
               .setServiceClient(
                   AdminServiceClient.create(
                       addDefaultSettings(
-                          options.topicPath().location().region(),
+                          options.topicPath().location().extractRegion(),
                           AdminServiceSettings.newBuilder())))
-              .setRegion(options.topicPath().location().region())
+              .setRegion(options.topicPath().location().extractRegion())
               .build());
     } catch (Throwable t) {
       throw toCanonical(t).underlying;
@@ -70,7 +70,7 @@ class Publishers {
             settingsBuilder);
     try {
       return PublisherServiceClient.create(
-          addDefaultSettings(options.topicPath().location().region(), settingsBuilder));
+          addDefaultSettings(options.topicPath().location().extractRegion(), settingsBuilder));
     } catch (Throwable t) {
       throw toCanonical(t).underlying;
     }

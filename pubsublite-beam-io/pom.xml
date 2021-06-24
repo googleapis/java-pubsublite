@@ -58,6 +58,10 @@
       <version>0.16.2-SNAPSHOT</version><!-- {x-version-update:google-cloud-pubsublite:current} -->
     </dependency>
     <dependency>
+      <groupId>com.google.api.grpc</groupId>
+      <artifactId>proto-google-cloud-pubsub-v1</artifactId>
+    </dependency>
+    <dependency>
       <groupId>com.google.auto.service</groupId>
       <artifactId>auto-service-annotations</artifactId>
     </dependency>

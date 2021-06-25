@@ -71,6 +71,17 @@ public class PartitionCountWatcherImplTest {
   }
 
   @Test
+  public void testConsumerExcepts() {
+    when(mockClient.getTopicPartitionCount(path())).thenReturn(ApiFutures.immediateFuture(1L));
+    PartitionCountWatcher watcher = watcherFactory.newWatcher(mockConsumer);
+    doThrow(new IllegalArgumentException("bad batching settings")).when(mockConsumer).accept(1L);
+    watcher.startAsync();
+    assertThrows(IllegalStateException.class, watcher::awaitTerminated);
+    ApiExceptionMatcher.assertThrowableMatches(watcher.failureCause(), StatusCode.Code.INTERNAL);
+    verify(mockClient, times(1)).getTopicPartitionCount(path());
+  }
+
+  @Test
   public void testCallsHandlerOnStart() {
     when(mockClient.getTopicPartitionCount(path())).thenReturn(ApiFutures.immediateFuture(1L));
     PartitionCountWatcher watcher = watcherFactory.newWatcher(mockConsumer);

@@ -78,7 +78,12 @@ public class PartitionCountWatcherImpl extends AbstractApiService implements Par
     if (currentPartitionCount.isPresent() && currentPartitionCount.get().equals(partitionCount)) {
       return;
     }
-    partitionCountReceiver.accept(partitionCount);
+    try {
+      partitionCountReceiver.accept(partitionCount);
+    } catch (Throwable t) {
+      notifyFailed(ExtractStatus.toCanonical(t));
+      stop();
+    }
     // Notify started after we successfully receive the config once.
     if (!currentPartitionCount.isPresent()) {
       notifyStarted();

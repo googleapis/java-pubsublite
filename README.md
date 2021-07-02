@@ -24,18 +24,8 @@ If you are using Maven, add this to your pom.xml file:
 </dependency>
 <dependency>
   <groupId>com.google.cloud</groupId>
-  <artifactId>pubsublite-beam-io</artifactId>
-  <version>0.16.0</version>
-</dependency>
-<dependency>
-  <groupId>com.google.cloud</groupId>
   <artifactId>google-cloud-pubsub</artifactId>
   <version>1.113.3</version>
-</dependency>
-<dependency>
-  <groupId>org.apache.beam</groupId>
-  <artifactId>beam-model-pipeline</artifactId>
-  <version>2.29.0</version>
 </dependency>
 
 ```

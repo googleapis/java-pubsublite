@@ -211,9 +211,9 @@ public class TopicName implements ResourceName {
     }
 
     private Builder(TopicName topicName) {
-      project = topicName.project;
-      location = topicName.location;
-      topic = topicName.topic;
+      this.project = topicName.project;
+      this.location = topicName.location;
+      this.topic = topicName.topic;
     }
 
     public TopicName build() {

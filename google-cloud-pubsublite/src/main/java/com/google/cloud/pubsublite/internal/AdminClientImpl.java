@@ -19,7 +19,7 @@ package com.google.cloud.pubsublite.internal;
 import com.google.api.core.ApiFuture;
 import com.google.api.core.ApiFutures;
 import com.google.cloud.pubsublite.AdminClient;
-import com.google.cloud.pubsublite.AdminClient.BacklogLocation;
+import com.google.cloud.pubsublite.BacklogLocation;
 import com.google.cloud.pubsublite.CloudRegion;
 import com.google.cloud.pubsublite.LocationPath;
 import com.google.cloud.pubsublite.ReservationPath;

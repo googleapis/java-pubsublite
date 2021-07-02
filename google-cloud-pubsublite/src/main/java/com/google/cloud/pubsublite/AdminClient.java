@@ -32,17 +32,6 @@ public interface AdminClient extends ApiBackgroundResource {
     return settings.instantiate();
   }
 
-  /**
-   * BacklogLoction refers to a location with respect to the message backlog.
-   *
-   * <p>BEGINNING refers to the location of the oldest retained message. END refers to the location
-   * past all currently published messages, skipping the entire message backlog.
-   */
-  public enum BacklogLocation {
-    BEGINNING,
-    END
-  }
-
   /** The Google Cloud region this client operates on. */
   CloudRegion region();
 

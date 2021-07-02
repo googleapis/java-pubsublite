@@ -31,10 +31,14 @@ import com.google.api.gax.core.InstantiatingExecutorProvider;
 import com.google.api.gax.grpc.GaxGrpcProperties;
 import com.google.api.gax.grpc.GrpcTransportChannel;
 import com.google.api.gax.grpc.InstantiatingGrpcChannelProvider;
+import com.google.api.gax.grpc.ProtoOperationTransformers;
+import com.google.api.gax.longrunning.OperationSnapshot;
+import com.google.api.gax.longrunning.OperationTimedPollAlgorithm;
 import com.google.api.gax.retrying.RetrySettings;
 import com.google.api.gax.rpc.ApiCallContext;
 import com.google.api.gax.rpc.ApiClientHeaderProvider;
 import com.google.api.gax.rpc.ClientContext;
+import com.google.api.gax.rpc.OperationCallSettings;
 import com.google.api.gax.rpc.PageContext;
 import com.google.api.gax.rpc.PagedCallSettings;
 import com.google.api.gax.rpc.PagedListDescriptor;
@@ -64,7 +68,10 @@ import com.google.cloud.pubsublite.proto.ListTopicSubscriptionsRequest;
 import com.google.cloud.pubsublite.proto.ListTopicSubscriptionsResponse;
 import com.google.cloud.pubsublite.proto.ListTopicsRequest;
 import com.google.cloud.pubsublite.proto.ListTopicsResponse;
+import com.google.cloud.pubsublite.proto.OperationMetadata;
 import com.google.cloud.pubsublite.proto.Reservation;
+import com.google.cloud.pubsublite.proto.SeekSubscriptionRequest;
+import com.google.cloud.pubsublite.proto.SeekSubscriptionResponse;
 import com.google.cloud.pubsublite.proto.Subscription;
 import com.google.cloud.pubsublite.proto.Topic;
 import com.google.cloud.pubsublite.proto.TopicPartitions;
@@ -75,6 +82,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
+import com.google.longrunning.Operation;
 import com.google.protobuf.Empty;
 import java.io.IOException;
 import java.util.List;
@@ -141,6 +149,10 @@ public class AdminServiceStubSettings extends StubSettings<AdminServiceStubSetti
   private final UnaryCallSettings<UpdateSubscriptionRequest, Subscription>
       updateSubscriptionSettings;
   private final UnaryCallSettings<DeleteSubscriptionRequest, Empty> deleteSubscriptionSettings;
+  private final UnaryCallSettings<SeekSubscriptionRequest, Operation> seekSubscriptionSettings;
+  private final OperationCallSettings<
+          SeekSubscriptionRequest, SeekSubscriptionResponse, OperationMetadata>
+      seekSubscriptionOperationSettings;
   private final UnaryCallSettings<CreateReservationRequest, Reservation> createReservationSettings;
   private final UnaryCallSettings<GetReservationRequest, Reservation> getReservationSettings;
   private final PagedCallSettings<
@@ -524,6 +536,17 @@ public class AdminServiceStubSettings extends StubSettings<AdminServiceStubSetti
     return deleteSubscriptionSettings;
   }
 
+  /** Returns the object with the settings used for calls to seekSubscription. */
+  public UnaryCallSettings<SeekSubscriptionRequest, Operation> seekSubscriptionSettings() {
+    return seekSubscriptionSettings;
+  }
+
+  /** Returns the object with the settings used for calls to seekSubscription. */
+  public OperationCallSettings<SeekSubscriptionRequest, SeekSubscriptionResponse, OperationMetadata>
+      seekSubscriptionOperationSettings() {
+    return seekSubscriptionOperationSettings;
+  }
+
   /** Returns the object with the settings used for calls to createReservation. */
   public UnaryCallSettings<CreateReservationRequest, Reservation> createReservationSettings() {
     return createReservationSettings;
@@ -646,6 +669,8 @@ public class AdminServiceStubSettings extends StubSettings<AdminServiceStubSetti
     listSubscriptionsSettings = settingsBuilder.listSubscriptionsSettings().build();
     updateSubscriptionSettings = settingsBuilder.updateSubscriptionSettings().build();
     deleteSubscriptionSettings = settingsBuilder.deleteSubscriptionSettings().build();
+    seekSubscriptionSettings = settingsBuilder.seekSubscriptionSettings().build();
+    seekSubscriptionOperationSettings = settingsBuilder.seekSubscriptionOperationSettings().build();
     createReservationSettings = settingsBuilder.createReservationSettings().build();
     getReservationSettings = settingsBuilder.getReservationSettings().build();
     listReservationsSettings = settingsBuilder.listReservationsSettings().build();
@@ -682,6 +707,11 @@ public class AdminServiceStubSettings extends StubSettings<AdminServiceStubSetti
         updateSubscriptionSettings;
     private final UnaryCallSettings.Builder<DeleteSubscriptionRequest, Empty>
         deleteSubscriptionSettings;
+    private final UnaryCallSettings.Builder<SeekSubscriptionRequest, Operation>
+        seekSubscriptionSettings;
+    private final OperationCallSettings.Builder<
+            SeekSubscriptionRequest, SeekSubscriptionResponse, OperationMetadata>
+        seekSubscriptionOperationSettings;
     private final UnaryCallSettings.Builder<CreateReservationRequest, Reservation>
         createReservationSettings;
     private final UnaryCallSettings.Builder<GetReservationRequest, Reservation>
@@ -755,6 +785,8 @@ public class AdminServiceStubSettings extends StubSettings<AdminServiceStubSetti
       listSubscriptionsSettings = PagedCallSettings.newBuilder(LIST_SUBSCRIPTIONS_PAGE_STR_FACT);
       updateSubscriptionSettings = UnaryCallSettings.newUnaryCallSettingsBuilder();
       deleteSubscriptionSettings = UnaryCallSettings.newUnaryCallSettingsBuilder();
+      seekSubscriptionSettings = UnaryCallSettings.newUnaryCallSettingsBuilder();
+      seekSubscriptionOperationSettings = OperationCallSettings.newBuilder();
       createReservationSettings = UnaryCallSettings.newUnaryCallSettingsBuilder();
       getReservationSettings = UnaryCallSettings.newUnaryCallSettingsBuilder();
       listReservationsSettings = PagedCallSettings.newBuilder(LIST_RESERVATIONS_PAGE_STR_FACT);
@@ -777,6 +809,7 @@ public class AdminServiceStubSettings extends StubSettings<AdminServiceStubSetti
               listSubscriptionsSettings,
               updateSubscriptionSettings,
               deleteSubscriptionSettings,
+              seekSubscriptionSettings,
               createReservationSettings,
               getReservationSettings,
               listReservationsSettings,
@@ -801,6 +834,8 @@ public class AdminServiceStubSettings extends StubSettings<AdminServiceStubSetti
       listSubscriptionsSettings = settings.listSubscriptionsSettings.toBuilder();
       updateSubscriptionSettings = settings.updateSubscriptionSettings.toBuilder();
       deleteSubscriptionSettings = settings.deleteSubscriptionSettings.toBuilder();
+      seekSubscriptionSettings = settings.seekSubscriptionSettings.toBuilder();
+      seekSubscriptionOperationSettings = settings.seekSubscriptionOperationSettings.toBuilder();
       createReservationSettings = settings.createReservationSettings.toBuilder();
       getReservationSettings = settings.getReservationSettings.toBuilder();
       listReservationsSettings = settings.listReservationsSettings.toBuilder();
@@ -822,6 +857,7 @@ public class AdminServiceStubSettings extends StubSettings<AdminServiceStubSetti
               listSubscriptionsSettings,
               updateSubscriptionSettings,
               deleteSubscriptionSettings,
+              seekSubscriptionSettings,
               createReservationSettings,
               getReservationSettings,
               listReservationsSettings,
@@ -905,6 +941,11 @@ public class AdminServiceStubSettings extends StubSettings<AdminServiceStubSetti
           .setRetrySettings(RETRY_PARAM_DEFINITIONS.get("retry_policy_0_params"));
 
       builder
+          .seekSubscriptionSettings()
+          .setRetryableCodes(RETRYABLE_CODE_DEFINITIONS.get("retry_policy_0_codes"))
+          .setRetrySettings(RETRY_PARAM_DEFINITIONS.get("retry_policy_0_params"));
+
+      builder
           .createReservationSettings()
           .setRetryableCodes(RETRYABLE_CODE_DEFINITIONS.get("retry_policy_0_codes"))
           .setRetrySettings(RETRY_PARAM_DEFINITIONS.get("retry_policy_0_params"));
@@ -933,6 +974,30 @@ public class AdminServiceStubSettings extends StubSettings<AdminServiceStubSetti
           .listReservationTopicsSettings()
           .setRetryableCodes(RETRYABLE_CODE_DEFINITIONS.get("retry_policy_0_codes"))
           .setRetrySettings(RETRY_PARAM_DEFINITIONS.get("retry_policy_0_params"));
+
+      builder
+          .seekSubscriptionOperationSettings()
+          .setInitialCallSettings(
+              UnaryCallSettings
+                  .<SeekSubscriptionRequest, OperationSnapshot>newUnaryCallSettingsBuilder()
+                  .setRetryableCodes(RETRYABLE_CODE_DEFINITIONS.get("retry_policy_0_codes"))
+                  .setRetrySettings(RETRY_PARAM_DEFINITIONS.get("retry_policy_0_params"))
+                  .build())
+          .setResponseTransformer(
+              ProtoOperationTransformers.ResponseTransformer.create(SeekSubscriptionResponse.class))
+          .setMetadataTransformer(
+              ProtoOperationTransformers.MetadataTransformer.create(OperationMetadata.class))
+          .setPollingAlgorithm(
+              OperationTimedPollAlgorithm.create(
+                  RetrySettings.newBuilder()
+                      .setInitialRetryDelay(Duration.ofMillis(5000L))
+                      .setRetryDelayMultiplier(1.5)
+                      .setMaxRetryDelay(Duration.ofMillis(45000L))
+                      .setInitialRpcTimeout(Duration.ZERO)
+                      .setRpcTimeoutMultiplier(1.0)
+                      .setMaxRpcTimeout(Duration.ZERO)
+                      .setTotalTimeout(Duration.ofMillis(300000L))
+                      .build()));
 
       return builder;
     }
@@ -1023,6 +1088,21 @@ public class AdminServiceStubSettings extends StubSettings<AdminServiceStubSetti
     public UnaryCallSettings.Builder<DeleteSubscriptionRequest, Empty>
         deleteSubscriptionSettings() {
       return deleteSubscriptionSettings;
+    }
+
+    /** Returns the builder for the settings used for calls to seekSubscription. */
+    public UnaryCallSettings.Builder<SeekSubscriptionRequest, Operation>
+        seekSubscriptionSettings() {
+      return seekSubscriptionSettings;
+    }
+
+    /** Returns the builder for the settings used for calls to seekSubscription. */
+    @BetaApi(
+        "The surface for use by generated code is not stable yet and may change in the future.")
+    public OperationCallSettings.Builder<
+            SeekSubscriptionRequest, SeekSubscriptionResponse, OperationMetadata>
+        seekSubscriptionOperationSettings() {
+      return seekSubscriptionOperationSettings;
     }
 
     /** Returns the builder for the settings used for calls to createReservation. */

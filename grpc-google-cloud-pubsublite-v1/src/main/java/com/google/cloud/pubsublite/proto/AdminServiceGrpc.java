@@ -584,6 +584,52 @@ public final class AdminServiceGrpc {
   }
 
   private static volatile io.grpc.MethodDescriptor<
+          com.google.cloud.pubsublite.proto.SeekSubscriptionRequest,
+          com.google.longrunning.Operation>
+      getSeekSubscriptionMethod;
+
+  @io.grpc.stub.annotations.RpcMethod(
+      fullMethodName = SERVICE_NAME + '/' + "SeekSubscription",
+      requestType = com.google.cloud.pubsublite.proto.SeekSubscriptionRequest.class,
+      responseType = com.google.longrunning.Operation.class,
+      methodType = io.grpc.MethodDescriptor.MethodType.UNARY)
+  public static io.grpc.MethodDescriptor<
+          com.google.cloud.pubsublite.proto.SeekSubscriptionRequest,
+          com.google.longrunning.Operation>
+      getSeekSubscriptionMethod() {
+    io.grpc.MethodDescriptor<
+            com.google.cloud.pubsublite.proto.SeekSubscriptionRequest,
+            com.google.longrunning.Operation>
+        getSeekSubscriptionMethod;
+    if ((getSeekSubscriptionMethod = AdminServiceGrpc.getSeekSubscriptionMethod) == null) {
+      synchronized (AdminServiceGrpc.class) {
+        if ((getSeekSubscriptionMethod = AdminServiceGrpc.getSeekSubscriptionMethod) == null) {
+          AdminServiceGrpc.getSeekSubscriptionMethod =
+              getSeekSubscriptionMethod =
+                  io.grpc.MethodDescriptor
+                      .<com.google.cloud.pubsublite.proto.SeekSubscriptionRequest,
+                          com.google.longrunning.Operation>
+                          newBuilder()
+                      .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
+                      .setFullMethodName(generateFullMethodName(SERVICE_NAME, "SeekSubscription"))
+                      .setSampledToLocalTracing(true)
+                      .setRequestMarshaller(
+                          io.grpc.protobuf.ProtoUtils.marshaller(
+                              com.google.cloud.pubsublite.proto.SeekSubscriptionRequest
+                                  .getDefaultInstance()))
+                      .setResponseMarshaller(
+                          io.grpc.protobuf.ProtoUtils.marshaller(
+                              com.google.longrunning.Operation.getDefaultInstance()))
+                      .setSchemaDescriptor(
+                          new AdminServiceMethodDescriptorSupplier("SeekSubscription"))
+                      .build();
+        }
+      }
+    }
+    return getSeekSubscriptionMethod;
+  }
+
+  private static volatile io.grpc.MethodDescriptor<
           com.google.cloud.pubsublite.proto.CreateReservationRequest,
           com.google.cloud.pubsublite.proto.Reservation>
       getCreateReservationMethod;
@@ -1090,6 +1136,37 @@ public final class AdminServiceGrpc {
      *
      *
      * <pre>
+     * Performs an out-of-band seek for a subscription to a specified target,
+     * which may be timestamps or named positions within the message backlog.
+     * Seek translates these targets to cursors for each partition and
+     * orchestrates subscribers to start consuming messages from these seek
+     * cursors.
+     * If an operation is returned, the seek has been registered and subscribers
+     * will eventually receive messages from the seek cursors (i.e. eventual
+     * consistency), as long as they are using a minimum supported client library
+     * version and not a system that tracks cursors independently of Pub/Sub Lite
+     * (e.g. Apache Beam, Dataflow, Spark). The seek operation will fail for
+     * unsupported clients.
+     * If clients would like to know when subscribers react to the seek (or not),
+     * they can poll the operation. The seek operation will succeed and complete
+     * once subscribers are ready to receive messages from the seek cursors for
+     * all partitions of the topic. This means that the seek operation will not
+     * complete until all subscribers come online.
+     * If the previous seek operation has not yet completed, it will be aborted
+     * and the new invocation of seek will supersede it.
+     * </pre>
+     */
+    public void seekSubscription(
+        com.google.cloud.pubsublite.proto.SeekSubscriptionRequest request,
+        io.grpc.stub.StreamObserver<com.google.longrunning.Operation> responseObserver) {
+      io.grpc.stub.ServerCalls.asyncUnimplementedUnaryCall(
+          getSeekSubscriptionMethod(), responseObserver);
+    }
+
+    /**
+     *
+     *
+     * <pre>
      * Creates a new reservation.
      * </pre>
      */
@@ -1257,6 +1334,12 @@ public final class AdminServiceGrpc {
                   new MethodHandlers<
                       com.google.cloud.pubsublite.proto.DeleteSubscriptionRequest,
                       com.google.protobuf.Empty>(this, METHODID_DELETE_SUBSCRIPTION)))
+          .addMethod(
+              getSeekSubscriptionMethod(),
+              io.grpc.stub.ServerCalls.asyncUnaryCall(
+                  new MethodHandlers<
+                      com.google.cloud.pubsublite.proto.SeekSubscriptionRequest,
+                      com.google.longrunning.Operation>(this, METHODID_SEEK_SUBSCRIPTION)))
           .addMethod(
               getCreateReservationMethod(),
               io.grpc.stub.ServerCalls.asyncUnaryCall(
@@ -1513,6 +1596,39 @@ public final class AdminServiceGrpc {
         io.grpc.stub.StreamObserver<com.google.protobuf.Empty> responseObserver) {
       io.grpc.stub.ClientCalls.asyncUnaryCall(
           getChannel().newCall(getDeleteSubscriptionMethod(), getCallOptions()),
+          request,
+          responseObserver);
+    }
+
+    /**
+     *
+     *
+     * <pre>
+     * Performs an out-of-band seek for a subscription to a specified target,
+     * which may be timestamps or named positions within the message backlog.
+     * Seek translates these targets to cursors for each partition and
+     * orchestrates subscribers to start consuming messages from these seek
+     * cursors.
+     * If an operation is returned, the seek has been registered and subscribers
+     * will eventually receive messages from the seek cursors (i.e. eventual
+     * consistency), as long as they are using a minimum supported client library
+     * version and not a system that tracks cursors independently of Pub/Sub Lite
+     * (e.g. Apache Beam, Dataflow, Spark). The seek operation will fail for
+     * unsupported clients.
+     * If clients would like to know when subscribers react to the seek (or not),
+     * they can poll the operation. The seek operation will succeed and complete
+     * once subscribers are ready to receive messages from the seek cursors for
+     * all partitions of the topic. This means that the seek operation will not
+     * complete until all subscribers come online.
+     * If the previous seek operation has not yet completed, it will be aborted
+     * and the new invocation of seek will supersede it.
+     * </pre>
+     */
+    public void seekSubscription(
+        com.google.cloud.pubsublite.proto.SeekSubscriptionRequest request,
+        io.grpc.stub.StreamObserver<com.google.longrunning.Operation> responseObserver) {
+      io.grpc.stub.ClientCalls.asyncUnaryCall(
+          getChannel().newCall(getSeekSubscriptionMethod(), getCallOptions()),
           request,
           responseObserver);
     }
@@ -1799,6 +1915,36 @@ public final class AdminServiceGrpc {
      *
      *
      * <pre>
+     * Performs an out-of-band seek for a subscription to a specified target,
+     * which may be timestamps or named positions within the message backlog.
+     * Seek translates these targets to cursors for each partition and
+     * orchestrates subscribers to start consuming messages from these seek
+     * cursors.
+     * If an operation is returned, the seek has been registered and subscribers
+     * will eventually receive messages from the seek cursors (i.e. eventual
+     * consistency), as long as they are using a minimum supported client library
+     * version and not a system that tracks cursors independently of Pub/Sub Lite
+     * (e.g. Apache Beam, Dataflow, Spark). The seek operation will fail for
+     * unsupported clients.
+     * If clients would like to know when subscribers react to the seek (or not),
+     * they can poll the operation. The seek operation will succeed and complete
+     * once subscribers are ready to receive messages from the seek cursors for
+     * all partitions of the topic. This means that the seek operation will not
+     * complete until all subscribers come online.
+     * If the previous seek operation has not yet completed, it will be aborted
+     * and the new invocation of seek will supersede it.
+     * </pre>
+     */
+    public com.google.longrunning.Operation seekSubscription(
+        com.google.cloud.pubsublite.proto.SeekSubscriptionRequest request) {
+      return io.grpc.stub.ClientCalls.blockingUnaryCall(
+          getChannel(), getSeekSubscriptionMethod(), getCallOptions(), request);
+    }
+
+    /**
+     *
+     *
+     * <pre>
      * Creates a new reservation.
      * </pre>
      */
@@ -2065,6 +2211,36 @@ public final class AdminServiceGrpc {
      *
      *
      * <pre>
+     * Performs an out-of-band seek for a subscription to a specified target,
+     * which may be timestamps or named positions within the message backlog.
+     * Seek translates these targets to cursors for each partition and
+     * orchestrates subscribers to start consuming messages from these seek
+     * cursors.
+     * If an operation is returned, the seek has been registered and subscribers
+     * will eventually receive messages from the seek cursors (i.e. eventual
+     * consistency), as long as they are using a minimum supported client library
+     * version and not a system that tracks cursors independently of Pub/Sub Lite
+     * (e.g. Apache Beam, Dataflow, Spark). The seek operation will fail for
+     * unsupported clients.
+     * If clients would like to know when subscribers react to the seek (or not),
+     * they can poll the operation. The seek operation will succeed and complete
+     * once subscribers are ready to receive messages from the seek cursors for
+     * all partitions of the topic. This means that the seek operation will not
+     * complete until all subscribers come online.
+     * If the previous seek operation has not yet completed, it will be aborted
+     * and the new invocation of seek will supersede it.
+     * </pre>
+     */
+    public com.google.common.util.concurrent.ListenableFuture<com.google.longrunning.Operation>
+        seekSubscription(com.google.cloud.pubsublite.proto.SeekSubscriptionRequest request) {
+      return io.grpc.stub.ClientCalls.futureUnaryCall(
+          getChannel().newCall(getSeekSubscriptionMethod(), getCallOptions()), request);
+    }
+
+    /**
+     *
+     *
+     * <pre>
      * Creates a new reservation.
      * </pre>
      */
@@ -2158,12 +2334,13 @@ public final class AdminServiceGrpc {
   private static final int METHODID_LIST_SUBSCRIPTIONS = 9;
   private static final int METHODID_UPDATE_SUBSCRIPTION = 10;
   private static final int METHODID_DELETE_SUBSCRIPTION = 11;
-  private static final int METHODID_CREATE_RESERVATION = 12;
-  private static final int METHODID_GET_RESERVATION = 13;
-  private static final int METHODID_LIST_RESERVATIONS = 14;
-  private static final int METHODID_UPDATE_RESERVATION = 15;
-  private static final int METHODID_DELETE_RESERVATION = 16;
-  private static final int METHODID_LIST_RESERVATION_TOPICS = 17;
+  private static final int METHODID_SEEK_SUBSCRIPTION = 12;
+  private static final int METHODID_CREATE_RESERVATION = 13;
+  private static final int METHODID_GET_RESERVATION = 14;
+  private static final int METHODID_LIST_RESERVATIONS = 15;
+  private static final int METHODID_UPDATE_RESERVATION = 16;
+  private static final int METHODID_DELETE_RESERVATION = 17;
+  private static final int METHODID_LIST_RESERVATION_TOPICS = 18;
 
   private static final class MethodHandlers<Req, Resp>
       implements io.grpc.stub.ServerCalls.UnaryMethod<Req, Resp>,
@@ -2253,6 +2430,11 @@ public final class AdminServiceGrpc {
           serviceImpl.deleteSubscription(
               (com.google.cloud.pubsublite.proto.DeleteSubscriptionRequest) request,
               (io.grpc.stub.StreamObserver<com.google.protobuf.Empty>) responseObserver);
+          break;
+        case METHODID_SEEK_SUBSCRIPTION:
+          serviceImpl.seekSubscription(
+              (com.google.cloud.pubsublite.proto.SeekSubscriptionRequest) request,
+              (io.grpc.stub.StreamObserver<com.google.longrunning.Operation>) responseObserver);
           break;
         case METHODID_CREATE_RESERVATION:
           serviceImpl.createReservation(
@@ -2367,6 +2549,7 @@ public final class AdminServiceGrpc {
                       .addMethod(getListSubscriptionsMethod())
                       .addMethod(getUpdateSubscriptionMethod())
                       .addMethod(getDeleteSubscriptionMethod())
+                      .addMethod(getSeekSubscriptionMethod())
                       .addMethod(getCreateReservationMethod())
                       .addMethod(getGetReservationMethod())
                       .addMethod(getListReservationsMethod())

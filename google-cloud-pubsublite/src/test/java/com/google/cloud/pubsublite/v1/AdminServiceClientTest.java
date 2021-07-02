@@ -29,6 +29,7 @@ import com.google.api.gax.grpc.testing.MockGrpcService;
 import com.google.api.gax.grpc.testing.MockServiceHelper;
 import com.google.api.gax.rpc.ApiClientHeaderProvider;
 import com.google.api.gax.rpc.InvalidArgumentException;
+import com.google.api.gax.rpc.StatusCode;
 import com.google.cloud.pubsublite.proto.CreateReservationRequest;
 import com.google.cloud.pubsublite.proto.CreateSubscriptionRequest;
 import com.google.cloud.pubsublite.proto.CreateTopicRequest;
@@ -52,6 +53,8 @@ import com.google.cloud.pubsublite.proto.ListTopicsResponse;
 import com.google.cloud.pubsublite.proto.LocationName;
 import com.google.cloud.pubsublite.proto.Reservation;
 import com.google.cloud.pubsublite.proto.ReservationName;
+import com.google.cloud.pubsublite.proto.SeekSubscriptionRequest;
+import com.google.cloud.pubsublite.proto.SeekSubscriptionResponse;
 import com.google.cloud.pubsublite.proto.Subscription;
 import com.google.cloud.pubsublite.proto.SubscriptionName;
 import com.google.cloud.pubsublite.proto.Topic;
@@ -61,7 +64,9 @@ import com.google.cloud.pubsublite.proto.UpdateReservationRequest;
 import com.google.cloud.pubsublite.proto.UpdateSubscriptionRequest;
 import com.google.cloud.pubsublite.proto.UpdateTopicRequest;
 import com.google.common.collect.Lists;
+import com.google.longrunning.Operation;
 import com.google.protobuf.AbstractMessage;
+import com.google.protobuf.Any;
 import com.google.protobuf.Empty;
 import com.google.protobuf.FieldMask;
 import io.grpc.StatusRuntimeException;
@@ -69,6 +74,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.ExecutionException;
 import javax.annotation.Generated;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -1021,6 +1027,57 @@ public class AdminServiceClientTest {
       Assert.fail("No exception raised");
     } catch (InvalidArgumentException e) {
       // Expected exception.
+    }
+  }
+
+  @Test
+  public void seekSubscriptionTest() throws Exception {
+    SeekSubscriptionResponse expectedResponse = SeekSubscriptionResponse.newBuilder().build();
+    Operation resultOperation =
+        Operation.newBuilder()
+            .setName("seekSubscriptionTest")
+            .setDone(true)
+            .setResponse(Any.pack(expectedResponse))
+            .build();
+    mockAdminService.addResponse(resultOperation);
+
+    SeekSubscriptionRequest request =
+        SeekSubscriptionRequest.newBuilder()
+            .setName(SubscriptionName.of("[PROJECT]", "[LOCATION]", "[SUBSCRIPTION]").toString())
+            .build();
+
+    SeekSubscriptionResponse actualResponse = client.seekSubscriptionAsync(request).get();
+    Assert.assertEquals(expectedResponse, actualResponse);
+
+    List<AbstractMessage> actualRequests = mockAdminService.getRequests();
+    Assert.assertEquals(1, actualRequests.size());
+    SeekSubscriptionRequest actualRequest = ((SeekSubscriptionRequest) actualRequests.get(0));
+
+    Assert.assertEquals(request.getName(), actualRequest.getName());
+    Assert.assertEquals(request.getNamedTarget(), actualRequest.getNamedTarget());
+    Assert.assertEquals(request.getTimeTarget(), actualRequest.getTimeTarget());
+    Assert.assertTrue(
+        channelProvider.isHeaderSent(
+            ApiClientHeaderProvider.getDefaultApiClientHeaderKey(),
+            GaxGrpcProperties.getDefaultApiClientHeaderPattern()));
+  }
+
+  @Test
+  public void seekSubscriptionExceptionTest() throws Exception {
+    StatusRuntimeException exception = new StatusRuntimeException(io.grpc.Status.INVALID_ARGUMENT);
+    mockAdminService.addException(exception);
+
+    try {
+      SeekSubscriptionRequest request =
+          SeekSubscriptionRequest.newBuilder()
+              .setName(SubscriptionName.of("[PROJECT]", "[LOCATION]", "[SUBSCRIPTION]").toString())
+              .build();
+      client.seekSubscriptionAsync(request).get();
+      Assert.fail("No exception raised");
+    } catch (ExecutionException e) {
+      Assert.assertEquals(InvalidArgumentException.class, e.getCause().getClass());
+      InvalidArgumentException apiException = ((InvalidArgumentException) e.getCause());
+      Assert.assertEquals(StatusCode.Code.INVALID_ARGUMENT, apiException.getStatusCode().getCode());
     }
   }
 

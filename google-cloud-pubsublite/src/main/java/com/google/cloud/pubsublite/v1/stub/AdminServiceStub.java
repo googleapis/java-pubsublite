@@ -23,6 +23,7 @@ import static com.google.cloud.pubsublite.v1.AdminServiceClient.ListTopicSubscri
 import static com.google.cloud.pubsublite.v1.AdminServiceClient.ListTopicsPagedResponse;
 
 import com.google.api.gax.core.BackgroundResource;
+import com.google.api.gax.rpc.OperationCallable;
 import com.google.api.gax.rpc.UnaryCallable;
 import com.google.cloud.pubsublite.proto.CreateReservationRequest;
 import com.google.cloud.pubsublite.proto.CreateSubscriptionRequest;
@@ -44,13 +45,18 @@ import com.google.cloud.pubsublite.proto.ListTopicSubscriptionsRequest;
 import com.google.cloud.pubsublite.proto.ListTopicSubscriptionsResponse;
 import com.google.cloud.pubsublite.proto.ListTopicsRequest;
 import com.google.cloud.pubsublite.proto.ListTopicsResponse;
+import com.google.cloud.pubsublite.proto.OperationMetadata;
 import com.google.cloud.pubsublite.proto.Reservation;
+import com.google.cloud.pubsublite.proto.SeekSubscriptionRequest;
+import com.google.cloud.pubsublite.proto.SeekSubscriptionResponse;
 import com.google.cloud.pubsublite.proto.Subscription;
 import com.google.cloud.pubsublite.proto.Topic;
 import com.google.cloud.pubsublite.proto.TopicPartitions;
 import com.google.cloud.pubsublite.proto.UpdateReservationRequest;
 import com.google.cloud.pubsublite.proto.UpdateSubscriptionRequest;
 import com.google.cloud.pubsublite.proto.UpdateTopicRequest;
+import com.google.longrunning.Operation;
+import com.google.longrunning.stub.OperationsStub;
 import com.google.protobuf.Empty;
 import javax.annotation.Generated;
 
@@ -62,6 +68,10 @@ import javax.annotation.Generated;
  */
 @Generated("by gapic-generator-java")
 public abstract class AdminServiceStub implements BackgroundResource {
+
+  public OperationsStub getOperationsStub() {
+    throw new UnsupportedOperationException("Not implemented: getOperationsStub()");
+  }
 
   public UnaryCallable<CreateTopicRequest, Topic> createTopicCallable() {
     throw new UnsupportedOperationException("Not implemented: createTopicCallable()");
@@ -126,6 +136,15 @@ public abstract class AdminServiceStub implements BackgroundResource {
 
   public UnaryCallable<DeleteSubscriptionRequest, Empty> deleteSubscriptionCallable() {
     throw new UnsupportedOperationException("Not implemented: deleteSubscriptionCallable()");
+  }
+
+  public OperationCallable<SeekSubscriptionRequest, SeekSubscriptionResponse, OperationMetadata>
+      seekSubscriptionOperationCallable() {
+    throw new UnsupportedOperationException("Not implemented: seekSubscriptionOperationCallable()");
+  }
+
+  public UnaryCallable<SeekSubscriptionRequest, Operation> seekSubscriptionCallable() {
+    throw new UnsupportedOperationException("Not implemented: seekSubscriptionCallable()");
   }
 
   public UnaryCallable<CreateReservationRequest, Reservation> createReservationCallable() {

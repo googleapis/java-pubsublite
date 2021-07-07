@@ -18,11 +18,13 @@ package com.google.cloud.pubsublite.internal;
 
 import com.google.api.core.ApiFuture;
 import com.google.api.core.ApiFutures;
+import com.google.api.gax.longrunning.OperationFuture;
 import com.google.cloud.pubsublite.AdminClient;
 import com.google.cloud.pubsublite.BacklogLocation;
 import com.google.cloud.pubsublite.CloudRegion;
 import com.google.cloud.pubsublite.LocationPath;
 import com.google.cloud.pubsublite.ReservationPath;
+import com.google.cloud.pubsublite.SeekTarget;
 import com.google.cloud.pubsublite.SubscriptionPath;
 import com.google.cloud.pubsublite.TopicPath;
 import com.google.cloud.pubsublite.proto.CreateReservationRequest;
@@ -43,7 +45,11 @@ import com.google.cloud.pubsublite.proto.ListSubscriptionsResponse;
 import com.google.cloud.pubsublite.proto.ListTopicSubscriptionsRequest;
 import com.google.cloud.pubsublite.proto.ListTopicsRequest;
 import com.google.cloud.pubsublite.proto.ListTopicsResponse;
+import com.google.cloud.pubsublite.proto.OperationMetadata;
 import com.google.cloud.pubsublite.proto.Reservation;
+import com.google.cloud.pubsublite.proto.SeekSubscriptionRequest;
+import com.google.cloud.pubsublite.proto.SeekSubscriptionRequest.NamedTarget;
+import com.google.cloud.pubsublite.proto.SeekSubscriptionResponse;
 import com.google.cloud.pubsublite.proto.Subscription;
 import com.google.cloud.pubsublite.proto.Topic;
 import com.google.cloud.pubsublite.proto.TopicPartitions;
@@ -186,6 +192,29 @@ public class AdminClientImpl extends ApiResourceAggregation implements AdminClie
                 .setSubscription(subscription)
                 .setUpdateMask(mask)
                 .build());
+  }
+
+  @Override
+  public OperationFuture<SeekSubscriptionResponse, OperationMetadata> seekSubscription(
+      SubscriptionPath path, SeekTarget target) {
+    SeekSubscriptionRequest.Builder request =
+        SeekSubscriptionRequest.newBuilder().setName(path.toString());
+    switch (target.getKind()) {
+      case BACKLOG_LOCATION:
+        if (target.backlogLocation() == BacklogLocation.END) {
+          request.setNamedTarget(NamedTarget.HEAD);
+        } else if (target.backlogLocation() == BacklogLocation.BEGINNING) {
+          request.setNamedTarget(NamedTarget.TAIL);
+        }
+        break;
+      case PUBLISH_TIME:
+        request.getTimeTargetBuilder().setPublishTime(target.publishTime());
+        break;
+      case EVENT_TIME:
+        request.getTimeTargetBuilder().setEventTime(target.eventTime());
+        break;
+    }
+    return serviceClient.seekSubscriptionOperationCallable().futureCall(request.build());
   }
 
   @Override

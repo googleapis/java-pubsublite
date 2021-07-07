@@ -58,8 +58,8 @@ import org.junit.Test;
 public class CursorServiceClientTest {
   private static MockCursorService mockCursorService;
   private static MockServiceHelper mockServiceHelper;
-  private CursorServiceClient client;
   private LocalChannelProvider channelProvider;
+  private CursorServiceClient client;
 
   @BeforeClass
   public static void startStaticServer() {

@@ -46,8 +46,8 @@ import org.junit.Test;
 public class PartitionAssignmentServiceClientTest {
   private static MockPartitionAssignmentService mockPartitionAssignmentService;
   private static MockServiceHelper mockServiceHelper;
-  private PartitionAssignmentServiceClient client;
   private LocalChannelProvider channelProvider;
+  private PartitionAssignmentServiceClient client;
 
   @BeforeClass
   public static void startStaticServer() {

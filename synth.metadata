@@ -4,15 +4,15 @@
       "git": {
         "name": ".",
         "remote": "https://github.com/googleapis/java-pubsublite.git",
-        "sha": "14fb550b9a5ba0d93745323048c34b306198912b"
+        "sha": "ba3d576d273a5917fd3e6a425b06c1bd788a3dfa"
       }
     },
     {
       "git": {
         "name": "googleapis",
         "remote": "https://github.com/googleapis/googleapis.git",
-        "sha": "a5f96d06ef57e325761bad010f460d0c5dbeccda",
-        "internalRef": "377081269"
+        "sha": "b601f026f724bbbd25f99273a3fd5e3c3cb8523c",
+        "internalRef": "380660182"
       }
     },
     {
@@ -254,6 +254,8 @@
     "proto-google-cloud-pubsublite-v1/src/main/java/com/google/cloud/pubsublite/proto/MessagePublishResponseOrBuilder.java",
     "proto-google-cloud-pubsublite-v1/src/main/java/com/google/cloud/pubsublite/proto/MessageResponse.java",
     "proto-google-cloud-pubsublite-v1/src/main/java/com/google/cloud/pubsublite/proto/MessageResponseOrBuilder.java",
+    "proto-google-cloud-pubsublite-v1/src/main/java/com/google/cloud/pubsublite/proto/OperationMetadata.java",
+    "proto-google-cloud-pubsublite-v1/src/main/java/com/google/cloud/pubsublite/proto/OperationMetadataOrBuilder.java",
     "proto-google-cloud-pubsublite-v1/src/main/java/com/google/cloud/pubsublite/proto/PartitionAssignment.java",
     "proto-google-cloud-pubsublite-v1/src/main/java/com/google/cloud/pubsublite/proto/PartitionAssignmentAck.java",
     "proto-google-cloud-pubsublite-v1/src/main/java/com/google/cloud/pubsublite/proto/PartitionAssignmentAckOrBuilder.java",
@@ -276,6 +278,10 @@
     "proto-google-cloud-pubsublite-v1/src/main/java/com/google/cloud/pubsublite/proto/SeekRequestOrBuilder.java",
     "proto-google-cloud-pubsublite-v1/src/main/java/com/google/cloud/pubsublite/proto/SeekResponse.java",
     "proto-google-cloud-pubsublite-v1/src/main/java/com/google/cloud/pubsublite/proto/SeekResponseOrBuilder.java",
+    "proto-google-cloud-pubsublite-v1/src/main/java/com/google/cloud/pubsublite/proto/SeekSubscriptionRequest.java",
+    "proto-google-cloud-pubsublite-v1/src/main/java/com/google/cloud/pubsublite/proto/SeekSubscriptionRequestOrBuilder.java",
+    "proto-google-cloud-pubsublite-v1/src/main/java/com/google/cloud/pubsublite/proto/SeekSubscriptionResponse.java",
+    "proto-google-cloud-pubsublite-v1/src/main/java/com/google/cloud/pubsublite/proto/SeekSubscriptionResponseOrBuilder.java",
     "proto-google-cloud-pubsublite-v1/src/main/java/com/google/cloud/pubsublite/proto/SequencedCommitCursorRequest.java",
     "proto-google-cloud-pubsublite-v1/src/main/java/com/google/cloud/pubsublite/proto/SequencedCommitCursorRequestOrBuilder.java",
     "proto-google-cloud-pubsublite-v1/src/main/java/com/google/cloud/pubsublite/proto/SequencedCommitCursorResponse.java",

@@ -30,6 +30,7 @@ import com.google.api.gax.grpc.InstantiatingGrpcChannelProvider;
 import com.google.api.gax.rpc.ApiClientHeaderProvider;
 import com.google.api.gax.rpc.ClientContext;
 import com.google.api.gax.rpc.ClientSettings;
+import com.google.api.gax.rpc.OperationCallSettings;
 import com.google.api.gax.rpc.PagedCallSettings;
 import com.google.api.gax.rpc.TransportChannelProvider;
 import com.google.api.gax.rpc.UnaryCallSettings;
@@ -53,7 +54,10 @@ import com.google.cloud.pubsublite.proto.ListTopicSubscriptionsRequest;
 import com.google.cloud.pubsublite.proto.ListTopicSubscriptionsResponse;
 import com.google.cloud.pubsublite.proto.ListTopicsRequest;
 import com.google.cloud.pubsublite.proto.ListTopicsResponse;
+import com.google.cloud.pubsublite.proto.OperationMetadata;
 import com.google.cloud.pubsublite.proto.Reservation;
+import com.google.cloud.pubsublite.proto.SeekSubscriptionRequest;
+import com.google.cloud.pubsublite.proto.SeekSubscriptionResponse;
 import com.google.cloud.pubsublite.proto.Subscription;
 import com.google.cloud.pubsublite.proto.Topic;
 import com.google.cloud.pubsublite.proto.TopicPartitions;
@@ -61,6 +65,7 @@ import com.google.cloud.pubsublite.proto.UpdateReservationRequest;
 import com.google.cloud.pubsublite.proto.UpdateSubscriptionRequest;
 import com.google.cloud.pubsublite.proto.UpdateTopicRequest;
 import com.google.cloud.pubsublite.v1.stub.AdminServiceStubSettings;
+import com.google.longrunning.Operation;
 import com.google.protobuf.Empty;
 import java.io.IOException;
 import java.util.List;
@@ -166,6 +171,17 @@ public class AdminServiceSettings extends ClientSettings<AdminServiceSettings> {
   /** Returns the object with the settings used for calls to deleteSubscription. */
   public UnaryCallSettings<DeleteSubscriptionRequest, Empty> deleteSubscriptionSettings() {
     return ((AdminServiceStubSettings) getStubSettings()).deleteSubscriptionSettings();
+  }
+
+  /** Returns the object with the settings used for calls to seekSubscription. */
+  public UnaryCallSettings<SeekSubscriptionRequest, Operation> seekSubscriptionSettings() {
+    return ((AdminServiceStubSettings) getStubSettings()).seekSubscriptionSettings();
+  }
+
+  /** Returns the object with the settings used for calls to seekSubscription. */
+  public OperationCallSettings<SeekSubscriptionRequest, SeekSubscriptionResponse, OperationMetadata>
+      seekSubscriptionOperationSettings() {
+    return ((AdminServiceStubSettings) getStubSettings()).seekSubscriptionOperationSettings();
   }
 
   /** Returns the object with the settings used for calls to createReservation. */
@@ -372,6 +388,19 @@ public class AdminServiceSettings extends ClientSettings<AdminServiceSettings> {
     public UnaryCallSettings.Builder<DeleteSubscriptionRequest, Empty>
         deleteSubscriptionSettings() {
       return getStubSettingsBuilder().deleteSubscriptionSettings();
+    }
+
+    /** Returns the builder for the settings used for calls to seekSubscription. */
+    public UnaryCallSettings.Builder<SeekSubscriptionRequest, Operation>
+        seekSubscriptionSettings() {
+      return getStubSettingsBuilder().seekSubscriptionSettings();
+    }
+
+    /** Returns the builder for the settings used for calls to seekSubscription. */
+    public OperationCallSettings.Builder<
+            SeekSubscriptionRequest, SeekSubscriptionResponse, OperationMetadata>
+        seekSubscriptionOperationSettings() {
+      return getStubSettingsBuilder().seekSubscriptionOperationSettings();
     }
 
     /** Returns the builder for the settings used for calls to createReservation. */

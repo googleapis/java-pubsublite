@@ -45,8 +45,8 @@ import org.junit.Test;
 public class PublisherServiceClientTest {
   private static MockPublisherService mockPublisherService;
   private static MockServiceHelper mockServiceHelper;
-  private PublisherServiceClient client;
   private LocalChannelProvider channelProvider;
+  private PublisherServiceClient client;
 
   @BeforeClass
   public static void startStaticServer() {

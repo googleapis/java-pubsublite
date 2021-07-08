@@ -41,6 +41,7 @@ import com.google.cloud.pubsublite.proto.PublishResponse;
 import com.google.cloud.pubsublite.v1.PublisherServiceClient;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Preconditions;
+import com.google.common.flogger.GoogleLogger;
 import com.google.common.util.concurrent.Monitor;
 import java.util.ArrayDeque;
 import java.util.Collection;
@@ -54,6 +55,8 @@ import javax.annotation.concurrent.GuardedBy;
 
 public final class PublisherImpl extends ProxyService
     implements Publisher<Offset>, RetryingConnectionObserver<Offset> {
+  private static final GoogleLogger logger = GoogleLogger.forEnclosingClass();
+
   private final BatchingSettings batchingSettings;
   private final PublishRequest initialRequest;
   private Future<?> alarmFuture;
@@ -135,6 +138,7 @@ public final class PublisherImpl extends ProxyService
         messages.add(UnbatchedMessage.of(batch.messages.get(i), batch.messageFutures.get(i)));
       }
     }
+    logger.atFiner().log("Re-publishing %s messages after reconnection", messages.size());
     long size = 0;
     int count = 0;
     Queue<UnbatchedMessage> currentBatch = new ArrayDeque<>();

@@ -28,12 +28,15 @@ import com.google.cloud.pubsublite.proto.PartitionAssignment;
 import com.google.cloud.pubsublite.proto.PartitionAssignmentRequest;
 import com.google.cloud.pubsublite.v1.PartitionAssignmentServiceClient;
 import com.google.common.annotations.VisibleForTesting;
+import com.google.common.flogger.GoogleLogger;
 import com.google.errorprone.annotations.concurrent.GuardedBy;
 import java.util.HashSet;
 import java.util.Set;
 
 public class AssignerImpl extends TrivialProxyService
     implements Assigner, RetryingConnectionObserver<PartitionAssignment> {
+  private static final GoogleLogger logger = GoogleLogger.forEnclosingClass();
+
   private final PartitionAssignmentRequest initialRequest;
 
   private final CloseableMonitor monitor = new CloseableMonitor();
@@ -90,7 +93,9 @@ public class AssignerImpl extends TrivialProxyService
   @Override
   public void onClientResponse(PartitionAssignment value) throws CheckedApiException {
     try (CloseableMonitor.Hold h = monitor.enter()) {
-      receiver.handleAssignment(toSet(value));
+      Set<Partition> partitions = toSet(value);
+      receiver.handleAssignment(partitions);
+      logger.atInfo().log("Subscribed to partitions: %s", partitions);
       connection.modifyConnection(connectionOr -> connectionOr.ifPresent(ConnectedAssigner::ack));
     }
   }

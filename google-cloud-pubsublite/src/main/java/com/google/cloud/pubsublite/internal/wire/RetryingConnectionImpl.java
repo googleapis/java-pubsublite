@@ -102,7 +102,9 @@ class RetryingConnectionImpl<
     try (CloseableMonitor.Hold h = connectionMonitor.enter()) {
       if (completed) return;
       lastInitialRequest = initialRequest;
+      logger.atFiner().log("Start initializing connection for %s", streamDescription());
       currentConnection = connectionFactory.New(streamFactory, this, lastInitialRequest);
+      logger.atFiner().log("Initialized connection for %s", streamDescription());
     }
   }
 
@@ -111,18 +113,15 @@ class RetryingConnectionImpl<
     try (CloseableMonitor.Hold h = connectionMonitor.enter()) {
       if (completed) return;
       completed = true;
-      logger.atFine().log(
-          String.format("Terminating connection with initial request %s.", streamDescription()));
+      logger.atFine().log("Terminating connection for %s", streamDescription());
       currentConnection.close();
     } catch (Throwable t) {
       logger.atWarning().withCause(t).log(
-          String.format(
-              "Failed while terminating connection with initial request %s.", streamDescription()));
+          "Failed while terminating connection for %s", streamDescription());
       notifyFailed(t);
       return;
     }
-    logger.atFine().log(
-        String.format("Terminated connection with initial request %s.", streamDescription()));
+    logger.atFine().log("Terminated connection for %s", streamDescription());
     notifyStopped();
   }
 
@@ -196,7 +195,8 @@ class RetryingConnectionImpl<
       return;
     }
     logger.atFine().withCause(t).log(
-        "Stream disconnected attempting retry, after %s milliseconds", backoffTime);
+        "Stream disconnected attempting retry, after %s milliseconds for %s",
+        backoffTime, streamDescription());
     ScheduledFuture<?> retry =
         SystemExecutors.getAlarmExecutor()
             .schedule(
@@ -214,7 +214,7 @@ class RetryingConnectionImpl<
 
   @Override
   public final void onComplete() {
-    logger.atFine().log("Stream completed for %s.", streamDescription());
+    logger.atFine().log("Stream completed for %s", streamDescription());
     boolean expectedCompletion;
     try (CloseableMonitor.Hold h = connectionMonitor.enter()) {
       expectedCompletion = completed;
@@ -227,7 +227,7 @@ class RetryingConnectionImpl<
 
   private String streamDescription() {
     try (CloseableMonitor.Hold h = connectionMonitor.enter()) {
-      return lastInitialRequest.toString();
+      return lastInitialRequest.getClass().getSimpleName() + ": " + lastInitialRequest.toString();
     }
   }
 }

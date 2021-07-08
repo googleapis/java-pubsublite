@@ -27,15 +27,12 @@ import com.google.cloud.pubsublite.proto.MessageResponse;
 import com.google.cloud.pubsublite.proto.SubscribeRequest;
 import com.google.cloud.pubsublite.proto.SubscribeResponse;
 import com.google.common.base.Preconditions;
-import com.google.common.flogger.GoogleLogger;
 import java.util.List;
 import java.util.stream.Collectors;
 
 class ConnectedSubscriberImpl
     extends SingleConnection<SubscribeRequest, SubscribeResponse, List<SequencedMessage>>
     implements ConnectedSubscriber {
-
-  private static final GoogleLogger log = GoogleLogger.forEnclosingClass();
 
   private final SubscribeRequest initialRequest;
 

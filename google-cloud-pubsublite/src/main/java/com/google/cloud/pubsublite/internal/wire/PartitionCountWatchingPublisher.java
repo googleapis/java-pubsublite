@@ -193,7 +193,6 @@ public class PartitionCountWatchingPublisher extends ProxyService
       current.ifPresent(p -> p.publishers.forEach(mapBuilder::put));
       getNewPartitionPublishers(LongStream.range(currentSize, partitionCount))
           .forEach(mapBuilder::put);
-      ImmutableMap<Partition, Publisher<MessageMetadata>> newMap = mapBuilder.build();
 
       partitionsWithRouting =
           Optional.of(

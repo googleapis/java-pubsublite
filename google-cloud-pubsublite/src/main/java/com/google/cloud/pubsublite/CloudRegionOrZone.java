@@ -22,7 +22,7 @@ import java.io.Serializable;
 
 @AutoOneOf(CloudRegionOrZone.Kind.class)
 public abstract class CloudRegionOrZone implements Serializable {
-  enum Kind {
+  public enum Kind {
     REGION,
     ZONE
   }

@@ -201,10 +201,13 @@ public class AdminClientImpl extends ApiResourceAggregation implements AdminClie
         SeekSubscriptionRequest.newBuilder().setName(path.toString());
     switch (target.getKind()) {
       case BACKLOG_LOCATION:
-        if (target.backlogLocation() == BacklogLocation.END) {
-          request.setNamedTarget(NamedTarget.HEAD);
-        } else if (target.backlogLocation() == BacklogLocation.BEGINNING) {
-          request.setNamedTarget(NamedTarget.TAIL);
+        switch (target.backlogLocation()) {
+          case END:
+            request.setNamedTarget(NamedTarget.HEAD);
+            break;
+          case BEGINNING:
+            request.setNamedTarget(NamedTarget.TAIL);
+            break;
         }
         break;
       case PUBLISH_TIME:

@@ -27,6 +27,7 @@ import com.google.api.gax.paging.AbstractPagedListResponse;
 import com.google.api.gax.rpc.BidiStreamingCallable;
 import com.google.api.gax.rpc.PageContext;
 import com.google.api.gax.rpc.UnaryCallable;
+import com.google.cloud.pubsublite.internal.wire.SystemExecutors;
 import com.google.cloud.pubsublite.proto.CommitCursorRequest;
 import com.google.cloud.pubsublite.proto.CommitCursorResponse;
 import com.google.cloud.pubsublite.proto.ListPartitionCursorsRequest;
@@ -37,7 +38,6 @@ import com.google.cloud.pubsublite.proto.StreamingCommitCursorResponse;
 import com.google.cloud.pubsublite.proto.SubscriptionName;
 import com.google.cloud.pubsublite.v1.stub.CursorServiceStub;
 import com.google.cloud.pubsublite.v1.stub.CursorServiceStubSettings;
-import com.google.common.util.concurrent.MoreExecutors;
 import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -437,7 +437,7 @@ public class CursorServiceClient implements BackgroundResource {
               return new ListPartitionCursorsPagedResponse(input);
             }
           },
-          MoreExecutors.directExecutor());
+          SystemExecutors.getFuturesExecutor());
     }
 
     private ListPartitionCursorsPagedResponse(ListPartitionCursorsPage page) {

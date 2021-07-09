@@ -18,6 +18,7 @@ package com.google.cloud.pubsublite.internal.wire;
 
 import static com.google.cloud.pubsublite.internal.CheckedApiPreconditions.checkState;
 import static com.google.cloud.pubsublite.internal.ExtractStatus.toCanonical;
+import static com.google.cloud.pubsublite.internal.wire.ApiServiceUtils.blockingShutdown;
 
 import com.google.api.core.ApiFuture;
 import com.google.api.core.ApiFutures;
@@ -32,7 +33,6 @@ import com.google.cloud.pubsublite.internal.Publisher;
 import com.google.cloud.pubsublite.internal.RoutingPolicy;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.flogger.GoogleLogger;
-import com.google.common.util.concurrent.MoreExecutors;
 import com.google.errorprone.annotations.concurrent.GuardedBy;
 import java.io.IOException;
 import java.util.Optional;
@@ -85,8 +85,7 @@ public class PartitionCountWatchingPublisher extends ProxyService
     }
 
     public void stop() {
-      publishers.values().forEach(ApiService::stopAsync);
-      publishers.values().forEach(ApiService::awaitTerminated);
+      blockingShutdown(publishers.values());
     }
   }
 
@@ -163,7 +162,7 @@ public class PartitionCountWatchingPublisher extends ProxyService
                   onPermanentError(toCanonical(failure));
                 }
               },
-              MoreExecutors.directExecutor());
+              SystemExecutors.getFuturesExecutor());
           mapBuilder.put(Partition.of(i), p);
           p.startAsync();
         });

@@ -15,6 +15,7 @@
  */
 package com.google.cloud.pubsublite.internal.wire;
 
+import static com.google.cloud.pubsublite.internal.testing.RetryingConnectionHelpers.whenTerminated;
 import static com.google.cloud.pubsublite.internal.testing.UnitTestExamples.example;
 import static org.junit.Assert.assertThrows;
 import static org.mockito.Mockito.*;
@@ -148,8 +149,10 @@ public class PartitionCountWatchingPublisherTest {
 
   @Test
   public void testChildPublisherFailure() throws Exception {
+    Future<Void> publisherTerminated = whenTerminated(publisher);
     publisher0.fail(new CheckedApiException(StatusCode.Code.FAILED_PRECONDITION));
 
+    publisherTerminated.get();
     ApiExceptionMatcher.assertThrowableMatches(
         publisher.failureCause(), StatusCode.Code.FAILED_PRECONDITION);
     assertThrows(IllegalStateException.class, publisher::flush);

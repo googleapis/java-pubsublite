@@ -88,7 +88,7 @@ class RetryingConnectionImpl<
     try (CloseableMonitor.Hold h = connectionMonitor.enter()) {
       initialInitialRequest = lastInitialRequest;
     }
-    SystemExecutors.getAlarmExecutor()
+    SystemExecutors.getFuturesExecutor()
         .execute(
             () -> {
               reinitialize(initialInitialRequest);
@@ -198,7 +198,7 @@ class RetryingConnectionImpl<
         "Stream disconnected attempting retry, after %s milliseconds for %s",
         backoffTime, streamDescription());
     ScheduledFuture<?> retry =
-        SystemExecutors.getAlarmExecutor()
+        SystemExecutors.getFuturesExecutor()
             .schedule(
                 () -> {
                   try {

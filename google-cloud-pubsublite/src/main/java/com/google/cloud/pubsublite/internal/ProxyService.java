@@ -23,8 +23,8 @@ import static com.google.cloud.pubsublite.internal.UncheckedApiPreconditions.che
 import com.google.api.core.AbstractApiService;
 import com.google.api.core.ApiService;
 import com.google.api.gax.rpc.ApiException;
+import com.google.cloud.pubsublite.internal.wire.SystemExecutors;
 import com.google.common.collect.ImmutableList;
-import com.google.common.util.concurrent.MoreExecutors;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -101,7 +101,7 @@ public abstract class ProxyService extends AbstractApiService {
           }
         };
     for (ApiService service : services) {
-      service.addListener(listener, MoreExecutors.directExecutor());
+      service.addListener(listener, SystemExecutors.getFuturesExecutor());
       service.startAsync();
     }
   }
@@ -110,15 +110,20 @@ public abstract class ProxyService extends AbstractApiService {
   protected final void doStop() {
     Listener listener =
         new Listener() {
-          private final AtomicInteger leftToStart = new AtomicInteger(services.size());
+          private final AtomicInteger leftToStop = new AtomicInteger(services.size());
 
           @Override
           public void terminated(State state) {
-            if (leftToStart.decrementAndGet() == 0) {
+            if (leftToStop.decrementAndGet() == 0) {
               if (!stoppedOrFailed.getAndSet(true)) {
                 notifyStopped();
               }
             }
+          }
+
+          @Override
+          public void failed(State state, Throwable throwable) {
+            onPermanentError(toCanonical(throwable));
           }
         };
     try {
@@ -128,7 +133,7 @@ public abstract class ProxyService extends AbstractApiService {
       return;
     }
     for (ApiService service : services) {
-      service.addListener(listener, MoreExecutors.directExecutor());
+      service.addListener(listener, SystemExecutors.getFuturesExecutor());
       service.stopAsync();
     }
   }

@@ -16,6 +16,8 @@
 
 package com.google.cloud.pubsublite.beam;
 
+import static com.google.cloud.pubsublite.internal.wire.ApiServiceUtils.blockingShutdown;
+
 import com.google.cloud.pubsublite.Offset;
 import com.google.cloud.pubsublite.internal.ExtractStatus;
 import com.google.cloud.pubsublite.internal.wire.Committer;
@@ -92,7 +94,7 @@ class PerSubscriptionPartitionSdf extends DoFn<SubscriptionPartition, SequencedM
                 } catch (Exception e) {
                   throw ExtractStatus.toCanonical(e).underlying;
                 }
-                committer.stopAsync().awaitTerminated();
+                blockingShutdown(committer);
               });
       return result;
     }

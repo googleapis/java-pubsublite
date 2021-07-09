@@ -27,6 +27,7 @@ import com.google.cloud.pubsublite.ReservationPath;
 import com.google.cloud.pubsublite.SeekTarget;
 import com.google.cloud.pubsublite.SubscriptionPath;
 import com.google.cloud.pubsublite.TopicPath;
+import com.google.cloud.pubsublite.internal.wire.SystemExecutors;
 import com.google.cloud.pubsublite.proto.CreateReservationRequest;
 import com.google.cloud.pubsublite.proto.CreateSubscriptionRequest;
 import com.google.cloud.pubsublite.proto.CreateTopicRequest;
@@ -58,7 +59,6 @@ import com.google.cloud.pubsublite.proto.UpdateSubscriptionRequest;
 import com.google.cloud.pubsublite.proto.UpdateTopicRequest;
 import com.google.cloud.pubsublite.v1.AdminServiceClient;
 import com.google.common.collect.ImmutableList;
-import com.google.common.util.concurrent.MoreExecutors;
 import com.google.protobuf.FieldMask;
 import java.util.List;
 
@@ -104,7 +104,7 @@ public class AdminClientImpl extends ApiResourceAggregation implements AdminClie
             .getTopicPartitionsCallable()
             .futureCall(GetTopicPartitionsRequest.newBuilder().setName(path.toString()).build()),
         TopicPartitions::getPartitionCount,
-        MoreExecutors.directExecutor());
+        SystemExecutors.getFuturesExecutor());
   }
 
   @Override
@@ -114,7 +114,7 @@ public class AdminClientImpl extends ApiResourceAggregation implements AdminClie
             .listTopicsCallable()
             .futureCall(ListTopicsRequest.newBuilder().setParent(path.toString()).build()),
         ListTopicsResponse::getTopicsList,
-        MoreExecutors.directExecutor());
+        SystemExecutors.getFuturesExecutor());
   }
 
   @Override
@@ -131,7 +131,7 @@ public class AdminClientImpl extends ApiResourceAggregation implements AdminClie
             .deleteTopicCallable()
             .futureCall(DeleteTopicRequest.newBuilder().setName(path.toString()).build()),
         x -> null,
-        MoreExecutors.directExecutor());
+        SystemExecutors.getFuturesExecutor());
   }
 
   @Override
@@ -148,7 +148,7 @@ public class AdminClientImpl extends ApiResourceAggregation implements AdminClie
           }
           return builder.build();
         },
-        MoreExecutors.directExecutor());
+        SystemExecutors.getFuturesExecutor());
   }
 
   @Override
@@ -180,7 +180,7 @@ public class AdminClientImpl extends ApiResourceAggregation implements AdminClie
             .listSubscriptionsCallable()
             .futureCall(ListSubscriptionsRequest.newBuilder().setParent(path.toString()).build()),
         ListSubscriptionsResponse::getSubscriptionsList,
-        MoreExecutors.directExecutor());
+        SystemExecutors.getFuturesExecutor());
   }
 
   @Override
@@ -227,7 +227,7 @@ public class AdminClientImpl extends ApiResourceAggregation implements AdminClie
             .deleteSubscriptionCallable()
             .futureCall(DeleteSubscriptionRequest.newBuilder().setName(path.toString()).build()),
         x -> null,
-        MoreExecutors.directExecutor());
+        SystemExecutors.getFuturesExecutor());
   }
 
   @Override
@@ -257,7 +257,7 @@ public class AdminClientImpl extends ApiResourceAggregation implements AdminClie
             .listReservationsCallable()
             .futureCall(ListReservationsRequest.newBuilder().setParent(path.toString()).build()),
         ListReservationsResponse::getReservationsList,
-        MoreExecutors.directExecutor());
+        SystemExecutors.getFuturesExecutor());
   }
 
   @Override
@@ -278,7 +278,7 @@ public class AdminClientImpl extends ApiResourceAggregation implements AdminClie
             .deleteReservationCallable()
             .futureCall(DeleteReservationRequest.newBuilder().setName(path.toString()).build()),
         x -> null,
-        MoreExecutors.directExecutor());
+        SystemExecutors.getFuturesExecutor());
   }
 
   @Override
@@ -294,6 +294,6 @@ public class AdminClientImpl extends ApiResourceAggregation implements AdminClie
           }
           return builder.build();
         },
-        MoreExecutors.directExecutor());
+        SystemExecutors.getFuturesExecutor());
   }
 }

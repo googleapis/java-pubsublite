@@ -102,8 +102,8 @@ public class ConnectedSubscriberImplTest {
         .then(
             args -> {
               Preconditions.checkArgument(!leakedResponseStream.isPresent());
-              ResponseObserver<SubscribeResponse> ResponseObserver = args.getArgument(0);
-              leakedResponseStream = Optional.of(ResponseObserver);
+              ResponseObserver<SubscribeResponse> responseObserver = args.getArgument(0);
+              leakedResponseStream = Optional.of(responseObserver);
               return mockRequestStream;
             });
   }

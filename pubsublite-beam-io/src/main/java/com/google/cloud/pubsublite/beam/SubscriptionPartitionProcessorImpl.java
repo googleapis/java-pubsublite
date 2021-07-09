@@ -16,6 +16,8 @@
 
 package com.google.cloud.pubsublite.beam;
 
+import static com.google.cloud.pubsublite.internal.wire.ApiServiceUtils.blockingShutdown;
+
 import com.google.api.core.ApiService.Listener;
 import com.google.api.core.ApiService.State;
 import com.google.cloud.pubsublite.Offset;
@@ -23,10 +25,10 @@ import com.google.cloud.pubsublite.cloudpubsub.FlowControlSettings;
 import com.google.cloud.pubsublite.internal.CheckedApiException;
 import com.google.cloud.pubsublite.internal.ExtractStatus;
 import com.google.cloud.pubsublite.internal.wire.Subscriber;
+import com.google.cloud.pubsublite.internal.wire.SystemExecutors;
 import com.google.cloud.pubsublite.proto.FlowControlRequest;
 import com.google.cloud.pubsublite.proto.SequencedMessage;
 import com.google.common.collect.Iterables;
-import com.google.common.util.concurrent.MoreExecutors;
 import com.google.common.util.concurrent.SettableFuture;
 import com.google.protobuf.util.Timestamps;
 import java.util.List;
@@ -66,7 +68,7 @@ class SubscriptionPartitionProcessorImpl extends Listener
   @Override
   @SuppressWarnings("argument.type.incompatible")
   public void start() throws CheckedApiException {
-    this.subscriber.addListener(this, MoreExecutors.directExecutor());
+    this.subscriber.addListener(this, SystemExecutors.getFuturesExecutor());
     this.subscriber.startAsync();
     this.subscriber.awaitRunning();
     try {
@@ -113,7 +115,7 @@ class SubscriptionPartitionProcessorImpl extends Listener
 
   @Override
   public void close() {
-    subscriber.stopAsync().awaitTerminated();
+    blockingShutdown(subscriber);
   }
 
   @Override

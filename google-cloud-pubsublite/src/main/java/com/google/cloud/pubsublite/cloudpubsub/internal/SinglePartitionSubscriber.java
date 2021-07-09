@@ -30,9 +30,9 @@ import com.google.cloud.pubsublite.cloudpubsub.Subscriber;
 import com.google.cloud.pubsublite.internal.CheckedApiException;
 import com.google.cloud.pubsublite.internal.ExtractStatus;
 import com.google.cloud.pubsublite.internal.ProxyService;
+import com.google.cloud.pubsublite.internal.wire.SystemExecutors;
 import com.google.cloud.pubsublite.proto.FlowControlRequest;
 import com.google.common.annotations.VisibleForTesting;
-import com.google.common.util.concurrent.MoreExecutors;
 import com.google.pubsub.v1.PubsubMessage;
 import java.util.List;
 
@@ -117,7 +117,7 @@ public class SinglePartitionSubscriber extends ProxyService implements Subscribe
                         ack();
                       }
                     },
-                    MoreExecutors.directExecutor());
+                    SystemExecutors.getFuturesExecutor());
               }
             };
         receiver.receiveMessage(userMessage, clientConsumer);

@@ -16,10 +16,11 @@
 
 package com.google.cloud.pubsublite.cloudpubsub.internal;
 
+import static com.google.cloud.pubsublite.internal.ApiExceptionMatcher.assertThrowableMatches;
+import static com.google.cloud.pubsublite.internal.testing.RetryingConnectionHelpers.whenFailed;
 import static com.google.common.truth.Truth.assertThat;
 import static org.junit.Assert.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
@@ -27,24 +28,21 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
-import com.google.api.core.ApiService.Listener;
 import com.google.api.core.SettableApiFuture;
 import com.google.api.gax.rpc.ApiException;
 import com.google.api.gax.rpc.StatusCode.Code;
 import com.google.cloud.pubsublite.Offset;
 import com.google.cloud.pubsublite.SequencedMessage;
-import com.google.cloud.pubsublite.internal.ApiExceptionMatcher;
 import com.google.cloud.pubsublite.internal.CheckedApiException;
 import com.google.cloud.pubsublite.internal.testing.FakeApiService;
 import com.google.cloud.pubsublite.internal.wire.Committer;
 import com.google.cloud.pubsublite.proto.Cursor;
-import com.google.common.util.concurrent.MoreExecutors;
+import java.util.concurrent.Future;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
-import org.mockito.Mock;
 import org.mockito.Spy;
 
 @RunWith(JUnit4.class)
@@ -52,8 +50,6 @@ public class AckSetTrackerImplTest {
   abstract static class FakeCommitter extends FakeApiService implements Committer {}
 
   @Spy private FakeCommitter committer;
-
-  @Mock private Listener permanentErrorHandler;
 
   AckSetTracker tracker;
 
@@ -70,7 +66,6 @@ public class AckSetTrackerImplTest {
     tracker = new AckSetTrackerImpl(committer);
     tracker.startAsync().awaitRunning();
     verify(committer).startAsync();
-    tracker.addListener(permanentErrorHandler, MoreExecutors.directExecutor());
   }
 
   @After
@@ -105,8 +100,9 @@ public class AckSetTrackerImplTest {
   }
 
   @Test
-  public void duplicateAckFails() throws CheckedApiException {
+  public void duplicateAckFails() throws Exception {
     Runnable ack1 = tracker.track(messageForOffset(1));
+    Future<Void> failed = whenFailed(tracker);
 
     SettableApiFuture<Void> commitFuture = SettableApiFuture.create();
     // 2 = ackedOffset + 1
@@ -120,8 +116,8 @@ public class AckSetTrackerImplTest {
     assertThat(tracker.isRunning()).isTrue();
 
     assertThrows(ApiException.class, ack1::run);
-    verify(permanentErrorHandler)
-        .failed(any(), argThat(new ApiExceptionMatcher(Code.FAILED_PRECONDITION)));
+    failed.get();
+    assertThrowableMatches(tracker.failureCause(), Code.FAILED_PRECONDITION);
   }
 
   @Test

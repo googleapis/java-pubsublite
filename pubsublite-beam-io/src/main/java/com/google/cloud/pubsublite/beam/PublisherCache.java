@@ -53,7 +53,7 @@ class PublisherCache implements AutoCloseable {
             evict(options);
           }
         },
-        SystemExecutors.getAlarmExecutor());
+        SystemExecutors.getFuturesExecutor());
     publisher.startAsync().awaitRunning();
     return publisher;
   }

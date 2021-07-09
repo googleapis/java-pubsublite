@@ -15,102 +15,87 @@
  */
 package com.google.cloud.pubsublite.internal.wire;
 
+import static com.google.cloud.pubsublite.internal.ExtractStatus.toCanonical;
+
 import com.google.api.core.AbstractApiService;
 import com.google.cloud.pubsublite.AdminClient;
 import com.google.cloud.pubsublite.TopicPath;
-import com.google.cloud.pubsublite.internal.ExtractStatus;
+import com.google.cloud.pubsublite.internal.AlarmFactory;
 import com.google.common.flogger.GoogleLogger;
-import java.time.Duration;
 import java.util.Optional;
 import java.util.concurrent.*;
 import java.util.function.Consumer;
 
 public class PartitionCountWatcherImpl extends AbstractApiService implements PartitionCountWatcher {
   private static final GoogleLogger log = GoogleLogger.forEnclosingClass();
-  private final Duration period;
   private final TopicPath topicPath;
   private final AdminClient adminClient;
   private final Consumer<Long> partitionCountReceiver;
+  private final AlarmFactory alarmFactory;
 
-  private ScheduledFuture<?> partitionCountPoll;
-  private Optional<Long> currentPartitionCount = Optional.empty();
+  private Optional<Future<?>> partitionCountPoll = Optional.empty();
+  private long currentPartitionCount = 0;
 
   public static class Factory implements PartitionCountWatcher.Factory {
     private final TopicPath topicPath;
     private final AdminClient adminClient;
-    private final Duration period;
+    private final AlarmFactory alarmFactory;
 
-    public Factory(TopicPath topicPath, AdminClient adminClient, Duration period) {
+    public Factory(TopicPath topicPath, AdminClient adminClient, AlarmFactory alarmFactory) {
       this.topicPath = topicPath;
       this.adminClient = adminClient;
-      this.period = period;
+      this.alarmFactory = alarmFactory;
     }
 
     @Override
     public PartitionCountWatcher newWatcher(Consumer<Long> receiver) {
-      return new PartitionCountWatcherImpl(topicPath, adminClient, receiver, period);
+      return new PartitionCountWatcherImpl(topicPath, adminClient, alarmFactory, receiver);
     }
   }
 
   private PartitionCountWatcherImpl(
-      TopicPath topicPath, AdminClient adminClient, Consumer<Long> receiver, Duration period) {
-    this.period = period;
+      TopicPath topicPath,
+      AdminClient adminClient,
+      AlarmFactory alarmFactory,
+      Consumer<Long> receiver) {
     this.topicPath = topicPath;
     this.adminClient = adminClient;
+    this.alarmFactory = alarmFactory;
     this.partitionCountReceiver = receiver;
   }
 
-  private void pollTopicConfig() {
-    Long partitionCount;
+  private void onAlarm() {
     try {
-      partitionCount = adminClient.getTopicPartitionCount(topicPath).get();
-    } catch (InterruptedException | ExecutionException e) {
-      // If we encounter an exception on our first topic config poll, then fail. We need to fetch
-      // the topic
-      // config at least once to start up properly.
-      if (!currentPartitionCount.isPresent()) {
-        notifyFailed(ExtractStatus.toCanonical(e));
-        stop();
-      }
-      log.atWarning().withCause(e).log("Failed to refresh partition count");
-      return;
-    }
-    if (currentPartitionCount.isPresent() && currentPartitionCount.get().equals(partitionCount)) {
-      return;
-    }
-    try {
-      partitionCountReceiver.accept(partitionCount);
+      pollTopicConfig();
     } catch (Throwable t) {
-      notifyFailed(ExtractStatus.toCanonical(t));
-      stop();
+      // Failures to update the partition count are not actual failures since we would have already
+      // fetched the first config.
+      log.atWarning().withCause(t).log("Failed to refresh partition count");
     }
-    // Notify started after we successfully receive the config once.
-    if (!currentPartitionCount.isPresent()) {
-      notifyStarted();
-    }
-    currentPartitionCount = Optional.of(partitionCount);
   }
 
-  private void stop() {
-    partitionCountPoll.cancel(true);
-    adminClient.close();
+  private void pollTopicConfig() {
+    try {
+      long partitionCount = adminClient.getTopicPartitionCount(topicPath).get();
+      if (currentPartitionCount == partitionCount) return;
+      currentPartitionCount = partitionCount;
+      partitionCountReceiver.accept(partitionCount);
+    } catch (Throwable t) {
+      throw toCanonical(t).underlying;
+    }
   }
 
   @Override
   protected void doStart() {
-    partitionCountPoll =
-        SystemExecutors.getAlarmExecutor()
-            .scheduleAtFixedRate(
-                this::pollTopicConfig, 0, period.toMillis(), TimeUnit.MILLISECONDS);
+    pollTopicConfig();
+    partitionCountPoll = Optional.of(alarmFactory.newAlarm(this::onAlarm));
+    notifyStarted();
   }
 
   @Override
   protected void doStop() {
-    try {
-      stop();
-      notifyStopped();
-    } catch (Exception e) {
-      notifyFailed(e);
-    }
+    partitionCountPoll.ifPresent(future -> future.cancel(true));
+    adminClient.close();
+    notifyStopped();
   }
 }

@@ -18,8 +18,8 @@ package com.google.cloud.pubsublite.cloudpubsub.internal;
 
 import static com.google.cloud.pubsublite.internal.CheckedApiPreconditions.checkState;
 import static com.google.cloud.pubsublite.internal.ExtractStatus.toCanonical;
+import static com.google.cloud.pubsublite.internal.wire.ApiServiceUtils.blockingShutdown;
 
-import com.google.api.core.ApiService;
 import com.google.api.gax.rpc.ApiException;
 import com.google.cloud.pubsublite.Partition;
 import com.google.cloud.pubsublite.cloudpubsub.Subscriber;
@@ -28,8 +28,9 @@ import com.google.cloud.pubsublite.internal.CloseableMonitor;
 import com.google.cloud.pubsublite.internal.ProxyService;
 import com.google.cloud.pubsublite.internal.wire.Assigner;
 import com.google.cloud.pubsublite.internal.wire.AssignerFactory;
+import com.google.cloud.pubsublite.internal.wire.SystemExecutors;
 import com.google.common.collect.ImmutableSet;
-import com.google.common.util.concurrent.MoreExecutors;
+import com.google.common.flogger.GoogleLogger;
 import com.google.errorprone.annotations.concurrent.GuardedBy;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -38,6 +39,7 @@ import java.util.Map;
 import java.util.Set;
 
 public class AssigningSubscriber extends ProxyService implements Subscriber {
+  private static final GoogleLogger LOG = GoogleLogger.forEnclosingClass();
   private final PartitionSubscriberFactory subscriberFactory;
 
   private final CloseableMonitor monitor = new CloseableMonitor();
@@ -66,10 +68,9 @@ public class AssigningSubscriber extends ProxyService implements Subscriber {
   protected void stop() {
     try (CloseableMonitor.Hold h = monitor.enter()) {
       shutdown = true;
-      liveSubscriberMap.values().forEach(ApiService::stopAsync);
-      liveSubscriberMap.values().forEach(ApiService::awaitTerminated);
+      blockingShutdown(liveSubscriberMap.values());
       liveSubscriberMap.clear();
-      stoppingSubscribers.forEach(Subscriber::awaitTerminated);
+      blockingShutdown(stoppingSubscribers);
     }
   }
 
@@ -115,7 +116,7 @@ public class AssigningSubscriber extends ProxyService implements Subscriber {
             }
           }
         },
-        MoreExecutors.directExecutor());
+        SystemExecutors.getFuturesExecutor());
     liveSubscriberMap.put(partition, subscriber);
     subscriber.startAsync();
   }

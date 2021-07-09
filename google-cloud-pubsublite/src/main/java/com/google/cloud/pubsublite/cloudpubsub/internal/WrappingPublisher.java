@@ -27,7 +27,7 @@ import com.google.cloud.pubsublite.MessageTransformer;
 import com.google.cloud.pubsublite.cloudpubsub.Publisher;
 import com.google.cloud.pubsublite.internal.CheckedApiException;
 import com.google.cloud.pubsublite.internal.TrivialProxyService;
-import com.google.common.util.concurrent.MoreExecutors;
+import com.google.cloud.pubsublite.internal.wire.SystemExecutors;
 import com.google.pubsub.v1.PubsubMessage;
 
 // A WrappingPublisher wraps the wire protocol client with a Cloud Pub/Sub api compliant
@@ -59,6 +59,6 @@ public class WrappingPublisher extends TrivialProxyService implements Publisher 
     return ApiFutures.transform(
         wirePublisher.publish(wireMessage),
         MessageMetadata::encode,
-        MoreExecutors.directExecutor());
+        SystemExecutors.getFuturesExecutor());
   }
 }

@@ -21,13 +21,13 @@ import com.google.cloud.pubsublite.CloudRegion;
 import com.google.cloud.pubsublite.Offset;
 import com.google.cloud.pubsublite.Partition;
 import com.google.cloud.pubsublite.SubscriptionPath;
+import com.google.cloud.pubsublite.internal.wire.SystemExecutors;
 import com.google.cloud.pubsublite.proto.CommitCursorRequest;
 import com.google.cloud.pubsublite.proto.Cursor;
 import com.google.cloud.pubsublite.proto.ListPartitionCursorsRequest;
 import com.google.cloud.pubsublite.proto.PartitionCursor;
 import com.google.cloud.pubsublite.v1.CursorServiceClient;
 import com.google.common.collect.ImmutableMap;
-import com.google.common.util.concurrent.MoreExecutors;
 import java.util.Map;
 
 public class CursorClientImpl extends ApiResourceAggregation implements CursorClient {
@@ -61,7 +61,7 @@ public class CursorClientImpl extends ApiResourceAggregation implements CursorCl
           }
           return resultBuilder.build();
         },
-        MoreExecutors.directExecutor());
+        SystemExecutors.getFuturesExecutor());
   }
 
   @Override
@@ -76,6 +76,6 @@ public class CursorClientImpl extends ApiResourceAggregation implements CursorCl
                     .setCursor(Cursor.newBuilder().setOffset(offset.value()))
                     .build()),
         x -> null,
-        MoreExecutors.directExecutor());
+        SystemExecutors.getFuturesExecutor());
   }
 }

@@ -23,7 +23,7 @@ import java.util.Optional;
 import javax.annotation.concurrent.ThreadSafe;
 
 @ThreadSafe
-public interface BlockingPullSubscriber extends Closeable {
+public interface BlockingPullSubscriber extends AutoCloseable {
 
   /**
    * Returns a {@link ApiFuture} that will be completed when there are messages available.

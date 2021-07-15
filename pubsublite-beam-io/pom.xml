@@ -5,13 +5,13 @@
   <parent>
     <groupId>com.google.cloud</groupId>
     <artifactId>google-cloud-pubsublite-parent</artifactId>
-    <version>0.16.1-SNAPSHOT</version><!-- {x-version-update:google-cloud-pubsublite:current} -->
+    <version>0.16.2-SNAPSHOT</version><!-- {x-version-update:google-cloud-pubsublite:current} -->
     <relativePath>../pom.xml</relativePath>
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.google.cloud</groupId>
   <artifactId>pubsublite-beam-io</artifactId>
-  <version>0.16.1-SNAPSHOT</version><!-- {x-version-update:google-cloud-pubsublite:current} -->
+  <version>0.16.2-SNAPSHOT</version><!-- {x-version-update:google-cloud-pubsublite:current} -->
   <packaging>jar</packaging>
   <name>Pub/Sub Lite IO</name>
   <url>https://github.com/googleapis/java-pubsublite</url>
@@ -23,12 +23,12 @@
     <dependency>
       <groupId>com.google.cloud</groupId>
       <artifactId>google-cloud-pubsublite</artifactId>
-      <version>0.16.1-SNAPSHOT</version><!-- {x-version-update:google-cloud-pubsublite:current} -->
+      <version>0.16.2-SNAPSHOT</version><!-- {x-version-update:google-cloud-pubsublite:current} -->
     </dependency>
     <dependency>
       <groupId>com.google.api.grpc</groupId>
       <artifactId>proto-google-cloud-pubsublite-v1</artifactId>
-      <version>0.16.1-SNAPSHOT</version><!-- {x-version-update:google-cloud-pubsublite:current} -->
+      <version>0.16.2-SNAPSHOT</version><!-- {x-version-update:google-cloud-pubsublite:current} -->
     </dependency>
     <dependency>
       <groupId>com.google.auto.service</groupId>
@@ -61,7 +61,7 @@
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-api</artifactId>
-      <version>1.7.30</version>
+      <version>1.7.31</version>
     </dependency>
     <dependency>
       <groupId>joda-time</groupId>
@@ -71,7 +71,7 @@
     <dependency>
       <groupId>org.checkerframework</groupId>
       <artifactId>checker-qual</artifactId>
-      <version>3.14.0</version>
+      <version>3.15.0</version>
     </dependency>
     <dependency>
       <groupId>com.google.guava</groupId>

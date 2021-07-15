@@ -4,22 +4,22 @@
       "git": {
         "name": ".",
         "remote": "https://github.com/googleapis/java-pubsublite.git",
-        "sha": "2d0cbde558c20f3c4eb7d217d4573e592e353f64"
+        "sha": "5fe36cb035f255f7c5c984ef770724be977bd2e9"
       }
     },
     {
       "git": {
         "name": "googleapis",
         "remote": "https://github.com/googleapis/googleapis.git",
-        "sha": "a5f96d06ef57e325761bad010f460d0c5dbeccda",
-        "internalRef": "377081269"
+        "sha": "b601f026f724bbbd25f99273a3fd5e3c3cb8523c",
+        "internalRef": "380660182"
       }
     },
     {
       "git": {
         "name": "synthtool",
         "remote": "https://github.com/googleapis/synthtool.git",
-        "sha": "8f76a885deaaf2fe234daeba4a8cc4d1b3de8086"
+        "sha": "09c59c20a4bf0daed1665af59035ff240fe356df"
       }
     }
   ],
@@ -50,7 +50,6 @@
     ".github/workflows/approve-readme.yaml",
     ".github/workflows/auto-release.yaml",
     ".github/workflows/ci.yaml",
-    ".github/workflows/samples.yaml",
     ".kokoro/build.bat",
     ".kokoro/build.sh",
     ".kokoro/coerce_logs.sh",
@@ -255,6 +254,8 @@
     "proto-google-cloud-pubsublite-v1/src/main/java/com/google/cloud/pubsublite/proto/MessagePublishResponseOrBuilder.java",
     "proto-google-cloud-pubsublite-v1/src/main/java/com/google/cloud/pubsublite/proto/MessageResponse.java",
     "proto-google-cloud-pubsublite-v1/src/main/java/com/google/cloud/pubsublite/proto/MessageResponseOrBuilder.java",
+    "proto-google-cloud-pubsublite-v1/src/main/java/com/google/cloud/pubsublite/proto/OperationMetadata.java",
+    "proto-google-cloud-pubsublite-v1/src/main/java/com/google/cloud/pubsublite/proto/OperationMetadataOrBuilder.java",
     "proto-google-cloud-pubsublite-v1/src/main/java/com/google/cloud/pubsublite/proto/PartitionAssignment.java",
     "proto-google-cloud-pubsublite-v1/src/main/java/com/google/cloud/pubsublite/proto/PartitionAssignmentAck.java",
     "proto-google-cloud-pubsublite-v1/src/main/java/com/google/cloud/pubsublite/proto/PartitionAssignmentAckOrBuilder.java",
@@ -277,6 +278,10 @@
     "proto-google-cloud-pubsublite-v1/src/main/java/com/google/cloud/pubsublite/proto/SeekRequestOrBuilder.java",
     "proto-google-cloud-pubsublite-v1/src/main/java/com/google/cloud/pubsublite/proto/SeekResponse.java",
     "proto-google-cloud-pubsublite-v1/src/main/java/com/google/cloud/pubsublite/proto/SeekResponseOrBuilder.java",
+    "proto-google-cloud-pubsublite-v1/src/main/java/com/google/cloud/pubsublite/proto/SeekSubscriptionRequest.java",
+    "proto-google-cloud-pubsublite-v1/src/main/java/com/google/cloud/pubsublite/proto/SeekSubscriptionRequestOrBuilder.java",
+    "proto-google-cloud-pubsublite-v1/src/main/java/com/google/cloud/pubsublite/proto/SeekSubscriptionResponse.java",
+    "proto-google-cloud-pubsublite-v1/src/main/java/com/google/cloud/pubsublite/proto/SeekSubscriptionResponseOrBuilder.java",
     "proto-google-cloud-pubsublite-v1/src/main/java/com/google/cloud/pubsublite/proto/SequencedCommitCursorRequest.java",
     "proto-google-cloud-pubsublite-v1/src/main/java/com/google/cloud/pubsublite/proto/SequencedCommitCursorRequestOrBuilder.java",
     "proto-google-cloud-pubsublite-v1/src/main/java/com/google/cloud/pubsublite/proto/SequencedCommitCursorResponse.java",

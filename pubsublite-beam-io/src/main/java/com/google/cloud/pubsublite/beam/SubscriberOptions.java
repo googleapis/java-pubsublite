@@ -119,7 +119,7 @@ public abstract class SubscriberOptions implements Serializable {
               RoutingMetadata.of(subscriptionPath(), partition),
               settingsBuilder);
       return SubscriberServiceClient.create(
-          addDefaultSettings(subscriptionPath().location().region(), settingsBuilder));
+          addDefaultSettings(subscriptionPath().location().extractRegion(), settingsBuilder));
     } catch (Throwable t) {
       throw toCanonical(t).underlying;
     }
@@ -147,7 +147,7 @@ public abstract class SubscriberOptions implements Serializable {
     try {
       return CursorServiceClient.create(
           addDefaultSettings(
-              subscriptionPath().location().region(), CursorServiceSettings.newBuilder()));
+              subscriptionPath().location().extractRegion(), CursorServiceSettings.newBuilder()));
     } catch (Throwable t) {
       throw toCanonical(t).underlying;
     }
@@ -186,7 +186,7 @@ public abstract class SubscriberOptions implements Serializable {
     return new InitialOffsetReaderImpl(
         CursorClient.create(
             CursorClientSettings.newBuilder()
-                .setRegion(subscriptionPath().location().region())
+                .setRegion(subscriptionPath().location().extractRegion())
                 .build()),
         subscriptionPath(),
         partition);

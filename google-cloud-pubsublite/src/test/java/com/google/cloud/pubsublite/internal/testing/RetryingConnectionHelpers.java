@@ -14,25 +14,51 @@
  * limitations under the License.
  */
 
-package com.google.cloud.pubsublite.internal.wire;
+package com.google.cloud.pubsublite.internal.testing;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.mock;
 
+import com.google.api.core.ApiService;
 import com.google.api.core.ApiService.Listener;
 import com.google.api.core.SettableApiFuture;
+import com.google.cloud.pubsublite.internal.wire.SystemExecutors;
 import java.util.concurrent.Future;
 
-class RetryingConnectionHelpers {
-  static Future<Void> whenFailed(Listener mockListener) {
+public class RetryingConnectionHelpers {
+  public static Future<Void> whenFailed(ApiService service) {
+    Listener listener = mock(Listener.class);
     SettableApiFuture<Void> future = SettableApiFuture.create();
     doAnswer(
             args -> {
               future.set(null);
               return null;
             })
-        .when(mockListener)
+        .when(listener)
         .failed(any(), any());
+    service.addListener(listener, SystemExecutors.getFuturesExecutor());
+    return future;
+  }
+
+  public static Future<Void> whenTerminated(ApiService service) {
+    Listener listener = mock(Listener.class);
+    SettableApiFuture<Void> future = SettableApiFuture.create();
+    doAnswer(
+            args -> {
+              future.set(null);
+              return null;
+            })
+        .when(listener)
+        .failed(any(), any());
+    doAnswer(
+            args -> {
+              future.set(null);
+              return null;
+            })
+        .when(listener)
+        .terminated(any());
+    service.addListener(listener, SystemExecutors.getFuturesExecutor());
     return future;
   }
 }

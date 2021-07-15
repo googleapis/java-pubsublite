@@ -21,11 +21,17 @@ import static com.google.cloud.pubsublite.internal.ExtractStatus.toCanonical;
 import com.google.api.core.AbstractApiService;
 import com.google.api.core.ApiService;
 import com.google.api.gax.core.BackgroundResource;
+import com.google.api.gax.rpc.ApiException;
+import com.google.cloud.pubsublite.internal.CheckedApiException;
+import com.google.common.collect.ImmutableList;
+import com.google.common.flogger.GoogleLogger;
 
-class ApiServiceUtils {
+public class ApiServiceUtils {
+  private static final GoogleLogger LOGGER = GoogleLogger.forEnclosingClass();
+
   private ApiServiceUtils() {}
 
-  static ApiService backgroundResourceAsApiService(BackgroundResource resource) {
+  public static ApiService backgroundResourceAsApiService(BackgroundResource resource) {
     return new AbstractApiService() {
       @Override
       protected void doStart() {
@@ -42,5 +48,25 @@ class ApiServiceUtils {
         }
       }
     };
+  }
+
+  public static void blockingShutdown(Iterable<? extends ApiService> services) throws ApiException {
+    CheckedApiException lastException = null;
+    for (ApiService service : services) {
+      try {
+        service.stopAsync();
+        service.awaitTerminated();
+      } catch (Throwable t) {
+        LOGGER.atFine().withCause(t).log("Exception in service shutdown.");
+        lastException = toCanonical(t);
+      }
+    }
+    if (lastException != null) {
+      throw lastException.underlying;
+    }
+  }
+
+  public static void blockingShutdown(ApiService service) {
+    blockingShutdown(ImmutableList.of(service));
   }
 }

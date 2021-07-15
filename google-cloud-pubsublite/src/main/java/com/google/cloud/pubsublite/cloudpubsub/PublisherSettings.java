@@ -158,7 +158,7 @@ public abstract class PublisherSettings {
             settingsBuilder);
     try {
       return PublisherServiceClient.create(
-          addDefaultSettings(topicPath().location().region(), settingsBuilder));
+          addDefaultSettings(topicPath().location().extractRegion(), settingsBuilder));
     } catch (Throwable t) {
       throw toCanonical(t).underlying;
     }
@@ -172,10 +172,10 @@ public abstract class PublisherSettings {
               .setServiceClient(
                   AdminServiceClient.create(
                       addDefaultSettings(
-                          topicPath().location().region(),
+                          topicPath().location().extractRegion(),
                           AdminServiceSettings.newBuilder()
                               .setCredentialsProvider(credentialsProvider()))))
-              .setRegion(topicPath().location().region())
+              .setRegion(topicPath().location().extractRegion())
               .build());
     } catch (Throwable t) {
       throw toCanonical(t).underlying;

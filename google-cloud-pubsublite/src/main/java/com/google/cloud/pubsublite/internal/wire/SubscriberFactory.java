@@ -23,5 +23,5 @@ import java.util.List;
 import java.util.function.Consumer;
 
 public interface SubscriberFactory extends Serializable {
-  Subscriber newSubscriber(Consumer<List<SequencedMessage>> message_consumer) throws ApiException;
+  Subscriber newSubscriber(Consumer<List<SequencedMessage>> messageConsumer) throws ApiException;
 }

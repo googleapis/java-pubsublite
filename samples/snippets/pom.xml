@@ -47,12 +47,12 @@
     <dependency>
       <groupId>com.google.cloud</groupId>
       <artifactId>google-cloud-pubsublite</artifactId>
-      <version>0.16.0</version>
+      <version>0.16.1</version>
     </dependency>
     <dependency>
       <groupId>com.google.cloud</groupId>
       <artifactId>google-cloud-pubsub</artifactId>
-      <version>1.113.3</version>
+      <version>1.113.5</version>
     </dependency>
     <!-- [END pubsublite_java_dependencies] -->
     <!-- [END pubsublite_install_without_bom] -->
@@ -65,7 +65,7 @@
     <dependency>
       <groupId>com.google.cloud</groupId>
       <artifactId>pubsublite-beam-io</artifactId>
-      <version>0.16.0</version>
+      <version>0.16.1</version>
     </dependency>
 
     <dependency>

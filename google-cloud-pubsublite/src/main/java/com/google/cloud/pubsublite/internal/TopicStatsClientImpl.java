@@ -21,6 +21,7 @@ import com.google.cloud.pubsublite.CloudRegion;
 import com.google.cloud.pubsublite.Offset;
 import com.google.cloud.pubsublite.Partition;
 import com.google.cloud.pubsublite.TopicPath;
+import com.google.cloud.pubsublite.internal.wire.SystemExecutors;
 import com.google.cloud.pubsublite.proto.ComputeHeadCursorRequest;
 import com.google.cloud.pubsublite.proto.ComputeHeadCursorResponse;
 import com.google.cloud.pubsublite.proto.ComputeMessageStatsRequest;
@@ -29,7 +30,6 @@ import com.google.cloud.pubsublite.proto.ComputeTimeCursorRequest;
 import com.google.cloud.pubsublite.proto.Cursor;
 import com.google.cloud.pubsublite.proto.TimeTarget;
 import com.google.cloud.pubsublite.v1.TopicStatsServiceClient;
-import com.google.common.util.concurrent.MoreExecutors;
 import com.google.protobuf.Timestamp;
 import java.util.Optional;
 
@@ -73,7 +73,7 @@ public class TopicStatsClientImpl extends ApiResourceAggregation implements Topi
                     .setPartition(partition.value())
                     .build()),
         ComputeHeadCursorResponse::getHeadCursor,
-        MoreExecutors.directExecutor());
+        SystemExecutors.getFuturesExecutor());
   }
 
   @Override
@@ -107,6 +107,6 @@ public class TopicStatsClientImpl extends ApiResourceAggregation implements Topi
           }
           return Optional.empty();
         },
-        MoreExecutors.directExecutor());
+        SystemExecutors.getFuturesExecutor());
   }
 }

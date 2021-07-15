@@ -25,7 +25,6 @@ import com.google.cloud.pubsublite.Offset;
 import com.google.cloud.pubsublite.Partition;
 import com.google.cloud.pubsublite.internal.Publisher;
 import com.google.cloud.pubsublite.internal.TrivialProxyService;
-import com.google.common.util.concurrent.MoreExecutors;
 import java.io.IOException;
 
 public class SinglePartitionPublisher extends TrivialProxyService
@@ -45,7 +44,7 @@ public class SinglePartitionPublisher extends TrivialProxyService
     return ApiFutures.transform(
         publisher.publish(message),
         offset -> MessageMetadata.of(partition, offset),
-        MoreExecutors.directExecutor());
+        SystemExecutors.getFuturesExecutor());
   }
 
   @Override

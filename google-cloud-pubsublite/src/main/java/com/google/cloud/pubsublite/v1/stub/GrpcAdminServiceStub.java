@@ -27,6 +27,7 @@ import com.google.api.gax.core.BackgroundResourceAggregation;
 import com.google.api.gax.grpc.GrpcCallSettings;
 import com.google.api.gax.grpc.GrpcStubCallableFactory;
 import com.google.api.gax.rpc.ClientContext;
+import com.google.api.gax.rpc.OperationCallable;
 import com.google.api.gax.rpc.RequestParamsExtractor;
 import com.google.api.gax.rpc.UnaryCallable;
 import com.google.cloud.pubsublite.proto.CreateReservationRequest;
@@ -49,7 +50,10 @@ import com.google.cloud.pubsublite.proto.ListTopicSubscriptionsRequest;
 import com.google.cloud.pubsublite.proto.ListTopicSubscriptionsResponse;
 import com.google.cloud.pubsublite.proto.ListTopicsRequest;
 import com.google.cloud.pubsublite.proto.ListTopicsResponse;
+import com.google.cloud.pubsublite.proto.OperationMetadata;
 import com.google.cloud.pubsublite.proto.Reservation;
+import com.google.cloud.pubsublite.proto.SeekSubscriptionRequest;
+import com.google.cloud.pubsublite.proto.SeekSubscriptionResponse;
 import com.google.cloud.pubsublite.proto.Subscription;
 import com.google.cloud.pubsublite.proto.Topic;
 import com.google.cloud.pubsublite.proto.TopicPartitions;
@@ -57,6 +61,7 @@ import com.google.cloud.pubsublite.proto.UpdateReservationRequest;
 import com.google.cloud.pubsublite.proto.UpdateSubscriptionRequest;
 import com.google.cloud.pubsublite.proto.UpdateTopicRequest;
 import com.google.common.collect.ImmutableMap;
+import com.google.longrunning.Operation;
 import com.google.longrunning.stub.GrpcOperationsStub;
 import com.google.protobuf.Empty;
 import io.grpc.MethodDescriptor;
@@ -189,6 +194,16 @@ public class GrpcAdminServiceStub extends AdminServiceStub {
               .setResponseMarshaller(ProtoUtils.marshaller(Empty.getDefaultInstance()))
               .build();
 
+  private static final MethodDescriptor<SeekSubscriptionRequest, Operation>
+      seekSubscriptionMethodDescriptor =
+          MethodDescriptor.<SeekSubscriptionRequest, Operation>newBuilder()
+              .setType(MethodDescriptor.MethodType.UNARY)
+              .setFullMethodName("google.cloud.pubsublite.v1.AdminService/SeekSubscription")
+              .setRequestMarshaller(
+                  ProtoUtils.marshaller(SeekSubscriptionRequest.getDefaultInstance()))
+              .setResponseMarshaller(ProtoUtils.marshaller(Operation.getDefaultInstance()))
+              .build();
+
   private static final MethodDescriptor<CreateReservationRequest, Reservation>
       createReservationMethodDescriptor =
           MethodDescriptor.<CreateReservationRequest, Reservation>newBuilder()
@@ -271,6 +286,10 @@ public class GrpcAdminServiceStub extends AdminServiceStub {
       listSubscriptionsPagedCallable;
   private final UnaryCallable<UpdateSubscriptionRequest, Subscription> updateSubscriptionCallable;
   private final UnaryCallable<DeleteSubscriptionRequest, Empty> deleteSubscriptionCallable;
+  private final UnaryCallable<SeekSubscriptionRequest, Operation> seekSubscriptionCallable;
+  private final OperationCallable<
+          SeekSubscriptionRequest, SeekSubscriptionResponse, OperationMetadata>
+      seekSubscriptionOperationCallable;
   private final UnaryCallable<CreateReservationRequest, Reservation> createReservationCallable;
   private final UnaryCallable<GetReservationRequest, Reservation> getReservationCallable;
   private final UnaryCallable<ListReservationsRequest, ListReservationsResponse>
@@ -487,6 +506,19 @@ public class GrpcAdminServiceStub extends AdminServiceStub {
                   }
                 })
             .build();
+    GrpcCallSettings<SeekSubscriptionRequest, Operation> seekSubscriptionTransportSettings =
+        GrpcCallSettings.<SeekSubscriptionRequest, Operation>newBuilder()
+            .setMethodDescriptor(seekSubscriptionMethodDescriptor)
+            .setParamsExtractor(
+                new RequestParamsExtractor<SeekSubscriptionRequest>() {
+                  @Override
+                  public Map<String, String> extract(SeekSubscriptionRequest request) {
+                    ImmutableMap.Builder<String, String> params = ImmutableMap.builder();
+                    params.put("name", String.valueOf(request.getName()));
+                    return params.build();
+                  }
+                })
+            .build();
     GrpcCallSettings<CreateReservationRequest, Reservation> createReservationTransportSettings =
         GrpcCallSettings.<CreateReservationRequest, Reservation>newBuilder()
             .setMethodDescriptor(createReservationMethodDescriptor)
@@ -631,6 +663,15 @@ public class GrpcAdminServiceStub extends AdminServiceStub {
             deleteSubscriptionTransportSettings,
             settings.deleteSubscriptionSettings(),
             clientContext);
+    this.seekSubscriptionCallable =
+        callableFactory.createUnaryCallable(
+            seekSubscriptionTransportSettings, settings.seekSubscriptionSettings(), clientContext);
+    this.seekSubscriptionOperationCallable =
+        callableFactory.createOperationCallable(
+            seekSubscriptionTransportSettings,
+            settings.seekSubscriptionOperationSettings(),
+            clientContext,
+            operationsStub);
     this.createReservationCallable =
         callableFactory.createUnaryCallable(
             createReservationTransportSettings,
@@ -751,6 +792,17 @@ public class GrpcAdminServiceStub extends AdminServiceStub {
   @Override
   public UnaryCallable<DeleteSubscriptionRequest, Empty> deleteSubscriptionCallable() {
     return deleteSubscriptionCallable;
+  }
+
+  @Override
+  public UnaryCallable<SeekSubscriptionRequest, Operation> seekSubscriptionCallable() {
+    return seekSubscriptionCallable;
+  }
+
+  @Override
+  public OperationCallable<SeekSubscriptionRequest, SeekSubscriptionResponse, OperationMetadata>
+      seekSubscriptionOperationCallable() {
+    return seekSubscriptionOperationCallable;
   }
 
   @Override

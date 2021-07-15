@@ -16,6 +16,7 @@
 
 package com.google.cloud.pubsublite.cloudpubsub.internal;
 
+import static com.google.cloud.pubsublite.internal.testing.RetryingConnectionHelpers.whenTerminated;
 import static com.google.common.truth.Truth.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.reset;
@@ -34,6 +35,7 @@ import com.google.cloud.pubsublite.internal.wire.AssignerFactory;
 import com.google.cloud.pubsublite.internal.wire.PartitionAssignmentReceiver;
 import com.google.common.collect.ImmutableSet;
 import io.grpc.Status;
+import java.util.concurrent.Future;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -131,10 +133,12 @@ public class AssigningSubscriberTest {
   }
 
   @Test
-  public void assignerErrorStopsSubs() throws CheckedApiException {
+  public void assignerErrorFailsSubs() throws Exception {
     Subscriber sub1 = initSub1();
+    Future<Void> terminated = whenTerminated(sub1);
 
     assigner.fail(Status.INVALID_ARGUMENT.asException());
+    terminated.get();
     verify(sub1).stopAsync();
     verify(sub1).awaitTerminated();
   }

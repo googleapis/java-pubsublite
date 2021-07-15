@@ -215,9 +215,9 @@ public class SubscriptionName implements ResourceName {
     }
 
     private Builder(SubscriptionName subscriptionName) {
-      project = subscriptionName.project;
-      location = subscriptionName.location;
-      subscription = subscriptionName.subscription;
+      this.project = subscriptionName.project;
+      this.location = subscriptionName.location;
+      this.subscription = subscriptionName.subscription;
     }
 
     public SubscriptionName build() {

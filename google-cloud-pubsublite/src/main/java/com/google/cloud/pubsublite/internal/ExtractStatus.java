@@ -20,7 +20,7 @@ import com.google.api.core.ApiFuture;
 import com.google.api.core.ApiFutures;
 import com.google.api.gax.rpc.ApiException;
 import com.google.api.gax.rpc.StatusCode.Code;
-import com.google.common.util.concurrent.MoreExecutors;
+import com.google.cloud.pubsublite.internal.wire.SystemExecutors;
 import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 import java.util.function.BiConsumer;
@@ -53,7 +53,7 @@ public final class ExtractStatus {
         source,
         Throwable.class,
         t -> ApiFutures.immediateFailedFuture(toCanonical(t).underlying),
-        MoreExecutors.directExecutor());
+        SystemExecutors.getFuturesExecutor());
   }
 
   public static void addFailureHandler(
@@ -66,7 +66,7 @@ public final class ExtractStatus {
             consumer.accept(toCanonical(e));
           }
         },
-        MoreExecutors.directExecutor());
+        SystemExecutors.getFuturesExecutor());
   }
 
   public interface StatusFunction<I, O> {

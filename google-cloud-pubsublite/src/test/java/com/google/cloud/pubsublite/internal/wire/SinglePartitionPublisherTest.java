@@ -89,7 +89,6 @@ public class SinglePartitionPublisherTest {
     ApiFuture<MessageMetadata> metadataFuture = pub.publish(message);
     assertThat(metadataFuture.isDone()).isFalse();
     offsetFuture.set(Offset.of(7));
-    assertThat(metadataFuture.isDone()).isTrue();
     assertThat(metadataFuture.get()).isEqualTo(MessageMetadata.of(Partition.of(3), Offset.of(7)));
     pub.stopAsync().awaitTerminated();
   }

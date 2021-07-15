@@ -30,7 +30,6 @@ import com.google.cloud.pubsublite.internal.ExtractStatus;
 import com.google.cloud.pubsublite.internal.Publisher;
 import com.google.cloud.pubsublite.internal.wire.SystemExecutors;
 import com.google.cloud.pubsublite.proto.PubSubMessage;
-import com.google.common.util.concurrent.MoreExecutors;
 import com.google.errorprone.annotations.concurrent.GuardedBy;
 import java.util.ArrayDeque;
 import java.util.Deque;
@@ -85,7 +84,7 @@ class PubsubLiteSink extends DoFn<PubSubMessage, Void> {
             onFailure.accept(t);
           }
         },
-        MoreExecutors.directExecutor());
+        SystemExecutors.getFuturesExecutor());
     if (!options.usesCache()) {
       publisher.startAsync();
     }
@@ -126,7 +125,7 @@ class PubsubLiteSink extends DoFn<PubSubMessage, Void> {
             onFailure.accept(t);
           }
         },
-        SystemExecutors.getAlarmExecutor());
+        SystemExecutors.getFuturesExecutor());
   }
 
   // Intentionally don't flush on bundle finish to allow multi-sink client reuse.

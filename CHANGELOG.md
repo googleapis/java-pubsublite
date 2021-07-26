@@ -1,5 +1,42 @@
 # Changelog
 
+## [0.17.0](https://www.github.com/googleapis/java-pubsublite/compare/v0.16.1...v0.17.0) (2021-07-26)
+
+
+### Features
+
+* Add SeekSubscription and Operations to API  ([#705](https://www.github.com/googleapis/java-pubsublite/issues/705)) ([92d0246](https://www.github.com/googleapis/java-pubsublite/commit/92d0246b9480762e6cd9125cf298cafb9d028c53))
+* Blocking pull subscribe is AutoCloseable ([#748](https://www.github.com/googleapis/java-pubsublite/issues/748)) ([fc52221](https://www.github.com/googleapis/java-pubsublite/commit/fc52221b5dbc52ade7d06cc5aa2d86e48144b973))
+* Support seek subscription in AdminClient ([#740](https://www.github.com/googleapis/java-pubsublite/issues/740)) ([5fe36cb](https://www.github.com/googleapis/java-pubsublite/commit/5fe36cb035f255f7c5c984ef770724be977bd2e9))
+
+
+### Bug Fixes
+
+* Add `shopt -s nullglob` to dependencies script ([#726](https://www.github.com/googleapis/java-pubsublite/issues/726)) ([c860ae9](https://www.github.com/googleapis/java-pubsublite/commit/c860ae956c67228eb43a0f1a28f9030137420ee6))
+* Change all DirectExecutors to use a SystemExecutor and fix service shutdowns ([#744](https://www.github.com/googleapis/java-pubsublite/issues/744)) ([c8541aa](https://www.github.com/googleapis/java-pubsublite/commit/c8541aa63c68d14badfeb566916d88f91d065c84))
+* create a hard failure when batching settings with flow control are used ([#758](https://www.github.com/googleapis/java-pubsublite/issues/758)) ([459378d](https://www.github.com/googleapis/java-pubsublite/commit/459378d80223a16b2a36a2a759e378c324a4a522))
+* Fail the partition watcher if its consumer throws an exception ([#728](https://www.github.com/googleapis/java-pubsublite/issues/728)) ([c297c77](https://www.github.com/googleapis/java-pubsublite/commit/c297c77cd43a9477fd5fbdd1b283efa9dc516f00))
+* Make the one breaking change required to allow regions on TopicPath or SubscriptionPath ([#729](https://www.github.com/googleapis/java-pubsublite/issues/729)) ([5cf5783](https://www.github.com/googleapis/java-pubsublite/commit/5cf578365c77f9d71b49c450bbf846cd22007378))
+* Move BacklogLocation enum to standalone file ([#736](https://www.github.com/googleapis/java-pubsublite/issues/736)) ([70749d8](https://www.github.com/googleapis/java-pubsublite/commit/70749d8f4c9cc23937fbb332a5fd168be4ac0d2f))
+* Updates for import ([#743](https://www.github.com/googleapis/java-pubsublite/issues/743)) ([245004e](https://www.github.com/googleapis/java-pubsublite/commit/245004e74e7d9a8c28be625e5e8259a36d1769f8))
+
+
+### Dependencies
+
+* update dependency com.google.auto.value:auto-value to v1.8.2 ([#753](https://www.github.com/googleapis/java-pubsublite/issues/753)) ([f88c7c0](https://www.github.com/googleapis/java-pubsublite/commit/f88c7c0ee442f797a54298414fa849fac1c21c0e))
+* update dependency com.google.cloud:google-cloud-pubsub to v1.113.4 ([#724](https://www.github.com/googleapis/java-pubsublite/issues/724)) ([5b0c122](https://www.github.com/googleapis/java-pubsublite/commit/5b0c1226a6b6a6f2916a75dd9f48b5fce62cb1e4))
+* update dependency com.google.cloud:google-cloud-pubsub to v1.113.5 ([#738](https://www.github.com/googleapis/java-pubsublite/issues/738)) ([542c2c7](https://www.github.com/googleapis/java-pubsublite/commit/542c2c71df4aadeece5fc426fb93fffa661b0a32))
+* update dependency com.google.cloud:google-cloud-pubsub-bom to v1.113.4 ([#725](https://www.github.com/googleapis/java-pubsublite/issues/725)) ([f6dcbd1](https://www.github.com/googleapis/java-pubsublite/commit/f6dcbd1cdfdd48e3ae1c88b19f7700c1004a5556))
+* update dependency com.google.cloud:google-cloud-pubsub-bom to v1.113.5 ([#737](https://www.github.com/googleapis/java-pubsublite/issues/737)) ([496e2b6](https://www.github.com/googleapis/java-pubsublite/commit/496e2b666b3f3641cf575b657e2548bf38c1714d))
+* update dependency com.google.cloud:google-cloud-shared-dependencies to v1.4.0 ([#731](https://www.github.com/googleapis/java-pubsublite/issues/731)) ([2ac33c6](https://www.github.com/googleapis/java-pubsublite/commit/2ac33c6ba2b5fafa6ae087dba2061924f02cd1c7))
+* update dependency com.google.cloud:pubsublite-beam-io to v0.16.1 ([#718](https://www.github.com/googleapis/java-pubsublite/issues/718)) ([db7e718](https://www.github.com/googleapis/java-pubsublite/commit/db7e71899be6bf5bbd83795b5206d08bc368d322))
+* update dependency com.google.errorprone:error_prone_annotations to v2.8.0 ([#756](https://www.github.com/googleapis/java-pubsublite/issues/756)) ([61ef3a3](https://www.github.com/googleapis/java-pubsublite/commit/61ef3a330bab8232b950675146025510e3d8ae1e))
+* update dependency com.google.errorprone:error_prone_core to v2.8.0 ([#757](https://www.github.com/googleapis/java-pubsublite/issues/757)) ([a3c8579](https://www.github.com/googleapis/java-pubsublite/commit/a3c857951bf57d51209b75f1962c722c8537d76c))
+* update dependency org.checkerframework:checker-qual to v3.15.0 ([#721](https://www.github.com/googleapis/java-pubsublite/issues/721)) ([2bb7b04](https://www.github.com/googleapis/java-pubsublite/commit/2bb7b04ccad2a57af2930ecca1f3635c1b043d9d))
+* update dependency org.checkerframework:checker-qual to v3.16.0 ([#747](https://www.github.com/googleapis/java-pubsublite/issues/747)) ([39de840](https://www.github.com/googleapis/java-pubsublite/commit/39de84072805b71d09129513155aa50d4e3ebfe2))
+* update dependency org.slf4j:slf4j-api to v1.7.31 ([#719](https://www.github.com/googleapis/java-pubsublite/issues/719)) ([43506a0](https://www.github.com/googleapis/java-pubsublite/commit/43506a03fa830f77f2d768b34c973ce971c0627e))
+* update dependency org.slf4j:slf4j-api to v1.7.32 ([#755](https://www.github.com/googleapis/java-pubsublite/issues/755)) ([829053e](https://www.github.com/googleapis/java-pubsublite/commit/829053e3aa79706a4af255ef0485630b9a29b517))
+
 ### [0.16.1](https://www.github.com/googleapis/java-pubsublite/compare/v0.16.0...v0.16.1) (2021-06-17)
 
 

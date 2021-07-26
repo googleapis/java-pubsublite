@@ -187,11 +187,12 @@ public abstract class PublisherSettings {
   @SuppressWarnings("CheckReturnValue")
   Publisher instantiate() throws ApiException {
     BatchingSettings batchingSettings = batchingSettings().orElse(DEFAULT_BATCHING_SETTINGS);
-    if (batchingSettings.getFlowControlSettings().getMaxOutstandingElementCount() != null ||
-        batchingSettings.getFlowControlSettings().getMaxOutstandingRequestBytes() != null) {
+    if (batchingSettings.getFlowControlSettings().getMaxOutstandingElementCount() != null
+        || batchingSettings.getFlowControlSettings().getMaxOutstandingRequestBytes() != null) {
       throw new CheckedApiException(
-          "Pub/Sub Lite does not support flow control settings for publishing.",
-          Code.INVALID_ARGUMENT).underlying;
+              "Pub/Sub Lite does not support flow control settings for publishing.",
+              Code.INVALID_ARGUMENT)
+          .underlying;
     }
     KeyExtractor keyExtractor = keyExtractor().orElse(KeyExtractor.DEFAULT);
     MessageTransformer<PubsubMessage, Message> messageTransformer =

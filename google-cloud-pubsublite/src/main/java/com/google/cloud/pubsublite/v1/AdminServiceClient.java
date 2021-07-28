@@ -28,7 +28,6 @@ import com.google.api.gax.paging.AbstractPagedListResponse;
 import com.google.api.gax.rpc.OperationCallable;
 import com.google.api.gax.rpc.PageContext;
 import com.google.api.gax.rpc.UnaryCallable;
-import com.google.cloud.pubsublite.internal.wire.SystemExecutors;
 import com.google.cloud.pubsublite.proto.CreateReservationRequest;
 import com.google.cloud.pubsublite.proto.CreateSubscriptionRequest;
 import com.google.cloud.pubsublite.proto.CreateTopicRequest;
@@ -65,6 +64,7 @@ import com.google.cloud.pubsublite.proto.UpdateSubscriptionRequest;
 import com.google.cloud.pubsublite.proto.UpdateTopicRequest;
 import com.google.cloud.pubsublite.v1.stub.AdminServiceStub;
 import com.google.cloud.pubsublite.v1.stub.AdminServiceStubSettings;
+import com.google.common.util.concurrent.MoreExecutors;
 import com.google.longrunning.Operation;
 import com.google.longrunning.OperationsClient;
 import com.google.protobuf.Empty;
@@ -2292,7 +2292,7 @@ public class AdminServiceClient implements BackgroundResource {
               return new ListTopicsPagedResponse(input);
             }
           },
-          SystemExecutors.getFuturesExecutor());
+          MoreExecutors.directExecutor());
     }
 
     private ListTopicsPagedResponse(ListTopicsPage page) {
@@ -2372,7 +2372,7 @@ public class AdminServiceClient implements BackgroundResource {
               return new ListTopicSubscriptionsPagedResponse(input);
             }
           },
-          SystemExecutors.getFuturesExecutor());
+          MoreExecutors.directExecutor());
     }
 
     private ListTopicSubscriptionsPagedResponse(ListTopicSubscriptionsPage page) {
@@ -2457,7 +2457,7 @@ public class AdminServiceClient implements BackgroundResource {
               return new ListSubscriptionsPagedResponse(input);
             }
           },
-          SystemExecutors.getFuturesExecutor());
+          MoreExecutors.directExecutor());
     }
 
     private ListSubscriptionsPagedResponse(ListSubscriptionsPage page) {
@@ -2542,7 +2542,7 @@ public class AdminServiceClient implements BackgroundResource {
               return new ListReservationsPagedResponse(input);
             }
           },
-          SystemExecutors.getFuturesExecutor());
+          MoreExecutors.directExecutor());
     }
 
     private ListReservationsPagedResponse(ListReservationsPage page) {
@@ -2624,7 +2624,7 @@ public class AdminServiceClient implements BackgroundResource {
               return new ListReservationTopicsPagedResponse(input);
             }
           },
-          SystemExecutors.getFuturesExecutor());
+          MoreExecutors.directExecutor());
     }
 
     private ListReservationTopicsPagedResponse(ListReservationTopicsPage page) {

@@ -5,12 +5,12 @@
   <parent>
     <groupId>com.google.cloud</groupId>
     <artifactId>google-cloud-shared-config</artifactId>
-    <version>0.12.0</version>
+    <version>0.13.1</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.google.cloud</groupId>
   <artifactId>google-cloud-pubsublite-parent</artifactId>
-  <version>0.17.0</version><!-- {x-version-update:google-cloud-pubsublite:current} -->
+  <version>0.17.1-SNAPSHOT</version><!-- {x-version-update:google-cloud-pubsublite:current} -->
   <packaging>pom</packaging>
   <name>Google Cloud Pub/Sub Lite Parent</name>
   <url>https://github.com/googleapis/java-pubsublite</url>
@@ -26,8 +26,8 @@
       </dependency>
       <dependency>
         <groupId>com.google.cloud</groupId>
-        <artifactId>google-cloud-pubsub-bom</artifactId>
-        <version>1.113.5</version>
+        <artifactId>google-cloud-bom</artifactId>
+        <version>0.158.0</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>

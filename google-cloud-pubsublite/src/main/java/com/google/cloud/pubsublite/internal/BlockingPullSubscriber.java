@@ -18,12 +18,11 @@ package com.google.cloud.pubsublite.internal;
 
 import com.google.api.core.ApiFuture;
 import com.google.cloud.pubsublite.SequencedMessage;
-import java.io.Closeable;
 import java.util.Optional;
 import javax.annotation.concurrent.ThreadSafe;
 
 @ThreadSafe
-public interface BlockingPullSubscriber extends Closeable {
+public interface BlockingPullSubscriber extends AutoCloseable {
 
   /**
    * Returns a {@link ApiFuture} that will be completed when there are messages available.

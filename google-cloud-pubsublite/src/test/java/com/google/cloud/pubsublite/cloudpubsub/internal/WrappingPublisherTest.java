@@ -83,7 +83,6 @@ public class WrappingPublisherTest {
     assertThat(published.isDone()).isFalse();
     MessageMetadata metadata = MessageMetadata.of(Partition.of(3), Offset.of(88));
     metadataFuture.set(metadata);
-    assertThat(published.isDone()).isTrue();
     assertThat(published.get()).isEqualTo(metadata.encode());
   }
 

@@ -16,16 +16,19 @@
 
 package com.google.cloud.pubsublite.cloudpubsub.internal;
 
+import static com.google.cloud.pubsublite.internal.ApiExceptionMatcher.assertThrowableMatches;
+import static com.google.cloud.pubsublite.internal.testing.RetryingConnectionHelpers.whenFailed;
+import static com.google.cloud.pubsublite.internal.testing.RetryingConnectionHelpers.whenTerminated;
 import static com.google.common.truth.Truth.assertThat;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.google.api.core.ApiFutures;
-import com.google.api.core.ApiService.Listener;
+import com.google.api.core.SettableApiFuture;
 import com.google.api.gax.rpc.StatusCode.Code;
 import com.google.cloud.pubsub.v1.AckReplyConsumer;
 import com.google.cloud.pubsub.v1.MessageReceiver;
@@ -36,17 +39,16 @@ import com.google.cloud.pubsublite.SequencedMessage;
 import com.google.cloud.pubsublite.cloudpubsub.FlowControlSettings;
 import com.google.cloud.pubsublite.cloudpubsub.MessageTransforms;
 import com.google.cloud.pubsublite.cloudpubsub.NackHandler;
-import com.google.cloud.pubsublite.internal.ApiExceptionMatcher;
 import com.google.cloud.pubsublite.internal.CheckedApiException;
 import com.google.cloud.pubsublite.internal.testing.FakeApiService;
 import com.google.cloud.pubsublite.internal.wire.Subscriber;
 import com.google.cloud.pubsublite.proto.Cursor;
 import com.google.cloud.pubsublite.proto.FlowControlRequest;
 import com.google.common.collect.ImmutableList;
-import com.google.common.util.concurrent.MoreExecutors;
 import com.google.protobuf.ByteString;
 import com.google.protobuf.util.Timestamps;
 import com.google.pubsub.v1.PubsubMessage;
+import java.util.concurrent.Future;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -73,7 +75,6 @@ public class SinglePartitionSubscriberTest {
   abstract static class SubscriberFakeService extends FakeApiService implements Subscriber {}
 
   @Spy private SubscriberFakeService wireSubscriber;
-  @Mock private Listener permanentErrorHandler;
   private SinglePartitionSubscriber subscriber;
 
   private static final Offset OFFSET = Offset.of(1);
@@ -104,25 +105,26 @@ public class SinglePartitionSubscriberTest {
     verify(subscriberFactory).newSubscriber(any(), any());
     verify(ackSetTracker).startAsync();
     verify(wireSubscriber).startAsync();
-    subscriber.addListener(permanentErrorHandler, MoreExecutors.directExecutor());
   }
 
   @Test
-  public void ackSetTrackerFailure() {
+  public void ackSetTrackerFailure() throws Exception {
+    Future<Void> failed = whenFailed(subscriber);
     ackSetTracker.fail(new CheckedApiException(Code.INVALID_ARGUMENT));
+    failed.get();
     verify(ackSetTracker).stopAsync();
     verify(wireSubscriber).stopAsync();
-    verify(permanentErrorHandler)
-        .failed(any(), argThat(new ApiExceptionMatcher(Code.INVALID_ARGUMENT)));
+    assertThrowableMatches(subscriber.failureCause(), Code.INVALID_ARGUMENT);
   }
 
   @Test
-  public void wireSubscriberFailure() {
+  public void wireSubscriberFailure() throws Exception {
+    Future<Void> failed = whenFailed(subscriber);
     wireSubscriber.fail(new CheckedApiException(Code.INVALID_ARGUMENT));
+    failed.get();
     verify(ackSetTracker).stopAsync();
     verify(wireSubscriber).stopAsync();
-    verify(permanentErrorHandler)
-        .failed(any(), argThat(new ApiExceptionMatcher(Code.INVALID_ARGUMENT)));
+    assertThrowableMatches(subscriber.failureCause(), Code.INVALID_ARGUMENT);
   }
 
   @Test
@@ -184,8 +186,10 @@ public class SinglePartitionSubscriberTest {
   }
 
   @Test
-  public void singleMessageNackHandlerSuccessFuture() throws CheckedApiException {
+  public void singleMessageNackHandlerSuccessFuture() throws Exception {
     Runnable ack = mock(Runnable.class);
+    SettableApiFuture ackDone = SettableApiFuture.create();
+    doAnswer(args -> ackDone.set(null)).when(ack).run();
     when(ackSetTracker.track(MESSAGE)).thenReturn(ack);
     subscriber.onMessages(ImmutableList.of(MESSAGE));
     verify(ackSetTracker).track(MESSAGE);
@@ -194,6 +198,7 @@ public class SinglePartitionSubscriberTest {
     when(nackHandler.nack(transformer.transform(MESSAGE)))
         .thenReturn(ApiFutures.immediateFuture(null));
     ackConsumerCaptor.getValue().nack();
+    ackDone.get();
     verify(ack).run();
     verify(wireSubscriber)
         .allowFlow(
@@ -204,9 +209,10 @@ public class SinglePartitionSubscriberTest {
   }
 
   @Test
-  public void singleMessageNackHandlerFailedFuture() throws CheckedApiException {
-
+  public void singleMessageNackHandlerFailedFuture() throws Exception {
     Runnable ack = mock(Runnable.class);
+    Future<Void> trackerTerminated = whenTerminated(ackSetTracker);
+    Future<Void> wireSubscriberTerminated = whenTerminated(wireSubscriber);
     when(ackSetTracker.track(MESSAGE)).thenReturn(ack);
     subscriber.onMessages(ImmutableList.of(MESSAGE));
     verify(ackSetTracker).track(MESSAGE);
@@ -216,10 +222,11 @@ public class SinglePartitionSubscriberTest {
         .thenReturn(
             ApiFutures.immediateFailedFuture(new CheckedApiException(Code.INVALID_ARGUMENT)));
     ackConsumerCaptor.getValue().nack();
+    trackerTerminated.get();
     verify(ackSetTracker).stopAsync();
+    wireSubscriberTerminated.get();
     verify(wireSubscriber).stopAsync();
-    verify(permanentErrorHandler)
-        .failed(any(), argThat(new ApiExceptionMatcher(Code.INVALID_ARGUMENT)));
+    assertThrowableMatches(subscriber.failureCause(), Code.INVALID_ARGUMENT);
   }
 
   @Test

@@ -15,23 +15,24 @@
  */
 package com.google.cloud.pubsublite.internal.wire;
 
+import static com.google.common.truth.Truth.assertThat;
 import static org.junit.Assert.assertThrows;
 import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.initMocks;
 
 import com.google.api.core.ApiFutures;
+import com.google.api.core.SettableApiFuture;
 import com.google.api.gax.rpc.StatusCode;
 import com.google.cloud.pubsublite.*;
+import com.google.cloud.pubsublite.internal.AlarmFactory;
 import com.google.cloud.pubsublite.internal.ApiExceptionMatcher;
 import com.google.cloud.pubsublite.internal.CheckedApiException;
-import java.time.Duration;
 import java.util.function.Consumer;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 
 @RunWith(JUnit4.class)
 public class PartitionCountWatcherImplTest {
@@ -45,15 +46,18 @@ public class PartitionCountWatcherImplTest {
         .build();
   }
 
-  PartitionCountWatcher.Factory watcherFactory;
   @Mock AdminClient mockClient;
+  @Mock AlarmFactory alarmFactory;
   @Mock Consumer<Long> mockConsumer;
+  PartitionCountWatcher watcher;
+  final SettableApiFuture<Void> alarmFuture = SettableApiFuture.create();
 
   @Before
-  public void setUp() {
+  public void setUp() throws Exception {
     initMocks(this);
-    watcherFactory =
-        new PartitionCountWatcherImpl.Factory(path(), mockClient, Duration.ofMillis(10));
+    PartitionCountWatcherImpl.Factory watcherFactory =
+        new PartitionCountWatcherImpl.Factory(path(), mockClient, alarmFactory);
+    watcher = watcherFactory.newWatcher(mockConsumer);
   }
 
   @Test
@@ -62,7 +66,6 @@ public class PartitionCountWatcherImplTest {
         .thenReturn(
             ApiFutures.immediateFailedFuture(
                 new CheckedApiException(StatusCode.Code.FAILED_PRECONDITION).underlying));
-    PartitionCountWatcher watcher = watcherFactory.newWatcher(mockConsumer);
     watcher.startAsync();
     assertThrows(IllegalStateException.class, watcher::awaitTerminated);
     ApiExceptionMatcher.assertThrowableMatches(
@@ -71,53 +74,74 @@ public class PartitionCountWatcherImplTest {
   }
 
   @Test
-  public void testCallsHandlerOnStart() {
+  public void testConsumerExcepts() {
     when(mockClient.getTopicPartitionCount(path())).thenReturn(ApiFutures.immediateFuture(1L));
-    PartitionCountWatcher watcher = watcherFactory.newWatcher(mockConsumer);
+    doThrow(new IllegalArgumentException("bad batching settings")).when(mockConsumer).accept(1L);
     watcher.startAsync();
-    verify(mockConsumer, after(1000)).accept(1L);
-    verifyNoMoreInteractions(mockConsumer);
+    assertThrows(IllegalStateException.class, watcher::awaitTerminated);
+    ApiExceptionMatcher.assertThrowableMatches(watcher.failureCause(), StatusCode.Code.INTERNAL);
+    verify(mockClient, times(1)).getTopicPartitionCount(path());
+  }
+
+  Runnable startAndLeakAlarm() throws Exception {
+    SettableApiFuture<Runnable> toLeak = SettableApiFuture.create();
+    when(alarmFactory.newAlarm(any()))
+        .thenAnswer(
+            args -> {
+              toLeak.set(args.getArgument(0));
+              return alarmFuture;
+            });
+    watcher.startAsync();
+    return toLeak.get();
   }
 
   @Test
-  public void testHandlerCalledOnUpdates() {
+  public void testCallsHandlerOnStart() throws Exception {
+    when(mockClient.getTopicPartitionCount(path())).thenReturn(ApiFutures.immediateFuture(1L));
+    Runnable unusedAlarm = startAndLeakAlarm();
+    verify(mockConsumer).accept(1L);
+    verifyNoMoreInteractions(mockConsumer);
+    assertThat(watcher.isRunning()).isTrue();
+  }
+
+  @Test
+  public void testHandlerCalledOnUpdates() throws Exception {
     when(mockClient.getTopicPartitionCount(path()))
         .thenReturn(ApiFutures.immediateFuture(1L))
         .thenReturn(ApiFutures.immediateFuture(1L))
         .thenReturn(ApiFutures.immediateFuture(2L));
-    PartitionCountWatcher watcher = watcherFactory.newWatcher(mockConsumer);
-    watcher.startAsync();
-    verify(mockClient, after(1000).atLeast(3)).getTopicPartitionCount(path());
-    verify(mockConsumer, after(1000)).accept(1L);
-    verify(mockConsumer, after(1000)).accept(2L);
+    Runnable alarm = startAndLeakAlarm();
+    alarm.run();
+    alarm.run();
+    verify(mockClient, times(3)).getTopicPartitionCount(path());
+    verify(mockConsumer, times(1)).accept(1L);
+    verify(mockConsumer, times(1)).accept(2L);
     verifyNoMoreInteractions(mockConsumer);
   }
 
   @Test
-  public void testFailuresAfterFirstSuccessIgnored() {
+  public void testFailuresAfterFirstSuccessIgnored() throws Exception {
     when(mockClient.getTopicPartitionCount(path()))
         .thenReturn(ApiFutures.immediateFuture(1L))
         .thenReturn(
             ApiFutures.immediateFailedFuture(
                 new CheckedApiException(StatusCode.Code.FAILED_PRECONDITION)))
         .thenReturn(ApiFutures.immediateFuture(2L));
-    PartitionCountWatcher watcher = watcherFactory.newWatcher(mockConsumer);
-    watcher.startAsync();
-    verify(mockClient, after(1000).atLeast(3)).getTopicPartitionCount(path());
-    verify(mockConsumer, after(1000)).accept(1L);
-    verify(mockConsumer, after(1000)).accept(2L);
+    Runnable alarm = startAndLeakAlarm();
+    alarm.run();
+    alarm.run();
+    verify(mockClient, times(3)).getTopicPartitionCount(path());
+    verify(mockConsumer, times(1)).accept(1L);
+    verify(mockConsumer, times(1)).accept(2L);
     verifyNoMoreInteractions(mockConsumer);
   }
 
   @Test
-  public void testStopPreventsFutureCalls() {
+  public void testStopStopsAlarm() throws Exception {
     when(mockClient.getTopicPartitionCount(path())).thenReturn(ApiFutures.immediateFuture(1L));
-    PartitionCountWatcher watcher = watcherFactory.newWatcher(mockConsumer);
-    watcher.startAsync();
-    watcher.stopAsync();
-    watcher.awaitTerminated();
-    verify(mockClient, after(1000).atLeast(1)).getTopicPartitionCount(path());
-    Mockito.reset(mockClient);
-    verify(mockClient, after(20).never()).getTopic(any());
+    Runnable unusedAlarm = startAndLeakAlarm();
+    watcher.awaitRunning();
+    watcher.stopAsync().awaitTerminated();
+    assertThat(alarmFuture.isCancelled()).isTrue();
   }
 }

@@ -23,6 +23,7 @@ import static com.google.cloud.pubsublite.internal.wire.ServiceClients.addDefaul
 import com.google.api.gax.batching.BatchingSettings;
 import com.google.api.gax.core.CredentialsProvider;
 import com.google.api.gax.rpc.ApiException;
+import com.google.api.gax.rpc.StatusCode.Code;
 import com.google.auto.value.AutoValue;
 import com.google.cloud.pubsublite.AdminClient;
 import com.google.cloud.pubsublite.AdminClientSettings;
@@ -32,6 +33,7 @@ import com.google.cloud.pubsublite.MessageTransformer;
 import com.google.cloud.pubsublite.Partition;
 import com.google.cloud.pubsublite.TopicPath;
 import com.google.cloud.pubsublite.cloudpubsub.internal.WrappingPublisher;
+import com.google.cloud.pubsublite.internal.CheckedApiException;
 import com.google.cloud.pubsublite.internal.wire.PartitionCountWatchingPublisherSettings;
 import com.google.cloud.pubsublite.internal.wire.PubsubContext;
 import com.google.cloud.pubsublite.internal.wire.PubsubContext.Framework;
@@ -185,6 +187,13 @@ public abstract class PublisherSettings {
   @SuppressWarnings("CheckReturnValue")
   Publisher instantiate() throws ApiException {
     BatchingSettings batchingSettings = batchingSettings().orElse(DEFAULT_BATCHING_SETTINGS);
+    if (batchingSettings.getFlowControlSettings().getMaxOutstandingElementCount() != null
+        || batchingSettings.getFlowControlSettings().getMaxOutstandingRequestBytes() != null) {
+      throw new CheckedApiException(
+              "Pub/Sub Lite does not support flow control settings for publishing.",
+              Code.INVALID_ARGUMENT)
+          .underlying;
+    }
     KeyExtractor keyExtractor = keyExtractor().orElse(KeyExtractor.DEFAULT);
     MessageTransformer<PubsubMessage, Message> messageTransformer =
         messageTransformer()

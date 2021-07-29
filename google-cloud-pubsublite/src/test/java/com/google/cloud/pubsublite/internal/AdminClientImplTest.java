@@ -20,21 +20,26 @@ import static com.google.api.core.ApiFutures.immediateFuture;
 import static com.google.cloud.pubsublite.internal.ApiExceptionMatcher.assertFutureThrowsCode;
 import static com.google.cloud.pubsublite.internal.testing.UnitTestExamples.example;
 import static com.google.common.truth.Truth.assertThat;
+import static org.junit.Assert.assertThrows;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
 import com.google.api.core.ApiFuture;
 import com.google.api.core.ApiFutures;
+import com.google.api.gax.longrunning.OperationFuture;
+import com.google.api.gax.rpc.ApiException;
+import com.google.api.gax.rpc.OperationCallable;
 import com.google.api.gax.rpc.StatusCode.Code;
 import com.google.api.gax.rpc.UnaryCallable;
-import com.google.cloud.pubsublite.AdminClient.BacklogLocation;
+import com.google.cloud.pubsublite.BacklogLocation;
 import com.google.cloud.pubsublite.CloudRegion;
 import com.google.cloud.pubsublite.CloudZone;
 import com.google.cloud.pubsublite.LocationPath;
 import com.google.cloud.pubsublite.ProjectNumber;
 import com.google.cloud.pubsublite.ReservationName;
 import com.google.cloud.pubsublite.ReservationPath;
+import com.google.cloud.pubsublite.SeekTarget;
 import com.google.cloud.pubsublite.SubscriptionName;
 import com.google.cloud.pubsublite.SubscriptionPath;
 import com.google.cloud.pubsublite.TopicName;
@@ -59,9 +64,14 @@ import com.google.cloud.pubsublite.proto.ListTopicSubscriptionsRequest;
 import com.google.cloud.pubsublite.proto.ListTopicSubscriptionsResponse;
 import com.google.cloud.pubsublite.proto.ListTopicsRequest;
 import com.google.cloud.pubsublite.proto.ListTopicsResponse;
+import com.google.cloud.pubsublite.proto.OperationMetadata;
 import com.google.cloud.pubsublite.proto.Reservation;
+import com.google.cloud.pubsublite.proto.SeekSubscriptionRequest;
+import com.google.cloud.pubsublite.proto.SeekSubscriptionRequest.NamedTarget;
+import com.google.cloud.pubsublite.proto.SeekSubscriptionResponse;
 import com.google.cloud.pubsublite.proto.Subscription;
 import com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig;
+import com.google.cloud.pubsublite.proto.TimeTarget;
 import com.google.cloud.pubsublite.proto.Topic;
 import com.google.cloud.pubsublite.proto.Topic.PartitionConfig;
 import com.google.cloud.pubsublite.proto.TopicPartitions;
@@ -73,6 +83,7 @@ import com.google.cloud.pubsublite.v1.stub.AdminServiceStub;
 import com.google.common.collect.ImmutableList;
 import com.google.protobuf.Empty;
 import com.google.protobuf.FieldMask;
+import com.google.protobuf.Timestamp;
 import java.io.IOException;
 import org.junit.After;
 import org.junit.Before;
@@ -103,6 +114,8 @@ public class AdminClientImplTest {
           .setThroughputCapacity(example(Reservation.class).getThroughputCapacity() + 1)
           .build();
 
+  private static final String OPERATION_PATH = "/path/for/operation";
+
   private static final <T> ApiFuture<T> failedPreconditionFuture() {
     return ApiFutures.immediateFailedFuture(
         new CheckedApiException(Code.FAILED_PRECONDITION).underlying);
@@ -127,6 +140,12 @@ public class AdminClientImplTest {
 
   @Mock UnaryCallable<UpdateSubscriptionRequest, Subscription> updateSubscriptionCallable;
   @Mock UnaryCallable<DeleteSubscriptionRequest, Empty> deleteSubscriptionCallable;
+
+  @Mock
+  OperationCallable<SeekSubscriptionRequest, SeekSubscriptionResponse, OperationMetadata>
+      seekSubscriptionCallable;
+
+  @Mock OperationFuture<SeekSubscriptionResponse, OperationMetadata> seekFuture;
 
   @Mock UnaryCallable<CreateReservationRequest, Reservation> createReservationCallable;
   @Mock UnaryCallable<GetReservationRequest, Reservation> getReservationCallable;
@@ -159,6 +178,7 @@ public class AdminClientImplTest {
     when(stub.listSubscriptionsCallable()).thenReturn(listSubscriptionsCallable);
     when(stub.updateSubscriptionCallable()).thenReturn(updateSubscriptionCallable);
     when(stub.deleteSubscriptionCallable()).thenReturn(deleteSubscriptionCallable);
+    when(stub.seekSubscriptionOperationCallable()).thenReturn(seekSubscriptionCallable);
 
     when(stub.createReservationCallable()).thenReturn(createReservationCallable);
     when(stub.getReservationCallable()).thenReturn(getReservationCallable);
@@ -544,6 +564,104 @@ public class AdminClientImplTest {
 
     assertFutureThrowsCode(
         client.listSubscriptions(example(LocationPath.class)), Code.FAILED_PRECONDITION);
+  }
+
+  @Test
+  public void seekSubscription_PublishTimeOk() throws Exception {
+    Timestamp publishTime = Timestamp.newBuilder().setSeconds(123).build();
+    SeekSubscriptionRequest request =
+        SeekSubscriptionRequest.newBuilder()
+            .setName(example(SubscriptionPath.class).toString())
+            .setTimeTarget(TimeTarget.newBuilder().setPublishTime(publishTime))
+            .build();
+
+    when(seekFuture.getName()).thenReturn(OPERATION_PATH);
+    when(seekSubscriptionCallable.futureCall(request)).thenReturn(seekFuture);
+
+    assertThat(
+            client
+                .seekSubscription(
+                    example(SubscriptionPath.class), SeekTarget.ofPublishTime(publishTime))
+                .getName())
+        .isEqualTo(OPERATION_PATH);
+  }
+
+  @Test
+  public void seekSubscription_EventTimeOk() throws Exception {
+    Timestamp eventTime = Timestamp.newBuilder().setSeconds(456).build();
+    SeekSubscriptionRequest request =
+        SeekSubscriptionRequest.newBuilder()
+            .setName(example(SubscriptionPath.class).toString())
+            .setTimeTarget(TimeTarget.newBuilder().setEventTime(eventTime))
+            .build();
+
+    when(seekFuture.getName()).thenReturn(OPERATION_PATH);
+    when(seekSubscriptionCallable.futureCall(request)).thenReturn(seekFuture);
+
+    assertThat(
+            client
+                .seekSubscription(
+                    example(SubscriptionPath.class), SeekTarget.ofEventTime(eventTime))
+                .getName())
+        .isEqualTo(OPERATION_PATH);
+  }
+
+  @Test
+  public void seekSubscription_BacklogBeginningOk() throws Exception {
+    SeekSubscriptionRequest request =
+        SeekSubscriptionRequest.newBuilder()
+            .setName(example(SubscriptionPath.class).toString())
+            .setNamedTarget(NamedTarget.TAIL)
+            .build();
+
+    when(seekFuture.getName()).thenReturn(OPERATION_PATH);
+    when(seekSubscriptionCallable.futureCall(request)).thenReturn(seekFuture);
+
+    assertThat(
+            client
+                .seekSubscription(
+                    example(SubscriptionPath.class), SeekTarget.of(BacklogLocation.BEGINNING))
+                .getName())
+        .isEqualTo(OPERATION_PATH);
+  }
+
+  @Test
+  public void seekSubscription_BacklogEndOk() throws Exception {
+    SeekSubscriptionRequest request =
+        SeekSubscriptionRequest.newBuilder()
+            .setName(example(SubscriptionPath.class).toString())
+            .setNamedTarget(NamedTarget.HEAD)
+            .build();
+
+    when(seekFuture.getName()).thenReturn(OPERATION_PATH);
+    when(seekSubscriptionCallable.futureCall(request)).thenReturn(seekFuture);
+
+    assertThat(
+            client
+                .seekSubscription(
+                    example(SubscriptionPath.class), SeekTarget.of(BacklogLocation.END))
+                .getName())
+        .isEqualTo(OPERATION_PATH);
+  }
+
+  @Test
+  public void seekSubscription_Error() throws Exception {
+    SeekSubscriptionRequest request =
+        SeekSubscriptionRequest.newBuilder()
+            .setName(example(SubscriptionPath.class).toString())
+            .setNamedTarget(NamedTarget.HEAD)
+            .build();
+
+    when(seekFuture.getName()).thenThrow(new CheckedApiException(Code.NOT_FOUND).underlying);
+    when(seekSubscriptionCallable.futureCall(request)).thenReturn(seekFuture);
+
+    assertThrows(
+        ApiException.class,
+        () ->
+            client
+                .seekSubscription(
+                    example(SubscriptionPath.class), SeekTarget.of(BacklogLocation.END))
+                .getName());
   }
 
   @Test

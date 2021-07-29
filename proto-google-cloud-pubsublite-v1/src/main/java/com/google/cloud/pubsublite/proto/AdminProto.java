@@ -92,6 +92,18 @@ public final class AdminProto {
   static final com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_google_cloud_pubsublite_v1_DeleteSubscriptionRequest_fieldAccessorTable;
   static final com.google.protobuf.Descriptors.Descriptor
+      internal_static_google_cloud_pubsublite_v1_SeekSubscriptionRequest_descriptor;
+  static final com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_google_cloud_pubsublite_v1_SeekSubscriptionRequest_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+      internal_static_google_cloud_pubsublite_v1_SeekSubscriptionResponse_descriptor;
+  static final com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_google_cloud_pubsublite_v1_SeekSubscriptionResponse_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+      internal_static_google_cloud_pubsublite_v1_OperationMetadata_descriptor;
+  static final com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_google_cloud_pubsublite_v1_OperationMetadata_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
       internal_static_google_cloud_pubsublite_v1_CreateReservationRequest_descriptor;
   static final com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_google_cloud_pubsublite_v1_CreateReservationRequest_fieldAccessorTable;
@@ -137,175 +149,194 @@ public final class AdminProto {
           + "/annotations.proto\032\027google/api/client.pr"
           + "oto\032\037google/api/field_behavior.proto\032\031go"
           + "ogle/api/resource.proto\032\'google/cloud/pu"
-          + "bsublite/v1/common.proto\032\033google/protobu"
-          + "f/empty.proto\032 google/protobuf/field_mas"
-          + "k.proto\032\037google/protobuf/timestamp.proto"
-          + "\"\235\001\n\022CreateTopicRequest\0229\n\006parent\030\001 \001(\tB"
-          + ")\340A\002\372A#\n!locations.googleapis.com/Locati"
-          + "on\0225\n\005topic\030\002 \001(\0132!.google.cloud.pubsubl"
-          + "ite.v1.TopicB\003\340A\002\022\025\n\010topic_id\030\003 \001(\tB\003\340A\002"
-          + "\"H\n\017GetTopicRequest\0225\n\004name\030\001 \001(\tB\'\340A\002\372A"
-          + "!\n\037pubsublite.googleapis.com/Topic\"R\n\031Ge"
-          + "tTopicPartitionsRequest\0225\n\004name\030\001 \001(\tB\'\340"
-          + "A\002\372A!\n\037pubsublite.googleapis.com/Topic\"*"
-          + "\n\017TopicPartitions\022\027\n\017partition_count\030\001 \001"
-          + "(\003\"u\n\021ListTopicsRequest\0229\n\006parent\030\001 \001(\tB"
-          + ")\340A\002\372A#\n!locations.googleapis.com/Locati"
-          + "on\022\021\n\tpage_size\030\002 \001(\005\022\022\n\npage_token\030\003 \001("
-          + "\t\"`\n\022ListTopicsResponse\0221\n\006topics\030\001 \003(\0132"
-          + "!.google.cloud.pubsublite.v1.Topic\022\027\n\017ne"
-          + "xt_page_token\030\002 \001(\t\"\201\001\n\022UpdateTopicReque"
-          + "st\0225\n\005topic\030\001 \001(\0132!.google.cloud.pubsubl"
-          + "ite.v1.TopicB\003\340A\002\0224\n\013update_mask\030\002 \001(\0132\032"
-          + ".google.protobuf.FieldMaskB\003\340A\002\"K\n\022Delet"
-          + "eTopicRequest\0225\n\004name\030\001 \001(\tB\'\340A\002\372A!\n\037pub"
-          + "sublite.googleapis.com/Topic\"}\n\035ListTopi"
-          + "cSubscriptionsRequest\0225\n\004name\030\001 \001(\tB\'\340A\002"
-          + "\372A!\n\037pubsublite.googleapis.com/Topic\022\021\n\t"
-          + "page_size\030\002 \001(\005\022\022\n\npage_token\030\003 \001(\t\"P\n\036L"
-          + "istTopicSubscriptionsResponse\022\025\n\rsubscri"
-          + "ptions\030\001 \003(\t\022\027\n\017next_page_token\030\002 \001(\t\"\317\001"
-          + "\n\031CreateSubscriptionRequest\0229\n\006parent\030\001 "
-          + "\001(\tB)\340A\002\372A#\n!locations.googleapis.com/Lo"
-          + "cation\022C\n\014subscription\030\002 \001(\0132(.google.cl"
-          + "oud.pubsublite.v1.SubscriptionB\003\340A\002\022\034\n\017s"
-          + "ubscription_id\030\003 \001(\tB\003\340A\002\022\024\n\014skip_backlo"
-          + "g\030\004 \001(\010\"V\n\026GetSubscriptionRequest\022<\n\004nam"
-          + "e\030\001 \001(\tB.\340A\002\372A(\n&pubsublite.googleapis.c"
-          + "om/Subscription\"|\n\030ListSubscriptionsRequ"
-          + "est\0229\n\006parent\030\001 \001(\tB)\340A\002\372A#\n!locations.g"
-          + "oogleapis.com/Location\022\021\n\tpage_size\030\002 \001("
-          + "\005\022\022\n\npage_token\030\003 \001(\t\"u\n\031ListSubscriptio"
-          + "nsResponse\022?\n\rsubscriptions\030\001 \003(\0132(.goog"
-          + "le.cloud.pubsublite.v1.Subscription\022\027\n\017n"
-          + "ext_page_token\030\002 \001(\t\"\226\001\n\031UpdateSubscript"
-          + "ionRequest\022C\n\014subscription\030\001 \001(\0132(.googl"
-          + "e.cloud.pubsublite.v1.SubscriptionB\003\340A\002\022"
-          + "4\n\013update_mask\030\002 \001(\0132\032.google.protobuf.F"
-          + "ieldMaskB\003\340A\002\"Y\n\031DeleteSubscriptionReque"
-          + "st\022<\n\004name\030\001 \001(\tB.\340A\002\372A(\n&pubsublite.goo"
-          + "gleapis.com/Subscription\"\265\001\n\030CreateReser"
-          + "vationRequest\0229\n\006parent\030\001 \001(\tB)\340A\002\372A#\n!l"
-          + "ocations.googleapis.com/Location\022A\n\013rese"
-          + "rvation\030\002 \001(\0132\'.google.cloud.pubsublite."
-          + "v1.ReservationB\003\340A\002\022\033\n\016reservation_id\030\003 "
-          + "\001(\tB\003\340A\002\"T\n\025GetReservationRequest\022;\n\004nam"
-          + "e\030\001 \001(\tB-\340A\002\372A\'\n%pubsublite.googleapis.c"
-          + "om/Reservation\"{\n\027ListReservationsReques"
-          + "t\0229\n\006parent\030\001 \001(\tB)\340A\002\372A#\n!locations.goo"
-          + "gleapis.com/Location\022\021\n\tpage_size\030\002 \001(\005\022"
-          + "\022\n\npage_token\030\003 \001(\t\"r\n\030ListReservationsR"
-          + "esponse\022=\n\014reservations\030\001 \003(\0132\'.google.c"
-          + "loud.pubsublite.v1.Reservation\022\027\n\017next_p"
-          + "age_token\030\002 \001(\t\"\223\001\n\030UpdateReservationReq"
-          + "uest\022A\n\013reservation\030\001 \001(\0132\'.google.cloud"
-          + ".pubsublite.v1.ReservationB\003\340A\002\0224\n\013updat"
-          + "e_mask\030\002 \001(\0132\032.google.protobuf.FieldMask"
-          + "B\003\340A\002\"W\n\030DeleteReservationRequest\022;\n\004nam"
-          + "e\030\001 \001(\tB-\340A\002\372A\'\n%pubsublite.googleapis.c"
-          + "om/Reservation\"\202\001\n\034ListReservationTopics"
-          + "Request\022;\n\004name\030\001 \001(\tB-\340A\002\372A\'\n%pubsublit"
-          + "e.googleapis.com/Reservation\022\021\n\tpage_siz"
-          + "e\030\002 \001(\005\022\022\n\npage_token\030\003 \001(\t\"H\n\035ListReser"
-          + "vationTopicsResponse\022\016\n\006topics\030\001 \003(\t\022\027\n\017"
-          + "next_page_token\030\002 \001(\t2\315\034\n\014AdminService\022\271"
-          + "\001\n\013CreateTopic\022..google.cloud.pubsublite"
-          + ".v1.CreateTopicRequest\032!.google.cloud.pu"
-          + "bsublite.v1.Topic\"W\202\323\344\223\0029\"0/v1/admin/{pa"
-          + "rent=projects/*/locations/*}/topics:\005top"
-          + "ic\332A\025parent,topic,topic_id\022\233\001\n\010GetTopic\022"
-          + "+.google.cloud.pubsublite.v1.GetTopicReq"
-          + "uest\032!.google.cloud.pubsublite.v1.Topic\""
-          + "?\202\323\344\223\0022\0220/v1/admin/{name=projects/*/loca"
-          + "tions/*/topics/*}\332A\004name\022\304\001\n\022GetTopicPar"
-          + "titions\0225.google.cloud.pubsublite.v1.Get"
-          + "TopicPartitionsRequest\032+.google.cloud.pu"
-          + "bsublite.v1.TopicPartitions\"J\202\323\344\223\002=\022;/v1"
-          + "/admin/{name=projects/*/locations/*/topi"
-          + "cs/*}/partitions\332A\004name\022\256\001\n\nListTopics\022-"
-          + ".google.cloud.pubsublite.v1.ListTopicsRe"
-          + "quest\032..google.cloud.pubsublite.v1.ListT"
-          + "opicsResponse\"A\202\323\344\223\0022\0220/v1/admin/{parent"
-          + "=projects/*/locations/*}/topics\332A\006parent"
-          + "\022\273\001\n\013UpdateTopic\022..google.cloud.pubsubli"
-          + "te.v1.UpdateTopicRequest\032!.google.cloud."
-          + "pubsublite.v1.Topic\"Y\202\323\344\223\002?26/v1/admin/{"
-          + "topic.name=projects/*/locations/*/topics"
-          + "/*}:\005topic\332A\021topic,update_mask\022\226\001\n\013Delet"
-          + "eTopic\022..google.cloud.pubsublite.v1.Dele"
-          + "teTopicRequest\032\026.google.protobuf.Empty\"?"
-          + "\202\323\344\223\0022*0/v1/admin/{name=projects/*/locat"
-          + "ions/*/topics/*}\332A\004name\022\336\001\n\026ListTopicSub"
-          + "scriptions\0229.google.cloud.pubsublite.v1."
-          + "ListTopicSubscriptionsRequest\032:.google.c"
-          + "loud.pubsublite.v1.ListTopicSubscription"
-          + "sResponse\"M\202\323\344\223\002@\022>/v1/admin/{name=proje"
-          + "cts/*/locations/*/topics/*}/subscription"
-          + "s\332A\004name\022\352\001\n\022CreateSubscription\0225.google"
-          + ".cloud.pubsublite.v1.CreateSubscriptionR"
+          + "bsublite/v1/common.proto\032#google/longrun"
+          + "ning/operations.proto\032\033google/protobuf/e"
+          + "mpty.proto\032 google/protobuf/field_mask.p"
+          + "roto\032\037google/protobuf/timestamp.proto\"\235\001"
+          + "\n\022CreateTopicRequest\0229\n\006parent\030\001 \001(\tB)\340A"
+          + "\002\372A#\n!locations.googleapis.com/Location\022"
+          + "5\n\005topic\030\002 \001(\0132!.google.cloud.pubsublite"
+          + ".v1.TopicB\003\340A\002\022\025\n\010topic_id\030\003 \001(\tB\003\340A\002\"H\n"
+          + "\017GetTopicRequest\0225\n\004name\030\001 \001(\tB\'\340A\002\372A!\n\037"
+          + "pubsublite.googleapis.com/Topic\"R\n\031GetTo"
+          + "picPartitionsRequest\0225\n\004name\030\001 \001(\tB\'\340A\002\372"
+          + "A!\n\037pubsublite.googleapis.com/Topic\"*\n\017T"
+          + "opicPartitions\022\027\n\017partition_count\030\001 \001(\003\""
+          + "u\n\021ListTopicsRequest\0229\n\006parent\030\001 \001(\tB)\340A"
+          + "\002\372A#\n!locations.googleapis.com/Location\022"
+          + "\021\n\tpage_size\030\002 \001(\005\022\022\n\npage_token\030\003 \001(\t\"`"
+          + "\n\022ListTopicsResponse\0221\n\006topics\030\001 \003(\0132!.g"
+          + "oogle.cloud.pubsublite.v1.Topic\022\027\n\017next_"
+          + "page_token\030\002 \001(\t\"\201\001\n\022UpdateTopicRequest\022"
+          + "5\n\005topic\030\001 \001(\0132!.google.cloud.pubsublite"
+          + ".v1.TopicB\003\340A\002\0224\n\013update_mask\030\002 \001(\0132\032.go"
+          + "ogle.protobuf.FieldMaskB\003\340A\002\"K\n\022DeleteTo"
+          + "picRequest\0225\n\004name\030\001 \001(\tB\'\340A\002\372A!\n\037pubsub"
+          + "lite.googleapis.com/Topic\"}\n\035ListTopicSu"
+          + "bscriptionsRequest\0225\n\004name\030\001 \001(\tB\'\340A\002\372A!"
+          + "\n\037pubsublite.googleapis.com/Topic\022\021\n\tpag"
+          + "e_size\030\002 \001(\005\022\022\n\npage_token\030\003 \001(\t\"P\n\036List"
+          + "TopicSubscriptionsResponse\022\025\n\rsubscripti"
+          + "ons\030\001 \003(\t\022\027\n\017next_page_token\030\002 \001(\t\"\317\001\n\031C"
+          + "reateSubscriptionRequest\0229\n\006parent\030\001 \001(\t"
+          + "B)\340A\002\372A#\n!locations.googleapis.com/Locat"
+          + "ion\022C\n\014subscription\030\002 \001(\0132(.google.cloud"
+          + ".pubsublite.v1.SubscriptionB\003\340A\002\022\034\n\017subs"
+          + "cription_id\030\003 \001(\tB\003\340A\002\022\024\n\014skip_backlog\030\004"
+          + " \001(\010\"V\n\026GetSubscriptionRequest\022<\n\004name\030\001"
+          + " \001(\tB.\340A\002\372A(\n&pubsublite.googleapis.com/"
+          + "Subscription\"|\n\030ListSubscriptionsRequest"
+          + "\0229\n\006parent\030\001 \001(\tB)\340A\002\372A#\n!locations.goog"
+          + "leapis.com/Location\022\021\n\tpage_size\030\002 \001(\005\022\022"
+          + "\n\npage_token\030\003 \001(\t\"u\n\031ListSubscriptionsR"
+          + "esponse\022?\n\rsubscriptions\030\001 \003(\0132(.google."
+          + "cloud.pubsublite.v1.Subscription\022\027\n\017next"
+          + "_page_token\030\002 \001(\t\"\226\001\n\031UpdateSubscription"
+          + "Request\022C\n\014subscription\030\001 \001(\0132(.google.c"
+          + "loud.pubsublite.v1.SubscriptionB\003\340A\002\0224\n\013"
+          + "update_mask\030\002 \001(\0132\032.google.protobuf.Fiel"
+          + "dMaskB\003\340A\002\"Y\n\031DeleteSubscriptionRequest\022"
+          + "<\n\004name\030\001 \001(\tB.\340A\002\372A(\n&pubsublite.google"
+          + "apis.com/Subscription\"\272\002\n\027SeekSubscripti"
+          + "onRequest\022<\n\004name\030\001 \001(\tB.\340A\002\372A(\n&pubsubl"
+          + "ite.googleapis.com/Subscription\022W\n\014named"
+          + "_target\030\002 \001(\0162?.google.cloud.pubsublite."
+          + "v1.SeekSubscriptionRequest.NamedTargetH\000"
+          + "\022=\n\013time_target\030\003 \001(\0132&.google.cloud.pub"
+          + "sublite.v1.TimeTargetH\000\"?\n\013NamedTarget\022\034"
+          + "\n\030NAMED_TARGET_UNSPECIFIED\020\000\022\010\n\004TAIL\020\001\022\010"
+          + "\n\004HEAD\020\002B\010\n\006target\"\032\n\030SeekSubscriptionRe"
+          + "sponse\"\220\001\n\021OperationMetadata\022/\n\013create_t"
+          + "ime\030\001 \001(\0132\032.google.protobuf.Timestamp\022,\n"
+          + "\010end_time\030\002 \001(\0132\032.google.protobuf.Timest"
+          + "amp\022\016\n\006target\030\003 \001(\t\022\014\n\004verb\030\004 \001(\t\"\265\001\n\030Cr"
+          + "eateReservationRequest\0229\n\006parent\030\001 \001(\tB)"
+          + "\340A\002\372A#\n!locations.googleapis.com/Locatio"
+          + "n\022A\n\013reservation\030\002 \001(\0132\'.google.cloud.pu"
+          + "bsublite.v1.ReservationB\003\340A\002\022\033\n\016reservat"
+          + "ion_id\030\003 \001(\tB\003\340A\002\"T\n\025GetReservationReque"
+          + "st\022;\n\004name\030\001 \001(\tB-\340A\002\372A\'\n%pubsublite.goo"
+          + "gleapis.com/Reservation\"{\n\027ListReservati"
+          + "onsRequest\0229\n\006parent\030\001 \001(\tB)\340A\002\372A#\n!loca"
+          + "tions.googleapis.com/Location\022\021\n\tpage_si"
+          + "ze\030\002 \001(\005\022\022\n\npage_token\030\003 \001(\t\"r\n\030ListRese"
+          + "rvationsResponse\022=\n\014reservations\030\001 \003(\0132\'"
+          + ".google.cloud.pubsublite.v1.Reservation\022"
+          + "\027\n\017next_page_token\030\002 \001(\t\"\223\001\n\030UpdateReser"
+          + "vationRequest\022A\n\013reservation\030\001 \001(\0132\'.goo"
+          + "gle.cloud.pubsublite.v1.ReservationB\003\340A\002"
+          + "\0224\n\013update_mask\030\002 \001(\0132\032.google.protobuf."
+          + "FieldMaskB\003\340A\002\"W\n\030DeleteReservationReque"
+          + "st\022;\n\004name\030\001 \001(\tB-\340A\002\372A\'\n%pubsublite.goo"
+          + "gleapis.com/Reservation\"\202\001\n\034ListReservat"
+          + "ionTopicsRequest\022;\n\004name\030\001 \001(\tB-\340A\002\372A\'\n%"
+          + "pubsublite.googleapis.com/Reservation\022\021\n"
+          + "\tpage_size\030\002 \001(\005\022\022\n\npage_token\030\003 \001(\t\"H\n\035"
+          + "ListReservationTopicsResponse\022\016\n\006topics\030"
+          + "\001 \003(\t\022\027\n\017next_page_token\030\002 \001(\t2\257\036\n\014Admin"
+          + "Service\022\271\001\n\013CreateTopic\022..google.cloud.p"
+          + "ubsublite.v1.CreateTopicRequest\032!.google"
+          + ".cloud.pubsublite.v1.Topic\"W\202\323\344\223\0029\"0/v1/"
+          + "admin/{parent=projects/*/locations/*}/to"
+          + "pics:\005topic\332A\025parent,topic,topic_id\022\233\001\n\010"
+          + "GetTopic\022+.google.cloud.pubsublite.v1.Ge"
+          + "tTopicRequest\032!.google.cloud.pubsublite."
+          + "v1.Topic\"?\202\323\344\223\0022\0220/v1/admin/{name=projec"
+          + "ts/*/locations/*/topics/*}\332A\004name\022\304\001\n\022Ge"
+          + "tTopicPartitions\0225.google.cloud.pubsubli"
+          + "te.v1.GetTopicPartitionsRequest\032+.google"
+          + ".cloud.pubsublite.v1.TopicPartitions\"J\202\323"
+          + "\344\223\002=\022;/v1/admin/{name=projects/*/locatio"
+          + "ns/*/topics/*}/partitions\332A\004name\022\256\001\n\nLis"
+          + "tTopics\022-.google.cloud.pubsublite.v1.Lis"
+          + "tTopicsRequest\032..google.cloud.pubsublite"
+          + ".v1.ListTopicsResponse\"A\202\323\344\223\0022\0220/v1/admi"
+          + "n/{parent=projects/*/locations/*}/topics"
+          + "\332A\006parent\022\273\001\n\013UpdateTopic\022..google.cloud"
+          + ".pubsublite.v1.UpdateTopicRequest\032!.goog"
+          + "le.cloud.pubsublite.v1.Topic\"Y\202\323\344\223\002?26/v"
+          + "1/admin/{topic.name=projects/*/locations"
+          + "/*/topics/*}:\005topic\332A\021topic,update_mask\022"
+          + "\226\001\n\013DeleteTopic\022..google.cloud.pubsublit"
+          + "e.v1.DeleteTopicRequest\032\026.google.protobu"
+          + "f.Empty\"?\202\323\344\223\0022*0/v1/admin/{name=project"
+          + "s/*/locations/*/topics/*}\332A\004name\022\336\001\n\026Lis"
+          + "tTopicSubscriptions\0229.google.cloud.pubsu"
+          + "blite.v1.ListTopicSubscriptionsRequest\032:"
+          + ".google.cloud.pubsublite.v1.ListTopicSub"
+          + "scriptionsResponse\"M\202\323\344\223\002@\022>/v1/admin/{n"
+          + "ame=projects/*/locations/*/topics/*}/sub"
+          + "scriptions\332A\004name\022\352\001\n\022CreateSubscription"
+          + "\0225.google.cloud.pubsublite.v1.CreateSubs"
+          + "criptionRequest\032(.google.cloud.pubsublit"
+          + "e.v1.Subscription\"s\202\323\344\223\002G\"7/v1/admin/{pa"
+          + "rent=projects/*/locations/*}/subscriptio"
+          + "ns:\014subscription\332A#parent,subscription,s"
+          + "ubscription_id\022\267\001\n\017GetSubscription\0222.goo"
+          + "gle.cloud.pubsublite.v1.GetSubscriptionR"
           + "equest\032(.google.cloud.pubsublite.v1.Subs"
-          + "cription\"s\202\323\344\223\002G\"7/v1/admin/{parent=proj"
-          + "ects/*/locations/*}/subscriptions:\014subsc"
-          + "ription\332A#parent,subscription,subscripti"
-          + "on_id\022\267\001\n\017GetSubscription\0222.google.cloud"
-          + ".pubsublite.v1.GetSubscriptionRequest\032(."
-          + "google.cloud.pubsublite.v1.Subscription\""
-          + "F\202\323\344\223\0029\0227/v1/admin/{name=projects/*/loca"
-          + "tions/*/subscriptions/*}\332A\004name\022\312\001\n\021List"
-          + "Subscriptions\0224.google.cloud.pubsublite."
-          + "v1.ListSubscriptionsRequest\0325.google.clo"
-          + "ud.pubsublite.v1.ListSubscriptionsRespon"
-          + "se\"H\202\323\344\223\0029\0227/v1/admin/{parent=projects/*"
-          + "/locations/*}/subscriptions\332A\006parent\022\354\001\n"
-          + "\022UpdateSubscription\0225.google.cloud.pubsu"
-          + "blite.v1.UpdateSubscriptionRequest\032(.goo"
-          + "gle.cloud.pubsublite.v1.Subscription\"u\202\323"
-          + "\344\223\002T2D/v1/admin/{subscription.name=proje"
-          + "cts/*/locations/*/subscriptions/*}:\014subs"
-          + "cription\332A\030subscription,update_mask\022\253\001\n\022"
-          + "DeleteSubscription\0225.google.cloud.pubsub"
-          + "lite.v1.DeleteSubscriptionRequest\032\026.goog"
-          + "le.protobuf.Empty\"F\202\323\344\223\0029*7/v1/admin/{na"
-          + "me=projects/*/locations/*/subscriptions/"
-          + "*}\332A\004name\022\343\001\n\021CreateReservation\0224.google"
-          + ".cloud.pubsublite.v1.CreateReservationRe"
-          + "quest\032\'.google.cloud.pubsublite.v1.Reser"
-          + "vation\"o\202\323\344\223\002E\"6/v1/admin/{parent=projec"
-          + "ts/*/locations/*}/reservations:\013reservat"
-          + "ion\332A!parent,reservation,reservation_id\022"
-          + "\263\001\n\016GetReservation\0221.google.cloud.pubsub"
-          + "lite.v1.GetReservationRequest\032\'.google.c"
-          + "loud.pubsublite.v1.Reservation\"E\202\323\344\223\0028\0226"
-          + "/v1/admin/{name=projects/*/locations/*/r"
-          + "eservations/*}\332A\004name\022\306\001\n\020ListReservatio"
-          + "ns\0223.google.cloud.pubsublite.v1.ListRese"
-          + "rvationsRequest\0324.google.cloud.pubsublit"
-          + "e.v1.ListReservationsResponse\"G\202\323\344\223\0028\0226/"
-          + "v1/admin/{parent=projects/*/locations/*}"
-          + "/reservations\332A\006parent\022\345\001\n\021UpdateReserva"
-          + "tion\0224.google.cloud.pubsublite.v1.Update"
-          + "ReservationRequest\032\'.google.cloud.pubsub"
-          + "lite.v1.Reservation\"q\202\323\344\223\002Q2B/v1/admin/{"
-          + "reservation.name=projects/*/locations/*/"
-          + "reservations/*}:\013reservation\332A\027reservati"
-          + "on,update_mask\022\250\001\n\021DeleteReservation\0224.g"
-          + "oogle.cloud.pubsublite.v1.DeleteReservat"
-          + "ionRequest\032\026.google.protobuf.Empty\"E\202\323\344\223"
-          + "\0028*6/v1/admin/{name=projects/*/locations"
-          + "/*/reservations/*}\332A\004name\022\332\001\n\025ListReserv"
-          + "ationTopics\0228.google.cloud.pubsublite.v1"
-          + ".ListReservationTopicsRequest\0329.google.c"
-          + "loud.pubsublite.v1.ListReservationTopics"
-          + "Response\"L\202\323\344\223\002?\022=/v1/admin/{name=projec"
-          + "ts/*/locations/*/reservations/*}/topics\332"
-          + "A\004name\032M\312A\031pubsublite.googleapis.com\322A.h"
-          + "ttps://www.googleapis.com/auth/cloud-pla"
-          + "tformB\321\001\n!com.google.cloud.pubsublite.pr"
-          + "otoB\nAdminProtoP\001ZDgoogle.golang.org/gen"
-          + "proto/googleapis/cloud/pubsublite/v1;pub"
-          + "sublite\252\002\032Google.Cloud.PubSubLite.V1\312\002\032G"
-          + "oogle\\Cloud\\PubSubLite\\V1\352\002\035Google::Clou"
-          + "d::PubSubLite::V1b\006proto3"
+          + "cription\"F\202\323\344\223\0029\0227/v1/admin/{name=projec"
+          + "ts/*/locations/*/subscriptions/*}\332A\004name"
+          + "\022\312\001\n\021ListSubscriptions\0224.google.cloud.pu"
+          + "bsublite.v1.ListSubscriptionsRequest\0325.g"
+          + "oogle.cloud.pubsublite.v1.ListSubscripti"
+          + "onsResponse\"H\202\323\344\223\0029\0227/v1/admin/{parent=p"
+          + "rojects/*/locations/*}/subscriptions\332A\006p"
+          + "arent\022\354\001\n\022UpdateSubscription\0225.google.cl"
+          + "oud.pubsublite.v1.UpdateSubscriptionRequ"
+          + "est\032(.google.cloud.pubsublite.v1.Subscri"
+          + "ption\"u\202\323\344\223\002T2D/v1/admin/{subscription.n"
+          + "ame=projects/*/locations/*/subscriptions"
+          + "/*}:\014subscription\332A\030subscription,update_"
+          + "mask\022\253\001\n\022DeleteSubscription\0225.google.clo"
+          + "ud.pubsublite.v1.DeleteSubscriptionReque"
+          + "st\032\026.google.protobuf.Empty\"F\202\323\344\223\0029*7/v1/"
+          + "admin/{name=projects/*/locations/*/subsc"
+          + "riptions/*}\332A\004name\022\337\001\n\020SeekSubscription\022"
+          + "3.google.cloud.pubsublite.v1.SeekSubscri"
+          + "ptionRequest\032\035.google.longrunning.Operat"
+          + "ion\"w\202\323\344\223\002A\"</v1/admin/{name=projects/*/"
+          + "locations/*/subscriptions/*}:seek:\001*\312A-\n"
+          + "\030SeekSubscriptionResponse\022\021OperationMeta"
+          + "data\022\343\001\n\021CreateReservation\0224.google.clou"
+          + "d.pubsublite.v1.CreateReservationRequest"
+          + "\032\'.google.cloud.pubsublite.v1.Reservatio"
+          + "n\"o\202\323\344\223\002E\"6/v1/admin/{parent=projects/*/"
+          + "locations/*}/reservations:\013reservation\332A"
+          + "!parent,reservation,reservation_id\022\263\001\n\016G"
+          + "etReservation\0221.google.cloud.pubsublite."
+          + "v1.GetReservationRequest\032\'.google.cloud."
+          + "pubsublite.v1.Reservation\"E\202\323\344\223\0028\0226/v1/a"
+          + "dmin/{name=projects/*/locations/*/reserv"
+          + "ations/*}\332A\004name\022\306\001\n\020ListReservations\0223."
+          + "google.cloud.pubsublite.v1.ListReservati"
+          + "onsRequest\0324.google.cloud.pubsublite.v1."
+          + "ListReservationsResponse\"G\202\323\344\223\0028\0226/v1/ad"
+          + "min/{parent=projects/*/locations/*}/rese"
+          + "rvations\332A\006parent\022\345\001\n\021UpdateReservation\022"
+          + "4.google.cloud.pubsublite.v1.UpdateReser"
+          + "vationRequest\032\'.google.cloud.pubsublite."
+          + "v1.Reservation\"q\202\323\344\223\002Q2B/v1/admin/{reser"
+          + "vation.name=projects/*/locations/*/reser"
+          + "vations/*}:\013reservation\332A\027reservation,up"
+          + "date_mask\022\250\001\n\021DeleteReservation\0224.google"
+          + ".cloud.pubsublite.v1.DeleteReservationRe"
+          + "quest\032\026.google.protobuf.Empty\"E\202\323\344\223\0028*6/"
+          + "v1/admin/{name=projects/*/locations/*/re"
+          + "servations/*}\332A\004name\022\332\001\n\025ListReservation"
+          + "Topics\0228.google.cloud.pubsublite.v1.List"
+          + "ReservationTopicsRequest\0329.google.cloud."
+          + "pubsublite.v1.ListReservationTopicsRespo"
+          + "nse\"L\202\323\344\223\002?\022=/v1/admin/{name=projects/*/"
+          + "locations/*/reservations/*}/topics\332A\004nam"
+          + "e\032M\312A\031pubsublite.googleapis.com\322A.https:"
+          + "//www.googleapis.com/auth/cloud-platform"
+          + "B\321\001\n!com.google.cloud.pubsublite.protoB\n"
+          + "AdminProtoP\001ZDgoogle.golang.org/genproto"
+          + "/googleapis/cloud/pubsublite/v1;pubsubli"
+          + "te\252\002\032Google.Cloud.PubSubLite.V1\312\002\032Google"
+          + "\\Cloud\\PubSubLite\\V1\352\002\035Google::Cloud::Pu"
+          + "bSubLite::V1b\006proto3"
     };
     descriptor =
         com.google.protobuf.Descriptors.FileDescriptor.internalBuildGeneratedFileFrom(
@@ -316,6 +347,7 @@ public final class AdminProto {
               com.google.api.FieldBehaviorProto.getDescriptor(),
               com.google.api.ResourceProto.getDescriptor(),
               com.google.cloud.pubsublite.proto.CommonProto.getDescriptor(),
+              com.google.longrunning.OperationsProto.getDescriptor(),
               com.google.protobuf.EmptyProto.getDescriptor(),
               com.google.protobuf.FieldMaskProto.getDescriptor(),
               com.google.protobuf.TimestampProto.getDescriptor(),
@@ -448,8 +480,30 @@ public final class AdminProto {
             new java.lang.String[] {
               "Name",
             });
-    internal_static_google_cloud_pubsublite_v1_CreateReservationRequest_descriptor =
+    internal_static_google_cloud_pubsublite_v1_SeekSubscriptionRequest_descriptor =
         getDescriptor().getMessageTypes().get(16);
+    internal_static_google_cloud_pubsublite_v1_SeekSubscriptionRequest_fieldAccessorTable =
+        new com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+            internal_static_google_cloud_pubsublite_v1_SeekSubscriptionRequest_descriptor,
+            new java.lang.String[] {
+              "Name", "NamedTarget", "TimeTarget", "Target",
+            });
+    internal_static_google_cloud_pubsublite_v1_SeekSubscriptionResponse_descriptor =
+        getDescriptor().getMessageTypes().get(17);
+    internal_static_google_cloud_pubsublite_v1_SeekSubscriptionResponse_fieldAccessorTable =
+        new com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+            internal_static_google_cloud_pubsublite_v1_SeekSubscriptionResponse_descriptor,
+            new java.lang.String[] {});
+    internal_static_google_cloud_pubsublite_v1_OperationMetadata_descriptor =
+        getDescriptor().getMessageTypes().get(18);
+    internal_static_google_cloud_pubsublite_v1_OperationMetadata_fieldAccessorTable =
+        new com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+            internal_static_google_cloud_pubsublite_v1_OperationMetadata_descriptor,
+            new java.lang.String[] {
+              "CreateTime", "EndTime", "Target", "Verb",
+            });
+    internal_static_google_cloud_pubsublite_v1_CreateReservationRequest_descriptor =
+        getDescriptor().getMessageTypes().get(19);
     internal_static_google_cloud_pubsublite_v1_CreateReservationRequest_fieldAccessorTable =
         new com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
             internal_static_google_cloud_pubsublite_v1_CreateReservationRequest_descriptor,
@@ -457,7 +511,7 @@ public final class AdminProto {
               "Parent", "Reservation", "ReservationId",
             });
     internal_static_google_cloud_pubsublite_v1_GetReservationRequest_descriptor =
-        getDescriptor().getMessageTypes().get(17);
+        getDescriptor().getMessageTypes().get(20);
     internal_static_google_cloud_pubsublite_v1_GetReservationRequest_fieldAccessorTable =
         new com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
             internal_static_google_cloud_pubsublite_v1_GetReservationRequest_descriptor,
@@ -465,7 +519,7 @@ public final class AdminProto {
               "Name",
             });
     internal_static_google_cloud_pubsublite_v1_ListReservationsRequest_descriptor =
-        getDescriptor().getMessageTypes().get(18);
+        getDescriptor().getMessageTypes().get(21);
     internal_static_google_cloud_pubsublite_v1_ListReservationsRequest_fieldAccessorTable =
         new com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
             internal_static_google_cloud_pubsublite_v1_ListReservationsRequest_descriptor,
@@ -473,7 +527,7 @@ public final class AdminProto {
               "Parent", "PageSize", "PageToken",
             });
     internal_static_google_cloud_pubsublite_v1_ListReservationsResponse_descriptor =
-        getDescriptor().getMessageTypes().get(19);
+        getDescriptor().getMessageTypes().get(22);
     internal_static_google_cloud_pubsublite_v1_ListReservationsResponse_fieldAccessorTable =
         new com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
             internal_static_google_cloud_pubsublite_v1_ListReservationsResponse_descriptor,
@@ -481,7 +535,7 @@ public final class AdminProto {
               "Reservations", "NextPageToken",
             });
     internal_static_google_cloud_pubsublite_v1_UpdateReservationRequest_descriptor =
-        getDescriptor().getMessageTypes().get(20);
+        getDescriptor().getMessageTypes().get(23);
     internal_static_google_cloud_pubsublite_v1_UpdateReservationRequest_fieldAccessorTable =
         new com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
             internal_static_google_cloud_pubsublite_v1_UpdateReservationRequest_descriptor,
@@ -489,7 +543,7 @@ public final class AdminProto {
               "Reservation", "UpdateMask",
             });
     internal_static_google_cloud_pubsublite_v1_DeleteReservationRequest_descriptor =
-        getDescriptor().getMessageTypes().get(21);
+        getDescriptor().getMessageTypes().get(24);
     internal_static_google_cloud_pubsublite_v1_DeleteReservationRequest_fieldAccessorTable =
         new com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
             internal_static_google_cloud_pubsublite_v1_DeleteReservationRequest_descriptor,
@@ -497,7 +551,7 @@ public final class AdminProto {
               "Name",
             });
     internal_static_google_cloud_pubsublite_v1_ListReservationTopicsRequest_descriptor =
-        getDescriptor().getMessageTypes().get(22);
+        getDescriptor().getMessageTypes().get(25);
     internal_static_google_cloud_pubsublite_v1_ListReservationTopicsRequest_fieldAccessorTable =
         new com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
             internal_static_google_cloud_pubsublite_v1_ListReservationTopicsRequest_descriptor,
@@ -505,7 +559,7 @@ public final class AdminProto {
               "Name", "PageSize", "PageToken",
             });
     internal_static_google_cloud_pubsublite_v1_ListReservationTopicsResponse_descriptor =
-        getDescriptor().getMessageTypes().get(23);
+        getDescriptor().getMessageTypes().get(26);
     internal_static_google_cloud_pubsublite_v1_ListReservationTopicsResponse_fieldAccessorTable =
         new com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
             internal_static_google_cloud_pubsublite_v1_ListReservationTopicsResponse_descriptor,
@@ -520,6 +574,7 @@ public final class AdminProto {
     registry.add(com.google.api.ClientProto.methodSignature);
     registry.add(com.google.api.ClientProto.oauthScopes);
     registry.add(com.google.api.ResourceProto.resourceReference);
+    registry.add(com.google.longrunning.OperationsProto.operationInfo);
     com.google.protobuf.Descriptors.FileDescriptor.internalUpdateFileDescriptor(
         descriptor, registry);
     com.google.api.AnnotationsProto.getDescriptor();
@@ -527,6 +582,7 @@ public final class AdminProto {
     com.google.api.FieldBehaviorProto.getDescriptor();
     com.google.api.ResourceProto.getDescriptor();
     com.google.cloud.pubsublite.proto.CommonProto.getDescriptor();
+    com.google.longrunning.OperationsProto.getDescriptor();
     com.google.protobuf.EmptyProto.getDescriptor();
     com.google.protobuf.FieldMaskProto.getDescriptor();
     com.google.protobuf.TimestampProto.getDescriptor();

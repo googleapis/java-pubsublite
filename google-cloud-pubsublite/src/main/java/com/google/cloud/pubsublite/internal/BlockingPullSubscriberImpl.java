@@ -16,6 +16,8 @@
 
 package com.google.cloud.pubsublite.internal;
 
+import static com.google.cloud.pubsublite.internal.wire.ApiServiceUtils.blockingShutdown;
+
 import com.google.api.core.ApiFuture;
 import com.google.api.core.ApiFutures;
 import com.google.api.core.ApiService.Listener;
@@ -26,8 +28,8 @@ import com.google.cloud.pubsublite.SequencedMessage;
 import com.google.cloud.pubsublite.cloudpubsub.FlowControlSettings;
 import com.google.cloud.pubsublite.internal.wire.Subscriber;
 import com.google.cloud.pubsublite.internal.wire.SubscriberFactory;
+import com.google.cloud.pubsublite.internal.wire.SystemExecutors;
 import com.google.cloud.pubsublite.proto.FlowControlRequest;
-import com.google.common.util.concurrent.MoreExecutors;
 import com.google.errorprone.annotations.concurrent.GuardedBy;
 import java.util.ArrayDeque;
 import java.util.Collection;
@@ -57,7 +59,7 @@ public class BlockingPullSubscriberImpl implements BlockingPullSubscriber {
             fail(ExtractStatus.toCanonical(throwable));
           }
         },
-        MoreExecutors.directExecutor());
+        SystemExecutors.getFuturesExecutor());
     underlying.startAsync().awaitRunning();
     underlying.allowFlow(
         FlowControlRequest.newBuilder()
@@ -123,6 +125,6 @@ public class BlockingPullSubscriberImpl implements BlockingPullSubscriber {
                     "Subscriber client shut down", StatusCode.Code.UNAVAILABLE));
       }
     }
-    underlying.stopAsync().awaitTerminated();
+    blockingShutdown(underlying);
   }
 }

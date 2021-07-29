@@ -21,6 +21,7 @@ import static com.google.cloud.pubsublite.internal.wire.ApiServiceUtils.backgrou
 
 import com.google.api.gax.rpc.ApiException;
 import com.google.cloud.pubsublite.SequencedMessage;
+import com.google.cloud.pubsublite.internal.AlarmFactory;
 import com.google.cloud.pubsublite.internal.CheckedApiException;
 import com.google.cloud.pubsublite.internal.CloseableMonitor;
 import com.google.cloud.pubsublite.internal.ProxyService;
@@ -32,15 +33,18 @@ import com.google.cloud.pubsublite.proto.SubscribeRequest;
 import com.google.cloud.pubsublite.proto.SubscribeResponse;
 import com.google.cloud.pubsublite.v1.SubscriberServiceClient;
 import com.google.common.annotations.VisibleForTesting;
+import java.time.Duration;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 import javax.annotation.concurrent.GuardedBy;
 
 public class SubscriberImpl extends ProxyService
     implements Subscriber, RetryingConnectionObserver<List<SequencedMessage>> {
-  @VisibleForTesting static final long FLOW_REQUESTS_FLUSH_INTERVAL_MS = 100;
+  private static final Duration FLOW_REQUESTS_FLUSH_INTERVAL = Duration.ofMillis(100);
+
+  private final AlarmFactory alarmFactory;
 
   private final Consumer<List<SequencedMessage>> messageConsumer;
 
@@ -50,7 +54,8 @@ public class SubscriberImpl extends ProxyService
 
   private final CloseableMonitor monitor = new CloseableMonitor();
 
-  private Future<?> alarmFuture;
+  @GuardedBy("monitor.monitor")
+  private Optional<Future<?>> alarmFuture = Optional.empty();
 
   @GuardedBy("monitor.monitor")
   private final RetryingConnection<SubscribeRequest, ConnectedSubscriber> connection;
@@ -71,11 +76,13 @@ public class SubscriberImpl extends ProxyService
   SubscriberImpl(
       StreamFactory<SubscribeRequest, SubscribeResponse> streamFactory,
       ConnectedSubscriberFactory factory,
+      AlarmFactory alarmFactory,
       InitialSubscribeRequest baseInitialRequest,
       SeekRequest initialLocation,
       Consumer<List<SequencedMessage>> messageConsumer,
       SubscriberResetHandler resetHandler)
       throws ApiException {
+    this.alarmFactory = alarmFactory;
     this.messageConsumer = messageConsumer;
     this.resetHandler = resetHandler;
     this.baseInitialRequest = baseInitialRequest;
@@ -95,6 +102,7 @@ public class SubscriberImpl extends ProxyService
     this(
         stream -> client.subscribeCallable().splitCall(stream),
         new ConnectedSubscriberImpl.Factory(),
+        AlarmFactory.create(FLOW_REQUESTS_FLUSH_INTERVAL),
         baseInitialRequest,
         initialLocation,
         messageConsumer,
@@ -104,32 +112,24 @@ public class SubscriberImpl extends ProxyService
 
   // ProxyService implementation.
   @Override
-  protected void handlePermanentError(CheckedApiException error) {
-    try (CloseableMonitor.Hold h = monitor.enter()) {
-      shutdown = true;
-      onPermanentError(error);
-    }
-  }
-
-  @Override
   protected void start() {
     try (CloseableMonitor.Hold h = monitor.enter()) {
-      alarmFuture =
-          SystemExecutors.getAlarmExecutor()
-              .scheduleWithFixedDelay(
-                  this::processBatchFlowRequest,
-                  FLOW_REQUESTS_FLUSH_INTERVAL_MS,
-                  FLOW_REQUESTS_FLUSH_INTERVAL_MS,
-                  TimeUnit.MILLISECONDS);
+      alarmFuture = Optional.of(alarmFactory.newAlarm(this::processBatchFlowRequest));
     }
   }
 
   @Override
   protected void stop() {
-    alarmFuture.cancel(false /* mayInterruptIfRunning */);
     try (CloseableMonitor.Hold h = monitor.enter()) {
       shutdown = true;
+      this.alarmFuture.ifPresent(future -> future.cancel(false));
+      this.alarmFuture = Optional.empty();
     }
+  }
+
+  @Override
+  protected void handlePermanentError(CheckedApiException error) {
+    stop();
   }
 
   @Override
@@ -206,8 +206,7 @@ public class SubscriberImpl extends ProxyService
     messageConsumer.accept(messages);
   }
 
-  @VisibleForTesting
-  void processBatchFlowRequest() {
+  private void processBatchFlowRequest() {
     try (CloseableMonitor.Hold h = monitor.enter()) {
       if (shutdown) return;
       connection.modifyConnection(

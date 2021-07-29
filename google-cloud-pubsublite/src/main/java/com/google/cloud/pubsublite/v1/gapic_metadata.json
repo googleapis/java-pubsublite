@@ -55,6 +55,9 @@
             "ListTopics": {
               "methods": ["listTopics", "listTopics", "listTopics", "listTopicsPagedCallable", "listTopicsCallable"]
             },
+            "SeekSubscription": {
+              "methods": ["seekSubscriptionAsync", "seekSubscriptionOperationCallable", "seekSubscriptionCallable"]
+            },
             "UpdateReservation": {
               "methods": ["updateReservation", "updateReservation", "updateReservationCallable"]
             },

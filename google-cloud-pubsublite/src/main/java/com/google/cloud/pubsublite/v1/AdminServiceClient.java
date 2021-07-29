@@ -21,9 +21,11 @@ import com.google.api.core.ApiFuture;
 import com.google.api.core.ApiFutures;
 import com.google.api.core.BetaApi;
 import com.google.api.gax.core.BackgroundResource;
+import com.google.api.gax.longrunning.OperationFuture;
 import com.google.api.gax.paging.AbstractFixedSizeCollection;
 import com.google.api.gax.paging.AbstractPage;
 import com.google.api.gax.paging.AbstractPagedListResponse;
+import com.google.api.gax.rpc.OperationCallable;
 import com.google.api.gax.rpc.PageContext;
 import com.google.api.gax.rpc.UnaryCallable;
 import com.google.cloud.pubsublite.proto.CreateReservationRequest;
@@ -47,8 +49,11 @@ import com.google.cloud.pubsublite.proto.ListTopicSubscriptionsResponse;
 import com.google.cloud.pubsublite.proto.ListTopicsRequest;
 import com.google.cloud.pubsublite.proto.ListTopicsResponse;
 import com.google.cloud.pubsublite.proto.LocationName;
+import com.google.cloud.pubsublite.proto.OperationMetadata;
 import com.google.cloud.pubsublite.proto.Reservation;
 import com.google.cloud.pubsublite.proto.ReservationName;
+import com.google.cloud.pubsublite.proto.SeekSubscriptionRequest;
+import com.google.cloud.pubsublite.proto.SeekSubscriptionResponse;
 import com.google.cloud.pubsublite.proto.Subscription;
 import com.google.cloud.pubsublite.proto.SubscriptionName;
 import com.google.cloud.pubsublite.proto.Topic;
@@ -60,6 +65,8 @@ import com.google.cloud.pubsublite.proto.UpdateTopicRequest;
 import com.google.cloud.pubsublite.v1.stub.AdminServiceStub;
 import com.google.cloud.pubsublite.v1.stub.AdminServiceStubSettings;
 import com.google.common.util.concurrent.MoreExecutors;
+import com.google.longrunning.Operation;
+import com.google.longrunning.OperationsClient;
 import com.google.protobuf.Empty;
 import com.google.protobuf.FieldMask;
 import java.io.IOException;
@@ -134,6 +141,7 @@ import javax.annotation.Generated;
 public class AdminServiceClient implements BackgroundResource {
   private final AdminServiceSettings settings;
   private final AdminServiceStub stub;
+  private final OperationsClient operationsClient;
 
   /** Constructs an instance of AdminServiceClient with default settings. */
   public static final AdminServiceClient create() throws IOException {
@@ -165,12 +173,14 @@ public class AdminServiceClient implements BackgroundResource {
   protected AdminServiceClient(AdminServiceSettings settings) throws IOException {
     this.settings = settings;
     this.stub = ((AdminServiceStubSettings) settings.getStubSettings()).createStub();
+    this.operationsClient = OperationsClient.create(this.stub.getOperationsStub());
   }
 
   @BetaApi("A restructuring of stub classes is planned, so this may break in the future")
   protected AdminServiceClient(AdminServiceStub stub) {
     this.settings = null;
     this.stub = stub;
+    this.operationsClient = OperationsClient.create(this.stub.getOperationsStub());
   }
 
   public final AdminServiceSettings getSettings() {
@@ -180,6 +190,14 @@ public class AdminServiceClient implements BackgroundResource {
   @BetaApi("A restructuring of stub classes is planned, so this may break in the future")
   public AdminServiceStub getStub() {
     return stub;
+  }
+
+  /**
+   * Returns the OperationsClient that can be used to query the status of a long-running operation
+   * returned by another API method call.
+   */
+  public final OperationsClient getOperationsClient() {
+    return operationsClient;
   }
 
   // AUTO-GENERATED DOCUMENTATION AND METHOD.
@@ -1433,6 +1451,129 @@ public class AdminServiceClient implements BackgroundResource {
    */
   public final UnaryCallable<DeleteSubscriptionRequest, Empty> deleteSubscriptionCallable() {
     return stub.deleteSubscriptionCallable();
+  }
+
+  // AUTO-GENERATED DOCUMENTATION AND METHOD.
+  /**
+   * Performs an out-of-band seek for a subscription to a specified target, which may be timestamps
+   * or named positions within the message backlog. Seek translates these targets to cursors for
+   * each partition and orchestrates subscribers to start consuming messages from these seek
+   * cursors.
+   *
+   * <p>If an operation is returned, the seek has been registered and subscribers will eventually
+   * receive messages from the seek cursors (i.e. eventual consistency), as long as they are using a
+   * minimum supported client library version and not a system that tracks cursors independently of
+   * Pub/Sub Lite (e.g. Apache Beam, Dataflow, Spark). The seek operation will fail for unsupported
+   * clients.
+   *
+   * <p>If clients would like to know when subscribers react to the seek (or not), they can poll the
+   * operation. The seek operation will succeed and complete once subscribers are ready to receive
+   * messages from the seek cursors for all partitions of the topic. This means that the seek
+   * operation will not complete until all subscribers come online.
+   *
+   * <p>If the previous seek operation has not yet completed, it will be aborted and the new
+   * invocation of seek will supersede it.
+   *
+   * <p>Sample code:
+   *
+   * <pre>{@code
+   * try (AdminServiceClient adminServiceClient = AdminServiceClient.create()) {
+   *   SeekSubscriptionRequest request =
+   *       SeekSubscriptionRequest.newBuilder()
+   *           .setName(SubscriptionName.of("[PROJECT]", "[LOCATION]", "[SUBSCRIPTION]").toString())
+   *           .build();
+   *   SeekSubscriptionResponse response = adminServiceClient.seekSubscriptionAsync(request).get();
+   * }
+   * }</pre>
+   *
+   * @param request The request object containing all of the parameters for the API call.
+   * @throws com.google.api.gax.rpc.ApiException if the remote call fails
+   */
+  public final OperationFuture<SeekSubscriptionResponse, OperationMetadata> seekSubscriptionAsync(
+      SeekSubscriptionRequest request) {
+    return seekSubscriptionOperationCallable().futureCall(request);
+  }
+
+  // AUTO-GENERATED DOCUMENTATION AND METHOD.
+  /**
+   * Performs an out-of-band seek for a subscription to a specified target, which may be timestamps
+   * or named positions within the message backlog. Seek translates these targets to cursors for
+   * each partition and orchestrates subscribers to start consuming messages from these seek
+   * cursors.
+   *
+   * <p>If an operation is returned, the seek has been registered and subscribers will eventually
+   * receive messages from the seek cursors (i.e. eventual consistency), as long as they are using a
+   * minimum supported client library version and not a system that tracks cursors independently of
+   * Pub/Sub Lite (e.g. Apache Beam, Dataflow, Spark). The seek operation will fail for unsupported
+   * clients.
+   *
+   * <p>If clients would like to know when subscribers react to the seek (or not), they can poll the
+   * operation. The seek operation will succeed and complete once subscribers are ready to receive
+   * messages from the seek cursors for all partitions of the topic. This means that the seek
+   * operation will not complete until all subscribers come online.
+   *
+   * <p>If the previous seek operation has not yet completed, it will be aborted and the new
+   * invocation of seek will supersede it.
+   *
+   * <p>Sample code:
+   *
+   * <pre>{@code
+   * try (AdminServiceClient adminServiceClient = AdminServiceClient.create()) {
+   *   SeekSubscriptionRequest request =
+   *       SeekSubscriptionRequest.newBuilder()
+   *           .setName(SubscriptionName.of("[PROJECT]", "[LOCATION]", "[SUBSCRIPTION]").toString())
+   *           .build();
+   *   OperationFuture<SeekSubscriptionResponse, OperationMetadata> future =
+   *       adminServiceClient.seekSubscriptionOperationCallable().futureCall(request);
+   *   // Do something.
+   *   SeekSubscriptionResponse response = future.get();
+   * }
+   * }</pre>
+   */
+  public final OperationCallable<
+          SeekSubscriptionRequest, SeekSubscriptionResponse, OperationMetadata>
+      seekSubscriptionOperationCallable() {
+    return stub.seekSubscriptionOperationCallable();
+  }
+
+  // AUTO-GENERATED DOCUMENTATION AND METHOD.
+  /**
+   * Performs an out-of-band seek for a subscription to a specified target, which may be timestamps
+   * or named positions within the message backlog. Seek translates these targets to cursors for
+   * each partition and orchestrates subscribers to start consuming messages from these seek
+   * cursors.
+   *
+   * <p>If an operation is returned, the seek has been registered and subscribers will eventually
+   * receive messages from the seek cursors (i.e. eventual consistency), as long as they are using a
+   * minimum supported client library version and not a system that tracks cursors independently of
+   * Pub/Sub Lite (e.g. Apache Beam, Dataflow, Spark). The seek operation will fail for unsupported
+   * clients.
+   *
+   * <p>If clients would like to know when subscribers react to the seek (or not), they can poll the
+   * operation. The seek operation will succeed and complete once subscribers are ready to receive
+   * messages from the seek cursors for all partitions of the topic. This means that the seek
+   * operation will not complete until all subscribers come online.
+   *
+   * <p>If the previous seek operation has not yet completed, it will be aborted and the new
+   * invocation of seek will supersede it.
+   *
+   * <p>Sample code:
+   *
+   * <pre>{@code
+   * try (AdminServiceClient adminServiceClient = AdminServiceClient.create()) {
+   *   SeekSubscriptionRequest request =
+   *       SeekSubscriptionRequest.newBuilder()
+   *           .setName(SubscriptionName.of("[PROJECT]", "[LOCATION]", "[SUBSCRIPTION]").toString())
+   *           .build();
+   *   ApiFuture<Operation> future =
+   *       adminServiceClient.seekSubscriptionCallable().futureCall(request);
+   *   // Do something.
+   *   Operation response = future.get();
+   * }
+   * }</pre>
+   */
+  public final UnaryCallable<SeekSubscriptionRequest, Operation> seekSubscriptionCallable() {
+    return stub.seekSubscriptionCallable();
   }
 
   // AUTO-GENERATED DOCUMENTATION AND METHOD.

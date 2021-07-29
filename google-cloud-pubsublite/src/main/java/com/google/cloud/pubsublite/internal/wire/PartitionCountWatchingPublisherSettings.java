@@ -18,6 +18,7 @@ package com.google.cloud.pubsublite.internal.wire;
 import com.google.api.gax.rpc.ApiException;
 import com.google.auto.value.AutoValue;
 import com.google.cloud.pubsublite.*;
+import com.google.cloud.pubsublite.internal.AlarmFactory;
 import com.google.cloud.pubsublite.internal.DefaultRoutingPolicy;
 import com.google.cloud.pubsublite.internal.Publisher;
 import java.time.Duration;
@@ -36,7 +37,7 @@ public abstract class PartitionCountWatchingPublisherSettings {
 
   public static Builder newBuilder() {
     return new AutoValue_PartitionCountWatchingPublisherSettings.Builder()
-        .setConfigPollPeriod(Duration.ofMinutes(10));
+        .setConfigPollPeriod(Duration.ofMinutes(1));
   }
 
   @AutoValue.Builder
@@ -58,6 +59,7 @@ public abstract class PartitionCountWatchingPublisherSettings {
     return new PartitionCountWatchingPublisher(
         publisherFactory(),
         DefaultRoutingPolicy::new,
-        new PartitionCountWatcherImpl.Factory(topic(), adminClient(), configPollPeriod()));
+        new PartitionCountWatcherImpl.Factory(
+            topic(), adminClient(), AlarmFactory.create(configPollPeriod())));
   }
 }

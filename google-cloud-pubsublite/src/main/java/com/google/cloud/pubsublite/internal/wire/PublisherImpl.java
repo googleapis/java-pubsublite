@@ -29,6 +29,7 @@ import com.google.api.gax.rpc.StatusCode.Code;
 import com.google.cloud.pubsublite.Constants;
 import com.google.cloud.pubsublite.Message;
 import com.google.cloud.pubsublite.Offset;
+import com.google.cloud.pubsublite.internal.AlarmFactory;
 import com.google.cloud.pubsublite.internal.CheckedApiException;
 import com.google.cloud.pubsublite.internal.CloseableMonitor;
 import com.google.cloud.pubsublite.internal.ProxyService;
@@ -41,22 +42,26 @@ import com.google.cloud.pubsublite.proto.PublishResponse;
 import com.google.cloud.pubsublite.v1.PublisherServiceClient;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Preconditions;
+import com.google.common.flogger.GoogleLogger;
 import com.google.common.util.concurrent.Monitor;
+import java.time.Duration;
 import java.util.ArrayDeque;
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Queue;
 import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import javax.annotation.concurrent.GuardedBy;
 
 public final class PublisherImpl extends ProxyService
     implements Publisher<Offset>, RetryingConnectionObserver<Offset> {
+  private static final GoogleLogger logger = GoogleLogger.forEnclosingClass();
+
+  private final AlarmFactory alarmFactory;
   private final BatchingSettings batchingSettings;
   private final PublishRequest initialRequest;
-  private Future<?> alarmFuture;
 
   private final CloseableMonitor monitor = new CloseableMonitor();
   private final Monitor.Guard noneInFlight =
@@ -66,6 +71,9 @@ public final class PublisherImpl extends ProxyService
           return batchesInFlight.isEmpty() || shutdown;
         }
       };
+
+  @GuardedBy("monitor.monitor")
+  private Optional<Future<?>> alarmFuture = Optional.empty();
 
   @GuardedBy("monitor.monitor")
   private final RetryingConnection<PublishRequest, BatchPublisher> connection;
@@ -97,10 +105,11 @@ public final class PublisherImpl extends ProxyService
   PublisherImpl(
       StreamFactory<PublishRequest, PublishResponse> streamFactory,
       BatchPublisherFactory publisherFactory,
+      AlarmFactory alarmFactory,
       InitialPublishRequest initialRequest,
       BatchingSettings batchingSettings)
       throws ApiException {
-    Preconditions.checkNotNull(batchingSettings.getDelayThreshold());
+    this.alarmFactory = alarmFactory;
     Preconditions.checkNotNull(batchingSettings.getRequestByteThreshold());
     Preconditions.checkNotNull(batchingSettings.getElementCountThreshold());
     this.batchingSettings = batchingSettings;
@@ -122,6 +131,9 @@ public final class PublisherImpl extends ProxyService
     this(
         responseStream -> client.publishCallable().splitCall(responseStream),
         new BatchPublisherImpl.Factory(),
+        AlarmFactory.create(
+            Duration.ofNanos(
+                Objects.requireNonNull(batchingSettings.getDelayThreshold()).toNanos())),
         initialRequest,
         batchingSettings);
     addServices(backgroundResourceAsApiService(client));
@@ -135,6 +147,7 @@ public final class PublisherImpl extends ProxyService
         messages.add(UnbatchedMessage.of(batch.messages.get(i), batch.messageFutures.get(i)));
       }
     }
+    logger.atFiner().log("Re-publishing %s messages after reconnection", messages.size());
     long size = 0;
     int count = 0;
     Queue<UnbatchedMessage> currentBatch = new ArrayDeque<>();
@@ -179,6 +192,8 @@ public final class PublisherImpl extends ProxyService
   protected void handlePermanentError(CheckedApiException error) {
     try (CloseableMonitor.Hold h = monitor.enter()) {
       shutdown = true;
+      this.alarmFuture.ifPresent(future -> future.cancel(false));
+      this.alarmFuture = Optional.empty();
       terminateOutstandingPublishes(error);
     }
   }
@@ -186,24 +201,17 @@ public final class PublisherImpl extends ProxyService
   @Override
   protected void start() {
     try (CloseableMonitor.Hold h = monitor.enter()) {
-      // After initialize, the stream can have an error and try to cancel the future, but the
-      // future can call into the stream, so this needs to be created under lock.
-      this.alarmFuture =
-          SystemExecutors.getAlarmExecutor()
-              .scheduleWithFixedDelay(
-                  this::flushToStream,
-                  batchingSettings.getDelayThreshold().toNanos(),
-                  batchingSettings.getDelayThreshold().toNanos(),
-                  TimeUnit.NANOSECONDS);
+      this.alarmFuture = Optional.of(alarmFactory.newAlarm(this::flushToStream));
     }
   }
 
   @Override
   protected void stop() {
-    alarmFuture.cancel(false /* mayInterruptIfRunning */);
     flush(); // Flush any outstanding messages that were batched.
     try (CloseableMonitor.Hold h = monitor.enter()) {
       shutdown = true;
+      this.alarmFuture.ifPresent(future -> future.cancel(false));
+      this.alarmFuture = Optional.empty();
     }
     flush(); // Flush again in case messages were added since shutdown was set.
   }
@@ -256,8 +264,7 @@ public final class PublisherImpl extends ProxyService
     }
   }
 
-  @VisibleForTesting
-  void flushToStream() {
+  private void flushToStream() {
     try (CloseableMonitor.Hold h = monitor.enter()) {
       if (shutdown) return;
       processBatch(batcher.flush());

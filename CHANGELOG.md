@@ -1,5 +1,26 @@
 # Changelog
 
+## [0.18.0](https://www.github.com/googleapis/java-pubsublite/compare/v0.17.0...v0.18.0) (2021-07-29)
+
+
+### Features
+
+* split versions.txt to independently release the Beam IO ([#766](https://www.github.com/googleapis/java-pubsublite/issues/766)) ([b6e48dc](https://www.github.com/googleapis/java-pubsublite/commit/b6e48dc7f21ad3f8857d42ca2e3ebc549eea35f6))
+* Update CloudPubsubChecks to CloudPubsubTransforms ([#730](https://www.github.com/googleapis/java-pubsublite/issues/730)) ([2e10924](https://www.github.com/googleapis/java-pubsublite/commit/2e109244e43ed4beec50ba9cbc5efadddfb53b5c))
+
+
+### Bug Fixes
+
+* deflake SubscriptionPartitionProcessorImplTest ([#768](https://www.github.com/googleapis/java-pubsublite/issues/768)) ([c34e430](https://www.github.com/googleapis/java-pubsublite/commit/c34e4303cfb8ce9d0b812ad5c1dd306af32a544e))
+* remove DlqProvider which should remain in the beam repo and bump beam version ([#772](https://www.github.com/googleapis/java-pubsublite/issues/772)) ([a540c1d](https://www.github.com/googleapis/java-pubsublite/commit/a540c1dd8eb7e7b2e6afd03550433060635a62fc))
+
+
+### Dependencies
+
+* define Beam version as a Maven property in pom ([#714](https://www.github.com/googleapis/java-pubsublite/issues/714)) ([69106fe](https://www.github.com/googleapis/java-pubsublite/commit/69106fe309040bc24f2af4c70dfddb602963f365))
+* update dependency com.google.apis:google-api-services-bigquery to v2-rev20210617-1.32.1 ([#773](https://www.github.com/googleapis/java-pubsublite/issues/773)) ([e904392](https://www.github.com/googleapis/java-pubsublite/commit/e9043922fbf83220aeff301890fc58b33ae925b4))
+* Version bump cloud BOM and remove no longer needed dependency management settings ([#777](https://www.github.com/googleapis/java-pubsublite/issues/777)) ([1cd23cb](https://www.github.com/googleapis/java-pubsublite/commit/1cd23cb3295d521453c1658c25468f4bd82962e2))
+
 ## [0.17.0](https://www.github.com/googleapis/java-pubsublite/compare/v0.16.1...v0.17.0) (2021-07-26)
 
 

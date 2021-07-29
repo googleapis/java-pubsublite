@@ -26,8 +26,8 @@
       </dependency>
       <dependency>
         <groupId>com.google.cloud</groupId>
-        <artifactId>google-cloud-pubsub-bom</artifactId>
-        <version>1.113.5</version>
+        <artifactId>google-cloud-bom</artifactId>
+        <version>0.156.0</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>

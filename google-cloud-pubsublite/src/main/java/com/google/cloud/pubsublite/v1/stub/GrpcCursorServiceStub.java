@@ -24,7 +24,6 @@ import com.google.api.gax.grpc.GrpcCallSettings;
 import com.google.api.gax.grpc.GrpcStubCallableFactory;
 import com.google.api.gax.rpc.BidiStreamingCallable;
 import com.google.api.gax.rpc.ClientContext;
-import com.google.api.gax.rpc.RequestParamsExtractor;
 import com.google.api.gax.rpc.UnaryCallable;
 import com.google.cloud.pubsublite.proto.CommitCursorRequest;
 import com.google.cloud.pubsublite.proto.CommitCursorResponse;
@@ -37,7 +36,6 @@ import com.google.longrunning.stub.GrpcOperationsStub;
 import io.grpc.MethodDescriptor;
 import io.grpc.protobuf.ProtoUtils;
 import java.io.IOException;
-import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import javax.annotation.Generated;
 
@@ -141,13 +139,10 @@ public class GrpcCursorServiceStub extends CursorServiceStub {
         GrpcCallSettings.<CommitCursorRequest, CommitCursorResponse>newBuilder()
             .setMethodDescriptor(commitCursorMethodDescriptor)
             .setParamsExtractor(
-                new RequestParamsExtractor<CommitCursorRequest>() {
-                  @Override
-                  public Map<String, String> extract(CommitCursorRequest request) {
-                    ImmutableMap.Builder<String, String> params = ImmutableMap.builder();
-                    params.put("subscription", String.valueOf(request.getSubscription()));
-                    return params.build();
-                  }
+                request -> {
+                  ImmutableMap.Builder<String, String> params = ImmutableMap.builder();
+                  params.put("subscription", String.valueOf(request.getSubscription()));
+                  return params.build();
                 })
             .build();
     GrpcCallSettings<ListPartitionCursorsRequest, ListPartitionCursorsResponse>
@@ -155,13 +150,10 @@ public class GrpcCursorServiceStub extends CursorServiceStub {
             GrpcCallSettings.<ListPartitionCursorsRequest, ListPartitionCursorsResponse>newBuilder()
                 .setMethodDescriptor(listPartitionCursorsMethodDescriptor)
                 .setParamsExtractor(
-                    new RequestParamsExtractor<ListPartitionCursorsRequest>() {
-                      @Override
-                      public Map<String, String> extract(ListPartitionCursorsRequest request) {
-                        ImmutableMap.Builder<String, String> params = ImmutableMap.builder();
-                        params.put("parent", String.valueOf(request.getParent()));
-                        return params.build();
-                      }
+                    request -> {
+                      ImmutableMap.Builder<String, String> params = ImmutableMap.builder();
+                      params.put("parent", String.valueOf(request.getParent()));
+                      return params.build();
                     })
                 .build();
 

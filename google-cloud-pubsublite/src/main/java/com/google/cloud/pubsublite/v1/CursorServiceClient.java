@@ -16,7 +16,6 @@
 
 package com.google.cloud.pubsublite.v1;
 
-import com.google.api.core.ApiFunction;
 import com.google.api.core.ApiFuture;
 import com.google.api.core.ApiFutures;
 import com.google.api.core.BetaApi;
@@ -431,12 +430,7 @@ public class CursorServiceClient implements BackgroundResource {
           ListPartitionCursorsPage.createEmptyPage().createPageAsync(context, futureResponse);
       return ApiFutures.transform(
           futurePage,
-          new ApiFunction<ListPartitionCursorsPage, ListPartitionCursorsPagedResponse>() {
-            @Override
-            public ListPartitionCursorsPagedResponse apply(ListPartitionCursorsPage input) {
-              return new ListPartitionCursorsPagedResponse(input);
-            }
-          },
+          input -> new ListPartitionCursorsPagedResponse(input),
           MoreExecutors.directExecutor());
     }
 

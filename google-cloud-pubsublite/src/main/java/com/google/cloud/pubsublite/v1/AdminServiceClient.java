@@ -16,7 +16,6 @@
 
 package com.google.cloud.pubsublite.v1;
 
-import com.google.api.core.ApiFunction;
 import com.google.api.core.ApiFuture;
 import com.google.api.core.ApiFutures;
 import com.google.api.core.BetaApi;
@@ -2285,14 +2284,7 @@ public class AdminServiceClient implements BackgroundResource {
       ApiFuture<ListTopicsPage> futurePage =
           ListTopicsPage.createEmptyPage().createPageAsync(context, futureResponse);
       return ApiFutures.transform(
-          futurePage,
-          new ApiFunction<ListTopicsPage, ListTopicsPagedResponse>() {
-            @Override
-            public ListTopicsPagedResponse apply(ListTopicsPage input) {
-              return new ListTopicsPagedResponse(input);
-            }
-          },
-          MoreExecutors.directExecutor());
+          futurePage, input -> new ListTopicsPagedResponse(input), MoreExecutors.directExecutor());
     }
 
     private ListTopicsPagedResponse(ListTopicsPage page) {
@@ -2366,12 +2358,7 @@ public class AdminServiceClient implements BackgroundResource {
           ListTopicSubscriptionsPage.createEmptyPage().createPageAsync(context, futureResponse);
       return ApiFutures.transform(
           futurePage,
-          new ApiFunction<ListTopicSubscriptionsPage, ListTopicSubscriptionsPagedResponse>() {
-            @Override
-            public ListTopicSubscriptionsPagedResponse apply(ListTopicSubscriptionsPage input) {
-              return new ListTopicSubscriptionsPagedResponse(input);
-            }
-          },
+          input -> new ListTopicSubscriptionsPagedResponse(input),
           MoreExecutors.directExecutor());
     }
 
@@ -2451,12 +2438,7 @@ public class AdminServiceClient implements BackgroundResource {
           ListSubscriptionsPage.createEmptyPage().createPageAsync(context, futureResponse);
       return ApiFutures.transform(
           futurePage,
-          new ApiFunction<ListSubscriptionsPage, ListSubscriptionsPagedResponse>() {
-            @Override
-            public ListSubscriptionsPagedResponse apply(ListSubscriptionsPage input) {
-              return new ListSubscriptionsPagedResponse(input);
-            }
-          },
+          input -> new ListSubscriptionsPagedResponse(input),
           MoreExecutors.directExecutor());
     }
 
@@ -2536,12 +2518,7 @@ public class AdminServiceClient implements BackgroundResource {
           ListReservationsPage.createEmptyPage().createPageAsync(context, futureResponse);
       return ApiFutures.transform(
           futurePage,
-          new ApiFunction<ListReservationsPage, ListReservationsPagedResponse>() {
-            @Override
-            public ListReservationsPagedResponse apply(ListReservationsPage input) {
-              return new ListReservationsPagedResponse(input);
-            }
-          },
+          input -> new ListReservationsPagedResponse(input),
           MoreExecutors.directExecutor());
     }
 
@@ -2618,12 +2595,7 @@ public class AdminServiceClient implements BackgroundResource {
           ListReservationTopicsPage.createEmptyPage().createPageAsync(context, futureResponse);
       return ApiFutures.transform(
           futurePage,
-          new ApiFunction<ListReservationTopicsPage, ListReservationTopicsPagedResponse>() {
-            @Override
-            public ListReservationTopicsPagedResponse apply(ListReservationTopicsPage input) {
-              return new ListReservationTopicsPagedResponse(input);
-            }
-          },
+          input -> new ListReservationTopicsPagedResponse(input),
           MoreExecutors.directExecutor());
     }
 

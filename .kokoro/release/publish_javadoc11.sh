@@ -61,7 +61,7 @@ python3 -m docuploader create-metadata \
  --language java
 
 # upload yml to production bucket
-python3 -m docuploader upload . \
- --credentials ${CREDENTIALS} \
- --staging-bucket ${STAGING_BUCKET_V2} \
- --destination-prefix docfx
+#python3 -m docuploader upload . \
+# --credentials ${CREDENTIALS} \
+# --staging-bucket ${STAGING_BUCKET_V2} \
+# --destination-prefix docfx

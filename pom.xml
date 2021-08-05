@@ -119,6 +119,28 @@
     </plugins>
   </build>
 
+  <reporting>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-javadoc-plugin</artifactId>
+        <version>3.3.0</version>
+        <configuration>
+          <source>8</source>
+          <links combine.self="override">
+            <link>https://googleapis.dev/java/api-common/latest/</link>
+            <link>https://googleapis.dev/java/gax/latest/</link>
+            <link>https://googleapis.dev/java/google-auth-library/latest/</link>
+            <link>https://developers.google.com/protocol-buffers/docs/reference/java/</link>
+            <link>https://grpc.io/grpc-java/javadoc/</link>
+            <link>https://docs.oracle.com/javase/8/docs/api/</link>
+          </links>
+          <excludePackageNames>com.google.cloud.pubsublite.cloudpubsub.internal:com.google.cloud.pubsublite.internal:com.google.cloud.pubsublite.internal.testing:com.google.cloud.pubsublite.internal.wire</excludePackageNames>
+        </configuration>
+      </plugin>
+    </plugins>
+  </reporting>
+
   <modules>
     <module>google-cloud-pubsublite</module>
     <module>grpc-google-cloud-pubsublite-v1</module>
@@ -158,6 +180,27 @@
           </plugin>
         </plugins>
       </build>
+    </profile>
+
+    <profile>
+      <id>docFX</id>
+      <activation>
+        <property>
+          <name>docFX</name>
+        </property>
+      </activation>
+      <reporting>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-javadoc-plugin</artifactId>
+            <version>3.3.0</version>
+            <configuration>
+              <excludePackageNames>com.google.cloud.pubsublite.cloudpubsub.internal:com.google.cloud.pubsublite.internal:com.google.cloud.pubsublite.internal.testing:com.google.cloud.pubsublite.internal.wire</excludePackageNames>
+            </configuration>
+          </plugin>
+        </plugins>
+      </reporting>
     </profile>
   </profiles>
 </project>

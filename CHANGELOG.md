@@ -1,5 +1,26 @@
 # Changelog
 
+## [1.0.0](https://www.github.com/googleapis/java-pubsublite/compare/v0.18.0...v1.0.0) (2021-08-04)
+
+
+### Features
+
+* promote to 1.0.0 ([#764](https://www.github.com/googleapis/java-pubsublite/issues/764)) ([2d37abe](https://www.github.com/googleapis/java-pubsublite/commit/2d37abe1436cae9954ea6798ca5e347a2938c422))
+
+
+### Miscellaneous Chores
+
+* **deps:** update dependency com.google.cloud:google-cloud-pubsublite to v0.18.0 ([#782](https://www.github.com/googleapis/java-pubsublite/issues/782)) ([76a238a](https://www.github.com/googleapis/java-pubsublite/commit/76a238adfb907afaca1e6eb448d19f1871644e67))
+
+
+### Dependencies
+
+* update dependency com.google.cloud:google-cloud-shared-dependencies to v2 ([#795](https://www.github.com/googleapis/java-pubsublite/issues/795)) ([8f81925](https://www.github.com/googleapis/java-pubsublite/commit/8f81925579f7cb5b30df92aa298fc404d4975244))
+* update dependency com.google.cloud:pubsublite-beam-io to v0.18.0 ([#783](https://www.github.com/googleapis/java-pubsublite/issues/783)) ([1fd9834](https://www.github.com/googleapis/java-pubsublite/commit/1fd9834e2f82922464be740f90c8d6d09aebce04))
+* update dependency com.google.errorprone:error_prone_annotations to v2.8.1 ([#789](https://www.github.com/googleapis/java-pubsublite/issues/789)) ([cd5c628](https://www.github.com/googleapis/java-pubsublite/commit/cd5c628748c0dff7366f9e5a149af4a5b7a06a82))
+* update dependency com.google.errorprone:error_prone_core to v2.8.1 ([#790](https://www.github.com/googleapis/java-pubsublite/issues/790)) ([573e288](https://www.github.com/googleapis/java-pubsublite/commit/573e288e6060f2fb85b2695aa7c8432abe2aa75f))
+* update dependency org.checkerframework:checker-qual to v3.17.0 ([#788](https://www.github.com/googleapis/java-pubsublite/issues/788)) ([50ce4dc](https://www.github.com/googleapis/java-pubsublite/commit/50ce4dc4c3a9a3a104c964011067f5a3df40bd66))
+
 ## [0.18.0](https://www.github.com/googleapis/java-pubsublite/compare/v0.17.0...v0.18.0) (2021-07-29)
 
 

@@ -38,7 +38,7 @@
     <maven.compiler.target>1.8</maven.compiler.target>
     <maven.compiler.source>1.8</maven.compiler.source>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <beam.version>2.29.0</beam.version>
+    <beam.version>2.31.0</beam.version>
   </properties>
 
   <dependencies>
@@ -47,12 +47,12 @@
     <dependency>
       <groupId>com.google.cloud</groupId>
       <artifactId>google-cloud-pubsublite</artifactId>
-      <version>0.17.0</version>
+      <version>1.0.1</version>
     </dependency>
     <dependency>
       <groupId>com.google.cloud</groupId>
       <artifactId>google-cloud-pubsub</artifactId>
-      <version>1.113.5</version>
+      <version>1.113.6</version>
     </dependency>
     <!-- [END pubsublite_java_dependencies] -->
     <!-- [END pubsublite_install_without_bom] -->
@@ -65,7 +65,7 @@
     <dependency>
       <groupId>com.google.cloud</groupId>
       <artifactId>pubsublite-beam-io</artifactId>
-      <version>0.17.0</version>
+      <version>0.19.1</version>
     </dependency>
 
     <dependency>

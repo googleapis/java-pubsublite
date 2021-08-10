@@ -19,6 +19,8 @@ package pubsublite;
 import static com.google.common.truth.Truth.assertThat;
 import static junit.framework.TestCase.assertNotNull;
 
+import com.google.cloud.pubsublite.BacklogLocation;
+import com.google.cloud.pubsublite.SeekTarget;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.util.Random;
@@ -158,6 +160,17 @@ public class QuickStartIT {
       assertThat(bout.toString()).contains(String.format("Data : message-%s", i));
     }
     assertThat(bout.toString()).contains("Subscriber is shut down: TERMINATED");
+
+    bout.reset();
+    // Seek.
+    SeekSubscriptionExample.seekSubscriptionExample(
+        cloudRegion,
+        zoneId,
+        projectNumber,
+        subscriptionId,
+        SeekTarget.of(BacklogLocation.BEGINNING),
+        false);
+    assertThat(bout.toString()).contains("initiated successfully");
 
     bout.reset();
     // Delete a subscription.

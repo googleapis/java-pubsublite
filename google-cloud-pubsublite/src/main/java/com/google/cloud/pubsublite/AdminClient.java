@@ -174,7 +174,6 @@ public interface AdminClient extends ApiBackgroundResource {
    *     operation completes successfully, or otherwise throw an {@link
    *     com.google.api.gax.rpc.ApiException}.
    */
-  @BetaApi("This may not be implemented in the backend, it is a pre-release feature.")
   OperationFuture<SeekSubscriptionResponse, OperationMetadata> seekSubscription(
       SubscriptionPath path, SeekTarget target);
 

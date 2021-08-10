@@ -1,5 +1,12 @@
 # Changelog
 
+### [1.0.2](https://www.github.com/googleapis/java-pubsublite/compare/v1.0.1...v1.0.2) (2021-08-10)
+
+
+### Dependencies
+
+* update dependency com.google.cloud:pubsublite-beam-io to v0.19.1 ([#810](https://www.github.com/googleapis/java-pubsublite/issues/810)) ([7764c1d](https://www.github.com/googleapis/java-pubsublite/commit/7764c1d66d4244a1c6f3fbea5ca898eb040a3d0a))
+
 ### [1.0.1](https://www.github.com/googleapis/java-pubsublite/compare/v1.0.0...v1.0.1) (2021-08-09)
 
 

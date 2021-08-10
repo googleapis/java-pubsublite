@@ -52,8 +52,8 @@ public class SeekSubscriptionExample {
     SeekTarget target = SeekTarget.of(BacklogLocation.BEGINNING);
 
     // Optional: Wait for the seek operation to complete, which indicates when subscribers for all
-    // partitions are receiving messages from the seek target. If subscribers are offline, the seek
-    // will complete once they are online.
+    // partitions are receiving messages from the seek target. If subscribers are offline, the
+    // operation will complete once they are online.
     boolean waitForOperation = false;
 
     seekSubscriptionExample(

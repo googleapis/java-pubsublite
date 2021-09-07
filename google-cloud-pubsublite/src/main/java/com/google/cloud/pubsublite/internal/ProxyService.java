@@ -67,12 +67,15 @@ public abstract class ProxyService extends AbstractApiService {
   // Tries to stop all dependent services and sets this service into the FAILED state.
   protected final void onPermanentError(CheckedApiException error) {
     if (stoppedOrFailed.getAndSet(true)) return;
-    for (ApiService service : services) {
-      service.stopAsync();
+    try {
+      for (ApiService service : services) {
+        service.stopAsync();
+      }
+      handlePermanentError(error);
+    } finally {
+      // Failures are sent to the client and should always be ApiExceptions.
+      notifyFailed(error.underlying);
     }
-    handlePermanentError(error);
-    // Failures are sent to the client and should always be ApiExceptions.
-    notifyFailed(error.underlying);
   }
 
   // AbstractApiService implementation.

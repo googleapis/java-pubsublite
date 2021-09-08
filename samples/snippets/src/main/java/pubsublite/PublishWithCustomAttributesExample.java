@@ -25,11 +25,14 @@ import com.google.cloud.pubsublite.MessageMetadata;
 import com.google.cloud.pubsublite.ProjectNumber;
 import com.google.cloud.pubsublite.TopicName;
 import com.google.cloud.pubsublite.TopicPath;
+import com.google.cloud.pubsublite.cloudpubsub.MessageTransforms;
 import com.google.cloud.pubsublite.cloudpubsub.Publisher;
 import com.google.cloud.pubsublite.cloudpubsub.PublisherSettings;
 import com.google.common.collect.ImmutableMap;
 import com.google.protobuf.ByteString;
+import com.google.protobuf.util.Timestamps;
 import com.google.pubsub.v1.PubsubMessage;
+import java.time.Instant;
 import java.util.concurrent.ExecutionException;
 
 public class PublishWithCustomAttributesExample {
@@ -64,15 +67,22 @@ public class PublishWithCustomAttributesExample {
     // Start the publisher. Upon successful starting, its state will become RUNNING.
     publisher.startAsync().awaitRunning();
 
-    String message = "message-with-custom-attributes";
+    // Prepare the message data as a byte string.
+    String messageData = "message-with-custom-attributes";
+    ByteString data = ByteString.copyFromUtf8(messageData);
 
-    // Convert the message to a byte string.
-    ByteString data = ByteString.copyFromUtf8(message);
+    // Prepare a protobuf-encoded event timestamp for the message.
+    Instant now = Instant.now();
+    String eventTime =
+        MessageTransforms.encodeAttributeEventTime(Timestamps.fromMillis(now.toEpochMilli()));
+
     PubsubMessage pubsubMessage =
         PubsubMessage.newBuilder()
             .setData(data)
             // Add two sets of custom attributes to the message.
             .putAllAttributes(ImmutableMap.of("year", "2020", "author", "unknown"))
+            // Add an event timestamp as an attribute.
+            .putAttributes(MessageTransforms.PUBSUB_LITE_EVENT_TIME_TIMESTAMP_PROTO, eventTime)
             .build();
 
     // Publish a message.

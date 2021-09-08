@@ -23,8 +23,10 @@ import static com.google.cloud.pubsublite.internal.UncheckedApiPreconditions.che
 import com.google.api.core.AbstractApiService;
 import com.google.api.core.ApiService;
 import com.google.api.gax.rpc.ApiException;
+import com.google.cloud.pubsublite.internal.wire.ApiServiceUtils;
 import com.google.cloud.pubsublite.internal.wire.SystemExecutors;
 import com.google.common.collect.ImmutableList;
+import com.google.common.flogger.GoogleLogger;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -35,6 +37,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 //
 // On any dependent service failure, fails all other services and calls handlePermanentError.
 public abstract class ProxyService extends AbstractApiService {
+  private static final GoogleLogger LOGGER = GoogleLogger.forEnclosingClass();
   private final List<ApiService> services = new ArrayList<>();
   private final AtomicBoolean stoppedOrFailed = new AtomicBoolean(false);
 
@@ -67,8 +70,10 @@ public abstract class ProxyService extends AbstractApiService {
   // Tries to stop all dependent services and sets this service into the FAILED state.
   protected final void onPermanentError(CheckedApiException error) {
     if (stoppedOrFailed.getAndSet(true)) return;
-    for (ApiService service : services) {
-      service.stopAsync();
+    try {
+      ApiServiceUtils.stopAsync(services);
+    } catch (Throwable t) {
+      LOGGER.atFine().withCause(t).log("Exception in underlying service shutdown.");
     }
     handlePermanentError(error);
     // Failures are sent to the client and should always be ApiExceptions.

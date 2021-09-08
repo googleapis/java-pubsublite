@@ -50,6 +50,21 @@ public class ApiServiceUtils {
     };
   }
 
+  public static void stopAsync(Iterable<? extends ApiService> services) throws ApiException {
+    CheckedApiException lastException = null;
+    for (ApiService service : services) {
+      try {
+        service.stopAsync();
+      } catch (Throwable t) {
+        LOGGER.atFine().withCause(t).log("Exception in service shutdown.");
+        lastException = toCanonical(t);
+      }
+    }
+    if (lastException != null) {
+      throw lastException.underlying;
+    }
+  }
+
   public static void blockingShutdown(Iterable<? extends ApiService> services) throws ApiException {
     CheckedApiException lastException = null;
     for (ApiService service : services) {

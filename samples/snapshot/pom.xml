@@ -46,14 +46,14 @@
     <dependency>
       <groupId>com.google.cloud</groupId>
       <artifactId>google-cloud-pubsublite</artifactId>
-      <version>1.0.5-SNAPSHOT</version>
+      <version>1.0.5</version>
     </dependency>
     <!-- {x-version-update-end} -->
     <!-- {x-version-update-start:pubsublite-beam-io:current} -->
     <dependency>
       <groupId>com.google.cloud</groupId>
       <artifactId>pubsublite-beam-io</artifactId>
-      <version>0.19.5-SNAPSHOT</version>
+      <version>0.19.5</version>
     </dependency>
     <!-- {x-version-update-end} -->
     <dependency>

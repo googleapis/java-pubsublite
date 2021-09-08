@@ -1,5 +1,23 @@
 # Changelog
 
+### [1.0.5](https://www.github.com/googleapis/java-pubsublite/compare/v1.0.4...v1.0.5) (2021-09-08)
+
+
+### Bug Fixes
+
+* Ensure notifyFailed is called and all services are stopped when a permanent error happens ([#860](https://www.github.com/googleapis/java-pubsublite/issues/860)) ([a046b53](https://www.github.com/googleapis/java-pubsublite/commit/a046b53276d8e6a4ca7b9fac090064e900de181c))
+
+
+### Dependencies
+
+* update dependency com.google.cloud:google-cloud-pubsub to v1.114.1 ([#843](https://www.github.com/googleapis/java-pubsublite/issues/843)) ([04415ec](https://www.github.com/googleapis/java-pubsublite/commit/04415ecf52a9ea731a45ef780cb6b4f64681d1f4))
+* update dependency com.google.cloud:google-cloud-pubsub to v1.114.2 ([#848](https://www.github.com/googleapis/java-pubsublite/issues/848)) ([074488e](https://www.github.com/googleapis/java-pubsublite/commit/074488eba32baa48e0543efb044e8f92c5210b15))
+* update dependency com.google.cloud:google-cloud-shared-dependencies to v2.1.0 ([#842](https://www.github.com/googleapis/java-pubsublite/issues/842)) ([e5e66bc](https://www.github.com/googleapis/java-pubsublite/commit/e5e66bc0a50b01474776a79d4d797df102b3eb47))
+* update dependency com.google.cloud:google-cloud-shared-dependencies to v2.2.0 ([#854](https://www.github.com/googleapis/java-pubsublite/issues/854)) ([4ef86a6](https://www.github.com/googleapis/java-pubsublite/commit/4ef86a66dde47adc98dd3fe9f468e571c2e619d4))
+* update dependency com.google.errorprone:error_prone_annotations to v2.9.0 ([#838](https://www.github.com/googleapis/java-pubsublite/issues/838)) ([47e48d6](https://www.github.com/googleapis/java-pubsublite/commit/47e48d6ff017eccba94086c8285ad800dd53406f))
+* update dependency com.google.errorprone:error_prone_core to v2.9.0 ([#839](https://www.github.com/googleapis/java-pubsublite/issues/839)) ([ebb1bb1](https://www.github.com/googleapis/java-pubsublite/commit/ebb1bb192170d83beb329e582038cd0c59a22152))
+* update dependency org.checkerframework:checker-qual to v3.18.0 ([#855](https://www.github.com/googleapis/java-pubsublite/issues/855)) ([c3c8400](https://www.github.com/googleapis/java-pubsublite/commit/c3c8400fe234534023abef96e5b9b1d523e7dfaa))
+
 ### [1.0.4](https://www.github.com/googleapis/java-pubsublite/compare/v1.0.3...v1.0.4) (2021-08-11)
 
 

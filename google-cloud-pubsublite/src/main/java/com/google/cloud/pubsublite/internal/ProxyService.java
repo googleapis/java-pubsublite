@@ -75,7 +75,11 @@ public abstract class ProxyService extends AbstractApiService {
     } catch (Throwable t) {
       LOGGER.atFine().withCause(t).log("Exception in underlying service shutdown.");
     }
-    handlePermanentError(error);
+    try {
+      handlePermanentError(error);
+    } catch (Throwable t) {
+      LOGGER.atFine().withCause(t).log("Exception in handlePermanentError.");
+    }
     // Failures are sent to the client and should always be ApiExceptions.
     notifyFailed(error.underlying);
   }

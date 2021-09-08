@@ -27,8 +27,10 @@ import com.google.cloud.pubsublite.ProjectNumber;
 import com.google.cloud.pubsublite.SubscriptionName;
 import com.google.cloud.pubsublite.SubscriptionPath;
 import com.google.cloud.pubsublite.cloudpubsub.FlowControlSettings;
+import com.google.cloud.pubsublite.cloudpubsub.MessageTransforms;
 import com.google.cloud.pubsublite.cloudpubsub.Subscriber;
 import com.google.cloud.pubsublite.cloudpubsub.SubscriberSettings;
+import com.google.protobuf.Timestamp;
 import com.google.pubsub.v1.PubsubMessage;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
@@ -75,7 +77,16 @@ public class SubscriberExample {
           System.out.println("Attributes : ");
           message
               .getAttributesMap()
-              .forEach((key, value) -> System.out.println(key + " = " + value));
+              .forEach(
+                  (key, value) -> {
+                    if (key == MessageTransforms.PUBSUB_LITE_EVENT_TIME_TIMESTAMP_PROTO) {
+                      Timestamp ts = MessageTransforms.decodeAttributeEventTime(value);
+                      System.out.println(key + " = " + ts.toString());
+                    } else {
+                      System.out.println(key + " = " + value);
+                    }
+                  });
+
           // Acknowledge the message.
           consumer.ack();
         };

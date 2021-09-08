@@ -71,6 +71,12 @@ public class SubscriberExample {
         (PubsubMessage message, AckReplyConsumer consumer) -> {
           System.out.println("Id : " + MessageMetadata.decode(message.getMessageId()));
           System.out.println("Data : " + message.getData().toStringUtf8());
+          System.out.println("Ordering key : " + message.getOrderingKey());
+          System.out.println("Attributes : ");
+          message
+              .getAttributesMap()
+              .forEach((key, value) -> System.out.println(key + " = " + value));
+          // Acknowledge the message.
           consumer.ack();
         };
 

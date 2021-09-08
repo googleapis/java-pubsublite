@@ -30,7 +30,7 @@ import com.google.cloud.pubsublite.cloudpubsub.Publisher;
 import com.google.cloud.pubsublite.cloudpubsub.PublisherSettings;
 import com.google.common.collect.ImmutableMap;
 import com.google.protobuf.ByteString;
-import com.google.protobuf.Timestamp;
+import com.google.protobuf.util.Timestamps;
 import com.google.pubsub.v1.PubsubMessage;
 import java.time.Instant;
 import java.util.concurrent.ExecutionException;
@@ -74,8 +74,7 @@ public class PublishWithCustomAttributesExample {
     // Prepare a protobuf-encoded event timestamp for the message.
     Instant now = Instant.now();
     String eventTime =
-        MessageTransforms.encodeAttributeEventTime(
-            Timestamp.newBuilder().setSeconds(now.getEpochSecond()).build());
+        MessageTransforms.encodeAttributeEventTime(Timestamps.fromMillis(now.toEpochMilli()));
 
     PubsubMessage pubsubMessage =
         PubsubMessage.newBuilder()

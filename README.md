@@ -19,12 +19,12 @@ If you are using Maven, add this to your pom.xml file:
 <dependency>
   <groupId>com.google.cloud</groupId>
   <artifactId>google-cloud-pubsublite</artifactId>
-  <version>1.0.3</version>
+  <version>1.0.4</version>
 </dependency>
 <dependency>
   <groupId>com.google.cloud</groupId>
   <artifactId>google-cloud-pubsub</artifactId>
-  <version>1.113.8</version>
+  <version>1.114.1</version>
 </dependency>
 
 ```

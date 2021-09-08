@@ -52,16 +52,16 @@
         <version>1.3.2</version>
       </dependency>
       <dependency>
+        <!-- Explicit override, remove when no longer needed.-->
+        <groupId>org.checkerframework</groupId>
+        <artifactId>checker-qual</artifactId>
+        <version>3.17.0</version>
+      </dependency>
+      <dependency>
         <groupId>com.google.truth</groupId>
         <artifactId>truth</artifactId>
         <version>1.1.3</version>
         <scope>test</scope>
-        <exclusions>
-          <exclusion>
-            <groupId>org.checkerframework</groupId>
-            <artifactId>checker-qual</artifactId>
-          </exclusion>
-        </exclusions>
       </dependency>
       <dependency>
         <groupId>com.google.truth.extensions</groupId>

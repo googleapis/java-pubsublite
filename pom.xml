@@ -130,7 +130,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-javadoc-plugin</artifactId>
-        <version>3.3.0</version>
+        <version>3.3.1</version>
         <configuration>
           <source>8</source>
           <links combine.self="override">
@@ -200,7 +200,7 @@
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-javadoc-plugin</artifactId>
-            <version>3.3.0</version>
+            <version>3.3.1</version>
             <configuration>
               <excludePackageNames>com.google.cloud.pubsublite.cloudpubsub.internal:com.google.cloud.pubsublite.internal:com.google.cloud.pubsublite.internal.testing:com.google.cloud.pubsublite.internal.wire</excludePackageNames>
             </configuration>

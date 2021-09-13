@@ -1,5 +1,18 @@
 # Changelog
 
+### [1.0.6](https://www.github.com/googleapis/java-pubsublite/compare/v1.0.5...v1.0.6) (2021-09-13)
+
+
+### Bug Fixes
+
+* simplify AckSetTrackerImpl and make acks after shutdown not cause a permanent error ([#872](https://www.github.com/googleapis/java-pubsublite/issues/872)) ([98ceff0](https://www.github.com/googleapis/java-pubsublite/commit/98ceff05e69ef4659dcb7650fabd3766d16ef1b8))
+
+
+### Dependencies
+
+* update dependency com.google.cloud:google-cloud-pubsub to v1.114.3 ([#857](https://www.github.com/googleapis/java-pubsublite/issues/857)) ([d312080](https://www.github.com/googleapis/java-pubsublite/commit/d312080cc4b9c74eab6023703e37511df270feb8))
+* update dependency com.google.cloud:pubsublite-beam-io to v0.19.5 ([#830](https://www.github.com/googleapis/java-pubsublite/issues/830)) ([3a74d32](https://www.github.com/googleapis/java-pubsublite/commit/3a74d32d091e712b2c9f8be210905c3548f5ccf4))
+
 ### [1.0.5](https://www.github.com/googleapis/java-pubsublite/compare/v1.0.4...v1.0.5) (2021-09-08)
 
 

@@ -38,8 +38,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class AckSetTrackerImpl extends ProxyService implements AckSetTracker {
   private static final GoogleLogger LOGGER = GoogleLogger.forEnclosingClass();
 
-  // Receipt represents an unacked message. It can be cleared, which will cause the ack to be
-  // ignored.
+  // Receipt represents an unacked message. If the tracker generation is incremented, the ack will
+  // be ignored.
   private static class Receipt {
     final Offset offset;
     final long generation;

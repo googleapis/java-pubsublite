@@ -24,120 +24,117 @@ import com.google.api.gax.rpc.StatusCode.Code;
 import com.google.cloud.pubsublite.Offset;
 import com.google.cloud.pubsublite.SequencedMessage;
 import com.google.cloud.pubsublite.internal.CheckedApiException;
-import com.google.cloud.pubsublite.internal.CloseableMonitor;
 import com.google.cloud.pubsublite.internal.ExtractStatus;
-import com.google.cloud.pubsublite.internal.TrivialProxyService;
+import com.google.cloud.pubsublite.internal.ProxyService;
 import com.google.cloud.pubsublite.internal.wire.Committer;
-import com.google.common.collect.ImmutableList;
+import com.google.common.flogger.GoogleLogger;
 import com.google.errorprone.annotations.concurrent.GuardedBy;
 import java.util.ArrayDeque;
 import java.util.Deque;
-import java.util.List;
 import java.util.Optional;
 import java.util.PriorityQueue;
+import java.util.concurrent.atomic.AtomicBoolean;
 
-public class AckSetTrackerImpl extends TrivialProxyService implements AckSetTracker {
+public class AckSetTrackerImpl extends ProxyService implements AckSetTracker {
+  private static final GoogleLogger LOGGER = GoogleLogger.forEnclosingClass();
+
   // Receipt represents an unacked message. It can be cleared, which will cause the ack to be
   // ignored.
   private static class Receipt {
     final Offset offset;
+    final long generation;
 
-    private final CloseableMonitor m = new CloseableMonitor();
+    private final AtomicBoolean wasAcked = new AtomicBoolean();
 
-    @GuardedBy("m.monitor")
-    private boolean wasAcked = false;
+    private final AckSetTrackerImpl tracker;
 
-    @GuardedBy("m.monitor")
-    private Optional<AckSetTrackerImpl> tracker;
-
-    Receipt(Offset offset, AckSetTrackerImpl tracker) {
+    Receipt(Offset offset, long generation, AckSetTrackerImpl tracker) {
       this.offset = offset;
-      this.tracker = Optional.of(tracker);
+      this.generation = generation;
+      this.tracker = tracker;
     }
 
-    void clear() {
-      try (CloseableMonitor.Hold h = m.enter()) {
-        tracker = Optional.empty();
+    void onAck() throws ApiException {
+      if (wasAcked.getAndSet(true)) {
+        CheckedApiException e =
+            new CheckedApiException("Duplicate acks are not allowed.", Code.FAILED_PRECONDITION);
+        tracker.onPermanentError(e);
+        throw e.underlying;
       }
-    }
-
-    void onAck() {
-      try (CloseableMonitor.Hold h = m.enter()) {
-        if (!tracker.isPresent()) {
-          return;
-        }
-        if (wasAcked) {
-          CheckedApiException e =
-              new CheckedApiException("Duplicate acks are not allowed.", Code.FAILED_PRECONDITION);
-          tracker.get().onPermanentError(e);
-          throw e.underlying;
-        }
-        wasAcked = true;
-        tracker.get().onAck(offset);
-      }
+      tracker.onAck(offset, generation);
     }
   }
 
-  private final CloseableMonitor monitor = new CloseableMonitor();
-
-  @GuardedBy("monitor.monitor")
+  @GuardedBy("this")
   private final Committer committer;
 
-  @GuardedBy("monitor.monitor")
+  @GuardedBy("this")
   private final Deque<Receipt> receipts = new ArrayDeque<>();
 
-  @GuardedBy("monitor.monitor")
+  @GuardedBy("this")
   private final PriorityQueue<Offset> acks = new PriorityQueue<>();
 
+  @GuardedBy("this")
+  private long generation = 0L;
+
+  @GuardedBy("this")
+  private boolean shutdown = false;
+
   public AckSetTrackerImpl(Committer committer) throws ApiException {
-    super(committer);
     this.committer = committer;
+    addServices(committer);
   }
 
   // AckSetTracker implementation.
   @Override
-  public Runnable track(SequencedMessage message) throws CheckedApiException {
-    final Offset messageOffset = message.offset();
-    try (CloseableMonitor.Hold h = monitor.enter()) {
-      checkArgument(
-          receipts.isEmpty() || receipts.peekLast().offset.value() < messageOffset.value());
-      Receipt receipt = new Receipt(messageOffset, this);
-      receipts.addLast(receipt);
-      return receipt::onAck;
+  public synchronized Runnable track(SequencedMessage message) throws CheckedApiException {
+    checkArgument(
+        receipts.isEmpty() || receipts.peekLast().offset.value() < message.offset().value());
+    Receipt receipt = new Receipt(message.offset(), generation, this);
+    receipts.addLast(receipt);
+    return receipt::onAck;
+  }
+
+  @Override
+  public synchronized void waitUntilCommitted() throws CheckedApiException {
+    ++generation;
+    receipts.clear();
+    acks.clear();
+    committer.waitUntilEmpty();
+  }
+
+  private synchronized void onAck(Offset offset, long generation) {
+    if (shutdown) {
+      LOGGER.atFine().log("Dropping ack after tracker shutdown.");
+      return;
+    }
+    if (generation != this.generation) {
+      LOGGER.atFine().log("Dropping ack from wrong generation (admin seek occurred).");
+      return;
+    }
+    acks.add(offset);
+    Optional<Offset> prefixAckedOffset = Optional.empty();
+    while (!receipts.isEmpty()
+        && !acks.isEmpty()
+        && receipts.peekFirst().offset.value() == acks.peek().value()) {
+      prefixAckedOffset = Optional.of(acks.remove());
+      receipts.removeFirst();
+    }
+    // Convert from last acked to first unacked.
+    if (prefixAckedOffset.isPresent()) {
+      ApiFuture<?> future = committer.commitOffset(Offset.of(prefixAckedOffset.get().value() + 1));
+      ExtractStatus.addFailureHandler(future, this::onPermanentError);
     }
   }
 
   @Override
-  public void waitUntilCommitted() throws CheckedApiException {
-    List<Receipt> receiptsCopy;
-    try (CloseableMonitor.Hold h = monitor.enter()) {
-      receiptsCopy = ImmutableList.copyOf(receipts);
-    }
-    // Clearing receipts here avoids deadlocks due to locks acquired in different order.
-    receiptsCopy.forEach(Receipt::clear);
-    try (CloseableMonitor.Hold h = monitor.enter()) {
-      receipts.clear();
-      acks.clear();
-      committer.waitUntilEmpty();
-    }
+  protected void start() throws CheckedApiException {}
+
+  @Override
+  protected synchronized void stop() throws CheckedApiException {
+    shutdown = true;
   }
 
-  private void onAck(Offset offset) {
-    try (CloseableMonitor.Hold h = monitor.enter()) {
-      acks.add(offset);
-      Optional<Offset> prefixAckedOffset = Optional.empty();
-      while (!receipts.isEmpty()
-          && !acks.isEmpty()
-          && receipts.peekFirst().offset.value() == acks.peek().value()) {
-        prefixAckedOffset = Optional.of(acks.remove());
-        receipts.removeFirst();
-      }
-      // Convert from last acked to first unacked.
-      if (prefixAckedOffset.isPresent()) {
-        ApiFuture<?> future =
-            committer.commitOffset(Offset.of(prefixAckedOffset.get().value() + 1));
-        ExtractStatus.addFailureHandler(future, this::onPermanentError);
-      }
-    }
-  }
+  @Override
+  protected void handlePermanentError(CheckedApiException error) {}
 }

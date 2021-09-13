@@ -131,4 +131,13 @@ public class AckSetTrackerImplTest {
     ack.run();
     verify(committer, never()).commitOffset(any());
   }
+
+  @Test
+  public void ackAfterShutdown() throws Exception {
+    Runnable ack = tracker.track(messageForOffset(1));
+
+    tracker.stopAsync().awaitTerminated();
+    ack.run();
+    verify(committer, never()).commitOffset(any());
+  }
 }

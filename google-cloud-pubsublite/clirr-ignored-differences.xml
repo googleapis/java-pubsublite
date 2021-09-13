@@ -133,6 +133,16 @@
     <className>com/google/cloud/pubsublite/internal/**</className>
   </difference>
   <difference>
+    <differenceType>4001</differenceType>
+    <className>com/google/cloud/pubsublite/cloudpubsub/internal/**</className>
+    <to>**</to>
+  </difference>
+  <difference>
+    <differenceType>5001</differenceType>
+    <className>com/google/cloud/pubsublite/cloudpubsub/internal/**</className>
+    <to>**</to>
+  </difference>
+  <difference>
     <differenceType>6000</differenceType>
     <className>com/google/cloud/pubsublite/cloudpubsub/internal/**</className>
     <method>*</method>

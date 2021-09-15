@@ -18,6 +18,7 @@ package com.google.cloud.pubsublite.cloudpubsub.internal;
 
 import static com.google.cloud.pubsublite.internal.testing.RetryingConnectionHelpers.whenTerminated;
 import static com.google.common.truth.Truth.assertThat;
+import static org.junit.Assert.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.spy;
@@ -77,6 +78,15 @@ public class AssigningSubscriberTest {
   public void startStop() {
     assigningSubscriber.stopAsync().awaitTerminated();
     verify(assigner).stopAsync();
+  }
+
+  @Test
+  public void failedCreate() throws CheckedApiException {
+    when(subscriberFactory.newSubscriber(Partition.of(1))).thenThrow(
+        new RuntimeException("Arbitrary error."));
+    leakedReceiver.handleAssignment(ImmutableSet.of(Partition.of(1)));
+    verify(subscriberFactory).newSubscriber(Partition.of(1));
+    assertThrows(IllegalStateException.class, assigningSubscriber::awaitTerminated);
   }
 
   @Test

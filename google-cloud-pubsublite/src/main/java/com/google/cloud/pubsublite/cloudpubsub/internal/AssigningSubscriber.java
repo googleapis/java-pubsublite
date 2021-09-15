@@ -93,8 +93,8 @@ public class AssigningSubscriber extends ProxyService implements Subscriber {
           if (!liveSubscriberMap.containsKey(partition)) startSubscriber(partition);
         }
       }
-    } catch (CheckedApiException e) {
-      onPermanentError(e);
+    } catch (Throwable t) {
+      onPermanentError(toCanonical(t));
     }
   }
 
@@ -106,6 +106,7 @@ public class AssigningSubscriber extends ProxyService implements Subscriber {
         new Listener() {
           @Override
           public void failed(State from, Throwable failure) {
+            if (State.STOPPING.equals(from)) return;
             onPermanentError(toCanonical(failure));
           }
 

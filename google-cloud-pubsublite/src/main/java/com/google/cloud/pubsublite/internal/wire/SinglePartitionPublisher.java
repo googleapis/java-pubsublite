@@ -23,12 +23,11 @@ import com.google.cloud.pubsublite.Message;
 import com.google.cloud.pubsublite.MessageMetadata;
 import com.google.cloud.pubsublite.Offset;
 import com.google.cloud.pubsublite.Partition;
+import com.google.cloud.pubsublite.internal.ProxyService;
 import com.google.cloud.pubsublite.internal.Publisher;
-import com.google.cloud.pubsublite.internal.TrivialProxyService;
 import java.io.IOException;
 
-public class SinglePartitionPublisher extends TrivialProxyService
-    implements Publisher<MessageMetadata> {
+public class SinglePartitionPublisher extends ProxyService implements Publisher<MessageMetadata> {
   private final Publisher<Offset> publisher;
   private final Partition partition;
 

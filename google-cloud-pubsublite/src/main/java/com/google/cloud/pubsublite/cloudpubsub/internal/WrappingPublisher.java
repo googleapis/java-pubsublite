@@ -26,13 +26,13 @@ import com.google.cloud.pubsublite.MessageMetadata;
 import com.google.cloud.pubsublite.MessageTransformer;
 import com.google.cloud.pubsublite.cloudpubsub.Publisher;
 import com.google.cloud.pubsublite.internal.CheckedApiException;
-import com.google.cloud.pubsublite.internal.TrivialProxyService;
+import com.google.cloud.pubsublite.internal.ProxyService;
 import com.google.cloud.pubsublite.internal.wire.SystemExecutors;
 import com.google.pubsub.v1.PubsubMessage;
 
 // A WrappingPublisher wraps the wire protocol client with a Cloud Pub/Sub api compliant
 // publisher. It encodes a MessageMetadata object in the response string.
-public class WrappingPublisher extends TrivialProxyService implements Publisher {
+public class WrappingPublisher extends ProxyService implements Publisher {
   private final com.google.cloud.pubsublite.internal.Publisher<MessageMetadata> wirePublisher;
   private final MessageTransformer<PubsubMessage, Message> transformer;
 

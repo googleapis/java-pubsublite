@@ -20,7 +20,6 @@ import static com.google.cloud.pubsublite.internal.ExtractStatus.toCanonical;
 
 import com.google.api.core.AbstractApiService;
 import com.google.api.core.ApiService;
-import com.google.api.gax.core.BackgroundResource;
 import com.google.api.gax.rpc.ApiException;
 import com.google.cloud.pubsublite.internal.CheckedApiException;
 import com.google.common.collect.ImmutableList;
@@ -31,7 +30,7 @@ public class ApiServiceUtils {
 
   private ApiServiceUtils() {}
 
-  public static ApiService backgroundResourceAsApiService(BackgroundResource resource) {
+  public static ApiService autoCloseableAsApiService(AutoCloseable resource) {
     return new AbstractApiService() {
       @Override
       protected void doStart() {

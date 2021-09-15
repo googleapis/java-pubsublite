@@ -201,9 +201,6 @@ public class PartitionCountWatchingPublisher extends ProxyService
   }
 
   @Override
-  protected void start() {}
-
-  @Override
   protected void stop() {
     Optional<PartitionsWithRouting> current;
     try (CloseableMonitor.Hold h = monitor.enter()) {

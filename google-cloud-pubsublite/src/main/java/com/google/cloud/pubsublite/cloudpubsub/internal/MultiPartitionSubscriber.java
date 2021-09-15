@@ -18,12 +18,12 @@ package com.google.cloud.pubsublite.cloudpubsub.internal;
 
 import com.google.api.gax.rpc.ApiException;
 import com.google.cloud.pubsublite.cloudpubsub.Subscriber;
-import com.google.cloud.pubsublite.internal.TrivialProxyService;
+import com.google.cloud.pubsublite.internal.ProxyService;
 import java.util.List;
 
 // A MultiPartitionSubscriber wraps multiple subscribers into a single ApiService that can be
 // interacted with. If any single subscriber fails, all others are stopped.
-public class MultiPartitionSubscriber extends TrivialProxyService implements Subscriber {
+public class MultiPartitionSubscriber extends ProxyService implements Subscriber {
   public static Subscriber of(List<Subscriber> subscribers) throws ApiException {
     return new MultiPartitionSubscriber(subscribers);
   }

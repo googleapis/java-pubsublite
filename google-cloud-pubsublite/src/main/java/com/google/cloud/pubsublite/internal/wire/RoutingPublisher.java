@@ -26,13 +26,13 @@ import com.google.cloud.pubsublite.Message;
 import com.google.cloud.pubsublite.MessageMetadata;
 import com.google.cloud.pubsublite.Partition;
 import com.google.cloud.pubsublite.internal.CheckedApiException;
+import com.google.cloud.pubsublite.internal.ProxyService;
 import com.google.cloud.pubsublite.internal.Publisher;
 import com.google.cloud.pubsublite.internal.RoutingPolicy;
-import com.google.cloud.pubsublite.internal.TrivialProxyService;
 import java.io.IOException;
 import java.util.Map;
 
-public class RoutingPublisher extends TrivialProxyService implements Publisher<MessageMetadata> {
+public class RoutingPublisher extends ProxyService implements Publisher<MessageMetadata> {
   private final Map<Partition, Publisher<MessageMetadata>> partitionPublishers;
   private final RoutingPolicy policy;
 

@@ -82,8 +82,8 @@ public class AssigningSubscriberTest {
 
   @Test
   public void failedCreate() throws CheckedApiException {
-    when(subscriberFactory.newSubscriber(Partition.of(1))).thenThrow(
-        new RuntimeException("Arbitrary error."));
+    when(subscriberFactory.newSubscriber(Partition.of(1)))
+        .thenThrow(new RuntimeException("Arbitrary error."));
     leakedReceiver.handleAssignment(ImmutableSet.of(Partition.of(1)));
     verify(subscriberFactory).newSubscriber(Partition.of(1));
     assertThrows(IllegalStateException.class, assigningSubscriber::awaitTerminated);

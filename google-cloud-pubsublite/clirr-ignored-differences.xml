@@ -15,6 +15,16 @@
     <method>*</method>
     <to>*</to>
   </difference>
+  <difference>
+    <differenceType>7002</differenceType>
+    <className>com/google/cloud/pubsublite/SubscriptionPath$Builder</className>
+    <method>*</method>
+  </difference>
+  <difference>
+    <differenceType>7002</differenceType>
+    <className>com/google/cloud/pubsublite/TopicPath$Builder</className>
+    <method>*</method>
+  </difference>
   <!-- END TODO: Remove on next release -->
   <!-- Added method to AdminClient interface (Always okay) -->
   <difference>

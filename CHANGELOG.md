@@ -1,5 +1,23 @@
 # Changelog
 
+## [1.1.0](https://www.github.com/googleapis/java-pubsublite/compare/v1.0.6...v1.1.0) (2021-09-15)
+
+
+### Features
+
+* Allow regional path creation for when the backend supports this ([#881](https://www.github.com/googleapis/java-pubsublite/issues/881)) ([8bcbe26](https://www.github.com/googleapis/java-pubsublite/commit/8bcbe26bef9cf5dee97869a0318113e21da43d2d))
+
+
+### Bug Fixes
+
+* catch more possible errors in AssigningSubscriber and don't have hard errors on stopping subscribers ([#880](https://www.github.com/googleapis/java-pubsublite/issues/880)) ([22db237](https://www.github.com/googleapis/java-pubsublite/commit/22db237a8b3e5756e78e4a3e6bd0e1a773dcff5f))
+
+
+### Dependencies
+
+* update dependency com.google.cloud:google-cloud-shared-dependencies to v2.2.1 ([#878](https://www.github.com/googleapis/java-pubsublite/issues/878)) ([b38b501](https://www.github.com/googleapis/java-pubsublite/commit/b38b501d554b550ce6b2a65ad366007477582f37))
+* update dependency com.google.cloud:pubsublite-beam-io to v0.19.6 ([#876](https://www.github.com/googleapis/java-pubsublite/issues/876)) ([debf7a4](https://www.github.com/googleapis/java-pubsublite/commit/debf7a43e81a9002d3d21491387d059b205c5d99))
+
 ### [1.0.6](https://www.github.com/googleapis/java-pubsublite/compare/v1.0.5...v1.0.6) (2021-09-13)
 
 

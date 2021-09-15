@@ -28,6 +28,7 @@ import com.google.cloud.pubsublite.internal.wire.SystemExecutors;
 import com.google.common.collect.ImmutableList;
 import com.google.common.flogger.GoogleLogger;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -41,7 +42,13 @@ public abstract class ProxyService extends AbstractApiService {
   private final List<ApiService> services = new ArrayList<>();
   private final AtomicBoolean stoppedOrFailed = new AtomicBoolean(false);
 
-  protected ProxyService() {}
+  protected <T extends ApiService> ProxyService(Collection<T> services) {
+    addServices(services);
+  }
+
+  protected ProxyService(ApiService... services) throws ApiException {
+    this(Arrays.asList(services));
+  }
 
   // Add a new ApiServices to this. Requires that all of them are in state NEW and this is in state
   // NEW.
@@ -59,13 +66,13 @@ public abstract class ProxyService extends AbstractApiService {
   }
 
   // Method to be called on service start after dependent services start.
-  protected abstract void start() throws CheckedApiException;
+  protected void start() throws CheckedApiException {}
   // Method to be called on service stop before dependent services stop.
-  protected abstract void stop() throws CheckedApiException;
+  protected void stop() throws CheckedApiException {}
 
   // Method to be called for class-specific permanent error handling after trying to stop all other
   // services. May not throw.
-  protected abstract void handlePermanentError(CheckedApiException error);
+  protected void handlePermanentError(CheckedApiException error) {}
 
   // Tries to stop all dependent services and sets this service into the FAILED state.
   protected final void onPermanentError(CheckedApiException error) {

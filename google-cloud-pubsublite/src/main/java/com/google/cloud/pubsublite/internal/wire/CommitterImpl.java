@@ -17,7 +17,7 @@
 package com.google.cloud.pubsublite.internal.wire;
 
 import static com.google.cloud.pubsublite.internal.CheckedApiPreconditions.checkState;
-import static com.google.cloud.pubsublite.internal.wire.ApiServiceUtils.backgroundResourceAsApiService;
+import static com.google.cloud.pubsublite.internal.wire.ApiServiceUtils.autoCloseableAsApiService;
 
 import com.google.api.core.ApiFuture;
 import com.google.api.core.ApiFutures;
@@ -81,7 +81,7 @@ public class CommitterImpl extends ProxyService
         stream -> client.streamingCommitCursorCallable().splitCall(stream),
         new ConnectedCommitterImpl.Factory(),
         request);
-    addServices(backgroundResourceAsApiService(client));
+    addServices(autoCloseableAsApiService(client));
   }
 
   // ProxyService implementation.
@@ -93,9 +93,6 @@ public class CommitterImpl extends ProxyService
       state.abort(error);
     }
   }
-
-  @Override
-  protected void start() {}
 
   @Override
   protected void stop() {

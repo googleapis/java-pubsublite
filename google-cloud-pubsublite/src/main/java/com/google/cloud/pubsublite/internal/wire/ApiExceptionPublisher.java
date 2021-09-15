@@ -21,11 +21,11 @@ import static com.google.cloud.pubsublite.internal.ExtractStatus.toClientFuture;
 import com.google.api.core.ApiFuture;
 import com.google.api.gax.rpc.ApiException;
 import com.google.cloud.pubsublite.Message;
+import com.google.cloud.pubsublite.internal.ProxyService;
 import com.google.cloud.pubsublite.internal.Publisher;
-import com.google.cloud.pubsublite.internal.TrivialProxyService;
 import java.io.IOException;
 
-public class ApiExceptionPublisher<T> extends TrivialProxyService implements Publisher<T> {
+public class ApiExceptionPublisher<T> extends ProxyService implements Publisher<T> {
   private final Publisher<T> publisher;
 
   ApiExceptionPublisher(Publisher<T> publisher) throws ApiException {

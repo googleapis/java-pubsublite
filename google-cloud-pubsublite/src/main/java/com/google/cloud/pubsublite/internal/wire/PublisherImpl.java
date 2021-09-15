@@ -17,7 +17,7 @@
 package com.google.cloud.pubsublite.internal.wire;
 
 import static com.google.cloud.pubsublite.internal.CheckedApiPreconditions.checkState;
-import static com.google.cloud.pubsublite.internal.wire.ApiServiceUtils.backgroundResourceAsApiService;
+import static com.google.cloud.pubsublite.internal.wire.ApiServiceUtils.autoCloseableAsApiService;
 
 import com.google.api.core.ApiFuture;
 import com.google.api.core.ApiFutures;
@@ -136,7 +136,7 @@ public final class PublisherImpl extends ProxyService
                 Objects.requireNonNull(batchingSettings.getDelayThreshold()).toNanos())),
         initialRequest,
         batchingSettings);
-    addServices(backgroundResourceAsApiService(client));
+    addServices(autoCloseableAsApiService(client));
   }
 
   @GuardedBy("monitor.monitor")

@@ -22,9 +22,9 @@ import com.google.api.core.ApiFuture;
 import com.google.api.gax.rpc.ApiException;
 import com.google.cloud.pubsublite.Offset;
 import com.google.cloud.pubsublite.internal.CheckedApiException;
-import com.google.cloud.pubsublite.internal.TrivialProxyService;
+import com.google.cloud.pubsublite.internal.ProxyService;
 
-class ApiExceptionCommitter extends TrivialProxyService implements Committer {
+class ApiExceptionCommitter extends ProxyService implements Committer {
   private final Committer committer;
 
   ApiExceptionCommitter(Committer committer) throws ApiException {

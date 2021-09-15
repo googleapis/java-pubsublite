@@ -16,13 +16,13 @@
 
 package com.google.cloud.pubsublite.internal.wire;
 
-import static com.google.cloud.pubsublite.internal.wire.ApiServiceUtils.backgroundResourceAsApiService;
+import static com.google.cloud.pubsublite.internal.wire.ApiServiceUtils.autoCloseableAsApiService;
 
 import com.google.api.gax.rpc.ApiException;
 import com.google.cloud.pubsublite.Partition;
 import com.google.cloud.pubsublite.internal.CheckedApiException;
 import com.google.cloud.pubsublite.internal.CloseableMonitor;
-import com.google.cloud.pubsublite.internal.TrivialProxyService;
+import com.google.cloud.pubsublite.internal.ProxyService;
 import com.google.cloud.pubsublite.proto.InitialPartitionAssignmentRequest;
 import com.google.cloud.pubsublite.proto.PartitionAssignment;
 import com.google.cloud.pubsublite.proto.PartitionAssignmentRequest;
@@ -33,7 +33,7 @@ import com.google.errorprone.annotations.concurrent.GuardedBy;
 import java.util.HashSet;
 import java.util.Set;
 
-public class AssignerImpl extends TrivialProxyService
+public class AssignerImpl extends ProxyService
     implements Assigner, RetryingConnectionObserver<PartitionAssignment> {
   private static final GoogleLogger logger = GoogleLogger.forEnclosingClass();
 
@@ -72,7 +72,7 @@ public class AssignerImpl extends TrivialProxyService
         new ConnectedAssignerImpl.Factory(),
         initialRequest,
         receiver);
-    addServices(backgroundResourceAsApiService(client));
+    addServices(autoCloseableAsApiService(client));
   }
 
   @Override

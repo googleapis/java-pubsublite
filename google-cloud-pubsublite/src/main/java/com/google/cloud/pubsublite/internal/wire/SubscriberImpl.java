@@ -17,7 +17,7 @@
 package com.google.cloud.pubsublite.internal.wire;
 
 import static com.google.cloud.pubsublite.internal.CheckedApiPreconditions.checkArgument;
-import static com.google.cloud.pubsublite.internal.wire.ApiServiceUtils.backgroundResourceAsApiService;
+import static com.google.cloud.pubsublite.internal.wire.ApiServiceUtils.autoCloseableAsApiService;
 
 import com.google.api.gax.rpc.ApiException;
 import com.google.cloud.pubsublite.SequencedMessage;
@@ -107,7 +107,7 @@ public class SubscriberImpl extends ProxyService
         initialLocation,
         messageConsumer,
         resetHandler);
-    addServices(backgroundResourceAsApiService(client));
+    addServices(autoCloseableAsApiService(client));
   }
 
   // ProxyService implementation.

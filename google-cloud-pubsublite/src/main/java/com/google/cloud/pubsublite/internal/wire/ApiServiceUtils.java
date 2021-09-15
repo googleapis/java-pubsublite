@@ -31,7 +31,7 @@ public class ApiServiceUtils {
 
   private ApiServiceUtils() {}
 
-  public static ApiService backgroundResourceAsApiService(BackgroundResource resource) {
+  public static ApiService autoCloseableAsApiService(AutoCloseable resource) {
     return new AbstractApiService() {
       @Override
       protected void doStart() {

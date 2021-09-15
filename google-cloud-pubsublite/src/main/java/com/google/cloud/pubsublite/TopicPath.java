@@ -54,14 +54,7 @@ public abstract class TopicPath implements Serializable {
   public abstract Builder toBuilder();
 
   @AutoValue.Builder
-  public abstract static class Builder extends ProjectBuilderHelper<Builder> {
-    // TODO(dpcollins): Make this public and use ProjectLocationBuilderHelper once region is allowed
-    abstract Builder setLocation(CloudRegionOrZone location);
-
-    public Builder setLocation(CloudZone zone) {
-      return setLocation(CloudRegionOrZone.of(zone));
-    }
-
+  public abstract static class Builder extends ProjectLocationBuilderHelper<Builder> {
     public abstract Builder setName(TopicName name);
 
     /** Build a new TopicPath. */
@@ -73,9 +66,6 @@ public abstract class TopicPath implements Serializable {
     checkArgument(splits.length == 6);
     checkArgument(splits[4].equals("topics"));
     LocationPath location = LocationPath.parse(String.join("/", Arrays.copyOf(splits, 4)));
-    // TODO(dpcollins): Remove once region is allowed
-    checkArgument(
-        location.location().getKind() == Kind.ZONE, "Topic location must be a valid cloud zone.");
     return TopicPath.newBuilder()
         .setProject(location.project())
         .setLocation(location.location())

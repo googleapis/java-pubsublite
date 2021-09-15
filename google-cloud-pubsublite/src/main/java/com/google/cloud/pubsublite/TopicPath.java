@@ -20,7 +20,6 @@ import static com.google.cloud.pubsublite.internal.UncheckedApiPreconditions.che
 
 import com.google.api.gax.rpc.ApiException;
 import com.google.auto.value.AutoValue;
-import com.google.cloud.pubsublite.CloudRegionOrZone.Kind;
 import java.io.Serializable;
 import java.util.Arrays;
 

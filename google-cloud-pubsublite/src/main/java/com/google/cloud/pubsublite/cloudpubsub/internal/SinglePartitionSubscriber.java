@@ -103,6 +103,9 @@ public class SinglePartitionSubscriber extends ProxyService implements Subscribe
 
               @Override
               public void nack() {
+                if (!State.RUNNING.equals(state())) {
+                  return; // Drop nacks after shutdown to allow nacking from reassignment handler
+                }
                 ApiFuture<Void> nackDone = nackHandler.nack(userMessage);
                 ApiFutures.addCallback(
                     nackDone,

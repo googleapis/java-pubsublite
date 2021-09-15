@@ -2,27 +2,28 @@
 <!-- see http://www.mojohaus.org/clirr-maven-plugin/examples/ignored-differences.html -->
 <differences>
   <!-- TODO: Remove on next release -->
-  <difference>
-    <differenceType>7005</differenceType>
-    <className>com/google/cloud/pubsublite/AdminClient</className>
-    <method>*</method>
-    <to>*</to>
-  </difference>
-  <difference>
-    <differenceType>8001</differenceType>
-    <className>com/google/cloud/pubsublite/AdminClient*</className>
-  </difference>
+  <!-- Clirr doesn't understand CRTP -->
   <difference>
     <differenceType>7006</differenceType>
-    <className>com/google/cloud/pubsublite/SubscriptionPath</className>
+    <className>com/google/cloud/pubsublite/SubscriptionPath$Builder</className>
     <method>*</method>
     <to>*</to>
   </difference>
   <difference>
     <differenceType>7006</differenceType>
-    <className>com/google/cloud/pubsublite/TopicPath</className>
+    <className>com/google/cloud/pubsublite/TopicPath$Builder</className>
     <method>*</method>
     <to>*</to>
+  </difference>
+  <difference>
+    <differenceType>7002</differenceType>
+    <className>com/google/cloud/pubsublite/SubscriptionPath$Builder</className>
+    <method>*</method>
+  </difference>
+  <difference>
+    <differenceType>7002</differenceType>
+    <className>com/google/cloud/pubsublite/TopicPath$Builder</className>
+    <method>*</method>
   </difference>
   <!-- END TODO: Remove on next release -->
   <!-- Added method to AdminClient interface (Always okay) -->

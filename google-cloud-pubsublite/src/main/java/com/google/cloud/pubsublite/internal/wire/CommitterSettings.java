@@ -55,8 +55,9 @@ public abstract class CommitterSettings {
             .setSubscription(subscriptionPath().toString())
             .setPartition(partition().value())
             .build();
-    return new ApiExceptionCommitter(new BatchingCommitter(
-        new CommitterImpl(serviceClient(), initialCommitCursorRequest),
-        AlarmFactory.create(Duration.ofMillis(50))));
+    return new ApiExceptionCommitter(
+        new BatchingCommitter(
+            new CommitterImpl(serviceClient(), initialCommitCursorRequest),
+            AlarmFactory.create(Duration.ofMillis(50))));
   }
 }

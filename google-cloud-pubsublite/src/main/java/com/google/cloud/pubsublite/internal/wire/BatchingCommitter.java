@@ -32,6 +32,7 @@ public class BatchingCommitter extends ProxyService implements Committer {
 
   @GuardedBy("this")
   private SettableApiFuture<Void> currentFuture = SettableApiFuture.create();
+
   @GuardedBy("this")
   private Optional<Offset> currentOffset = Optional.empty();
 

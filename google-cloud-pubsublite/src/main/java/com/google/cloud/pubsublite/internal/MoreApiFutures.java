@@ -23,18 +23,23 @@ import com.google.api.core.SettableApiFuture;
 import com.google.cloud.pubsublite.internal.wire.SystemExecutors;
 
 public final class MoreApiFutures {
-private MoreApiFutures() {}
-  public static <T> void connectFutures(ApiFuture<T> source, SettableApiFuture<? super T> toConnect) {
-    ApiFutures.addCallback(source, new ApiFutureCallback<T>() {
-      @Override
-      public void onFailure(Throwable throwable) {
-        toConnect.setException(throwable);
-      }
+  private MoreApiFutures() {}
 
-      @Override
-      public void onSuccess(T t) {
-        toConnect.set(t);
-      }
-    }, SystemExecutors.getFuturesExecutor());
+  public static <T> void connectFutures(
+      ApiFuture<T> source, SettableApiFuture<? super T> toConnect) {
+    ApiFutures.addCallback(
+        source,
+        new ApiFutureCallback<T>() {
+          @Override
+          public void onFailure(Throwable throwable) {
+            toConnect.setException(throwable);
+          }
+
+          @Override
+          public void onSuccess(T t) {
+            toConnect.set(t);
+          }
+        },
+        SystemExecutors.getFuturesExecutor());
   }
 }

@@ -27,8 +27,7 @@ import com.google.cloud.pubsublite.internal.ProxyService;
 import com.google.cloud.pubsublite.internal.Publisher;
 import java.io.IOException;
 
-public class SinglePartitionPublisher extends ProxyService
-    implements Publisher<MessageMetadata> {
+public class SinglePartitionPublisher extends ProxyService implements Publisher<MessageMetadata> {
   private final Publisher<Offset> publisher;
   private final Partition partition;
 

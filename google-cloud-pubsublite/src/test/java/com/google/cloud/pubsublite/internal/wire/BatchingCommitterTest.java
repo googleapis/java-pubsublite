@@ -42,10 +42,8 @@ import org.mockito.Spy;
 public class BatchingCommitterTest {
   abstract static class FakeCommitter extends FakeApiService implements Committer {}
 
-  @Spy
-  FakeCommitter underlying;
-  @Mock
-  AlarmFactory alarmFactory;
+  @Spy FakeCommitter underlying;
+  @Mock AlarmFactory alarmFactory;
 
   private BatchingCommitter committer;
 
@@ -54,10 +52,12 @@ public class BatchingCommitterTest {
   @Before
   public void setUp() {
     initMocks(this);
-    when(alarmFactory.newAlarm(any())).thenAnswer(args -> {
-      flushAlarm = args.getArgument(0);
-      return SettableApiFuture.create();
-    });
+    when(alarmFactory.newAlarm(any()))
+        .thenAnswer(
+            args -> {
+              flushAlarm = args.getArgument(0);
+              return SettableApiFuture.create();
+            });
     committer = new BatchingCommitter(underlying, alarmFactory);
     checkState(flushAlarm != null);
     committer.startAsync().awaitRunning();

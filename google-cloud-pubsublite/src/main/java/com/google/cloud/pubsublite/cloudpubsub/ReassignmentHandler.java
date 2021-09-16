@@ -30,7 +30,7 @@ import java.util.Set;
  *
  * <p>Because of the above, as long as reassignment handling is processed quickly, it can be used to
  * abort outstanding operations on partitions which are being assigned away from this client, or to
- * pre-warm state which will be used by the subscriber handler.
+ * pre-warm state which will be used by the message handler.
  */
 public interface ReassignmentHandler {
   /**
@@ -39,7 +39,7 @@ public interface ReassignmentHandler {
    * quickly, or the backend will assume it is non-responsive and assign all partitions away without
    * waiting for acknowledgement.
    *
-   * <p>Nacks on messages for partitions being assigned away will not call the client's nackHandler.
+   * <p>Nacks on messages for partitions being assigned away will not call the client's NackHandler.
    *
    * @param before the previous assignment
    * @param after the new assignment

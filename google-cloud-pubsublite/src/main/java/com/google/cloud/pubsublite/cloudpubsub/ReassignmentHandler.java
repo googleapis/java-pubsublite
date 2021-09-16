@@ -39,10 +39,10 @@ public interface ReassignmentHandler {
    * quickly, or the backend will assume it is non-responsive and assign all partitions away without
    * waiting for acknowledgement.
    *
-   * handleReassignment will only be called after no new messages will be delivered for the
+   * <p>handleReassignment will only be called after no new messages will be delivered for the
    * partition.
    *
-   * <p>Nacks on messages for partitions being assigned away will not call the client's NackHandler.
+   * <p>Acks or nacks on messages from partitions being assigned away will have no effect.
    *
    * @param before the previous assignment
    * @param after the new assignment

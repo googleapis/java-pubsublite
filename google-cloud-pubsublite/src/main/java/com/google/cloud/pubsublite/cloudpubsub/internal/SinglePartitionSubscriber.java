@@ -78,6 +78,10 @@ public class SinglePartitionSubscriber extends ProxyService implements Subscribe
   @Override
   protected void stop() {}
 
+  private boolean terminated() {
+    return State.TERMINATED.equals(state());
+  }
+
   @VisibleForTesting
   void onMessages(List<SequencedMessage> sequencedMessages) {
     try {
@@ -89,6 +93,9 @@ public class SinglePartitionSubscriber extends ProxyService implements Subscribe
             new AckReplyConsumer() {
               @Override
               public void ack() {
+                if (terminated()) {
+                  return; // Drop acks after shutdown
+                }
                 trackerConsumer.run();
                 try {
                   wireSubscriber.allowFlow(
@@ -103,6 +110,9 @@ public class SinglePartitionSubscriber extends ProxyService implements Subscribe
 
               @Override
               public void nack() {
+                if (terminated()) {
+                  return; // Drop nacks after shutdown to allow nacking from reassignment handler
+                }
                 ApiFuture<Void> nackDone = nackHandler.nack(userMessage);
                 ApiFutures.addCallback(
                     nackDone,

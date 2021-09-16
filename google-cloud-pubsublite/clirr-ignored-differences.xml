@@ -165,6 +165,11 @@
     <method>*</method>
   </difference>
   <difference>
+    <differenceType>7004</differenceType>
+    <className>com/google/cloud/pubsublite/cloudpubsub/internal/**</className>
+    <method>*</method>
+  </difference>
+  <difference>
     <differenceType>7005</differenceType>
     <className>com/google/cloud/pubsublite/cloudpubsub/internal/**</className>
     <method>*</method>

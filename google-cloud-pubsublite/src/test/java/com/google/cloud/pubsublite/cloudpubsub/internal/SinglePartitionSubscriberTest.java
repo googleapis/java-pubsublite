@@ -24,6 +24,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -227,6 +228,19 @@ public class SinglePartitionSubscriberTest {
     wireSubscriberTerminated.get();
     verify(wireSubscriber).stopAsync();
     assertThrowableMatches(subscriber.failureCause(), Code.INVALID_ARGUMENT);
+  }
+
+  @Test
+  public void singleMessageNackAfterShutdownNoNackHandler() throws Exception {
+    Runnable ack = mock(Runnable.class);
+    when(ackSetTracker.track(MESSAGE)).thenReturn(ack);
+    subscriber.onMessages(ImmutableList.of(MESSAGE));
+    verify(ackSetTracker).track(MESSAGE);
+    verify(receiver)
+        .receiveMessage(eq(transformer.transform(MESSAGE)), ackConsumerCaptor.capture());
+    subscriber.stopAsync().awaitTerminated();
+    ackConsumerCaptor.getValue().nack();
+    verify(nackHandler, times(0)).nack(any());
   }
 
   @Test

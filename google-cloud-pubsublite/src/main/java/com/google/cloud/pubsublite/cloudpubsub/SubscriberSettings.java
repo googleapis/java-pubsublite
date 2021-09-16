@@ -126,12 +126,16 @@ public abstract class SubscriberSettings {
    */
   abstract Optional<NackHandler> nackHandler();
 
+  /** A handler that will be notified when partition assignments change from the backend. */
+  abstract ReassignmentHandler reassignmentHandler();
+
   public static Builder newBuilder() {
     return new AutoValue_SubscriberSettings.Builder()
         .setFramework(Framework.of("CLOUD_PUBSUB_SHIM"))
         .setPartitions(ImmutableList.of())
         .setCredentialsProvider(
-            SubscriberServiceSettings.defaultCredentialsProviderBuilder().build());
+            SubscriberServiceSettings.defaultCredentialsProviderBuilder().build())
+        .setReassignmentHandler((before, after) -> {});
   }
 
   @AutoValue.Builder
@@ -202,6 +206,9 @@ public abstract class SubscriberSettings {
      * other client that may be able to handle messages.
      */
     public abstract Builder setNackHandler(NackHandler nackHandler);
+
+    /** A handler that will be notified when partition assignments change from the backend. */
+    public abstract Builder setReassignmentHandler(ReassignmentHandler reassignmentHandler);
 
     public abstract SubscriberSettings build();
   }
@@ -301,7 +308,8 @@ public abstract class SubscriberSettings {
               .setServiceClient(getAssignmentServiceClient());
       AssignerFactory assignerFactory =
           receiver -> assignerSettings.setReceiver(receiver).build().instantiate();
-      return new AssigningSubscriber(partitionSubscriberFactory, assignerFactory);
+      return new AssigningSubscriber(
+          partitionSubscriberFactory, reassignmentHandler(), assignerFactory);
     }
 
     List<Subscriber> perPartitionSubscribers = new ArrayList<>();

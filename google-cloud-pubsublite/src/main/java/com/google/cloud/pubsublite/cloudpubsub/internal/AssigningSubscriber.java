@@ -22,9 +22,9 @@ import static com.google.cloud.pubsublite.internal.wire.ApiServiceUtils.blocking
 
 import com.google.api.gax.rpc.ApiException;
 import com.google.cloud.pubsublite.Partition;
+import com.google.cloud.pubsublite.cloudpubsub.ReassignmentHandler;
 import com.google.cloud.pubsublite.cloudpubsub.Subscriber;
 import com.google.cloud.pubsublite.internal.CheckedApiException;
-import com.google.cloud.pubsublite.internal.CloseableMonitor;
 import com.google.cloud.pubsublite.internal.ProxyService;
 import com.google.cloud.pubsublite.internal.wire.Assigner;
 import com.google.cloud.pubsublite.internal.wire.AssignerFactory;
@@ -36,42 +36,36 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
 public class AssigningSubscriber extends ProxyService implements Subscriber {
   private static final GoogleLogger LOG = GoogleLogger.forEnclosingClass();
   private final PartitionSubscriberFactory subscriberFactory;
+  private final ReassignmentHandler reassignmentHandler;
 
-  private final CloseableMonitor monitor = new CloseableMonitor();
-
-  @GuardedBy("monitor.monitor")
+  @GuardedBy("this")
   private final Map<Partition, Subscriber> liveSubscriberMap = new HashMap<>();
 
-  @GuardedBy("monitor.monitor")
-  private final List<Subscriber> stoppingSubscribers = new ArrayList<>();
-
-  @GuardedBy("monitor.monitor")
+  @GuardedBy("this")
   private boolean shutdown = false;
 
   public AssigningSubscriber(
-      PartitionSubscriberFactory subscriberFactory, AssignerFactory assignerFactory)
+      PartitionSubscriberFactory subscriberFactory,
+      ReassignmentHandler reassignmentHandler,
+      AssignerFactory assignerFactory)
       throws ApiException {
     this.subscriberFactory = subscriberFactory;
+    this.reassignmentHandler = reassignmentHandler;
     Assigner assigner = assignerFactory.New(this::handleAssignment);
     addServices(assigner);
   }
 
   @Override
-  protected void start() {}
-
-  @Override
-  protected void stop() {
-    try (CloseableMonitor.Hold h = monitor.enter()) {
-      shutdown = true;
-      blockingShutdown(liveSubscriberMap.values());
-      liveSubscriberMap.clear();
-      blockingShutdown(stoppingSubscribers);
-    }
+  protected synchronized void stop() {
+    shutdown = true;
+    blockingShutdown(liveSubscriberMap.values());
+    liveSubscriberMap.clear();
   }
 
   @Override
@@ -81,25 +75,30 @@ public class AssigningSubscriber extends ProxyService implements Subscriber {
 
   private void handleAssignment(Set<Partition> assignment) {
     try {
-      try (CloseableMonitor.Hold h = monitor.enter()) {
+      Set<Partition> livePartitions;
+      List<Subscriber> removed = new ArrayList<>();
+      synchronized (this) {
         if (shutdown) return;
-        Set<Partition> livePartitions = ImmutableSet.copyOf(liveSubscriberMap.keySet());
+        livePartitions = ImmutableSet.copyOf(liveSubscriberMap.keySet());
         for (Partition partition : livePartitions) {
           if (!assignment.contains(partition)) {
-            stopSubscriber(liveSubscriberMap.remove(partition));
+            removed.add(Objects.requireNonNull(liveSubscriberMap.remove(partition)));
           }
         }
         for (Partition partition : assignment) {
           if (!liveSubscriberMap.containsKey(partition)) startSubscriber(partition);
         }
       }
+      blockingShutdown(removed);
+      // Call reassignment handler outside lock so it won't deadlock if it is asynchronously
+      // reentrant such as by calling sub.stopAsync().awaitTerminated().
+      reassignmentHandler.handleReassignment(livePartitions, assignment);
     } catch (Throwable t) {
       onPermanentError(toCanonical(t));
     }
   }
 
-  @GuardedBy("monitor.monitor")
-  private void startSubscriber(Partition partition) throws CheckedApiException {
+  private synchronized void startSubscriber(Partition partition) throws CheckedApiException {
     checkState(!liveSubscriberMap.containsKey(partition));
     Subscriber subscriber = subscriberFactory.newSubscriber(partition);
     subscriber.addListener(
@@ -109,22 +108,9 @@ public class AssigningSubscriber extends ProxyService implements Subscriber {
             if (State.STOPPING.equals(from)) return;
             onPermanentError(toCanonical(failure));
           }
-
-          @Override
-          public void terminated(State from) {
-            try (CloseableMonitor.Hold h = monitor.enter()) {
-              stoppingSubscribers.remove(subscriber);
-            }
-          }
         },
         SystemExecutors.getFuturesExecutor());
     liveSubscriberMap.put(partition, subscriber);
     subscriber.startAsync();
-  }
-
-  @GuardedBy("monitor.monitor")
-  private void stopSubscriber(Subscriber subscriber) {
-    stoppingSubscribers.add(subscriber);
-    subscriber.stopAsync();
   }
 }

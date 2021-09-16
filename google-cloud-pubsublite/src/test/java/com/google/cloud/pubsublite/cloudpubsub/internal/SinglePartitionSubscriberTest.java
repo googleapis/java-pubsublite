@@ -238,7 +238,7 @@ public class SinglePartitionSubscriberTest {
     verify(ackSetTracker).track(MESSAGE);
     verify(receiver)
         .receiveMessage(eq(transformer.transform(MESSAGE)), ackConsumerCaptor.capture());
-    subscriber.stopAsync();
+    subscriber.stopAsync().awaitTerminated();
     ackConsumerCaptor.getValue().nack();
     verify(nackHandler, times(0)).nack(any());
   }

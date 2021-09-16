@@ -26,6 +26,7 @@ import com.google.cloud.pubsublite.cloudpubsub.ReassignmentHandler;
 import com.google.cloud.pubsublite.cloudpubsub.Subscriber;
 import com.google.cloud.pubsublite.internal.CheckedApiException;
 import com.google.cloud.pubsublite.internal.ProxyService;
+import com.google.cloud.pubsublite.internal.wire.ApiServiceUtils;
 import com.google.cloud.pubsublite.internal.wire.Assigner;
 import com.google.cloud.pubsublite.internal.wire.AssignerFactory;
 import com.google.cloud.pubsublite.internal.wire.SystemExecutors;
@@ -34,8 +35,10 @@ import com.google.common.flogger.GoogleLogger;
 import com.google.errorprone.annotations.concurrent.GuardedBy;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
 public class AssigningSubscriber extends ProxyService implements Subscriber {
@@ -45,9 +48,6 @@ public class AssigningSubscriber extends ProxyService implements Subscriber {
 
   @GuardedBy("this")
   private final Map<Partition, Subscriber> liveSubscriberMap = new HashMap<>();
-
-  @GuardedBy("this")
-  private final List<Subscriber> stoppingSubscribers = new ArrayList<>();
 
   @GuardedBy("this")
   private boolean shutdown = false;
@@ -64,14 +64,10 @@ public class AssigningSubscriber extends ProxyService implements Subscriber {
   }
 
   @Override
-  protected void start() {}
-
-  @Override
   protected synchronized void stop() {
     shutdown = true;
     blockingShutdown(liveSubscriberMap.values());
     liveSubscriberMap.clear();
-    blockingShutdown(stoppingSubscribers);
   }
 
   @Override
@@ -82,18 +78,20 @@ public class AssigningSubscriber extends ProxyService implements Subscriber {
   private void handleAssignment(Set<Partition> assignment) {
     try {
       Set<Partition> livePartitions;
+      List<Subscriber> removed = new ArrayList<>();
       synchronized (this) {
         if (shutdown) return;
         livePartitions = ImmutableSet.copyOf(liveSubscriberMap.keySet());
         for (Partition partition : livePartitions) {
           if (!assignment.contains(partition)) {
-            stopSubscriber(liveSubscriberMap.remove(partition));
+            removed.add(Objects.requireNonNull(liveSubscriberMap.remove(partition)));
           }
         }
         for (Partition partition : assignment) {
           if (!liveSubscriberMap.containsKey(partition)) startSubscriber(partition);
         }
       }
+      blockingShutdown(removed);
       // Call reassignment handler outside lock so it won't deadlock if it is asynchronously
       // reentrant such as by calling sub.stopAsync().awaitTerminated().
       reassignmentHandler.handleReassignment(livePartitions, assignment);
@@ -112,21 +110,9 @@ public class AssigningSubscriber extends ProxyService implements Subscriber {
             if (State.STOPPING.equals(from)) return;
             onPermanentError(toCanonical(failure));
           }
-
-          @Override
-          public void terminated(State from) {
-            synchronized (AssigningSubscriber.this) {
-              stoppingSubscribers.remove(subscriber);
-            }
-          }
         },
         SystemExecutors.getFuturesExecutor());
     liveSubscriberMap.put(partition, subscriber);
     subscriber.startAsync();
-  }
-
-  private synchronized void stopSubscriber(Subscriber subscriber) {
-    stoppingSubscribers.add(subscriber);
-    subscriber.stopAsync();
   }
 }

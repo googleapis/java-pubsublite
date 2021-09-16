@@ -167,9 +167,8 @@ public class AssigningSubscriberTest {
     doAnswer(
             (Answer<Void>)
                 args -> {
-                  // sub1 should already be stopping by the time the reassignmentHandler is called
-                  assertThat(sub1.state()).isNotEqualTo(State.STARTING);
-                  assertThat(sub1.state()).isNotEqualTo(State.RUNNING);
+                  // sub1 should already be stopped by the time the reassignmentHandler is called
+                  assertThat(sub1.state()).isEqualTo(State.TERMINATED);
                   return null;
                 })
         .when(reassignmentHandler)
@@ -180,6 +179,7 @@ public class AssigningSubscriberTest {
         .handleReassignment(ImmutableSet.of(Partition.of(1)), ImmutableSet.of(Partition.of(2)));
     verify(sub2).startAsync();
     verify(sub1).stopAsync();
+    verify(sub1).awaitTerminated();
   }
 
   private Subscriber initSub1() throws CheckedApiException {

@@ -94,7 +94,7 @@ public class SinglePartitionSubscriber extends ProxyService implements Subscribe
               @Override
               public void ack() {
                 if (terminated()) {
-                  return;
+                  return; // Drop acks after shutdown
                 }
                 trackerConsumer.run();
                 try {

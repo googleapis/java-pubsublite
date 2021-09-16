@@ -1,5 +1,5 @@
 # Format:
 # module:released-version:current-version
 
-google-cloud-pubsublite:1.1.0:1.1.1-SNAPSHOT
-pubsublite-beam-io:0.20.0:0.20.1-SNAPSHOT
+google-cloud-pubsublite:1.2.0:1.2.0
+pubsublite-beam-io:0.21.0:0.21.0

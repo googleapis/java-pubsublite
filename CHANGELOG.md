@@ -1,5 +1,18 @@
 # Changelog
 
+## [1.2.0](https://www.github.com/googleapis/java-pubsublite/compare/v1.1.0...v1.2.0) (2021-09-16)
+
+
+### Features
+
+* Add ReassignmentHandler which is notified on client reassignment ([#886](https://www.github.com/googleapis/java-pubsublite/issues/886)) ([5bfef8d](https://www.github.com/googleapis/java-pubsublite/commit/5bfef8d1cc0597f31422b8567de24df09f1936b3)), closes [#869](https://www.github.com/googleapis/java-pubsublite/issues/869)
+* Batch commit requests ([#883](https://www.github.com/googleapis/java-pubsublite/issues/883)) ([5abd97d](https://www.github.com/googleapis/java-pubsublite/commit/5abd97d20f9e121ff91b5d0a33333585fc5c3790))
+
+
+### Dependencies
+
+* update dependency com.google.cloud:pubsublite-beam-io to v0.20.0 ([#885](https://www.github.com/googleapis/java-pubsublite/issues/885)) ([66d23e3](https://www.github.com/googleapis/java-pubsublite/commit/66d23e3e2fe7b0926963e231341917f6fd0c311e))
+
 ## [1.1.0](https://www.github.com/googleapis/java-pubsublite/compare/v1.0.6...v1.1.0) (2021-09-15)
 
 

@@ -44,16 +44,16 @@
   <dependencyManagement>
     <dependencies>
       <dependency>
-        <groupId>com.google.cloud</groupId>
-        <artifactId>google-cloud-bom</artifactId>
-        <version>0.158.0</version>
+        <groupId>org.apache.beam</groupId>
+        <artifactId>beam-sdks-java-google-cloud-platform-bom</artifactId>
+        <version>${beam.version}</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
       <dependency>
-        <groupId>org.apache.beam</groupId>
-        <artifactId>beam-sdks-java-google-cloud-platform-bom</artifactId>
-        <version>${beam.version}</version>
+        <groupId>com.google.cloud</groupId>
+        <artifactId>google-cloud-bom</artifactId>
+        <version>0.158.0</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>

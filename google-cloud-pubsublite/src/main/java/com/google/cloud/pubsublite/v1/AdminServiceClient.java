@@ -97,13 +97,13 @@ import javax.annotation.Generated;
  * methods:
  *
  * <ol>
- *   <li>A "flattened" method. With this type of method, the fields of the request type have been
+ *   <li> A "flattened" method. With this type of method, the fields of the request type have been
  *       converted into function parameters. It may be the case that not all fields are available as
  *       parameters, and not every API method will have a flattened method entry point.
- *   <li>A "request object" method. This type of method only takes one parameter, a request object,
+ *   <li> A "request object" method. This type of method only takes one parameter, a request object,
  *       which must be constructed before the call. Not every API method will have a request object
  *       method.
- *   <li>A "callable" method. This type of method takes no parameters and returns an immutable API
+ *   <li> A "callable" method. This type of method takes no parameters and returns an immutable API
  *       callable object, which can be used to initiate calls to the service.
  * </ol>
  *
@@ -2272,10 +2272,7 @@ public class AdminServiceClient implements BackgroundResource {
 
   public static class ListTopicsPagedResponse
       extends AbstractPagedListResponse<
-          ListTopicsRequest,
-          ListTopicsResponse,
-          Topic,
-          ListTopicsPage,
+          ListTopicsRequest, ListTopicsResponse, Topic, ListTopicsPage,
           ListTopicsFixedSizeCollection> {
 
     public static ApiFuture<ListTopicsPagedResponse> createAsync(
@@ -2322,10 +2319,7 @@ public class AdminServiceClient implements BackgroundResource {
 
   public static class ListTopicsFixedSizeCollection
       extends AbstractFixedSizeCollection<
-          ListTopicsRequest,
-          ListTopicsResponse,
-          Topic,
-          ListTopicsPage,
+          ListTopicsRequest, ListTopicsResponse, Topic, ListTopicsPage,
           ListTopicsFixedSizeCollection> {
 
     private ListTopicsFixedSizeCollection(List<ListTopicsPage> pages, int collectionSize) {
@@ -2345,11 +2339,8 @@ public class AdminServiceClient implements BackgroundResource {
 
   public static class ListTopicSubscriptionsPagedResponse
       extends AbstractPagedListResponse<
-          ListTopicSubscriptionsRequest,
-          ListTopicSubscriptionsResponse,
-          String,
-          ListTopicSubscriptionsPage,
-          ListTopicSubscriptionsFixedSizeCollection> {
+          ListTopicSubscriptionsRequest, ListTopicSubscriptionsResponse, String,
+          ListTopicSubscriptionsPage, ListTopicSubscriptionsFixedSizeCollection> {
 
     public static ApiFuture<ListTopicSubscriptionsPagedResponse> createAsync(
         PageContext<ListTopicSubscriptionsRequest, ListTopicSubscriptionsResponse, String> context,
@@ -2369,9 +2360,7 @@ public class AdminServiceClient implements BackgroundResource {
 
   public static class ListTopicSubscriptionsPage
       extends AbstractPage<
-          ListTopicSubscriptionsRequest,
-          ListTopicSubscriptionsResponse,
-          String,
+          ListTopicSubscriptionsRequest, ListTopicSubscriptionsResponse, String,
           ListTopicSubscriptionsPage> {
 
     private ListTopicSubscriptionsPage(
@@ -2401,11 +2390,8 @@ public class AdminServiceClient implements BackgroundResource {
 
   public static class ListTopicSubscriptionsFixedSizeCollection
       extends AbstractFixedSizeCollection<
-          ListTopicSubscriptionsRequest,
-          ListTopicSubscriptionsResponse,
-          String,
-          ListTopicSubscriptionsPage,
-          ListTopicSubscriptionsFixedSizeCollection> {
+          ListTopicSubscriptionsRequest, ListTopicSubscriptionsResponse, String,
+          ListTopicSubscriptionsPage, ListTopicSubscriptionsFixedSizeCollection> {
 
     private ListTopicSubscriptionsFixedSizeCollection(
         List<ListTopicSubscriptionsPage> pages, int collectionSize) {
@@ -2425,10 +2411,7 @@ public class AdminServiceClient implements BackgroundResource {
 
   public static class ListSubscriptionsPagedResponse
       extends AbstractPagedListResponse<
-          ListSubscriptionsRequest,
-          ListSubscriptionsResponse,
-          Subscription,
-          ListSubscriptionsPage,
+          ListSubscriptionsRequest, ListSubscriptionsResponse, Subscription, ListSubscriptionsPage,
           ListSubscriptionsFixedSizeCollection> {
 
     public static ApiFuture<ListSubscriptionsPagedResponse> createAsync(
@@ -2449,9 +2432,7 @@ public class AdminServiceClient implements BackgroundResource {
 
   public static class ListSubscriptionsPage
       extends AbstractPage<
-          ListSubscriptionsRequest,
-          ListSubscriptionsResponse,
-          Subscription,
+          ListSubscriptionsRequest, ListSubscriptionsResponse, Subscription,
           ListSubscriptionsPage> {
 
     private ListSubscriptionsPage(
@@ -2481,10 +2462,7 @@ public class AdminServiceClient implements BackgroundResource {
 
   public static class ListSubscriptionsFixedSizeCollection
       extends AbstractFixedSizeCollection<
-          ListSubscriptionsRequest,
-          ListSubscriptionsResponse,
-          Subscription,
-          ListSubscriptionsPage,
+          ListSubscriptionsRequest, ListSubscriptionsResponse, Subscription, ListSubscriptionsPage,
           ListSubscriptionsFixedSizeCollection> {
 
     private ListSubscriptionsFixedSizeCollection(
@@ -2505,10 +2483,7 @@ public class AdminServiceClient implements BackgroundResource {
 
   public static class ListReservationsPagedResponse
       extends AbstractPagedListResponse<
-          ListReservationsRequest,
-          ListReservationsResponse,
-          Reservation,
-          ListReservationsPage,
+          ListReservationsRequest, ListReservationsResponse, Reservation, ListReservationsPage,
           ListReservationsFixedSizeCollection> {
 
     public static ApiFuture<ListReservationsPagedResponse> createAsync(
@@ -2558,10 +2533,7 @@ public class AdminServiceClient implements BackgroundResource {
 
   public static class ListReservationsFixedSizeCollection
       extends AbstractFixedSizeCollection<
-          ListReservationsRequest,
-          ListReservationsResponse,
-          Reservation,
-          ListReservationsPage,
+          ListReservationsRequest, ListReservationsResponse, Reservation, ListReservationsPage,
           ListReservationsFixedSizeCollection> {
 
     private ListReservationsFixedSizeCollection(
@@ -2582,11 +2554,8 @@ public class AdminServiceClient implements BackgroundResource {
 
   public static class ListReservationTopicsPagedResponse
       extends AbstractPagedListResponse<
-          ListReservationTopicsRequest,
-          ListReservationTopicsResponse,
-          String,
-          ListReservationTopicsPage,
-          ListReservationTopicsFixedSizeCollection> {
+          ListReservationTopicsRequest, ListReservationTopicsResponse, String,
+          ListReservationTopicsPage, ListReservationTopicsFixedSizeCollection> {
 
     public static ApiFuture<ListReservationTopicsPagedResponse> createAsync(
         PageContext<ListReservationTopicsRequest, ListReservationTopicsResponse, String> context,
@@ -2606,9 +2575,7 @@ public class AdminServiceClient implements BackgroundResource {
 
   public static class ListReservationTopicsPage
       extends AbstractPage<
-          ListReservationTopicsRequest,
-          ListReservationTopicsResponse,
-          String,
+          ListReservationTopicsRequest, ListReservationTopicsResponse, String,
           ListReservationTopicsPage> {
 
     private ListReservationTopicsPage(
@@ -2638,11 +2605,8 @@ public class AdminServiceClient implements BackgroundResource {
 
   public static class ListReservationTopicsFixedSizeCollection
       extends AbstractFixedSizeCollection<
-          ListReservationTopicsRequest,
-          ListReservationTopicsResponse,
-          String,
-          ListReservationTopicsPage,
-          ListReservationTopicsFixedSizeCollection> {
+          ListReservationTopicsRequest, ListReservationTopicsResponse, String,
+          ListReservationTopicsPage, ListReservationTopicsFixedSizeCollection> {
 
     private ListReservationTopicsFixedSizeCollection(
         List<ListReservationTopicsPage> pages, int collectionSize) {

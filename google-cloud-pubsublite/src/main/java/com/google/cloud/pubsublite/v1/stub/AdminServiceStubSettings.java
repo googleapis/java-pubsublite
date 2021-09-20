@@ -96,9 +96,9 @@ import org.threeten.bp.Duration;
  * <p>The default instance has everything set to sensible defaults:
  *
  * <ul>
- *   <li>The default service address (pubsublite.googleapis.com) and default port (443) are used.
- *   <li>Credentials are acquired automatically through Application Default Credentials.
- *   <li>Retries are configured for idempotent methods but not for non-idempotent methods.
+ *   <li> The default service address (pubsublite.googleapis.com) and default port (443) are used.
+ *   <li> Credentials are acquired automatically through Application Default Credentials.
+ *   <li> Retries are configured for idempotent methods but not for non-idempotent methods.
  * </ul>
  *
  * <p>The builder of this class is recursive, so contained classes are themselves builders. When
@@ -136,8 +136,7 @@ public class AdminServiceStubSettings extends StubSettings<AdminServiceStubSetti
   private final UnaryCallSettings<UpdateTopicRequest, Topic> updateTopicSettings;
   private final UnaryCallSettings<DeleteTopicRequest, Empty> deleteTopicSettings;
   private final PagedCallSettings<
-          ListTopicSubscriptionsRequest,
-          ListTopicSubscriptionsResponse,
+          ListTopicSubscriptionsRequest, ListTopicSubscriptionsResponse,
           ListTopicSubscriptionsPagedResponse>
       listTopicSubscriptionsSettings;
   private final UnaryCallSettings<CreateSubscriptionRequest, Subscription>
@@ -161,8 +160,7 @@ public class AdminServiceStubSettings extends StubSettings<AdminServiceStubSetti
   private final UnaryCallSettings<UpdateReservationRequest, Reservation> updateReservationSettings;
   private final UnaryCallSettings<DeleteReservationRequest, Empty> deleteReservationSettings;
   private final PagedCallSettings<
-          ListReservationTopicsRequest,
-          ListReservationTopicsResponse,
+          ListReservationTopicsRequest, ListReservationTopicsResponse,
           ListReservationTopicsPagedResponse>
       listReservationTopicsSettings;
 
@@ -382,13 +380,11 @@ public class AdminServiceStubSettings extends StubSettings<AdminServiceStubSetti
           };
 
   private static final PagedListResponseFactory<
-          ListTopicSubscriptionsRequest,
-          ListTopicSubscriptionsResponse,
+          ListTopicSubscriptionsRequest, ListTopicSubscriptionsResponse,
           ListTopicSubscriptionsPagedResponse>
       LIST_TOPIC_SUBSCRIPTIONS_PAGE_STR_FACT =
           new PagedListResponseFactory<
-              ListTopicSubscriptionsRequest,
-              ListTopicSubscriptionsResponse,
+              ListTopicSubscriptionsRequest, ListTopicSubscriptionsResponse,
               ListTopicSubscriptionsPagedResponse>() {
             @Override
             public ApiFuture<ListTopicSubscriptionsPagedResponse> getFuturePagedResponse(
@@ -409,8 +405,7 @@ public class AdminServiceStubSettings extends StubSettings<AdminServiceStubSetti
           ListSubscriptionsRequest, ListSubscriptionsResponse, ListSubscriptionsPagedResponse>
       LIST_SUBSCRIPTIONS_PAGE_STR_FACT =
           new PagedListResponseFactory<
-              ListSubscriptionsRequest,
-              ListSubscriptionsResponse,
+              ListSubscriptionsRequest, ListSubscriptionsResponse,
               ListSubscriptionsPagedResponse>() {
             @Override
             public ApiFuture<ListSubscriptionsPagedResponse> getFuturePagedResponse(
@@ -446,13 +441,11 @@ public class AdminServiceStubSettings extends StubSettings<AdminServiceStubSetti
           };
 
   private static final PagedListResponseFactory<
-          ListReservationTopicsRequest,
-          ListReservationTopicsResponse,
+          ListReservationTopicsRequest, ListReservationTopicsResponse,
           ListReservationTopicsPagedResponse>
       LIST_RESERVATION_TOPICS_PAGE_STR_FACT =
           new PagedListResponseFactory<
-              ListReservationTopicsRequest,
-              ListReservationTopicsResponse,
+              ListReservationTopicsRequest, ListReservationTopicsResponse,
               ListReservationTopicsPagedResponse>() {
             @Override
             public ApiFuture<ListReservationTopicsPagedResponse> getFuturePagedResponse(
@@ -502,8 +495,7 @@ public class AdminServiceStubSettings extends StubSettings<AdminServiceStubSetti
 
   /** Returns the object with the settings used for calls to listTopicSubscriptions. */
   public PagedCallSettings<
-          ListTopicSubscriptionsRequest,
-          ListTopicSubscriptionsResponse,
+          ListTopicSubscriptionsRequest, ListTopicSubscriptionsResponse,
           ListTopicSubscriptionsPagedResponse>
       listTopicSubscriptionsSettings() {
     return listTopicSubscriptionsSettings;
@@ -576,8 +568,7 @@ public class AdminServiceStubSettings extends StubSettings<AdminServiceStubSetti
 
   /** Returns the object with the settings used for calls to listReservationTopics. */
   public PagedCallSettings<
-          ListReservationTopicsRequest,
-          ListReservationTopicsResponse,
+          ListReservationTopicsRequest, ListReservationTopicsResponse,
           ListReservationTopicsPagedResponse>
       listReservationTopicsSettings() {
     return listReservationTopicsSettings;
@@ -694,8 +685,7 @@ public class AdminServiceStubSettings extends StubSettings<AdminServiceStubSetti
     private final UnaryCallSettings.Builder<UpdateTopicRequest, Topic> updateTopicSettings;
     private final UnaryCallSettings.Builder<DeleteTopicRequest, Empty> deleteTopicSettings;
     private final PagedCallSettings.Builder<
-            ListTopicSubscriptionsRequest,
-            ListTopicSubscriptionsResponse,
+            ListTopicSubscriptionsRequest, ListTopicSubscriptionsResponse,
             ListTopicSubscriptionsPagedResponse>
         listTopicSubscriptionsSettings;
     private final UnaryCallSettings.Builder<CreateSubscriptionRequest, Subscription>
@@ -726,8 +716,7 @@ public class AdminServiceStubSettings extends StubSettings<AdminServiceStubSetti
     private final UnaryCallSettings.Builder<DeleteReservationRequest, Empty>
         deleteReservationSettings;
     private final PagedCallSettings.Builder<
-            ListReservationTopicsRequest,
-            ListReservationTopicsResponse,
+            ListReservationTopicsRequest, ListReservationTopicsResponse,
             ListReservationTopicsPagedResponse>
         listReservationTopicsSettings;
     private static final ImmutableMap<String, ImmutableSet<StatusCode.Code>>
@@ -1053,8 +1042,7 @@ public class AdminServiceStubSettings extends StubSettings<AdminServiceStubSetti
 
     /** Returns the builder for the settings used for calls to listTopicSubscriptions. */
     public PagedCallSettings.Builder<
-            ListTopicSubscriptionsRequest,
-            ListTopicSubscriptionsResponse,
+            ListTopicSubscriptionsRequest, ListTopicSubscriptionsResponse,
             ListTopicSubscriptionsPagedResponse>
         listTopicSubscriptionsSettings() {
       return listTopicSubscriptionsSettings;
@@ -1137,8 +1125,7 @@ public class AdminServiceStubSettings extends StubSettings<AdminServiceStubSetti
 
     /** Returns the builder for the settings used for calls to listReservationTopics. */
     public PagedCallSettings.Builder<
-            ListReservationTopicsRequest,
-            ListReservationTopicsResponse,
+            ListReservationTopicsRequest, ListReservationTopicsResponse,
             ListReservationTopicsPagedResponse>
         listReservationTopicsSettings() {
       return listReservationTopicsSettings;

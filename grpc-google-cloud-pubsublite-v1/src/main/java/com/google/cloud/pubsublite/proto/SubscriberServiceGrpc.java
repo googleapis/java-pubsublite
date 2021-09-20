@@ -1,25 +1,8 @@
-/*
- * Copyright 2020 Google LLC
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     https://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package com.google.cloud.pubsublite.proto;
 
 import static io.grpc.MethodDescriptor.generateFullMethodName;
 
 /**
- *
- *
  * <pre>
  * The service that a subscriber client application uses to receive messages
  * from subscriptions.
@@ -35,144 +18,121 @@ public final class SubscriberServiceGrpc {
   public static final String SERVICE_NAME = "google.cloud.pubsublite.v1.SubscriberService";
 
   // Static method descriptors that strictly reflect the proto.
-  private static volatile io.grpc.MethodDescriptor<
-          com.google.cloud.pubsublite.proto.SubscribeRequest,
-          com.google.cloud.pubsublite.proto.SubscribeResponse>
-      getSubscribeMethod;
+  private static volatile io.grpc.MethodDescriptor<com.google.cloud.pubsublite.proto.SubscribeRequest,
+      com.google.cloud.pubsublite.proto.SubscribeResponse> getSubscribeMethod;
 
   @io.grpc.stub.annotations.RpcMethod(
       fullMethodName = SERVICE_NAME + '/' + "Subscribe",
       requestType = com.google.cloud.pubsublite.proto.SubscribeRequest.class,
       responseType = com.google.cloud.pubsublite.proto.SubscribeResponse.class,
       methodType = io.grpc.MethodDescriptor.MethodType.BIDI_STREAMING)
-  public static io.grpc.MethodDescriptor<
-          com.google.cloud.pubsublite.proto.SubscribeRequest,
-          com.google.cloud.pubsublite.proto.SubscribeResponse>
-      getSubscribeMethod() {
-    io.grpc.MethodDescriptor<
-            com.google.cloud.pubsublite.proto.SubscribeRequest,
-            com.google.cloud.pubsublite.proto.SubscribeResponse>
-        getSubscribeMethod;
+  public static io.grpc.MethodDescriptor<com.google.cloud.pubsublite.proto.SubscribeRequest,
+      com.google.cloud.pubsublite.proto.SubscribeResponse> getSubscribeMethod() {
+    io.grpc.MethodDescriptor<com.google.cloud.pubsublite.proto.SubscribeRequest, com.google.cloud.pubsublite.proto.SubscribeResponse> getSubscribeMethod;
     if ((getSubscribeMethod = SubscriberServiceGrpc.getSubscribeMethod) == null) {
       synchronized (SubscriberServiceGrpc.class) {
         if ((getSubscribeMethod = SubscriberServiceGrpc.getSubscribeMethod) == null) {
-          SubscriberServiceGrpc.getSubscribeMethod =
-              getSubscribeMethod =
-                  io.grpc.MethodDescriptor
-                      .<com.google.cloud.pubsublite.proto.SubscribeRequest,
-                          com.google.cloud.pubsublite.proto.SubscribeResponse>
-                          newBuilder()
-                      .setType(io.grpc.MethodDescriptor.MethodType.BIDI_STREAMING)
-                      .setFullMethodName(generateFullMethodName(SERVICE_NAME, "Subscribe"))
-                      .setSampledToLocalTracing(true)
-                      .setRequestMarshaller(
-                          io.grpc.protobuf.ProtoUtils.marshaller(
-                              com.google.cloud.pubsublite.proto.SubscribeRequest
-                                  .getDefaultInstance()))
-                      .setResponseMarshaller(
-                          io.grpc.protobuf.ProtoUtils.marshaller(
-                              com.google.cloud.pubsublite.proto.SubscribeResponse
-                                  .getDefaultInstance()))
-                      .setSchemaDescriptor(
-                          new SubscriberServiceMethodDescriptorSupplier("Subscribe"))
-                      .build();
+          SubscriberServiceGrpc.getSubscribeMethod = getSubscribeMethod =
+              io.grpc.MethodDescriptor.<com.google.cloud.pubsublite.proto.SubscribeRequest, com.google.cloud.pubsublite.proto.SubscribeResponse>newBuilder()
+              .setType(io.grpc.MethodDescriptor.MethodType.BIDI_STREAMING)
+              .setFullMethodName(generateFullMethodName(SERVICE_NAME, "Subscribe"))
+              .setSampledToLocalTracing(true)
+              .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  com.google.cloud.pubsublite.proto.SubscribeRequest.getDefaultInstance()))
+              .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  com.google.cloud.pubsublite.proto.SubscribeResponse.getDefaultInstance()))
+              .setSchemaDescriptor(new SubscriberServiceMethodDescriptorSupplier("Subscribe"))
+              .build();
         }
       }
     }
     return getSubscribeMethod;
   }
 
-  /** Creates a new async stub that supports all call types for the service */
+  /**
+   * Creates a new async stub that supports all call types for the service
+   */
   public static SubscriberServiceStub newStub(io.grpc.Channel channel) {
     io.grpc.stub.AbstractStub.StubFactory<SubscriberServiceStub> factory =
-        new io.grpc.stub.AbstractStub.StubFactory<SubscriberServiceStub>() {
-          @java.lang.Override
-          public SubscriberServiceStub newStub(
-              io.grpc.Channel channel, io.grpc.CallOptions callOptions) {
-            return new SubscriberServiceStub(channel, callOptions);
-          }
-        };
+      new io.grpc.stub.AbstractStub.StubFactory<SubscriberServiceStub>() {
+        @java.lang.Override
+        public SubscriberServiceStub newStub(io.grpc.Channel channel, io.grpc.CallOptions callOptions) {
+          return new SubscriberServiceStub(channel, callOptions);
+        }
+      };
     return SubscriberServiceStub.newStub(factory, channel);
   }
 
   /**
    * Creates a new blocking-style stub that supports unary and streaming output calls on the service
    */
-  public static SubscriberServiceBlockingStub newBlockingStub(io.grpc.Channel channel) {
+  public static SubscriberServiceBlockingStub newBlockingStub(
+      io.grpc.Channel channel) {
     io.grpc.stub.AbstractStub.StubFactory<SubscriberServiceBlockingStub> factory =
-        new io.grpc.stub.AbstractStub.StubFactory<SubscriberServiceBlockingStub>() {
-          @java.lang.Override
-          public SubscriberServiceBlockingStub newStub(
-              io.grpc.Channel channel, io.grpc.CallOptions callOptions) {
-            return new SubscriberServiceBlockingStub(channel, callOptions);
-          }
-        };
+      new io.grpc.stub.AbstractStub.StubFactory<SubscriberServiceBlockingStub>() {
+        @java.lang.Override
+        public SubscriberServiceBlockingStub newStub(io.grpc.Channel channel, io.grpc.CallOptions callOptions) {
+          return new SubscriberServiceBlockingStub(channel, callOptions);
+        }
+      };
     return SubscriberServiceBlockingStub.newStub(factory, channel);
   }
 
-  /** Creates a new ListenableFuture-style stub that supports unary calls on the service */
-  public static SubscriberServiceFutureStub newFutureStub(io.grpc.Channel channel) {
+  /**
+   * Creates a new ListenableFuture-style stub that supports unary calls on the service
+   */
+  public static SubscriberServiceFutureStub newFutureStub(
+      io.grpc.Channel channel) {
     io.grpc.stub.AbstractStub.StubFactory<SubscriberServiceFutureStub> factory =
-        new io.grpc.stub.AbstractStub.StubFactory<SubscriberServiceFutureStub>() {
-          @java.lang.Override
-          public SubscriberServiceFutureStub newStub(
-              io.grpc.Channel channel, io.grpc.CallOptions callOptions) {
-            return new SubscriberServiceFutureStub(channel, callOptions);
-          }
-        };
+      new io.grpc.stub.AbstractStub.StubFactory<SubscriberServiceFutureStub>() {
+        @java.lang.Override
+        public SubscriberServiceFutureStub newStub(io.grpc.Channel channel, io.grpc.CallOptions callOptions) {
+          return new SubscriberServiceFutureStub(channel, callOptions);
+        }
+      };
     return SubscriberServiceFutureStub.newStub(factory, channel);
   }
 
   /**
-   *
-   *
    * <pre>
    * The service that a subscriber client application uses to receive messages
    * from subscriptions.
    * </pre>
    */
-  public abstract static class SubscriberServiceImplBase implements io.grpc.BindableService {
+  public static abstract class SubscriberServiceImplBase implements io.grpc.BindableService {
 
     /**
-     *
-     *
      * <pre>
      * Establishes a stream with the server for receiving messages.
      * </pre>
      */
-    public io.grpc.stub.StreamObserver<com.google.cloud.pubsublite.proto.SubscribeRequest>
-        subscribe(
-            io.grpc.stub.StreamObserver<com.google.cloud.pubsublite.proto.SubscribeResponse>
-                responseObserver) {
-      return io.grpc.stub.ServerCalls.asyncUnimplementedStreamingCall(
-          getSubscribeMethod(), responseObserver);
+    public io.grpc.stub.StreamObserver<com.google.cloud.pubsublite.proto.SubscribeRequest> subscribe(
+        io.grpc.stub.StreamObserver<com.google.cloud.pubsublite.proto.SubscribeResponse> responseObserver) {
+      return io.grpc.stub.ServerCalls.asyncUnimplementedStreamingCall(getSubscribeMethod(), responseObserver);
     }
 
-    @java.lang.Override
-    public final io.grpc.ServerServiceDefinition bindService() {
+    @java.lang.Override public final io.grpc.ServerServiceDefinition bindService() {
       return io.grpc.ServerServiceDefinition.builder(getServiceDescriptor())
           .addMethod(
-              getSubscribeMethod(),
-              io.grpc.stub.ServerCalls.asyncBidiStreamingCall(
-                  new MethodHandlers<
-                      com.google.cloud.pubsublite.proto.SubscribeRequest,
-                      com.google.cloud.pubsublite.proto.SubscribeResponse>(
-                      this, METHODID_SUBSCRIBE)))
+            getSubscribeMethod(),
+            io.grpc.stub.ServerCalls.asyncBidiStreamingCall(
+              new MethodHandlers<
+                com.google.cloud.pubsublite.proto.SubscribeRequest,
+                com.google.cloud.pubsublite.proto.SubscribeResponse>(
+                  this, METHODID_SUBSCRIBE)))
           .build();
     }
   }
 
   /**
-   *
-   *
    * <pre>
    * The service that a subscriber client application uses to receive messages
    * from subscriptions.
    * </pre>
    */
-  public static final class SubscriberServiceStub
-      extends io.grpc.stub.AbstractAsyncStub<SubscriberServiceStub> {
-    private SubscriberServiceStub(io.grpc.Channel channel, io.grpc.CallOptions callOptions) {
+  public static final class SubscriberServiceStub extends io.grpc.stub.AbstractAsyncStub<SubscriberServiceStub> {
+    private SubscriberServiceStub(
+        io.grpc.Channel channel, io.grpc.CallOptions callOptions) {
       super(channel, callOptions);
     }
 
@@ -183,31 +143,24 @@ public final class SubscriberServiceGrpc {
     }
 
     /**
-     *
-     *
      * <pre>
      * Establishes a stream with the server for receiving messages.
      * </pre>
      */
-    public io.grpc.stub.StreamObserver<com.google.cloud.pubsublite.proto.SubscribeRequest>
-        subscribe(
-            io.grpc.stub.StreamObserver<com.google.cloud.pubsublite.proto.SubscribeResponse>
-                responseObserver) {
+    public io.grpc.stub.StreamObserver<com.google.cloud.pubsublite.proto.SubscribeRequest> subscribe(
+        io.grpc.stub.StreamObserver<com.google.cloud.pubsublite.proto.SubscribeResponse> responseObserver) {
       return io.grpc.stub.ClientCalls.asyncBidiStreamingCall(
           getChannel().newCall(getSubscribeMethod(), getCallOptions()), responseObserver);
     }
   }
 
   /**
-   *
-   *
    * <pre>
    * The service that a subscriber client application uses to receive messages
    * from subscriptions.
    * </pre>
    */
-  public static final class SubscriberServiceBlockingStub
-      extends io.grpc.stub.AbstractBlockingStub<SubscriberServiceBlockingStub> {
+  public static final class SubscriberServiceBlockingStub extends io.grpc.stub.AbstractBlockingStub<SubscriberServiceBlockingStub> {
     private SubscriberServiceBlockingStub(
         io.grpc.Channel channel, io.grpc.CallOptions callOptions) {
       super(channel, callOptions);
@@ -221,16 +174,14 @@ public final class SubscriberServiceGrpc {
   }
 
   /**
-   *
-   *
    * <pre>
    * The service that a subscriber client application uses to receive messages
    * from subscriptions.
    * </pre>
    */
-  public static final class SubscriberServiceFutureStub
-      extends io.grpc.stub.AbstractFutureStub<SubscriberServiceFutureStub> {
-    private SubscriberServiceFutureStub(io.grpc.Channel channel, io.grpc.CallOptions callOptions) {
+  public static final class SubscriberServiceFutureStub extends io.grpc.stub.AbstractFutureStub<SubscriberServiceFutureStub> {
+    private SubscriberServiceFutureStub(
+        io.grpc.Channel channel, io.grpc.CallOptions callOptions) {
       super(channel, callOptions);
     }
 
@@ -243,11 +194,11 @@ public final class SubscriberServiceGrpc {
 
   private static final int METHODID_SUBSCRIBE = 0;
 
-  private static final class MethodHandlers<Req, Resp>
-      implements io.grpc.stub.ServerCalls.UnaryMethod<Req, Resp>,
-          io.grpc.stub.ServerCalls.ServerStreamingMethod<Req, Resp>,
-          io.grpc.stub.ServerCalls.ClientStreamingMethod<Req, Resp>,
-          io.grpc.stub.ServerCalls.BidiStreamingMethod<Req, Resp> {
+  private static final class MethodHandlers<Req, Resp> implements
+      io.grpc.stub.ServerCalls.UnaryMethod<Req, Resp>,
+      io.grpc.stub.ServerCalls.ServerStreamingMethod<Req, Resp>,
+      io.grpc.stub.ServerCalls.ClientStreamingMethod<Req, Resp>,
+      io.grpc.stub.ServerCalls.BidiStreamingMethod<Req, Resp> {
     private final SubscriberServiceImplBase serviceImpl;
     private final int methodId;
 
@@ -271,19 +222,16 @@ public final class SubscriberServiceGrpc {
         io.grpc.stub.StreamObserver<Resp> responseObserver) {
       switch (methodId) {
         case METHODID_SUBSCRIBE:
-          return (io.grpc.stub.StreamObserver<Req>)
-              serviceImpl.subscribe(
-                  (io.grpc.stub.StreamObserver<com.google.cloud.pubsublite.proto.SubscribeResponse>)
-                      responseObserver);
+          return (io.grpc.stub.StreamObserver<Req>) serviceImpl.subscribe(
+              (io.grpc.stub.StreamObserver<com.google.cloud.pubsublite.proto.SubscribeResponse>) responseObserver);
         default:
           throw new AssertionError();
       }
     }
   }
 
-  private abstract static class SubscriberServiceBaseDescriptorSupplier
-      implements io.grpc.protobuf.ProtoFileDescriptorSupplier,
-          io.grpc.protobuf.ProtoServiceDescriptorSupplier {
+  private static abstract class SubscriberServiceBaseDescriptorSupplier
+      implements io.grpc.protobuf.ProtoFileDescriptorSupplier, io.grpc.protobuf.ProtoServiceDescriptorSupplier {
     SubscriberServiceBaseDescriptorSupplier() {}
 
     @java.lang.Override
@@ -325,12 +273,10 @@ public final class SubscriberServiceGrpc {
       synchronized (SubscriberServiceGrpc.class) {
         result = serviceDescriptor;
         if (result == null) {
-          serviceDescriptor =
-              result =
-                  io.grpc.ServiceDescriptor.newBuilder(SERVICE_NAME)
-                      .setSchemaDescriptor(new SubscriberServiceFileDescriptorSupplier())
-                      .addMethod(getSubscribeMethod())
-                      .build();
+          serviceDescriptor = result = io.grpc.ServiceDescriptor.newBuilder(SERVICE_NAME)
+              .setSchemaDescriptor(new SubscriberServiceFileDescriptorSupplier())
+              .addMethod(getSubscribeMethod())
+              .build();
         }
       }
     }

@@ -1,25 +1,8 @@
-/*
- * Copyright 2020 Google LLC
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     https://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package com.google.cloud.pubsublite.proto;
 
 import static io.grpc.MethodDescriptor.generateFullMethodName;
 
 /**
- *
- *
  * <pre>
  * The service that a publisher client application uses to publish messages to
  * topics. Published messages are retained by the service for the duration of
@@ -37,96 +20,82 @@ public final class PublisherServiceGrpc {
   public static final String SERVICE_NAME = "google.cloud.pubsublite.v1.PublisherService";
 
   // Static method descriptors that strictly reflect the proto.
-  private static volatile io.grpc.MethodDescriptor<
-          com.google.cloud.pubsublite.proto.PublishRequest,
-          com.google.cloud.pubsublite.proto.PublishResponse>
-      getPublishMethod;
+  private static volatile io.grpc.MethodDescriptor<com.google.cloud.pubsublite.proto.PublishRequest,
+      com.google.cloud.pubsublite.proto.PublishResponse> getPublishMethod;
 
   @io.grpc.stub.annotations.RpcMethod(
       fullMethodName = SERVICE_NAME + '/' + "Publish",
       requestType = com.google.cloud.pubsublite.proto.PublishRequest.class,
       responseType = com.google.cloud.pubsublite.proto.PublishResponse.class,
       methodType = io.grpc.MethodDescriptor.MethodType.BIDI_STREAMING)
-  public static io.grpc.MethodDescriptor<
-          com.google.cloud.pubsublite.proto.PublishRequest,
-          com.google.cloud.pubsublite.proto.PublishResponse>
-      getPublishMethod() {
-    io.grpc.MethodDescriptor<
-            com.google.cloud.pubsublite.proto.PublishRequest,
-            com.google.cloud.pubsublite.proto.PublishResponse>
-        getPublishMethod;
+  public static io.grpc.MethodDescriptor<com.google.cloud.pubsublite.proto.PublishRequest,
+      com.google.cloud.pubsublite.proto.PublishResponse> getPublishMethod() {
+    io.grpc.MethodDescriptor<com.google.cloud.pubsublite.proto.PublishRequest, com.google.cloud.pubsublite.proto.PublishResponse> getPublishMethod;
     if ((getPublishMethod = PublisherServiceGrpc.getPublishMethod) == null) {
       synchronized (PublisherServiceGrpc.class) {
         if ((getPublishMethod = PublisherServiceGrpc.getPublishMethod) == null) {
-          PublisherServiceGrpc.getPublishMethod =
-              getPublishMethod =
-                  io.grpc.MethodDescriptor
-                      .<com.google.cloud.pubsublite.proto.PublishRequest,
-                          com.google.cloud.pubsublite.proto.PublishResponse>
-                          newBuilder()
-                      .setType(io.grpc.MethodDescriptor.MethodType.BIDI_STREAMING)
-                      .setFullMethodName(generateFullMethodName(SERVICE_NAME, "Publish"))
-                      .setSampledToLocalTracing(true)
-                      .setRequestMarshaller(
-                          io.grpc.protobuf.ProtoUtils.marshaller(
-                              com.google.cloud.pubsublite.proto.PublishRequest
-                                  .getDefaultInstance()))
-                      .setResponseMarshaller(
-                          io.grpc.protobuf.ProtoUtils.marshaller(
-                              com.google.cloud.pubsublite.proto.PublishResponse
-                                  .getDefaultInstance()))
-                      .setSchemaDescriptor(new PublisherServiceMethodDescriptorSupplier("Publish"))
-                      .build();
+          PublisherServiceGrpc.getPublishMethod = getPublishMethod =
+              io.grpc.MethodDescriptor.<com.google.cloud.pubsublite.proto.PublishRequest, com.google.cloud.pubsublite.proto.PublishResponse>newBuilder()
+              .setType(io.grpc.MethodDescriptor.MethodType.BIDI_STREAMING)
+              .setFullMethodName(generateFullMethodName(SERVICE_NAME, "Publish"))
+              .setSampledToLocalTracing(true)
+              .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  com.google.cloud.pubsublite.proto.PublishRequest.getDefaultInstance()))
+              .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  com.google.cloud.pubsublite.proto.PublishResponse.getDefaultInstance()))
+              .setSchemaDescriptor(new PublisherServiceMethodDescriptorSupplier("Publish"))
+              .build();
         }
       }
     }
     return getPublishMethod;
   }
 
-  /** Creates a new async stub that supports all call types for the service */
+  /**
+   * Creates a new async stub that supports all call types for the service
+   */
   public static PublisherServiceStub newStub(io.grpc.Channel channel) {
     io.grpc.stub.AbstractStub.StubFactory<PublisherServiceStub> factory =
-        new io.grpc.stub.AbstractStub.StubFactory<PublisherServiceStub>() {
-          @java.lang.Override
-          public PublisherServiceStub newStub(
-              io.grpc.Channel channel, io.grpc.CallOptions callOptions) {
-            return new PublisherServiceStub(channel, callOptions);
-          }
-        };
+      new io.grpc.stub.AbstractStub.StubFactory<PublisherServiceStub>() {
+        @java.lang.Override
+        public PublisherServiceStub newStub(io.grpc.Channel channel, io.grpc.CallOptions callOptions) {
+          return new PublisherServiceStub(channel, callOptions);
+        }
+      };
     return PublisherServiceStub.newStub(factory, channel);
   }
 
   /**
    * Creates a new blocking-style stub that supports unary and streaming output calls on the service
    */
-  public static PublisherServiceBlockingStub newBlockingStub(io.grpc.Channel channel) {
+  public static PublisherServiceBlockingStub newBlockingStub(
+      io.grpc.Channel channel) {
     io.grpc.stub.AbstractStub.StubFactory<PublisherServiceBlockingStub> factory =
-        new io.grpc.stub.AbstractStub.StubFactory<PublisherServiceBlockingStub>() {
-          @java.lang.Override
-          public PublisherServiceBlockingStub newStub(
-              io.grpc.Channel channel, io.grpc.CallOptions callOptions) {
-            return new PublisherServiceBlockingStub(channel, callOptions);
-          }
-        };
+      new io.grpc.stub.AbstractStub.StubFactory<PublisherServiceBlockingStub>() {
+        @java.lang.Override
+        public PublisherServiceBlockingStub newStub(io.grpc.Channel channel, io.grpc.CallOptions callOptions) {
+          return new PublisherServiceBlockingStub(channel, callOptions);
+        }
+      };
     return PublisherServiceBlockingStub.newStub(factory, channel);
   }
 
-  /** Creates a new ListenableFuture-style stub that supports unary calls on the service */
-  public static PublisherServiceFutureStub newFutureStub(io.grpc.Channel channel) {
+  /**
+   * Creates a new ListenableFuture-style stub that supports unary calls on the service
+   */
+  public static PublisherServiceFutureStub newFutureStub(
+      io.grpc.Channel channel) {
     io.grpc.stub.AbstractStub.StubFactory<PublisherServiceFutureStub> factory =
-        new io.grpc.stub.AbstractStub.StubFactory<PublisherServiceFutureStub>() {
-          @java.lang.Override
-          public PublisherServiceFutureStub newStub(
-              io.grpc.Channel channel, io.grpc.CallOptions callOptions) {
-            return new PublisherServiceFutureStub(channel, callOptions);
-          }
-        };
+      new io.grpc.stub.AbstractStub.StubFactory<PublisherServiceFutureStub>() {
+        @java.lang.Override
+        public PublisherServiceFutureStub newStub(io.grpc.Channel channel, io.grpc.CallOptions callOptions) {
+          return new PublisherServiceFutureStub(channel, callOptions);
+        }
+      };
     return PublisherServiceFutureStub.newStub(factory, channel);
   }
 
   /**
-   *
-   *
    * <pre>
    * The service that a publisher client application uses to publish messages to
    * topics. Published messages are retained by the service for the duration of
@@ -134,11 +103,9 @@ public final class PublisherServiceGrpc {
    * to subscriber clients upon request (via the `SubscriberService`).
    * </pre>
    */
-  public abstract static class PublisherServiceImplBase implements io.grpc.BindableService {
+  public static abstract class PublisherServiceImplBase implements io.grpc.BindableService {
 
     /**
-     *
-     *
      * <pre>
      * Establishes a stream with the server for publishing messages. Once the
      * stream is initialized, the client publishes messages by sending publish
@@ -150,28 +117,24 @@ public final class PublisherServiceGrpc {
      * </pre>
      */
     public io.grpc.stub.StreamObserver<com.google.cloud.pubsublite.proto.PublishRequest> publish(
-        io.grpc.stub.StreamObserver<com.google.cloud.pubsublite.proto.PublishResponse>
-            responseObserver) {
-      return io.grpc.stub.ServerCalls.asyncUnimplementedStreamingCall(
-          getPublishMethod(), responseObserver);
+        io.grpc.stub.StreamObserver<com.google.cloud.pubsublite.proto.PublishResponse> responseObserver) {
+      return io.grpc.stub.ServerCalls.asyncUnimplementedStreamingCall(getPublishMethod(), responseObserver);
     }
 
-    @java.lang.Override
-    public final io.grpc.ServerServiceDefinition bindService() {
+    @java.lang.Override public final io.grpc.ServerServiceDefinition bindService() {
       return io.grpc.ServerServiceDefinition.builder(getServiceDescriptor())
           .addMethod(
-              getPublishMethod(),
-              io.grpc.stub.ServerCalls.asyncBidiStreamingCall(
-                  new MethodHandlers<
-                      com.google.cloud.pubsublite.proto.PublishRequest,
-                      com.google.cloud.pubsublite.proto.PublishResponse>(this, METHODID_PUBLISH)))
+            getPublishMethod(),
+            io.grpc.stub.ServerCalls.asyncBidiStreamingCall(
+              new MethodHandlers<
+                com.google.cloud.pubsublite.proto.PublishRequest,
+                com.google.cloud.pubsublite.proto.PublishResponse>(
+                  this, METHODID_PUBLISH)))
           .build();
     }
   }
 
   /**
-   *
-   *
    * <pre>
    * The service that a publisher client application uses to publish messages to
    * topics. Published messages are retained by the service for the duration of
@@ -179,20 +142,19 @@ public final class PublisherServiceGrpc {
    * to subscriber clients upon request (via the `SubscriberService`).
    * </pre>
    */
-  public static final class PublisherServiceStub
-      extends io.grpc.stub.AbstractAsyncStub<PublisherServiceStub> {
-    private PublisherServiceStub(io.grpc.Channel channel, io.grpc.CallOptions callOptions) {
+  public static final class PublisherServiceStub extends io.grpc.stub.AbstractAsyncStub<PublisherServiceStub> {
+    private PublisherServiceStub(
+        io.grpc.Channel channel, io.grpc.CallOptions callOptions) {
       super(channel, callOptions);
     }
 
     @java.lang.Override
-    protected PublisherServiceStub build(io.grpc.Channel channel, io.grpc.CallOptions callOptions) {
+    protected PublisherServiceStub build(
+        io.grpc.Channel channel, io.grpc.CallOptions callOptions) {
       return new PublisherServiceStub(channel, callOptions);
     }
 
     /**
-     *
-     *
      * <pre>
      * Establishes a stream with the server for publishing messages. Once the
      * stream is initialized, the client publishes messages by sending publish
@@ -204,16 +166,13 @@ public final class PublisherServiceGrpc {
      * </pre>
      */
     public io.grpc.stub.StreamObserver<com.google.cloud.pubsublite.proto.PublishRequest> publish(
-        io.grpc.stub.StreamObserver<com.google.cloud.pubsublite.proto.PublishResponse>
-            responseObserver) {
+        io.grpc.stub.StreamObserver<com.google.cloud.pubsublite.proto.PublishResponse> responseObserver) {
       return io.grpc.stub.ClientCalls.asyncBidiStreamingCall(
           getChannel().newCall(getPublishMethod(), getCallOptions()), responseObserver);
     }
   }
 
   /**
-   *
-   *
    * <pre>
    * The service that a publisher client application uses to publish messages to
    * topics. Published messages are retained by the service for the duration of
@@ -221,9 +180,9 @@ public final class PublisherServiceGrpc {
    * to subscriber clients upon request (via the `SubscriberService`).
    * </pre>
    */
-  public static final class PublisherServiceBlockingStub
-      extends io.grpc.stub.AbstractBlockingStub<PublisherServiceBlockingStub> {
-    private PublisherServiceBlockingStub(io.grpc.Channel channel, io.grpc.CallOptions callOptions) {
+  public static final class PublisherServiceBlockingStub extends io.grpc.stub.AbstractBlockingStub<PublisherServiceBlockingStub> {
+    private PublisherServiceBlockingStub(
+        io.grpc.Channel channel, io.grpc.CallOptions callOptions) {
       super(channel, callOptions);
     }
 
@@ -235,8 +194,6 @@ public final class PublisherServiceGrpc {
   }
 
   /**
-   *
-   *
    * <pre>
    * The service that a publisher client application uses to publish messages to
    * topics. Published messages are retained by the service for the duration of
@@ -244,9 +201,9 @@ public final class PublisherServiceGrpc {
    * to subscriber clients upon request (via the `SubscriberService`).
    * </pre>
    */
-  public static final class PublisherServiceFutureStub
-      extends io.grpc.stub.AbstractFutureStub<PublisherServiceFutureStub> {
-    private PublisherServiceFutureStub(io.grpc.Channel channel, io.grpc.CallOptions callOptions) {
+  public static final class PublisherServiceFutureStub extends io.grpc.stub.AbstractFutureStub<PublisherServiceFutureStub> {
+    private PublisherServiceFutureStub(
+        io.grpc.Channel channel, io.grpc.CallOptions callOptions) {
       super(channel, callOptions);
     }
 
@@ -259,11 +216,11 @@ public final class PublisherServiceGrpc {
 
   private static final int METHODID_PUBLISH = 0;
 
-  private static final class MethodHandlers<Req, Resp>
-      implements io.grpc.stub.ServerCalls.UnaryMethod<Req, Resp>,
-          io.grpc.stub.ServerCalls.ServerStreamingMethod<Req, Resp>,
-          io.grpc.stub.ServerCalls.ClientStreamingMethod<Req, Resp>,
-          io.grpc.stub.ServerCalls.BidiStreamingMethod<Req, Resp> {
+  private static final class MethodHandlers<Req, Resp> implements
+      io.grpc.stub.ServerCalls.UnaryMethod<Req, Resp>,
+      io.grpc.stub.ServerCalls.ServerStreamingMethod<Req, Resp>,
+      io.grpc.stub.ServerCalls.ClientStreamingMethod<Req, Resp>,
+      io.grpc.stub.ServerCalls.BidiStreamingMethod<Req, Resp> {
     private final PublisherServiceImplBase serviceImpl;
     private final int methodId;
 
@@ -287,19 +244,16 @@ public final class PublisherServiceGrpc {
         io.grpc.stub.StreamObserver<Resp> responseObserver) {
       switch (methodId) {
         case METHODID_PUBLISH:
-          return (io.grpc.stub.StreamObserver<Req>)
-              serviceImpl.publish(
-                  (io.grpc.stub.StreamObserver<com.google.cloud.pubsublite.proto.PublishResponse>)
-                      responseObserver);
+          return (io.grpc.stub.StreamObserver<Req>) serviceImpl.publish(
+              (io.grpc.stub.StreamObserver<com.google.cloud.pubsublite.proto.PublishResponse>) responseObserver);
         default:
           throw new AssertionError();
       }
     }
   }
 
-  private abstract static class PublisherServiceBaseDescriptorSupplier
-      implements io.grpc.protobuf.ProtoFileDescriptorSupplier,
-          io.grpc.protobuf.ProtoServiceDescriptorSupplier {
+  private static abstract class PublisherServiceBaseDescriptorSupplier
+      implements io.grpc.protobuf.ProtoFileDescriptorSupplier, io.grpc.protobuf.ProtoServiceDescriptorSupplier {
     PublisherServiceBaseDescriptorSupplier() {}
 
     @java.lang.Override
@@ -341,12 +295,10 @@ public final class PublisherServiceGrpc {
       synchronized (PublisherServiceGrpc.class) {
         result = serviceDescriptor;
         if (result == null) {
-          serviceDescriptor =
-              result =
-                  io.grpc.ServiceDescriptor.newBuilder(SERVICE_NAME)
-                      .setSchemaDescriptor(new PublisherServiceFileDescriptorSupplier())
-                      .addMethod(getPublishMethod())
-                      .build();
+          serviceDescriptor = result = io.grpc.ServiceDescriptor.newBuilder(SERVICE_NAME)
+              .setSchemaDescriptor(new PublisherServiceFileDescriptorSupplier())
+              .addMethod(getPublishMethod())
+              .build();
         }
       }
     }

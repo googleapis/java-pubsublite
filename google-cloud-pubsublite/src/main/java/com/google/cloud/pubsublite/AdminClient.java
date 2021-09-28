@@ -17,7 +17,6 @@
 package com.google.cloud.pubsublite;
 
 import com.google.api.core.ApiFuture;
-import com.google.api.core.BetaApi;
 import com.google.api.gax.longrunning.OperationFuture;
 import com.google.api.gax.rpc.ApiException;
 import com.google.cloud.pubsublite.internal.ApiBackgroundResource;
@@ -194,7 +193,6 @@ public interface AdminClient extends ApiBackgroundResource {
    * @return A future that will have either an error {@link com.google.api.gax.rpc.ApiException} or
    *     the reservation on success.
    */
-  @BetaApi("This may not be implemented in the backend, it is a pre-release feature.")
   ApiFuture<Reservation> createReservation(Reservation reservation);
 
   /**
@@ -204,7 +202,6 @@ public interface AdminClient extends ApiBackgroundResource {
    * @return A future that will have either an error {@link com.google.api.gax.rpc.ApiException} or
    *     the reservation on success.
    */
-  @BetaApi("This may not be implemented in the backend, it is a pre-release feature.")
   ApiFuture<Reservation> getReservation(ReservationPath path);
 
   /**
@@ -214,7 +211,6 @@ public interface AdminClient extends ApiBackgroundResource {
    * @return A future that will have either an error {@link com.google.api.gax.rpc.ApiException} or
    *     the list of reservation paths on success.
    */
-  @BetaApi("This may not be implemented in the backend, it is a pre-release feature.")
   ApiFuture<List<Reservation>> listReservations(LocationPath path);
 
   /**
@@ -227,7 +223,6 @@ public interface AdminClient extends ApiBackgroundResource {
    *     future to have an exception with status {@link
    *     com.google.api.gax.rpc.StatusCode.Code#NOT_FOUND}
    */
-  @BetaApi("This may not be implemented in the backend, it is a pre-release feature.")
   ApiFuture<Reservation> updateReservation(Reservation reservation, FieldMask mask);
 
   /**
@@ -238,7 +233,6 @@ public interface AdminClient extends ApiBackgroundResource {
    *     void on success. Deleting nonexistent reservations will cause the future to have an
    *     exception with status {@link com.google.api.gax.rpc.StatusCode.Code#NOT_FOUND}
    */
-  @BetaApi("This may not be implemented in the backend, it is a pre-release feature.")
   ApiFuture<Void> deleteReservation(ReservationPath path);
 
   /**
@@ -248,6 +242,5 @@ public interface AdminClient extends ApiBackgroundResource {
    * @return A future that will have either an error {@link com.google.api.gax.rpc.ApiException} or
    *     the list of topics on success.
    */
-  @BetaApi("This may not be implemented in the backend, it is a pre-release feature.")
   ApiFuture<List<TopicPath>> listReservationTopics(ReservationPath path);
 }

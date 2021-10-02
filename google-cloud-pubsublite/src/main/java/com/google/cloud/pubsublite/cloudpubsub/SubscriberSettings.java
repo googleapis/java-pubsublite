@@ -102,10 +102,10 @@ public abstract class SubscriberSettings {
   abstract Framework framework();
 
   /**
-   * A supplier for new SubscriberServiceClients. Should return a new client each time. If present,
-   * ignores CredentialsProvider.
+   * A supplier for new SubscriberServiceClients for given partitions. Should return a new client
+   * each time. If present, ignores CredentialsProvider.
    */
-  abstract Optional<Supplier<SubscriberServiceClient>> subscriberServiceClientSupplier();
+  abstract Optional<PartitionSubscriberClientSupplier> partitionSubscriberClientSupplier();
 
   /**
    * A supplier for new CursorServiceClients. Should return a new client each time. If present,
@@ -181,11 +181,22 @@ public abstract class SubscriberSettings {
     public abstract Builder setFramework(Framework framework);
 
     /**
+     * A supplier for new SubscriberServiceClients for given partitions. Should return a new client
+     * each time. If present, ignores CredentialsProvider.
+     */
+    public abstract Builder setPartitionSubscriberClientSupplier(
+        PartitionSubscriberClientSupplier supplier);
+
+    /**
      * A supplier for new SubscriberServiceClients. Should return a new client each time. If
      * present, ignores CredentialsProvider.
+     *
+     * @deprecated Use {@link
+     *     #setPartitionSubscriberClientSupplier(PartitionSubscriberClientSupplier)} instead.
      */
-    public abstract Builder setSubscriberServiceClientSupplier(
-        Supplier<SubscriberServiceClient> supplier);
+    public Builder setSubscriberServiceClientSupplier(Supplier<SubscriberServiceClient> supplier) {
+      return setPartitionSubscriberClientSupplier((subscriptionPath, partition) -> supplier.get());
+    }
 
     /**
      * A supplier for new CursorServiceClients. Should return a new client each time. If present,
@@ -215,8 +226,8 @@ public abstract class SubscriberSettings {
 
   private SubscriberServiceClient newSubscriberServiceClient(Partition partition)
       throws ApiException {
-    if (subscriberServiceClientSupplier().isPresent()) {
-      return subscriberServiceClientSupplier().get().get();
+    if (partitionSubscriberClientSupplier().isPresent()) {
+      return partitionSubscriberClientSupplier().get().get(subscriptionPath(), partition);
     }
     try {
       SubscriberServiceSettings.Builder settingsBuilder =

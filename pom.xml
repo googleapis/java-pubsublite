@@ -55,7 +55,7 @@
         <!-- Explicit override, remove when no longer needed.-->
         <groupId>org.checkerframework</groupId>
         <artifactId>checker-qual</artifactId>
-        <version>3.18.0</version>
+        <version>3.18.1</version>
       </dependency>
       <dependency>
         <groupId>com.google.truth</groupId>

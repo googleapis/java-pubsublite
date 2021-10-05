@@ -50,7 +50,8 @@ public class SubscriberSettingsTest {
         .setPerPartitionFlowControlSettings(
             FlowControlSettings.builder().setBytesOutstanding(1).setMessagesOutstanding(1).build())
         .setCursorServiceClientSupplier(() -> mock(CursorServiceClient.class))
-        .setSubscriberServiceClientSupplier(() -> mock(SubscriberServiceClient.class))
+        .setPartitionSubscriberClientSupplier(
+            (subscription, partition) -> mock(SubscriberServiceClient.class))
         .setPartitions(ImmutableList.of(Partition.of(3), Partition.of(1)))
         .build()
         .instantiate();
@@ -65,7 +66,8 @@ public class SubscriberSettingsTest {
             FlowControlSettings.builder().setBytesOutstanding(1).setMessagesOutstanding(1).build())
         .setAssignmentServiceClient(mock(PartitionAssignmentServiceClient.class))
         .setCursorServiceClientSupplier(() -> mock(CursorServiceClient.class))
-        .setSubscriberServiceClientSupplier(() -> mock(SubscriberServiceClient.class))
+        .setPartitionSubscriberClientSupplier(
+            (subscription, partition) -> mock(SubscriberServiceClient.class))
         .build()
         .instantiate();
   }

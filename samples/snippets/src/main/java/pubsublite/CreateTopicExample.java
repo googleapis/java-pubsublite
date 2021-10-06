@@ -39,6 +39,9 @@ public class CreateTopicExample {
     long projectNumber = Long.parseLong("123456789");
     int partitions = 1;
 
+    cloudRegion = "us-west1";
+    topicId = "west-topic";
+    projectNumber = 502009289245L;
     createTopicExample(cloudRegion, zoneId, projectNumber, topicId, partitions);
   }
 
@@ -49,7 +52,8 @@ public class CreateTopicExample {
     TopicPath topicPath =
         TopicPath.newBuilder()
             .setProject(ProjectNumber.of(projectNumber))
-            .setLocation(CloudZone.of(CloudRegion.of(cloudRegion), zoneId))
+            .setLocation(CloudRegion.of(cloudRegion))
+            // .setLocation(CloudZone.of(CloudRegion.of(cloudRegion), zoneId))
             .setName(TopicName.of(topicId))
             .build();
 

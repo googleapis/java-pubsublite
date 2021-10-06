@@ -1,5 +1,30 @@
 # Changelog
 
+## [1.3.0](https://www.github.com/googleapis/java-pubsublite/compare/v1.2.0...v1.3.0) (2021-10-06)
+
+
+### Features
+
+* Remove BetaApi from reservation methods ([#906](https://www.github.com/googleapis/java-pubsublite/issues/906)) ([2d5b594](https://www.github.com/googleapis/java-pubsublite/commit/2d5b594b40532247eec3ee7e41ae9a77ae0478be))
+
+
+### Documentation
+
+* Update ReassignmentHandler comments ([#892](https://www.github.com/googleapis/java-pubsublite/issues/892)) ([a79ffff](https://www.github.com/googleapis/java-pubsublite/commit/a79ffff99d22ff149848c02070cc4f14589e2be0))
+
+
+### Dependencies
+
+* bump beam.version and restucture snippets POM to not break ([#893](https://www.github.com/googleapis/java-pubsublite/issues/893)) ([3dcf839](https://www.github.com/googleapis/java-pubsublite/commit/3dcf839ee2d257dc42c3b8fe0a2e165773e86445))
+* update dependency com.google.cloud:google-cloud-pubsub to v1.114.4 ([#891](https://www.github.com/googleapis/java-pubsublite/issues/891)) ([86e95d5](https://www.github.com/googleapis/java-pubsublite/commit/86e95d5890866be853e6af4cba4c72598989479a))
+* update dependency com.google.cloud:google-cloud-pubsub to v1.114.5 ([#904](https://www.github.com/googleapis/java-pubsublite/issues/904)) ([b4d7497](https://www.github.com/googleapis/java-pubsublite/commit/b4d7497ee494d35b38a8c7af6aea769db64a969a))
+* update dependency com.google.cloud:google-cloud-pubsub to v1.114.6 ([#912](https://www.github.com/googleapis/java-pubsublite/issues/912)) ([160fdc9](https://www.github.com/googleapis/java-pubsublite/commit/160fdc9a609b7f41bc79b576e0f725598fbec95f))
+* update dependency com.google.cloud:google-cloud-shared-dependencies to v2.3.0 ([#896](https://www.github.com/googleapis/java-pubsublite/issues/896)) ([2c7afd3](https://www.github.com/googleapis/java-pubsublite/commit/2c7afd3b1fe292e245c8d2beabb64702afbc444a))
+* update dependency com.google.cloud:pubsublite-beam-io to v0.21.0 ([#890](https://www.github.com/googleapis/java-pubsublite/issues/890)) ([f574d1d](https://www.github.com/googleapis/java-pubsublite/commit/f574d1d16432c4ececd5332ba201b0bd2308415a))
+* update dependency joda-time:joda-time to v2.10.11 ([#897](https://www.github.com/googleapis/java-pubsublite/issues/897)) ([6a9e041](https://www.github.com/googleapis/java-pubsublite/commit/6a9e041099af72dab7ffb01a29ce658413fbd369))
+* update dependency joda-time:joda-time to v2.10.12 ([#908](https://www.github.com/googleapis/java-pubsublite/issues/908)) ([dc2f721](https://www.github.com/googleapis/java-pubsublite/commit/dc2f7212943798190843fa10d41cb3c2d6b44757))
+* update dependency org.checkerframework:checker-qual to v3.18.1 ([#910](https://www.github.com/googleapis/java-pubsublite/issues/910)) ([0ddc6e9](https://www.github.com/googleapis/java-pubsublite/commit/0ddc6e9b9a066ce410e0e476fcc36374c2982ef9))
+
 ## [1.2.0](https://www.github.com/googleapis/java-pubsublite/compare/v1.1.0...v1.2.0) (2021-09-16)
 
 

@@ -27,7 +27,7 @@
     </dependencies>
   </dependencyManagement>
   <properties>
-    <beam.version>2.32.0</beam.version>
+    <beam.version>2.33.0</beam.version>
   </properties>
   <dependencies>
     <dependency>

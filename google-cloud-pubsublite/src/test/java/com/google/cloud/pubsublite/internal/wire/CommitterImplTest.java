@@ -26,7 +26,7 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
-import static org.mockito.Mockito.verifyZeroInteractions;
+import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.MockitoAnnotations.initMocks;
 
 import com.google.api.core.ApiFuture;
@@ -106,7 +106,7 @@ public class CommitterImplTest {
   @Test
   public void construct_CallsFactoryNew() {
     verifyNoMoreInteractions(mockCommitterFactory);
-    verifyZeroInteractions(mockConnectedCommitter);
+    verifyNoInteractions(mockConnectedCommitter);
   }
 
   @Test

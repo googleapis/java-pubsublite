@@ -30,8 +30,8 @@ import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
-import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 import static org.mockito.hamcrest.MockitoHamcrest.argThat;
@@ -131,7 +131,7 @@ public class PublisherImplTest {
   public void construct_CallsFactoryNew() {
     startPublisher();
     verifyNoMoreInteractions(mockPublisherFactory);
-    verifyZeroInteractions(mockBatchPublisher);
+    verifyNoInteractions(mockBatchPublisher);
   }
 
   @Test
@@ -184,8 +184,8 @@ public class PublisherImplTest {
     Message message = Message.builder().build();
     assertThrows(IllegalStateException.class, () -> publisher.publish(message));
     assertThrows(IllegalStateException.class, () -> publisher.startAsync().awaitRunning());
-    verifyZeroInteractions(mockPublisherFactory);
-    verifyZeroInteractions(mockBatchPublisher);
+    verifyNoInteractions(mockPublisherFactory);
+    verifyNoInteractions(mockBatchPublisher);
   }
 
   @Test

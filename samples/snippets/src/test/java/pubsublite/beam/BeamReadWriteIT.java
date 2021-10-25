@@ -20,6 +20,13 @@ import static com.google.common.truth.Truth.assertThat;
 import static junit.framework.Assert.fail;
 import static junit.framework.TestCase.assertNotNull;
 
+import com.google.cloud.pubsublite.AdminClient;
+import com.google.cloud.pubsublite.AdminClientSettings;
+import com.google.cloud.pubsublite.CloudRegion;
+import com.google.cloud.pubsublite.ProjectNumber;
+import com.google.cloud.pubsublite.ReservationName;
+import com.google.cloud.pubsublite.ReservationPath;
+import com.google.cloud.pubsublite.proto.Reservation;
 import com.google.cloud.pubsublite.proto.SequencedMessage;
 import com.google.common.collect.ImmutableList;
 import java.io.ByteArrayOutputStream;
@@ -65,8 +72,16 @@ public class BeamReadWriteIT {
   private static final String suffix = UUID.randomUUID().toString();
   private static final String topicId = "lite-topic-" + suffix;
   private static final String subscriptionId = "lite-subscription-" + suffix;
+  private static final String reservationId = "lite-reservation-" + suffix;
   private static final int partitions = 2;
   private static final int messageCount = 50;
+
+  ReservationPath reservationPath =
+      ReservationPath.newBuilder()
+          .setProject(ProjectNumber.of(projectNumber))
+          .setLocation(CloudRegion.of(cloudRegion))
+          .setName(ReservationName.of(reservationId))
+          .build();
 
   private static void requireEnvVar(String varName) {
     assertNotNull(
@@ -87,9 +102,23 @@ public class BeamReadWriteIT {
     out = new PrintStream(bout);
     System.setOut(out);
 
+    // Create a reservation.
+    AdminClientSettings adminClientSettings =
+        AdminClientSettings.newBuilder().setRegion(CloudRegion.of(cloudRegion)).build();
+    try (AdminClient adminClient = AdminClient.create(adminClientSettings)) {
+      adminClient
+          .createReservation(
+              Reservation.newBuilder()
+                  .setName(reservationPath.toString())
+                  .setThroughputCapacity(4)
+                  .build())
+          .get();
+    }
+
     // Create a topic.
-    CreateTopicExample.createTopicExample(cloudRegion, zoneId, projectNumber, topicId, partitions);
-    assertThat(bout.toString()).contains("created successfully");
+    CreateTopicExample.createTopicExample(
+        cloudRegion, zoneId, projectNumber, topicId, reservationId, partitions, false);
+    assertThat(bout.toString()).contains(" (zonal topic) created successfully");
 
     // Create a subscription.
     CreateSubscriptionExample.createSubscriptionExample(
@@ -100,13 +129,21 @@ public class BeamReadWriteIT {
   @After
   public void tearDown() throws Exception {
     // Delete a topic.
-    DeleteTopicExample.deleteTopicExample(cloudRegion, zoneId, projectNumber, topicId);
-    assertThat(bout.toString()).contains("deleted successfully");
+    DeleteTopicExample.deleteTopicExample(
+        cloudRegion, zoneId, projectNumber, topicId, /*regional=*/ false);
+    assertThat(bout.toString()).contains(" (zonal topic) deleted successfully");
 
     // Delete a subscription.
     DeleteSubscriptionExample.deleteSubscriptionExample(
         cloudRegion, zoneId, projectNumber, subscriptionId);
     assertThat(bout.toString()).contains("deleted successfully");
+
+    // Delete the reservation.
+    AdminClientSettings adminClientSettings =
+        AdminClientSettings.newBuilder().setRegion(CloudRegion.of(cloudRegion)).build();
+    try (AdminClient adminClient = AdminClient.create(adminClientSettings)) {
+      adminClient.deleteReservation(reservationPath).get();
+    }
 
     System.setOut(null);
   }

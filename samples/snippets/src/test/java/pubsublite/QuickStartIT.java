@@ -19,8 +19,15 @@ package pubsublite;
 import static com.google.common.truth.Truth.assertThat;
 import static junit.framework.TestCase.assertNotNull;
 
+import com.google.cloud.pubsublite.AdminClient;
+import com.google.cloud.pubsublite.AdminClientSettings;
 import com.google.cloud.pubsublite.BacklogLocation;
+import com.google.cloud.pubsublite.CloudRegion;
+import com.google.cloud.pubsublite.ProjectNumber;
+import com.google.cloud.pubsublite.ReservationName;
+import com.google.cloud.pubsublite.ReservationPath;
 import com.google.cloud.pubsublite.SeekTarget;
+import com.google.cloud.pubsublite.proto.Reservation;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.util.Random;
@@ -45,8 +52,16 @@ public class QuickStartIT {
   private static final String suffix = UUID.randomUUID().toString();
   private static final String topicId = "lite-topic-" + suffix;
   private static final String subscriptionId = "lite-subscription-" + suffix;
+  private static final String reservationId = "lite-reservation-" + suffix;
   private static final int partitions = 2;
   private static final int messageCount = 10;
+
+  ReservationPath reservationPath =
+      ReservationPath.newBuilder()
+          .setProject(ProjectNumber.of(projectNumber))
+          .setLocation(CloudRegion.of(cloudRegion))
+          .setName(ReservationName.of(reservationId))
+          .build();
 
   private static void requireEnvVar(String varName) {
     assertNotNull(
@@ -65,19 +80,50 @@ public class QuickStartIT {
   public void setUp() throws Exception {
     bout = new ByteArrayOutputStream();
     out = new PrintStream(bout);
+
+    // Create a reservation.
+    AdminClientSettings adminClientSettings =
+        AdminClientSettings.newBuilder().setRegion(CloudRegion.of(cloudRegion)).build();
+    try (AdminClient adminClient = AdminClient.create(adminClientSettings)) {
+      adminClient
+          .createReservation(
+              Reservation.newBuilder()
+                  .setName(reservationPath.toString())
+                  .setThroughputCapacity(4)
+                  .build())
+          .get();
+    }
     System.setOut(out);
   }
 
   @After
   public void tearDown() throws Exception {
+    // Delete the reservation.
+    AdminClientSettings adminClientSettings =
+        AdminClientSettings.newBuilder().setRegion(CloudRegion.of(cloudRegion)).build();
+    try (AdminClient adminClient = AdminClient.create(adminClientSettings)) {
+      adminClient.deleteReservation(reservationPath).get();
+    }
     System.setOut(null);
   }
 
   @Test
   public void testQuickstart() throws Exception {
-    // Create a topic.
-    CreateTopicExample.createTopicExample(cloudRegion, zoneId, projectNumber, topicId, partitions);
-    assertThat(bout.toString()).contains("created successfully");
+    // Create a zonal topic.
+    CreateTopicExample.createTopicExample(
+        cloudRegion,
+        zoneId,
+        projectNumber,
+        topicId,
+        reservationId,
+        partitions,
+        /*regional=*/ false);
+    assertThat(bout.toString()).contains(" (zonal topic) created successfully");
+
+    // Create a regional topic.
+    CreateTopicExample.createTopicExample(
+        cloudRegion, zoneId, projectNumber, topicId, reservationId, partitions, /*regional=*/ true);
+    assertThat(bout.toString()).contains(" (regional topic) created successfully");
 
     bout.reset();
     // Get a topic.
@@ -179,8 +225,13 @@ public class QuickStartIT {
     assertThat(bout.toString()).contains("deleted successfully");
 
     bout.reset();
-    // Delete a topic.
-    DeleteTopicExample.deleteTopicExample(cloudRegion, zoneId, projectNumber, topicId);
-    assertThat(bout.toString()).contains("deleted successfully");
+    // Delete a regional topic.
+    DeleteTopicExample.deleteTopicExample(
+        cloudRegion, zoneId, projectNumber, topicId, /*regional=*/ true);
+    assertThat(bout.toString()).contains(" (regional topic) deleted successfully");
+    // Delete a zonal topic.
+    DeleteTopicExample.deleteTopicExample(
+        cloudRegion, zoneId, projectNumber, topicId, /*regional=*/ false);
+    assertThat(bout.toString()).contains(" (zonal topic) deleted successfully");
   }
 }

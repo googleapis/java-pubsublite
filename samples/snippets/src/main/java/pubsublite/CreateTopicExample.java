@@ -22,10 +22,14 @@ import com.google.cloud.pubsublite.AdminClientSettings;
 import com.google.cloud.pubsublite.CloudRegion;
 import com.google.cloud.pubsublite.CloudZone;
 import com.google.cloud.pubsublite.ProjectNumber;
+import com.google.cloud.pubsublite.ReservationName;
+import com.google.cloud.pubsublite.ReservationPath;
 import com.google.cloud.pubsublite.TopicName;
 import com.google.cloud.pubsublite.TopicPath;
 import com.google.cloud.pubsublite.proto.Topic;
 import com.google.cloud.pubsublite.proto.Topic.PartitionConfig;
+import com.google.cloud.pubsublite.proto.Topic.PartitionConfig.Capacity;
+import com.google.cloud.pubsublite.proto.Topic.ReservationConfig;
 import com.google.cloud.pubsublite.proto.Topic.RetentionConfig;
 import com.google.protobuf.util.Durations;
 
@@ -34,28 +38,52 @@ public class CreateTopicExample {
   public static void main(String... args) throws Exception {
     // TODO(developer): Replace these variables before running the sample.
     String cloudRegion = "your-cloud-region";
-    char zoneId = 'b';
+    char zoneId = 'a';
     String topicId = "your-topic-id";
+    String reservationId = "your-reservation-id";
     long projectNumber = Long.parseLong("123456789");
     int partitions = 1;
+    boolean regional = false;
 
-    cloudRegion = "us-west1";
-    topicId = "west-topic";
-    projectNumber = 502009289245L;
-    createTopicExample(cloudRegion, zoneId, projectNumber, topicId, partitions);
+    createTopicExample(
+        cloudRegion, zoneId, projectNumber, topicId, reservationId, partitions, regional);
   }
 
   public static void createTopicExample(
-      String cloudRegion, char zoneId, long projectNumber, String topicId, int partitions)
+      String cloudRegion,
+      char zoneId,
+      long projectNumber,
+      String topicId,
+      String reservationId,
+      int partitions,
+      boolean regional)
       throws Exception {
 
-    TopicPath topicPath =
-        TopicPath.newBuilder()
+    ReservationPath reservationPath =
+        ReservationPath.newBuilder()
             .setProject(ProjectNumber.of(projectNumber))
             .setLocation(CloudRegion.of(cloudRegion))
-            // .setLocation(CloudZone.of(CloudRegion.of(cloudRegion), zoneId))
-            .setName(TopicName.of(topicId))
+            .setName(ReservationName.of(reservationId))
             .build();
+
+    TopicPath topicPath = null;
+    if (regional) {
+      // A regional topic.
+      topicPath =
+          TopicPath.newBuilder()
+              .setProject(ProjectNumber.of(projectNumber))
+              .setLocation(CloudRegion.of(cloudRegion))
+              .setName(TopicName.of(topicId))
+              .build();
+    } else {
+      // A zonal topic.
+      topicPath =
+          TopicPath.newBuilder()
+              .setProject(ProjectNumber.of(projectNumber))
+              .setLocation(CloudZone.of(CloudRegion.of(cloudRegion), zoneId))
+              .setName(TopicName.of(topicId))
+              .build();
+    }
 
     Topic topic =
         Topic.newBuilder()
@@ -63,7 +91,7 @@ public class CreateTopicExample {
                 PartitionConfig.newBuilder()
                     // Set throughput capacity per partition in MiB/s.
                     .setCapacity(
-                        PartitionConfig.Capacity.newBuilder()
+                        Capacity.newBuilder()
                             // Must be 4-16 MiB/s.
                             .setPublishMibPerSec(4)
                             // Must be 4-32 MiB/s.
@@ -79,6 +107,10 @@ public class CreateTopicExample {
                     // beyond this value, older messages will be dropped to make room for
                     // newer ones, regardless of the value of `period`.
                     .setPerPartitionBytes(30 * 1024 * 1024 * 1024L))
+            .setReservationConfig(
+                ReservationConfig.newBuilder()
+                    .setThroughputReservation(reservationPath.toString())
+                    .build())
             .setName(topicPath.toString())
             .build();
 
@@ -87,7 +119,11 @@ public class CreateTopicExample {
 
     try (AdminClient adminClient = AdminClient.create(adminClientSettings)) {
       Topic response = adminClient.createTopic(topic).get();
-      System.out.println(response.getAllFields() + "created successfully.");
+      if (regional) {
+        System.out.println(response.getAllFields() + " (regional topic) created successfully.");
+      } else {
+        System.out.println(response.getAllFields() + " (zonal topic) created successfully.");
+      }
     }
   }
 }

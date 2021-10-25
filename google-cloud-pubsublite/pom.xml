@@ -98,7 +98,7 @@
     <dependency>
       <groupId>com.google.flogger</groupId>
       <artifactId>flogger-system-backend</artifactId>
-      <version>0.6</version>
+      <version>0.7.1</version>
       <scope>runtime</scope>
     </dependency>
 
@@ -163,7 +163,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-enforcer-plugin</artifactId>
-        <version>3.0.0-M3</version>
+        <version>3.0.0</version>
         <executions>
           <execution>
             <id>enforce</id>
@@ -182,6 +182,22 @@
             </goals>
           </execution>
         </executions>
+        <!--
+          workaround for https://github.com/mojohaus/extra-enforcer-rules/issues/132
+          Remove when it's fixed upstream.
+        -->
+        <dependencies>
+          <dependency>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>extra-enforcer-rules</artifactId>
+            <version>1.4</version>
+          </dependency>
+          <dependency>
+            <groupId>org.apache.maven.shared</groupId>
+            <artifactId>maven-dependency-tree</artifactId>
+            <version>3.1.0</version>
+          </dependency>
+        </dependencies>
       </plugin>
     </plugins>
   </build>

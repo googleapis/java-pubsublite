@@ -28,13 +28,12 @@ import com.google.cloud.pubsublite.SubscriptionPath;
 import com.google.cloud.pubsublite.cloudpubsub.FlowControlSettings;
 import com.google.cloud.pubsublite.internal.CursorClient;
 import com.google.cloud.pubsublite.internal.CursorClientSettings;
-import com.google.cloud.pubsublite.internal.wire.Committer;
-import com.google.cloud.pubsublite.internal.wire.CommitterSettings;
 import com.google.cloud.pubsublite.internal.wire.PubsubContext;
 import com.google.cloud.pubsublite.internal.wire.PubsubContext.Framework;
 import com.google.cloud.pubsublite.internal.wire.RoutingMetadata;
 import com.google.cloud.pubsublite.internal.wire.SubscriberBuilder;
 import com.google.cloud.pubsublite.internal.wire.SubscriberFactory;
+import com.google.cloud.pubsublite.proto.CommitCursorRequest;
 import com.google.cloud.pubsublite.proto.Cursor;
 import com.google.cloud.pubsublite.proto.SeekRequest;
 import com.google.cloud.pubsublite.v1.CursorServiceClient;
@@ -81,12 +80,6 @@ public abstract class SubscriberOptions implements Serializable {
    * useful for testing.
    */
   abstract @Nullable SubscriberFactory subscriberFactory();
-
-  /**
-   * A supplier to override committer creation entirely and delegate to another method. Primarily
-   * useful for testing.
-   */
-  abstract @Nullable SerializableSupplier<Committer> committerSupplier();
 
   /**
    * A supplier to override topic backlog reader creation entirely and delegate to another method.
@@ -153,17 +146,15 @@ public abstract class SubscriberOptions implements Serializable {
     }
   }
 
-  Committer getCommitter(Partition partition) {
-    SerializableSupplier<Committer> supplier = committerSupplier();
-    if (supplier != null) {
-      return supplier.get();
-    }
-    return CommitterSettings.newBuilder()
-        .setSubscriptionPath(subscriptionPath())
-        .setPartition(partition)
-        .setServiceClient(newCursorServiceClient())
-        .build()
-        .instantiate();
+  BlockingCommitter getCommitter(Partition partition) {
+    CursorServiceClient client = newCursorServiceClient();
+    return offset ->
+        client.commitCursor(
+            CommitCursorRequest.newBuilder()
+                .setSubscription(subscriptionPath().toString())
+                .setPartition(partition.value())
+                .setCursor(Cursor.newBuilder().setOffset(offset.value()))
+                .build());
   }
 
   TopicBacklogReader getBacklogReader(Partition partition) {
@@ -204,8 +195,6 @@ public abstract class SubscriberOptions implements Serializable {
 
     // Used in unit tests
     abstract Builder setSubscriberFactory(SubscriberFactory subscriberFactory);
-
-    abstract Builder setCommitterSupplier(SerializableSupplier<Committer> committerSupplier);
 
     abstract Builder setBacklogReaderSupplier(
         SerializableSupplier<TopicBacklogReader> backlogReaderSupplier);

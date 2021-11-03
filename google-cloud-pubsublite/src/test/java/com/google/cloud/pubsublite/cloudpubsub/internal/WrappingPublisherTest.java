@@ -16,7 +16,9 @@
 
 package com.google.cloud.pubsublite.cloudpubsub.internal;
 
+import static com.google.cloud.pubsublite.internal.ExtractStatus.toCanonical;
 import static com.google.common.truth.Truth.assertThat;
+import static org.junit.Assert.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -38,6 +40,7 @@ import com.google.cloud.pubsublite.internal.Publisher;
 import com.google.cloud.pubsublite.internal.testing.FakeApiService;
 import com.google.protobuf.ByteString;
 import com.google.pubsub.v1.PubsubMessage;
+import java.util.concurrent.ExecutionException;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -100,5 +103,16 @@ public class WrappingPublisherTest {
     verify(underlying, times(0)).publish(any());
     ApiExceptionMatcher.assertFutureThrowsCode(published, Code.INVALID_ARGUMENT);
     assertThat(publisher.isRunning()).isFalse();
+  }
+
+  @Test
+  public void publishAfterFailureFailedImmediately() throws Exception {
+    underlying.fail(new CheckedApiException(Code.FAILED_PRECONDITION));
+    assertThrows(Throwable.class, publisher::awaitTerminated);
+
+    PubsubMessage message = PubsubMessage.newBuilder().setOrderingKey("abc").build();
+    ApiFuture<String> published = publisher.publish(message);
+    ExecutionException e = assertThrows(ExecutionException.class, published::get);
+    assertThat(toCanonical(e).code()).isEqualTo(Code.FAILED_PRECONDITION);
   }
 }

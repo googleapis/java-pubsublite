@@ -48,6 +48,9 @@ public class WrappingPublisher extends ProxyService implements Publisher {
   // Publisher implementation.
   @Override
   public ApiFuture<String> publish(PubsubMessage message) {
+    if (state().equals(State.FAILED)) {
+      return ApiFutures.immediateFailedFuture(toCanonical(failureCause()).underlying);
+    }
     Message wireMessage;
     try {
       wireMessage = transformer.transform(message);

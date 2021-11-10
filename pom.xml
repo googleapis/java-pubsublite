@@ -153,6 +153,7 @@
     <module>grpc-google-cloud-pubsublite-v1</module>
     <module>proto-google-cloud-pubsublite-v1</module>
     <module>pubsublite-beam-io</module>
+    <module>google-cloud-pubsublite-bom</module>
   </modules>
 
   <profiles>

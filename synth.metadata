@@ -4,21 +4,22 @@
       "git": {
         "name": ".",
         "remote": "https://github.com/googleapis/java-pubsublite.git",
-        "sha": "b7b446ee830b72cd09e81153ff7b8f7540358192"
+        "sha": "ab63bf24addfb0b41e2a1c0cc4b5eafb126b0703"
       }
     },
     {
       "git": {
         "name": "googleapis",
         "remote": "https://github.com/googleapis/googleapis.git",
-        "sha": "b64d30b2b245cb805d1aa328e50258fdff6e628e"
+        "sha": "2921f9fb3bfbd16f6b2da0104373e2b47a80a65e",
+        "internalRef": "408420890"
       }
     },
     {
       "git": {
         "name": "synthtool",
         "remote": "https://github.com/googleapis/synthtool.git",
-        "sha": "a4be3384ccb92364795d981f2863f6986fcee620"
+        "sha": "42a3786737c17ece39924d7025f3be481812da53"
       }
     }
   ],
@@ -68,6 +69,7 @@
     ".kokoro/presubmit/clirr.cfg",
     ".kokoro/presubmit/common.cfg",
     ".kokoro/presubmit/dependencies.cfg",
+    ".kokoro/presubmit/graalvm-native.cfg",
     ".kokoro/presubmit/integration.cfg",
     ".kokoro/presubmit/java11.cfg",
     ".kokoro/presubmit/java7.cfg",

@@ -28,11 +28,14 @@ import com.google.cloud.pubsublite.cloudpubsub.Publisher;
 import com.google.cloud.pubsublite.internal.CheckedApiException;
 import com.google.cloud.pubsublite.internal.ProxyService;
 import com.google.cloud.pubsublite.internal.wire.SystemExecutors;
+import com.google.common.flogger.GoogleLogger;
 import com.google.pubsub.v1.PubsubMessage;
 
 // A WrappingPublisher wraps the wire protocol client with a Cloud Pub/Sub api compliant
 // publisher. It encodes a MessageMetadata object in the response string.
 public class WrappingPublisher extends ProxyService implements Publisher {
+  private static final GoogleLogger logger = GoogleLogger.forEnclosingClass();
+
   private final com.google.cloud.pubsublite.internal.Publisher<MessageMetadata> wirePublisher;
   private final MessageTransformer<PubsubMessage, Message> transformer;
 
@@ -43,11 +46,23 @@ public class WrappingPublisher extends ProxyService implements Publisher {
     super(wirePublisher);
     this.wirePublisher = wirePublisher;
     this.transformer = transformer;
+    addListener(
+        new Listener() {
+          @Override
+          public void failed(State from, Throwable failure) {
+            logger.atWarning().withCause(failure).log(
+                "Publisher client failed with permanent error.");
+          }
+        },
+        SystemExecutors.getFuturesExecutor());
   }
 
   // Publisher implementation.
   @Override
   public ApiFuture<String> publish(PubsubMessage message) {
+    if (state().equals(State.FAILED)) {
+      return ApiFutures.immediateFailedFuture(toCanonical(failureCause()).underlying);
+    }
     Message wireMessage;
     try {
       wireMessage = transformer.transform(message);

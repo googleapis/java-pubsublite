@@ -47,8 +47,8 @@ public class QuickStartIT {
 
   private static final Long projectNumber =
       Long.parseLong(System.getenv("GOOGLE_CLOUD_PROJECT_NUMBER"));
-  private String cloudRegion = "us-central1";
-  private final char zoneId = (char) (rand.nextInt(3) + 'a');
+  private String cloudRegion = "us-west1"; // "us-central1";
+  private final char zoneId = 'a'; // (char) (rand.nextInt(3) + 'a');
   private static final String suffix = UUID.randomUUID().toString();
   private static final String topicId = "lite-topic-" + suffix;
   private static final String subscriptionId = "lite-subscription-" + suffix;
@@ -138,10 +138,11 @@ public class QuickStartIT {
 
     bout.reset();
     // Update a topic.
-    UpdateTopicExample.updateTopicExample(cloudRegion, zoneId, projectNumber, topicId);
+    UpdateTopicExample.updateTopicExample(
+        cloudRegion, zoneId, projectNumber, topicId, reservationId);
     assertThat(bout.toString()).contains("seconds: 604800");
-    assertThat(bout.toString()).contains("per_partition_bytes: 214748364800");
-    assertThat(bout.toString()).contains("scale: 4");
+    assertThat(bout.toString()).contains("per_partition_bytes: 34359738368");
+    assertThat(bout.toString()).contains("throughput_reservation: \"" + reservationPath.toString());
 
     bout.reset();
     // Create a subscription.

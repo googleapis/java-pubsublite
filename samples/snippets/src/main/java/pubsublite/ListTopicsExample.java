@@ -46,7 +46,7 @@ public class ListTopicsExample {
     LocationPath locationPath =
         LocationPath.newBuilder()
             .setProject(ProjectNumber.of(projectNumber))
-            // To list topic in a region, set location to a cloud region instead.
+            // To list topics in a region, set location to a cloud region instead.
             .setLocation(CloudZone.of(CloudRegion.of(cloudRegion), zoneId))
             .build();
 

@@ -1,5 +1,33 @@
 # Changelog
 
+## [1.4.0](https://www.github.com/googleapis/java-pubsublite/compare/v1.3.0...v1.4.0) (2021-11-11)
+
+
+### Features
+
+* Introduce Native Image testing build script changes ([#924](https://www.github.com/googleapis/java-pubsublite/issues/924)) ([5801212](https://www.github.com/googleapis/java-pubsublite/commit/5801212edb94ceee10b344141d7c4b75cc07d51d))
+
+
+### Bug Fixes
+
+* Fail early when publishing to already failed publishers ([#934](https://www.github.com/googleapis/java-pubsublite/issues/934)) ([6ab2754](https://www.github.com/googleapis/java-pubsublite/commit/6ab2754292f34854f1fd68b513d7b71936f6e96e))
+
+
+### Dependencies
+
+* Bump assorted dependencies which need to be incremented together ([#943](https://www.github.com/googleapis/java-pubsublite/issues/943)) ([ab63bf2](https://www.github.com/googleapis/java-pubsublite/commit/ab63bf24addfb0b41e2a1c0cc4b5eafb126b0703))
+* Correct BOM deps ([#946](https://www.github.com/googleapis/java-pubsublite/issues/946)) ([fa6bbbe](https://www.github.com/googleapis/java-pubsublite/commit/fa6bbbedda4f022e4246e602e20441559192c5ca))
+* update beam.version to v2.33.0 ([#920](https://www.github.com/googleapis/java-pubsublite/issues/920)) ([91289d2](https://www.github.com/googleapis/java-pubsublite/commit/91289d2f9cd92a0af6bbdf5701dfd71c307275cb))
+* update dependency com.google.auto.service:auto-service to v1.0.1 ([#935](https://www.github.com/googleapis/java-pubsublite/issues/935)) ([b72dcf6](https://www.github.com/googleapis/java-pubsublite/commit/b72dcf684e9a79e5699b34b314bbf4486a717292))
+* update dependency com.google.auto.service:auto-service-annotations to v1.0.1 ([#936](https://www.github.com/googleapis/java-pubsublite/issues/936)) ([30b4ab0](https://www.github.com/googleapis/java-pubsublite/commit/30b4ab01357484d080b064d100b4590cd1ee4912))
+* update dependency com.google.cloud:google-cloud-pubsub to v1.114.7 ([#926](https://www.github.com/googleapis/java-pubsublite/issues/926)) ([80becc5](https://www.github.com/googleapis/java-pubsublite/commit/80becc572b1769534c525e7962159045a3fc25d1))
+* update dependency com.google.cloud:google-cloud-shared-dependencies to v2.4.0 ([#925](https://www.github.com/googleapis/java-pubsublite/issues/925)) ([50a36f3](https://www.github.com/googleapis/java-pubsublite/commit/50a36f3c30e7a1b66cb1ee3be7d5f7382e205fa4))
+* update dependency com.google.cloud:pubsublite-beam-io to v0.22.0 ([#915](https://www.github.com/googleapis/java-pubsublite/issues/915)) ([b9f7727](https://www.github.com/googleapis/java-pubsublite/commit/b9f7727e2a507415a170f49d7c2947bac187addc))
+* update dependency com.google.errorprone:error_prone_annotations to v2.10.0 ([#939](https://www.github.com/googleapis/java-pubsublite/issues/939)) ([eea5f38](https://www.github.com/googleapis/java-pubsublite/commit/eea5f381ffe065ccbfc6ba69207bd2ce170c6a9b))
+* update dependency com.google.errorprone:error_prone_core to v2.10.0 ([#940](https://www.github.com/googleapis/java-pubsublite/issues/940)) ([c5359e8](https://www.github.com/googleapis/java-pubsublite/commit/c5359e875cd9dca8298c032d4a4814e5991d3830))
+* update dependency com.google.flogger:flogger-system-backend to v0.7.1 ([#917](https://www.github.com/googleapis/java-pubsublite/issues/917)) ([580aa0a](https://www.github.com/googleapis/java-pubsublite/commit/580aa0acf5e53849d79f95239be944b5ac269461))
+* update dependency org.checkerframework:checker-qual to v3.19.0 ([#933](https://www.github.com/googleapis/java-pubsublite/issues/933)) ([5b49749](https://www.github.com/googleapis/java-pubsublite/commit/5b49749be4b0858e7a8fbbe0524f17035fb2797e))
+
 ## [1.3.0](https://www.github.com/googleapis/java-pubsublite/compare/v1.2.0...v1.3.0) (2021-10-06)
 
 

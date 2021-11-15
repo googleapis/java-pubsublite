@@ -5,12 +5,12 @@
   <parent>
     <groupId>com.google.cloud</groupId>
     <artifactId>google-cloud-shared-config</artifactId>
-    <version>1.2.0</version>
+    <version>1.2.1</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.google.cloud</groupId>
   <artifactId>google-cloud-pubsublite-parent</artifactId>
-  <version>1.3.1-SNAPSHOT</version><!-- {x-version-update:google-cloud-pubsublite:current} -->
+  <version>1.4.1-SNAPSHOT</version><!-- {x-version-update:google-cloud-pubsublite:current} -->
   <packaging>pom</packaging>
   <name>Google Cloud Pub/Sub Lite Parent</name>
   <url>https://github.com/googleapis/java-pubsublite</url>
@@ -27,7 +27,7 @@
       <dependency>
         <groupId>com.google.cloud</groupId>
         <artifactId>google-cloud-bom</artifactId>
-        <version>0.158.0</version>
+        <version>0.163.0</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
@@ -39,12 +39,12 @@
       <dependency>
         <groupId>com.google.errorprone</groupId>
         <artifactId>error_prone_annotations</artifactId>
-        <version>2.9.0</version>
+        <version>2.10.0</version>
       </dependency>
       <dependency>
         <groupId>com.google.auto.service</groupId>
         <artifactId>auto-service-annotations</artifactId>
-        <version>1.0</version>
+        <version>1.0.1</version>
       </dependency>
       <dependency>
         <groupId>javax.annotation</groupId>
@@ -56,7 +56,7 @@
         <!-- Explicit override, remove when no longer needed.-->
         <groupId>org.checkerframework</groupId>
         <artifactId>checker-qual</artifactId>
-        <version>3.18.1</version>
+        <version>3.19.0</version>
       </dependency>
       <dependency>
         <groupId>com.google.truth</groupId>
@@ -118,7 +118,7 @@
             <path>
               <groupId>com.google.auto.service</groupId>
               <artifactId>auto-service</artifactId>
-              <version>1.0</version>
+              <version>1.0.1</version>
             </path>
           </annotationProcessorPaths>
         </configuration>
@@ -153,6 +153,7 @@
     <module>grpc-google-cloud-pubsublite-v1</module>
     <module>proto-google-cloud-pubsublite-v1</module>
     <module>pubsublite-beam-io</module>
+    <module>google-cloud-pubsublite-bom</module>
   </modules>
 
   <profiles>
@@ -191,7 +192,7 @@
                 <path>
                   <groupId>com.google.errorprone</groupId>
                   <artifactId>error_prone_core</artifactId>
-                  <version>2.9.0</version>
+                  <version>2.10.0</version>
                 </path>
               </annotationProcessorPaths>
             </configuration>

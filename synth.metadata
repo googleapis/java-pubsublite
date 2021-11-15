@@ -4,21 +4,22 @@
       "git": {
         "name": ".",
         "remote": "https://github.com/googleapis/java-pubsublite.git",
-        "sha": "6ab2754292f34854f1fd68b513d7b71936f6e96e"
+        "sha": "ab63bf24addfb0b41e2a1c0cc4b5eafb126b0703"
       }
     },
     {
       "git": {
         "name": "googleapis",
         "remote": "https://github.com/googleapis/googleapis.git",
-        "sha": "b64d30b2b245cb805d1aa328e50258fdff6e628e"
+        "sha": "2921f9fb3bfbd16f6b2da0104373e2b47a80a65e",
+        "internalRef": "408420890"
       }
     },
     {
       "git": {
         "name": "synthtool",
         "remote": "https://github.com/googleapis/synthtool.git",
-        "sha": "d45942be8066ad57bd0509f4a16e1fac78ecc50f"
+        "sha": "42a3786737c17ece39924d7025f3be481812da53"
       }
     }
   ],

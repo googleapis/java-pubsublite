@@ -47,8 +47,8 @@ public class QuickStartIT {
 
   private static final Long projectNumber =
       Long.parseLong(System.getenv("GOOGLE_CLOUD_PROJECT_NUMBER"));
-  private String cloudRegion = "us-west1"; // "us-central1";
-  private final char zoneId = 'a'; // (char) (rand.nextInt(3) + 'a');
+  private String cloudRegion = "us-central1";
+  private final char zoneId = (char) (rand.nextInt(3) + 'a');
   private static final String suffix = UUID.randomUUID().toString();
   private static final String topicId = "lite-topic-" + suffix;
   private static final String subscriptionId = "lite-subscription-" + suffix;
@@ -132,8 +132,12 @@ public class QuickStartIT {
     assertThat(bout.toString()).contains(String.format("%s partition(s).", partitions));
 
     bout.reset();
-    // List topics.
-    ListTopicsExample.listTopicsExample(cloudRegion, zoneId, projectNumber);
+    // List regional topics.
+    ListTopicsExample.listTopicsExample(cloudRegion, zoneId, projectNumber, true);
+    // List zonal topics.
+    ListTopicsExample.listTopicsExample(cloudRegion, zoneId, projectNumber, false);
+    assertThat(bout.toString().contains(cloudRegion + "/topics/" + topicId));
+    assertThat(bout.toString().contains(cloudRegion + "-" + zoneId + "/topics/" + topicId));
     assertThat(bout.toString()).contains("topic(s) listed");
 
     bout.reset();

@@ -33,22 +33,33 @@ public class ListTopicsExample {
     String cloudRegion = "your-cloud-region";
     char zoneId = 'b';
     long projectNumber = Long.parseLong("123456789");
+    boolean regional = true;
 
-    listTopicsExample(cloudRegion, zoneId, projectNumber);
+    listTopicsExample(cloudRegion, zoneId, projectNumber, regional);
   }
 
-  public static void listTopicsExample(String cloudRegion, char zoneId, long projectNumber)
-      throws Exception {
+  public static void listTopicsExample(
+      String cloudRegion, char zoneId, long projectNumber, boolean regional) throws Exception {
 
     AdminClientSettings adminClientSettings =
         AdminClientSettings.newBuilder().setRegion(CloudRegion.of(cloudRegion)).build();
 
-    LocationPath locationPath =
-        LocationPath.newBuilder()
-            .setProject(ProjectNumber.of(projectNumber))
-            // To list topic in a region, set location to a cloud region instead.
-            .setLocation(CloudZone.of(CloudRegion.of(cloudRegion), zoneId))
-            .build();
+    LocationPath locationPath = null;
+    if (regional) {
+      // A region.
+      locationPath =
+          LocationPath.newBuilder()
+              .setProject(ProjectNumber.of(projectNumber))
+              .setLocation(CloudRegion.of(cloudRegion))
+              .build();
+    } else {
+      // A zone.
+      locationPath =
+          LocationPath.newBuilder()
+              .setProject(ProjectNumber.of(projectNumber))
+              .setLocation(CloudZone.of(CloudRegion.of(cloudRegion), zoneId))
+              .build();
+    }
 
     try (AdminClient adminClient = AdminClient.create(adminClientSettings)) {
       List<Topic> topics = adminClient.listTopics(locationPath).get();

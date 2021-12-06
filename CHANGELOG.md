@@ -1,5 +1,20 @@
 # Changelog
 
+### [1.4.1](https://www.github.com/googleapis/java-pubsublite/compare/v1.4.0...v1.4.1) (2021-12-03)
+
+
+### Bug Fixes
+
+* remove local copy of beam I/O now that it is merged to upstream ([#873](https://www.github.com/googleapis/java-pubsublite/issues/873)) ([0bd9d52](https://www.github.com/googleapis/java-pubsublite/commit/0bd9d52e1da3029281f67e3e323e7fca890d2fee))
+
+
+### Dependencies
+
+* update beam.version to v2.34.0 ([#950](https://www.github.com/googleapis/java-pubsublite/issues/950)) ([527f77f](https://www.github.com/googleapis/java-pubsublite/commit/527f77fabc59c8b294e119d0d68384b47624f0b9))
+* update dependency com.google.cloud:google-cloud-shared-dependencies to v2.5.0 ([#952](https://www.github.com/googleapis/java-pubsublite/issues/952)) ([41ebb30](https://www.github.com/googleapis/java-pubsublite/commit/41ebb30bbfc729f1df3b0dc189dd4823e0af7360))
+* update dependency com.google.cloud:google-cloud-shared-dependencies to v2.5.1 ([#960](https://www.github.com/googleapis/java-pubsublite/issues/960)) ([9e46dbc](https://www.github.com/googleapis/java-pubsublite/commit/9e46dbc52085e0bbfa6c14d2d7892608a1d2fa7a))
+* update dependency com.google.cloud:pubsublite-beam-io to v0.23.0 ([#951](https://www.github.com/googleapis/java-pubsublite/issues/951)) ([c62c79c](https://www.github.com/googleapis/java-pubsublite/commit/c62c79c21bca315740e9298e35a57e8ff08de4db))
+
 ## [1.4.0](https://www.github.com/googleapis/java-pubsublite/compare/v1.3.0...v1.4.0) (2021-11-11)
 
 

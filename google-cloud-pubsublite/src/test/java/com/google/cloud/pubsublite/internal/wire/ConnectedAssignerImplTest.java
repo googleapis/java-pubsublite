@@ -83,13 +83,13 @@ public class ConnectedAssignerImplTest {
   public void setUp() throws IOException {
     MockitoAnnotations.initMocks(this);
     doAnswer(
-        (Answer<ClientStream<PartitionAssignmentRequest>>)
-            args -> {
-              Preconditions.checkArgument(!leakedResponseStream.isPresent());
-              ResponseObserver<PartitionAssignment> responseObserver = args.getArgument(0);
-              leakedResponseStream = Optional.of(responseObserver);
-              return mockRequestStream;
-            })
+            (Answer<ClientStream<PartitionAssignmentRequest>>)
+                args -> {
+                  Preconditions.checkArgument(!leakedResponseStream.isPresent());
+                  ResponseObserver<PartitionAssignment> responseObserver = args.getArgument(0);
+                  leakedResponseStream = Optional.of(responseObserver);
+                  return mockRequestStream;
+                })
         .when(streamFactory)
         .New(any());
   }

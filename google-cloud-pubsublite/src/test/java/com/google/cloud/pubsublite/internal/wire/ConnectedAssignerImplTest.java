@@ -86,8 +86,8 @@ public class ConnectedAssignerImplTest {
             (Answer<ClientStream<PartitionAssignmentRequest>>)
                 args -> {
                   Preconditions.checkArgument(!leakedResponseStream.isPresent());
-                  ResponseObserver<PartitionAssignment> ResponseObserver = args.getArgument(0);
-                  leakedResponseStream = Optional.of(ResponseObserver);
+                  ResponseObserver<PartitionAssignment> responseObserver = args.getArgument(0);
+                  leakedResponseStream = Optional.of(responseObserver);
                   return mockRequestStream;
                 })
         .when(streamFactory)
@@ -137,6 +137,12 @@ public class ConnectedAssignerImplTest {
     doAnswer(AnswerWith(Code.INTERNAL)).when(mockRequestStream).send(initialRequest());
     try (ConnectedAssigner assigner =
         FACTORY.New(streamFactory, mockOutputStream, initialRequest())) {}
+  }
+
+  @Test
+  public void construct_noInitialResponse() throws Exception {
+    assigner = FACTORY.New(streamFactory, mockOutputStream, initialRequest());
+    verify(mockRequestStream).send(initialRequest());
   }
 
   private void initialize() {

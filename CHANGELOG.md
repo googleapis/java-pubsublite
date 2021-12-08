@@ -1,5 +1,17 @@
 # Changelog
 
+### [1.4.3](https://www.github.com/googleapis/java-pubsublite/compare/v1.4.2...v1.4.3) (2021-12-08)
+
+
+### Bug Fixes
+
+* Change PublisherImpl and SerialBatcher interplay to not call into the network layer on the downcall ([#975](https://www.github.com/googleapis/java-pubsublite/issues/975)) ([e771c49](https://www.github.com/googleapis/java-pubsublite/commit/e771c49ba702d57706e4131c2ac6535ce066ec30))
+
+
+### Dependencies
+
+* update dependency com.google.cloud:google-cloud-bom to v0.164.0 ([#973](https://www.github.com/googleapis/java-pubsublite/issues/973)) ([e1139e9](https://www.github.com/googleapis/java-pubsublite/commit/e1139e956648d05ff2a76dfab3aed66ec4109eba))
+
 ### [1.4.2](https://www.github.com/googleapis/java-pubsublite/compare/v1.4.1...v1.4.2) (2021-12-07)
 
 

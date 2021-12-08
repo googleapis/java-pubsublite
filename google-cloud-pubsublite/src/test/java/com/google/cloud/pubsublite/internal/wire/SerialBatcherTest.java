@@ -17,16 +17,12 @@
 package com.google.cloud.pubsublite.internal.wire;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.junit.Assert.assertThrows;
 
 import com.google.api.core.ApiFuture;
 import com.google.cloud.pubsublite.Offset;
 import com.google.cloud.pubsublite.internal.wire.SerialBatcher.UnbatchedMessage;
 import com.google.cloud.pubsublite.proto.PubSubMessage;
-import com.google.common.base.Preconditions;
-import com.google.common.collect.ImmutableList;
 import com.google.protobuf.ByteString;
-import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.junit.Test;
@@ -36,21 +32,29 @@ import org.junit.runners.JUnit4;
 @RunWith(JUnit4.class)
 public class SerialBatcherTest {
   private static final PubSubMessage MESSAGE_1 =
-      PubSubMessage.newBuilder().setData(ByteString.copyFromUtf8("Some data")).build();
+      PubSubMessage.newBuilder().setData(ByteString.copyFromUtf8("data")).build();
   private static final PubSubMessage MESSAGE_2 =
-      PubSubMessage.newBuilder().setData(ByteString.copyFromUtf8("Some other data")).build();
+      PubSubMessage.newBuilder().setData(ByteString.copyFromUtf8("other data")).build();
+  private static final PubSubMessage MESSAGE_3 =
+      PubSubMessage.newBuilder().setData(ByteString.copyFromUtf8("more data")).build();
 
-  private static List<PubSubMessage> extractMessages(Collection<UnbatchedMessage> messages) {
+  private static List<PubSubMessage> extractMessages(List<List<UnbatchedMessage>> messages) {
+    return messages.stream()
+        .flatMap(batch -> batch.stream().map(UnbatchedMessage::message))
+        .collect(Collectors.toList());
+  }
+
+  private static List<PubSubMessage> extractMessagesFromBatch(List<UnbatchedMessage> messages) {
     return messages.stream().map(UnbatchedMessage::message).collect(Collectors.toList());
   }
 
   @Test
-  public void shouldFlushAtMessageLimit() throws Exception {
+  public void needsImmediateFlushAtMessageLimit() throws Exception {
     SerialBatcher batcher = new SerialBatcher(/*byteLimit=*/ 10000, /*messageLimit=*/ 1);
-    assertThat(batcher.shouldFlush()).isFalse();
     ApiFuture<Offset> future = batcher.add(PubSubMessage.getDefaultInstance());
-    assertThat(batcher.shouldFlush()).isTrue();
-    ImmutableList<UnbatchedMessage> messages = ImmutableList.copyOf(batcher.flush());
+    List<List<UnbatchedMessage>> batches = batcher.flush();
+    assertThat(batches).hasSize(1);
+    List<UnbatchedMessage> messages = batches.get(0);
     assertThat(messages).hasSize(1);
     assertThat(future.isDone()).isFalse();
     messages.get(0).future().set(Offset.of(43));
@@ -59,31 +63,47 @@ public class SerialBatcherTest {
 
   @Test
   @SuppressWarnings({"CheckReturnValue", "FutureReturnValueIgnored"})
-  public void shouldFlushAtMessageLimitAggregated() {
-    SerialBatcher batcher = new SerialBatcher(/*byteLimit=*/ 10000, /*messageLimit=*/ 2);
-    assertThat(batcher.shouldFlush()).isFalse();
+  public void moreThanLimitMultipleBatches() throws Exception {
+    SerialBatcher batcher =
+        new SerialBatcher(
+            /*byteLimit=*/ MESSAGE_1.getSerializedSize() + MESSAGE_2.getSerializedSize(),
+            /*messageLimit=*/ 1000);
     batcher.add(MESSAGE_1);
-    assertThat(batcher.shouldFlush()).isFalse();
     batcher.add(MESSAGE_2);
-    assertThat(batcher.shouldFlush()).isTrue();
-    assertThat(extractMessages(batcher.flush())).containsExactly(MESSAGE_1, MESSAGE_2);
+    batcher.add(MESSAGE_3);
+    List<List<UnbatchedMessage>> batches = batcher.flush();
+    assertThat(batches).hasSize(2);
+    assertThat(extractMessagesFromBatch(batches.get(0))).containsExactly(MESSAGE_1, MESSAGE_2);
+    assertThat(extractMessagesFromBatch(batches.get(1))).containsExactly(MESSAGE_3);
   }
 
   @Test
   @SuppressWarnings({"CheckReturnValue", "FutureReturnValueIgnored"})
-  public void shouldFlushAtByteLimitAggregated() {
+  public void flushMessageLimit() {
+    SerialBatcher batcher = new SerialBatcher(/*byteLimit=*/ 10000, /*messageLimit=*/ 2);
+    batcher.add(MESSAGE_1);
+    batcher.add(MESSAGE_2);
+    batcher.add(MESSAGE_3);
+    List<List<UnbatchedMessage>> batches = batcher.flush();
+    assertThat(batches.size()).isEqualTo(2);
+    assertThat(extractMessagesFromBatch(batches.get(0))).containsExactly(MESSAGE_1, MESSAGE_2);
+    assertThat(extractMessagesFromBatch(batches.get(1))).containsExactly(MESSAGE_3);
+  }
+
+  @Test
+  @SuppressWarnings({"CheckReturnValue", "FutureReturnValueIgnored"})
+  public void flushByteLimit() {
     SerialBatcher batcher =
         new SerialBatcher(
-            /*byteLimit=*/ MESSAGE_1.getSerializedSize() + 1, /*messageLimit=*/ 10000);
-    assertThat(batcher.shouldFlush()).isFalse();
+            /*byteLimit=*/ MESSAGE_1.getSerializedSize() + MESSAGE_2.getSerializedSize() + 1,
+            /*messageLimit=*/ 10000);
     batcher.add(MESSAGE_1);
-    assertThat(batcher.shouldFlush()).isFalse();
     batcher.add(MESSAGE_2);
-    assertThat(batcher.shouldFlush()).isTrue();
-    assertThat(extractMessages(batcher.flush())).containsExactly(MESSAGE_1);
-    Preconditions.checkArgument(MESSAGE_2.getSerializedSize() > MESSAGE_1.getSerializedSize());
-    assertThat(batcher.shouldFlush()).isTrue();
-    assertThat(extractMessages(batcher.flush())).containsExactly(MESSAGE_2);
+    batcher.add(MESSAGE_3);
+    List<List<UnbatchedMessage>> batches = batcher.flush();
+    assertThat(batches.size()).isEqualTo(2);
+    assertThat(extractMessagesFromBatch(batches.get(0))).containsExactly(MESSAGE_1, MESSAGE_2);
+    assertThat(extractMessagesFromBatch(batches.get(1))).containsExactly(MESSAGE_3);
   }
 
   @Test
@@ -93,37 +113,8 @@ public class SerialBatcherTest {
         new SerialBatcher(
             /*byteLimit=*/ MESSAGE_1.getSerializedSize() + MESSAGE_2.getSerializedSize(),
             /*messageLimit=*/ 10000);
-    assertThat(batcher.shouldFlush()).isFalse();
     batcher.add(MESSAGE_2);
-    assertThat(batcher.shouldFlush()).isFalse();
     batcher.add(MESSAGE_1);
-    assertThat(batcher.shouldFlush()).isTrue();
     assertThat(extractMessages(batcher.flush())).containsExactly(MESSAGE_2, MESSAGE_1);
-  }
-
-  @Test
-  @SuppressWarnings({"CheckReturnValue", "FutureReturnValueIgnored"})
-  public void callerNoFlushFailsMessagePrecondition() {
-    SerialBatcher batcher = new SerialBatcher(/*byteLimit=*/ 10000, /*messageLimit=*/ 1);
-    batcher.add(MESSAGE_1);
-    assertThat(batcher.shouldFlush()).isTrue();
-    batcher.add(MESSAGE_2);
-    assertThat(batcher.shouldFlush()).isTrue();
-    batcher.add(PubSubMessage.getDefaultInstance());
-    assertThat(batcher.shouldFlush()).isTrue();
-    assertThrows(IllegalStateException.class, batcher::flush);
-  }
-
-  @Test
-  @SuppressWarnings({"CheckReturnValue", "FutureReturnValueIgnored"})
-  public void callerNoFlushFailsBytePrecondition() {
-    SerialBatcher batcher = new SerialBatcher(/*byteLimit=*/ 1, /*messageLimit=*/ 10000);
-    batcher.add(MESSAGE_1);
-    assertThat(batcher.shouldFlush()).isTrue();
-    batcher.add(MESSAGE_2);
-    assertThat(batcher.shouldFlush()).isTrue();
-    batcher.add(PubSubMessage.getDefaultInstance());
-    assertThat(batcher.shouldFlush()).isTrue();
-    assertThrows(IllegalStateException.class, batcher::flush);
   }
 }

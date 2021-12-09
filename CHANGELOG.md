@@ -1,5 +1,12 @@
 # Changelog
 
+### [1.4.4](https://www.github.com/googleapis/java-pubsublite/compare/v1.4.3...v1.4.4) (2021-12-09)
+
+
+### Bug Fixes
+
+* Add a timeout to getTopicPartitionCount ([#979](https://www.github.com/googleapis/java-pubsublite/issues/979)) ([0301d55](https://www.github.com/googleapis/java-pubsublite/commit/0301d55f9c2f7ac49a4d1c9755199e61d2fc09e3))
+
 ### [1.4.3](https://www.github.com/googleapis/java-pubsublite/compare/v1.4.2...v1.4.3) (2021-12-08)
 
 

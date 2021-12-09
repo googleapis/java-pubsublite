@@ -21,16 +21,15 @@ import com.google.api.core.SettableApiFuture;
 import com.google.auto.value.AutoValue;
 import com.google.cloud.pubsublite.Offset;
 import com.google.cloud.pubsublite.proto.PubSubMessage;
-import com.google.common.base.Preconditions;
 import java.util.ArrayDeque;
-import java.util.Collection;
+import java.util.ArrayList;
 import java.util.Deque;
+import java.util.List;
 
 // A thread compatible batcher which preserves message order.
 class SerialBatcher {
   private final long byteLimit;
   private final long messageLimit;
-  private long byteCount = 0L;
   private Deque<UnbatchedMessage> messages = new ArrayDeque<>();
 
   @AutoValue
@@ -49,36 +48,29 @@ class SerialBatcher {
     this.messageLimit = messageLimit;
   }
 
-  // Callers should always call shouldFlush() after add, and flush() if that returns true.
   ApiFuture<Offset> add(PubSubMessage message) {
-    byteCount += message.getSerializedSize();
     SettableApiFuture<Offset> future = SettableApiFuture.create();
     messages.add(UnbatchedMessage.of(message, future));
     return future;
   }
 
-  boolean shouldFlush() {
-    return byteCount >= byteLimit || messages.size() >= messageLimit;
-  }
-
-  // If callers satisfy the conditions on add, one of two things will be true after a call to flush.
-  // Either, there will be 0-many messages remaining and they will be within the limits, or
-  // there will be 1 message remaining.
-  //
-  // This means, an isolated call to flush will always return all messages in the batcher.
-  Collection<UnbatchedMessage> flush() {
-    Deque<UnbatchedMessage> toReturn = messages;
-    messages = new ArrayDeque<>();
-    while ((byteCount > byteLimit || toReturn.size() > messageLimit) && toReturn.size() > 1) {
-      messages.addFirst(toReturn.removeLast());
-      byteCount -= toReturn.peekLast().message().getSerializedSize();
+  List<List<UnbatchedMessage>> flush() {
+    List<List<UnbatchedMessage>> toReturn = new ArrayList<>();
+    List<UnbatchedMessage> currentBatch = new ArrayList<>();
+    toReturn.add(currentBatch);
+    long currentBatchBytes = 0;
+    for (UnbatchedMessage message : messages) {
+      long newBatchBytes = currentBatchBytes + message.message().getSerializedSize();
+      if (currentBatch.size() + 1 > messageLimit || newBatchBytes > byteLimit) {
+        // If we would be pushed over the limit, create a new batch.
+        currentBatch = new ArrayList<>();
+        toReturn.add(currentBatch);
+        newBatchBytes = message.message().getSerializedSize();
+      }
+      currentBatchBytes = newBatchBytes;
+      currentBatch.add(message);
     }
-    byteCount = messages.stream().mapToLong(value -> value.message().getSerializedSize()).sum();
-    // Validate the postcondition.
-    Preconditions.checkState(
-        messages.size() == 1 || (byteCount <= byteLimit && messages.size() <= messageLimit),
-        "Postcondition violation in SerialBatcher::flush. The caller is likely not calling flush"
-            + " after calling add.");
+    messages = new ArrayDeque<>();
     return toReturn;
   }
 }

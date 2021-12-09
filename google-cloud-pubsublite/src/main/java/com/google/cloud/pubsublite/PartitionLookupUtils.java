@@ -17,6 +17,7 @@
 package com.google.cloud.pubsublite;
 
 import static com.google.cloud.pubsublite.internal.UncheckedApiPreconditions.checkState;
+import static java.util.concurrent.TimeUnit.MINUTES;
 
 import com.google.api.core.ApiFuture;
 import com.google.api.gax.rpc.ApiException;
@@ -42,7 +43,7 @@ public final class PartitionLookupUtils {
   public static int numPartitions(TopicPath topic, AdminClient client) throws ApiException {
     ApiFuture<Long> partitionCountFuture = client.getTopicPartitionCount(topic);
     try {
-      long numPartitions = partitionCountFuture.get();
+      long numPartitions = partitionCountFuture.get(1, MINUTES);
       checkState(
           numPartitions > 0, "Config has 0 or less partitions configured. This config is invalid.");
       checkState(
@@ -76,7 +77,7 @@ public final class PartitionLookupUtils {
       throws ApiException {
     ApiFuture<Subscription> subscriptionFuture = client.getSubscription(subscription);
     try {
-      return numPartitions(TopicPath.parse(subscriptionFuture.get().getTopic()), client);
+      return numPartitions(TopicPath.parse(subscriptionFuture.get(1, MINUTES).getTopic()), client);
     } catch (Throwable t) {
       throw ExtractStatus.toCanonical(t).underlying;
     }

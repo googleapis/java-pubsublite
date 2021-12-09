@@ -1,5 +1,31 @@
 # Changelog
 
+### [1.4.3](https://www.github.com/googleapis/java-pubsublite/compare/v1.4.2...v1.4.3) (2021-12-08)
+
+
+### Bug Fixes
+
+* Change PublisherImpl and SerialBatcher interplay to not call into the network layer on the downcall ([#975](https://www.github.com/googleapis/java-pubsublite/issues/975)) ([e771c49](https://www.github.com/googleapis/java-pubsublite/commit/e771c49ba702d57706e4131c2ac6535ce066ec30))
+
+
+### Dependencies
+
+* update dependency com.google.cloud:google-cloud-bom to v0.164.0 ([#973](https://www.github.com/googleapis/java-pubsublite/issues/973)) ([e1139e9](https://www.github.com/googleapis/java-pubsublite/commit/e1139e956648d05ff2a76dfab3aed66ec4109eba))
+
+### [1.4.2](https://www.github.com/googleapis/java-pubsublite/compare/v1.4.1...v1.4.2) (2021-12-07)
+
+
+### Bug Fixes
+
+* Add a really long timeout to PartitionLookupUtils ([#965](https://www.github.com/googleapis/java-pubsublite/issues/965)) ([1c0678d](https://www.github.com/googleapis/java-pubsublite/commit/1c0678d07934f358cbaf030f5bdb212356d002b9))
+* Partition assignment stream does not require an initial response ([#966](https://www.github.com/googleapis/java-pubsublite/issues/966)) ([8227d31](https://www.github.com/googleapis/java-pubsublite/commit/8227d31fea754e09c251b7a8a9aaf43877125a9d))
+
+
+### Dependencies
+
+* update dependency com.google.cloud:google-cloud-pubsub to v1.115.0 ([#969](https://www.github.com/googleapis/java-pubsublite/issues/969)) ([2f78d56](https://www.github.com/googleapis/java-pubsublite/commit/2f78d56db0541dd5e8a1ac60757af9c9f0a7aa80))
+* update dependency org.checkerframework:checker-qual to v3.20.0 ([#964](https://www.github.com/googleapis/java-pubsublite/issues/964)) ([38a7fde](https://www.github.com/googleapis/java-pubsublite/commit/38a7fde03e1af187128e85274ffc173b3ccb3c0d))
+
 ### [1.4.1](https://www.github.com/googleapis/java-pubsublite/compare/v1.4.0...v1.4.1) (2021-12-03)
 
 

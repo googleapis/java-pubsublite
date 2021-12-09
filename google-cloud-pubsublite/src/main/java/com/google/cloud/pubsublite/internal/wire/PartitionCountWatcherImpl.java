@@ -16,6 +16,7 @@
 package com.google.cloud.pubsublite.internal.wire;
 
 import static com.google.cloud.pubsublite.internal.ExtractStatus.toCanonical;
+import static java.util.concurrent.TimeUnit.MINUTES;
 
 import com.google.api.core.AbstractApiService;
 import com.google.cloud.pubsublite.AdminClient;
@@ -23,7 +24,8 @@ import com.google.cloud.pubsublite.TopicPath;
 import com.google.cloud.pubsublite.internal.AlarmFactory;
 import com.google.common.flogger.GoogleLogger;
 import java.util.Optional;
-import java.util.concurrent.*;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeoutException;
 import java.util.function.Consumer;
 
 public class PartitionCountWatcherImpl extends AbstractApiService implements PartitionCountWatcher {
@@ -76,10 +78,15 @@ public class PartitionCountWatcherImpl extends AbstractApiService implements Par
 
   private void pollTopicConfig() {
     try {
-      long partitionCount = adminClient.getTopicPartitionCount(topicPath).get();
-      if (currentPartitionCount == partitionCount) return;
+      long partitionCount = adminClient.getTopicPartitionCount(topicPath).get(1, MINUTES);
+      if (currentPartitionCount == partitionCount) {
+        return;
+      }
       currentPartitionCount = partitionCount;
       partitionCountReceiver.accept(partitionCount);
+    } catch (TimeoutException e) {
+      log.atWarning().withCause(e).log(
+          "Timed out polling for partition count- see https://github.com/googleapis/gax-java/issues/1577");
     } catch (Throwable t) {
       throw toCanonical(t).underlying;
     }

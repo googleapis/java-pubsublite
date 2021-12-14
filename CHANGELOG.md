@@ -1,5 +1,13 @@
 # Changelog
 
+### [1.4.5](https://www.github.com/googleapis/java-pubsublite/compare/v1.4.4...v1.4.5) (2021-12-14)
+
+
+### Dependencies
+
+* update dependency com.google.flogger:flogger-system-backend to v0.7.2 ([#983](https://www.github.com/googleapis/java-pubsublite/issues/983)) ([6faf2dd](https://www.github.com/googleapis/java-pubsublite/commit/6faf2dd9c1d3403343f960b3868d1aac1eb0136f))
+* update dependency com.google.flogger:google-extensions to v0.7.2 ([#984](https://www.github.com/googleapis/java-pubsublite/issues/984)) ([d6004c6](https://www.github.com/googleapis/java-pubsublite/commit/d6004c650b5bc37fe35eeaf0011f12c545bf85fd))
+
 ### [1.4.4](https://www.github.com/googleapis/java-pubsublite/compare/v1.4.3...v1.4.4) (2021-12-09)
 
 

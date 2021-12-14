@@ -40,16 +40,20 @@ public final class ServiceClients {
               FixedExecutorProvider.create(
                   SystemExecutors.newDaemonExecutor("pubsub-lite-service-clients")));
 
-  private static final ConcurrentHashMap<CloudRegion, TransportChannelProvider> CHANNELS = new ConcurrentHashMap<>();
+  private static final ConcurrentHashMap<CloudRegion, TransportChannelProvider> CHANNELS =
+      new ConcurrentHashMap<>();
 
   private static TransportChannelProvider getTransportChannelProvider(CloudRegion region) {
-    return CHANNELS.computeIfAbsent(region, key -> InstantiatingGrpcChannelProvider.newBuilder()
-        .setMaxInboundMessageSize(Integer.MAX_VALUE)
-        .setKeepAliveTime(Duration.ofMinutes(1))
-        .setKeepAliveWithoutCalls(true)
-        .setKeepAliveTimeout(Duration.ofMinutes(1))
-        .setPoolSize(100)
-        .build());
+    return CHANNELS.computeIfAbsent(
+        region,
+        key ->
+            InstantiatingGrpcChannelProvider.newBuilder()
+                .setMaxInboundMessageSize(Integer.MAX_VALUE)
+                .setKeepAliveTime(Duration.ofMinutes(1))
+                .setKeepAliveWithoutCalls(true)
+                .setKeepAliveTimeout(Duration.ofMinutes(1))
+                .setPoolSize(100)
+                .build());
   }
 
   public static <

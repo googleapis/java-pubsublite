@@ -23,10 +23,12 @@ import com.google.api.gax.core.FixedExecutorProvider;
 import com.google.api.gax.grpc.InstantiatingGrpcChannelProvider;
 import com.google.api.gax.rpc.ApiException;
 import com.google.api.gax.rpc.ClientSettings;
+import com.google.api.gax.rpc.TransportChannelProvider;
 import com.google.cloud.pubsublite.CloudRegion;
 import com.google.cloud.pubsublite.Endpoints;
 import com.google.cloud.pubsublite.internal.Lazy;
 import com.google.common.collect.ImmutableMap;
+import java.util.concurrent.ConcurrentHashMap;
 import org.threeten.bp.Duration;
 
 public final class ServiceClients {
@@ -38,6 +40,18 @@ public final class ServiceClients {
               FixedExecutorProvider.create(
                   SystemExecutors.newDaemonExecutor("pubsub-lite-service-clients")));
 
+  private static final ConcurrentHashMap<CloudRegion, TransportChannelProvider> CHANNELS = new ConcurrentHashMap<>();
+
+  private static TransportChannelProvider getTransportChannelProvider(CloudRegion region) {
+    return CHANNELS.computeIfAbsent(region, key -> InstantiatingGrpcChannelProvider.newBuilder()
+        .setMaxInboundMessageSize(Integer.MAX_VALUE)
+        .setKeepAliveTime(Duration.ofMinutes(1))
+        .setKeepAliveWithoutCalls(true)
+        .setKeepAliveTimeout(Duration.ofMinutes(1))
+        .setPoolSize(100)
+        .build());
+  }
+
   public static <
           Settings extends ClientSettings<Settings>,
           Builder extends ClientSettings.Builder<Settings, Builder>>
@@ -46,13 +60,7 @@ public final class ServiceClients {
       return builder
           .setEndpoint(Endpoints.regionalEndpoint(target))
           .setExecutorProvider(PROVIDER.get())
-          .setTransportChannelProvider(
-              InstantiatingGrpcChannelProvider.newBuilder()
-                  .setMaxInboundMessageSize(Integer.MAX_VALUE)
-                  .setKeepAliveTime(Duration.ofMinutes(1))
-                  .setKeepAliveWithoutCalls(true)
-                  .setKeepAliveTimeout(Duration.ofMinutes(1))
-                  .build())
+          .setTransportChannelProvider(getTransportChannelProvider(target))
           .build();
     } catch (Throwable t) {
       throw toCanonical(t).underlying;

@@ -22,35 +22,27 @@ import com.google.api.gax.rpc.ApiException;
 import com.google.cloud.pubsublite.Partition;
 import com.google.common.hash.HashCode;
 import com.google.common.hash.Hashing;
-import com.google.errorprone.annotations.concurrent.GuardedBy;
 import com.google.protobuf.ByteString;
 import java.math.BigInteger;
-import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.concurrent.atomic.AtomicLong;
 
 public class DefaultRoutingPolicy implements RoutingPolicy {
   private final long numPartitions;
-  private final CloseableMonitor monitor = new CloseableMonitor();
 
-  @GuardedBy("monitor.monitor")
-  private long nextWithoutKeyPartition;
+  // An incrementing counter, when taken mod(numPartitions), gives the partition choice.
+  private final AtomicLong withoutKeyCounter;
 
   public DefaultRoutingPolicy(long numPartitions) throws ApiException {
     checkArgument(numPartitions > 0, "Must have a positive number of partitions.");
     this.numPartitions = numPartitions;
-    this.nextWithoutKeyPartition = ThreadLocalRandom.current().nextLong(numPartitions);
-    this.nextWithoutKeyPartition = new Random().longs(1, 0, numPartitions).findFirst().getAsLong();
+    this.withoutKeyCounter = new AtomicLong(ThreadLocalRandom.current().nextLong(numPartitions));
   }
 
   @Override
   public Partition routeWithoutKey() throws ApiException {
-    try (CloseableMonitor.Hold h = monitor.enter()) {
-      Partition toReturn = Partition.of(nextWithoutKeyPartition);
-      long next = nextWithoutKeyPartition + 1;
-      next = next % numPartitions;
-      nextWithoutKeyPartition = next;
-      return toReturn;
-    }
+    long index = withoutKeyCounter.incrementAndGet();
+    return Partition.of(index % numPartitions);
   }
 
   @Override

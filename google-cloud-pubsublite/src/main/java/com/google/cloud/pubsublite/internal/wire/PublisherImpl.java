@@ -234,7 +234,8 @@ public final class PublisherImpl extends ProxyService
       ApiService.State currentState = state();
       checkState(
           currentState == ApiService.State.RUNNING,
-          String.format("Cannot publish when Publisher state is %s.", currentState.name()));
+          "Cannot publish when Publisher state is %s.",
+          currentState.name());
       return batcher.add(proto);
     } catch (CheckedApiException e) {
       onPermanentError(e);

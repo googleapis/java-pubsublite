@@ -10,7 +10,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.google.cloud</groupId>
   <artifactId>google-cloud-pubsublite-parent</artifactId>
-  <version>1.4.0.1</version><!-- {x-version-update:google-cloud-pubsublite:current} -->
+  <version>1.4.0.2</version><!-- {x-version-update:google-cloud-pubsublite:current} -->
   <packaging>pom</packaging>
   <name>Google Cloud Pub/Sub Lite Parent</name>
   <url>https://github.com/googleapis/java-pubsublite</url>
@@ -34,7 +34,7 @@
       <dependency>
         <groupId>com.google.flogger</groupId>
         <artifactId>google-extensions</artifactId>
-        <version>0.7.2</version>
+        <version>0.7.3</version>
       </dependency>
       <dependency>
         <groupId>com.google.errorprone</groupId>

@@ -46,7 +46,7 @@
     <dependency>
       <groupId>com.google.cloud</groupId>
       <artifactId>google-cloud-pubsublite</artifactId>
-      <version>1.4.0.1</version>
+      <version>1.4.0.2</version>
     </dependency>
     <!-- {x-version-update-end} -->
     <!-- {x-version-update-start:pubsublite-beam-io:current} -->

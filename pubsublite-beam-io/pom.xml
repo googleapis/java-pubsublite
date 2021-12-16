@@ -5,7 +5,7 @@
   <parent>
     <groupId>com.google.cloud</groupId>
     <artifactId>google-cloud-pubsublite-parent</artifactId>
-    <version>1.4.0.1</version><!-- {x-version-update:google-cloud-pubsublite:current} -->
+    <version>1.4.0.2</version><!-- {x-version-update:google-cloud-pubsublite:current} -->
     <relativePath>../pom.xml</relativePath>
   </parent>
   <modelVersion>4.0.0</modelVersion>
@@ -38,12 +38,12 @@
     <dependency>
       <groupId>com.google.cloud</groupId>
       <artifactId>google-cloud-pubsublite</artifactId>
-      <version>1.4.0.1</version><!-- {x-version-update:google-cloud-pubsublite:current} -->
+      <version>1.4.0.2</version><!-- {x-version-update:google-cloud-pubsublite:current} -->
     </dependency>
     <dependency>
       <groupId>com.google.api.grpc</groupId>
       <artifactId>proto-google-cloud-pubsublite-v1</artifactId>
-      <version>1.4.0.1</version><!-- {x-version-update:google-cloud-pubsublite:current} -->
+      <version>1.4.0.2</version><!-- {x-version-update:google-cloud-pubsublite:current} -->
     </dependency>
     <dependency>
       <groupId>com.google.api.grpc</groupId>
@@ -118,7 +118,7 @@
     <dependency>
       <groupId>com.google.flogger</groupId>
       <artifactId>flogger-system-backend</artifactId>
-      <version>0.7.2</version>
+      <version>0.7.3</version>
       <scope>compile</scope>
     </dependency>
     <!-- Test dependencies -->

@@ -18,25 +18,17 @@ package com.google.cloud.pubsublite.internal.wire;
 
 import static com.google.cloud.pubsublite.internal.ExtractStatus.toCanonical;
 
-import com.google.api.gax.core.ExecutorProvider;
 import com.google.api.gax.core.FixedExecutorProvider;
 import com.google.api.gax.grpc.InstantiatingGrpcChannelProvider;
 import com.google.api.gax.rpc.ApiException;
 import com.google.api.gax.rpc.ClientSettings;
 import com.google.cloud.pubsublite.CloudRegion;
 import com.google.cloud.pubsublite.Endpoints;
-import com.google.cloud.pubsublite.internal.Lazy;
 import com.google.common.collect.ImmutableMap;
 import org.threeten.bp.Duration;
 
 public final class ServiceClients {
   private ServiceClients() {}
-
-  private static final Lazy<ExecutorProvider> PROVIDER =
-      new Lazy<>(
-          () ->
-              FixedExecutorProvider.create(
-                  SystemExecutors.newDaemonExecutor("pubsub-lite-service-clients")));
 
   public static <
           Settings extends ClientSettings<Settings>,
@@ -45,13 +37,15 @@ public final class ServiceClients {
     try {
       return builder
           .setEndpoint(Endpoints.regionalEndpoint(target))
-          .setExecutorProvider(PROVIDER.get())
+          .setBackgroundExecutorProvider(
+              FixedExecutorProvider.create(SystemExecutors.getAlarmExecutor()))
           .setTransportChannelProvider(
               InstantiatingGrpcChannelProvider.newBuilder()
                   .setMaxInboundMessageSize(Integer.MAX_VALUE)
                   .setKeepAliveTime(Duration.ofMinutes(1))
                   .setKeepAliveWithoutCalls(true)
                   .setKeepAliveTimeout(Duration.ofMinutes(1))
+                  .setExecutor(SystemExecutors.getFuturesExecutor())
                   .build())
           .build();
     } catch (Throwable t) {

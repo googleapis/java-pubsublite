@@ -1,5 +1,14 @@
 # Changelog
 
+### [1.4.6](https://www.github.com/googleapis/java-pubsublite/compare/v1.4.5...v1.4.6) (2021-12-16)
+
+
+### Dependencies
+
+* update dependency com.google.auto.value:auto-value to v1.9 ([#989](https://www.github.com/googleapis/java-pubsublite/issues/989)) ([d2cc54a](https://www.github.com/googleapis/java-pubsublite/commit/d2cc54a83d3e1349b40ae0f862562fd8f1414bef))
+* update dependency com.google.flogger:flogger-system-backend to v0.7.3 ([#992](https://www.github.com/googleapis/java-pubsublite/issues/992)) ([98a1cf7](https://www.github.com/googleapis/java-pubsublite/commit/98a1cf7d489c523c11ba217abf1ff0c68e64f34a))
+* update dependency com.google.flogger:google-extensions to v0.7.3 ([#993](https://www.github.com/googleapis/java-pubsublite/issues/993)) ([34f08bf](https://www.github.com/googleapis/java-pubsublite/commit/34f08bfdbe17cc2cdf1b864f1f3d463fba005e9a))
+
 ### [1.4.5](https://www.github.com/googleapis/java-pubsublite/compare/v1.4.4...v1.4.5) (2021-12-14)
 
 

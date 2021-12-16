@@ -60,7 +60,6 @@ public final class PublisherImpl extends ProxyService
   private static final GoogleLogger logger = GoogleLogger.forEnclosingClass();
 
   private final AlarmFactory alarmFactory;
-  private final BatchingSettings batchingSettings;
   private final PublishRequest initialRequest;
 
   private final CloseableMonitor monitor = new CloseableMonitor();
@@ -84,7 +83,10 @@ public final class PublisherImpl extends ProxyService
   @GuardedBy("monitor.monitor")
   private Optional<Offset> lastSentOffset = Optional.empty();
 
-  @GuardedBy("monitor.monitor")
+  // batcherMonitor is always acquired after monitor.monitor when both are held.
+  private final CloseableMonitor batcherMonitor = new CloseableMonitor();
+
+  @GuardedBy("batcherMonitor.monitor")
   private final SerialBatcher batcher;
 
   private static class InFlightBatch {
@@ -112,7 +114,6 @@ public final class PublisherImpl extends ProxyService
     this.alarmFactory = alarmFactory;
     Preconditions.checkNotNull(batchingSettings.getRequestByteThreshold());
     Preconditions.checkNotNull(batchingSettings.getElementCountThreshold());
-    this.batchingSettings = batchingSettings;
     this.initialRequest = PublishRequest.newBuilder().setInitialRequest(initialRequest).build();
     this.connection =
         new RetryingConnectionImpl<>(streamFactory, publisherFactory, this, this.initialRequest);
@@ -217,39 +218,25 @@ public final class PublisherImpl extends ProxyService
   }
 
   @GuardedBy("monitor.monitor")
-  private void processBatch(Collection<UnbatchedMessage> batch) throws CheckedApiException {
-    if (batch.isEmpty()) return;
-    InFlightBatch inFlightBatch = new InFlightBatch(batch);
-    batchesInFlight.add(inFlightBatch);
-    connection.modifyConnection(
-        connectionOr -> {
-          checkState(connectionOr.isPresent(), "Published after the stream shut down.");
-          connectionOr.get().publish(inFlightBatch.messages);
-        });
-  }
-
-  @GuardedBy("monitor.monitor")
   private void terminateOutstandingPublishes(CheckedApiException e) {
     batchesInFlight.forEach(
         batch -> batch.messageFutures.forEach(future -> future.setException(e)));
-    batcher.flush().forEach(m -> m.future().setException(e));
+    try (CloseableMonitor.Hold h = batcherMonitor.enter()) {
+      batcher.flush().forEach(batch -> batch.forEach(m -> m.future().setException(e)));
+    }
     batchesInFlight.clear();
   }
 
   @Override
   public ApiFuture<Offset> publish(Message message) {
     PubSubMessage proto = message.toProto();
-    try (CloseableMonitor.Hold h = monitor.enter()) {
+    try (CloseableMonitor.Hold h = batcherMonitor.enter()) {
       ApiService.State currentState = state();
       checkState(
           currentState == ApiService.State.RUNNING,
-          String.format("Cannot publish when Publisher state is %s.", currentState.name()));
-      checkState(!shutdown, "Published after the stream shut down.");
-      ApiFuture<Offset> messageFuture = batcher.add(proto);
-      if (batcher.shouldFlush()) {
-        processBatch(batcher.flush());
-      }
-      return messageFuture;
+          "Cannot publish when Publisher state is %s.",
+          currentState.name());
+      return batcher.add(proto);
     } catch (CheckedApiException e) {
       onPermanentError(e);
       return ApiFutures.immediateFailedFuture(e);
@@ -267,10 +254,28 @@ public final class PublisherImpl extends ProxyService
   private void flushToStream() {
     try (CloseableMonitor.Hold h = monitor.enter()) {
       if (shutdown) return;
-      processBatch(batcher.flush());
+      List<List<UnbatchedMessage>> batches;
+      try (CloseableMonitor.Hold h2 = batcherMonitor.enter()) {
+        batches = batcher.flush();
+      }
+      for (List<UnbatchedMessage> batch : batches) {
+        processBatch(batch);
+      }
     } catch (CheckedApiException e) {
       onPermanentError(e);
     }
+  }
+
+  @GuardedBy("monitor.monitor")
+  private void processBatch(Collection<UnbatchedMessage> batch) throws CheckedApiException {
+    if (batch.isEmpty()) return;
+    InFlightBatch inFlightBatch = new InFlightBatch(batch);
+    batchesInFlight.add(inFlightBatch);
+    connection.modifyConnection(
+        connectionOr -> {
+          checkState(connectionOr.isPresent(), "Published after the stream shut down.");
+          connectionOr.get().publish(inFlightBatch.messages);
+        });
   }
 
   // Flushable implementation

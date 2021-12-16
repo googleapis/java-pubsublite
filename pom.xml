@@ -8,7 +8,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.google.cloud</groupId>
   <artifactId>google-cloud-pubsublite-parent</artifactId>
-  <version>1.4.2-SNAPSHOT</version><!-- {x-version-update:google-cloud-pubsublite:current} -->
+  <version>1.4.7-SNAPSHOT</version><!-- {x-version-update:google-cloud-pubsublite:current} -->
   <packaging>pom</packaging>
   <name>Google Cloud Pub/Sub Lite Parent</name>
   <url>https://github.com/googleapis/java-pubsublite</url>
@@ -25,29 +25,29 @@
       <dependency>
         <groupId>com.google.api.grpc</groupId>
         <artifactId>proto-google-cloud-pubsublite-v1</artifactId>
-        <version>1.4.2-SNAPSHOT</version><!-- {x-version-update:proto-google-cloud-pubsublite-v1:current} -->
+        <version>1.4.7-SNAPSHOT</version><!-- {x-version-update:proto-google-cloud-pubsublite-v1:current} -->
       </dependency>
       <dependency>
         <groupId>com.google.api.grpc</groupId>
         <artifactId>grpc-google-cloud-pubsublite-v1</artifactId>
-        <version>1.4.2-SNAPSHOT</version><!-- {x-version-update:grpc-google-cloud-pubsublite-v1:current} -->
+        <version>1.4.7-SNAPSHOT</version><!-- {x-version-update:grpc-google-cloud-pubsublite-v1:current} -->
       </dependency>
       <dependency>
         <groupId>com.google.cloud</groupId>
         <artifactId>google-cloud-pubsublite</artifactId>
-        <version>1.4.2-SNAPSHOT</version><!-- {x-version-update:google-cloud-pubsublite:current} -->
+        <version>1.4.7-SNAPSHOT</version><!-- {x-version-update:google-cloud-pubsublite:current} -->
       </dependency>
       <dependency>
         <groupId>com.google.cloud</groupId>
         <artifactId>google-cloud-bom</artifactId>
-        <version>0.163.0</version>
+        <version>0.164.0</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
       <dependency>
         <groupId>com.google.flogger</groupId>
         <artifactId>google-extensions</artifactId>
-        <version>0.7.1</version>
+        <version>0.7.3</version>
       </dependency>
       <dependency>
         <groupId>com.google.errorprone</groupId>
@@ -69,7 +69,7 @@
         <!-- Explicit override, remove when no longer needed.-->
         <groupId>org.checkerframework</groupId>
         <artifactId>checker-qual</artifactId>
-        <version>3.19.0</version>
+        <version>3.20.0</version>
       </dependency>
       <dependency>
         <groupId>com.google.truth</groupId>
@@ -86,7 +86,7 @@
       <dependency>
         <groupId>org.mockito</groupId>
         <artifactId>mockito-core</artifactId>
-        <version>4.1.0</version>
+        <version>4.2.0</version>
         <scope>test</scope>
       </dependency>
       <dependency>
@@ -126,7 +126,7 @@
             <path>
               <groupId>com.google.auto.value</groupId>
               <artifactId>auto-value</artifactId>
-              <version>1.8.2</version>
+              <version>1.9</version>
             </path>
             <path>
               <groupId>com.google.auto.service</groupId>

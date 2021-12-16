@@ -29,6 +29,7 @@ import com.google.cloud.pubsublite.proto.PartitionAssignmentRequest;
 import com.google.cloud.pubsublite.v1.PartitionAssignmentServiceClient;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.flogger.GoogleLogger;
+import com.google.common.io.BaseEncoding;
 import com.google.errorprone.annotations.concurrent.GuardedBy;
 import java.util.HashSet;
 import java.util.Set;
@@ -38,6 +39,7 @@ public class AssignerImpl extends ProxyService
   private static final GoogleLogger logger = GoogleLogger.forEnclosingClass();
 
   private final PartitionAssignmentRequest initialRequest;
+  private final String uuidHex;
 
   private final CloseableMonitor monitor = new CloseableMonitor();
 
@@ -56,6 +58,8 @@ public class AssignerImpl extends ProxyService
       throws ApiException {
     this.initialRequest =
         PartitionAssignmentRequest.newBuilder().setInitial(initialRequest).build();
+    this.uuidHex =
+        BaseEncoding.base16().lowerCase().encode(initialRequest.getClientId().toByteArray());
     this.receiver = receiver;
     this.connection =
         new RetryingConnectionImpl<>(streamFactory, factory, this, this.initialRequest);
@@ -94,8 +98,9 @@ public class AssignerImpl extends ProxyService
   public void onClientResponse(PartitionAssignment value) throws CheckedApiException {
     try (CloseableMonitor.Hold h = monitor.enter()) {
       Set<Partition> partitions = toSet(value);
+      logger.atFine().log("Subscriber with uuid %s received assignment: %s", uuidHex, partitions);
       receiver.handleAssignment(partitions);
-      logger.atInfo().log("Subscribed to partitions: %s", partitions);
+      logger.atInfo().log("Subscriber with uuid %s handled assignment: %s", uuidHex, partitions);
       connection.modifyConnection(connectionOr -> connectionOr.ifPresent(ConnectedAssigner::ack));
     }
   }

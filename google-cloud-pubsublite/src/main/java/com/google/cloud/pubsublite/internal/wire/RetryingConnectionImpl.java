@@ -198,7 +198,7 @@ class RetryingConnectionImpl<
         "Stream disconnected attempting retry, after %s milliseconds for %s",
         backoffTime, streamDescription());
     ScheduledFuture<?> retry =
-        SystemExecutors.getFuturesExecutor()
+        SystemExecutors.getAlarmExecutor()
             .schedule(
                 () -> {
                   try {

@@ -38,7 +38,7 @@ public class ConnectedAssignerImpl
       StreamFactory<PartitionAssignmentRequest, PartitionAssignment> streamFactory,
       ResponseObserver<PartitionAssignment> clientStream,
       PartitionAssignmentRequest initialRequest) {
-    super(streamFactory, clientStream);
+    super(streamFactory, clientStream, /*expectInitialResponse=*/ false);
     initialize(initialRequest);
   }
 

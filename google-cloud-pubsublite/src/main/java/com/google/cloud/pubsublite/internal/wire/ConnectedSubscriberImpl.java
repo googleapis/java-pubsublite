@@ -100,18 +100,16 @@ class ConnectedSubscriberImpl
   private void onMessages(MessageResponse response) throws CheckedApiException {
     checkState(
         response.getMessagesCount() > 0,
-        String.format(
-            "Received an empty MessageResponse on stream with initial request %s.",
-            initialRequest));
+        "Received an empty MessageResponse on stream with initial request %s.",
+        initialRequest);
     List<SequencedMessage> messages =
         response.getMessagesList().stream()
             .map(SequencedMessage::fromProto)
             .collect(Collectors.toList());
     checkState(
         Predicates.isOrdered(messages),
-        String.format(
-            "Received out of order messages on the stream with initial request %s.",
-            initialRequest));
+        "Received out of order messages on the stream with initial request %s.",
+        initialRequest);
     sendToClient(messages);
   }
 }

@@ -29,6 +29,7 @@ import com.google.cloud.pubsublite.internal.CheckedApiException;
 import com.google.cloud.pubsublite.internal.ProxyService;
 import com.google.cloud.pubsublite.internal.wire.SystemExecutors;
 import com.google.common.flogger.GoogleLogger;
+import com.google.common.util.concurrent.MoreExecutors;
 import com.google.pubsub.v1.PubsubMessage;
 
 // A WrappingPublisher wraps the wire protocol client with a Cloud Pub/Sub api compliant
@@ -74,6 +75,6 @@ public class WrappingPublisher extends ProxyService implements Publisher {
     return ApiFutures.transform(
         wirePublisher.publish(wireMessage),
         MessageMetadata::encode,
-        SystemExecutors.getFuturesExecutor());
+        MoreExecutors.directExecutor());
   }
 }

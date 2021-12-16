@@ -30,11 +30,24 @@ public class CheckedApiPreconditions {
     if (!test) throw new CheckedApiException(description, Code.INVALID_ARGUMENT);
   }
 
+  public static void checkArgument(boolean test, String descriptionFormat, Object... args)
+      throws CheckedApiException {
+    if (!test)
+      throw new CheckedApiException(String.format(descriptionFormat, args), Code.INVALID_ARGUMENT);
+  }
+
   public static void checkState(boolean test) throws CheckedApiException {
     checkState(test, "");
   }
 
   public static void checkState(boolean test, String description) throws CheckedApiException {
     if (!test) throw new CheckedApiException(description, Code.FAILED_PRECONDITION);
+  }
+
+  public static void checkState(boolean test, String descriptionFormat, Object... args)
+      throws CheckedApiException {
+    if (!test)
+      throw new CheckedApiException(
+          String.format(descriptionFormat, args), Code.FAILED_PRECONDITION);
   }
 }

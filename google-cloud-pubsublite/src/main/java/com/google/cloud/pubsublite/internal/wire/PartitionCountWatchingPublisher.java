@@ -63,9 +63,8 @@ public class PartitionCountWatchingPublisher extends ProxyService
                 : routingPolicy.route(message.key());
         checkState(
             publishers.containsKey(routedPartition),
-            String.format(
-                "Routed to partition %s for which there is no publisher available.",
-                routedPartition));
+            "Routed to partition %s for which there is no publisher available.",
+            routedPartition);
         return publishers.get(routedPartition).publish(message);
       } catch (Throwable t) {
         throw toCanonical(t);

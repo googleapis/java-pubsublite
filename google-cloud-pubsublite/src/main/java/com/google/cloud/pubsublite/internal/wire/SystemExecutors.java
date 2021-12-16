@@ -18,16 +18,21 @@ package com.google.cloud.pubsublite.internal.wire;
 
 import com.google.cloud.pubsublite.internal.Lazy;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
+import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ThreadFactory;
 
 public class SystemExecutors {
   private SystemExecutors() {}
 
+  private static ThreadFactory newDaemonThreadFactory(String prefix) {
+    return new ThreadFactoryBuilder().setDaemon(true).setNameFormat(prefix + "-%d").build();
+  }
+
   public static ScheduledExecutorService newDaemonExecutor(String prefix) {
     return Executors.newScheduledThreadPool(
-        Math.max(4, Runtime.getRuntime().availableProcessors()),
-        new ThreadFactoryBuilder().setDaemon(true).setNameFormat(prefix + "-%d").build());
+        Math.max(4, Runtime.getRuntime().availableProcessors()), newDaemonThreadFactory(prefix));
   }
 
   private static final Lazy<ScheduledExecutorService> ALARM_EXECUTOR =
@@ -37,10 +42,14 @@ public class SystemExecutors {
     return ALARM_EXECUTOR.get();
   }
 
-  private static final Lazy<ScheduledExecutorService> FUTURES_EXECUTOR =
-      new Lazy<>(() -> newDaemonExecutor("pubsub-lite-futures"));
+  private static Executor newDaemonThreadPool(String prefix) {
+    return Executors.newCachedThreadPool(newDaemonThreadFactory(prefix));
+  }
+
+  private static final Lazy<Executor> FUTURES_EXECUTOR =
+      new Lazy<>(() -> newDaemonThreadPool("pubsub-lite-futures"));
   // An executor for future handling.
-  public static ScheduledExecutorService getFuturesExecutor() {
+  public static Executor getFuturesExecutor() {
     return FUTURES_EXECUTOR.get();
   }
 }

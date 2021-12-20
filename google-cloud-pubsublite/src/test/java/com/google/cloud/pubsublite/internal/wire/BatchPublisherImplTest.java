@@ -36,6 +36,7 @@ import com.google.cloud.pubsublite.TopicName;
 import com.google.cloud.pubsublite.TopicPath;
 import com.google.cloud.pubsublite.internal.ApiExceptionMatcher;
 import com.google.cloud.pubsublite.internal.CheckedApiException;
+import com.google.cloud.pubsublite.internal.wire.StreamFactories.PublishStreamFactory;
 import com.google.cloud.pubsublite.proto.Cursor;
 import com.google.cloud.pubsublite.proto.InitialPublishRequest;
 import com.google.cloud.pubsublite.proto.InitialPublishResponse;
@@ -80,7 +81,7 @@ public class BatchPublisherImplTest {
 
   private static final BatchPublisherImpl.Factory FACTORY = new BatchPublisherImpl.Factory();
 
-  @Mock private StreamFactory<PublishRequest, PublishResponse> streamFactory;
+  @Mock private PublishStreamFactory streamFactory;
 
   @Mock private ClientStream<PublishRequest> mockRequestStream;
 

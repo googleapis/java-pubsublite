@@ -18,6 +18,7 @@ package com.google.cloud.pubsublite.cloudpubsub.internal;
 
 import static com.google.cloud.pubsublite.internal.CheckedApiPreconditions.checkState;
 import static com.google.cloud.pubsublite.internal.ExtractStatus.toCanonical;
+import static com.google.cloud.pubsublite.internal.wire.ApiServiceUtils.autoCloseableAsApiService;
 import static com.google.cloud.pubsublite.internal.wire.ApiServiceUtils.blockingShutdown;
 
 import com.google.api.gax.rpc.ApiException;
@@ -58,7 +59,7 @@ public class AssigningSubscriber extends ProxyService implements Subscriber {
     this.subscriberFactory = subscriberFactory;
     this.reassignmentHandler = reassignmentHandler;
     Assigner assigner = assignerFactory.New(this::handleAssignment);
-    addServices(assigner);
+    addServices(assigner, autoCloseableAsApiService(subscriberFactory));
   }
 
   @Override

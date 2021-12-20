@@ -78,7 +78,7 @@ public class PartitionCountWatcherImpl extends AbstractApiService implements Par
 
   private void pollTopicConfig() {
     try {
-      long partitionCount = adminClient.getTopicPartitionCount(topicPath).get(1, MINUTES);
+      long partitionCount = adminClient.getTopicPartitionCount(topicPath).get(5, MINUTES);
       if (currentPartitionCount == partitionCount) {
         return;
       }
@@ -87,6 +87,7 @@ public class PartitionCountWatcherImpl extends AbstractApiService implements Par
     } catch (TimeoutException e) {
       log.atWarning().withCause(e).log(
           "Timed out polling for partition count- see https://github.com/googleapis/gax-java/issues/1577");
+      throw toCanonical(e).underlying;
     } catch (Throwable t) {
       throw toCanonical(t).underlying;
     }

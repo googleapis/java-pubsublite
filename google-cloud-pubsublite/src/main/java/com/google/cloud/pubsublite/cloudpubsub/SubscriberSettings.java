@@ -17,10 +17,13 @@
 package com.google.cloud.pubsublite.cloudpubsub;
 
 import static com.google.cloud.pubsublite.internal.ExtractStatus.toCanonical;
-import static com.google.cloud.pubsublite.internal.wire.ServiceClients.addDefaultMetadata;
+import static com.google.cloud.pubsublite.internal.wire.ApiServiceUtils.autoCloseableAsApiService;
 import static com.google.cloud.pubsublite.internal.wire.ServiceClients.addDefaultSettings;
+import static com.google.cloud.pubsublite.internal.wire.ServiceClients.getCallContext;
 
+import com.google.api.core.ApiService;
 import com.google.api.gax.core.CredentialsProvider;
+import com.google.api.gax.rpc.ApiCallContext;
 import com.google.api.gax.rpc.ApiException;
 import com.google.auto.value.AutoValue;
 import com.google.cloud.pubsub.v1.MessageReceiver;
@@ -101,11 +104,8 @@ public abstract class SubscriberSettings {
    */
   abstract Framework framework();
 
-  /**
-   * A supplier for new SubscriberServiceClients for given partitions. Should return a new client
-   * each time. If present, ignores CredentialsProvider.
-   */
-  abstract Optional<PartitionSubscriberClientSupplier> partitionSubscriberClientSupplier();
+  /** A SubscriberServiceClient to use, if present. */
+  abstract Optional<SubscriberServiceClient> subscriberServiceClient();
 
   /**
    * A supplier for new CursorServiceClients. Should return a new client each time. If present,
@@ -180,23 +180,8 @@ public abstract class SubscriberSettings {
      */
     public abstract Builder setFramework(Framework framework);
 
-    /**
-     * A supplier for new SubscriberServiceClients for given partitions. Should return a new client
-     * each time. If present, ignores CredentialsProvider.
-     */
-    public abstract Builder setPartitionSubscriberClientSupplier(
-        PartitionSubscriberClientSupplier supplier);
-
-    /**
-     * A supplier for new SubscriberServiceClients. Should return a new client each time. If
-     * present, ignores CredentialsProvider.
-     *
-     * @deprecated Use {@link
-     *     #setPartitionSubscriberClientSupplier(PartitionSubscriberClientSupplier)} instead.
-     */
-    public Builder setSubscriberServiceClientSupplier(Supplier<SubscriberServiceClient> supplier) {
-      return setPartitionSubscriberClientSupplier((subscriptionPath, partition) -> supplier.get());
-    }
+    /** A SubscriberServiceClient to use, if present. */
+    public abstract Builder setSubscriberServiceClient(SubscriberServiceClient client);
 
     /**
      * A supplier for new CursorServiceClients. Should return a new client each time. If present,
@@ -224,21 +209,16 @@ public abstract class SubscriberSettings {
     public abstract SubscriberSettings build();
   }
 
-  private SubscriberServiceClient newSubscriberServiceClient(Partition partition)
-      throws ApiException {
-    if (partitionSubscriberClientSupplier().isPresent()) {
-      return partitionSubscriberClientSupplier().get().get(subscriptionPath(), partition);
+  private SubscriberServiceClient newSubscriberServiceClient() throws ApiException {
+    if (subscriberServiceClient().isPresent()) {
+      return subscriberServiceClient().get();
     }
     try {
-      SubscriberServiceSettings.Builder settingsBuilder =
-          SubscriberServiceSettings.newBuilder().setCredentialsProvider(credentialsProvider());
-      settingsBuilder =
-          addDefaultMetadata(
-              PubsubContext.of(framework()),
-              RoutingMetadata.of(subscriptionPath(), partition),
-              settingsBuilder);
       return SubscriberServiceClient.create(
-          addDefaultSettings(subscriptionPath().location().extractRegion(), settingsBuilder));
+          addDefaultSettings(
+              subscriptionPath().location().extractRegion(),
+              SubscriberServiceSettings.newBuilder()
+                  .setCredentialsProvider(credentialsProvider())));
     } catch (Throwable t) {
       throw toCanonical(t).underlying;
     }
@@ -258,39 +238,57 @@ public abstract class SubscriberSettings {
     }
   }
 
-  Subscriber newPartitionSubscriber(Partition partition) throws CheckedApiException {
-    try {
-      SubscriberBuilder.Builder wireSubscriberBuilder =
-          SubscriberBuilder.newBuilder()
-              .setPartition(partition)
-              .setSubscriptionPath(subscriptionPath())
-              .setServiceClient(newSubscriberServiceClient(partition))
-              .setInitialLocation(
-                  SeekRequest.newBuilder().setNamedTarget(NamedTarget.COMMITTED_CURSOR).build());
+  PartitionSubscriberFactory getPartitionSubscriberFactory() {
+    SubscriberServiceClient client = newSubscriberServiceClient();
+    CursorServiceClient cursorClient = newCursorServiceClient();
+    return new PartitionSubscriberFactory() {
+      @Override
+      public Subscriber newSubscriber(Partition partition) {
+        SubscriberBuilder.Builder wireSubscriberBuilder =
+            SubscriberBuilder.newBuilder()
+                .setPartition(partition)
+                .setSubscriptionPath(subscriptionPath())
+                .setStreamFactory(
+                    responseStream -> {
+                      ApiCallContext context =
+                          getCallContext(
+                              PubsubContext.of(framework()),
+                              RoutingMetadata.of(subscriptionPath(), partition));
+                      return client.subscribeCallable().splitCall(responseStream, context);
+                    })
+                .setInitialLocation(
+                    SeekRequest.newBuilder().setNamedTarget(NamedTarget.COMMITTED_CURSOR).build());
 
-      Committer wireCommitter =
-          CommitterSettings.newBuilder()
-              .setSubscriptionPath(subscriptionPath())
-              .setPartition(partition)
-              .setServiceClient(newCursorServiceClient())
-              .build()
-              .instantiate();
+        Committer wireCommitter =
+            CommitterSettings.newBuilder()
+                .setSubscriptionPath(subscriptionPath())
+                .setPartition(partition)
+                .setStreamFactory(
+                    responseStream ->
+                        cursorClient.streamingCommitCursorCallable().splitCall(responseStream))
+                .build()
+                .instantiate();
 
-      return new SinglePartitionSubscriber(
-          receiver(),
-          MessageTransforms.addIdCpsSubscribeTransformer(
-              partition, transformer().orElse(MessageTransforms.toCpsSubscribeTransformer())),
-          new AckSetTrackerImpl(wireCommitter),
-          nackHandler().orElse(new NackHandler() {}),
-          (messageConsumer, resetHandler) ->
-              wireSubscriberBuilder
-                  .setMessageConsumer(messageConsumer)
-                  .setResetHandler(resetHandler)
-                  .build(),
-          perPartitionFlowControlSettings());
-    } catch (Throwable t) {
-      throw toCanonical(t);
-    }
+        return new SinglePartitionSubscriber(
+            receiver(),
+            MessageTransforms.addIdCpsSubscribeTransformer(
+                partition, transformer().orElse(MessageTransforms.toCpsSubscribeTransformer())),
+            new AckSetTrackerImpl(wireCommitter),
+            nackHandler().orElse(new NackHandler() {}),
+            (messageConsumer, resetHandler) ->
+                wireSubscriberBuilder
+                    .setMessageConsumer(messageConsumer)
+                    .setResetHandler(resetHandler)
+                    .build(),
+            perPartitionFlowControlSettings());
+      }
+
+      @Override
+      public void close() {
+        try (SubscriberServiceClient c1 = client;
+            CursorServiceClient c2 = cursorClient) {}
+      }
+    };
   }
 
   private PartitionAssignmentServiceClient getAssignmentServiceClient() throws ApiException {
@@ -310,7 +308,7 @@ public abstract class SubscriberSettings {
 
   @SuppressWarnings("CheckReturnValue")
   Subscriber instantiate() throws ApiException {
-    PartitionSubscriberFactory partitionSubscriberFactory = this::newPartitionSubscriber;
+    PartitionSubscriberFactory partitionSubscriberFactory = getPartitionSubscriberFactory();
 
     if (partitions().isEmpty()) {
       AssignerSettings.Builder assignerSettings =
@@ -323,14 +321,15 @@ public abstract class SubscriberSettings {
           partitionSubscriberFactory, reassignmentHandler(), assignerFactory);
     }
 
-    List<Subscriber> perPartitionSubscribers = new ArrayList<>();
+    List<ApiService> services = new ArrayList<>();
+    services.add(autoCloseableAsApiService(partitionSubscriberFactory));
     for (Partition partition : partitions()) {
       try {
-        perPartitionSubscribers.add(partitionSubscriberFactory.newSubscriber(partition));
+        services.add(partitionSubscriberFactory.newSubscriber(partition));
       } catch (CheckedApiException e) {
         throw e.underlying;
       }
     }
-    return MultiPartitionSubscriber.of(perPartitionSubscribers);
+    return MultiPartitionSubscriber.of(services);
   }
 }

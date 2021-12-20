@@ -38,12 +38,13 @@ import com.google.cloud.pubsublite.TopicName;
 import com.google.cloud.pubsublite.TopicPath;
 import com.google.cloud.pubsublite.internal.Publisher;
 import com.google.cloud.pubsublite.internal.testing.FakeApiService;
-import com.google.cloud.pubsublite.v1.PublisherServiceClient;
+import com.google.cloud.pubsublite.internal.wire.StreamFactories.PublishStreamFactory;
 import com.google.protobuf.ByteString;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
+import org.mockito.Mock;
 import org.mockito.Spy;
 
 @RunWith(JUnit4.class)
@@ -51,6 +52,7 @@ public class SinglePartitionPublisherTest {
   abstract static class FakeOffsetPublisher extends FakeApiService implements Publisher<Offset> {}
 
   @Spy private FakeOffsetPublisher underlying;
+  @Mock private PublishStreamFactory streamFactory;
 
   private Publisher<MessageMetadata> pub;
 
@@ -76,7 +78,7 @@ public class SinglePartitionPublisherTest {
             .setPartition(partition)
             .setUnderlyingBuilder(mockBuilder)
             .setBatchingSettings(BatchingSettings.newBuilder().setIsEnabled(false).build())
-            .setServiceClient(mock(PublisherServiceClient.class))
+            .setStreamFactory(streamFactory)
             .build();
     this.pub.startAsync().awaitRunning();
   }

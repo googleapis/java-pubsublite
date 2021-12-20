@@ -23,7 +23,7 @@ import com.google.cloud.pubsublite.MessageMetadata;
 import com.google.cloud.pubsublite.Partition;
 import com.google.cloud.pubsublite.TopicPath;
 import com.google.cloud.pubsublite.internal.Publisher;
-import com.google.cloud.pubsublite.v1.PublisherServiceClient;
+import com.google.cloud.pubsublite.internal.wire.StreamFactories.PublishStreamFactory;
 import com.google.common.annotations.VisibleForTesting;
 
 @AutoValue
@@ -33,7 +33,7 @@ public abstract class SinglePartitionPublisherBuilder {
 
   abstract Partition partition();
 
-  abstract PublisherServiceClient serviceClient();
+  abstract PublishStreamFactory streamFactory();
 
   abstract BatchingSettings batchingSettings();
 
@@ -53,7 +53,7 @@ public abstract class SinglePartitionPublisherBuilder {
 
     public abstract Builder setPartition(Partition partition);
 
-    public abstract Builder setServiceClient(PublisherServiceClient serviceClient);
+    public abstract Builder setStreamFactory(PublishStreamFactory streamFactory);
 
     public abstract Builder setBatchingSettings(BatchingSettings batchingSettings);
 
@@ -70,7 +70,7 @@ public abstract class SinglePartitionPublisherBuilder {
               .underlyingBuilder()
               .setTopic(builder.topic())
               .setPartition(builder.partition())
-              .setServiceClient(builder.serviceClient())
+              .setStreamFactory(builder.streamFactory())
               .setBatching(builder.batchingSettings());
       return new SinglePartitionPublisher(publisherBuilder.build(), builder.partition());
     }

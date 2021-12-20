@@ -17,7 +17,6 @@
 package com.google.cloud.pubsublite.internal.wire;
 
 import static com.google.cloud.pubsublite.internal.CheckedApiPreconditions.checkState;
-import static com.google.cloud.pubsublite.internal.wire.ApiServiceUtils.autoCloseableAsApiService;
 
 import com.google.api.core.ApiFuture;
 import com.google.api.core.ApiFutures;
@@ -35,11 +34,10 @@ import com.google.cloud.pubsublite.internal.CloseableMonitor;
 import com.google.cloud.pubsublite.internal.ProxyService;
 import com.google.cloud.pubsublite.internal.Publisher;
 import com.google.cloud.pubsublite.internal.wire.SerialBatcher.UnbatchedMessage;
+import com.google.cloud.pubsublite.internal.wire.StreamFactories.PublishStreamFactory;
 import com.google.cloud.pubsublite.proto.InitialPublishRequest;
 import com.google.cloud.pubsublite.proto.PubSubMessage;
 import com.google.cloud.pubsublite.proto.PublishRequest;
-import com.google.cloud.pubsublite.proto.PublishResponse;
-import com.google.cloud.pubsublite.v1.PublisherServiceClient;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Preconditions;
 import com.google.common.flogger.GoogleLogger;
@@ -105,7 +103,7 @@ public final class PublisherImpl extends ProxyService
 
   @VisibleForTesting
   PublisherImpl(
-      StreamFactory<PublishRequest, PublishResponse> streamFactory,
+      PublishStreamFactory streamFactory,
       BatchPublisherFactory publisherFactory,
       AlarmFactory alarmFactory,
       InitialPublishRequest initialRequest,
@@ -125,19 +123,18 @@ public final class PublisherImpl extends ProxyService
   }
 
   public PublisherImpl(
-      PublisherServiceClient client,
+      PublishStreamFactory streamFactory,
       InitialPublishRequest initialRequest,
       BatchingSettings batchingSettings)
       throws ApiException {
     this(
-        responseStream -> client.publishCallable().splitCall(responseStream),
+        streamFactory,
         new BatchPublisherImpl.Factory(),
         AlarmFactory.create(
             Duration.ofNanos(
                 Objects.requireNonNull(batchingSettings.getDelayThreshold()).toNanos())),
         initialRequest,
         batchingSettings);
-    addServices(autoCloseableAsApiService(client));
   }
 
   @GuardedBy("monitor.monitor")

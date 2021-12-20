@@ -58,7 +58,6 @@ import com.google.pubsub.v1.PubsubMessage;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.function.Supplier;
 
 /**
  * Settings for instantiating a Pub/Sub Lite subscriber emulating the Cloud Pub/Sub Subscriber API.
@@ -107,11 +106,8 @@ public abstract class SubscriberSettings {
   /** A SubscriberServiceClient to use, if present. */
   abstract Optional<SubscriberServiceClient> subscriberServiceClient();
 
-  /**
-   * A supplier for new CursorServiceClients. Should return a new client each time. If present,
-   * ignores CredentialsProvider.
-   */
-  abstract Optional<Supplier<CursorServiceClient>> cursorServiceClientSupplier();
+  /** A CursorServiceClient to use, if present. */
+  abstract Optional<CursorServiceClient> cursorServiceClient();
 
   /**
    * A client to connect to the Pub/Sub lite assignment service. If present, ignores
@@ -183,11 +179,8 @@ public abstract class SubscriberSettings {
     /** A SubscriberServiceClient to use, if present. */
     public abstract Builder setSubscriberServiceClient(SubscriberServiceClient client);
 
-    /**
-     * A supplier for new CursorServiceClients. Should return a new client each time. If present,
-     * ignores CredentialsProvider.
-     */
-    public abstract Builder setCursorServiceClientSupplier(Supplier<CursorServiceClient> supplier);
+    /** A CursorServiceClient to use, if present. */
+    public abstract Builder setCursorServiceClient(CursorServiceClient client);
 
     /**
      * A client to connect to the Pub/Sub lite assignment service. If present, ignores
@@ -225,8 +218,8 @@ public abstract class SubscriberSettings {
   }
 
   private CursorServiceClient newCursorServiceClient() throws ApiException {
-    if (cursorServiceClientSupplier().isPresent()) {
-      return cursorServiceClientSupplier().get().get();
+    if (cursorServiceClient().isPresent()) {
+      return cursorServiceClient().get();
     }
     try {
       return CursorServiceClient.create(

@@ -1,5 +1,22 @@
 # Changelog
 
+### [1.4.7](https://www.github.com/googleapis/java-pubsublite/compare/v1.4.6...v1.4.7) (2021-12-22)
+
+
+### Bug Fixes
+
+* Numerous publish path performance issues ([#998](https://www.github.com/googleapis/java-pubsublite/issues/998)) ([2cd8b85](https://www.github.com/googleapis/java-pubsublite/commit/2cd8b85c4f6ef8cd41592b889b407dbe3485725f))
+* Restructure java client stream creation to reuse clients for different partitions ([#1002](https://www.github.com/googleapis/java-pubsublite/issues/1002)) ([a45a179](https://www.github.com/googleapis/java-pubsublite/commit/a45a179c71c8c0e220c2ea9f711c8ff5e37908d4))
+* Use an unbounded pool for the GRPC executor ([#997](https://www.github.com/googleapis/java-pubsublite/issues/997)) ([6f3946d](https://www.github.com/googleapis/java-pubsublite/commit/6f3946d3f4648ff294d7812a306b7e8297498795))
+
+
+### Dependencies
+
+* update dependency com.google.cloud:google-cloud-bom to v0.165.0 ([#1005](https://www.github.com/googleapis/java-pubsublite/issues/1005)) ([b1ba967](https://www.github.com/googleapis/java-pubsublite/commit/b1ba9678b2e8b5227e43aa9af8cf1efcbb6cbd16))
+* update dependency com.google.flogger:flogger-system-backend to v0.7.4 ([#1004](https://www.github.com/googleapis/java-pubsublite/issues/1004)) ([8ae651d](https://www.github.com/googleapis/java-pubsublite/commit/8ae651d610d4438f829b5127e461c1e878759f47))
+* update dependency com.google.flogger:google-extensions to v0.7.4 ([#1003](https://www.github.com/googleapis/java-pubsublite/issues/1003)) ([e8295c5](https://www.github.com/googleapis/java-pubsublite/commit/e8295c5d458fe31d7f4741995e7d8ce9d93f1f22))
+* update dependency org.checkerframework:checker-qual to v3.21.0 ([#1001](https://www.github.com/googleapis/java-pubsublite/issues/1001)) ([255817f](https://www.github.com/googleapis/java-pubsublite/commit/255817fe5d5bdff1c916b4685fe5ab6af0de54ea))
+
 ### [1.4.6](https://www.github.com/googleapis/java-pubsublite/compare/v1.4.5...v1.4.6) (2021-12-16)
 
 

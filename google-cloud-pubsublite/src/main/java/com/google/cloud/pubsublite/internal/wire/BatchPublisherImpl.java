@@ -23,6 +23,7 @@ import com.google.api.gax.rpc.StatusCode.Code;
 import com.google.cloud.pubsublite.Offset;
 import com.google.cloud.pubsublite.internal.CheckedApiException;
 import com.google.cloud.pubsublite.internal.CloseableMonitor;
+import com.google.cloud.pubsublite.internal.wire.StreamFactories.PublishStreamFactory;
 import com.google.cloud.pubsublite.proto.MessagePublishResponse;
 import com.google.cloud.pubsublite.proto.PubSubMessage;
 import com.google.cloud.pubsublite.proto.PublishRequest;
@@ -44,12 +45,12 @@ class BatchPublisherImpl extends SingleConnection<PublishRequest, PublishRespons
         StreamFactory<PublishRequest, PublishResponse> streamFactory,
         ResponseObserver<Offset> clientStream,
         PublishRequest initialRequest) {
-      return new BatchPublisherImpl(streamFactory, clientStream, initialRequest);
+      return new BatchPublisherImpl(streamFactory::New, clientStream, initialRequest);
     }
   }
 
   private BatchPublisherImpl(
-      StreamFactory<PublishRequest, PublishResponse> streamFactory,
+      PublishStreamFactory streamFactory,
       ResponseObserver<Offset> publishCompleteStream,
       PublishRequest initialRequest) {
     super(streamFactory, publishCompleteStream);

@@ -24,6 +24,8 @@ import com.google.cloud.pubsublite.internal.CheckedApiException;
  * PartitionSubscriberFactories are used dynamically in a context where there is no client downcall.
  * Therefore, their factory method throws a checked exception.
  */
-public interface PartitionSubscriberFactory {
+public interface PartitionSubscriberFactory extends AutoCloseable {
   Subscriber newSubscriber(Partition partition) throws CheckedApiException;
+
+  void close();
 }

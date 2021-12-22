@@ -16,7 +16,6 @@
 
 package com.google.cloud.pubsublite.internal.wire;
 
-import static org.mockito.Mockito.mock;
 import static org.mockito.MockitoAnnotations.initMocks;
 
 import com.google.cloud.pubsublite.CloudRegion;
@@ -26,9 +25,9 @@ import com.google.cloud.pubsublite.ProjectNumber;
 import com.google.cloud.pubsublite.SequencedMessage;
 import com.google.cloud.pubsublite.SubscriptionName;
 import com.google.cloud.pubsublite.SubscriptionPath;
+import com.google.cloud.pubsublite.internal.wire.StreamFactories.SubscribeStreamFactory;
 import com.google.cloud.pubsublite.proto.SeekRequest;
 import com.google.cloud.pubsublite.proto.SeekRequest.NamedTarget;
-import com.google.cloud.pubsublite.v1.SubscriberServiceClient;
 import java.util.List;
 import java.util.function.Consumer;
 import org.junit.Before;
@@ -40,6 +39,7 @@ import org.mockito.Mock;
 @RunWith(JUnit4.class)
 public class SubscriberBuilderTest {
   @Mock public Consumer<List<SequencedMessage>> mockConsumer;
+  @Mock public SubscribeStreamFactory streamFactory;
 
   @Before
   public void setUp() {
@@ -58,7 +58,7 @@ public class SubscriberBuilderTest {
                     .build())
             .setMessageConsumer(mockConsumer)
             .setPartition(Partition.of(3))
-            .setServiceClient(mock(SubscriberServiceClient.class))
+            .setStreamFactory(streamFactory)
             .setInitialLocation(
                 SeekRequest.newBuilder().setNamedTarget(NamedTarget.COMMITTED_CURSOR).build())
             .setResetHandler(SubscriberResetHandler::unhandled)
@@ -77,7 +77,7 @@ public class SubscriberBuilderTest {
                     .build())
             .setMessageConsumer(mockConsumer)
             .setPartition(Partition.of(3))
-            .setServiceClient(mock(SubscriberServiceClient.class))
+            .setStreamFactory(streamFactory)
             .setInitialLocation(
                 SeekRequest.newBuilder().setNamedTarget(NamedTarget.COMMITTED_CURSOR).build())
             .build();

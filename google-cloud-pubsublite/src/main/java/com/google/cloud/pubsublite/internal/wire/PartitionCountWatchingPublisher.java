@@ -18,6 +18,7 @@ package com.google.cloud.pubsublite.internal.wire;
 
 import static com.google.cloud.pubsublite.internal.CheckedApiPreconditions.checkState;
 import static com.google.cloud.pubsublite.internal.ExtractStatus.toCanonical;
+import static com.google.cloud.pubsublite.internal.wire.ApiServiceUtils.autoCloseableAsApiService;
 import static com.google.cloud.pubsublite.internal.wire.ApiServiceUtils.blockingShutdown;
 
 import com.google.api.core.ApiFuture;
@@ -103,7 +104,7 @@ public class PartitionCountWatchingPublisher extends ProxyService
     this.publisherFactory = publisherFactory;
     this.policyFactory = policyFactory;
     PartitionCountWatcher configWatcher = configWatcherFactory.newWatcher(this::handleConfig);
-    addServices(configWatcher);
+    addServices(configWatcher, autoCloseableAsApiService(publisherFactory));
   }
 
   @Override

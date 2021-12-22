@@ -21,9 +21,9 @@ import com.google.auto.value.AutoValue;
 import com.google.cloud.pubsublite.Partition;
 import com.google.cloud.pubsublite.SequencedMessage;
 import com.google.cloud.pubsublite.SubscriptionPath;
+import com.google.cloud.pubsublite.internal.wire.StreamFactories.SubscribeStreamFactory;
 import com.google.cloud.pubsublite.proto.InitialSubscribeRequest;
 import com.google.cloud.pubsublite.proto.SeekRequest;
-import com.google.cloud.pubsublite.v1.SubscriberServiceClient;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -36,7 +36,7 @@ public abstract class SubscriberBuilder {
 
   abstract Partition partition();
 
-  abstract SubscriberServiceClient serviceClient();
+  abstract SubscribeStreamFactory streamFactory();
 
   abstract SeekRequest initialLocation();
 
@@ -57,7 +57,7 @@ public abstract class SubscriberBuilder {
 
     public abstract Builder setPartition(Partition partition);
 
-    public abstract Builder setServiceClient(SubscriberServiceClient serviceClient);
+    public abstract Builder setStreamFactory(SubscribeStreamFactory streamFactory);
 
     public abstract Builder setInitialLocation(SeekRequest initialLocation);
 
@@ -76,7 +76,7 @@ public abstract class SubscriberBuilder {
               .setPartition(autoBuilt.partition().value())
               .build();
       return new SubscriberImpl(
-          autoBuilt.serviceClient(),
+          autoBuilt.streamFactory(),
           initialSubscribeRequest,
           autoBuilt.initialLocation(),
           autoBuilt.messageConsumer(),

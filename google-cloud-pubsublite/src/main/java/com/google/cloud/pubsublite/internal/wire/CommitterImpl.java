@@ -17,7 +17,6 @@
 package com.google.cloud.pubsublite.internal.wire;
 
 import static com.google.cloud.pubsublite.internal.CheckedApiPreconditions.checkState;
-import static com.google.cloud.pubsublite.internal.wire.ApiServiceUtils.autoCloseableAsApiService;
 
 import com.google.api.core.ApiFuture;
 import com.google.api.core.ApiFutures;
@@ -30,7 +29,6 @@ import com.google.cloud.pubsublite.proto.InitialCommitCursorRequest;
 import com.google.cloud.pubsublite.proto.SequencedCommitCursorResponse;
 import com.google.cloud.pubsublite.proto.StreamingCommitCursorRequest;
 import com.google.cloud.pubsublite.proto.StreamingCommitCursorResponse;
-import com.google.cloud.pubsublite.v1.CursorServiceClient;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Preconditions;
 import com.google.common.util.concurrent.Monitor.Guard;
@@ -75,13 +73,11 @@ public class CommitterImpl extends ProxyService
     addServices(this.connection);
   }
 
-  public CommitterImpl(CursorServiceClient client, InitialCommitCursorRequest request)
+  public CommitterImpl(
+      StreamFactory<StreamingCommitCursorRequest, StreamingCommitCursorResponse> streamFactory,
+      InitialCommitCursorRequest request)
       throws ApiException {
-    this(
-        stream -> client.streamingCommitCursorCallable().splitCall(stream),
-        new ConnectedCommitterImpl.Factory(),
-        request);
-    addServices(autoCloseableAsApiService(client));
+    this(streamFactory, new ConnectedCommitterImpl.Factory(), request);
   }
 
   // ProxyService implementation.

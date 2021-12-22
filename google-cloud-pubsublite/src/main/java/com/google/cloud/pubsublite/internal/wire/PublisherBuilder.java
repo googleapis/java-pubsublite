@@ -25,8 +25,8 @@ import com.google.cloud.pubsublite.Offset;
 import com.google.cloud.pubsublite.Partition;
 import com.google.cloud.pubsublite.TopicPath;
 import com.google.cloud.pubsublite.internal.Publisher;
+import com.google.cloud.pubsublite.internal.wire.StreamFactories.PublishStreamFactory;
 import com.google.cloud.pubsublite.proto.InitialPublishRequest;
-import com.google.cloud.pubsublite.v1.PublisherServiceClient;
 import com.google.common.base.Preconditions;
 
 /**
@@ -62,7 +62,7 @@ public abstract class PublisherBuilder {
 
   abstract BatchingSettings batching();
 
-  abstract PublisherServiceClient serviceClient();
+  abstract PublishStreamFactory streamFactory();
 
   // Optional parameters.
   public static Builder builder() {
@@ -78,14 +78,14 @@ public abstract class PublisherBuilder {
 
     public abstract Builder setBatching(BatchingSettings batching);
 
-    public abstract Builder setServiceClient(PublisherServiceClient client);
+    public abstract Builder setStreamFactory(PublishStreamFactory streamFactory);
 
     abstract PublisherBuilder autoBuild();
 
     public Publisher<Offset> build() throws ApiException {
       PublisherBuilder autoBuilt = autoBuild();
       return new PublisherImpl(
-          autoBuilt.serviceClient(),
+          autoBuilt.streamFactory(),
           InitialPublishRequest.newBuilder()
               .setTopic(autoBuilt.topic().toString())
               .setPartition(autoBuilt.partition().value())

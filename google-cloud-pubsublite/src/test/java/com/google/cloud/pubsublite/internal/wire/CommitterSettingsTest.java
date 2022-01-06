@@ -24,7 +24,7 @@ import com.google.cloud.pubsublite.Partition;
 import com.google.cloud.pubsublite.ProjectNumber;
 import com.google.cloud.pubsublite.SubscriptionName;
 import com.google.cloud.pubsublite.SubscriptionPath;
-import com.google.cloud.pubsublite.v1.CursorServiceClient;
+import com.google.cloud.pubsublite.internal.wire.StreamFactories.CursorStreamFactory;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -42,7 +42,7 @@ public class CommitterSettingsTest {
                     .setName(SubscriptionName.of("abc"))
                     .build())
             .setPartition(Partition.of(987))
-            .setServiceClient(mock(CursorServiceClient.class))
+            .setStreamFactory(mock(CursorStreamFactory.class))
             .build()
             .instantiate();
   }

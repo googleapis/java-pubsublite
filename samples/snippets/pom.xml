@@ -31,7 +31,7 @@
   <parent>
     <groupId>com.google.cloud.samples</groupId>
     <artifactId>shared-configuration</artifactId>
-    <version>1.0.23</version>
+    <version>1.2.0</version>
   </parent>
 
   <properties>
@@ -46,12 +46,12 @@
     <dependency>
       <groupId>com.google.cloud</groupId>
       <artifactId>google-cloud-pubsublite</artifactId>
-      <version>1.4.0</version>
+      <version>1.4.7</version>
     </dependency>
     <dependency>
       <groupId>com.google.cloud</groupId>
       <artifactId>google-cloud-pubsub</artifactId>
-      <version>1.114.7</version>
+      <version>1.115.0</version>
     </dependency>
     <!-- [END pubsublite_java_dependencies] -->
     <!-- [END pubsublite_install_without_bom] -->

@@ -40,6 +40,7 @@ public abstract class SingleConnection<StreamRequestT, StreamResponseT, ClientRe
 
   private final ClientStream<StreamRequestT> requestStream;
   private final ResponseObserver<ClientResponseT> clientStream;
+  private final boolean expectInitial;
 
   private final CloseableMonitor connectionMonitor = new CloseableMonitor();
 
@@ -56,13 +57,24 @@ public abstract class SingleConnection<StreamRequestT, StreamResponseT, ClientRe
 
   protected SingleConnection(
       StreamFactory<StreamRequestT, StreamResponseT> streamFactory,
-      ResponseObserver<ClientResponseT> clientStream) {
+      ResponseObserver<ClientResponseT> clientStream,
+      boolean expectInitialResponse) {
     this.clientStream = clientStream;
     this.requestStream = streamFactory.New(this);
+    this.expectInitial = expectInitialResponse;
+  }
+
+  protected SingleConnection(
+      StreamFactory<StreamRequestT, StreamResponseT> streamFactory,
+      ResponseObserver<ClientResponseT> clientStream) {
+    this(streamFactory, clientStream, /*expectInitialResponse=*/ true);
   }
 
   protected void initialize(StreamRequestT initialRequest) {
     this.requestStream.send(initialRequest);
+    if (!expectInitial) {
+      return;
+    }
     try (CloseableMonitor.Hold h =
         connectionMonitor.enterWhenUninterruptibly(
             new Guard(connectionMonitor.monitor) {

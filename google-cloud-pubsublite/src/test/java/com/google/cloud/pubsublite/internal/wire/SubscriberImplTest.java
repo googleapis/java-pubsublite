@@ -22,7 +22,6 @@ import static com.google.common.truth.Truth.assertThat;
 import static org.junit.Assert.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.times;
@@ -45,13 +44,13 @@ import com.google.cloud.pubsublite.SubscriptionPath;
 import com.google.cloud.pubsublite.internal.AlarmFactory;
 import com.google.cloud.pubsublite.internal.CheckedApiException;
 import com.google.cloud.pubsublite.internal.testing.TestResetSignal;
+import com.google.cloud.pubsublite.internal.wire.StreamFactories.SubscribeStreamFactory;
 import com.google.cloud.pubsublite.proto.Cursor;
 import com.google.cloud.pubsublite.proto.FlowControlRequest;
 import com.google.cloud.pubsublite.proto.InitialSubscribeRequest;
 import com.google.cloud.pubsublite.proto.SeekRequest;
 import com.google.cloud.pubsublite.proto.SeekRequest.NamedTarget;
 import com.google.cloud.pubsublite.proto.SubscribeRequest;
-import com.google.cloud.pubsublite.proto.SubscribeResponse;
 import com.google.common.collect.ImmutableList;
 import com.google.protobuf.util.Timestamps;
 import java.util.List;
@@ -85,7 +84,7 @@ public class SubscriberImplTest {
         .build();
   }
 
-  @Mock private StreamFactory<SubscribeRequest, SubscribeResponse> unusedStreamFactory;
+  @Mock private SubscribeStreamFactory unusedStreamFactory;
   @Mock private ConnectedSubscriber mockConnectedSubscriber1;
   @Mock private ConnectedSubscriber mockConnectedSubscriber2;
   @Mock private ConnectedSubscriberFactory mockSubscriberFactory;

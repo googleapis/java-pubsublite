@@ -22,6 +22,7 @@ import com.google.api.gax.rpc.ResponseObserver;
 import com.google.api.gax.rpc.StatusCode.Code;
 import com.google.cloud.pubsublite.SequencedMessage;
 import com.google.cloud.pubsublite.internal.CheckedApiException;
+import com.google.cloud.pubsublite.internal.wire.StreamFactories.SubscribeStreamFactory;
 import com.google.cloud.pubsublite.proto.FlowControlRequest;
 import com.google.cloud.pubsublite.proto.MessageResponse;
 import com.google.cloud.pubsublite.proto.SubscribeRequest;
@@ -43,12 +44,12 @@ class ConnectedSubscriberImpl
         StreamFactory<SubscribeRequest, SubscribeResponse> streamFactory,
         ResponseObserver<List<SequencedMessage>> clientStream,
         SubscribeRequest initialRequest) {
-      return new ConnectedSubscriberImpl(streamFactory, clientStream, initialRequest);
+      return new ConnectedSubscriberImpl(streamFactory::New, clientStream, initialRequest);
     }
   }
 
   private ConnectedSubscriberImpl(
-      StreamFactory<SubscribeRequest, SubscribeResponse> streamFactory,
+      SubscribeStreamFactory streamFactory,
       ResponseObserver<List<SequencedMessage>> clientStream,
       SubscribeRequest initialRequest) {
     super(streamFactory, clientStream);
@@ -100,18 +101,16 @@ class ConnectedSubscriberImpl
   private void onMessages(MessageResponse response) throws CheckedApiException {
     checkState(
         response.getMessagesCount() > 0,
-        String.format(
-            "Received an empty MessageResponse on stream with initial request %s.",
-            initialRequest));
+        "Received an empty MessageResponse on stream with initial request %s.",
+        initialRequest);
     List<SequencedMessage> messages =
         response.getMessagesList().stream()
             .map(SequencedMessage::fromProto)
             .collect(Collectors.toList());
     checkState(
         Predicates.isOrdered(messages),
-        String.format(
-            "Received out of order messages on the stream with initial request %s.",
-            initialRequest));
+        "Received out of order messages on the stream with initial request %s.",
+        initialRequest);
     sendToClient(messages);
   }
 }

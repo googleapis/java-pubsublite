@@ -1,31 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- see http://www.mojohaus.org/clirr-maven-plugin/examples/ignored-differences.html -->
 <differences>
-  <!-- TODO: Remove on next release -->
-  <!-- Clirr doesn't understand CRTP -->
-  <difference>
-    <differenceType>7006</differenceType>
-    <className>com/google/cloud/pubsublite/SubscriptionPath$Builder</className>
-    <method>*</method>
-    <to>*</to>
-  </difference>
-  <difference>
-    <differenceType>7006</differenceType>
-    <className>com/google/cloud/pubsublite/TopicPath$Builder</className>
-    <method>*</method>
-    <to>*</to>
-  </difference>
   <difference>
     <differenceType>7002</differenceType>
-    <className>com/google/cloud/pubsublite/SubscriptionPath$Builder</className>
+    <className>com/google/cloud/pubsublite/cloudpubsub/PublisherSettings$Builder</className>
     <method>*</method>
   </difference>
   <difference>
     <differenceType>7002</differenceType>
-    <className>com/google/cloud/pubsublite/TopicPath$Builder</className>
+    <className>com/google/cloud/pubsublite/cloudpubsub/SubscriberSettings$Builder</className>
     <method>*</method>
   </difference>
-  <!-- END TODO: Remove on next release -->
+  <!-- TODO: Remove above after next release -->
   <!-- Added method to AdminClient interface (Always okay) -->
   <difference>
     <differenceType>7012</differenceType>

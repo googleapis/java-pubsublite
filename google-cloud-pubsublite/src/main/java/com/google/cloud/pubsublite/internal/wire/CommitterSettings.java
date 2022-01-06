@@ -20,8 +20,8 @@ import com.google.auto.value.AutoValue;
 import com.google.cloud.pubsublite.Partition;
 import com.google.cloud.pubsublite.SubscriptionPath;
 import com.google.cloud.pubsublite.internal.AlarmFactory;
+import com.google.cloud.pubsublite.internal.wire.StreamFactories.CursorStreamFactory;
 import com.google.cloud.pubsublite.proto.InitialCommitCursorRequest;
-import com.google.cloud.pubsublite.v1.CursorServiceClient;
 import java.time.Duration;
 
 @AutoValue
@@ -31,7 +31,7 @@ public abstract class CommitterSettings {
 
   abstract Partition partition();
 
-  abstract CursorServiceClient serviceClient();
+  abstract CursorStreamFactory streamFactory();
 
   public static Builder newBuilder() {
     return new AutoValue_CommitterSettings.Builder();
@@ -44,7 +44,7 @@ public abstract class CommitterSettings {
 
     public abstract Builder setPartition(Partition partition);
 
-    public abstract Builder setServiceClient(CursorServiceClient client);
+    public abstract Builder setStreamFactory(CursorStreamFactory streamFactory);
 
     public abstract CommitterSettings build();
   }
@@ -57,7 +57,7 @@ public abstract class CommitterSettings {
             .build();
     return new ApiExceptionCommitter(
         new BatchingCommitter(
-            new CommitterImpl(serviceClient(), initialCommitCursorRequest),
+            new CommitterImpl(streamFactory(), initialCommitCursorRequest),
             AlarmFactory.create(Duration.ofMillis(50))));
   }
 }

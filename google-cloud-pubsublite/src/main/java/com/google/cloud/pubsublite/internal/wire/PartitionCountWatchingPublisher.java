@@ -18,6 +18,7 @@ package com.google.cloud.pubsublite.internal.wire;
 
 import static com.google.cloud.pubsublite.internal.CheckedApiPreconditions.checkState;
 import static com.google.cloud.pubsublite.internal.ExtractStatus.toCanonical;
+import static com.google.cloud.pubsublite.internal.wire.ApiServiceUtils.autoCloseableAsApiService;
 import static com.google.cloud.pubsublite.internal.wire.ApiServiceUtils.blockingShutdown;
 
 import com.google.api.core.ApiFuture;
@@ -63,9 +64,8 @@ public class PartitionCountWatchingPublisher extends ProxyService
                 : routingPolicy.route(message.key());
         checkState(
             publishers.containsKey(routedPartition),
-            String.format(
-                "Routed to partition %s for which there is no publisher available.",
-                routedPartition));
+            "Routed to partition %s for which there is no publisher available.",
+            routedPartition);
         return publishers.get(routedPartition).publish(message);
       } catch (Throwable t) {
         throw toCanonical(t);
@@ -104,7 +104,7 @@ public class PartitionCountWatchingPublisher extends ProxyService
     this.publisherFactory = publisherFactory;
     this.policyFactory = policyFactory;
     PartitionCountWatcher configWatcher = configWatcherFactory.newWatcher(this::handleConfig);
-    addServices(configWatcher);
+    addServices(configWatcher, autoCloseableAsApiService(publisherFactory));
   }
 
   @Override

@@ -1,5 +1,87 @@
 # Changelog
 
+### [1.4.7](https://www.github.com/googleapis/java-pubsublite/compare/v1.4.6...v1.4.7) (2021-12-22)
+
+
+### Bug Fixes
+
+* Numerous publish path performance issues ([#998](https://www.github.com/googleapis/java-pubsublite/issues/998)) ([2cd8b85](https://www.github.com/googleapis/java-pubsublite/commit/2cd8b85c4f6ef8cd41592b889b407dbe3485725f))
+* Restructure java client stream creation to reuse clients for different partitions ([#1002](https://www.github.com/googleapis/java-pubsublite/issues/1002)) ([a45a179](https://www.github.com/googleapis/java-pubsublite/commit/a45a179c71c8c0e220c2ea9f711c8ff5e37908d4))
+* Use an unbounded pool for the GRPC executor ([#997](https://www.github.com/googleapis/java-pubsublite/issues/997)) ([6f3946d](https://www.github.com/googleapis/java-pubsublite/commit/6f3946d3f4648ff294d7812a306b7e8297498795))
+
+
+### Dependencies
+
+* update dependency com.google.cloud:google-cloud-bom to v0.165.0 ([#1005](https://www.github.com/googleapis/java-pubsublite/issues/1005)) ([b1ba967](https://www.github.com/googleapis/java-pubsublite/commit/b1ba9678b2e8b5227e43aa9af8cf1efcbb6cbd16))
+* update dependency com.google.flogger:flogger-system-backend to v0.7.4 ([#1004](https://www.github.com/googleapis/java-pubsublite/issues/1004)) ([8ae651d](https://www.github.com/googleapis/java-pubsublite/commit/8ae651d610d4438f829b5127e461c1e878759f47))
+* update dependency com.google.flogger:google-extensions to v0.7.4 ([#1003](https://www.github.com/googleapis/java-pubsublite/issues/1003)) ([e8295c5](https://www.github.com/googleapis/java-pubsublite/commit/e8295c5d458fe31d7f4741995e7d8ce9d93f1f22))
+* update dependency org.checkerframework:checker-qual to v3.21.0 ([#1001](https://www.github.com/googleapis/java-pubsublite/issues/1001)) ([255817f](https://www.github.com/googleapis/java-pubsublite/commit/255817fe5d5bdff1c916b4685fe5ab6af0de54ea))
+
+### [1.4.6](https://www.github.com/googleapis/java-pubsublite/compare/v1.4.5...v1.4.6) (2021-12-16)
+
+
+### Dependencies
+
+* update dependency com.google.auto.value:auto-value to v1.9 ([#989](https://www.github.com/googleapis/java-pubsublite/issues/989)) ([d2cc54a](https://www.github.com/googleapis/java-pubsublite/commit/d2cc54a83d3e1349b40ae0f862562fd8f1414bef))
+* update dependency com.google.flogger:flogger-system-backend to v0.7.3 ([#992](https://www.github.com/googleapis/java-pubsublite/issues/992)) ([98a1cf7](https://www.github.com/googleapis/java-pubsublite/commit/98a1cf7d489c523c11ba217abf1ff0c68e64f34a))
+* update dependency com.google.flogger:google-extensions to v0.7.3 ([#993](https://www.github.com/googleapis/java-pubsublite/issues/993)) ([34f08bf](https://www.github.com/googleapis/java-pubsublite/commit/34f08bfdbe17cc2cdf1b864f1f3d463fba005e9a))
+
+### [1.4.5](https://www.github.com/googleapis/java-pubsublite/compare/v1.4.4...v1.4.5) (2021-12-14)
+
+
+### Dependencies
+
+* update dependency com.google.flogger:flogger-system-backend to v0.7.2 ([#983](https://www.github.com/googleapis/java-pubsublite/issues/983)) ([6faf2dd](https://www.github.com/googleapis/java-pubsublite/commit/6faf2dd9c1d3403343f960b3868d1aac1eb0136f))
+* update dependency com.google.flogger:google-extensions to v0.7.2 ([#984](https://www.github.com/googleapis/java-pubsublite/issues/984)) ([d6004c6](https://www.github.com/googleapis/java-pubsublite/commit/d6004c650b5bc37fe35eeaf0011f12c545bf85fd))
+
+### [1.4.4](https://www.github.com/googleapis/java-pubsublite/compare/v1.4.3...v1.4.4) (2021-12-09)
+
+
+### Bug Fixes
+
+* Add a timeout to getTopicPartitionCount ([#979](https://www.github.com/googleapis/java-pubsublite/issues/979)) ([0301d55](https://www.github.com/googleapis/java-pubsublite/commit/0301d55f9c2f7ac49a4d1c9755199e61d2fc09e3))
+
+### [1.4.3](https://www.github.com/googleapis/java-pubsublite/compare/v1.4.2...v1.4.3) (2021-12-08)
+
+
+### Bug Fixes
+
+* Change PublisherImpl and SerialBatcher interplay to not call into the network layer on the downcall ([#975](https://www.github.com/googleapis/java-pubsublite/issues/975)) ([e771c49](https://www.github.com/googleapis/java-pubsublite/commit/e771c49ba702d57706e4131c2ac6535ce066ec30))
+
+
+### Dependencies
+
+* update dependency com.google.cloud:google-cloud-bom to v0.164.0 ([#973](https://www.github.com/googleapis/java-pubsublite/issues/973)) ([e1139e9](https://www.github.com/googleapis/java-pubsublite/commit/e1139e956648d05ff2a76dfab3aed66ec4109eba))
+
+### [1.4.2](https://www.github.com/googleapis/java-pubsublite/compare/v1.4.1...v1.4.2) (2021-12-07)
+
+
+### Bug Fixes
+
+* Add a really long timeout to PartitionLookupUtils ([#965](https://www.github.com/googleapis/java-pubsublite/issues/965)) ([1c0678d](https://www.github.com/googleapis/java-pubsublite/commit/1c0678d07934f358cbaf030f5bdb212356d002b9))
+* Partition assignment stream does not require an initial response ([#966](https://www.github.com/googleapis/java-pubsublite/issues/966)) ([8227d31](https://www.github.com/googleapis/java-pubsublite/commit/8227d31fea754e09c251b7a8a9aaf43877125a9d))
+
+
+### Dependencies
+
+* update dependency com.google.cloud:google-cloud-pubsub to v1.115.0 ([#969](https://www.github.com/googleapis/java-pubsublite/issues/969)) ([2f78d56](https://www.github.com/googleapis/java-pubsublite/commit/2f78d56db0541dd5e8a1ac60757af9c9f0a7aa80))
+* update dependency org.checkerframework:checker-qual to v3.20.0 ([#964](https://www.github.com/googleapis/java-pubsublite/issues/964)) ([38a7fde](https://www.github.com/googleapis/java-pubsublite/commit/38a7fde03e1af187128e85274ffc173b3ccb3c0d))
+
+### [1.4.1](https://www.github.com/googleapis/java-pubsublite/compare/v1.4.0...v1.4.1) (2021-12-03)
+
+
+### Bug Fixes
+
+* remove local copy of beam I/O now that it is merged to upstream ([#873](https://www.github.com/googleapis/java-pubsublite/issues/873)) ([0bd9d52](https://www.github.com/googleapis/java-pubsublite/commit/0bd9d52e1da3029281f67e3e323e7fca890d2fee))
+
+
+### Dependencies
+
+* update beam.version to v2.34.0 ([#950](https://www.github.com/googleapis/java-pubsublite/issues/950)) ([527f77f](https://www.github.com/googleapis/java-pubsublite/commit/527f77fabc59c8b294e119d0d68384b47624f0b9))
+* update dependency com.google.cloud:google-cloud-shared-dependencies to v2.5.0 ([#952](https://www.github.com/googleapis/java-pubsublite/issues/952)) ([41ebb30](https://www.github.com/googleapis/java-pubsublite/commit/41ebb30bbfc729f1df3b0dc189dd4823e0af7360))
+* update dependency com.google.cloud:google-cloud-shared-dependencies to v2.5.1 ([#960](https://www.github.com/googleapis/java-pubsublite/issues/960)) ([9e46dbc](https://www.github.com/googleapis/java-pubsublite/commit/9e46dbc52085e0bbfa6c14d2d7892608a1d2fa7a))
+* update dependency com.google.cloud:pubsublite-beam-io to v0.23.0 ([#951](https://www.github.com/googleapis/java-pubsublite/issues/951)) ([c62c79c](https://www.github.com/googleapis/java-pubsublite/commit/c62c79c21bca315740e9298e35a57e8ff08de4db))
+
 ## [1.4.0](https://www.github.com/googleapis/java-pubsublite/compare/v1.3.0...v1.4.0) (2021-11-11)
 
 

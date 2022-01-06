@@ -47,7 +47,7 @@ public class QuickStartIT {
 
   private static final Long projectNumber =
       Long.parseLong(System.getenv("GOOGLE_CLOUD_PROJECT_NUMBER"));
-  private String cloudRegion = "us-central1";
+  private String cloudRegion = "us-west1";
   private final char zoneId = (char) (rand.nextInt(3) + 'a');
   private static final String suffix = UUID.randomUUID().toString();
   private static final String topicId = "lite-topic-" + suffix;
@@ -109,6 +109,9 @@ public class QuickStartIT {
 
   @Test
   public void testQuickstart() throws Exception {
+    // Create a regional topic.
+    CreateTopicExample.createTopicExample(
+        cloudRegion, zoneId, projectNumber, topicId, reservationId, partitions, /*regional=*/ true);
     // Create a zonal topic.
     CreateTopicExample.createTopicExample(
         cloudRegion,
@@ -118,32 +121,36 @@ public class QuickStartIT {
         reservationId,
         partitions,
         /*regional=*/ false);
+    assertThat(bout.toString()).contains(" (regional topic) created successfully");
     assertThat(bout.toString()).contains(" (zonal topic) created successfully");
 
-    // Create a regional topic.
-    CreateTopicExample.createTopicExample(
-        cloudRegion, zoneId, projectNumber, topicId, reservationId, partitions, /*regional=*/ true);
-    assertThat(bout.toString()).contains(" (regional topic) created successfully");
-
     bout.reset();
-    // Get a topic.
-    GetTopicExample.getTopicExample(cloudRegion, zoneId, projectNumber, topicId);
-    assertThat(bout.toString()).contains(topicId);
+    // Get a regional topic.
+    GetTopicExample.getTopicExample(
+        cloudRegion, zoneId, projectNumber, topicId, /*regional=*/ true);
+    // Get a zonal topic
+    GetTopicExample.getTopicExample(
+        cloudRegion, zoneId, projectNumber, topicId, /*regional=*/ false);
+    assertThat(bout.toString().contains(cloudRegion + "-" + zoneId + "/topics/" + topicId));
+    assertThat(bout.toString()).contains(cloudRegion + "/topics/" + topicId);
     assertThat(bout.toString()).contains(String.format("%s partition(s).", partitions));
 
     bout.reset();
     // List regional topics.
-    ListTopicsExample.listTopicsExample(cloudRegion, zoneId, projectNumber, true);
+    ListTopicsExample.listTopicsExample(cloudRegion, zoneId, projectNumber, /*regional=*/ true);
     // List zonal topics.
-    ListTopicsExample.listTopicsExample(cloudRegion, zoneId, projectNumber, false);
+    ListTopicsExample.listTopicsExample(cloudRegion, zoneId, projectNumber, /*regional=*/ false);
     assertThat(bout.toString().contains(cloudRegion + "/topics/" + topicId));
     assertThat(bout.toString().contains(cloudRegion + "-" + zoneId + "/topics/" + topicId));
     assertThat(bout.toString()).contains("topic(s) listed");
 
     bout.reset();
-    // Update a topic.
+    // Update a regional topic.
     UpdateTopicExample.updateTopicExample(
-        cloudRegion, zoneId, projectNumber, topicId, reservationId);
+        cloudRegion, zoneId, projectNumber, topicId, reservationId, /*regional=*/ true);
+    // Update a zonal topic.
+    UpdateTopicExample.updateTopicExample(
+        cloudRegion, zoneId, projectNumber, topicId, reservationId, /*regional=*/ false);
     assertThat(bout.toString()).contains("seconds: 604800");
     assertThat(bout.toString()).contains("per_partition_bytes: 34359738368");
     assertThat(bout.toString()).contains("throughput_reservation: \"" + reservationPath.toString());
@@ -233,10 +240,10 @@ public class QuickStartIT {
     // Delete a regional topic.
     DeleteTopicExample.deleteTopicExample(
         cloudRegion, zoneId, projectNumber, topicId, /*regional=*/ true);
-    assertThat(bout.toString()).contains(" (regional topic) deleted successfully");
     // Delete a zonal topic.
     DeleteTopicExample.deleteTopicExample(
         cloudRegion, zoneId, projectNumber, topicId, /*regional=*/ false);
+    assertThat(bout.toString()).contains(" (regional topic) deleted successfully");
     assertThat(bout.toString()).contains(" (zonal topic) deleted successfully");
   }
 }

@@ -45,7 +45,7 @@ public class DeleteTopicExample {
       throws Exception {
     TopicPath topicPath = null;
     if (regional) {
-      // A regional topic.
+      // A regional topic path.
       topicPath =
           TopicPath.newBuilder()
               .setProject(ProjectNumber.of(projectNumber))
@@ -53,7 +53,7 @@ public class DeleteTopicExample {
               .setName(TopicName.of(topicId))
               .build();
     } else {
-      // A zonal topic.
+      // A zonal topic path.
       topicPath =
           TopicPath.newBuilder()
               .setProject(ProjectNumber.of(projectNumber))

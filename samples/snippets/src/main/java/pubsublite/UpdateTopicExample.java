@@ -44,20 +44,38 @@ public class UpdateTopicExample {
     String topicId = "your-topic-id";
     String reservationId = "your-reservation-id";
     long projectNumber = Long.parseLong("123456789");
+    boolean regional = true;
 
-    updateTopicExample(cloudRegion, zoneId, projectNumber, topicId, reservationId);
+    updateTopicExample(cloudRegion, zoneId, projectNumber, topicId, reservationId, regional);
   }
 
   public static void updateTopicExample(
-      String cloudRegion, char zoneId, long projectNumber, String topicId, String reservationId)
+      String cloudRegion,
+      char zoneId,
+      long projectNumber,
+      String topicId,
+      String reservationId,
+      boolean regional)
       throws Exception {
 
-    TopicPath topicPath =
-        TopicPath.newBuilder()
-            .setProject(ProjectNumber.of(projectNumber))
-            .setLocation(CloudZone.of(CloudRegion.of(cloudRegion), zoneId))
-            .setName(TopicName.of(topicId))
-            .build();
+    TopicPath topicPath = null;
+    if (regional) {
+      // A regional topic path.
+      topicPath =
+          TopicPath.newBuilder()
+              .setProject(ProjectNumber.of(projectNumber))
+              .setLocation(CloudRegion.of(cloudRegion))
+              .setName(TopicName.of(topicId))
+              .build();
+    } else {
+      // A zonal topic path.
+      topicPath =
+          TopicPath.newBuilder()
+              .setProject(ProjectNumber.of(projectNumber))
+              .setLocation(CloudZone.of(CloudRegion.of(cloudRegion), zoneId))
+              .setName(TopicName.of(topicId))
+              .build();
+    }
 
     ReservationPath reservationPath =
         ReservationPath.newBuilder()

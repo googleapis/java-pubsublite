@@ -68,7 +68,7 @@ public class CreateTopicExample {
 
     TopicPath topicPath = null;
     if (regional) {
-      // A regional topic.
+      // A regional topic path.
       topicPath =
           TopicPath.newBuilder()
               .setProject(ProjectNumber.of(projectNumber))
@@ -76,7 +76,7 @@ public class CreateTopicExample {
               .setName(TopicName.of(topicId))
               .build();
     } else {
-      // A zonal topic.
+      // A zonal topic path.
       topicPath =
           TopicPath.newBuilder()
               .setProject(ProjectNumber.of(projectNumber))

@@ -203,7 +203,8 @@ class RetryingConnectionImpl<
   }
 
   private void triggerReinitialize(CheckedApiException streamError) {
-    // Reinitialize in an unbounded executor to avoid starving the bounded alarm executor.
+    // Reinitialize in an unbounded executor to avoid starving tasks using the bounded alarm
+    // executor.
     SystemExecutors.getFuturesExecutor()
         .execute(
             () -> {

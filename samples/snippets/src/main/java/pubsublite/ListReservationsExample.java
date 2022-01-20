@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Google LLC
+ * Copyright 2022 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,43 +16,45 @@
 
 package pubsublite;
 
-// [START pubsublite_delete_topic]
+// [START pubsublite_list_reservations]
+
 import com.google.cloud.pubsublite.AdminClient;
 import com.google.cloud.pubsublite.AdminClientSettings;
 import com.google.cloud.pubsublite.CloudRegion;
-import com.google.cloud.pubsublite.CloudZone;
+import com.google.cloud.pubsublite.LocationPath;
 import com.google.cloud.pubsublite.ProjectNumber;
-import com.google.cloud.pubsublite.TopicName;
-import com.google.cloud.pubsublite.TopicPath;
+import com.google.cloud.pubsublite.proto.Reservation;
+import java.util.List;
 
-public class DeleteTopicExample {
+public class ListReservationsExample {
 
   public static void main(String... args) throws Exception {
     // TODO(developer): Replace these variables before running the sample.
-    String cloudRegion = "your-cloud-region";
-    char zoneId = 'b';
-    // Choose an existing topic.
-    String topicId = "your-topic-id";
     long projectNumber = Long.parseLong("123456789");
+    String cloudRegion = "your-cloud-region";
 
-    deleteTopicExample(cloudRegion, zoneId, projectNumber, topicId);
+    listReservationsExample(projectNumber, cloudRegion);
   }
 
-  public static void deleteTopicExample(
-      String cloudRegion, char zoneId, long projectNumber, String topicId) throws Exception {
-    TopicPath topicPath =
-        TopicPath.newBuilder()
-            .setProject(ProjectNumber.of(projectNumber))
-            .setLocation(CloudZone.of(CloudRegion.of(cloudRegion), zoneId))
-            .setName(TopicName.of(topicId))
-            .build();
+  public static void listReservationsExample(long projectNumber, String cloudRegion)
+      throws Exception {
 
     AdminClientSettings adminClientSettings =
         AdminClientSettings.newBuilder().setRegion(CloudRegion.of(cloudRegion)).build();
 
+    LocationPath locationPath =
+        LocationPath.newBuilder()
+            .setProject(ProjectNumber.of(projectNumber))
+            .setLocation(CloudRegion.of(cloudRegion))
+            .build();
+
     try (AdminClient adminClient = AdminClient.create(adminClientSettings)) {
-      adminClient.deleteTopic(topicPath).get();
-      System.out.println(topicPath + " deleted successfully.");
+      List<Reservation> reservations = adminClient.listReservations(locationPath).get();
+      for (Reservation reservation : reservations) {
+        System.out.println(reservation.getAllFields());
+      }
+      System.out.println(reservations.size() + " reservation(s) listed in " + locationPath + ".");
     }
   }
-} // [END pubsublite_delete_topic]
+}
+// [END pubsublite_list_reservations]

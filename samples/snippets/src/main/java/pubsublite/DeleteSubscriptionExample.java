@@ -53,7 +53,7 @@ public class DeleteSubscriptionExample {
 
     try (AdminClient adminClient = AdminClient.create(adminClientSettings)) {
       adminClient.deleteSubscription(subscriptionPath).get();
-      System.out.println(subscriptionPath.toString() + " deleted successfully.");
+      System.out.println(subscriptionPath + " deleted successfully.");
     }
   }
 }

@@ -43,6 +43,7 @@ public class QuickStartIT {
   private String cloudRegion = "us-central1";
   private final char zoneId = (char) (rand.nextInt(3) + 'a');
   private static final String suffix = UUID.randomUUID().toString();
+  private static final String reservationId = "lite-reservation-" + suffix;
   private static final String topicId = "lite-topic-" + suffix;
   private static final String subscriptionId = "lite-subscription-" + suffix;
   private static final int partitions = 2;
@@ -75,6 +76,29 @@ public class QuickStartIT {
 
   @Test
   public void testQuickstart() throws Exception {
+    // Create a reservation.
+    CreateReservationExample.createReservationExample(
+        projectNumber, cloudRegion, reservationId, /*throughputCapacity=*/ 4);
+    assertThat(bout.toString()).contains(reservationId);
+    assertThat(bout.toString()).contains("created successfully");
+
+    bout.reset();
+    // Get a reservation.
+    GetReservationExample.getReservationExample(projectNumber, cloudRegion, reservationId);
+    assertThat(bout.toString()).contains(reservationId);
+    assertThat(bout.toString()).contains("4 units of throughput capacity.");
+
+    bout.reset();
+    // List reservations.
+    ListReservationsExample.listReservationsExample(projectNumber, cloudRegion);
+    assertThat(bout.toString()).contains("reservation(s) listed");
+
+    bout.reset();
+    // Update reservation to have a throughput capacity of 8 units.
+    UpdateReservationExample.updateReservationExample(projectNumber, cloudRegion, reservationId, 8);
+    assertThat(bout.toString()).contains("throughput_capacity=8");
+
+    bout.reset();
     // Create a topic.
     CreateTopicExample.createTopicExample(cloudRegion, zoneId, projectNumber, topicId, partitions);
     assertThat(bout.toString()).contains("created successfully");
@@ -181,6 +205,11 @@ public class QuickStartIT {
     bout.reset();
     // Delete a topic.
     DeleteTopicExample.deleteTopicExample(cloudRegion, zoneId, projectNumber, topicId);
+    assertThat(bout.toString()).contains("deleted successfully");
+
+    bout.reset();
+    // Delete a reservation.
+    DeleteReservationExample.deleteReservationExample(projectNumber, cloudRegion, reservationId);
     assertThat(bout.toString()).contains("deleted successfully");
   }
 }

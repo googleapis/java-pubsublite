@@ -17,6 +17,7 @@
 package pubsublite;
 
 // [START pubsublite_get_subscription]
+import com.google.api.gax.rpc.NotFoundException;
 import com.google.cloud.pubsublite.AdminClient;
 import com.google.cloud.pubsublite.AdminClientSettings;
 import com.google.cloud.pubsublite.CloudRegion;
@@ -25,6 +26,7 @@ import com.google.cloud.pubsublite.ProjectNumber;
 import com.google.cloud.pubsublite.SubscriptionName;
 import com.google.cloud.pubsublite.SubscriptionPath;
 import com.google.cloud.pubsublite.proto.Subscription;
+import java.util.concurrent.ExecutionException;
 
 public class GetSubscriptionExample {
 
@@ -55,6 +57,14 @@ public class GetSubscriptionExample {
     try (AdminClient adminClient = AdminClient.create(adminClientSettings)) {
       Subscription subscription = adminClient.getSubscription(subscriptionPath).get();
       System.out.println("Subscription: " + subscription.getAllFields());
+    } catch (ExecutionException e) {
+      try {
+        throw e.getCause();
+      } catch (NotFoundException notFound) {
+        System.out.println("This subscription is not found.");
+      } catch (Throwable throwable) {
+        throwable.printStackTrace();
+      }
     }
   }
 }

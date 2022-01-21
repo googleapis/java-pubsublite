@@ -17,6 +17,7 @@
 package pubsublite;
 
 // [START pubsublite_create_subscription]
+import com.google.api.gax.rpc.AlreadyExistsException;
 import com.google.cloud.pubsublite.AdminClient;
 import com.google.cloud.pubsublite.AdminClientSettings;
 import com.google.cloud.pubsublite.CloudRegion;
@@ -29,6 +30,7 @@ import com.google.cloud.pubsublite.TopicPath;
 import com.google.cloud.pubsublite.proto.Subscription;
 import com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig;
 import com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig.DeliveryRequirement;
+import java.util.concurrent.ExecutionException;
 
 public class CreateSubscriptionExample {
 
@@ -82,6 +84,14 @@ public class CreateSubscriptionExample {
     try (AdminClient adminClient = AdminClient.create(adminClientSettings)) {
       Subscription response = adminClient.createSubscription(subscription).get();
       System.out.println(response.getAllFields() + "created successfully.");
+    } catch (ExecutionException e) {
+      try {
+        throw e.getCause();
+      } catch (AlreadyExistsException alreadyExists) {
+        System.out.println("This subscription already exists.");
+      } catch (Throwable throwable) {
+        throwable.printStackTrace();
+      }
     }
   }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Google LLC
+ * Copyright 2022 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,53 +16,56 @@
 
 package pubsublite;
 
-// [START pubsublite_delete_topic]
+// [START pubsublite_get_reservation]
 import com.google.api.gax.rpc.NotFoundException;
 import com.google.cloud.pubsublite.AdminClient;
 import com.google.cloud.pubsublite.AdminClientSettings;
 import com.google.cloud.pubsublite.CloudRegion;
-import com.google.cloud.pubsublite.CloudZone;
 import com.google.cloud.pubsublite.ProjectNumber;
-import com.google.cloud.pubsublite.TopicName;
-import com.google.cloud.pubsublite.TopicPath;
+import com.google.cloud.pubsublite.ReservationName;
+import com.google.cloud.pubsublite.ReservationPath;
+import com.google.cloud.pubsublite.proto.Reservation;
 import java.util.concurrent.ExecutionException;
 
-public class DeleteTopicExample {
-
+public class GetReservationExample {
   public static void main(String... args) throws Exception {
     // TODO(developer): Replace these variables before running the sample.
-    String cloudRegion = "your-cloud-region";
-    char zoneId = 'b';
-    // Choose an existing topic.
-    String topicId = "your-topic-id";
     long projectNumber = Long.parseLong("123456789");
+    String cloudRegion = "your-cloud-region";
+    String reservationId = "your-reservation-id";
 
-    deleteTopicExample(cloudRegion, zoneId, projectNumber, topicId);
+    getReservationExample(projectNumber, cloudRegion, reservationId);
   }
 
-  public static void deleteTopicExample(
-      String cloudRegion, char zoneId, long projectNumber, String topicId) throws Exception {
-    TopicPath topicPath =
-        TopicPath.newBuilder()
+  public static void getReservationExample(
+      long projectNumber, String cloudRegion, String reservationId) throws Exception {
+    ReservationPath reservationPath =
+        ReservationPath.newBuilder()
             .setProject(ProjectNumber.of(projectNumber))
-            .setLocation(CloudZone.of(CloudRegion.of(cloudRegion), zoneId))
-            .setName(TopicName.of(topicId))
+            .setLocation(CloudRegion.of(cloudRegion))
+            .setName(ReservationName.of(reservationId))
             .build();
 
     AdminClientSettings adminClientSettings =
         AdminClientSettings.newBuilder().setRegion(CloudRegion.of(cloudRegion)).build();
 
     try (AdminClient adminClient = AdminClient.create(adminClientSettings)) {
-      adminClient.deleteTopic(topicPath).get();
-      System.out.println(topicPath + " deleted successfully.");
+      Reservation response = adminClient.getReservation(reservationPath).get();
+      long throughputCapacity = response.getThroughputCapacity();
+      System.out.println(
+          response.getAllFields()
+              + "\nhas "
+              + throughputCapacity
+              + " units of throughput capacity.");
     } catch (ExecutionException e) {
       try {
         throw e.getCause();
       } catch (NotFoundException notFound) {
-        System.out.println("This topic is not found.");
+        System.out.println("This reservation is not found.");
       } catch (Throwable throwable) {
         throwable.printStackTrace();
       }
     }
   }
-} // [END pubsublite_delete_topic]
+}
+// [END pubsublite_get_reservation]

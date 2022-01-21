@@ -18,7 +18,6 @@ package pubsublite;
 
 // [START pubsublite_update_reservation]
 
-import com.google.api.gax.rpc.NotFoundException;
 import com.google.cloud.pubsublite.AdminClient;
 import com.google.cloud.pubsublite.AdminClientSettings;
 import com.google.cloud.pubsublite.CloudRegion;

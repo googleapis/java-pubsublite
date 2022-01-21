@@ -69,8 +69,6 @@ public class UpdateReservationExample {
       Reservation reservationAfterUpdate =
           adminClient.updateReservation(reservation, fieldMask).get();
       System.out.println("After update: " + reservationAfterUpdate.getAllFields());
-    } catch (NotFoundException e) {
-      e.printStackTrace();
     }
   }
 }

@@ -57,8 +57,6 @@ public class GetReservationExample {
               + "\nhas "
               + throughputCapacity
               + " units of throughput capacity.");
-    } catch (NotFoundException e) {
-      e.printStackTrace();
     }
   }
 }

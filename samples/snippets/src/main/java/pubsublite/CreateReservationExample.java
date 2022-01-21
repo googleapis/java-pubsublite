@@ -63,8 +63,6 @@ public class CreateReservationExample {
     try (AdminClient adminClient = AdminClient.create(adminClientSettings)) {
       Reservation response = adminClient.createReservation(reservation).get();
       System.out.println(response.getAllFields() + " created successfully.");
-    } catch (AlreadyExistsException e) {
-      e.printStackTrace();
     }
   }
 }

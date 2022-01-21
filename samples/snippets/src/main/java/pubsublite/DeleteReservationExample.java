@@ -52,8 +52,6 @@ public class DeleteReservationExample {
     try (AdminClient adminClient = AdminClient.create(adminClientSettings)) {
       adminClient.deleteReservation(reservationPath).get();
       System.out.println(reservationPath + " deleted successfully.");
-    } catch (NotFoundException e) {
-      e.printStackTrace();
     }
   }
 }

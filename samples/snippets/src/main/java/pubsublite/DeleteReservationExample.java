@@ -24,6 +24,7 @@ import com.google.cloud.pubsublite.CloudRegion;
 import com.google.cloud.pubsublite.ProjectNumber;
 import com.google.cloud.pubsublite.ReservationName;
 import com.google.cloud.pubsublite.ReservationPath;
+import java.util.concurrent.ExecutionException;
 
 public class DeleteReservationExample {
   public static void main(String... args) throws Exception {
@@ -48,9 +49,13 @@ public class DeleteReservationExample {
     AdminClientSettings adminClientSettings =
         AdminClientSettings.newBuilder().setRegion(CloudRegion.of(cloudRegion)).build();
 
+    // If a reservation has topics attached, you must delete the topics before deleting
+    // the reservation.
     try (AdminClient adminClient = AdminClient.create(adminClientSettings)) {
       adminClient.deleteReservation(reservationPath).get();
       System.out.println(reservationPath + " deleted successfully.");
+    } catch (ExecutionException e) {
+      System.err.println(e.getCause());
     }
   }
 }

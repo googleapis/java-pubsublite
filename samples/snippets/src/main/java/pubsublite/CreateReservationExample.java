@@ -25,6 +25,7 @@ import com.google.cloud.pubsublite.ProjectNumber;
 import com.google.cloud.pubsublite.ReservationName;
 import com.google.cloud.pubsublite.ReservationPath;
 import com.google.cloud.pubsublite.proto.Reservation;
+import java.util.concurrent.ExecutionException;
 
 public class CreateReservationExample {
   public static void main(String... args) throws Exception {
@@ -62,6 +63,8 @@ public class CreateReservationExample {
     try (AdminClient adminClient = AdminClient.create(adminClientSettings)) {
       Reservation response = adminClient.createReservation(reservation).get();
       System.out.println(response.getAllFields() + " created successfully.");
+    } catch (ExecutionException e) {
+      System.err.println(e.getCause());
     }
   }
 }

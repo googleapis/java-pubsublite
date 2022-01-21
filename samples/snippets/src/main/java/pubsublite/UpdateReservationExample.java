@@ -25,6 +25,7 @@ import com.google.cloud.pubsublite.ProjectNumber;
 import com.google.cloud.pubsublite.ReservationName;
 import com.google.cloud.pubsublite.ReservationPath;
 import com.google.cloud.pubsublite.proto.Reservation;
+import java.util.concurrent.ExecutionException;
 
 public class UpdateReservationExample {
   public static void main(String... args) throws Exception {
@@ -69,6 +70,8 @@ public class UpdateReservationExample {
       Reservation reservationAfterUpdate =
           adminClient.updateReservation(reservation, fieldMask).get();
       System.out.println("After update: " + reservationAfterUpdate.getAllFields());
+    } catch (ExecutionException e) {
+      System.err.println(e.getCause());
     }
   }
 }

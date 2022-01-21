@@ -18,7 +18,6 @@ package pubsublite;
 
 // [START pubsublite_update_reservation]
 
-import com.google.api.gax.rpc.NotFoundException;
 import com.google.cloud.pubsublite.AdminClient;
 import com.google.cloud.pubsublite.AdminClientSettings;
 import com.google.cloud.pubsublite.CloudRegion;
@@ -33,7 +32,8 @@ public class UpdateReservationExample {
     long projectNumber = Long.parseLong("123456789");
     String cloudRegion = "your-cloud-region";
     String reservationId = "your-reservation-id";
-    // Must be a positive integer.
+    // Each unit of throughput capacity supports up to 1 MiB/s of published messages or
+    // 2 MiB/s of subscribed messages.
     int throughputCapacity = 8;
 
     updateReservationExample(projectNumber, cloudRegion, reservationId, throughputCapacity);

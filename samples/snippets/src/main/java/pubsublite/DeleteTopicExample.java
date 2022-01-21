@@ -17,6 +17,7 @@
 package pubsublite;
 
 // [START pubsublite_delete_topic]
+import com.google.api.gax.rpc.NotFoundException;
 import com.google.cloud.pubsublite.AdminClient;
 import com.google.cloud.pubsublite.AdminClientSettings;
 import com.google.cloud.pubsublite.CloudRegion;
@@ -24,6 +25,7 @@ import com.google.cloud.pubsublite.CloudZone;
 import com.google.cloud.pubsublite.ProjectNumber;
 import com.google.cloud.pubsublite.TopicName;
 import com.google.cloud.pubsublite.TopicPath;
+import java.util.concurrent.ExecutionException;
 
 public class DeleteTopicExample {
 
@@ -53,6 +55,14 @@ public class DeleteTopicExample {
     try (AdminClient adminClient = AdminClient.create(adminClientSettings)) {
       adminClient.deleteTopic(topicPath).get();
       System.out.println(topicPath + " deleted successfully.");
+    } catch (ExecutionException e) {
+      try {
+        throw e.getCause();
+      } catch (NotFoundException notFound) {
+        System.out.println("This topic is not found.");
+      } catch (Throwable throwable) {
+        throwable.printStackTrace();
+      }
     }
   }
 } // [END pubsublite_delete_topic]

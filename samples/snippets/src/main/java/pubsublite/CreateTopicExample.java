@@ -17,6 +17,7 @@
 package pubsublite;
 
 // [START pubsublite_create_topic]
+import com.google.api.gax.rpc.AlreadyExistsException;
 import com.google.cloud.pubsublite.AdminClient;
 import com.google.cloud.pubsublite.AdminClientSettings;
 import com.google.cloud.pubsublite.CloudRegion;
@@ -28,6 +29,7 @@ import com.google.cloud.pubsublite.proto.Topic;
 import com.google.cloud.pubsublite.proto.Topic.PartitionConfig;
 import com.google.cloud.pubsublite.proto.Topic.RetentionConfig;
 import com.google.protobuf.util.Durations;
+import java.util.concurrent.ExecutionException;
 
 public class CreateTopicExample {
 
@@ -84,6 +86,14 @@ public class CreateTopicExample {
     try (AdminClient adminClient = AdminClient.create(adminClientSettings)) {
       Topic response = adminClient.createTopic(topic).get();
       System.out.println(response.getAllFields() + "created successfully.");
+    } catch (ExecutionException e) {
+      try {
+        throw e.getCause();
+      } catch (AlreadyExistsException alreadyExists) {
+        System.out.println("This topic already exists.");
+      } catch (Throwable throwable) {
+        throwable.printStackTrace();
+      }
     }
   }
 }

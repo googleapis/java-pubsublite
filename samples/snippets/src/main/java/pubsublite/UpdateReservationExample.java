@@ -17,7 +17,7 @@
 package pubsublite;
 
 // [START pubsublite_update_reservation]
-
+import com.google.api.gax.rpc.NotFoundException;
 import com.google.cloud.pubsublite.AdminClient;
 import com.google.cloud.pubsublite.AdminClientSettings;
 import com.google.cloud.pubsublite.CloudRegion;
@@ -71,7 +71,13 @@ public class UpdateReservationExample {
           adminClient.updateReservation(reservation, fieldMask).get();
       System.out.println("After update: " + reservationAfterUpdate.getAllFields());
     } catch (ExecutionException e) {
-      System.err.println(e.getCause());
+      try {
+        throw e.getCause();
+      } catch (NotFoundException notFound) {
+        System.out.println("This reservation is not found.");
+      } catch (Throwable throwable) {
+        throwable.printStackTrace();
+      }
     }
   }
 }

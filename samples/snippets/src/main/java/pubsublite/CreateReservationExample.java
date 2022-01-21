@@ -17,7 +17,7 @@
 package pubsublite;
 
 // [START pubsublite_create_reservation]
-
+import com.google.api.gax.rpc.AlreadyExistsException;
 import com.google.cloud.pubsublite.AdminClient;
 import com.google.cloud.pubsublite.AdminClientSettings;
 import com.google.cloud.pubsublite.CloudRegion;
@@ -32,7 +32,7 @@ public class CreateReservationExample {
     // TODO(developer): Replace these variables before running the sample.
     long projectNumber = Long.parseLong("123456789");
     String cloudRegion = "your-cloud-region";
-    String reservationId = "your-topic-id";
+    String reservationId = "your-reservation-id";
     // Each unit of throughput capacity supports up to 1 MiB/s of published messages or
     // 2 MiB/s of subscribed messages.
     int throughputCapacity = 4;
@@ -64,7 +64,13 @@ public class CreateReservationExample {
       Reservation response = adminClient.createReservation(reservation).get();
       System.out.println(response.getAllFields() + " created successfully.");
     } catch (ExecutionException e) {
-      System.err.println(e.getCause());
+      try {
+        throw e.getCause();
+      } catch (AlreadyExistsException alreadyExists) {
+        System.out.println("This reservation already exists.");
+      } catch (Throwable throwable) {
+        throwable.printStackTrace();
+      }
     }
   }
 }

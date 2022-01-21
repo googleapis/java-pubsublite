@@ -17,7 +17,7 @@
 package pubsublite;
 
 // [START pubsublite_get_reservation]
-
+import com.google.api.gax.rpc.NotFoundException;
 import com.google.cloud.pubsublite.AdminClient;
 import com.google.cloud.pubsublite.AdminClientSettings;
 import com.google.cloud.pubsublite.CloudRegion;
@@ -58,7 +58,13 @@ public class GetReservationExample {
               + throughputCapacity
               + " units of throughput capacity.");
     } catch (ExecutionException e) {
-      System.err.println(e.getCause());
+      try {
+        throw e.getCause();
+      } catch (NotFoundException notFound) {
+        System.out.println("This reservation is not found.");
+      } catch (Throwable throwable) {
+        throwable.printStackTrace();
+      }
     }
   }
 }

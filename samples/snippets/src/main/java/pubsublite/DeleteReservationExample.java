@@ -17,7 +17,7 @@
 package pubsublite;
 
 // [START pubsublite_delete_reservation]
-
+import com.google.api.gax.rpc.NotFoundException;
 import com.google.cloud.pubsublite.AdminClient;
 import com.google.cloud.pubsublite.AdminClientSettings;
 import com.google.cloud.pubsublite.CloudRegion;
@@ -55,7 +55,13 @@ public class DeleteReservationExample {
       adminClient.deleteReservation(reservationPath).get();
       System.out.println(reservationPath + " deleted successfully.");
     } catch (ExecutionException e) {
-      System.err.println(e.getCause());
+      try {
+        throw e.getCause();
+      } catch (NotFoundException notFound) {
+        System.out.println("This reservation is not found.");
+      } catch (Throwable throwable) {
+        throwable.printStackTrace();
+      }
     }
   }
 }

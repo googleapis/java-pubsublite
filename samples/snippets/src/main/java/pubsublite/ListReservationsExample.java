@@ -17,7 +17,6 @@
 package pubsublite;
 
 // [START pubsublite_list_reservations]
-
 import com.google.cloud.pubsublite.AdminClient;
 import com.google.cloud.pubsublite.AdminClientSettings;
 import com.google.cloud.pubsublite.CloudRegion;

@@ -199,17 +199,22 @@ class RetryingConnectionImpl<
         backoffTime, streamDescription());
     ScheduledFuture<?> retry =
         SystemExecutors.getAlarmExecutor()
-            .schedule(
-                () -> {
-                  try {
-                    observer.triggerReinitialize(statusOr.get());
-                  } catch (Throwable t2) {
-                    logger.atWarning().withCause(t2).log("Error occurred in triggerReinitialize.");
-                    onError(t2);
-                  }
-                },
-                backoffTime,
-                MILLISECONDS);
+            .schedule(() -> triggerReinitialize(statusOr.get()), backoffTime, MILLISECONDS);
+  }
+
+  private void triggerReinitialize(CheckedApiException streamError) {
+    // Reinitialize in an unbounded executor to avoid starving tasks using the bounded alarm
+    // executor.
+    SystemExecutors.getFuturesExecutor()
+        .execute(
+            () -> {
+              try {
+                observer.triggerReinitialize(streamError);
+              } catch (Throwable t) {
+                logger.atWarning().withCause(t).log("Error occurred in triggerReinitialize.");
+                onError(t);
+              }
+            });
   }
 
   @Override

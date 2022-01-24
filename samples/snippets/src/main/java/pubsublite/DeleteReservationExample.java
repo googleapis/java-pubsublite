@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Google LLC
+ * Copyright 2022 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,56 +16,53 @@
 
 package pubsublite;
 
-// [START pubsublite_get_subscription]
+// [START pubsublite_delete_reservation]
 import com.google.api.gax.rpc.NotFoundException;
 import com.google.cloud.pubsublite.AdminClient;
 import com.google.cloud.pubsublite.AdminClientSettings;
 import com.google.cloud.pubsublite.CloudRegion;
-import com.google.cloud.pubsublite.CloudZone;
 import com.google.cloud.pubsublite.ProjectNumber;
-import com.google.cloud.pubsublite.SubscriptionName;
-import com.google.cloud.pubsublite.SubscriptionPath;
-import com.google.cloud.pubsublite.proto.Subscription;
+import com.google.cloud.pubsublite.ReservationName;
+import com.google.cloud.pubsublite.ReservationPath;
 import java.util.concurrent.ExecutionException;
 
-public class GetSubscriptionExample {
-
+public class DeleteReservationExample {
   public static void main(String... args) throws Exception {
     // TODO(developer): Replace these variables before running the sample.
-    String cloudRegion = "your-cloud-region";
-    char zoneId = 'b';
-    // Choose an existing subscription.
-    String subscriptionId = "your-subscription-id";
     long projectNumber = Long.parseLong("123456789");
+    String cloudRegion = "your-cloud-region";
+    String reservationId = "your-reservation-id";
 
-    getSubscriptionExample(cloudRegion, zoneId, projectNumber, subscriptionId);
+    deleteReservationExample(projectNumber, cloudRegion, reservationId);
   }
 
-  public static void getSubscriptionExample(
-      String cloudRegion, char zoneId, long projectNumber, String subscriptionId) throws Exception {
+  public static void deleteReservationExample(
+      long projectNumber, String cloudRegion, String reservationId) throws Exception {
 
-    SubscriptionPath subscriptionPath =
-        SubscriptionPath.newBuilder()
-            .setLocation(CloudZone.of(CloudRegion.of(cloudRegion), zoneId))
+    ReservationPath reservationPath =
+        ReservationPath.newBuilder()
             .setProject(ProjectNumber.of(projectNumber))
-            .setName(SubscriptionName.of(subscriptionId))
+            .setLocation(CloudRegion.of(cloudRegion))
+            .setName(ReservationName.of(reservationId))
             .build();
 
     AdminClientSettings adminClientSettings =
         AdminClientSettings.newBuilder().setRegion(CloudRegion.of(cloudRegion)).build();
 
+    // If a reservation has topics attached, you must delete the topics before deleting
+    // the reservation.
     try (AdminClient adminClient = AdminClient.create(adminClientSettings)) {
-      Subscription subscription = adminClient.getSubscription(subscriptionPath).get();
-      System.out.println("Subscription: " + subscription.getAllFields());
+      adminClient.deleteReservation(reservationPath).get();
+      System.out.println(reservationPath + " deleted successfully.");
     } catch (ExecutionException e) {
       try {
         throw e.getCause();
       } catch (NotFoundException notFound) {
-        System.out.println("This subscription is not found.");
+        System.out.println("This reservation is not found.");
       } catch (Throwable throwable) {
         throwable.printStackTrace();
       }
     }
   }
 }
-// [END pubsublite_get_subscription]
+// [END pubsublite_delete_reservation]

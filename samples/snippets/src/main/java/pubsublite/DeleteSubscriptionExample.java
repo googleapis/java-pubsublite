@@ -17,6 +17,7 @@
 package pubsublite;
 
 // [START pubsublite_delete_subscription]
+import com.google.api.gax.rpc.NotFoundException;
 import com.google.cloud.pubsublite.AdminClient;
 import com.google.cloud.pubsublite.AdminClientSettings;
 import com.google.cloud.pubsublite.CloudRegion;
@@ -24,6 +25,7 @@ import com.google.cloud.pubsublite.CloudZone;
 import com.google.cloud.pubsublite.ProjectNumber;
 import com.google.cloud.pubsublite.SubscriptionName;
 import com.google.cloud.pubsublite.SubscriptionPath;
+import java.util.concurrent.ExecutionException;
 
 public class DeleteSubscriptionExample {
 
@@ -53,7 +55,15 @@ public class DeleteSubscriptionExample {
 
     try (AdminClient adminClient = AdminClient.create(adminClientSettings)) {
       adminClient.deleteSubscription(subscriptionPath).get();
-      System.out.println(subscriptionPath.toString() + " deleted successfully.");
+      System.out.println(subscriptionPath + " deleted successfully.");
+    } catch (ExecutionException e) {
+      try {
+        throw e.getCause();
+      } catch (NotFoundException notFound) {
+        System.out.println("This subscription is not found.");
+      } catch (Throwable throwable) {
+        throwable.printStackTrace();
+      }
     }
   }
 }

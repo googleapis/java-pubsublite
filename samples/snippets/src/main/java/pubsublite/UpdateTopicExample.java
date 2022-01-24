@@ -17,6 +17,7 @@
 package pubsublite;
 
 // [START pubsublite_update_topic]
+import com.google.api.gax.rpc.NotFoundException;
 import com.google.cloud.pubsublite.AdminClient;
 import com.google.cloud.pubsublite.AdminClientSettings;
 import com.google.cloud.pubsublite.CloudRegion;
@@ -34,6 +35,7 @@ import com.google.cloud.pubsublite.proto.Topic.RetentionConfig;
 import com.google.protobuf.FieldMask;
 import com.google.protobuf.util.Durations;
 import java.util.Arrays;
+import java.util.concurrent.ExecutionException;
 
 public class UpdateTopicExample {
 
@@ -129,6 +131,14 @@ public class UpdateTopicExample {
 
       Topic topicAfterUpdate = adminClient.updateTopic(topic, fieldMask).get();
       System.out.println("After update: " + topicAfterUpdate.getAllFields());
+    } catch (ExecutionException e) {
+      try {
+        throw e.getCause();
+      } catch (NotFoundException notFound) {
+        System.out.println("This topic is not found.");
+      } catch (Throwable throwable) {
+        throwable.printStackTrace();
+      }
     }
   }
 }

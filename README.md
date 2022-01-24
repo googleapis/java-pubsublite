@@ -19,12 +19,12 @@ If you are using Maven, add this to your pom.xml file:
 <dependency>
   <groupId>com.google.cloud</groupId>
   <artifactId>google-cloud-pubsublite</artifactId>
-  <version>1.4.7</version>
+  <version>1.4.8</version>
 </dependency>
 <dependency>
   <groupId>com.google.cloud</groupId>
   <artifactId>google-cloud-pubsub</artifactId>
-  <version>1.115.0</version>
+  <version>1.115.1</version>
 </dependency>
 
 ```
@@ -32,13 +32,13 @@ If you are using Maven, add this to your pom.xml file:
 If you are using Gradle without BOM, add this to your dependencies
 
 ```Groovy
-implementation 'com.google.cloud:google-cloud-pubsublite:1.4.7'
+implementation 'com.google.cloud:google-cloud-pubsublite:1.4.8'
 ```
 
 If you are using SBT, add this to your dependencies
 
 ```Scala
-libraryDependencies += "com.google.cloud" % "google-cloud-pubsublite" % "1.4.7"
+libraryDependencies += "com.google.cloud" % "google-cloud-pubsublite" % "1.4.8"
 ```
 
 ## Authentication
@@ -355,12 +355,16 @@ Samples are in the [`samples/`](https://github.com/googleapis/java-pubsublite/tr
 
 | Sample                      | Source Code                       | Try it |
 | --------------------------- | --------------------------------- | ------ |
+| Create Reservation Example | [source code](https://github.com/googleapis/java-pubsublite/blob/main/samples/snippets/src/main/java/pubsublite/CreateReservationExample.java) | [![Open in Cloud Shell][shell_img]](https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/googleapis/java-pubsublite&page=editor&open_in_editor=samples/snippets/src/main/java/pubsublite/CreateReservationExample.java) |
 | Create Subscription Example | [source code](https://github.com/googleapis/java-pubsublite/blob/main/samples/snippets/src/main/java/pubsublite/CreateSubscriptionExample.java) | [![Open in Cloud Shell][shell_img]](https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/googleapis/java-pubsublite&page=editor&open_in_editor=samples/snippets/src/main/java/pubsublite/CreateSubscriptionExample.java) |
 | Create Topic Example | [source code](https://github.com/googleapis/java-pubsublite/blob/main/samples/snippets/src/main/java/pubsublite/CreateTopicExample.java) | [![Open in Cloud Shell][shell_img]](https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/googleapis/java-pubsublite&page=editor&open_in_editor=samples/snippets/src/main/java/pubsublite/CreateTopicExample.java) |
+| Delete Reservation Example | [source code](https://github.com/googleapis/java-pubsublite/blob/main/samples/snippets/src/main/java/pubsublite/DeleteReservationExample.java) | [![Open in Cloud Shell][shell_img]](https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/googleapis/java-pubsublite&page=editor&open_in_editor=samples/snippets/src/main/java/pubsublite/DeleteReservationExample.java) |
 | Delete Subscription Example | [source code](https://github.com/googleapis/java-pubsublite/blob/main/samples/snippets/src/main/java/pubsublite/DeleteSubscriptionExample.java) | [![Open in Cloud Shell][shell_img]](https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/googleapis/java-pubsublite&page=editor&open_in_editor=samples/snippets/src/main/java/pubsublite/DeleteSubscriptionExample.java) |
 | Delete Topic Example | [source code](https://github.com/googleapis/java-pubsublite/blob/main/samples/snippets/src/main/java/pubsublite/DeleteTopicExample.java) | [![Open in Cloud Shell][shell_img]](https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/googleapis/java-pubsublite&page=editor&open_in_editor=samples/snippets/src/main/java/pubsublite/DeleteTopicExample.java) |
+| Get Reservation Example | [source code](https://github.com/googleapis/java-pubsublite/blob/main/samples/snippets/src/main/java/pubsublite/GetReservationExample.java) | [![Open in Cloud Shell][shell_img]](https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/googleapis/java-pubsublite&page=editor&open_in_editor=samples/snippets/src/main/java/pubsublite/GetReservationExample.java) |
 | Get Subscription Example | [source code](https://github.com/googleapis/java-pubsublite/blob/main/samples/snippets/src/main/java/pubsublite/GetSubscriptionExample.java) | [![Open in Cloud Shell][shell_img]](https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/googleapis/java-pubsublite&page=editor&open_in_editor=samples/snippets/src/main/java/pubsublite/GetSubscriptionExample.java) |
 | Get Topic Example | [source code](https://github.com/googleapis/java-pubsublite/blob/main/samples/snippets/src/main/java/pubsublite/GetTopicExample.java) | [![Open in Cloud Shell][shell_img]](https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/googleapis/java-pubsublite&page=editor&open_in_editor=samples/snippets/src/main/java/pubsublite/GetTopicExample.java) |
+| List Reservations Example | [source code](https://github.com/googleapis/java-pubsublite/blob/main/samples/snippets/src/main/java/pubsublite/ListReservationsExample.java) | [![Open in Cloud Shell][shell_img]](https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/googleapis/java-pubsublite&page=editor&open_in_editor=samples/snippets/src/main/java/pubsublite/ListReservationsExample.java) |
 | List Subscriptions In Project Example | [source code](https://github.com/googleapis/java-pubsublite/blob/main/samples/snippets/src/main/java/pubsublite/ListSubscriptionsInProjectExample.java) | [![Open in Cloud Shell][shell_img]](https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/googleapis/java-pubsublite&page=editor&open_in_editor=samples/snippets/src/main/java/pubsublite/ListSubscriptionsInProjectExample.java) |
 | List Subscriptions In Topic Example | [source code](https://github.com/googleapis/java-pubsublite/blob/main/samples/snippets/src/main/java/pubsublite/ListSubscriptionsInTopicExample.java) | [![Open in Cloud Shell][shell_img]](https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/googleapis/java-pubsublite&page=editor&open_in_editor=samples/snippets/src/main/java/pubsublite/ListSubscriptionsInTopicExample.java) |
 | List Topics Example | [source code](https://github.com/googleapis/java-pubsublite/blob/main/samples/snippets/src/main/java/pubsublite/ListTopicsExample.java) | [![Open in Cloud Shell][shell_img]](https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/googleapis/java-pubsublite&page=editor&open_in_editor=samples/snippets/src/main/java/pubsublite/ListTopicsExample.java) |
@@ -370,6 +374,7 @@ Samples are in the [`samples/`](https://github.com/googleapis/java-pubsublite/tr
 | Publisher Example | [source code](https://github.com/googleapis/java-pubsublite/blob/main/samples/snippets/src/main/java/pubsublite/PublisherExample.java) | [![Open in Cloud Shell][shell_img]](https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/googleapis/java-pubsublite&page=editor&open_in_editor=samples/snippets/src/main/java/pubsublite/PublisherExample.java) |
 | Seek Subscription Example | [source code](https://github.com/googleapis/java-pubsublite/blob/main/samples/snippets/src/main/java/pubsublite/SeekSubscriptionExample.java) | [![Open in Cloud Shell][shell_img]](https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/googleapis/java-pubsublite&page=editor&open_in_editor=samples/snippets/src/main/java/pubsublite/SeekSubscriptionExample.java) |
 | Subscriber Example | [source code](https://github.com/googleapis/java-pubsublite/blob/main/samples/snippets/src/main/java/pubsublite/SubscriberExample.java) | [![Open in Cloud Shell][shell_img]](https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/googleapis/java-pubsublite&page=editor&open_in_editor=samples/snippets/src/main/java/pubsublite/SubscriberExample.java) |
+| Update Reservation Example | [source code](https://github.com/googleapis/java-pubsublite/blob/main/samples/snippets/src/main/java/pubsublite/UpdateReservationExample.java) | [![Open in Cloud Shell][shell_img]](https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/googleapis/java-pubsublite&page=editor&open_in_editor=samples/snippets/src/main/java/pubsublite/UpdateReservationExample.java) |
 | Update Subscription Example | [source code](https://github.com/googleapis/java-pubsublite/blob/main/samples/snippets/src/main/java/pubsublite/UpdateSubscriptionExample.java) | [![Open in Cloud Shell][shell_img]](https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/googleapis/java-pubsublite&page=editor&open_in_editor=samples/snippets/src/main/java/pubsublite/UpdateSubscriptionExample.java) |
 | Update Topic Example | [source code](https://github.com/googleapis/java-pubsublite/blob/main/samples/snippets/src/main/java/pubsublite/UpdateTopicExample.java) | [![Open in Cloud Shell][shell_img]](https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/googleapis/java-pubsublite&page=editor&open_in_editor=samples/snippets/src/main/java/pubsublite/UpdateTopicExample.java) |
 
@@ -473,7 +478,7 @@ Java is a registered trademark of Oracle and/or its affiliates.
 [kokoro-badge-link-4]: http://storage.googleapis.com/cloud-devrel-public/java/badges/java-pubsublite/java8-win.html
 [kokoro-badge-image-5]: http://storage.googleapis.com/cloud-devrel-public/java/badges/java-pubsublite/java11.svg
 [kokoro-badge-link-5]: http://storage.googleapis.com/cloud-devrel-public/java/badges/java-pubsublite/java11.html
-[stability-image]: https://img.shields.io/badge/stability-ga-green
+[stability-image]: https://img.shields.io/badge/stability-stable-green
 [maven-version-image]: https://img.shields.io/maven-central/v/com.google.cloud/google-cloud-pubsublite.svg
 [maven-version-link]: https://search.maven.org/search?q=g:com.google.cloud%20AND%20a:google-cloud-pubsublite&core=gav
 [authentication]: https://github.com/googleapis/google-cloud-java#authentication

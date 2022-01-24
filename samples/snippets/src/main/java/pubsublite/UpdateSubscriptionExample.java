@@ -17,6 +17,7 @@
 package pubsublite;
 
 // [START pubsublite_update_subscription]
+import com.google.api.gax.rpc.NotFoundException;
 import com.google.cloud.pubsublite.AdminClient;
 import com.google.cloud.pubsublite.AdminClientSettings;
 import com.google.cloud.pubsublite.CloudRegion;
@@ -28,6 +29,7 @@ import com.google.cloud.pubsublite.proto.Subscription;
 import com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig;
 import com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig.DeliveryRequirement;
 import com.google.protobuf.FieldMask;
+import java.util.concurrent.ExecutionException;
 
 public class UpdateSubscriptionExample {
 
@@ -77,6 +79,14 @@ public class UpdateSubscriptionExample {
       Subscription subscriptionAfterUpdate =
           adminClient.updateSubscription(subscription, fieldMask).get();
       System.out.println("After update: " + subscriptionAfterUpdate.getAllFields());
+    } catch (ExecutionException e) {
+      try {
+        throw e.getCause();
+      } catch (NotFoundException notFound) {
+        System.out.println("This subscription is not found.");
+      } catch (Throwable throwable) {
+        throwable.printStackTrace();
+      }
     }
   }
 }

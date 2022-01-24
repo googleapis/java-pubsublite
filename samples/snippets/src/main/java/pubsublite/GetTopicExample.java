@@ -17,6 +17,7 @@
 package pubsublite;
 
 // [START pubsublite_get_topic]
+import com.google.api.gax.rpc.NotFoundException;
 import com.google.cloud.pubsublite.AdminClient;
 import com.google.cloud.pubsublite.AdminClientSettings;
 import com.google.cloud.pubsublite.CloudRegion;
@@ -25,6 +26,7 @@ import com.google.cloud.pubsublite.ProjectNumber;
 import com.google.cloud.pubsublite.TopicName;
 import com.google.cloud.pubsublite.TopicPath;
 import com.google.cloud.pubsublite.proto.Topic;
+import java.util.concurrent.ExecutionException;
 
 public class GetTopicExample {
 
@@ -70,6 +72,14 @@ public class GetTopicExample {
       Topic topic = adminClient.getTopic(topicPath).get();
       long numPartitions = adminClient.getTopicPartitionCount(topicPath).get();
       System.out.println(topic.getAllFields() + "\nhas " + numPartitions + " partition(s).");
+    } catch (ExecutionException e) {
+      try {
+        throw e.getCause();
+      } catch (NotFoundException notFound) {
+        System.out.println("This topic is not found.");
+      } catch (Throwable throwable) {
+        throwable.printStackTrace();
+      }
     }
   }
 }

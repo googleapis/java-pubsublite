@@ -36,25 +36,44 @@ public class DeleteTopicExample {
     // Choose an existing topic.
     String topicId = "your-topic-id";
     long projectNumber = Long.parseLong("123456789");
+    // To delete a regional topic, set `regional` to true.
+    boolean regional = false;
 
-    deleteTopicExample(cloudRegion, zoneId, projectNumber, topicId);
+    deleteTopicExample(cloudRegion, zoneId, projectNumber, topicId, regional);
   }
 
   public static void deleteTopicExample(
-      String cloudRegion, char zoneId, long projectNumber, String topicId) throws Exception {
-    TopicPath topicPath =
-        TopicPath.newBuilder()
-            .setProject(ProjectNumber.of(projectNumber))
-            .setLocation(CloudZone.of(CloudRegion.of(cloudRegion), zoneId))
-            .setName(TopicName.of(topicId))
-            .build();
+      String cloudRegion, char zoneId, long projectNumber, String topicId, boolean regional)
+      throws Exception {
+    TopicPath topicPath = null;
+    if (regional) {
+      // A regional topic path.
+      topicPath =
+          TopicPath.newBuilder()
+              .setProject(ProjectNumber.of(projectNumber))
+              .setLocation(CloudRegion.of(cloudRegion))
+              .setName(TopicName.of(topicId))
+              .build();
+    } else {
+      // A zonal topic path.
+      topicPath =
+          TopicPath.newBuilder()
+              .setProject(ProjectNumber.of(projectNumber))
+              .setLocation(CloudZone.of(CloudRegion.of(cloudRegion), zoneId))
+              .setName(TopicName.of(topicId))
+              .build();
+    }
 
     AdminClientSettings adminClientSettings =
         AdminClientSettings.newBuilder().setRegion(CloudRegion.of(cloudRegion)).build();
 
     try (AdminClient adminClient = AdminClient.create(adminClientSettings)) {
       adminClient.deleteTopic(topicPath).get();
-      System.out.println(topicPath + " deleted successfully.");
+      if (regional) {
+        System.out.println(topicPath.toString() + " (regional topic) deleted successfully.");
+      } else {
+        System.out.println(topicPath.toString() + " (zonal topic) deleted successfully.");
+      }
     } catch (ExecutionException e) {
       try {
         throw e.getCause();

@@ -23,10 +23,14 @@ import com.google.cloud.pubsublite.AdminClientSettings;
 import com.google.cloud.pubsublite.CloudRegion;
 import com.google.cloud.pubsublite.CloudZone;
 import com.google.cloud.pubsublite.ProjectNumber;
+import com.google.cloud.pubsublite.ReservationName;
+import com.google.cloud.pubsublite.ReservationPath;
 import com.google.cloud.pubsublite.TopicName;
 import com.google.cloud.pubsublite.TopicPath;
 import com.google.cloud.pubsublite.proto.Topic;
 import com.google.cloud.pubsublite.proto.Topic.PartitionConfig;
+import com.google.cloud.pubsublite.proto.Topic.PartitionConfig.Capacity;
+import com.google.cloud.pubsublite.proto.Topic.ReservationConfig;
 import com.google.cloud.pubsublite.proto.Topic.RetentionConfig;
 import com.google.protobuf.FieldMask;
 import com.google.protobuf.util.Durations;
@@ -40,26 +44,54 @@ public class UpdateTopicExample {
     String cloudRegion = "your-cloud-region";
     char zoneId = 'b';
     String topicId = "your-topic-id";
+    String reservationId = "your-reservation-id";
     long projectNumber = Long.parseLong("123456789");
+    boolean regional = true;
 
-    updateTopicExample(cloudRegion, zoneId, projectNumber, topicId);
+    updateTopicExample(cloudRegion, zoneId, projectNumber, topicId, reservationId, regional);
   }
 
   public static void updateTopicExample(
-      String cloudRegion, char zoneId, long projectNumber, String topicId) throws Exception {
+      String cloudRegion,
+      char zoneId,
+      long projectNumber,
+      String topicId,
+      String reservationId,
+      boolean regional)
+      throws Exception {
 
-    TopicPath topicPath =
-        TopicPath.newBuilder()
+    TopicPath topicPath = null;
+    if (regional) {
+      // A regional topic path.
+      topicPath =
+          TopicPath.newBuilder()
+              .setProject(ProjectNumber.of(projectNumber))
+              .setLocation(CloudRegion.of(cloudRegion))
+              .setName(TopicName.of(topicId))
+              .build();
+    } else {
+      // A zonal topic path.
+      topicPath =
+          TopicPath.newBuilder()
+              .setProject(ProjectNumber.of(projectNumber))
+              .setLocation(CloudZone.of(CloudRegion.of(cloudRegion), zoneId))
+              .setName(TopicName.of(topicId))
+              .build();
+    }
+
+    ReservationPath reservationPath =
+        ReservationPath.newBuilder()
             .setProject(ProjectNumber.of(projectNumber))
-            .setLocation(CloudZone.of(CloudRegion.of(cloudRegion), zoneId))
-            .setName(TopicName.of(topicId))
+            .setLocation(CloudRegion.of(cloudRegion))
+            .setName(ReservationName.of(reservationId))
             .build();
 
     Iterable<String> iterablePaths =
         Arrays.asList(
             "partition_config.scale",
             "retention_config.per_partition_bytes",
-            "retention_config.period");
+            "retention_config.period",
+            "reservation_config.throughput_reservation");
 
     FieldMask fieldMask = FieldMask.newBuilder().addAllPaths(iterablePaths).build();
 
@@ -67,21 +99,26 @@ public class UpdateTopicExample {
         Topic.newBuilder()
             .setPartitionConfig(
                 PartitionConfig.newBuilder()
-                    // Set publishing throughput to 4 times the standard partition
-                    // throughput of 4 MiB per sec. This must be in the range [1,4]. A
-                    // topic with `scale` of 2 and count of 10 is charged for 20 partitions.
-                    .setScale(4)
+                    .setCapacity(
+                        Capacity.newBuilder()
+                            .setPublishMibPerSec(16)
+                            .setSubscribeMibPerSec(32)
+                            .build())
                     .build())
             .setRetentionConfig(
                 RetentionConfig.newBuilder()
-                    // Set storage per partition to 200 GiB. This must be 30 GiB-10 TiB.
+                    // Set storage per partition to 32 GiB. This must be 30 GiB-10 TiB.
                     // If the number of bytes stored in any of the topic's partitions grows
                     // beyond this value, older messages will be dropped to make room for
                     // newer ones, regardless of the value of `period`.
                     // Be careful when decreasing storage per partition as it may cause
                     // lost messages.
-                    .setPerPartitionBytes(200 * 1024 * 1024 * 1024L)
+                    .setPerPartitionBytes(32 * 1024 * 1024 * 1024L)
                     .setPeriod(Durations.fromDays(7)))
+            .setReservationConfig(
+                ReservationConfig.newBuilder()
+                    .setThroughputReservation(reservationPath.toString())
+                    .build())
             .setName(topicPath.toString())
             .build();
 

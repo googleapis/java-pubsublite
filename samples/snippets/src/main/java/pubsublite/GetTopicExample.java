@@ -37,18 +37,33 @@ public class GetTopicExample {
     // Choose an existing topic.
     String topicId = "your-topic-id";
     long projectNumber = Long.parseLong("123456789");
+    boolean regional = true;
 
-    getTopicExample(cloudRegion, zoneId, projectNumber, topicId);
+    getTopicExample(cloudRegion, zoneId, projectNumber, topicId, regional);
   }
 
   public static void getTopicExample(
-      String cloudRegion, char zoneId, long projectNumber, String topicId) throws Exception {
-    TopicPath topicPath =
-        TopicPath.newBuilder()
-            .setProject(ProjectNumber.of(projectNumber))
-            .setLocation(CloudZone.of(CloudRegion.of(cloudRegion), zoneId))
-            .setName(TopicName.of(topicId))
-            .build();
+      String cloudRegion, char zoneId, long projectNumber, String topicId, boolean regional)
+      throws Exception {
+
+    TopicPath topicPath = null;
+    if (regional) {
+      // A regional topic path.
+      topicPath =
+          TopicPath.newBuilder()
+              .setProject(ProjectNumber.of(projectNumber))
+              .setLocation(CloudRegion.of(cloudRegion))
+              .setName(TopicName.of(topicId))
+              .build();
+    } else {
+      // A zonal topic path.
+      topicPath =
+          TopicPath.newBuilder()
+              .setProject(ProjectNumber.of(projectNumber))
+              .setLocation(CloudZone.of(CloudRegion.of(cloudRegion), zoneId))
+              .setName(TopicName.of(topicId))
+              .build();
+    }
 
     AdminClientSettings adminClientSettings =
         AdminClientSettings.newBuilder().setRegion(CloudRegion.of(cloudRegion)).build();

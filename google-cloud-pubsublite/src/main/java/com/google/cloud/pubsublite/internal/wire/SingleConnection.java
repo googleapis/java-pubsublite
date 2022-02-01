@@ -18,6 +18,7 @@ package com.google.cloud.pubsublite.internal.wire;
 
 import com.google.api.gax.rpc.ClientStream;
 import com.google.api.gax.rpc.ResponseObserver;
+import com.google.api.gax.rpc.StatusCode.Code;
 import com.google.api.gax.rpc.StreamController;
 import com.google.cloud.pubsublite.internal.CheckedApiException;
 import com.google.cloud.pubsublite.internal.CloseableMonitor;
@@ -25,6 +26,7 @@ import com.google.common.base.Preconditions;
 import com.google.common.flogger.GoogleLogger;
 import com.google.common.util.concurrent.Monitor.Guard;
 import com.google.errorprone.annotations.concurrent.GuardedBy;
+import java.time.Duration;
 
 /**
  * A SingleConnection handles the state for a stream with an initial connection request that may
@@ -38,9 +40,12 @@ public abstract class SingleConnection<StreamRequestT, StreamResponseT, ClientRe
     implements ResponseObserver<StreamResponseT>, AutoCloseable {
   private static final GoogleLogger log = GoogleLogger.forEnclosingClass();
 
+  protected static final Duration DEFAULT_STREAM_IDLE_TIMEOUT = Duration.ofMinutes(2);
+
   private final ClientStream<StreamRequestT> requestStream;
   private final ResponseObserver<ClientResponseT> clientStream;
   private final boolean expectInitial;
+  private final StreamIdleTimer streamIdleTimer;
 
   private final CloseableMonitor connectionMonitor = new CloseableMonitor();
 
@@ -58,16 +63,18 @@ public abstract class SingleConnection<StreamRequestT, StreamResponseT, ClientRe
   protected SingleConnection(
       StreamFactory<StreamRequestT, StreamResponseT> streamFactory,
       ResponseObserver<ClientResponseT> clientStream,
+      Duration streamIdleTimeout,
       boolean expectInitialResponse) {
     this.clientStream = clientStream;
-    this.requestStream = streamFactory.New(this);
     this.expectInitial = expectInitialResponse;
+    this.streamIdleTimer = new StreamIdleTimer(streamIdleTimeout, this::onStreamIdle);
+    this.requestStream = streamFactory.New(this);
   }
 
   protected SingleConnection(
       StreamFactory<StreamRequestT, StreamResponseT> streamFactory,
       ResponseObserver<ClientResponseT> clientStream) {
-    this(streamFactory, clientStream, /*expectInitialResponse=*/ true);
+    this(streamFactory, clientStream, DEFAULT_STREAM_IDLE_TIMEOUT, /*expectInitialResponse=*/ true);
   }
 
   protected void initialize(StreamRequestT initialRequest) {
@@ -122,20 +129,33 @@ public abstract class SingleConnection<StreamRequestT, StreamResponseT, ClientRe
     }
   }
 
+  // Records the connection as completed and performs tear down, if not already completed. Returns
+  // whether the connection was already complete.
+  private boolean completeStream() {
+    try (CloseableMonitor.Hold h = connectionMonitor.enter()) {
+      if (completed) {
+        return true;
+      }
+      completed = true;
+      streamIdleTimer.close();
+    } catch (Exception e) {
+      log.atSevere().withCause(e).log("Error occurred while shutting down connection.");
+    }
+    return false;
+  }
+
   @Override
   public void close() {
-    try (CloseableMonitor.Hold h = connectionMonitor.enter()) {
-      if (completed) return;
-      completed = true;
+    if (completeStream()) {
+      return;
     }
     requestStream.closeSend();
     clientStream.onComplete();
   }
 
   private void abort(CheckedApiException error) {
-    try (CloseableMonitor.Hold h = connectionMonitor.enter()) {
-      if (completed) return;
-      completed = true;
+    if (completeStream()) {
+      return;
     }
     requestStream.closeSendWithError(error.underlying);
     clientStream.onError(error);
@@ -149,6 +169,7 @@ public abstract class SingleConnection<StreamRequestT, StreamResponseT, ClientRe
   public void onResponse(StreamResponseT response) {
     boolean isFirst;
     try (CloseableMonitor.Hold h = connectionMonitor.enter()) {
+      streamIdleTimer.restart();
       if (completed) {
         log.atFine().log("Received response on stream after completion: %s", response);
         return;
@@ -169,9 +190,8 @@ public abstract class SingleConnection<StreamRequestT, StreamResponseT, ClientRe
 
   @Override
   public void onError(Throwable t) {
-    try (CloseableMonitor.Hold h = connectionMonitor.enter()) {
-      if (completed) return;
-      completed = true;
+    if (completeStream()) {
+      return;
     }
     clientStream.onError(t);
     requestStream.closeSendWithError(t);
@@ -179,11 +199,14 @@ public abstract class SingleConnection<StreamRequestT, StreamResponseT, ClientRe
 
   @Override
   public void onComplete() {
-    try (CloseableMonitor.Hold h = connectionMonitor.enter()) {
-      if (completed) return;
-      completed = true;
+    if (completeStream()) {
+      return;
     }
     clientStream.onComplete();
     requestStream.closeSend();
+  }
+
+  private void onStreamIdle() {
+    onError(new CheckedApiException("Detected idle stream.", Code.ABORTED));
   }
 }

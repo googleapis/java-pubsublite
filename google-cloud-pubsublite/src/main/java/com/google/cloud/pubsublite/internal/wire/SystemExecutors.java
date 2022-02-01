@@ -21,6 +21,7 @@ import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.ThreadFactory;
 
 public class SystemExecutors {
@@ -31,8 +32,13 @@ public class SystemExecutors {
   }
 
   public static ScheduledExecutorService newDaemonExecutor(String prefix) {
-    return Executors.newScheduledThreadPool(
-        Math.max(4, Runtime.getRuntime().availableProcessors()), newDaemonThreadFactory(prefix));
+    ScheduledThreadPoolExecutor executor =
+        new ScheduledThreadPoolExecutor(
+            Math.max(4, Runtime.getRuntime().availableProcessors()),
+            newDaemonThreadFactory(prefix));
+    // Remove scheduled tasks from the executor as soon as they are cancelled.
+    executor.setRemoveOnCancelPolicy(true);
+    return executor;
   }
 
   private static final Lazy<ScheduledExecutorService> ALARM_EXECUTOR =

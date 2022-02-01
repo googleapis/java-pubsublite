@@ -25,10 +25,13 @@ import com.google.cloud.pubsublite.proto.PartitionAssignment;
 import com.google.cloud.pubsublite.proto.PartitionAssignmentAck;
 import com.google.cloud.pubsublite.proto.PartitionAssignmentRequest;
 import com.google.errorprone.annotations.concurrent.GuardedBy;
+import java.time.Duration;
 
 public class ConnectedAssignerImpl
     extends SingleConnection<PartitionAssignmentRequest, PartitionAssignment, PartitionAssignment>
     implements ConnectedAssigner {
+  private static final Duration STREAM_IDLE_TIMEOUT = Duration.ofMinutes(10);
+
   private final CloseableMonitor monitor = new CloseableMonitor();
 
   @GuardedBy("monitor.monitor")
@@ -38,7 +41,7 @@ public class ConnectedAssignerImpl
       StreamFactory<PartitionAssignmentRequest, PartitionAssignment> streamFactory,
       ResponseObserver<PartitionAssignment> clientStream,
       PartitionAssignmentRequest initialRequest) {
-    super(streamFactory, clientStream, /*expectInitialResponse=*/ false);
+    super(streamFactory, clientStream, STREAM_IDLE_TIMEOUT, /*expectInitialResponse=*/ false);
     initialize(initialRequest);
   }
 

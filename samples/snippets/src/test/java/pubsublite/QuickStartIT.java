@@ -44,7 +44,7 @@ public class QuickStartIT {
 
   private static final Long projectNumber =
       Long.parseLong(System.getenv("GOOGLE_CLOUD_PROJECT_NUMBER"));
-  private String cloudRegion = "us-west1";
+  private String cloudRegion = "us-central1";
   private final char zoneId = (char) (rand.nextInt(3) + 'a');
   private static final String suffix = UUID.randomUUID().toString();
   private static final String reservationId = "lite-reservation-" + suffix;

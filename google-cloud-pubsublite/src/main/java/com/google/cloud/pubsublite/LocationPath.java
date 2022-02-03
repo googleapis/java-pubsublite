@@ -54,7 +54,7 @@ public abstract class LocationPath implements Serializable {
   /**
    * Parse a location path. Should be structured like:
    *
-   * <p>projects/&lt;project number&gt;/locations/&lt;cloud zone&gt;
+   * <p>projects/&lt;project number&gt;/locations/&lt;cloud region or zone&gt;
    */
   public static LocationPath parse(String path) throws ApiException {
     String[] splits = path.split("/");

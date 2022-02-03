@@ -26,7 +26,7 @@ import java.util.Arrays;
 /**
  * A string wrapper representing a topic. Should be structured like:
  *
- * <p>projects/&lt;project number&gt;/locations/&lt;cloud zone&gt;/topics/&lt;id&gt;
+ * <p>projects/&lt;project number&gt;/locations/&lt;cloud region or zone&gt;/topics/&lt;id&gt;
  */
 @AutoValue
 public abstract class TopicPath implements Serializable {

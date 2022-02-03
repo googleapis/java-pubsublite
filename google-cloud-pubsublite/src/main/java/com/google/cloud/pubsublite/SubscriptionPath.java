@@ -26,7 +26,8 @@ import java.util.Arrays;
 /**
  * A string wrapper representing a subscription. Should be structured like:
  *
- * <p>projects/&lt;project number&gt;/locations/&lt;cloud zone&gt;/subscriptions/&lt;id&gt;
+ * <p>projects/&lt;project number&gt;/locations/&lt;cloud region or
+ * zone&gt;/subscriptions/&lt;id&gt;
  */
 @AutoValue
 public abstract class SubscriptionPath implements Serializable {

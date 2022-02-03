@@ -46,10 +46,10 @@ import com.google.cloud.pubsublite.Offset;
 import com.google.cloud.pubsublite.internal.AlarmFactory;
 import com.google.cloud.pubsublite.internal.CheckedApiException;
 import com.google.cloud.pubsublite.internal.ExtractStatus;
+import com.google.cloud.pubsublite.internal.wire.StreamFactories.PublishStreamFactory;
 import com.google.cloud.pubsublite.proto.InitialPublishRequest;
 import com.google.cloud.pubsublite.proto.PubSubMessage;
 import com.google.cloud.pubsublite.proto.PublishRequest;
-import com.google.cloud.pubsublite.proto.PublishResponse;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 import com.google.protobuf.ByteString;
@@ -84,7 +84,7 @@ public class PublisherImplTest {
           .setElementCountThreshold(1000000L)
           .build();
 
-  @Mock private StreamFactory<PublishRequest, PublishResponse> unusedStreamFactory;
+  @Mock private PublishStreamFactory unusedStreamFactory;
   @Mock private BatchPublisher mockBatchPublisher;
   @Mock private BatchPublisherFactory mockPublisherFactory;
   @Mock private AlarmFactory alarmFactory;

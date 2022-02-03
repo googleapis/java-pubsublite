@@ -17,7 +17,6 @@
 package com.google.cloud.pubsublite.internal.wire;
 
 import static com.google.cloud.pubsublite.internal.CheckedApiPreconditions.checkArgument;
-import static com.google.cloud.pubsublite.internal.wire.ApiServiceUtils.autoCloseableAsApiService;
 
 import com.google.api.gax.rpc.ApiException;
 import com.google.cloud.pubsublite.SequencedMessage;
@@ -25,13 +24,12 @@ import com.google.cloud.pubsublite.internal.AlarmFactory;
 import com.google.cloud.pubsublite.internal.CheckedApiException;
 import com.google.cloud.pubsublite.internal.CloseableMonitor;
 import com.google.cloud.pubsublite.internal.ProxyService;
+import com.google.cloud.pubsublite.internal.wire.StreamFactories.SubscribeStreamFactory;
 import com.google.cloud.pubsublite.proto.FlowControlRequest;
 import com.google.cloud.pubsublite.proto.InitialSubscribeRequest;
 import com.google.cloud.pubsublite.proto.SeekRequest;
 import com.google.cloud.pubsublite.proto.SeekRequest.NamedTarget;
 import com.google.cloud.pubsublite.proto.SubscribeRequest;
-import com.google.cloud.pubsublite.proto.SubscribeResponse;
-import com.google.cloud.pubsublite.v1.SubscriberServiceClient;
 import com.google.common.annotations.VisibleForTesting;
 import java.time.Duration;
 import java.util.List;
@@ -74,7 +72,7 @@ public class SubscriberImpl extends ProxyService
 
   @VisibleForTesting
   SubscriberImpl(
-      StreamFactory<SubscribeRequest, SubscribeResponse> streamFactory,
+      SubscribeStreamFactory streamFactory,
       ConnectedSubscriberFactory factory,
       AlarmFactory alarmFactory,
       InitialSubscribeRequest baseInitialRequest,
@@ -93,21 +91,20 @@ public class SubscriberImpl extends ProxyService
   }
 
   public SubscriberImpl(
-      SubscriberServiceClient client,
+      SubscribeStreamFactory streamFactory,
       InitialSubscribeRequest baseInitialRequest,
       SeekRequest initialLocation,
       Consumer<List<SequencedMessage>> messageConsumer,
       SubscriberResetHandler resetHandler)
       throws ApiException {
     this(
-        stream -> client.subscribeCallable().splitCall(stream),
+        streamFactory,
         new ConnectedSubscriberImpl.Factory(),
         AlarmFactory.create(FLOW_REQUESTS_FLUSH_INTERVAL),
         baseInitialRequest,
         initialLocation,
         messageConsumer,
         resetHandler);
-    addServices(autoCloseableAsApiService(client));
   }
 
   // ProxyService implementation.

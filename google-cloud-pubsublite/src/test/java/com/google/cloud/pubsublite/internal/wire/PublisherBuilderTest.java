@@ -27,7 +27,7 @@ import com.google.cloud.pubsublite.TopicName;
 import com.google.cloud.pubsublite.TopicPath;
 import com.google.cloud.pubsublite.cloudpubsub.PublisherSettings;
 import com.google.cloud.pubsublite.internal.Publisher;
-import com.google.cloud.pubsublite.v1.PublisherServiceClient;
+import com.google.cloud.pubsublite.internal.wire.StreamFactories.PublishStreamFactory;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -46,7 +46,7 @@ public class PublisherBuilderTest {
                     .setName(TopicName.of("abc"))
                     .build())
             .setPartition(Partition.of(85))
-            .setServiceClient(mock(PublisherServiceClient.class))
+            .setStreamFactory(mock(PublishStreamFactory.class))
             .build();
   }
 }

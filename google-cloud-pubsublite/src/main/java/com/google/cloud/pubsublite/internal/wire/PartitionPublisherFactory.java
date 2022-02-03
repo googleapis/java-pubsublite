@@ -21,6 +21,8 @@ import com.google.cloud.pubsublite.MessageMetadata;
 import com.google.cloud.pubsublite.Partition;
 import com.google.cloud.pubsublite.internal.Publisher;
 
-public interface PartitionPublisherFactory {
+public interface PartitionPublisherFactory extends AutoCloseable {
   Publisher<MessageMetadata> newPublisher(Partition partition) throws ApiException;
+
+  void close();
 }

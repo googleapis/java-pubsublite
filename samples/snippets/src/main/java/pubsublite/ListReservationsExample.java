@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Google LLC
+ * Copyright 2022 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,58 +16,44 @@
 
 package pubsublite;
 
-// [START pubsublite_list_topics]
+// [START pubsublite_list_reservations]
 import com.google.cloud.pubsublite.AdminClient;
 import com.google.cloud.pubsublite.AdminClientSettings;
 import com.google.cloud.pubsublite.CloudRegion;
-import com.google.cloud.pubsublite.CloudZone;
 import com.google.cloud.pubsublite.LocationPath;
 import com.google.cloud.pubsublite.ProjectNumber;
-import com.google.cloud.pubsublite.proto.Topic;
+import com.google.cloud.pubsublite.proto.Reservation;
 import java.util.List;
 
-public class ListTopicsExample {
+public class ListReservationsExample {
 
   public static void main(String... args) throws Exception {
     // TODO(developer): Replace these variables before running the sample.
-    String cloudRegion = "your-cloud-region";
-    char zoneId = 'b';
     long projectNumber = Long.parseLong("123456789");
-    boolean regional = true;
+    String cloudRegion = "your-cloud-region";
 
-    listTopicsExample(cloudRegion, zoneId, projectNumber, regional);
+    listReservationsExample(projectNumber, cloudRegion);
   }
 
-  public static void listTopicsExample(
-      String cloudRegion, char zoneId, long projectNumber, boolean regional) throws Exception {
+  public static void listReservationsExample(long projectNumber, String cloudRegion)
+      throws Exception {
 
     AdminClientSettings adminClientSettings =
         AdminClientSettings.newBuilder().setRegion(CloudRegion.of(cloudRegion)).build();
 
-    LocationPath locationPath = null;
-    if (regional) {
-      // A region.
-      locationPath =
-          LocationPath.newBuilder()
-              .setProject(ProjectNumber.of(projectNumber))
-              .setLocation(CloudRegion.of(cloudRegion))
-              .build();
-    } else {
-      // A zone.
-      locationPath =
-          LocationPath.newBuilder()
-              .setProject(ProjectNumber.of(projectNumber))
-              .setLocation(CloudZone.of(CloudRegion.of(cloudRegion), zoneId))
-              .build();
-    }
+    LocationPath locationPath =
+        LocationPath.newBuilder()
+            .setProject(ProjectNumber.of(projectNumber))
+            .setLocation(CloudRegion.of(cloudRegion))
+            .build();
 
     try (AdminClient adminClient = AdminClient.create(adminClientSettings)) {
-      List<Topic> topics = adminClient.listTopics(locationPath).get();
-      for (Topic topic : topics) {
-        System.out.println(topic.getAllFields());
+      List<Reservation> reservations = adminClient.listReservations(locationPath).get();
+      for (Reservation reservation : reservations) {
+        System.out.println(reservation.getAllFields());
       }
-      System.out.println(topics.size() + " topic(s) listed.");
+      System.out.println(reservations.size() + " reservation(s) listed in " + locationPath + ".");
     }
   }
 }
-// [END pubsublite_list_topics]
+// [END pubsublite_list_reservations]

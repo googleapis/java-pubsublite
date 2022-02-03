@@ -38,6 +38,7 @@ import com.google.cloud.pubsublite.SubscriptionName;
 import com.google.cloud.pubsublite.SubscriptionPath;
 import com.google.cloud.pubsublite.internal.ApiExceptionMatcher;
 import com.google.cloud.pubsublite.internal.CheckedApiException;
+import com.google.cloud.pubsublite.internal.wire.StreamFactories.SubscribeStreamFactory;
 import com.google.cloud.pubsublite.proto.Cursor;
 import com.google.cloud.pubsublite.proto.FlowControlRequest;
 import com.google.cloud.pubsublite.proto.InitialSubscribeRequest;
@@ -83,7 +84,7 @@ public class ConnectedSubscriberImplTest {
 
   private static final Offset INITIAL_OFFSET = Offset.of(9000);
 
-  @Mock StreamFactory<SubscribeRequest, SubscribeResponse> streamFactory;
+  @Mock SubscribeStreamFactory streamFactory;
 
   @Mock private ClientStream<SubscribeRequest> mockRequestStream;
 

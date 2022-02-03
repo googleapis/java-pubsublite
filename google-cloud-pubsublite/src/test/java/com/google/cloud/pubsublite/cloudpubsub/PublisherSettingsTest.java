@@ -64,7 +64,7 @@ public class PublisherSettingsTest {
     when(mockBuilder.build()).thenReturn(underlying);
     PublisherSettings.newBuilder()
         .setTopicPath(getPath())
-        .setServiceClientSupplier(() -> mock(PublisherServiceClient.class))
+        .setServiceClient(mock(PublisherServiceClient.class))
         .setAdminClient(mock(AdminClient.class))
         .setUnderlyingBuilder(mockBuilder)
         .build()

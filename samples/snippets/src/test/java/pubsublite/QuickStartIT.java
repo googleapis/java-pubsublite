@@ -20,6 +20,10 @@ import static com.google.common.truth.Truth.assertThat;
 import static junit.framework.TestCase.assertNotNull;
 
 import com.google.cloud.pubsublite.BacklogLocation;
+import com.google.cloud.pubsublite.CloudRegion;
+import com.google.cloud.pubsublite.ProjectNumber;
+import com.google.cloud.pubsublite.ReservationName;
+import com.google.cloud.pubsublite.ReservationPath;
 import com.google.cloud.pubsublite.SeekTarget;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
@@ -40,13 +44,21 @@ public class QuickStartIT {
 
   private static final Long projectNumber =
       Long.parseLong(System.getenv("GOOGLE_CLOUD_PROJECT_NUMBER"));
-  private String cloudRegion = "us-central1";
+  private String cloudRegion = "us-west1";
   private final char zoneId = (char) (rand.nextInt(3) + 'a');
   private static final String suffix = UUID.randomUUID().toString();
+  private static final String reservationId = "lite-reservation-" + suffix;
   private static final String topicId = "lite-topic-" + suffix;
   private static final String subscriptionId = "lite-subscription-" + suffix;
   private static final int partitions = 2;
   private static final int messageCount = 10;
+
+  ReservationPath reservationPath =
+      ReservationPath.newBuilder()
+          .setProject(ProjectNumber.of(projectNumber))
+          .setLocation(CloudRegion.of(cloudRegion))
+          .setName(ReservationName.of(reservationId))
+          .build();
 
   private static void requireEnvVar(String varName) {
     assertNotNull(
@@ -75,27 +87,77 @@ public class QuickStartIT {
 
   @Test
   public void testQuickstart() throws Exception {
-    // Create a topic.
-    CreateTopicExample.createTopicExample(cloudRegion, zoneId, projectNumber, topicId, partitions);
+
+    // Create a reservation.
+    CreateReservationExample.createReservationExample(
+        projectNumber, cloudRegion, reservationId, /*throughputCapacity=*/ 4);
+    assertThat(bout.toString()).contains(reservationId);
     assertThat(bout.toString()).contains("created successfully");
 
     bout.reset();
-    // Get a topic.
-    GetTopicExample.getTopicExample(cloudRegion, zoneId, projectNumber, topicId);
-    assertThat(bout.toString()).contains(topicId);
+    // Create a regional topic.
+    CreateTopicExample.createTopicExample(
+        cloudRegion, zoneId, projectNumber, topicId, reservationId, partitions, /*regional=*/ true);
+    assertThat(bout.toString()).contains(" (regional topic) created successfully");
+
+    bout.reset();
+    // Create a zonal topic.
+    CreateTopicExample.createTopicExample(
+        cloudRegion,
+        zoneId,
+        projectNumber,
+        topicId,
+        reservationId,
+        partitions,
+        /*regional=*/ false);
+    assertThat(bout.toString()).contains(" (zonal topic) created successfully");
+
+    bout.reset();
+    // Get a reservation.
+    GetReservationExample.getReservationExample(projectNumber, cloudRegion, reservationId);
+    assertThat(bout.toString()).contains(reservationId);
+    assertThat(bout.toString()).contains("4 units of throughput capacity.");
+
+    bout.reset();
+    // List reservations.
+    ListReservationsExample.listReservationsExample(projectNumber, cloudRegion);
+    assertThat(bout.toString()).contains("reservation(s) listed");
+
+    bout.reset();
+    // Update reservation to have a throughput capacity of 8 units.
+    UpdateReservationExample.updateReservationExample(projectNumber, cloudRegion, reservationId, 8);
+    assertThat(bout.toString()).contains("throughput_capacity=8");
+
+    bout.reset();
+    // Get a regional topic.
+    GetTopicExample.getTopicExample(
+        cloudRegion, zoneId, projectNumber, topicId, /*regional=*/ true);
+    // Get a zonal topic
+    GetTopicExample.getTopicExample(
+        cloudRegion, zoneId, projectNumber, topicId, /*regional=*/ false);
+    assertThat(bout.toString().contains(cloudRegion + "-" + zoneId + "/topics/" + topicId));
+    assertThat(bout.toString()).contains(cloudRegion + "/topics/" + topicId);
     assertThat(bout.toString()).contains(String.format("%s partition(s).", partitions));
 
     bout.reset();
-    // List topics.
-    ListTopicsExample.listTopicsExample(cloudRegion, zoneId, projectNumber);
+    // List regional topics.
+    ListTopicsExample.listTopicsExample(cloudRegion, zoneId, projectNumber, /*regional=*/ true);
+    // List zonal topics.
+    ListTopicsExample.listTopicsExample(cloudRegion, zoneId, projectNumber, /*regional=*/ false);
+    assertThat(bout.toString().contains(cloudRegion + "/topics/" + topicId));
+    assertThat(bout.toString().contains(cloudRegion + "-" + zoneId + "/topics/" + topicId));
     assertThat(bout.toString()).contains("topic(s) listed");
 
     bout.reset();
-    // Update a topic.
-    UpdateTopicExample.updateTopicExample(cloudRegion, zoneId, projectNumber, topicId);
+    // Update a regional topic.
+    UpdateTopicExample.updateTopicExample(
+        cloudRegion, zoneId, projectNumber, topicId, reservationId, /*regional=*/ true);
+    // Update a zonal topic.
+    UpdateTopicExample.updateTopicExample(
+        cloudRegion, zoneId, projectNumber, topicId, reservationId, /*regional=*/ false);
     assertThat(bout.toString()).contains("seconds: 604800");
-    assertThat(bout.toString()).contains("per_partition_bytes: 214748364800");
-    assertThat(bout.toString()).contains("scale: 4");
+    assertThat(bout.toString()).contains("per_partition_bytes: 34359738368");
+    assertThat(bout.toString()).contains("throughput_reservation: \"" + reservationPath.toString());
 
     bout.reset();
     // Create a subscription.
@@ -179,8 +241,18 @@ public class QuickStartIT {
     assertThat(bout.toString()).contains("deleted successfully");
 
     bout.reset();
-    // Delete a topic.
-    DeleteTopicExample.deleteTopicExample(cloudRegion, zoneId, projectNumber, topicId);
+    // Delete a regional topic.
+    DeleteTopicExample.deleteTopicExample(
+        cloudRegion, zoneId, projectNumber, topicId, /*regional=*/ true);
+    // Delete a zonal topic.
+    DeleteTopicExample.deleteTopicExample(
+        cloudRegion, zoneId, projectNumber, topicId, /*regional=*/ false);
+    assertThat(bout.toString()).contains(" (regional topic) deleted successfully");
+    assertThat(bout.toString()).contains(" (zonal topic) deleted successfully");
+
+    bout.reset();
+    // Delete a reservation.
+    DeleteReservationExample.deleteReservationExample(projectNumber, cloudRegion, reservationId);
     assertThat(bout.toString()).contains("deleted successfully");
   }
 }

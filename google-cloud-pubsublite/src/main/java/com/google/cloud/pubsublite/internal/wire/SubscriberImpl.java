@@ -24,6 +24,7 @@ import com.google.cloud.pubsublite.internal.AlarmFactory;
 import com.google.cloud.pubsublite.internal.CheckedApiException;
 import com.google.cloud.pubsublite.internal.CloseableMonitor;
 import com.google.cloud.pubsublite.internal.ProxyService;
+import com.google.cloud.pubsublite.internal.SerialExecutor;
 import com.google.cloud.pubsublite.internal.wire.StreamFactories.SubscribeStreamFactory;
 import com.google.cloud.pubsublite.proto.FlowControlRequest;
 import com.google.cloud.pubsublite.proto.InitialSubscribeRequest;
@@ -49,6 +50,9 @@ public class SubscriberImpl extends ProxyService
   private final SubscriberResetHandler resetHandler;
 
   private final InitialSubscribeRequest baseInitialRequest;
+
+  // Used to ensure messages are delivered to consumers in order.
+  private final SerialExecutor messageDeliveryExecutor;
 
   private final CloseableMonitor monitor = new CloseableMonitor();
 
@@ -84,6 +88,7 @@ public class SubscriberImpl extends ProxyService
     this.messageConsumer = messageConsumer;
     this.resetHandler = resetHandler;
     this.baseInitialRequest = baseInitialRequest;
+    this.messageDeliveryExecutor = new SerialExecutor(SystemExecutors.getFuturesExecutor());
     this.initialLocation = initialLocation;
     this.connection =
         new RetryingConnectionImpl<>(streamFactory, factory, this, getInitialRequest());
@@ -121,6 +126,7 @@ public class SubscriberImpl extends ProxyService
       shutdown = true;
       this.alarmFuture.ifPresent(future -> future.cancel(false));
       this.alarmFuture = Optional.empty();
+      messageDeliveryExecutor.close();
     }
   }
 
@@ -199,8 +205,8 @@ public class SubscriberImpl extends ProxyService
       if (shutdown) return;
       nextOffsetTracker.onMessages(messages);
       flowControlBatcher.onMessages(messages);
+      messageDeliveryExecutor.execute(() -> messageConsumer.accept(messages));
     }
-    messageConsumer.accept(messages);
   }
 
   private void processBatchFlowRequest() {

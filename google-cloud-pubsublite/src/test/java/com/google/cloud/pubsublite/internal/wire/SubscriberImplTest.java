@@ -19,6 +19,7 @@ package com.google.cloud.pubsublite.internal.wire;
 import static com.google.cloud.pubsublite.internal.ApiExceptionMatcher.assertThrowableMatches;
 import static com.google.cloud.pubsublite.internal.testing.RetryingConnectionHelpers.whenFailed;
 import static com.google.common.truth.Truth.assertThat;
+import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.junit.Assert.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
@@ -54,6 +55,7 @@ import com.google.cloud.pubsublite.proto.SubscribeRequest;
 import com.google.common.collect.ImmutableList;
 import com.google.protobuf.util.Timestamps;
 import java.util.List;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Future;
 import java.util.function.Consumer;
 import org.junit.Before;
@@ -96,6 +98,18 @@ public class SubscriberImplTest {
   private SubscriberImpl subscriber;
   private ResponseObserver<List<SequencedMessage>> leakedResponseObserver;
   private Runnable leakedFlowControlAlarm;
+
+  private CountDownLatch countdownMessageBatches(int count) {
+    CountDownLatch received = new CountDownLatch(count);
+    doAnswer(
+            args -> {
+              received.countDown();
+              return null;
+            })
+        .when(mockMessageConsumer)
+        .accept(any());
+    return received;
+  }
 
   @Before
   public void setUp() throws CheckedApiException {
@@ -216,7 +230,9 @@ public class SubscriberImplTest {
         ImmutableList.of(
             SequencedMessage.of(Message.builder().build(), Timestamps.EPOCH, Offset.of(0), 10),
             SequencedMessage.of(Message.builder().build(), Timestamps.EPOCH, Offset.of(1), 10));
+    CountDownLatch messagesReceived = countdownMessageBatches(1);
     leakedResponseObserver.onResponse(messages);
+    assertThat(messagesReceived.await(10, SECONDS)).isTrue();
 
     verify(mockMessageConsumer).accept(messages);
     assertThat(subscriber.isRunning()).isTrue();
@@ -237,7 +253,9 @@ public class SubscriberImplTest {
     ImmutableList<SequencedMessage> messages2 =
         ImmutableList.of(
             SequencedMessage.of(Message.builder().build(), Timestamps.EPOCH, Offset.of(3), 2));
+    CountDownLatch messagesReceived = countdownMessageBatches(1);
     leakedResponseObserver.onResponse(messages1);
+    assertThat(messagesReceived.await(10, SECONDS)).isTrue();
     verify(mockMessageConsumer).accept(messages1);
     assertThat(subscriber.isRunning()).isTrue();
     leakedResponseObserver.onResponse(messages2);
@@ -254,7 +272,9 @@ public class SubscriberImplTest {
         ImmutableList.of(
             SequencedMessage.of(Message.builder().build(), Timestamps.EPOCH, Offset.of(0), 10),
             SequencedMessage.of(Message.builder().build(), Timestamps.EPOCH, Offset.of(1), 10));
+    CountDownLatch messagesReceived = countdownMessageBatches(1);
     leakedResponseObserver.onResponse(messages);
+    assertThat(messagesReceived.await(10, SECONDS)).isTrue();
     verify(mockMessageConsumer).accept(messages);
 
     final SubscribeRequest nextOffsetRequest =
@@ -288,7 +308,9 @@ public class SubscriberImplTest {
         ImmutableList.of(
             SequencedMessage.of(Message.builder().build(), Timestamps.EPOCH, Offset.of(0), 10),
             SequencedMessage.of(Message.builder().build(), Timestamps.EPOCH, Offset.of(1), 10));
+    CountDownLatch messagesReceived = countdownMessageBatches(1);
     leakedResponseObserver.onResponse(messages);
+    assertThat(messagesReceived.await(10, SECONDS)).isTrue();
     verify(mockMessageConsumer).accept(messages);
 
     doAnswer(
@@ -317,7 +339,9 @@ public class SubscriberImplTest {
         ImmutableList.of(
             SequencedMessage.of(Message.builder().build(), Timestamps.EPOCH, Offset.of(0), 10),
             SequencedMessage.of(Message.builder().build(), Timestamps.EPOCH, Offset.of(1), 10));
+    CountDownLatch messagesReceived = countdownMessageBatches(1);
     leakedResponseObserver.onResponse(messages);
+    assertThat(messagesReceived.await(10, SECONDS)).isTrue();
     verify(mockMessageConsumer).accept(messages);
 
     final SubscribeRequest nextOffsetRequest =

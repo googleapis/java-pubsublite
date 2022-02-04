@@ -16,6 +16,8 @@
 
 package com.google.cloud.pubsublite.internal.wire;
 
+import static com.google.common.truth.Truth.assertThat;
+import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.doAnswer;
@@ -43,7 +45,9 @@ import com.google.cloud.pubsublite.proto.StreamingCommitCursorRequest;
 import com.google.cloud.pubsublite.proto.StreamingCommitCursorResponse;
 import com.google.common.base.Preconditions;
 import java.io.IOException;
+import java.time.Duration;
 import java.util.Optional;
+import java.util.concurrent.CountDownLatch;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -93,9 +97,9 @@ public class ConnectedCommitterImplTest {
             (Answer<ClientStream<StreamingCommitCursorRequest>>)
                 args -> {
                   Preconditions.checkArgument(!leakedResponseStream.isPresent());
-                  ResponseObserver<StreamingCommitCursorResponse> ResponseObserver =
+                  ResponseObserver<StreamingCommitCursorResponse> responseObserver =
                       args.getArgument(0);
-                  leakedResponseStream = Optional.of(ResponseObserver);
+                  leakedResponseStream = Optional.of(responseObserver);
                   return mockRequestStream;
                 })
         .when(streamFactory)
@@ -216,5 +220,65 @@ public class ConnectedCommitterImplTest {
                 .build());
     verify(mockOutputStream)
         .onResponse(SequencedCommitCursorResponse.newBuilder().setAcknowledgedCommits(10).build());
+  }
+
+  @Test
+  public void receiveTimeout_closesConnection() throws Exception {
+    CountDownLatch connectionClosed = new CountDownLatch(1);
+    doAnswer(
+            args -> {
+              connectionClosed.countDown();
+              return null;
+            })
+        .when(mockOutputStream)
+        .onError(any());
+
+    doAnswer(
+            AnswerWith(
+                StreamingCommitCursorResponse.newBuilder()
+                    .setInitial(InitialCommitCursorResponse.getDefaultInstance())))
+        .when(mockRequestStream)
+        .send(initialRequest());
+    committer =
+        new ConnectedCommitterImpl(
+            streamFactory, mockOutputStream, initialRequest(), Duration.ofMillis(100));
+    verify(mockRequestStream).send(initialRequest());
+
+    // No subsequent stream responses should close the stream.
+    assertThat(connectionClosed.await(5, SECONDS)).isTrue();
+
+    verify(mockRequestStream).closeSendWithError(argThat(new ApiExceptionMatcher(Code.ABORTED)));
+    verify(mockOutputStream).onError(argThat(new ApiExceptionMatcher(Code.ABORTED)));
+
+    committer.close();
+    verifyNoMoreInteractions(mockRequestStream);
+    verifyNoMoreInteractions(mockOutputStream);
+  }
+
+  @Test
+  public void initializationTimeout_closesConnection() throws Exception {
+    CountDownLatch connectionClosed = new CountDownLatch(1);
+    doAnswer(
+            args -> {
+              connectionClosed.countDown();
+              return null;
+            })
+        .when(mockOutputStream)
+        .onError(any());
+
+    // No initial response should close the stream.
+    committer =
+        new ConnectedCommitterImpl(
+            streamFactory, mockOutputStream, initialRequest(), Duration.ofMillis(100));
+
+    assertThat(connectionClosed.await(5, SECONDS)).isTrue();
+
+    verify(mockRequestStream).send(initialRequest());
+    verify(mockRequestStream).closeSendWithError(argThat(new ApiExceptionMatcher(Code.ABORTED)));
+    verify(mockOutputStream).onError(argThat(new ApiExceptionMatcher(Code.ABORTED)));
+
+    committer.close();
+    verifyNoMoreInteractions(mockRequestStream);
+    verifyNoMoreInteractions(mockOutputStream);
   }
 }

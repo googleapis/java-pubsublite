@@ -114,7 +114,9 @@ class RetryingConnectionImpl<
       if (completed) return;
       completed = true;
       logger.atFine().log("Terminating connection for %s", streamDescription());
-      currentConnection.close();
+      if (currentConnection != null) {
+        currentConnection.close();
+      }
     } catch (Throwable t) {
       logger.atWarning().withCause(t).log(
           "Failed while terminating connection for %s", streamDescription());
@@ -180,7 +182,9 @@ class RetryingConnectionImpl<
     Optional<Throwable> throwable = Optional.empty();
     long backoffTime = 0;
     try (CloseableMonitor.Hold h = connectionMonitor.enter()) {
-      currentConnection.close();
+      if (currentConnection != null) {
+        currentConnection.close();
+      }
       backoffTime = nextRetryBackoffDuration;
       nextRetryBackoffDuration = Math.min(backoffTime * 2, MAX_RECONNECT_BACKOFF_TIME.toMillis());
     } catch (Throwable t2) {
@@ -197,7 +201,7 @@ class RetryingConnectionImpl<
     logger.atFine().withCause(t).log(
         "Stream disconnected attempting retry, after %s milliseconds for %s",
         backoffTime, streamDescription());
-    ScheduledFuture<?> retry =
+    ScheduledFuture<?> unusedFuture =
         SystemExecutors.getAlarmExecutor()
             .schedule(() -> triggerReinitialize(statusOr.get()), backoffTime, MILLISECONDS);
   }

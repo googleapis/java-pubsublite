@@ -26,6 +26,8 @@ import com.google.cloud.pubsublite.proto.SequencedCommitCursorRequest;
 import com.google.cloud.pubsublite.proto.SequencedCommitCursorResponse;
 import com.google.cloud.pubsublite.proto.StreamingCommitCursorRequest;
 import com.google.cloud.pubsublite.proto.StreamingCommitCursorResponse;
+import com.google.common.annotations.VisibleForTesting;
+import java.time.Duration;
 
 public class ConnectedCommitterImpl
     extends SingleConnection<
@@ -33,11 +35,13 @@ public class ConnectedCommitterImpl
     implements ConnectedCommitter {
   private final StreamingCommitCursorRequest initialRequest;
 
-  private ConnectedCommitterImpl(
+  @VisibleForTesting
+  ConnectedCommitterImpl(
       StreamFactory<StreamingCommitCursorRequest, StreamingCommitCursorResponse> streamFactory,
       ResponseObserver<SequencedCommitCursorResponse> clientStream,
-      StreamingCommitCursorRequest initialRequest) {
-    super(streamFactory, clientStream);
+      StreamingCommitCursorRequest initialRequest,
+      Duration streamIdleTimeout) {
+    super(streamFactory, clientStream, streamIdleTimeout, /*expectInitialResponse=*/ true);
     this.initialRequest = initialRequest;
     initialize(initialRequest);
   }
@@ -48,7 +52,8 @@ public class ConnectedCommitterImpl
         StreamFactory<StreamingCommitCursorRequest, StreamingCommitCursorResponse> streamFactory,
         ResponseObserver<SequencedCommitCursorResponse> clientStream,
         StreamingCommitCursorRequest initialRequest) {
-      return new ConnectedCommitterImpl(streamFactory, clientStream, initialRequest);
+      return new ConnectedCommitterImpl(
+          streamFactory, clientStream, initialRequest, DEFAULT_STREAM_IDLE_TIMEOUT);
     }
   }
 

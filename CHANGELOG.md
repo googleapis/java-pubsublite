@@ -1,5 +1,30 @@
 # Changelog
 
+### [1.4.9](https://github.com/googleapis/java-pubsublite/compare/v1.4.8...v1.4.9) (2022-02-04)
+
+
+### Bug Fixes
+
+* Ensure messages are delivered in order ([#1031](https://github.com/googleapis/java-pubsublite/issues/1031)) ([a8a969e](https://github.com/googleapis/java-pubsublite/commit/a8a969e72ef5a74b19cf3e232a4abfe3629aeb5a))
+* mitigate gRPC stream connection issues ([#1038](https://github.com/googleapis/java-pubsublite/issues/1038)) ([f3678b7](https://github.com/googleapis/java-pubsublite/commit/f3678b75463f636e16447d0c323f3d5a4ac8e796))
+* Reinitialize streams in an unbounded executor ([#1027](https://github.com/googleapis/java-pubsublite/issues/1027)) ([6377c1d](https://github.com/googleapis/java-pubsublite/commit/6377c1d6c0eecfcfffbfd40356f414c7a4538205))
+
+
+### Documentation
+
+* Update comments for regional topics ([#967](https://github.com/googleapis/java-pubsublite/issues/967)) ([7220439](https://github.com/googleapis/java-pubsublite/commit/722043992affcc81a11ee2b78eda1dc6263bf2cd))
+
+
+### Dependencies
+
+* update dependency com.google.cloud:google-cloud-bom to v0.166.0 ([#1017](https://github.com/googleapis/java-pubsublite/issues/1017)) ([03ae03a](https://github.com/googleapis/java-pubsublite/commit/03ae03aaacb7d5e5f02eab6df1a14bddda9fbabe))
+* update dependency com.google.cloud:google-cloud-pubsub to v1.115.1 ([#1014](https://github.com/googleapis/java-pubsublite/issues/1014)) ([59e74c9](https://github.com/googleapis/java-pubsublite/commit/59e74c99447a7ac152470c4a5f085e295c11d3f9))
+* update dependency com.google.cloud:google-cloud-pubsub to v1.115.2 ([#1041](https://github.com/googleapis/java-pubsublite/issues/1041)) ([1f46ca9](https://github.com/googleapis/java-pubsublite/commit/1f46ca947ce2d0b9f5d4b4762737a4516eb05d3b))
+* update dependency com.google.cloud:google-cloud-shared-dependencies to v2.7.0 ([#1037](https://github.com/googleapis/java-pubsublite/issues/1037)) ([15d4215](https://github.com/googleapis/java-pubsublite/commit/15d4215d01153397dcc670a06fe9540e7f83b612))
+* update dependency com.google.errorprone:error_prone_annotations to v2.11.0 ([#1032](https://github.com/googleapis/java-pubsublite/issues/1032)) ([677b96b](https://github.com/googleapis/java-pubsublite/commit/677b96b4c1121acb86b508cdd8a8f6aa13951145))
+* update dependency com.google.errorprone:error_prone_core to v2.11.0 ([#1033](https://github.com/googleapis/java-pubsublite/issues/1033)) ([088cc62](https://github.com/googleapis/java-pubsublite/commit/088cc625e9225f8bd020cf956200726d877fdff7))
+* update dependency org.checkerframework:checker-qual to v3.21.1 ([#1015](https://github.com/googleapis/java-pubsublite/issues/1015)) ([ffa1f0b](https://github.com/googleapis/java-pubsublite/commit/ffa1f0bd82d1a1b223070aac4d61910eb150e950))
+
 ### [1.4.8](https://www.github.com/googleapis/java-pubsublite/compare/v1.4.7...v1.4.8) (2022-01-07)
 
 

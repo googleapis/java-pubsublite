@@ -1,5 +1,13 @@
 # Changelog
 
+### [1.4.10](https://github.com/googleapis/java-pubsublite/compare/v1.4.9...v1.4.10) (2022-02-08)
+
+
+### Dependencies
+
+* update dependency com.google.cloud:google-cloud-bom to v0.167.0 ([#1047](https://github.com/googleapis/java-pubsublite/issues/1047)) ([49dcd9c](https://github.com/googleapis/java-pubsublite/commit/49dcd9c21c66411c5da40874afe21b9edfc04f8b))
+* update dependency org.checkerframework:checker-qual to v3.21.2 ([#1039](https://github.com/googleapis/java-pubsublite/issues/1039)) ([3753757](https://github.com/googleapis/java-pubsublite/commit/37537579025b01f12c176f6bf7264cdd5722c96b))
+
 ### [1.4.9](https://github.com/googleapis/java-pubsublite/compare/v1.4.8...v1.4.9) (2022-02-04)
 
 

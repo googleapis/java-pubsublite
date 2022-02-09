@@ -1,5 +1,12 @@
 # Changelog
 
+### [1.4.11](https://github.com/googleapis/java-pubsublite/compare/v1.4.10...v1.4.11) (2022-02-09)
+
+
+### Dependencies
+
+* update dependency com.google.cloud:google-cloud-pubsub to v1.115.3 ([#1051](https://github.com/googleapis/java-pubsublite/issues/1051)) ([aac8966](https://github.com/googleapis/java-pubsublite/commit/aac89660d34ccbd1d3307f14d12186d1e01341be))
+
 ### [1.4.10](https://github.com/googleapis/java-pubsublite/compare/v1.4.9...v1.4.10) (2022-02-08)
 
 

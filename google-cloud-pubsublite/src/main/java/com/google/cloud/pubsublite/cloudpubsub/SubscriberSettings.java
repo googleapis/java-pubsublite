@@ -315,7 +315,6 @@ public abstract class SubscriberSettings {
     }
 
     List<ApiService> services = new ArrayList<>();
-    services.add(autoCloseableAsApiService(partitionSubscriberFactory));
     for (Partition partition : partitions()) {
       try {
         services.add(partitionSubscriberFactory.newSubscriber(partition));
@@ -323,6 +322,7 @@ public abstract class SubscriberSettings {
         throw e.underlying;
       }
     }
+    services.add(autoCloseableAsApiService(partitionSubscriberFactory));
     return MultiPartitionSubscriber.of(services);
   }
 }

@@ -36,26 +36,45 @@ public class DeleteSubscriptionExample {
     // Choose an existing subscription.
     String subscriptionId = "your-subscription-id";
     long projectNumber = Long.parseLong("123456789");
+    boolean regional = false;
 
-    deleteSubscriptionExample(cloudRegion, zoneId, projectNumber, subscriptionId);
+    deleteSubscriptionExample(cloudRegion, zoneId, projectNumber, subscriptionId, regional);
   }
 
   public static void deleteSubscriptionExample(
-      String cloudRegion, char zoneId, long projectNumber, String subscriptionId) throws Exception {
+      String cloudRegion, char zoneId, long projectNumber, String subscriptionId, boolean regional)
+      throws Exception {
 
-    SubscriptionPath subscriptionPath =
-        SubscriptionPath.newBuilder()
-            .setLocation(CloudZone.of(CloudRegion.of(cloudRegion), zoneId))
-            .setProject(ProjectNumber.of(projectNumber))
-            .setName(SubscriptionName.of(subscriptionId))
-            .build();
+    SubscriptionPath subscriptionPath = null;
+
+    if (regional) {
+      // A regional subscription path.
+      subscriptionPath =
+          SubscriptionPath.newBuilder()
+              .setLocation(CloudRegion.of(cloudRegion))
+              .setProject(ProjectNumber.of(projectNumber))
+              .setName(SubscriptionName.of(subscriptionId))
+              .build();
+    } else {
+      // A zonal subscription path.
+      subscriptionPath =
+          SubscriptionPath.newBuilder()
+              .setLocation(CloudZone.of(CloudRegion.of(cloudRegion), zoneId))
+              .setProject(ProjectNumber.of(projectNumber))
+              .setName(SubscriptionName.of(subscriptionId))
+              .build();
+    }
 
     AdminClientSettings adminClientSettings =
         AdminClientSettings.newBuilder().setRegion(CloudRegion.of(cloudRegion)).build();
 
     try (AdminClient adminClient = AdminClient.create(adminClientSettings)) {
       adminClient.deleteSubscription(subscriptionPath).get();
-      System.out.println(subscriptionPath + " deleted successfully.");
+      if (regional) {
+        System.out.println(subscriptionPath + " (regional subscription) deleted successfully.");
+      } else {
+        System.out.println(subscriptionPath + " (zonal subscription) deleted successfully.");
+      }
     } catch (ExecutionException e) {
       try {
         throw e.getCause();

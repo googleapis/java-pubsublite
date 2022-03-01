@@ -37,26 +37,51 @@ public class GetSubscriptionExample {
     // Choose an existing subscription.
     String subscriptionId = "your-subscription-id";
     long projectNumber = Long.parseLong("123456789");
+    boolean regional = false;
 
-    getSubscriptionExample(cloudRegion, zoneId, projectNumber, subscriptionId);
+    getSubscriptionExample(cloudRegion, zoneId, projectNumber, subscriptionId, regional);
   }
 
   public static void getSubscriptionExample(
-      String cloudRegion, char zoneId, long projectNumber, String subscriptionId) throws Exception {
+      String cloudRegion, char zoneId, long projectNumber, String subscriptionId, boolean regional)
+      throws Exception {
 
-    SubscriptionPath subscriptionPath =
-        SubscriptionPath.newBuilder()
-            .setLocation(CloudZone.of(CloudRegion.of(cloudRegion), zoneId))
-            .setProject(ProjectNumber.of(projectNumber))
-            .setName(SubscriptionName.of(subscriptionId))
-            .build();
+    SubscriptionPath subscriptionPath = null;
+
+    if (regional) {
+      // A regional subscription path.
+      subscriptionPath =
+          SubscriptionPath.newBuilder()
+              .setLocation(CloudRegion.of(cloudRegion))
+              .setProject(ProjectNumber.of(projectNumber))
+              .setName(SubscriptionName.of(subscriptionId))
+              .build();
+    } else {
+      // A zonal subscription path.
+      subscriptionPath =
+          SubscriptionPath.newBuilder()
+              .setLocation(CloudZone.of(CloudRegion.of(cloudRegion), zoneId))
+              .setProject(ProjectNumber.of(projectNumber))
+              .setName(SubscriptionName.of(subscriptionId))
+              .build();
+    }
 
     AdminClientSettings adminClientSettings =
         AdminClientSettings.newBuilder().setRegion(CloudRegion.of(cloudRegion)).build();
 
     try (AdminClient adminClient = AdminClient.create(adminClientSettings)) {
       Subscription subscription = adminClient.getSubscription(subscriptionPath).get();
-      System.out.println("Subscription: " + subscription.getAllFields());
+      if (regional) {
+        System.out.println(
+            subscription.getAllFields()
+                + "\nis attached to (regional topic) "
+                + subscription.getTopic());
+      } else {
+        System.out.println(
+            subscription.getAllFields()
+                + "\nis attached to (zonal topic) "
+                + subscription.getTopic());
+      }
     } catch (ExecutionException e) {
       try {
         throw e.getCause();

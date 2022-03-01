@@ -39,6 +39,7 @@ public class SeekSubscriptionExample {
     // Choose an existing subscription.
     String subscriptionId = "your-subscription-id";
     long projectNumber = Long.parseLong("123456789");
+    boolean regional = false;
 
     // Choose a target location within the message backlog to seek a subscription to.
     // Possible values for SeekTarget:
@@ -57,7 +58,7 @@ public class SeekSubscriptionExample {
     boolean waitForOperation = false;
 
     seekSubscriptionExample(
-        cloudRegion, zoneId, projectNumber, subscriptionId, target, waitForOperation);
+        cloudRegion, zoneId, projectNumber, subscriptionId, target, waitForOperation, regional);
   }
 
   public static void seekSubscriptionExample(
@@ -66,15 +67,29 @@ public class SeekSubscriptionExample {
       long projectNumber,
       String subscriptionId,
       SeekTarget target,
-      boolean waitForOperation)
+      boolean waitForOperation,
+      boolean regional)
       throws Exception {
 
-    SubscriptionPath subscriptionPath =
-        SubscriptionPath.newBuilder()
-            .setLocation(CloudZone.of(CloudRegion.of(cloudRegion), zoneId))
-            .setProject(ProjectNumber.of(projectNumber))
-            .setName(SubscriptionName.of(subscriptionId))
-            .build();
+    SubscriptionPath subscriptionPath = null;
+
+    if (regional) {
+      // A regional subscription path.
+      subscriptionPath =
+          SubscriptionPath.newBuilder()
+              .setLocation(CloudRegion.of(cloudRegion))
+              .setProject(ProjectNumber.of(projectNumber))
+              .setName(SubscriptionName.of(subscriptionId))
+              .build();
+    } else {
+      // A zonal subscription path.
+      subscriptionPath =
+          SubscriptionPath.newBuilder()
+              .setLocation(CloudZone.of(CloudRegion.of(cloudRegion), zoneId))
+              .setProject(ProjectNumber.of(projectNumber))
+              .setName(SubscriptionName.of(subscriptionId))
+              .build();
+    }
 
     AdminClientSettings adminClientSettings =
         AdminClientSettings.newBuilder().setRegion(CloudRegion.of(cloudRegion)).build();

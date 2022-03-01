@@ -44,20 +44,34 @@ public class SubscriberExample {
     // Choose an existing subscription for the subscribe example to work.
     String subscriptionId = "your-subscription-id";
     long projectNumber = Long.parseLong("123456789");
+    boolean regional = false;
 
-    subscriberExample(cloudRegion, zoneId, projectNumber, subscriptionId);
+    subscriberExample(cloudRegion, zoneId, projectNumber, subscriptionId, regional);
   }
 
   public static void subscriberExample(
-      String cloudRegion, char zoneId, long projectNumber, String subscriptionId)
+      String cloudRegion, char zoneId, long projectNumber, String subscriptionId, boolean regional)
       throws ApiException {
 
-    SubscriptionPath subscriptionPath =
-        SubscriptionPath.newBuilder()
-            .setLocation(CloudZone.of(CloudRegion.of(cloudRegion), zoneId))
-            .setProject(ProjectNumber.of(projectNumber))
-            .setName(SubscriptionName.of(subscriptionId))
-            .build();
+    SubscriptionPath subscriptionPath = null;
+
+    if (regional) {
+      // A regional subscription path.
+      subscriptionPath =
+          SubscriptionPath.newBuilder()
+              .setLocation(CloudRegion.of(cloudRegion))
+              .setProject(ProjectNumber.of(projectNumber))
+              .setName(SubscriptionName.of(subscriptionId))
+              .build();
+    } else {
+      // A zonal subscription path.
+      subscriptionPath =
+          SubscriptionPath.newBuilder()
+              .setLocation(CloudZone.of(CloudRegion.of(cloudRegion), zoneId))
+              .setProject(ProjectNumber.of(projectNumber))
+              .setName(SubscriptionName.of(subscriptionId))
+              .build();
+    }
 
     // The message stream is paused based on the maximum size or number of messages that the
     // subscriber has already received, whichever condition is met first.

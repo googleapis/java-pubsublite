@@ -44,21 +44,41 @@ public class PublisherExample {
     String topicId = "your-topic-id";
     long projectNumber = Long.parseLong("123456789");
     int messageCount = 100;
+    boolean regional = false;
 
-    publisherExample(cloudRegion, zoneId, projectNumber, topicId, messageCount);
+    publisherExample(cloudRegion, zoneId, projectNumber, topicId, messageCount, regional);
   }
 
   // Publish messages to a topic.
   public static void publisherExample(
-      String cloudRegion, char zoneId, long projectNumber, String topicId, int messageCount)
+      String cloudRegion,
+      char zoneId,
+      long projectNumber,
+      String topicId,
+      int messageCount,
+      boolean regional)
       throws ApiException, ExecutionException, InterruptedException {
 
-    TopicPath topicPath =
-        TopicPath.newBuilder()
-            .setProject(ProjectNumber.of(projectNumber))
-            .setLocation(CloudZone.of(CloudRegion.of(cloudRegion), zoneId))
-            .setName(TopicName.of(topicId))
-            .build();
+    TopicPath topicPath = null;
+
+    if (regional) {
+      // A regional topic path.
+      topicPath =
+          TopicPath.newBuilder()
+              .setProject(ProjectNumber.of(projectNumber))
+              .setLocation(CloudRegion.of(cloudRegion))
+              .setName(TopicName.of(topicId))
+              .build();
+    } else {
+      // A zonal topic path.
+      topicPath =
+          TopicPath.newBuilder()
+              .setProject(ProjectNumber.of(projectNumber))
+              .setLocation(CloudZone.of(CloudRegion.of(cloudRegion), zoneId))
+              .setName(TopicName.of(topicId))
+              .build();
+    }
+
     Publisher publisher = null;
     List<ApiFuture<String>> futures = new ArrayList<>();
 

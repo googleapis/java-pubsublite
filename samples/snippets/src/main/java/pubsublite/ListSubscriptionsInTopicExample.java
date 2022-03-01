@@ -35,19 +35,33 @@ public class ListSubscriptionsInTopicExample {
     char zoneId = 'b';
     long projectNumber = Long.parseLong("123456789");
     String topicId = "your-topic-id";
+    boolean regional = false;
 
-    listSubscriptionsInTopicExample(cloudRegion, zoneId, projectNumber, topicId);
+    listSubscriptionsInTopicExample(cloudRegion, zoneId, projectNumber, topicId, regional);
   }
 
   public static void listSubscriptionsInTopicExample(
-      String cloudRegion, char zoneId, long projectNumber, String topicId) throws Exception {
+      String cloudRegion, char zoneId, long projectNumber, String topicId, boolean regional)
+      throws Exception {
 
-    TopicPath topicPath =
-        TopicPath.newBuilder()
-            .setProject(ProjectNumber.of(projectNumber))
-            .setLocation(CloudZone.of(CloudRegion.of(cloudRegion), zoneId))
-            .setName(TopicName.of(topicId))
-            .build();
+    TopicPath topicPath = null;
+    if (regional) {
+      // A regional topic path.
+      topicPath =
+          TopicPath.newBuilder()
+              .setProject(ProjectNumber.of(projectNumber))
+              .setLocation(CloudRegion.of(cloudRegion))
+              .setName(TopicName.of(topicId))
+              .build();
+    } else {
+      // A zonal topic path.
+      topicPath =
+          TopicPath.newBuilder()
+              .setProject(ProjectNumber.of(projectNumber))
+              .setLocation(CloudZone.of(CloudRegion.of(cloudRegion), zoneId))
+              .setName(TopicName.of(topicId))
+              .build();
+    }
 
     AdminClientSettings adminClientSettings =
         AdminClientSettings.newBuilder().setRegion(CloudRegion.of(cloudRegion)).build();
@@ -58,7 +72,15 @@ public class ListSubscriptionsInTopicExample {
       for (SubscriptionPath subscription : subscriptionPaths) {
         System.out.println(subscription.toString());
       }
-      System.out.println(subscriptionPaths.size() + " subscription(s) listed.");
+      if (regional) {
+        System.out.println(
+            subscriptionPaths.size()
+                + " subscription(s) listed in the regional topic "
+                + topicPath);
+      } else {
+        System.out.println(
+            subscriptionPaths.size() + " subscription(s) listed in the zonal topic " + topicPath);
+      }
     }
   }
 }

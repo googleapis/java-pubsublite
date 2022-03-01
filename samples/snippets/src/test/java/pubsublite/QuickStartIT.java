@@ -132,19 +132,25 @@ public class QuickStartIT {
     // Get a regional topic.
     GetTopicExample.getTopicExample(
         cloudRegion, zoneId, projectNumber, topicId, /*regional=*/ true);
+    assertThat(bout.toString()).contains(cloudRegion + "/topics/" + topicId);
+    assertThat(bout.toString()).contains(String.format("%s partition(s).", partitions));
+
+    bout.reset();
     // Get a zonal topic
     GetTopicExample.getTopicExample(
         cloudRegion, zoneId, projectNumber, topicId, /*regional=*/ false);
     assertThat(bout.toString().contains(cloudRegion + "-" + zoneId + "/topics/" + topicId));
-    assertThat(bout.toString()).contains(cloudRegion + "/topics/" + topicId);
     assertThat(bout.toString()).contains(String.format("%s partition(s).", partitions));
 
     bout.reset();
     // List regional topics.
     ListTopicsExample.listTopicsExample(cloudRegion, zoneId, projectNumber, /*regional=*/ true);
+    assertThat(bout.toString().contains(cloudRegion + "/topics/" + topicId));
+    assertThat(bout.toString()).contains("topic(s) listed");
+
+    bout.reset();
     // List zonal topics.
     ListTopicsExample.listTopicsExample(cloudRegion, zoneId, projectNumber, /*regional=*/ false);
-    assertThat(bout.toString().contains(cloudRegion + "/topics/" + topicId));
     assertThat(bout.toString().contains(cloudRegion + "-" + zoneId + "/topics/" + topicId));
     assertThat(bout.toString()).contains("topic(s) listed");
 
@@ -152,6 +158,11 @@ public class QuickStartIT {
     // Update a regional topic.
     UpdateTopicExample.updateTopicExample(
         cloudRegion, zoneId, projectNumber, topicId, reservationId, /*regional=*/ true);
+    assertThat(bout.toString()).contains("seconds: 604800");
+    assertThat(bout.toString()).contains("per_partition_bytes: 34359738368");
+    assertThat(bout.toString()).contains("throughput_reservation: \"" + reservationPath.toString());
+
+    bout.reset();
     // Update a zonal topic.
     UpdateTopicExample.updateTopicExample(
         cloudRegion, zoneId, projectNumber, topicId, reservationId, /*regional=*/ false);
@@ -160,63 +171,121 @@ public class QuickStartIT {
     assertThat(bout.toString()).contains("throughput_reservation: \"" + reservationPath.toString());
 
     bout.reset();
-    // Create a subscription.
+    // Create a regional subscription.
     CreateSubscriptionExample.createSubscriptionExample(
-        cloudRegion, zoneId, projectNumber, topicId, subscriptionId);
-    assertThat(bout.toString()).contains("created successfully");
+        cloudRegion, zoneId, projectNumber, topicId, subscriptionId, /*regional=*/ true);
+    assertThat(bout.toString()).contains(" (regional subscription) created successfully");
 
     bout.reset();
-    // Get a subscription.
+    // Create a zonal subscription.
+    CreateSubscriptionExample.createSubscriptionExample(
+        cloudRegion, zoneId, projectNumber, topicId, subscriptionId, /*regional=*/ false);
+    assertThat(bout.toString()).contains(" (zonal subscription) created successfully");
+
+    bout.reset();
+    // Get a regional subscription.
     GetSubscriptionExample.getSubscriptionExample(
-        cloudRegion, zoneId, projectNumber, subscriptionId);
-    assertThat(bout.toString()).contains("Subscription: ");
-    assertThat(bout.toString()).contains(subscriptionId);
+        cloudRegion, zoneId, projectNumber, subscriptionId, /*regional=*/ true);
+    assertThat(bout.toString().contains(cloudRegion + "/subscriptions/" + subscriptionId));
+    assertThat(bout.toString().contains("is attached to (regional topic)"));
 
     bout.reset();
-    // List subscriptions in a topic.
+    // Get a zonal subscription.
+    GetSubscriptionExample.getSubscriptionExample(
+        cloudRegion, zoneId, projectNumber, subscriptionId, /*regional=*/ false);
+    assertThat(
+        bout.toString().contains(cloudRegion + "-" + zoneId + "/subscriptions/" + subscriptionId));
+    assertThat(bout.toString().contains("is attached to (zonal topic)"));
+
+    bout.reset();
+    // List subscriptions in a regional topic.
     ListSubscriptionsInTopicExample.listSubscriptionsInTopicExample(
-        cloudRegion, zoneId, projectNumber, topicId);
-    assertThat(bout.toString()).contains("subscription(s) listed");
+        cloudRegion, zoneId, projectNumber, topicId, /*regional=*/ true);
+    assertThat(bout.toString()).contains("subscription(s) listed in the regional topic");
+
+    // List subscriptions in a zonal topic.
+    ListSubscriptionsInTopicExample.listSubscriptionsInTopicExample(
+        cloudRegion, zoneId, projectNumber, topicId, /*regional=*/ false);
+    assertThat(bout.toString()).contains("subscription(s) listed in the zonal topic");
 
     bout.reset();
-    // List subscriptions in a project.
+    // List regional subscriptions in a project.
     ListSubscriptionsInProjectExample.listSubscriptionsInProjectExample(
-        cloudRegion, zoneId, projectNumber);
-    assertThat(bout.toString()).contains("subscription(s) listed");
+        cloudRegion, zoneId, projectNumber, /*regional=*/ true);
+    assertThat(bout.toString()).contains("(regional) subscription(s) listed in the project");
 
     bout.reset();
-    // Update a subscription.
+    // List zonal subscriptions in a project.
+    ListSubscriptionsInProjectExample.listSubscriptionsInProjectExample(
+        cloudRegion, zoneId, projectNumber, /*regional=*/ false);
+    assertThat(bout.toString()).contains("(zonal) subscription(s) listed in the project");
+
+    bout.reset();
+    // Update a regional subscription.
     UpdateSubscriptionExample.updateSubscriptionExample(
-        cloudRegion, zoneId, projectNumber, subscriptionId);
+        cloudRegion, zoneId, projectNumber, subscriptionId, /*regional=*/ true);
     assertThat(bout.toString()).contains("delivery_requirement: DELIVER_AFTER_STORED");
 
     bout.reset();
-    // Publish.
-    PublisherExample.publisherExample(cloudRegion, zoneId, projectNumber, topicId, messageCount);
+    // Update a zonal subscription.
+    UpdateSubscriptionExample.updateSubscriptionExample(
+        cloudRegion, zoneId, projectNumber, subscriptionId, /*regional=*/ false);
+    assertThat(bout.toString()).contains("delivery_requirement: DELIVER_AFTER_STORED");
+
+    bout.reset();
+    // Publish to a regional topic.
+    PublisherExample.publisherExample(
+        cloudRegion, zoneId, projectNumber, topicId, messageCount, /*regional=*/ true);
     assertThat(bout.toString()).contains("Published " + messageCount + " messages.");
 
     bout.reset();
-    // Publish with ordering key.
+    // Publish to a zonal topic.
+    PublisherExample.publisherExample(
+        cloudRegion, zoneId, projectNumber, topicId, messageCount, /*regional=*/ false);
+    assertThat(bout.toString()).contains("Published " + messageCount + " messages.");
+
+    bout.reset();
+    // Publish with ordering key to a regional topic.
     PublishWithOrderingKeyExample.publishWithOrderingKeyExample(
-        cloudRegion, zoneId, projectNumber, topicId);
+        cloudRegion, zoneId, projectNumber, topicId, /*regional=*/ true);
     assertThat(bout.toString()).contains("Published a message with ordering key:");
 
     bout.reset();
-    // Publish messages with custom attributes.
+    // Publish with ordering key to a zonal topic.
+    PublishWithOrderingKeyExample.publishWithOrderingKeyExample(
+        cloudRegion, zoneId, projectNumber, topicId, /*regional=*/ false);
+    assertThat(bout.toString()).contains("Published a message with ordering key:");
+
+    bout.reset();
+    // Publish messages with custom attributes to a regional topic.
     PublishWithCustomAttributesExample.publishWithCustomAttributesExample(
-        cloudRegion, zoneId, projectNumber, topicId);
+        cloudRegion, zoneId, projectNumber, topicId, /*regional=*/ true);
     assertThat(bout.toString()).contains("Published a message with custom attributes:");
 
     bout.reset();
-    // Publish with batch settings.
+    // Publish messages with custom attributes to a zonal topic.
+    PublishWithCustomAttributesExample.publishWithCustomAttributesExample(
+        cloudRegion, zoneId, projectNumber, topicId, /*regional=*/ false);
+    assertThat(bout.toString()).contains("Published a message with custom attributes:");
+
+    bout.reset();
+    // Publish with batch settings to a regional topic.
     PublishWithBatchSettingsExample.publishWithBatchSettingsExample(
-        cloudRegion, zoneId, projectNumber, topicId, messageCount);
+        cloudRegion, zoneId, projectNumber, topicId, messageCount, /*regional=*/ true);
     assertThat(bout.toString())
         .contains("Published " + messageCount + " messages with batch settings.");
 
     bout.reset();
-    // Subscribe.
-    SubscriberExample.subscriberExample(cloudRegion, zoneId, projectNumber, subscriptionId);
+    // Publish with batch settings to a zonal topic.
+    PublishWithBatchSettingsExample.publishWithBatchSettingsExample(
+        cloudRegion, zoneId, projectNumber, topicId, messageCount, /*regional=*/ false);
+    assertThat(bout.toString())
+        .contains("Published " + messageCount + " messages with batch settings.");
+
+    bout.reset();
+    // Subscribe to a regional subscription.
+    SubscriberExample.subscriberExample(
+        cloudRegion, zoneId, projectNumber, subscriptionId, /*regional=*/ true);
     assertThat(bout.toString()).contains("Listening");
     for (int i = 0; i < messageCount; ++i) {
       assertThat(bout.toString()).contains(String.format("Data : message-%s", i));
@@ -224,30 +293,61 @@ public class QuickStartIT {
     assertThat(bout.toString()).contains("Subscriber is shut down: TERMINATED");
 
     bout.reset();
-    // Seek.
+    // Subscribe to a zonal subscription.
+    SubscriberExample.subscriberExample(
+        cloudRegion, zoneId, projectNumber, subscriptionId, /*regional=*/ false);
+    assertThat(bout.toString()).contains("Listening");
+    for (int i = 0; i < messageCount; ++i) {
+      assertThat(bout.toString()).contains(String.format("Data : message-%s", i));
+    }
+    assertThat(bout.toString()).contains("Subscriber is shut down: TERMINATED");
+
+    bout.reset();
+    // Seek in a regional subscription.
     SeekSubscriptionExample.seekSubscriptionExample(
         cloudRegion,
         zoneId,
         projectNumber,
         subscriptionId,
         SeekTarget.of(BacklogLocation.BEGINNING),
-        false);
+        /*waitForOperation=*/ false,
+        /*regional=*/ true);
     assertThat(bout.toString()).contains("initiated successfully");
 
     bout.reset();
-    // Delete a subscription.
+    // Seek in a zonal subscription.
+    SeekSubscriptionExample.seekSubscriptionExample(
+        cloudRegion,
+        zoneId,
+        projectNumber,
+        subscriptionId,
+        SeekTarget.of(BacklogLocation.BEGINNING),
+        /*waitForOperation=*/ false,
+        /*regional=*/ false);
+    assertThat(bout.toString()).contains("initiated successfully");
+
+    bout.reset();
+    // Delete a regional subscription.
     DeleteSubscriptionExample.deleteSubscriptionExample(
-        cloudRegion, zoneId, projectNumber, subscriptionId);
-    assertThat(bout.toString()).contains("deleted successfully");
+        cloudRegion, zoneId, projectNumber, subscriptionId, /*regional=*/ true);
+    assertThat(bout.toString()).contains(" (regional subscription) deleted successfully");
+
+    bout.reset();
+    // Delete a zonal subscription.
+    DeleteSubscriptionExample.deleteSubscriptionExample(
+        cloudRegion, zoneId, projectNumber, subscriptionId, /*regional=*/ false);
+    assertThat(bout.toString()).contains(" (zonal subscription) deleted successfully");
 
     bout.reset();
     // Delete a regional topic.
     DeleteTopicExample.deleteTopicExample(
         cloudRegion, zoneId, projectNumber, topicId, /*regional=*/ true);
+    assertThat(bout.toString()).contains(" (regional topic) deleted successfully");
+
+    bout.reset();
     // Delete a zonal topic.
     DeleteTopicExample.deleteTopicExample(
         cloudRegion, zoneId, projectNumber, topicId, /*regional=*/ false);
-    assertThat(bout.toString()).contains(" (regional topic) deleted successfully");
     assertThat(bout.toString()).contains(" (zonal topic) deleted successfully");
 
     bout.reset();

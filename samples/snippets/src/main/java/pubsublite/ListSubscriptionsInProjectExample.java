@@ -33,28 +33,45 @@ public class ListSubscriptionsInProjectExample {
     String cloudRegion = "your-cloud-region";
     char zoneId = 'b';
     long projectNumber = Long.parseLong("123456789");
+    boolean regional = true;
 
-    listSubscriptionsInProjectExample(cloudRegion, zoneId, projectNumber);
+    listSubscriptionsInProjectExample(cloudRegion, zoneId, projectNumber, regional);
   }
 
   public static void listSubscriptionsInProjectExample(
-      String cloudRegion, char zoneId, long projectNumber) throws Exception {
+      String cloudRegion, char zoneId, long projectNumber, boolean regional) throws Exception {
 
     AdminClientSettings adminClientSettings =
         AdminClientSettings.newBuilder().setRegion(CloudRegion.of(cloudRegion)).build();
 
-    LocationPath locationPath =
-        LocationPath.newBuilder()
-            .setProject(ProjectNumber.of(projectNumber))
-            .setLocation(CloudZone.of(CloudRegion.of(cloudRegion), zoneId))
-            .build();
+    LocationPath locationPath = null;
+
+    if (regional) {
+      locationPath =
+          LocationPath.newBuilder()
+              .setProject(ProjectNumber.of(projectNumber))
+              .setLocation(CloudRegion.of(cloudRegion))
+              .build();
+    } else {
+      locationPath =
+          LocationPath.newBuilder()
+              .setProject(ProjectNumber.of(projectNumber))
+              .setLocation(CloudZone.of(CloudRegion.of(cloudRegion), zoneId))
+              .build();
+    }
 
     try (AdminClient adminClient = AdminClient.create(adminClientSettings)) {
       List<Subscription> subscriptions = adminClient.listSubscriptions(locationPath).get();
       for (Subscription subscription : subscriptions) {
         System.out.println(subscription.getAllFields());
       }
-      System.out.println(subscriptions.size() + " subscription(s) listed.");
+      if (regional) {
+        System.out.println(
+            subscriptions.size() + " (regional) subscription(s) listed in the project.");
+      } else {
+        System.out.println(
+            subscriptions.size() + " (zonal) subscription(s) listed in the project.");
+      }
     }
   }
 }

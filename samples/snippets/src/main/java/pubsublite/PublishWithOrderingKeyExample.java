@@ -39,21 +39,35 @@ public class PublishWithOrderingKeyExample {
     // Choose an existing topic for the publish example to work.
     String topicId = "your-topic-id";
     long projectNumber = Long.parseLong("123456789");
+    boolean regional = false;
 
-    publishWithOrderingKeyExample(cloudRegion, zoneId, projectNumber, topicId);
+    publishWithOrderingKeyExample(cloudRegion, zoneId, projectNumber, topicId, regional);
   }
 
   // Publish a message to a topic with an ordering key.
   public static void publishWithOrderingKeyExample(
-      String cloudRegion, char zoneId, long projectNumber, String topicId)
+      String cloudRegion, char zoneId, long projectNumber, String topicId, boolean regional)
       throws ApiException, ExecutionException, InterruptedException {
 
-    TopicPath topicPath =
-        TopicPath.newBuilder()
-            .setProject(ProjectNumber.of(projectNumber))
-            .setLocation(CloudZone.of(CloudRegion.of(cloudRegion), zoneId))
-            .setName(TopicName.of(topicId))
-            .build();
+    TopicPath topicPath = null;
+
+    if (regional) {
+      // A regional topic path.
+      topicPath =
+          TopicPath.newBuilder()
+              .setProject(ProjectNumber.of(projectNumber))
+              .setLocation(CloudRegion.of(cloudRegion))
+              .setName(TopicName.of(topicId))
+              .build();
+    } else {
+      // A zonal topic path.
+      topicPath =
+          TopicPath.newBuilder()
+              .setProject(ProjectNumber.of(projectNumber))
+              .setLocation(CloudZone.of(CloudRegion.of(cloudRegion), zoneId))
+              .setName(TopicName.of(topicId))
+              .build();
+    }
 
     PublisherSettings publisherSettings =
         PublisherSettings.newBuilder().setTopicPath(topicPath).build();

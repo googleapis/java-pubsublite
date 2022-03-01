@@ -37,21 +37,37 @@ public class UpdateSubscriptionExample {
     // TODO(developer): Replace these variables before running the sample.
     String cloudRegion = "your-cloud-region";
     char zoneId = 'b';
-    // Choose an existing subscription for the sample to work.
+    // Choose an existing subscription.
     String subscriptionId = "your-subscription-id";
     long projectNumber = Long.parseLong("123456789");
+    boolean regional = false;
 
-    updateSubscriptionExample(cloudRegion, zoneId, projectNumber, subscriptionId);
+    updateSubscriptionExample(cloudRegion, zoneId, projectNumber, subscriptionId, regional);
   }
 
   public static void updateSubscriptionExample(
-      String cloudRegion, char zoneId, long projectNumber, String subscriptionId) throws Exception {
-    SubscriptionPath subscriptionPath =
-        SubscriptionPath.newBuilder()
-            .setLocation(CloudZone.of(CloudRegion.of(cloudRegion), zoneId))
-            .setProject(ProjectNumber.of(projectNumber))
-            .setName(SubscriptionName.of(subscriptionId))
-            .build();
+      String cloudRegion, char zoneId, long projectNumber, String subscriptionId, boolean regional)
+      throws Exception {
+
+    SubscriptionPath subscriptionPath = null;
+
+    if (regional) {
+      // A regional subscription path.
+      subscriptionPath =
+          SubscriptionPath.newBuilder()
+              .setLocation(CloudRegion.of(cloudRegion))
+              .setProject(ProjectNumber.of(projectNumber))
+              .setName(SubscriptionName.of(subscriptionId))
+              .build();
+    } else {
+      // A zonal subscription path.
+      subscriptionPath =
+          SubscriptionPath.newBuilder()
+              .setLocation(CloudZone.of(CloudRegion.of(cloudRegion), zoneId))
+              .setProject(ProjectNumber.of(projectNumber))
+              .setName(SubscriptionName.of(subscriptionId))
+              .build();
+    }
 
     FieldMask fieldMask =
         FieldMask.newBuilder().addPaths("delivery_config.delivery_requirement").build();

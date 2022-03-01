@@ -21,6 +21,7 @@ import com.google.api.gax.rpc.ApiException;
 import com.google.cloud.pubsub.v1.AckReplyConsumer;
 import com.google.cloud.pubsub.v1.MessageReceiver;
 import com.google.cloud.pubsublite.CloudRegion;
+import com.google.cloud.pubsublite.CloudRegionOrZone;
 import com.google.cloud.pubsublite.CloudZone;
 import com.google.cloud.pubsublite.MessageMetadata;
 import com.google.cloud.pubsublite.ProjectNumber;
@@ -53,25 +54,20 @@ public class SubscriberExample {
       String cloudRegion, char zoneId, long projectNumber, String subscriptionId, boolean regional)
       throws ApiException {
 
-    SubscriptionPath subscriptionPath = null;
+    CloudRegionOrZone location = null;
 
     if (regional) {
-      // A regional subscription path.
-      subscriptionPath =
-          SubscriptionPath.newBuilder()
-              .setLocation(CloudRegion.of(cloudRegion))
-              .setProject(ProjectNumber.of(projectNumber))
-              .setName(SubscriptionName.of(subscriptionId))
-              .build();
+      location = CloudRegionOrZone.of(CloudRegion.of(cloudRegion));
     } else {
-      // A zonal subscription path.
-      subscriptionPath =
-          SubscriptionPath.newBuilder()
-              .setLocation(CloudZone.of(CloudRegion.of(cloudRegion), zoneId))
-              .setProject(ProjectNumber.of(projectNumber))
-              .setName(SubscriptionName.of(subscriptionId))
-              .build();
+      location = CloudRegionOrZone.of(CloudZone.of(CloudRegion.of(cloudRegion), zoneId));
     }
+
+    SubscriptionPath subscriptionPath =
+        SubscriptionPath.newBuilder()
+            .setLocation(location)
+            .setProject(ProjectNumber.of(projectNumber))
+            .setName(SubscriptionName.of(subscriptionId))
+            .build();
 
     // The message stream is paused based on the maximum size or number of messages that the
     // subscriber has already received, whichever condition is met first.

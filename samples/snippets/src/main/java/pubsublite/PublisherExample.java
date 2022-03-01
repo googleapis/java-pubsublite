@@ -21,6 +21,7 @@ import com.google.api.core.ApiFuture;
 import com.google.api.core.ApiFutures;
 import com.google.api.gax.rpc.ApiException;
 import com.google.cloud.pubsublite.CloudRegion;
+import com.google.cloud.pubsublite.CloudRegionOrZone;
 import com.google.cloud.pubsublite.CloudZone;
 import com.google.cloud.pubsublite.MessageMetadata;
 import com.google.cloud.pubsublite.ProjectNumber;
@@ -59,25 +60,20 @@ public class PublisherExample {
       boolean regional)
       throws ApiException, ExecutionException, InterruptedException {
 
-    TopicPath topicPath = null;
+    CloudRegionOrZone location = null;
 
     if (regional) {
-      // A regional topic path.
-      topicPath =
-          TopicPath.newBuilder()
-              .setProject(ProjectNumber.of(projectNumber))
-              .setLocation(CloudRegion.of(cloudRegion))
-              .setName(TopicName.of(topicId))
-              .build();
+      location = CloudRegionOrZone.of(CloudRegion.of(cloudRegion));
     } else {
-      // A zonal topic path.
-      topicPath =
-          TopicPath.newBuilder()
-              .setProject(ProjectNumber.of(projectNumber))
-              .setLocation(CloudZone.of(CloudRegion.of(cloudRegion), zoneId))
-              .setName(TopicName.of(topicId))
-              .build();
+      location = CloudRegionOrZone.of(CloudZone.of(CloudRegion.of(cloudRegion), zoneId));
     }
+
+    TopicPath topicPath =
+        TopicPath.newBuilder()
+            .setProject(ProjectNumber.of(projectNumber))
+            .setLocation(location)
+            .setName(TopicName.of(topicId))
+            .build();
 
     Publisher publisher = null;
     List<ApiFuture<String>> futures = new ArrayList<>();

@@ -20,6 +20,7 @@ package pubsublite;
 import com.google.cloud.pubsublite.AdminClient;
 import com.google.cloud.pubsublite.AdminClientSettings;
 import com.google.cloud.pubsublite.CloudRegion;
+import com.google.cloud.pubsublite.CloudRegionOrZone;
 import com.google.cloud.pubsublite.CloudZone;
 import com.google.cloud.pubsublite.LocationPath;
 import com.google.cloud.pubsublite.ProjectNumber;
@@ -44,34 +45,26 @@ public class ListSubscriptionsInProjectExample {
     AdminClientSettings adminClientSettings =
         AdminClientSettings.newBuilder().setRegion(CloudRegion.of(cloudRegion)).build();
 
-    LocationPath locationPath = null;
+    CloudRegionOrZone location = null;
 
     if (regional) {
-      locationPath =
-          LocationPath.newBuilder()
-              .setProject(ProjectNumber.of(projectNumber))
-              .setLocation(CloudRegion.of(cloudRegion))
-              .build();
+      location = CloudRegionOrZone.of(CloudRegion.of(cloudRegion));
     } else {
-      locationPath =
-          LocationPath.newBuilder()
-              .setProject(ProjectNumber.of(projectNumber))
-              .setLocation(CloudZone.of(CloudRegion.of(cloudRegion), zoneId))
-              .build();
+      location = CloudRegionOrZone.of(CloudZone.of(CloudRegion.of(cloudRegion), zoneId));
     }
+
+    LocationPath locationPath =
+        LocationPath.newBuilder()
+            .setProject(ProjectNumber.of(projectNumber))
+            .setLocation(location)
+            .build();
 
     try (AdminClient adminClient = AdminClient.create(adminClientSettings)) {
       List<Subscription> subscriptions = adminClient.listSubscriptions(locationPath).get();
       for (Subscription subscription : subscriptions) {
         System.out.println(subscription.getAllFields());
       }
-      if (regional) {
-        System.out.println(
-            subscriptions.size() + " (regional) subscription(s) listed in the project.");
-      } else {
-        System.out.println(
-            subscriptions.size() + " (zonal) subscription(s) listed in the project.");
-      }
+      System.out.println(subscriptions.size() + " subscription(s) listed in the project.");
     }
   }
 }

@@ -174,20 +174,22 @@ public class QuickStartIT {
     // Create a regional subscription.
     CreateSubscriptionExample.createSubscriptionExample(
         cloudRegion, zoneId, projectNumber, topicId, subscriptionId, /*regional=*/ true);
-    assertThat(bout.toString()).contains(" (regional subscription) created successfully");
+    assertThat(bout.toString().contains(cloudRegion + "/subscriptions/" + subscriptionId));
+    assertThat(bout.toString()).contains("created successfully");
 
     bout.reset();
     // Create a zonal subscription.
     CreateSubscriptionExample.createSubscriptionExample(
         cloudRegion, zoneId, projectNumber, topicId, subscriptionId, /*regional=*/ false);
-    assertThat(bout.toString()).contains(" (zonal subscription) created successfully");
+    assertThat(
+        bout.toString().contains(cloudRegion + "-" + zoneId + "/subscriptions/" + subscriptionId));
+    assertThat(bout.toString()).contains("created successfully");
 
     bout.reset();
     // Get a regional subscription.
     GetSubscriptionExample.getSubscriptionExample(
         cloudRegion, zoneId, projectNumber, subscriptionId, /*regional=*/ true);
     assertThat(bout.toString().contains(cloudRegion + "/subscriptions/" + subscriptionId));
-    assertThat(bout.toString().contains("is attached to (regional topic)"));
 
     bout.reset();
     // Get a zonal subscription.
@@ -195,7 +197,6 @@ public class QuickStartIT {
         cloudRegion, zoneId, projectNumber, subscriptionId, /*regional=*/ false);
     assertThat(
         bout.toString().contains(cloudRegion + "-" + zoneId + "/subscriptions/" + subscriptionId));
-    assertThat(bout.toString().contains("is attached to (zonal topic)"));
 
     bout.reset();
     // List subscriptions in a regional topic.
@@ -212,13 +213,13 @@ public class QuickStartIT {
     // List regional subscriptions in a project.
     ListSubscriptionsInProjectExample.listSubscriptionsInProjectExample(
         cloudRegion, zoneId, projectNumber, /*regional=*/ true);
-    assertThat(bout.toString()).contains("(regional) subscription(s) listed in the project");
+    assertThat(bout.toString()).contains("subscription(s) listed in the project");
 
     bout.reset();
     // List zonal subscriptions in a project.
     ListSubscriptionsInProjectExample.listSubscriptionsInProjectExample(
         cloudRegion, zoneId, projectNumber, /*regional=*/ false);
-    assertThat(bout.toString()).contains("(zonal) subscription(s) listed in the project");
+    assertThat(bout.toString()).contains("subscription(s) listed in the project");
 
     bout.reset();
     // Update a regional subscription.
@@ -330,13 +331,13 @@ public class QuickStartIT {
     // Delete a regional subscription.
     DeleteSubscriptionExample.deleteSubscriptionExample(
         cloudRegion, zoneId, projectNumber, subscriptionId, /*regional=*/ true);
-    assertThat(bout.toString()).contains(" (regional subscription) deleted successfully");
+    assertThat(bout.toString()).contains(" deleted successfully");
 
     bout.reset();
     // Delete a zonal subscription.
     DeleteSubscriptionExample.deleteSubscriptionExample(
         cloudRegion, zoneId, projectNumber, subscriptionId, /*regional=*/ false);
-    assertThat(bout.toString()).contains(" (zonal subscription) deleted successfully");
+    assertThat(bout.toString()).contains(" deleted successfully");
 
     bout.reset();
     // Delete a regional topic.

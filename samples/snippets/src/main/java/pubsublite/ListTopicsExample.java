@@ -20,6 +20,7 @@ package pubsublite;
 import com.google.cloud.pubsublite.AdminClient;
 import com.google.cloud.pubsublite.AdminClientSettings;
 import com.google.cloud.pubsublite.CloudRegion;
+import com.google.cloud.pubsublite.CloudRegionOrZone;
 import com.google.cloud.pubsublite.CloudZone;
 import com.google.cloud.pubsublite.LocationPath;
 import com.google.cloud.pubsublite.ProjectNumber;
@@ -44,22 +45,19 @@ public class ListTopicsExample {
     AdminClientSettings adminClientSettings =
         AdminClientSettings.newBuilder().setRegion(CloudRegion.of(cloudRegion)).build();
 
-    LocationPath locationPath = null;
+    CloudRegionOrZone location = null;
+
     if (regional) {
-      // A region.
-      locationPath =
-          LocationPath.newBuilder()
-              .setProject(ProjectNumber.of(projectNumber))
-              .setLocation(CloudRegion.of(cloudRegion))
-              .build();
+      location = CloudRegionOrZone.of(CloudRegion.of(cloudRegion));
     } else {
-      // A zone.
-      locationPath =
-          LocationPath.newBuilder()
-              .setProject(ProjectNumber.of(projectNumber))
-              .setLocation(CloudZone.of(CloudRegion.of(cloudRegion), zoneId))
-              .build();
+      location = CloudRegionOrZone.of(CloudZone.of(CloudRegion.of(cloudRegion), zoneId));
     }
+
+    LocationPath locationPath =
+        LocationPath.newBuilder()
+            .setProject(ProjectNumber.of(projectNumber))
+            .setLocation(location)
+            .build();
 
     try (AdminClient adminClient = AdminClient.create(adminClientSettings)) {
       List<Topic> topics = adminClient.listTopics(locationPath).get();

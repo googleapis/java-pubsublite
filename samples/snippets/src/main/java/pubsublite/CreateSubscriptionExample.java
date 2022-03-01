@@ -21,6 +21,7 @@ import com.google.api.gax.rpc.AlreadyExistsException;
 import com.google.cloud.pubsublite.AdminClient;
 import com.google.cloud.pubsublite.AdminClientSettings;
 import com.google.cloud.pubsublite.CloudRegion;
+import com.google.cloud.pubsublite.CloudRegionOrZone;
 import com.google.cloud.pubsublite.CloudZone;
 import com.google.cloud.pubsublite.ProjectNumber;
 import com.google.cloud.pubsublite.SubscriptionName;
@@ -56,40 +57,27 @@ public class CreateSubscriptionExample {
       boolean regional)
       throws Exception {
 
-    TopicPath topicPath = null;
-    SubscriptionPath subscriptionPath = null;
+    CloudRegionOrZone location = null;
 
     if (regional) {
-      // A regional topic path.
-      topicPath =
-          TopicPath.newBuilder()
-              .setProject(ProjectNumber.of(projectNumber))
-              .setLocation(CloudRegion.of(cloudRegion))
-              .setName(TopicName.of(topicId))
-              .build();
-      // A regional subscription path.
-      subscriptionPath =
-          SubscriptionPath.newBuilder()
-              .setLocation(CloudRegion.of(cloudRegion))
-              .setProject(ProjectNumber.of(projectNumber))
-              .setName(SubscriptionName.of(subscriptionId))
-              .build();
+      location = CloudRegionOrZone.of(CloudRegion.of(cloudRegion));
     } else {
-      // A zonal topic path.
-      topicPath =
-          TopicPath.newBuilder()
-              .setProject(ProjectNumber.of(projectNumber))
-              .setLocation(CloudZone.of(CloudRegion.of(cloudRegion), zoneId))
-              .setName(TopicName.of(topicId))
-              .build();
-      // A zonal subscription path.
-      subscriptionPath =
-          SubscriptionPath.newBuilder()
-              .setLocation(CloudZone.of(CloudRegion.of(cloudRegion), zoneId))
-              .setProject(ProjectNumber.of(projectNumber))
-              .setName(SubscriptionName.of(subscriptionId))
-              .build();
+      location = CloudRegionOrZone.of(CloudZone.of(CloudRegion.of(cloudRegion), zoneId));
     }
+
+    TopicPath topicPath =
+        TopicPath.newBuilder()
+            .setProject(ProjectNumber.of(projectNumber))
+            .setLocation(location)
+            .setName(TopicName.of(topicId))
+            .build();
+
+    SubscriptionPath subscriptionPath =
+        SubscriptionPath.newBuilder()
+            .setLocation(location)
+            .setProject(ProjectNumber.of(projectNumber))
+            .setName(SubscriptionName.of(subscriptionId))
+            .build();
 
     Subscription subscription =
         Subscription.newBuilder()
@@ -111,12 +99,7 @@ public class CreateSubscriptionExample {
 
     try (AdminClient adminClient = AdminClient.create(adminClientSettings)) {
       Subscription response = adminClient.createSubscription(subscription).get();
-      if (regional) {
-        System.out.println(
-            response.getAllFields() + " (regional subscription) created successfully.");
-      } else {
-        System.out.println(response.getAllFields() + " (zonal subscription) created successfully.");
-      }
+      System.out.println(response.getAllFields() + " created successfully.");
     } catch (ExecutionException e) {
       try {
         throw e.getCause();

@@ -21,6 +21,7 @@ import com.google.api.gax.rpc.NotFoundException;
 import com.google.cloud.pubsublite.AdminClient;
 import com.google.cloud.pubsublite.AdminClientSettings;
 import com.google.cloud.pubsublite.CloudRegion;
+import com.google.cloud.pubsublite.CloudRegionOrZone;
 import com.google.cloud.pubsublite.CloudZone;
 import com.google.cloud.pubsublite.ProjectNumber;
 import com.google.cloud.pubsublite.SubscriptionName;
@@ -46,42 +47,27 @@ public class GetSubscriptionExample {
       String cloudRegion, char zoneId, long projectNumber, String subscriptionId, boolean regional)
       throws Exception {
 
-    SubscriptionPath subscriptionPath = null;
+    CloudRegionOrZone location = null;
 
     if (regional) {
-      // A regional subscription path.
-      subscriptionPath =
-          SubscriptionPath.newBuilder()
-              .setLocation(CloudRegion.of(cloudRegion))
-              .setProject(ProjectNumber.of(projectNumber))
-              .setName(SubscriptionName.of(subscriptionId))
-              .build();
+      location = CloudRegionOrZone.of(CloudRegion.of(cloudRegion));
     } else {
-      // A zonal subscription path.
-      subscriptionPath =
-          SubscriptionPath.newBuilder()
-              .setLocation(CloudZone.of(CloudRegion.of(cloudRegion), zoneId))
-              .setProject(ProjectNumber.of(projectNumber))
-              .setName(SubscriptionName.of(subscriptionId))
-              .build();
+      location = CloudRegionOrZone.of(CloudZone.of(CloudRegion.of(cloudRegion), zoneId));
     }
+
+    SubscriptionPath subscriptionPath =
+        SubscriptionPath.newBuilder()
+            .setLocation(location)
+            .setProject(ProjectNumber.of(projectNumber))
+            .setName(SubscriptionName.of(subscriptionId))
+            .build();
 
     AdminClientSettings adminClientSettings =
         AdminClientSettings.newBuilder().setRegion(CloudRegion.of(cloudRegion)).build();
 
     try (AdminClient adminClient = AdminClient.create(adminClientSettings)) {
       Subscription subscription = adminClient.getSubscription(subscriptionPath).get();
-      if (regional) {
-        System.out.println(
-            subscription.getAllFields()
-                + "\nis attached to (regional topic) "
-                + subscription.getTopic());
-      } else {
-        System.out.println(
-            subscription.getAllFields()
-                + "\nis attached to (zonal topic) "
-                + subscription.getTopic());
-      }
+      System.out.println(subscription.getAllFields());
     } catch (ExecutionException e) {
       try {
         throw e.getCause();

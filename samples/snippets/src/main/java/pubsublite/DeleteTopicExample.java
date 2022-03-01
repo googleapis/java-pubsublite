@@ -21,6 +21,7 @@ import com.google.api.gax.rpc.NotFoundException;
 import com.google.cloud.pubsublite.AdminClient;
 import com.google.cloud.pubsublite.AdminClientSettings;
 import com.google.cloud.pubsublite.CloudRegion;
+import com.google.cloud.pubsublite.CloudRegionOrZone;
 import com.google.cloud.pubsublite.CloudZone;
 import com.google.cloud.pubsublite.ProjectNumber;
 import com.google.cloud.pubsublite.TopicName;
@@ -45,24 +46,21 @@ public class DeleteTopicExample {
   public static void deleteTopicExample(
       String cloudRegion, char zoneId, long projectNumber, String topicId, boolean regional)
       throws Exception {
-    TopicPath topicPath = null;
+
+    CloudRegionOrZone location = null;
+
     if (regional) {
-      // A regional topic path.
-      topicPath =
-          TopicPath.newBuilder()
-              .setProject(ProjectNumber.of(projectNumber))
-              .setLocation(CloudRegion.of(cloudRegion))
-              .setName(TopicName.of(topicId))
-              .build();
+      location = CloudRegionOrZone.of(CloudRegion.of(cloudRegion));
     } else {
-      // A zonal topic path.
-      topicPath =
-          TopicPath.newBuilder()
-              .setProject(ProjectNumber.of(projectNumber))
-              .setLocation(CloudZone.of(CloudRegion.of(cloudRegion), zoneId))
-              .setName(TopicName.of(topicId))
-              .build();
+      location = CloudRegionOrZone.of(CloudZone.of(CloudRegion.of(cloudRegion), zoneId));
     }
+
+    TopicPath topicPath =
+        TopicPath.newBuilder()
+            .setProject(ProjectNumber.of(projectNumber))
+            .setLocation(location)
+            .setName(TopicName.of(topicId))
+            .build();
 
     AdminClientSettings adminClientSettings =
         AdminClientSettings.newBuilder().setRegion(CloudRegion.of(cloudRegion)).build();

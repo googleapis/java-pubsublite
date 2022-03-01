@@ -22,6 +22,7 @@ import com.google.cloud.pubsublite.AdminClient;
 import com.google.cloud.pubsublite.AdminClientSettings;
 import com.google.cloud.pubsublite.BacklogLocation;
 import com.google.cloud.pubsublite.CloudRegion;
+import com.google.cloud.pubsublite.CloudRegionOrZone;
 import com.google.cloud.pubsublite.CloudZone;
 import com.google.cloud.pubsublite.ProjectNumber;
 import com.google.cloud.pubsublite.SeekTarget;
@@ -71,25 +72,20 @@ public class SeekSubscriptionExample {
       boolean regional)
       throws Exception {
 
-    SubscriptionPath subscriptionPath = null;
+    CloudRegionOrZone location = null;
 
     if (regional) {
-      // A regional subscription path.
-      subscriptionPath =
-          SubscriptionPath.newBuilder()
-              .setLocation(CloudRegion.of(cloudRegion))
-              .setProject(ProjectNumber.of(projectNumber))
-              .setName(SubscriptionName.of(subscriptionId))
-              .build();
+      location = CloudRegionOrZone.of(CloudRegion.of(cloudRegion));
     } else {
-      // A zonal subscription path.
-      subscriptionPath =
-          SubscriptionPath.newBuilder()
-              .setLocation(CloudZone.of(CloudRegion.of(cloudRegion), zoneId))
-              .setProject(ProjectNumber.of(projectNumber))
-              .setName(SubscriptionName.of(subscriptionId))
-              .build();
+      location = CloudRegionOrZone.of(CloudZone.of(CloudRegion.of(cloudRegion), zoneId));
     }
+
+    SubscriptionPath subscriptionPath =
+        SubscriptionPath.newBuilder()
+            .setLocation(location)
+            .setProject(ProjectNumber.of(projectNumber))
+            .setName(SubscriptionName.of(subscriptionId))
+            .build();
 
     AdminClientSettings adminClientSettings =
         AdminClientSettings.newBuilder().setRegion(CloudRegion.of(cloudRegion)).build();

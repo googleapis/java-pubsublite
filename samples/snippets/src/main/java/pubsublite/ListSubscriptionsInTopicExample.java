@@ -36,6 +36,8 @@ public class ListSubscriptionsInTopicExample {
     char zoneId = 'b';
     long projectNumber = Long.parseLong("123456789");
     String topicId = "your-topic-id";
+    // True if using a regional location. False if using a zonal location.
+    // https://cloud.google.com/pubsub/lite/docs/topics
     boolean regional = false;
 
     listSubscriptionsInTopicExample(cloudRegion, zoneId, projectNumber, topicId, regional);
@@ -45,8 +47,7 @@ public class ListSubscriptionsInTopicExample {
       String cloudRegion, char zoneId, long projectNumber, String topicId, boolean regional)
       throws Exception {
 
-    CloudRegionOrZone location = null;
-
+    CloudRegionOrZone location;
     if (regional) {
       location = CloudRegionOrZone.of(CloudRegion.of(cloudRegion));
     } else {

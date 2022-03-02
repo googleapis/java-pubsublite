@@ -34,6 +34,8 @@ public class ListTopicsExample {
     String cloudRegion = "your-cloud-region";
     char zoneId = 'b';
     long projectNumber = Long.parseLong("123456789");
+    // True if using a regional location. False if using a zonal location.
+    // https://cloud.google.com/pubsub/lite/docs/topics
     boolean regional = true;
 
     listTopicsExample(cloudRegion, zoneId, projectNumber, regional);
@@ -45,8 +47,7 @@ public class ListTopicsExample {
     AdminClientSettings adminClientSettings =
         AdminClientSettings.newBuilder().setRegion(CloudRegion.of(cloudRegion)).build();
 
-    CloudRegionOrZone location = null;
-
+    CloudRegionOrZone location;
     if (regional) {
       location = CloudRegionOrZone.of(CloudRegion.of(cloudRegion));
     } else {

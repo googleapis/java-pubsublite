@@ -37,6 +37,8 @@ public class DeleteSubscriptionExample {
     // Choose an existing subscription.
     String subscriptionId = "your-subscription-id";
     long projectNumber = Long.parseLong("123456789");
+    // True if using a regional location. False if using a zonal location.
+    // https://cloud.google.com/pubsub/lite/docs/topics
     boolean regional = false;
 
     deleteSubscriptionExample(cloudRegion, zoneId, projectNumber, subscriptionId, regional);
@@ -46,8 +48,7 @@ public class DeleteSubscriptionExample {
       String cloudRegion, char zoneId, long projectNumber, String subscriptionId, boolean regional)
       throws Exception {
 
-    CloudRegionOrZone location = null;
-
+    CloudRegionOrZone location;
     if (regional) {
       location = CloudRegionOrZone.of(CloudRegion.of(cloudRegion));
     } else {

@@ -45,6 +45,8 @@ public class SubscriberExample {
     // Choose an existing subscription for the subscribe example to work.
     String subscriptionId = "your-subscription-id";
     long projectNumber = Long.parseLong("123456789");
+    // True if using a regional location. False if using a zonal location.
+    // https://cloud.google.com/pubsub/lite/docs/topics
     boolean regional = false;
 
     subscriberExample(cloudRegion, zoneId, projectNumber, subscriptionId, regional);
@@ -54,8 +56,7 @@ public class SubscriberExample {
       String cloudRegion, char zoneId, long projectNumber, String subscriptionId, boolean regional)
       throws ApiException {
 
-    CloudRegionOrZone location = null;
-
+    CloudRegionOrZone location;
     if (regional) {
       location = CloudRegionOrZone.of(CloudRegion.of(cloudRegion));
     } else {

@@ -47,6 +47,8 @@ public class UpdateTopicExample {
     String topicId = "your-topic-id";
     String reservationId = "your-reservation-id";
     long projectNumber = Long.parseLong("123456789");
+    // True if using a regional location. False if using a zonal location.
+    // https://cloud.google.com/pubsub/lite/docs/topics
     boolean regional = true;
 
     updateTopicExample(cloudRegion, zoneId, projectNumber, topicId, reservationId, regional);
@@ -61,8 +63,7 @@ public class UpdateTopicExample {
       boolean regional)
       throws Exception {
 
-    CloudRegionOrZone location = null;
-
+    CloudRegionOrZone location;
     if (regional) {
       location = CloudRegionOrZone.of(CloudRegion.of(cloudRegion));
     } else {

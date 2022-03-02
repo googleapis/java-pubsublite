@@ -46,6 +46,8 @@ public class CreateTopicExample {
     String reservationId = "your-reservation-id";
     long projectNumber = Long.parseLong("123456789");
     int partitions = 1;
+    // True if using a regional location. False if using a zonal location.
+    // https://cloud.google.com/pubsub/lite/docs/topics
     boolean regional = false;
 
     createTopicExample(
@@ -69,8 +71,7 @@ public class CreateTopicExample {
             .setName(ReservationName.of(reservationId))
             .build();
 
-    CloudRegionOrZone location = null;
-
+    CloudRegionOrZone location;
     if (regional) {
       location = CloudRegionOrZone.of(CloudRegion.of(cloudRegion));
     } else {

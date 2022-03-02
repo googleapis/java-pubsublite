@@ -38,6 +38,8 @@ public class GetTopicExample {
     // Choose an existing topic.
     String topicId = "your-topic-id";
     long projectNumber = Long.parseLong("123456789");
+    // True if using a regional location. False if using a zonal location.
+    // https://cloud.google.com/pubsub/lite/docs/topics
     boolean regional = true;
 
     getTopicExample(cloudRegion, zoneId, projectNumber, topicId, regional);
@@ -47,8 +49,7 @@ public class GetTopicExample {
       String cloudRegion, char zoneId, long projectNumber, String topicId, boolean regional)
       throws Exception {
 
-    CloudRegionOrZone location = null;
-
+    CloudRegionOrZone location;
     if (regional) {
       location = CloudRegionOrZone.of(CloudRegion.of(cloudRegion));
     } else {

@@ -40,6 +40,8 @@ public class PublishWithOrderingKeyExample {
     // Choose an existing topic for the publish example to work.
     String topicId = "your-topic-id";
     long projectNumber = Long.parseLong("123456789");
+    // True if using a regional location. False if using a zonal location.
+    // https://cloud.google.com/pubsub/lite/docs/topics
     boolean regional = false;
 
     publishWithOrderingKeyExample(cloudRegion, zoneId, projectNumber, topicId, regional);
@@ -50,8 +52,7 @@ public class PublishWithOrderingKeyExample {
       String cloudRegion, char zoneId, long projectNumber, String topicId, boolean regional)
       throws ApiException, ExecutionException, InterruptedException {
 
-    CloudRegionOrZone location = null;
-
+    CloudRegionOrZone location;
     if (regional) {
       location = CloudRegionOrZone.of(CloudRegion.of(cloudRegion));
     } else {

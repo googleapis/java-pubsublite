@@ -20,6 +20,7 @@ package pubsublite;
 import com.google.api.core.ApiFuture;
 import com.google.api.gax.rpc.ApiException;
 import com.google.cloud.pubsublite.CloudRegion;
+import com.google.cloud.pubsublite.CloudRegionOrZone;
 import com.google.cloud.pubsublite.CloudZone;
 import com.google.cloud.pubsublite.MessageMetadata;
 import com.google.cloud.pubsublite.ProjectNumber;
@@ -39,19 +40,29 @@ public class PublishWithOrderingKeyExample {
     // Choose an existing topic for the publish example to work.
     String topicId = "your-topic-id";
     long projectNumber = Long.parseLong("123456789");
+    // True if using a regional location. False if using a zonal location.
+    // https://cloud.google.com/pubsub/lite/docs/topics
+    boolean regional = false;
 
-    publishWithOrderingKeyExample(cloudRegion, zoneId, projectNumber, topicId);
+    publishWithOrderingKeyExample(cloudRegion, zoneId, projectNumber, topicId, regional);
   }
 
   // Publish a message to a topic with an ordering key.
   public static void publishWithOrderingKeyExample(
-      String cloudRegion, char zoneId, long projectNumber, String topicId)
+      String cloudRegion, char zoneId, long projectNumber, String topicId, boolean regional)
       throws ApiException, ExecutionException, InterruptedException {
+
+    CloudRegionOrZone location;
+    if (regional) {
+      location = CloudRegionOrZone.of(CloudRegion.of(cloudRegion));
+    } else {
+      location = CloudRegionOrZone.of(CloudZone.of(CloudRegion.of(cloudRegion), zoneId));
+    }
 
     TopicPath topicPath =
         TopicPath.newBuilder()
             .setProject(ProjectNumber.of(projectNumber))
-            .setLocation(CloudZone.of(CloudRegion.of(cloudRegion), zoneId))
+            .setLocation(location)
             .setName(TopicName.of(topicId))
             .build();
 

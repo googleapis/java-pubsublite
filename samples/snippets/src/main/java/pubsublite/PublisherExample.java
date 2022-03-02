@@ -21,6 +21,7 @@ import com.google.api.core.ApiFuture;
 import com.google.api.core.ApiFutures;
 import com.google.api.gax.rpc.ApiException;
 import com.google.cloud.pubsublite.CloudRegion;
+import com.google.cloud.pubsublite.CloudRegionOrZone;
 import com.google.cloud.pubsublite.CloudZone;
 import com.google.cloud.pubsublite.MessageMetadata;
 import com.google.cloud.pubsublite.ProjectNumber;
@@ -44,21 +45,37 @@ public class PublisherExample {
     String topicId = "your-topic-id";
     long projectNumber = Long.parseLong("123456789");
     int messageCount = 100;
+    // True if using a regional location. False if using a zonal location.
+    // https://cloud.google.com/pubsub/lite/docs/topics
+    boolean regional = false;
 
-    publisherExample(cloudRegion, zoneId, projectNumber, topicId, messageCount);
+    publisherExample(cloudRegion, zoneId, projectNumber, topicId, messageCount, regional);
   }
 
   // Publish messages to a topic.
   public static void publisherExample(
-      String cloudRegion, char zoneId, long projectNumber, String topicId, int messageCount)
+      String cloudRegion,
+      char zoneId,
+      long projectNumber,
+      String topicId,
+      int messageCount,
+      boolean regional)
       throws ApiException, ExecutionException, InterruptedException {
+
+    CloudRegionOrZone location;
+    if (regional) {
+      location = CloudRegionOrZone.of(CloudRegion.of(cloudRegion));
+    } else {
+      location = CloudRegionOrZone.of(CloudZone.of(CloudRegion.of(cloudRegion), zoneId));
+    }
 
     TopicPath topicPath =
         TopicPath.newBuilder()
             .setProject(ProjectNumber.of(projectNumber))
-            .setLocation(CloudZone.of(CloudRegion.of(cloudRegion), zoneId))
+            .setLocation(location)
             .setName(TopicName.of(topicId))
             .build();
+
     Publisher publisher = null;
     List<ApiFuture<String>> futures = new ArrayList<>();
 

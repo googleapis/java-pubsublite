@@ -21,6 +21,7 @@ import com.google.api.gax.rpc.NotFoundException;
 import com.google.cloud.pubsublite.AdminClient;
 import com.google.cloud.pubsublite.AdminClientSettings;
 import com.google.cloud.pubsublite.CloudRegion;
+import com.google.cloud.pubsublite.CloudRegionOrZone;
 import com.google.cloud.pubsublite.CloudZone;
 import com.google.cloud.pubsublite.ProjectNumber;
 import com.google.cloud.pubsublite.SubscriptionName;
@@ -37,18 +38,30 @@ public class UpdateSubscriptionExample {
     // TODO(developer): Replace these variables before running the sample.
     String cloudRegion = "your-cloud-region";
     char zoneId = 'b';
-    // Choose an existing subscription for the sample to work.
+    // Choose an existing subscription.
     String subscriptionId = "your-subscription-id";
     long projectNumber = Long.parseLong("123456789");
+    // True if using a regional location. False if using a zonal location.
+    // https://cloud.google.com/pubsub/lite/docs/topics
+    boolean regional = false;
 
-    updateSubscriptionExample(cloudRegion, zoneId, projectNumber, subscriptionId);
+    updateSubscriptionExample(cloudRegion, zoneId, projectNumber, subscriptionId, regional);
   }
 
   public static void updateSubscriptionExample(
-      String cloudRegion, char zoneId, long projectNumber, String subscriptionId) throws Exception {
+      String cloudRegion, char zoneId, long projectNumber, String subscriptionId, boolean regional)
+      throws Exception {
+
+    CloudRegionOrZone location;
+    if (regional) {
+      location = CloudRegionOrZone.of(CloudRegion.of(cloudRegion));
+    } else {
+      location = CloudRegionOrZone.of(CloudZone.of(CloudRegion.of(cloudRegion), zoneId));
+    }
+
     SubscriptionPath subscriptionPath =
         SubscriptionPath.newBuilder()
-            .setLocation(CloudZone.of(CloudRegion.of(cloudRegion), zoneId))
+            .setLocation(location)
             .setProject(ProjectNumber.of(projectNumber))
             .setName(SubscriptionName.of(subscriptionId))
             .build();

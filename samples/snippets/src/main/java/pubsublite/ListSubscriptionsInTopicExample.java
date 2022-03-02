@@ -20,6 +20,7 @@ package pubsublite;
 import com.google.cloud.pubsublite.AdminClient;
 import com.google.cloud.pubsublite.AdminClientSettings;
 import com.google.cloud.pubsublite.CloudRegion;
+import com.google.cloud.pubsublite.CloudRegionOrZone;
 import com.google.cloud.pubsublite.CloudZone;
 import com.google.cloud.pubsublite.ProjectNumber;
 import com.google.cloud.pubsublite.SubscriptionPath;
@@ -35,17 +36,28 @@ public class ListSubscriptionsInTopicExample {
     char zoneId = 'b';
     long projectNumber = Long.parseLong("123456789");
     String topicId = "your-topic-id";
+    // True if using a regional location. False if using a zonal location.
+    // https://cloud.google.com/pubsub/lite/docs/topics
+    boolean regional = false;
 
-    listSubscriptionsInTopicExample(cloudRegion, zoneId, projectNumber, topicId);
+    listSubscriptionsInTopicExample(cloudRegion, zoneId, projectNumber, topicId, regional);
   }
 
   public static void listSubscriptionsInTopicExample(
-      String cloudRegion, char zoneId, long projectNumber, String topicId) throws Exception {
+      String cloudRegion, char zoneId, long projectNumber, String topicId, boolean regional)
+      throws Exception {
+
+    CloudRegionOrZone location;
+    if (regional) {
+      location = CloudRegionOrZone.of(CloudRegion.of(cloudRegion));
+    } else {
+      location = CloudRegionOrZone.of(CloudZone.of(CloudRegion.of(cloudRegion), zoneId));
+    }
 
     TopicPath topicPath =
         TopicPath.newBuilder()
             .setProject(ProjectNumber.of(projectNumber))
-            .setLocation(CloudZone.of(CloudRegion.of(cloudRegion), zoneId))
+            .setLocation(location)
             .setName(TopicName.of(topicId))
             .build();
 
@@ -58,7 +70,15 @@ public class ListSubscriptionsInTopicExample {
       for (SubscriptionPath subscription : subscriptionPaths) {
         System.out.println(subscription.toString());
       }
-      System.out.println(subscriptionPaths.size() + " subscription(s) listed.");
+      if (regional) {
+        System.out.println(
+            subscriptionPaths.size()
+                + " subscription(s) listed in the regional topic "
+                + topicPath);
+      } else {
+        System.out.println(
+            subscriptionPaths.size() + " subscription(s) listed in the zonal topic " + topicPath);
+      }
     }
   }
 }

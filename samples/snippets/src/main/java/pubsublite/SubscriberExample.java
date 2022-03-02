@@ -21,6 +21,7 @@ import com.google.api.gax.rpc.ApiException;
 import com.google.cloud.pubsub.v1.AckReplyConsumer;
 import com.google.cloud.pubsub.v1.MessageReceiver;
 import com.google.cloud.pubsublite.CloudRegion;
+import com.google.cloud.pubsublite.CloudRegionOrZone;
 import com.google.cloud.pubsublite.CloudZone;
 import com.google.cloud.pubsublite.MessageMetadata;
 import com.google.cloud.pubsublite.ProjectNumber;
@@ -44,17 +45,27 @@ public class SubscriberExample {
     // Choose an existing subscription for the subscribe example to work.
     String subscriptionId = "your-subscription-id";
     long projectNumber = Long.parseLong("123456789");
+    // True if using a regional location. False if using a zonal location.
+    // https://cloud.google.com/pubsub/lite/docs/topics
+    boolean regional = false;
 
-    subscriberExample(cloudRegion, zoneId, projectNumber, subscriptionId);
+    subscriberExample(cloudRegion, zoneId, projectNumber, subscriptionId, regional);
   }
 
   public static void subscriberExample(
-      String cloudRegion, char zoneId, long projectNumber, String subscriptionId)
+      String cloudRegion, char zoneId, long projectNumber, String subscriptionId, boolean regional)
       throws ApiException {
+
+    CloudRegionOrZone location;
+    if (regional) {
+      location = CloudRegionOrZone.of(CloudRegion.of(cloudRegion));
+    } else {
+      location = CloudRegionOrZone.of(CloudZone.of(CloudRegion.of(cloudRegion), zoneId));
+    }
 
     SubscriptionPath subscriptionPath =
         SubscriptionPath.newBuilder()
-            .setLocation(CloudZone.of(CloudRegion.of(cloudRegion), zoneId))
+            .setLocation(location)
             .setProject(ProjectNumber.of(projectNumber))
             .setName(SubscriptionName.of(subscriptionId))
             .build();

@@ -16,27 +16,44 @@
 
 package com.google.cloud.pubsublite.internal;
 
+import com.google.common.util.concurrent.Monitor.Guard;
 import java.util.ArrayDeque;
 import java.util.Queue;
 import java.util.concurrent.Executor;
-import java.util.concurrent.atomic.AtomicBoolean;
 import javax.annotation.concurrent.GuardedBy;
 
 /** An executor that runs tasks sequentially. */
 public final class SerialExecutor implements AutoCloseable, Executor {
   private final Executor executor;
-  private final AtomicBoolean isShutdown = new AtomicBoolean(false);
 
-  @GuardedBy("this")
+  private final CloseableMonitor monitor = new CloseableMonitor();
+  private final Guard isInactive =
+      new Guard(monitor.monitor) {
+        @Override
+        public boolean isSatisfied() {
+          return !isTaskActive;
+        }
+      };
+
+  @GuardedBy("monitor.monitor")
   private final Queue<Runnable> tasks;
 
-  @GuardedBy("this")
+  @GuardedBy("monitor.monitor")
   private boolean isTaskActive;
+
+  @GuardedBy("monitor.monitor")
+  private boolean isShutdown;
 
   public SerialExecutor(Executor executor) {
     this.executor = executor;
     this.tasks = new ArrayDeque<>();
     this.isTaskActive = false;
+    this.isShutdown = false;
+  }
+
+  /** Waits until there are no active tasks. */
+  public void waitUntilInactive() {
+    try (CloseableMonitor.Hold h = monitor.enterWhenUninterruptibly(isInactive)) {}
   }
 
   /**
@@ -45,34 +62,45 @@ public final class SerialExecutor implements AutoCloseable, Executor {
    */
   @Override
   public void close() {
-    isShutdown.set(true);
+    try (CloseableMonitor.Hold h = monitor.enter()) {
+      isShutdown = true;
+    }
   }
 
   @Override
-  public synchronized void execute(Runnable r) {
-    if (isShutdown.get()) {
-      return;
-    }
-    tasks.add(
-        () -> {
-          if (isShutdown.get()) {
-            return;
-          }
-          try {
-            r.run();
-          } finally {
-            scheduleNextTask();
-          }
-        });
-    if (!isTaskActive) {
-      scheduleNextTask();
+  public void execute(Runnable r) {
+    try (CloseableMonitor.Hold h = monitor.enter()) {
+      if (isShutdown) {
+        return;
+      }
+      tasks.add(
+          () -> {
+            try {
+              if (shouldExecuteTask()) {
+                r.run();
+              }
+            } finally {
+              scheduleNextTask();
+            }
+          });
+      if (!isTaskActive) {
+        scheduleNextTask();
+      }
     }
   }
 
-  private synchronized void scheduleNextTask() {
-    isTaskActive = !tasks.isEmpty();
-    if (isTaskActive) {
-      executor.execute(tasks.poll());
+  private boolean shouldExecuteTask() {
+    try (CloseableMonitor.Hold h = monitor.enter()) {
+      return !isShutdown;
+    }
+  }
+
+  private void scheduleNextTask() {
+    try (CloseableMonitor.Hold h = monitor.enter()) {
+      isTaskActive = !tasks.isEmpty() && !isShutdown;
+      if (isTaskActive) {
+        executor.execute(tasks.poll());
+      }
     }
   }
 }

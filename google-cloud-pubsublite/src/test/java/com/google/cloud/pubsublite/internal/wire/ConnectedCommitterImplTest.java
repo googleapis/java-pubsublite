@@ -245,7 +245,7 @@ public class ConnectedCommitterImplTest {
     verify(mockRequestStream).send(initialRequest());
 
     // No subsequent stream responses should close the stream.
-    assertThat(connectionClosed.await(5, SECONDS)).isTrue();
+    assertThat(connectionClosed.await(30, SECONDS)).isTrue();
 
     verify(mockRequestStream).closeSendWithError(argThat(new ApiExceptionMatcher(Code.ABORTED)));
     verify(mockOutputStream).onError(argThat(new ApiExceptionMatcher(Code.ABORTED)));
@@ -271,7 +271,7 @@ public class ConnectedCommitterImplTest {
         new ConnectedCommitterImpl(
             streamFactory, mockOutputStream, initialRequest(), Duration.ofMillis(100));
 
-    assertThat(connectionClosed.await(5, SECONDS)).isTrue();
+    assertThat(connectionClosed.await(30, SECONDS)).isTrue();
 
     verify(mockRequestStream).send(initialRequest());
     verify(mockRequestStream).closeSendWithError(argThat(new ApiExceptionMatcher(Code.ABORTED)));

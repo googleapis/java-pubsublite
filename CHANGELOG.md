@@ -1,5 +1,24 @@
 # Changelog
 
+### [1.4.12](https://github.com/googleapis/java-pubsublite/compare/v1.4.11...v1.4.12) (2022-03-08)
+
+
+### Bug Fixes
+
+* Committer stuck in retry loop on shutdown ([#1062](https://github.com/googleapis/java-pubsublite/issues/1062)) ([cbad789](https://github.com/googleapis/java-pubsublite/commit/cbad789e11560e8cf974def152483c0f43e58ab6))
+
+
+### Dependencies
+
+* remove no longer needed explicit overrides ([#1069](https://github.com/googleapis/java-pubsublite/issues/1069)) ([15c7de7](https://github.com/googleapis/java-pubsublite/commit/15c7de755ad2cd8b897fbf532784991c6abb7c65))
+* update actions/github-script action to v6 ([#1058](https://github.com/googleapis/java-pubsublite/issues/1058)) ([8b28569](https://github.com/googleapis/java-pubsublite/commit/8b28569d24a5637f30d3aa37e6e5d45293a01ebd))
+* update dependency com.google.cloud:google-cloud-bom to v0.168.1 ([#1070](https://github.com/googleapis/java-pubsublite/issues/1070)) ([edd3bdc](https://github.com/googleapis/java-pubsublite/commit/edd3bdc99c106c5db0d5897d7e1c57fdbefcb566))
+* update dependency com.google.cloud:google-cloud-bom to v0.169.0 ([#1075](https://github.com/googleapis/java-pubsublite/issues/1075)) ([9f9f774](https://github.com/googleapis/java-pubsublite/commit/9f9f774c1c28de9dee99515f53276485b21abc72))
+* update dependency com.google.cloud:google-cloud-pubsub to v1.115.4 ([#1056](https://github.com/googleapis/java-pubsublite/issues/1056)) ([152a793](https://github.com/googleapis/java-pubsublite/commit/152a793d15312bb5b462d196da4bc610f4a53990))
+* update dependency com.google.cloud:google-cloud-pubsub to v1.115.5 ([#1061](https://github.com/googleapis/java-pubsublite/issues/1061)) ([597bdc2](https://github.com/googleapis/java-pubsublite/commit/597bdc223232c2e08055500bb99d5ffd155ac4e1))
+* update dependency com.google.cloud:google-cloud-pubsub to v1.116.0 ([#1077](https://github.com/googleapis/java-pubsublite/issues/1077)) ([1034612](https://github.com/googleapis/java-pubsublite/commit/10346125158d1efd729cc4ca7d2e707f7ad15684))
+* update dependency com.google.cloud:google-cloud-shared-dependencies to v2.8.0 ([#1074](https://github.com/googleapis/java-pubsublite/issues/1074)) ([8b2a4df](https://github.com/googleapis/java-pubsublite/commit/8b2a4dfaaeb5f80c4fa9e7fe976e46c37e420ca2))
+
 ### [1.4.11](https://github.com/googleapis/java-pubsublite/compare/v1.4.10...v1.4.11) (2022-02-09)
 
 

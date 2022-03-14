@@ -43,9 +43,13 @@ public abstract class SubscriberBuilder {
   // Optional parameters.
   abstract SubscriberResetHandler resetHandler();
 
+  // Whether to retry races when streams are created by other clients.
+  abstract boolean retryStreamRaces();
+
   public static Builder newBuilder() {
     return new AutoValue_SubscriberBuilder.Builder()
-        .setResetHandler(SubscriberResetHandler::unhandled);
+        .setResetHandler(SubscriberResetHandler::unhandled)
+        .setRetryStreamRaces(true);
   }
 
   @AutoValue.Builder
@@ -64,6 +68,9 @@ public abstract class SubscriberBuilder {
     // Optional parameters.
     public abstract Builder setResetHandler(SubscriberResetHandler resetHandler);
 
+    // Whether to re
+    public abstract Builder setRetryStreamRaces(boolean retryStreamRaces);
+
     abstract SubscriberBuilder autoBuild();
 
     @SuppressWarnings("CheckReturnValue")
@@ -80,7 +87,8 @@ public abstract class SubscriberBuilder {
           initialSubscribeRequest,
           autoBuilt.initialLocation(),
           autoBuilt.messageConsumer(),
-          autoBuilt.resetHandler());
+          autoBuilt.resetHandler(),
+          autoBuilt.retryStreamRaces());
     }
   }
 }

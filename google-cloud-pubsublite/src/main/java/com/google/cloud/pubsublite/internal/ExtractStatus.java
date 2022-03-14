@@ -22,6 +22,10 @@ import com.google.api.gax.rpc.ApiException;
 import com.google.api.gax.rpc.StatusCode.Code;
 import com.google.cloud.pubsublite.internal.wire.SystemExecutors;
 import com.google.common.util.concurrent.MoreExecutors;
+import com.google.protobuf.Any;
+import com.google.rpc.ErrorInfo;
+import com.google.rpc.Status;
+import io.grpc.protobuf.StatusProto;
 import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 import java.util.function.BiConsumer;
@@ -47,6 +51,25 @@ public final class ExtractStatus {
     Optional<CheckedApiException> statusOr = extract(t);
     if (statusOr.isPresent()) return statusOr.get();
     return new CheckedApiException(t, Code.INTERNAL);
+  }
+
+  public static String getErrorInfoReason(CheckedApiException error) {
+    Status status = StatusProto.fromThrowable(error.underlying);
+    if (status == null) {
+      return "";
+    }
+    for (Any any : status.getDetailsList()) {
+      if (any.is(ErrorInfo.class)) {
+        try {
+          ErrorInfo errorInfo = any.unpack(ErrorInfo.class);
+          if ("pubsublite.googleapis.com".equals(errorInfo.getDomain())) {
+            return errorInfo.getReason();
+          }
+        } catch (Throwable unused) {
+        }
+      }
+    }
+    return "";
   }
 
   public static <T> ApiFuture<T> toClientFuture(ApiFuture<T> source) {

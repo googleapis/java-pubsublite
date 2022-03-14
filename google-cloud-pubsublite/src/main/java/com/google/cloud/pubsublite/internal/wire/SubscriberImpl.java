@@ -17,12 +17,14 @@
 package com.google.cloud.pubsublite.internal.wire;
 
 import static com.google.cloud.pubsublite.internal.CheckedApiPreconditions.checkArgument;
+import static com.google.cloud.pubsublite.internal.ExtractStatus.toCanonical;
 
 import com.google.api.gax.rpc.ApiException;
 import com.google.cloud.pubsublite.SequencedMessage;
 import com.google.cloud.pubsublite.internal.AlarmFactory;
 import com.google.cloud.pubsublite.internal.CheckedApiException;
 import com.google.cloud.pubsublite.internal.CloseableMonitor;
+import com.google.cloud.pubsublite.internal.ExtractStatus;
 import com.google.cloud.pubsublite.internal.ProxyService;
 import com.google.cloud.pubsublite.internal.SerialExecutor;
 import com.google.cloud.pubsublite.internal.wire.StreamFactories.SubscribeStreamFactory;
@@ -32,6 +34,7 @@ import com.google.cloud.pubsublite.proto.SeekRequest;
 import com.google.cloud.pubsublite.proto.SeekRequest.NamedTarget;
 import com.google.cloud.pubsublite.proto.SubscribeRequest;
 import com.google.common.annotations.VisibleForTesting;
+import com.google.common.flogger.GoogleLogger;
 import java.time.Duration;
 import java.util.List;
 import java.util.Optional;
@@ -41,6 +44,8 @@ import javax.annotation.concurrent.GuardedBy;
 
 public class SubscriberImpl extends ProxyService
     implements Subscriber, RetryingConnectionObserver<List<SequencedMessage>> {
+  private static final GoogleLogger logger = GoogleLogger.forEnclosingClass();
+
   private static final Duration FLOW_REQUESTS_FLUSH_INTERVAL = Duration.ofMillis(100);
 
   private final AlarmFactory alarmFactory;
@@ -50,6 +55,9 @@ public class SubscriberImpl extends ProxyService
   private final SubscriberResetHandler resetHandler;
 
   private final InitialSubscribeRequest baseInitialRequest;
+
+  // Whether to retry `DUPLICATE_SUBSCRIBER_CONNECTIONS` errors.
+  private final boolean retryStreamRaces;
 
   // Used to ensure messages are delivered to consumers in order.
   private final SerialExecutor messageDeliveryExecutor;
@@ -82,12 +90,14 @@ public class SubscriberImpl extends ProxyService
       InitialSubscribeRequest baseInitialRequest,
       SeekRequest initialLocation,
       Consumer<List<SequencedMessage>> messageConsumer,
-      SubscriberResetHandler resetHandler)
+      SubscriberResetHandler resetHandler,
+      boolean retryStreamRaces)
       throws ApiException {
     this.alarmFactory = alarmFactory;
     this.messageConsumer = messageConsumer;
     this.resetHandler = resetHandler;
     this.baseInitialRequest = baseInitialRequest;
+    this.retryStreamRaces = retryStreamRaces;
     this.messageDeliveryExecutor = new SerialExecutor(SystemExecutors.getFuturesExecutor());
     this.initialLocation = initialLocation;
     this.connection =
@@ -100,7 +110,8 @@ public class SubscriberImpl extends ProxyService
       InitialSubscribeRequest baseInitialRequest,
       SeekRequest initialLocation,
       Consumer<List<SequencedMessage>> messageConsumer,
-      SubscriberResetHandler resetHandler)
+      SubscriberResetHandler resetHandler,
+      boolean retryStreamRaces)
       throws ApiException {
     this(
         streamFactory,
@@ -109,7 +120,8 @@ public class SubscriberImpl extends ProxyService
         baseInitialRequest,
         initialLocation,
         messageConsumer,
-        resetHandler);
+        resetHandler,
+        retryStreamRaces);
   }
 
   // ProxyService implementation.
@@ -142,8 +154,7 @@ public class SubscriberImpl extends ProxyService
       flowControlBatcher.onClientFlowRequest(clientRequest);
       if (flowControlBatcher.shouldExpediteBatchRequest()) {
         connection.modifyConnection(
-            connectedSubscriber ->
-                connectedSubscriber.ifPresent(subscriber -> flushBatchFlowRequest(subscriber)));
+            connectedSubscriber -> connectedSubscriber.ifPresent(this::flushBatchFlowRequest));
       }
     }
   }
@@ -172,6 +183,12 @@ public class SubscriberImpl extends ProxyService
   @Override
   @SuppressWarnings("GuardedBy")
   public void triggerReinitialize(CheckedApiException streamError) {
+    if (!retryStreamRaces
+        && ExtractStatus.getErrorInfoReason(streamError)
+            .equals("DUPLICATE_SUBSCRIBER_CONNECTIONS")) {
+      onPermanentError(streamError);
+      return;
+    }
     if (ResetSignal.isResetSignal(streamError)) {
       try {
         if (resetHandler.handleReset()) {
@@ -205,7 +222,16 @@ public class SubscriberImpl extends ProxyService
       if (shutdown) return;
       nextOffsetTracker.onMessages(messages);
       flowControlBatcher.onMessages(messages);
-      messageDeliveryExecutor.execute(() -> messageConsumer.accept(messages));
+      messageDeliveryExecutor.execute(
+          () -> {
+            try {
+              messageConsumer.accept(messages);
+            } catch (Throwable t) {
+              logger.atWarning().withCause(t).log(
+                  "Consumer threw an exception- failing subscriber. %s", baseInitialRequest);
+              onPermanentError(toCanonical(t));
+            }
+          });
     }
   }
 
@@ -213,8 +239,7 @@ public class SubscriberImpl extends ProxyService
     try (CloseableMonitor.Hold h = monitor.enter()) {
       if (shutdown) return;
       connection.modifyConnection(
-          connectedSubscriber ->
-              connectedSubscriber.ifPresent(subscriber -> flushBatchFlowRequest(subscriber)));
+          connectedSubscriber -> connectedSubscriber.ifPresent(this::flushBatchFlowRequest));
     } catch (CheckedApiException e) {
       onPermanentError(e);
     }
@@ -222,9 +247,7 @@ public class SubscriberImpl extends ProxyService
 
   private void flushBatchFlowRequest(ConnectedSubscriber subscriber) {
     try (CloseableMonitor.Hold h = monitor.enter()) {
-      flowControlBatcher
-          .releasePendingRequest()
-          .ifPresent(request -> subscriber.allowFlow(request));
+      flowControlBatcher.releasePendingRequest().ifPresent(subscriber::allowFlow);
     }
   }
 }

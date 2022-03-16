@@ -18,37 +18,18 @@ package com.google.cloud.pubsublite.internal.wire;
 
 import com.google.cloud.pubsublite.ErrorCodes;
 import com.google.cloud.pubsublite.internal.CheckedApiException;
-import com.google.protobuf.Any;
-import com.google.rpc.ErrorInfo;
-import com.google.rpc.Status;
-import io.grpc.protobuf.StatusProto;
+import com.google.cloud.pubsublite.internal.ExtractStatus;
 
 // Pub/Sub Lite's stream RESET signal is sent by the server to instruct the client to reset the
 // stream state.
 public final class ResetSignal {
   private static final String REASON = "RESET";
-  private static final String DOMAIN = "pubsublite.googleapis.com";
 
   public static boolean isResetSignal(CheckedApiException checkedApiException) {
     if (!ErrorCodes.IsRetryableForStreams(checkedApiException.code())) {
       return false;
     }
-    Status status = StatusProto.fromThrowable(checkedApiException.underlying);
-    if (status == null) {
-      return false;
-    }
-    for (Any any : status.getDetailsList()) {
-      if (any.is(ErrorInfo.class)) {
-        try {
-          ErrorInfo errorInfo = any.unpack(ErrorInfo.class);
-          if (REASON.equals(errorInfo.getReason()) && DOMAIN.equals(errorInfo.getDomain())) {
-            return true;
-          }
-        } catch (Throwable t) {
-        }
-      }
-    }
-    return false;
+    return ExtractStatus.getErrorInfoReason(checkedApiException).equals(REASON);
   }
 
   private ResetSignal() {}

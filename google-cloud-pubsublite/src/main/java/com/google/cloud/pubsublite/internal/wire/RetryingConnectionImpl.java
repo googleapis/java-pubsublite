@@ -118,7 +118,7 @@ class RetryingConnectionImpl<
         currentConnection.close();
       }
     } catch (Throwable t) {
-      logger.atWarning().withCause(t).log(
+      logger.atInfo().withCause(t).log(
           "Failed while terminating connection for %s", streamDescription());
       notifyFailed(t);
       return;
@@ -215,7 +215,7 @@ class RetryingConnectionImpl<
               try {
                 observer.triggerReinitialize(streamError);
               } catch (Throwable t) {
-                logger.atWarning().withCause(t).log("Error occurred in triggerReinitialize.");
+                logger.atInfo().withCause(t).log("Error occurred in triggerReinitialize.");
                 onError(t);
               }
             });

@@ -53,7 +53,11 @@ import com.google.cloud.pubsublite.proto.SeekRequest;
 import com.google.cloud.pubsublite.proto.SeekRequest.NamedTarget;
 import com.google.cloud.pubsublite.proto.SubscribeRequest;
 import com.google.common.collect.ImmutableList;
+import com.google.protobuf.Any;
 import com.google.protobuf.util.Timestamps;
+import com.google.rpc.ErrorInfo;
+import com.google.rpc.Status;
+import io.grpc.protobuf.StatusProto;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Future;
@@ -79,6 +83,20 @@ public class SubscriberImplTest {
           .build();
   private static final SeekRequest INITIAL_LOCATION =
       SeekRequest.newBuilder().setNamedTarget(NamedTarget.COMMITTED_CURSOR).build();
+
+  private static final CheckedApiException DUPLICATE_CONNECTION_SIGNAL =
+      new CheckedApiException(
+          StatusProto.toStatusRuntimeException(
+              Status.newBuilder()
+                  .setCode(Code.ABORTED.ordinal())
+                  .addDetails(
+                      Any.pack(
+                          ErrorInfo.newBuilder()
+                              .setReason("DUPLICATE_SUBSCRIBER_CONNECTIONS")
+                              .setDomain("pubsublite.googleapis.com")
+                              .build()))
+                  .build()),
+          Code.ABORTED);
 
   private static SubscribeRequest initialRequest() {
     return SubscribeRequest.newBuilder()
@@ -135,7 +153,8 @@ public class SubscriberImplTest {
             BASE_INITIAL_SUBSCRIBE_REQUEST,
             INITIAL_LOCATION,
             mockMessageConsumer,
-            mockResetHandler);
+            mockResetHandler,
+            true);
     subscriber.startAsync().awaitRunning();
   }
 
@@ -298,6 +317,31 @@ public class SubscriberImplTest {
     verify(mockConnectedSubscriber2)
         .allowFlow(
             FlowControlRequest.newBuilder().setAllowedBytes(80).setAllowedMessages(98).build());
+  }
+
+  @Test
+  public void reinitialize_retriesDuplicateConnectionByDefault() {
+    subscriber.triggerReinitialize(DUPLICATE_CONNECTION_SIGNAL);
+    verify(mockSubscriberFactory, times(2)).New(any(), any(), eq(initialRequest()));
+  }
+
+  @Test
+  public void reinitialize_doesntRetryDuplicateConnectionIfDisabled() throws Exception {
+    subscriber =
+        new SubscriberImpl(
+            unusedStreamFactory,
+            mockSubscriberFactory,
+            alarmFactory,
+            BASE_INITIAL_SUBSCRIBE_REQUEST,
+            INITIAL_LOCATION,
+            mockMessageConsumer,
+            mockResetHandler,
+            false);
+    Future<Void> failed = whenFailed(subscriber);
+    subscriber.startAsync().awaitRunning();
+    subscriber.triggerReinitialize(DUPLICATE_CONNECTION_SIGNAL);
+    failed.get();
+    assertThrowableMatches(subscriber.failureCause(), DUPLICATE_CONNECTION_SIGNAL.code());
   }
 
   @Test

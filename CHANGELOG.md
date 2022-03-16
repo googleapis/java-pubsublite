@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.5.0](https://github.com/googleapis/java-pubsublite/compare/v1.4.12...v1.5.0) (2022-03-16)
+
+
+### Features
+
+* add explicit duplicate subscriber handling to SubscriberImpl for beam ([#1088](https://github.com/googleapis/java-pubsublite/issues/1088)) ([f808056](https://github.com/googleapis/java-pubsublite/commit/f808056c479076cd5d1400f6e86c5094fd50b25e))
+
+
+### Dependencies
+
+* update dependency com.google.cloud:google-cloud-bom to v0.171.0 ([#1085](https://github.com/googleapis/java-pubsublite/issues/1085)) ([88551c6](https://github.com/googleapis/java-pubsublite/commit/88551c66ee7833b27d08007af149d1877e0b3e18))
+
 ### [1.4.12](https://github.com/googleapis/java-pubsublite/compare/v1.4.11...v1.4.12) (2022-03-08)
 
 

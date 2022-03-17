@@ -1,5 +1,12 @@
 # Changelog
 
+### [1.5.1](https://github.com/googleapis/java-pubsublite/compare/v1.5.0...v1.5.1) (2022-03-17)
+
+
+### Bug Fixes
+
+* Flush messages in serial executor before handling admin seek ([#1079](https://github.com/googleapis/java-pubsublite/issues/1079)) ([49bed38](https://github.com/googleapis/java-pubsublite/commit/49bed386d9ebbd05ea9db36176e6f275d4f78e93))
+
 ## [1.5.0](https://github.com/googleapis/java-pubsublite/compare/v1.4.12...v1.5.0) (2022-03-16)
 
 

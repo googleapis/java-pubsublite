@@ -17,12 +17,10 @@
 package com.google.cloud.pubsublite.internal;
 
 import static com.google.common.truth.Truth.assertThat;
-import static java.util.concurrent.TimeUnit.SECONDS;
 
 import com.google.cloud.pubsublite.internal.wire.SystemExecutors;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.CountDownLatch;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -35,7 +33,6 @@ public final class SerialExecutorTest {
   public void serializesTasks() throws Exception {
     final int numTasks = 100;
     List<Integer> receivedSequences = new ArrayList<>();
-    CountDownLatch tasksDone = new CountDownLatch(numTasks);
     for (int i = 0; i < numTasks; i++) {
       int sequence = i;
       executor.execute(
@@ -43,10 +40,9 @@ public final class SerialExecutorTest {
             synchronized (receivedSequences) {
               receivedSequences.add(sequence);
             }
-            tasksDone.countDown();
           });
     }
-    assertThat(tasksDone.await(30, SECONDS)).isTrue();
+    executor.waitUntilInactive();
 
     for (int i = 0; i < receivedSequences.size(); i++) {
       assertThat(receivedSequences.get(i)).isEqualTo(i);
@@ -56,7 +52,6 @@ public final class SerialExecutorTest {
   @Test
   public void closeDiscardsTasks() throws Exception {
     List<Integer> receivedSequences = new ArrayList<>();
-    CountDownLatch tasksDone = new CountDownLatch(1);
     for (int i = 0; i < 10; i++) {
       int sequence = i;
       executor.execute(
@@ -64,11 +59,10 @@ public final class SerialExecutorTest {
             synchronized (receivedSequences) {
               receivedSequences.add(sequence);
             }
-            tasksDone.countDown();
             executor.close();
           });
     }
-    assertThat(tasksDone.await(10, SECONDS)).isTrue();
+    executor.waitUntilInactive();
 
     assertThat(receivedSequences).containsExactly(0);
   }

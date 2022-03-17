@@ -354,8 +354,6 @@ public class SubscriberImplTest {
             SequencedMessage.of(Message.builder().build(), Timestamps.EPOCH, Offset.of(1), 10));
     CountDownLatch messagesReceived = countdownMessageBatches(1);
     leakedResponseObserver.onResponse(messages);
-    assertThat(messagesReceived.await(10, SECONDS)).isTrue();
-    verify(mockMessageConsumer).accept(messages);
 
     doAnswer(
             args -> {
@@ -369,6 +367,8 @@ public class SubscriberImplTest {
     // from the committed cursor upon reconnect.
     when(mockResetHandler.handleReset()).thenReturn(true);
     subscriber.triggerReinitialize(TestResetSignal.newCheckedException());
+    assertThat(messagesReceived.await(10, SECONDS)).isTrue();
+    verify(mockMessageConsumer).accept(messages); // Pre-seek messages always received.
     verify(mockSubscriberFactory, times(2)).New(any(), any(), eq(initialRequest()));
     verify(mockConnectedSubscriber2)
         .allowFlow(

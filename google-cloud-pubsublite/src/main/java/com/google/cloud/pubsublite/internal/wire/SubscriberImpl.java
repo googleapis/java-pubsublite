@@ -191,7 +191,10 @@ public class SubscriberImpl extends ProxyService
     }
     if (ResetSignal.isResetSignal(streamError)) {
       try {
+        // Flush pre-seek messages.
+        messageDeliveryExecutor.waitUntilInactive();
         if (resetHandler.handleReset()) {
+          // Wait for cursor commit.
           reset();
         }
       } catch (CheckedApiException e) {

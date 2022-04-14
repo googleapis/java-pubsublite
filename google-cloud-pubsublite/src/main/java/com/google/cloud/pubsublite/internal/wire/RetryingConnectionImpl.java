@@ -104,7 +104,7 @@ class RetryingConnectionImpl<
       lastInitialRequest = initialRequest;
       logger.atFiner().log("Start initializing connection for %s", streamDescription());
       currentConnection = connectionFactory.New(streamFactory, this, lastInitialRequest);
-      logger.atFiner().log("Initialized connection for %s", streamDescription());
+      logger.atFiner().log("Finished initializing connection for %s", streamDescription());
     }
   }
 
@@ -123,7 +123,6 @@ class RetryingConnectionImpl<
       notifyFailed(t);
       return;
     }
-    logger.atFine().log("Terminated connection for %s", streamDescription());
     notifyStopped();
   }
 
@@ -144,6 +143,7 @@ class RetryingConnectionImpl<
       if (completed) return;
       completed = true;
     }
+    logger.atInfo().withCause(error).log("Permanent error occurred for %s", streamDescription());
     notifyFailed(error);
   }
 

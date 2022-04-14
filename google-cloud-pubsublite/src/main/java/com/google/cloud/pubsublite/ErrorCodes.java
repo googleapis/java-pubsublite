@@ -28,7 +28,8 @@ public final class ErrorCodes {
           Code.INTERNAL,
           Code.UNAVAILABLE,
           Code.UNKNOWN,
-          Code.RESOURCE_EXHAUSTED);
+          Code.RESOURCE_EXHAUSTED,
+          Code.CANCELLED);
 
   public static boolean IsRetryableForStreams(Code code) {
     return STREAM_RETRYABLE_CODES.contains(code);

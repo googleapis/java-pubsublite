@@ -145,7 +145,8 @@ public final class PublisherImpl extends ProxyService
         messages.add(UnbatchedMessage.of(batch.messages.get(i), batch.messageFutures.get(i)));
       }
     }
-    logger.atFiner().log("Re-publishing %s messages after reconnection", messages.size());
+    logger.atFiner().log("Re-publishing %s messages after reconnection for partition %s",
+        messages.size(), initialRequest.getInitialRequest().getPartition());
     long size = 0;
     int count = 0;
     Queue<UnbatchedMessage> currentBatch = new ArrayDeque<>();

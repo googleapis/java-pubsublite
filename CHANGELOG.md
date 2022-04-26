@@ -1,5 +1,18 @@
 # Changelog
 
+### [1.5.5](https://github.com/googleapis/java-pubsublite/compare/v1.5.4...v1.5.5) (2022-04-26)
+
+
+### Bug Fixes
+
+* retry Cancelled stream errors ([#1124](https://github.com/googleapis/java-pubsublite/issues/1124)) ([6d54da8](https://github.com/googleapis/java-pubsublite/commit/6d54da81d1bfd4142900e749a733954a647d1f16))
+
+
+### Dependencies
+
+* update dependency com.google.cloud:google-cloud-bom to v0.173.0 ([#1123](https://github.com/googleapis/java-pubsublite/issues/1123)) ([7f2ced1](https://github.com/googleapis/java-pubsublite/commit/7f2ced19217afa1aa902b41c43de30cd731f55ab))
+* update dependency com.google.errorprone:error_prone_annotations to v2.13.1 ([#1106](https://github.com/googleapis/java-pubsublite/issues/1106)) ([ab92e3f](https://github.com/googleapis/java-pubsublite/commit/ab92e3f0b706159b8d51425c8b1867639084942b))
+
 ### [1.5.4](https://github.com/googleapis/java-pubsublite/compare/v1.5.3...v1.5.4) (2022-04-21)
 
 

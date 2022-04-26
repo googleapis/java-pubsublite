@@ -111,6 +111,8 @@ public final class SeekSubscriptionRequest extends com.google.protobuf.Generated
       }
     } catch (com.google.protobuf.InvalidProtocolBufferException e) {
       throw e.setUnfinishedMessage(this);
+    } catch (com.google.protobuf.UninitializedMessageException e) {
+      throw e.asInvalidProtocolBufferException().setUnfinishedMessage(this);
     } catch (java.io.IOException e) {
       throw new com.google.protobuf.InvalidProtocolBufferException(e).setUnfinishedMessage(this);
     } finally {
@@ -1271,8 +1273,9 @@ public final class SeekSubscriptionRequest extends com.google.protobuf.Generated
       } else {
         if (targetCase_ == 3) {
           timeTargetBuilder_.mergeFrom(value);
+        } else {
+          timeTargetBuilder_.setMessage(value);
         }
-        timeTargetBuilder_.setMessage(value);
       }
       targetCase_ = 3;
       return this;

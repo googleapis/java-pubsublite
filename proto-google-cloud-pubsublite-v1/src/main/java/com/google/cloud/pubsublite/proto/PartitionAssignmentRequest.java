@@ -120,6 +120,8 @@ public final class PartitionAssignmentRequest extends com.google.protobuf.Genera
       }
     } catch (com.google.protobuf.InvalidProtocolBufferException e) {
       throw e.setUnfinishedMessage(this);
+    } catch (com.google.protobuf.UninitializedMessageException e) {
+      throw e.asInvalidProtocolBufferException().setUnfinishedMessage(this);
     } catch (java.io.IOException e) {
       throw new com.google.protobuf.InvalidProtocolBufferException(e).setUnfinishedMessage(this);
     } finally {
@@ -805,8 +807,9 @@ public final class PartitionAssignmentRequest extends com.google.protobuf.Genera
       } else {
         if (requestCase_ == 1) {
           initialBuilder_.mergeFrom(value);
+        } else {
+          initialBuilder_.setMessage(value);
         }
-        initialBuilder_.setMessage(value);
       }
       requestCase_ = 1;
       return this;
@@ -1020,8 +1023,9 @@ public final class PartitionAssignmentRequest extends com.google.protobuf.Genera
       } else {
         if (requestCase_ == 2) {
           ackBuilder_.mergeFrom(value);
+        } else {
+          ackBuilder_.setMessage(value);
         }
-        ackBuilder_.setMessage(value);
       }
       requestCase_ = 2;
       return this;

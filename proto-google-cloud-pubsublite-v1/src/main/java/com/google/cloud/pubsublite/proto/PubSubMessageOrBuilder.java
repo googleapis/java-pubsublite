@@ -95,8 +95,12 @@ public interface PubSubMessageOrBuilder
    *
    * <code>map&lt;string, .google.cloud.pubsublite.v1.AttributeValues&gt; attributes = 3;</code>
    */
+
+  /* nullable */
   com.google.cloud.pubsublite.proto.AttributeValues getAttributesOrDefault(
-      java.lang.String key, com.google.cloud.pubsublite.proto.AttributeValues defaultValue);
+      java.lang.String key,
+      /* nullable */
+      com.google.cloud.pubsublite.proto.AttributeValues defaultValue);
   /**
    *
    *

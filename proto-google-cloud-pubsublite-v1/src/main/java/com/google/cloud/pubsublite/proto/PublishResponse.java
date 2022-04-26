@@ -119,6 +119,8 @@ public final class PublishResponse extends com.google.protobuf.GeneratedMessageV
       }
     } catch (com.google.protobuf.InvalidProtocolBufferException e) {
       throw e.setUnfinishedMessage(this);
+    } catch (com.google.protobuf.UninitializedMessageException e) {
+      throw e.asInvalidProtocolBufferException().setUnfinishedMessage(this);
     } catch (java.io.IOException e) {
       throw new com.google.protobuf.InvalidProtocolBufferException(e).setUnfinishedMessage(this);
     } finally {
@@ -798,8 +800,9 @@ public final class PublishResponse extends com.google.protobuf.GeneratedMessageV
       } else {
         if (responseTypeCase_ == 1) {
           initialResponseBuilder_.mergeFrom(value);
+        } else {
+          initialResponseBuilder_.setMessage(value);
         }
-        initialResponseBuilder_.setMessage(value);
       }
       responseTypeCase_ = 1;
       return this;
@@ -1013,8 +1016,9 @@ public final class PublishResponse extends com.google.protobuf.GeneratedMessageV
       } else {
         if (responseTypeCase_ == 2) {
           messageResponseBuilder_.mergeFrom(value);
+        } else {
+          messageResponseBuilder_.setMessage(value);
         }
-        messageResponseBuilder_.setMessage(value);
       }
       responseTypeCase_ = 2;
       return this;

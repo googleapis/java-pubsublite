@@ -134,6 +134,8 @@ public final class SubscribeResponse extends com.google.protobuf.GeneratedMessag
       }
     } catch (com.google.protobuf.InvalidProtocolBufferException e) {
       throw e.setUnfinishedMessage(this);
+    } catch (com.google.protobuf.UninitializedMessageException e) {
+      throw e.asInvalidProtocolBufferException().setUnfinishedMessage(this);
     } catch (java.io.IOException e) {
       throw new com.google.protobuf.InvalidProtocolBufferException(e).setUnfinishedMessage(this);
     } finally {
@@ -890,8 +892,9 @@ public final class SubscribeResponse extends com.google.protobuf.GeneratedMessag
       } else {
         if (responseCase_ == 1) {
           initialBuilder_.mergeFrom(value);
+        } else {
+          initialBuilder_.setMessage(value);
         }
-        initialBuilder_.setMessage(value);
       }
       responseCase_ = 1;
       return this;
@@ -1100,8 +1103,9 @@ public final class SubscribeResponse extends com.google.protobuf.GeneratedMessag
       } else {
         if (responseCase_ == 2) {
           seekBuilder_.mergeFrom(value);
+        } else {
+          seekBuilder_.setMessage(value);
         }
-        seekBuilder_.setMessage(value);
       }
       responseCase_ = 2;
       return this;
@@ -1310,8 +1314,9 @@ public final class SubscribeResponse extends com.google.protobuf.GeneratedMessag
       } else {
         if (responseCase_ == 3) {
           messagesBuilder_.mergeFrom(value);
+        } else {
+          messagesBuilder_.setMessage(value);
         }
-        messagesBuilder_.setMessage(value);
       }
       responseCase_ = 3;
       return this;

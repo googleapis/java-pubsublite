@@ -108,6 +108,8 @@ public final class TimeTarget extends com.google.protobuf.GeneratedMessageV3
       }
     } catch (com.google.protobuf.InvalidProtocolBufferException e) {
       throw e.setUnfinishedMessage(this);
+    } catch (com.google.protobuf.UninitializedMessageException e) {
+      throw e.asInvalidProtocolBufferException().setUnfinishedMessage(this);
     } catch (java.io.IOException e) {
       throw new com.google.protobuf.InvalidProtocolBufferException(e).setUnfinishedMessage(this);
     } finally {
@@ -804,8 +806,9 @@ public final class TimeTarget extends com.google.protobuf.GeneratedMessageV3
       } else {
         if (timeCase_ == 1) {
           publishTimeBuilder_.mergeFrom(value);
+        } else {
+          publishTimeBuilder_.setMessage(value);
         }
-        publishTimeBuilder_.setMessage(value);
       }
       timeCase_ = 1;
       return this;
@@ -1036,8 +1039,9 @@ public final class TimeTarget extends com.google.protobuf.GeneratedMessageV3
       } else {
         if (timeCase_ == 2) {
           eventTimeBuilder_.mergeFrom(value);
+        } else {
+          eventTimeBuilder_.setMessage(value);
         }
-        eventTimeBuilder_.setMessage(value);
       }
       timeCase_ = 2;
       return this;

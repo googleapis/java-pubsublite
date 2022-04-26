@@ -119,6 +119,8 @@ public final class PublishRequest extends com.google.protobuf.GeneratedMessageV3
       }
     } catch (com.google.protobuf.InvalidProtocolBufferException e) {
       throw e.setUnfinishedMessage(this);
+    } catch (com.google.protobuf.UninitializedMessageException e) {
+      throw e.asInvalidProtocolBufferException().setUnfinishedMessage(this);
     } catch (java.io.IOException e) {
       throw new com.google.protobuf.InvalidProtocolBufferException(e).setUnfinishedMessage(this);
     } finally {
@@ -797,8 +799,9 @@ public final class PublishRequest extends com.google.protobuf.GeneratedMessageV3
       } else {
         if (requestTypeCase_ == 1) {
           initialRequestBuilder_.mergeFrom(value);
+        } else {
+          initialRequestBuilder_.setMessage(value);
         }
-        initialRequestBuilder_.setMessage(value);
       }
       requestTypeCase_ = 1;
       return this;
@@ -1012,8 +1015,9 @@ public final class PublishRequest extends com.google.protobuf.GeneratedMessageV3
       } else {
         if (requestTypeCase_ == 2) {
           messagePublishRequestBuilder_.mergeFrom(value);
+        } else {
+          messagePublishRequestBuilder_.setMessage(value);
         }
-        messagePublishRequestBuilder_.setMessage(value);
       }
       requestTypeCase_ = 2;
       return this;

@@ -37,10 +37,6 @@ public final class ServiceClients {
   private static final int CLIENT_POOL_SIZE =
       Integer.parseInt(System.getProperty("PUBSUB_LITE_CHANNELS_PER_CLIENT", "10"));
 
-  // Set maximum inbound message size to 20 MiB to match Cloud Pub/Sub and ensure at least 1 10 MiB
-  // message can be received in a subscribe batch.
-  private static final int MAX_INBOUND_MESSAGE_SIZE = 20 * 1024 * 1024;
-
   private ServiceClients() {}
 
   private static TransportChannelProvider getTransportChannelProvider() {
@@ -51,7 +47,6 @@ public final class ServiceClients {
         .setKeepAliveTimeout(Duration.ofMinutes(1))
         .setPoolSize(CLIENT_POOL_SIZE)
         .setExecutor(SystemExecutors.getFuturesExecutor())
-        .setMaxInboundMessageSize(MAX_INBOUND_MESSAGE_SIZE)
         .build();
   }
 

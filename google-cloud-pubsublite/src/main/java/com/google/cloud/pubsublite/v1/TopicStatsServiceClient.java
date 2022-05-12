@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Google LLC
+ * Copyright 2022 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -39,6 +39,8 @@ import javax.annotation.Generated;
  * calls that map to API methods. Sample code to get started:
  *
  * <pre>{@code
+ * // This snippet has been automatically generated for illustrative purposes only.
+ * // It may require modifications to work in your environment.
  * try (TopicStatsServiceClient topicStatsServiceClient = TopicStatsServiceClient.create()) {
  *   ComputeMessageStatsRequest request =
  *       ComputeMessageStatsRequest.newBuilder()
@@ -81,6 +83,8 @@ import javax.annotation.Generated;
  * <p>To customize credentials:
  *
  * <pre>{@code
+ * // This snippet has been automatically generated for illustrative purposes only.
+ * // It may require modifications to work in your environment.
  * TopicStatsServiceSettings topicStatsServiceSettings =
  *     TopicStatsServiceSettings.newBuilder()
  *         .setCredentialsProvider(FixedCredentialsProvider.create(myCredentials))
@@ -92,6 +96,8 @@ import javax.annotation.Generated;
  * <p>To customize the endpoint:
  *
  * <pre>{@code
+ * // This snippet has been automatically generated for illustrative purposes only.
+ * // It may require modifications to work in your environment.
  * TopicStatsServiceSettings topicStatsServiceSettings =
  *     TopicStatsServiceSettings.newBuilder().setEndpoint(myEndpoint).build();
  * TopicStatsServiceClient topicStatsServiceClient =
@@ -160,6 +166,8 @@ public class TopicStatsServiceClient implements BackgroundResource {
    * <p>Sample code:
    *
    * <pre>{@code
+   * // This snippet has been automatically generated for illustrative purposes only.
+   * // It may require modifications to work in your environment.
    * try (TopicStatsServiceClient topicStatsServiceClient = TopicStatsServiceClient.create()) {
    *   ComputeMessageStatsRequest request =
    *       ComputeMessageStatsRequest.newBuilder()
@@ -186,6 +194,8 @@ public class TopicStatsServiceClient implements BackgroundResource {
    * <p>Sample code:
    *
    * <pre>{@code
+   * // This snippet has been automatically generated for illustrative purposes only.
+   * // It may require modifications to work in your environment.
    * try (TopicStatsServiceClient topicStatsServiceClient = TopicStatsServiceClient.create()) {
    *   ComputeMessageStatsRequest request =
    *       ComputeMessageStatsRequest.newBuilder()
@@ -216,6 +226,8 @@ public class TopicStatsServiceClient implements BackgroundResource {
    * <p>Sample code:
    *
    * <pre>{@code
+   * // This snippet has been automatically generated for illustrative purposes only.
+   * // It may require modifications to work in your environment.
    * try (TopicStatsServiceClient topicStatsServiceClient = TopicStatsServiceClient.create()) {
    *   ComputeHeadCursorRequest request =
    *       ComputeHeadCursorRequest.newBuilder()
@@ -243,6 +255,8 @@ public class TopicStatsServiceClient implements BackgroundResource {
    * <p>Sample code:
    *
    * <pre>{@code
+   * // This snippet has been automatically generated for illustrative purposes only.
+   * // It may require modifications to work in your environment.
    * try (TopicStatsServiceClient topicStatsServiceClient = TopicStatsServiceClient.create()) {
    *   ComputeHeadCursorRequest request =
    *       ComputeHeadCursorRequest.newBuilder()
@@ -268,6 +282,8 @@ public class TopicStatsServiceClient implements BackgroundResource {
    * <p>Sample code:
    *
    * <pre>{@code
+   * // This snippet has been automatically generated for illustrative purposes only.
+   * // It may require modifications to work in your environment.
    * try (TopicStatsServiceClient topicStatsServiceClient = TopicStatsServiceClient.create()) {
    *   ComputeTimeCursorRequest request =
    *       ComputeTimeCursorRequest.newBuilder()
@@ -293,6 +309,8 @@ public class TopicStatsServiceClient implements BackgroundResource {
    * <p>Sample code:
    *
    * <pre>{@code
+   * // This snippet has been automatically generated for illustrative purposes only.
+   * // It may require modifications to work in your environment.
    * try (TopicStatsServiceClient topicStatsServiceClient = TopicStatsServiceClient.create()) {
    *   ComputeTimeCursorRequest request =
    *       ComputeTimeCursorRequest.newBuilder()

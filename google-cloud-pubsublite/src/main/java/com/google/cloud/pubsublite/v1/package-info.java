@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Google LLC
+ * Copyright 2022 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,6 +25,8 @@
  * <p>Sample for AdminServiceClient:
  *
  * <pre>{@code
+ * // This snippet has been automatically generated for illustrative purposes only.
+ * // It may require modifications to work in your environment.
  * try (AdminServiceClient adminServiceClient = AdminServiceClient.create()) {
  *   LocationName parent = LocationName.of("[PROJECT]", "[LOCATION]");
  *   Topic topic = Topic.newBuilder().build();
@@ -42,6 +44,8 @@
  * <p>Sample for CursorServiceClient:
  *
  * <pre>{@code
+ * // This snippet has been automatically generated for illustrative purposes only.
+ * // It may require modifications to work in your environment.
  * try (CursorServiceClient cursorServiceClient = CursorServiceClient.create()) {
  *   CommitCursorRequest request =
  *       CommitCursorRequest.newBuilder()
@@ -63,6 +67,8 @@
  * <p>Sample for PublisherServiceClient:
  *
  * <pre>{@code
+ * // This snippet has been automatically generated for illustrative purposes only.
+ * // It may require modifications to work in your environment.
  * try (PublisherServiceClient publisherServiceClient = PublisherServiceClient.create()) {
  *   BidiStream<PublishRequest, PublishResponse> bidiStream =
  *       publisherServiceClient.publishCallable().call();
@@ -82,6 +88,8 @@
  * <p>Sample for SubscriberServiceClient:
  *
  * <pre>{@code
+ * // This snippet has been automatically generated for illustrative purposes only.
+ * // It may require modifications to work in your environment.
  * try (SubscriberServiceClient subscriberServiceClient = SubscriberServiceClient.create()) {
  *   BidiStream<SubscribeRequest, SubscribeResponse> bidiStream =
  *       subscriberServiceClient.subscribeCallable().call();
@@ -101,6 +109,8 @@
  * <p>Sample for PartitionAssignmentServiceClient:
  *
  * <pre>{@code
+ * // This snippet has been automatically generated for illustrative purposes only.
+ * // It may require modifications to work in your environment.
  * try (PartitionAssignmentServiceClient partitionAssignmentServiceClient =
  *     PartitionAssignmentServiceClient.create()) {
  *   BidiStream<PartitionAssignmentRequest, PartitionAssignment> bidiStream =
@@ -120,6 +130,8 @@
  * <p>Sample for TopicStatsServiceClient:
  *
  * <pre>{@code
+ * // This snippet has been automatically generated for illustrative purposes only.
+ * // It may require modifications to work in your environment.
  * try (TopicStatsServiceClient topicStatsServiceClient = TopicStatsServiceClient.create()) {
  *   ComputeMessageStatsRequest request =
  *       ComputeMessageStatsRequest.newBuilder()

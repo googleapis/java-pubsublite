@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Google LLC
+ * Copyright 2022 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -82,6 +82,8 @@ import javax.annotation.Generated;
  * calls that map to API methods. Sample code to get started:
  *
  * <pre>{@code
+ * // This snippet has been automatically generated for illustrative purposes only.
+ * // It may require modifications to work in your environment.
  * try (AdminServiceClient adminServiceClient = AdminServiceClient.create()) {
  *   LocationName parent = LocationName.of("[PROJECT]", "[LOCATION]");
  *   Topic topic = Topic.newBuilder().build();
@@ -119,6 +121,8 @@ import javax.annotation.Generated;
  * <p>To customize credentials:
  *
  * <pre>{@code
+ * // This snippet has been automatically generated for illustrative purposes only.
+ * // It may require modifications to work in your environment.
  * AdminServiceSettings adminServiceSettings =
  *     AdminServiceSettings.newBuilder()
  *         .setCredentialsProvider(FixedCredentialsProvider.create(myCredentials))
@@ -129,6 +133,8 @@ import javax.annotation.Generated;
  * <p>To customize the endpoint:
  *
  * <pre>{@code
+ * // This snippet has been automatically generated for illustrative purposes only.
+ * // It may require modifications to work in your environment.
  * AdminServiceSettings adminServiceSettings =
  *     AdminServiceSettings.newBuilder().setEndpoint(myEndpoint).build();
  * AdminServiceClient adminServiceClient = AdminServiceClient.create(adminServiceSettings);
@@ -206,6 +212,8 @@ public class AdminServiceClient implements BackgroundResource {
    * <p>Sample code:
    *
    * <pre>{@code
+   * // This snippet has been automatically generated for illustrative purposes only.
+   * // It may require modifications to work in your environment.
    * try (AdminServiceClient adminServiceClient = AdminServiceClient.create()) {
    *   LocationName parent = LocationName.of("[PROJECT]", "[LOCATION]");
    *   Topic topic = Topic.newBuilder().build();
@@ -239,6 +247,8 @@ public class AdminServiceClient implements BackgroundResource {
    * <p>Sample code:
    *
    * <pre>{@code
+   * // This snippet has been automatically generated for illustrative purposes only.
+   * // It may require modifications to work in your environment.
    * try (AdminServiceClient adminServiceClient = AdminServiceClient.create()) {
    *   String parent = LocationName.of("[PROJECT]", "[LOCATION]").toString();
    *   Topic topic = Topic.newBuilder().build();
@@ -272,6 +282,8 @@ public class AdminServiceClient implements BackgroundResource {
    * <p>Sample code:
    *
    * <pre>{@code
+   * // This snippet has been automatically generated for illustrative purposes only.
+   * // It may require modifications to work in your environment.
    * try (AdminServiceClient adminServiceClient = AdminServiceClient.create()) {
    *   CreateTopicRequest request =
    *       CreateTopicRequest.newBuilder()
@@ -297,6 +309,8 @@ public class AdminServiceClient implements BackgroundResource {
    * <p>Sample code:
    *
    * <pre>{@code
+   * // This snippet has been automatically generated for illustrative purposes only.
+   * // It may require modifications to work in your environment.
    * try (AdminServiceClient adminServiceClient = AdminServiceClient.create()) {
    *   CreateTopicRequest request =
    *       CreateTopicRequest.newBuilder()
@@ -321,6 +335,8 @@ public class AdminServiceClient implements BackgroundResource {
    * <p>Sample code:
    *
    * <pre>{@code
+   * // This snippet has been automatically generated for illustrative purposes only.
+   * // It may require modifications to work in your environment.
    * try (AdminServiceClient adminServiceClient = AdminServiceClient.create()) {
    *   TopicName name = TopicName.of("[PROJECT]", "[LOCATION]", "[TOPIC]");
    *   Topic response = adminServiceClient.getTopic(name);
@@ -343,6 +359,8 @@ public class AdminServiceClient implements BackgroundResource {
    * <p>Sample code:
    *
    * <pre>{@code
+   * // This snippet has been automatically generated for illustrative purposes only.
+   * // It may require modifications to work in your environment.
    * try (AdminServiceClient adminServiceClient = AdminServiceClient.create()) {
    *   String name = TopicName.of("[PROJECT]", "[LOCATION]", "[TOPIC]").toString();
    *   Topic response = adminServiceClient.getTopic(name);
@@ -364,6 +382,8 @@ public class AdminServiceClient implements BackgroundResource {
    * <p>Sample code:
    *
    * <pre>{@code
+   * // This snippet has been automatically generated for illustrative purposes only.
+   * // It may require modifications to work in your environment.
    * try (AdminServiceClient adminServiceClient = AdminServiceClient.create()) {
    *   GetTopicRequest request =
    *       GetTopicRequest.newBuilder()
@@ -387,6 +407,8 @@ public class AdminServiceClient implements BackgroundResource {
    * <p>Sample code:
    *
    * <pre>{@code
+   * // This snippet has been automatically generated for illustrative purposes only.
+   * // It may require modifications to work in your environment.
    * try (AdminServiceClient adminServiceClient = AdminServiceClient.create()) {
    *   GetTopicRequest request =
    *       GetTopicRequest.newBuilder()
@@ -409,6 +431,8 @@ public class AdminServiceClient implements BackgroundResource {
    * <p>Sample code:
    *
    * <pre>{@code
+   * // This snippet has been automatically generated for illustrative purposes only.
+   * // It may require modifications to work in your environment.
    * try (AdminServiceClient adminServiceClient = AdminServiceClient.create()) {
    *   TopicName name = TopicName.of("[PROJECT]", "[LOCATION]", "[TOPIC]");
    *   TopicPartitions response = adminServiceClient.getTopicPartitions(name);
@@ -433,6 +457,8 @@ public class AdminServiceClient implements BackgroundResource {
    * <p>Sample code:
    *
    * <pre>{@code
+   * // This snippet has been automatically generated for illustrative purposes only.
+   * // It may require modifications to work in your environment.
    * try (AdminServiceClient adminServiceClient = AdminServiceClient.create()) {
    *   String name = TopicName.of("[PROJECT]", "[LOCATION]", "[TOPIC]").toString();
    *   TopicPartitions response = adminServiceClient.getTopicPartitions(name);
@@ -455,6 +481,8 @@ public class AdminServiceClient implements BackgroundResource {
    * <p>Sample code:
    *
    * <pre>{@code
+   * // This snippet has been automatically generated for illustrative purposes only.
+   * // It may require modifications to work in your environment.
    * try (AdminServiceClient adminServiceClient = AdminServiceClient.create()) {
    *   GetTopicPartitionsRequest request =
    *       GetTopicPartitionsRequest.newBuilder()
@@ -478,6 +506,8 @@ public class AdminServiceClient implements BackgroundResource {
    * <p>Sample code:
    *
    * <pre>{@code
+   * // This snippet has been automatically generated for illustrative purposes only.
+   * // It may require modifications to work in your environment.
    * try (AdminServiceClient adminServiceClient = AdminServiceClient.create()) {
    *   GetTopicPartitionsRequest request =
    *       GetTopicPartitionsRequest.newBuilder()
@@ -502,6 +532,8 @@ public class AdminServiceClient implements BackgroundResource {
    * <p>Sample code:
    *
    * <pre>{@code
+   * // This snippet has been automatically generated for illustrative purposes only.
+   * // It may require modifications to work in your environment.
    * try (AdminServiceClient adminServiceClient = AdminServiceClient.create()) {
    *   LocationName parent = LocationName.of("[PROJECT]", "[LOCATION]");
    *   for (Topic element : adminServiceClient.listTopics(parent).iterateAll()) {
@@ -527,6 +559,8 @@ public class AdminServiceClient implements BackgroundResource {
    * <p>Sample code:
    *
    * <pre>{@code
+   * // This snippet has been automatically generated for illustrative purposes only.
+   * // It may require modifications to work in your environment.
    * try (AdminServiceClient adminServiceClient = AdminServiceClient.create()) {
    *   String parent = LocationName.of("[PROJECT]", "[LOCATION]").toString();
    *   for (Topic element : adminServiceClient.listTopics(parent).iterateAll()) {
@@ -551,6 +585,8 @@ public class AdminServiceClient implements BackgroundResource {
    * <p>Sample code:
    *
    * <pre>{@code
+   * // This snippet has been automatically generated for illustrative purposes only.
+   * // It may require modifications to work in your environment.
    * try (AdminServiceClient adminServiceClient = AdminServiceClient.create()) {
    *   ListTopicsRequest request =
    *       ListTopicsRequest.newBuilder()
@@ -578,6 +614,8 @@ public class AdminServiceClient implements BackgroundResource {
    * <p>Sample code:
    *
    * <pre>{@code
+   * // This snippet has been automatically generated for illustrative purposes only.
+   * // It may require modifications to work in your environment.
    * try (AdminServiceClient adminServiceClient = AdminServiceClient.create()) {
    *   ListTopicsRequest request =
    *       ListTopicsRequest.newBuilder()
@@ -604,6 +642,8 @@ public class AdminServiceClient implements BackgroundResource {
    * <p>Sample code:
    *
    * <pre>{@code
+   * // This snippet has been automatically generated for illustrative purposes only.
+   * // It may require modifications to work in your environment.
    * try (AdminServiceClient adminServiceClient = AdminServiceClient.create()) {
    *   ListTopicsRequest request =
    *       ListTopicsRequest.newBuilder()
@@ -637,6 +677,8 @@ public class AdminServiceClient implements BackgroundResource {
    * <p>Sample code:
    *
    * <pre>{@code
+   * // This snippet has been automatically generated for illustrative purposes only.
+   * // It may require modifications to work in your environment.
    * try (AdminServiceClient adminServiceClient = AdminServiceClient.create()) {
    *   Topic topic = Topic.newBuilder().build();
    *   FieldMask updateMask = FieldMask.newBuilder().build();
@@ -661,6 +703,8 @@ public class AdminServiceClient implements BackgroundResource {
    * <p>Sample code:
    *
    * <pre>{@code
+   * // This snippet has been automatically generated for illustrative purposes only.
+   * // It may require modifications to work in your environment.
    * try (AdminServiceClient adminServiceClient = AdminServiceClient.create()) {
    *   UpdateTopicRequest request =
    *       UpdateTopicRequest.newBuilder()
@@ -685,6 +729,8 @@ public class AdminServiceClient implements BackgroundResource {
    * <p>Sample code:
    *
    * <pre>{@code
+   * // This snippet has been automatically generated for illustrative purposes only.
+   * // It may require modifications to work in your environment.
    * try (AdminServiceClient adminServiceClient = AdminServiceClient.create()) {
    *   UpdateTopicRequest request =
    *       UpdateTopicRequest.newBuilder()
@@ -708,6 +754,8 @@ public class AdminServiceClient implements BackgroundResource {
    * <p>Sample code:
    *
    * <pre>{@code
+   * // This snippet has been automatically generated for illustrative purposes only.
+   * // It may require modifications to work in your environment.
    * try (AdminServiceClient adminServiceClient = AdminServiceClient.create()) {
    *   TopicName name = TopicName.of("[PROJECT]", "[LOCATION]", "[TOPIC]");
    *   adminServiceClient.deleteTopic(name);
@@ -730,6 +778,8 @@ public class AdminServiceClient implements BackgroundResource {
    * <p>Sample code:
    *
    * <pre>{@code
+   * // This snippet has been automatically generated for illustrative purposes only.
+   * // It may require modifications to work in your environment.
    * try (AdminServiceClient adminServiceClient = AdminServiceClient.create()) {
    *   String name = TopicName.of("[PROJECT]", "[LOCATION]", "[TOPIC]").toString();
    *   adminServiceClient.deleteTopic(name);
@@ -751,6 +801,8 @@ public class AdminServiceClient implements BackgroundResource {
    * <p>Sample code:
    *
    * <pre>{@code
+   * // This snippet has been automatically generated for illustrative purposes only.
+   * // It may require modifications to work in your environment.
    * try (AdminServiceClient adminServiceClient = AdminServiceClient.create()) {
    *   DeleteTopicRequest request =
    *       DeleteTopicRequest.newBuilder()
@@ -774,6 +826,8 @@ public class AdminServiceClient implements BackgroundResource {
    * <p>Sample code:
    *
    * <pre>{@code
+   * // This snippet has been automatically generated for illustrative purposes only.
+   * // It may require modifications to work in your environment.
    * try (AdminServiceClient adminServiceClient = AdminServiceClient.create()) {
    *   DeleteTopicRequest request =
    *       DeleteTopicRequest.newBuilder()
@@ -796,6 +850,8 @@ public class AdminServiceClient implements BackgroundResource {
    * <p>Sample code:
    *
    * <pre>{@code
+   * // This snippet has been automatically generated for illustrative purposes only.
+   * // It may require modifications to work in your environment.
    * try (AdminServiceClient adminServiceClient = AdminServiceClient.create()) {
    *   TopicName name = TopicName.of("[PROJECT]", "[LOCATION]", "[TOPIC]");
    *   for (String element : adminServiceClient.listTopicSubscriptions(name).iterateAll()) {
@@ -822,6 +878,8 @@ public class AdminServiceClient implements BackgroundResource {
    * <p>Sample code:
    *
    * <pre>{@code
+   * // This snippet has been automatically generated for illustrative purposes only.
+   * // It may require modifications to work in your environment.
    * try (AdminServiceClient adminServiceClient = AdminServiceClient.create()) {
    *   String name = TopicName.of("[PROJECT]", "[LOCATION]", "[TOPIC]").toString();
    *   for (String element : adminServiceClient.listTopicSubscriptions(name).iterateAll()) {
@@ -846,6 +904,8 @@ public class AdminServiceClient implements BackgroundResource {
    * <p>Sample code:
    *
    * <pre>{@code
+   * // This snippet has been automatically generated for illustrative purposes only.
+   * // It may require modifications to work in your environment.
    * try (AdminServiceClient adminServiceClient = AdminServiceClient.create()) {
    *   ListTopicSubscriptionsRequest request =
    *       ListTopicSubscriptionsRequest.newBuilder()
@@ -874,6 +934,8 @@ public class AdminServiceClient implements BackgroundResource {
    * <p>Sample code:
    *
    * <pre>{@code
+   * // This snippet has been automatically generated for illustrative purposes only.
+   * // It may require modifications to work in your environment.
    * try (AdminServiceClient adminServiceClient = AdminServiceClient.create()) {
    *   ListTopicSubscriptionsRequest request =
    *       ListTopicSubscriptionsRequest.newBuilder()
@@ -902,6 +964,8 @@ public class AdminServiceClient implements BackgroundResource {
    * <p>Sample code:
    *
    * <pre>{@code
+   * // This snippet has been automatically generated for illustrative purposes only.
+   * // It may require modifications to work in your environment.
    * try (AdminServiceClient adminServiceClient = AdminServiceClient.create()) {
    *   ListTopicSubscriptionsRequest request =
    *       ListTopicSubscriptionsRequest.newBuilder()
@@ -937,6 +1001,8 @@ public class AdminServiceClient implements BackgroundResource {
    * <p>Sample code:
    *
    * <pre>{@code
+   * // This snippet has been automatically generated for illustrative purposes only.
+   * // It may require modifications to work in your environment.
    * try (AdminServiceClient adminServiceClient = AdminServiceClient.create()) {
    *   LocationName parent = LocationName.of("[PROJECT]", "[LOCATION]");
    *   Subscription subscription = Subscription.newBuilder().build();
@@ -973,6 +1039,8 @@ public class AdminServiceClient implements BackgroundResource {
    * <p>Sample code:
    *
    * <pre>{@code
+   * // This snippet has been automatically generated for illustrative purposes only.
+   * // It may require modifications to work in your environment.
    * try (AdminServiceClient adminServiceClient = AdminServiceClient.create()) {
    *   String parent = LocationName.of("[PROJECT]", "[LOCATION]").toString();
    *   Subscription subscription = Subscription.newBuilder().build();
@@ -1009,6 +1077,8 @@ public class AdminServiceClient implements BackgroundResource {
    * <p>Sample code:
    *
    * <pre>{@code
+   * // This snippet has been automatically generated for illustrative purposes only.
+   * // It may require modifications to work in your environment.
    * try (AdminServiceClient adminServiceClient = AdminServiceClient.create()) {
    *   CreateSubscriptionRequest request =
    *       CreateSubscriptionRequest.newBuilder()
@@ -1035,6 +1105,8 @@ public class AdminServiceClient implements BackgroundResource {
    * <p>Sample code:
    *
    * <pre>{@code
+   * // This snippet has been automatically generated for illustrative purposes only.
+   * // It may require modifications to work in your environment.
    * try (AdminServiceClient adminServiceClient = AdminServiceClient.create()) {
    *   CreateSubscriptionRequest request =
    *       CreateSubscriptionRequest.newBuilder()
@@ -1061,6 +1133,8 @@ public class AdminServiceClient implements BackgroundResource {
    * <p>Sample code:
    *
    * <pre>{@code
+   * // This snippet has been automatically generated for illustrative purposes only.
+   * // It may require modifications to work in your environment.
    * try (AdminServiceClient adminServiceClient = AdminServiceClient.create()) {
    *   SubscriptionName name = SubscriptionName.of("[PROJECT]", "[LOCATION]", "[SUBSCRIPTION]");
    *   Subscription response = adminServiceClient.getSubscription(name);
@@ -1083,6 +1157,8 @@ public class AdminServiceClient implements BackgroundResource {
    * <p>Sample code:
    *
    * <pre>{@code
+   * // This snippet has been automatically generated for illustrative purposes only.
+   * // It may require modifications to work in your environment.
    * try (AdminServiceClient adminServiceClient = AdminServiceClient.create()) {
    *   String name = SubscriptionName.of("[PROJECT]", "[LOCATION]", "[SUBSCRIPTION]").toString();
    *   Subscription response = adminServiceClient.getSubscription(name);
@@ -1104,6 +1180,8 @@ public class AdminServiceClient implements BackgroundResource {
    * <p>Sample code:
    *
    * <pre>{@code
+   * // This snippet has been automatically generated for illustrative purposes only.
+   * // It may require modifications to work in your environment.
    * try (AdminServiceClient adminServiceClient = AdminServiceClient.create()) {
    *   GetSubscriptionRequest request =
    *       GetSubscriptionRequest.newBuilder()
@@ -1127,6 +1205,8 @@ public class AdminServiceClient implements BackgroundResource {
    * <p>Sample code:
    *
    * <pre>{@code
+   * // This snippet has been automatically generated for illustrative purposes only.
+   * // It may require modifications to work in your environment.
    * try (AdminServiceClient adminServiceClient = AdminServiceClient.create()) {
    *   GetSubscriptionRequest request =
    *       GetSubscriptionRequest.newBuilder()
@@ -1150,6 +1230,8 @@ public class AdminServiceClient implements BackgroundResource {
    * <p>Sample code:
    *
    * <pre>{@code
+   * // This snippet has been automatically generated for illustrative purposes only.
+   * // It may require modifications to work in your environment.
    * try (AdminServiceClient adminServiceClient = AdminServiceClient.create()) {
    *   LocationName parent = LocationName.of("[PROJECT]", "[LOCATION]");
    *   for (Subscription element : adminServiceClient.listSubscriptions(parent).iterateAll()) {
@@ -1177,6 +1259,8 @@ public class AdminServiceClient implements BackgroundResource {
    * <p>Sample code:
    *
    * <pre>{@code
+   * // This snippet has been automatically generated for illustrative purposes only.
+   * // It may require modifications to work in your environment.
    * try (AdminServiceClient adminServiceClient = AdminServiceClient.create()) {
    *   String parent = LocationName.of("[PROJECT]", "[LOCATION]").toString();
    *   for (Subscription element : adminServiceClient.listSubscriptions(parent).iterateAll()) {
@@ -1202,6 +1286,8 @@ public class AdminServiceClient implements BackgroundResource {
    * <p>Sample code:
    *
    * <pre>{@code
+   * // This snippet has been automatically generated for illustrative purposes only.
+   * // It may require modifications to work in your environment.
    * try (AdminServiceClient adminServiceClient = AdminServiceClient.create()) {
    *   ListSubscriptionsRequest request =
    *       ListSubscriptionsRequest.newBuilder()
@@ -1229,6 +1315,8 @@ public class AdminServiceClient implements BackgroundResource {
    * <p>Sample code:
    *
    * <pre>{@code
+   * // This snippet has been automatically generated for illustrative purposes only.
+   * // It may require modifications to work in your environment.
    * try (AdminServiceClient adminServiceClient = AdminServiceClient.create()) {
    *   ListSubscriptionsRequest request =
    *       ListSubscriptionsRequest.newBuilder()
@@ -1257,6 +1345,8 @@ public class AdminServiceClient implements BackgroundResource {
    * <p>Sample code:
    *
    * <pre>{@code
+   * // This snippet has been automatically generated for illustrative purposes only.
+   * // It may require modifications to work in your environment.
    * try (AdminServiceClient adminServiceClient = AdminServiceClient.create()) {
    *   ListSubscriptionsRequest request =
    *       ListSubscriptionsRequest.newBuilder()
@@ -1292,6 +1382,8 @@ public class AdminServiceClient implements BackgroundResource {
    * <p>Sample code:
    *
    * <pre>{@code
+   * // This snippet has been automatically generated for illustrative purposes only.
+   * // It may require modifications to work in your environment.
    * try (AdminServiceClient adminServiceClient = AdminServiceClient.create()) {
    *   Subscription subscription = Subscription.newBuilder().build();
    *   FieldMask updateMask = FieldMask.newBuilder().build();
@@ -1320,6 +1412,8 @@ public class AdminServiceClient implements BackgroundResource {
    * <p>Sample code:
    *
    * <pre>{@code
+   * // This snippet has been automatically generated for illustrative purposes only.
+   * // It may require modifications to work in your environment.
    * try (AdminServiceClient adminServiceClient = AdminServiceClient.create()) {
    *   UpdateSubscriptionRequest request =
    *       UpdateSubscriptionRequest.newBuilder()
@@ -1344,6 +1438,8 @@ public class AdminServiceClient implements BackgroundResource {
    * <p>Sample code:
    *
    * <pre>{@code
+   * // This snippet has been automatically generated for illustrative purposes only.
+   * // It may require modifications to work in your environment.
    * try (AdminServiceClient adminServiceClient = AdminServiceClient.create()) {
    *   UpdateSubscriptionRequest request =
    *       UpdateSubscriptionRequest.newBuilder()
@@ -1368,6 +1464,8 @@ public class AdminServiceClient implements BackgroundResource {
    * <p>Sample code:
    *
    * <pre>{@code
+   * // This snippet has been automatically generated for illustrative purposes only.
+   * // It may require modifications to work in your environment.
    * try (AdminServiceClient adminServiceClient = AdminServiceClient.create()) {
    *   SubscriptionName name = SubscriptionName.of("[PROJECT]", "[LOCATION]", "[SUBSCRIPTION]");
    *   adminServiceClient.deleteSubscription(name);
@@ -1392,6 +1490,8 @@ public class AdminServiceClient implements BackgroundResource {
    * <p>Sample code:
    *
    * <pre>{@code
+   * // This snippet has been automatically generated for illustrative purposes only.
+   * // It may require modifications to work in your environment.
    * try (AdminServiceClient adminServiceClient = AdminServiceClient.create()) {
    *   String name = SubscriptionName.of("[PROJECT]", "[LOCATION]", "[SUBSCRIPTION]").toString();
    *   adminServiceClient.deleteSubscription(name);
@@ -1414,6 +1514,8 @@ public class AdminServiceClient implements BackgroundResource {
    * <p>Sample code:
    *
    * <pre>{@code
+   * // This snippet has been automatically generated for illustrative purposes only.
+   * // It may require modifications to work in your environment.
    * try (AdminServiceClient adminServiceClient = AdminServiceClient.create()) {
    *   DeleteSubscriptionRequest request =
    *       DeleteSubscriptionRequest.newBuilder()
@@ -1437,6 +1539,8 @@ public class AdminServiceClient implements BackgroundResource {
    * <p>Sample code:
    *
    * <pre>{@code
+   * // This snippet has been automatically generated for illustrative purposes only.
+   * // It may require modifications to work in your environment.
    * try (AdminServiceClient adminServiceClient = AdminServiceClient.create()) {
    *   DeleteSubscriptionRequest request =
    *       DeleteSubscriptionRequest.newBuilder()
@@ -1476,6 +1580,8 @@ public class AdminServiceClient implements BackgroundResource {
    * <p>Sample code:
    *
    * <pre>{@code
+   * // This snippet has been automatically generated for illustrative purposes only.
+   * // It may require modifications to work in your environment.
    * try (AdminServiceClient adminServiceClient = AdminServiceClient.create()) {
    *   SeekSubscriptionRequest request =
    *       SeekSubscriptionRequest.newBuilder()
@@ -1517,6 +1623,8 @@ public class AdminServiceClient implements BackgroundResource {
    * <p>Sample code:
    *
    * <pre>{@code
+   * // This snippet has been automatically generated for illustrative purposes only.
+   * // It may require modifications to work in your environment.
    * try (AdminServiceClient adminServiceClient = AdminServiceClient.create()) {
    *   SeekSubscriptionRequest request =
    *       SeekSubscriptionRequest.newBuilder()
@@ -1559,6 +1667,8 @@ public class AdminServiceClient implements BackgroundResource {
    * <p>Sample code:
    *
    * <pre>{@code
+   * // This snippet has been automatically generated for illustrative purposes only.
+   * // It may require modifications to work in your environment.
    * try (AdminServiceClient adminServiceClient = AdminServiceClient.create()) {
    *   SeekSubscriptionRequest request =
    *       SeekSubscriptionRequest.newBuilder()
@@ -1582,6 +1692,8 @@ public class AdminServiceClient implements BackgroundResource {
    * <p>Sample code:
    *
    * <pre>{@code
+   * // This snippet has been automatically generated for illustrative purposes only.
+   * // It may require modifications to work in your environment.
    * try (AdminServiceClient adminServiceClient = AdminServiceClient.create()) {
    *   LocationName parent = LocationName.of("[PROJECT]", "[LOCATION]");
    *   Reservation reservation = Reservation.newBuilder().build();
@@ -1618,6 +1730,8 @@ public class AdminServiceClient implements BackgroundResource {
    * <p>Sample code:
    *
    * <pre>{@code
+   * // This snippet has been automatically generated for illustrative purposes only.
+   * // It may require modifications to work in your environment.
    * try (AdminServiceClient adminServiceClient = AdminServiceClient.create()) {
    *   String parent = LocationName.of("[PROJECT]", "[LOCATION]").toString();
    *   Reservation reservation = Reservation.newBuilder().build();
@@ -1654,6 +1768,8 @@ public class AdminServiceClient implements BackgroundResource {
    * <p>Sample code:
    *
    * <pre>{@code
+   * // This snippet has been automatically generated for illustrative purposes only.
+   * // It may require modifications to work in your environment.
    * try (AdminServiceClient adminServiceClient = AdminServiceClient.create()) {
    *   CreateReservationRequest request =
    *       CreateReservationRequest.newBuilder()
@@ -1679,6 +1795,8 @@ public class AdminServiceClient implements BackgroundResource {
    * <p>Sample code:
    *
    * <pre>{@code
+   * // This snippet has been automatically generated for illustrative purposes only.
+   * // It may require modifications to work in your environment.
    * try (AdminServiceClient adminServiceClient = AdminServiceClient.create()) {
    *   CreateReservationRequest request =
    *       CreateReservationRequest.newBuilder()
@@ -1704,6 +1822,8 @@ public class AdminServiceClient implements BackgroundResource {
    * <p>Sample code:
    *
    * <pre>{@code
+   * // This snippet has been automatically generated for illustrative purposes only.
+   * // It may require modifications to work in your environment.
    * try (AdminServiceClient adminServiceClient = AdminServiceClient.create()) {
    *   ReservationName name = ReservationName.of("[PROJECT]", "[LOCATION]", "[RESERVATION]");
    *   Reservation response = adminServiceClient.getReservation(name);
@@ -1727,6 +1847,8 @@ public class AdminServiceClient implements BackgroundResource {
    * <p>Sample code:
    *
    * <pre>{@code
+   * // This snippet has been automatically generated for illustrative purposes only.
+   * // It may require modifications to work in your environment.
    * try (AdminServiceClient adminServiceClient = AdminServiceClient.create()) {
    *   String name = ReservationName.of("[PROJECT]", "[LOCATION]", "[RESERVATION]").toString();
    *   Reservation response = adminServiceClient.getReservation(name);
@@ -1749,6 +1871,8 @@ public class AdminServiceClient implements BackgroundResource {
    * <p>Sample code:
    *
    * <pre>{@code
+   * // This snippet has been automatically generated for illustrative purposes only.
+   * // It may require modifications to work in your environment.
    * try (AdminServiceClient adminServiceClient = AdminServiceClient.create()) {
    *   GetReservationRequest request =
    *       GetReservationRequest.newBuilder()
@@ -1772,6 +1896,8 @@ public class AdminServiceClient implements BackgroundResource {
    * <p>Sample code:
    *
    * <pre>{@code
+   * // This snippet has been automatically generated for illustrative purposes only.
+   * // It may require modifications to work in your environment.
    * try (AdminServiceClient adminServiceClient = AdminServiceClient.create()) {
    *   GetReservationRequest request =
    *       GetReservationRequest.newBuilder()
@@ -1795,6 +1921,8 @@ public class AdminServiceClient implements BackgroundResource {
    * <p>Sample code:
    *
    * <pre>{@code
+   * // This snippet has been automatically generated for illustrative purposes only.
+   * // It may require modifications to work in your environment.
    * try (AdminServiceClient adminServiceClient = AdminServiceClient.create()) {
    *   LocationName parent = LocationName.of("[PROJECT]", "[LOCATION]");
    *   for (Reservation element : adminServiceClient.listReservations(parent).iterateAll()) {
@@ -1822,6 +1950,8 @@ public class AdminServiceClient implements BackgroundResource {
    * <p>Sample code:
    *
    * <pre>{@code
+   * // This snippet has been automatically generated for illustrative purposes only.
+   * // It may require modifications to work in your environment.
    * try (AdminServiceClient adminServiceClient = AdminServiceClient.create()) {
    *   String parent = LocationName.of("[PROJECT]", "[LOCATION]").toString();
    *   for (Reservation element : adminServiceClient.listReservations(parent).iterateAll()) {
@@ -1847,6 +1977,8 @@ public class AdminServiceClient implements BackgroundResource {
    * <p>Sample code:
    *
    * <pre>{@code
+   * // This snippet has been automatically generated for illustrative purposes only.
+   * // It may require modifications to work in your environment.
    * try (AdminServiceClient adminServiceClient = AdminServiceClient.create()) {
    *   ListReservationsRequest request =
    *       ListReservationsRequest.newBuilder()
@@ -1874,6 +2006,8 @@ public class AdminServiceClient implements BackgroundResource {
    * <p>Sample code:
    *
    * <pre>{@code
+   * // This snippet has been automatically generated for illustrative purposes only.
+   * // It may require modifications to work in your environment.
    * try (AdminServiceClient adminServiceClient = AdminServiceClient.create()) {
    *   ListReservationsRequest request =
    *       ListReservationsRequest.newBuilder()
@@ -1902,6 +2036,8 @@ public class AdminServiceClient implements BackgroundResource {
    * <p>Sample code:
    *
    * <pre>{@code
+   * // This snippet has been automatically generated for illustrative purposes only.
+   * // It may require modifications to work in your environment.
    * try (AdminServiceClient adminServiceClient = AdminServiceClient.create()) {
    *   ListReservationsRequest request =
    *       ListReservationsRequest.newBuilder()
@@ -1937,6 +2073,8 @@ public class AdminServiceClient implements BackgroundResource {
    * <p>Sample code:
    *
    * <pre>{@code
+   * // This snippet has been automatically generated for illustrative purposes only.
+   * // It may require modifications to work in your environment.
    * try (AdminServiceClient adminServiceClient = AdminServiceClient.create()) {
    *   Reservation reservation = Reservation.newBuilder().build();
    *   FieldMask updateMask = FieldMask.newBuilder().build();
@@ -1964,6 +2102,8 @@ public class AdminServiceClient implements BackgroundResource {
    * <p>Sample code:
    *
    * <pre>{@code
+   * // This snippet has been automatically generated for illustrative purposes only.
+   * // It may require modifications to work in your environment.
    * try (AdminServiceClient adminServiceClient = AdminServiceClient.create()) {
    *   UpdateReservationRequest request =
    *       UpdateReservationRequest.newBuilder()
@@ -1988,6 +2128,8 @@ public class AdminServiceClient implements BackgroundResource {
    * <p>Sample code:
    *
    * <pre>{@code
+   * // This snippet has been automatically generated for illustrative purposes only.
+   * // It may require modifications to work in your environment.
    * try (AdminServiceClient adminServiceClient = AdminServiceClient.create()) {
    *   UpdateReservationRequest request =
    *       UpdateReservationRequest.newBuilder()
@@ -2012,6 +2154,8 @@ public class AdminServiceClient implements BackgroundResource {
    * <p>Sample code:
    *
    * <pre>{@code
+   * // This snippet has been automatically generated for illustrative purposes only.
+   * // It may require modifications to work in your environment.
    * try (AdminServiceClient adminServiceClient = AdminServiceClient.create()) {
    *   ReservationName name = ReservationName.of("[PROJECT]", "[LOCATION]", "[RESERVATION]");
    *   adminServiceClient.deleteReservation(name);
@@ -2037,6 +2181,8 @@ public class AdminServiceClient implements BackgroundResource {
    * <p>Sample code:
    *
    * <pre>{@code
+   * // This snippet has been automatically generated for illustrative purposes only.
+   * // It may require modifications to work in your environment.
    * try (AdminServiceClient adminServiceClient = AdminServiceClient.create()) {
    *   String name = ReservationName.of("[PROJECT]", "[LOCATION]", "[RESERVATION]").toString();
    *   adminServiceClient.deleteReservation(name);
@@ -2059,6 +2205,8 @@ public class AdminServiceClient implements BackgroundResource {
    * <p>Sample code:
    *
    * <pre>{@code
+   * // This snippet has been automatically generated for illustrative purposes only.
+   * // It may require modifications to work in your environment.
    * try (AdminServiceClient adminServiceClient = AdminServiceClient.create()) {
    *   DeleteReservationRequest request =
    *       DeleteReservationRequest.newBuilder()
@@ -2082,6 +2230,8 @@ public class AdminServiceClient implements BackgroundResource {
    * <p>Sample code:
    *
    * <pre>{@code
+   * // This snippet has been automatically generated for illustrative purposes only.
+   * // It may require modifications to work in your environment.
    * try (AdminServiceClient adminServiceClient = AdminServiceClient.create()) {
    *   DeleteReservationRequest request =
    *       DeleteReservationRequest.newBuilder()
@@ -2104,6 +2254,8 @@ public class AdminServiceClient implements BackgroundResource {
    * <p>Sample code:
    *
    * <pre>{@code
+   * // This snippet has been automatically generated for illustrative purposes only.
+   * // It may require modifications to work in your environment.
    * try (AdminServiceClient adminServiceClient = AdminServiceClient.create()) {
    *   ReservationName name = ReservationName.of("[PROJECT]", "[LOCATION]", "[RESERVATION]");
    *   for (String element : adminServiceClient.listReservationTopics(name).iterateAll()) {
@@ -2131,6 +2283,8 @@ public class AdminServiceClient implements BackgroundResource {
    * <p>Sample code:
    *
    * <pre>{@code
+   * // This snippet has been automatically generated for illustrative purposes only.
+   * // It may require modifications to work in your environment.
    * try (AdminServiceClient adminServiceClient = AdminServiceClient.create()) {
    *   String name = ReservationName.of("[PROJECT]", "[LOCATION]", "[RESERVATION]").toString();
    *   for (String element : adminServiceClient.listReservationTopics(name).iterateAll()) {
@@ -2156,6 +2310,8 @@ public class AdminServiceClient implements BackgroundResource {
    * <p>Sample code:
    *
    * <pre>{@code
+   * // This snippet has been automatically generated for illustrative purposes only.
+   * // It may require modifications to work in your environment.
    * try (AdminServiceClient adminServiceClient = AdminServiceClient.create()) {
    *   ListReservationTopicsRequest request =
    *       ListReservationTopicsRequest.newBuilder()
@@ -2184,6 +2340,8 @@ public class AdminServiceClient implements BackgroundResource {
    * <p>Sample code:
    *
    * <pre>{@code
+   * // This snippet has been automatically generated for illustrative purposes only.
+   * // It may require modifications to work in your environment.
    * try (AdminServiceClient adminServiceClient = AdminServiceClient.create()) {
    *   ListReservationTopicsRequest request =
    *       ListReservationTopicsRequest.newBuilder()
@@ -2212,6 +2370,8 @@ public class AdminServiceClient implements BackgroundResource {
    * <p>Sample code:
    *
    * <pre>{@code
+   * // This snippet has been automatically generated for illustrative purposes only.
+   * // It may require modifications to work in your environment.
    * try (AdminServiceClient adminServiceClient = AdminServiceClient.create()) {
    *   ListReservationTopicsRequest request =
    *       ListReservationTopicsRequest.newBuilder()

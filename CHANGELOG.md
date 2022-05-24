@@ -1,5 +1,24 @@
 # Changelog
 
+## [1.6.0](https://github.com/googleapis/java-pubsublite/compare/v1.5.5...v1.6.0) (2022-05-23)
+
+
+### Features
+
+* add build scripts for native image testing in Java 17 ([#1440](https://github.com/googleapis/java-pubsublite/issues/1440)) ([#1141](https://github.com/googleapis/java-pubsublite/issues/1141)) ([ae9aff7](https://github.com/googleapis/java-pubsublite/commit/ae9aff7cdda0879b7c18d0c56019ae705db9f928))
+* ensure large message batches can be received by subscribers ([#1133](https://github.com/googleapis/java-pubsublite/issues/1133)) ([3276d47](https://github.com/googleapis/java-pubsublite/commit/3276d47d662d93303c80bbac6a5bb3b87af62f1f))
+
+
+### Dependencies
+
+* error_prone_annotations from shared deps BOM ([#1128](https://github.com/googleapis/java-pubsublite/issues/1128)) ([32f7f4f](https://github.com/googleapis/java-pubsublite/commit/32f7f4fa2732e14fd2c399a2f62ee01932517aa7))
+* update dependency com.google.cloud:google-cloud-bom to v0.174.0 ([#1136](https://github.com/googleapis/java-pubsublite/issues/1136)) ([00c2737](https://github.com/googleapis/java-pubsublite/commit/00c2737123c0e3080d26169cc4c1fb6a37d708b5))
+* update dependency com.google.cloud:google-cloud-pubsub to v1.117.0 ([#1134](https://github.com/googleapis/java-pubsublite/issues/1134)) ([312224e](https://github.com/googleapis/java-pubsublite/commit/312224e0b07754e37f3eb4d9a9480f3803389c59))
+* update dependency com.google.cloud:google-cloud-pubsub to v1.118.0 ([#1139](https://github.com/googleapis/java-pubsublite/issues/1139)) ([ac83f8d](https://github.com/googleapis/java-pubsublite/commit/ac83f8dbc5fe82f3ca9dc3c528256d8820595722))
+* update dependency com.google.cloud:google-cloud-shared-dependencies to v2.11.0 ([#1140](https://github.com/googleapis/java-pubsublite/issues/1140)) ([869b4ee](https://github.com/googleapis/java-pubsublite/commit/869b4ee9e7c6418492ff7ce8b04c53f60de44741))
+* update dependency com.google.cloud:google-cloud-shared-dependencies to v2.12.0 ([#1142](https://github.com/googleapis/java-pubsublite/issues/1142)) ([577af94](https://github.com/googleapis/java-pubsublite/commit/577af94e6e27c2d088a7bfb6d20b9e2234c75c22))
+* update dependency com.google.errorprone:error_prone_core to v2.13.1 ([#1107](https://github.com/googleapis/java-pubsublite/issues/1107)) ([484ca3e](https://github.com/googleapis/java-pubsublite/commit/484ca3eaae5ba2d53f4421d3e3d32d0b643f52b3))
+
 ### [1.5.5](https://github.com/googleapis/java-pubsublite/compare/v1.5.4...v1.5.5) (2022-04-26)
 
 

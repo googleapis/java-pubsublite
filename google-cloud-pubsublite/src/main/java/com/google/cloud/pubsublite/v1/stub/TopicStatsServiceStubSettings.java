@@ -112,7 +112,6 @@ public class TopicStatsServiceStubSettings extends StubSettings<TopicStatsServic
     return computeTimeCursorSettings;
   }
 
-  @BetaApi("A restructuring of stub classes is planned, so this may break in the future")
   public TopicStatsServiceStub createStub() throws IOException {
     if (getTransportChannelProvider()
         .getTransportName()

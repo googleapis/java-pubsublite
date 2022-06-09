@@ -16,7 +16,6 @@
 
 package com.google.cloud.pubsublite.v1;
 
-import com.google.api.core.BetaApi;
 import com.google.api.gax.core.BackgroundResource;
 import com.google.api.gax.rpc.BidiStreamingCallable;
 import com.google.cloud.pubsublite.proto.PartitionAssignment;
@@ -127,7 +126,6 @@ public class PartitionAssignmentServiceClient implements BackgroundResource {
    * Constructs an instance of PartitionAssignmentServiceClient, using the given stub for making
    * calls. This is for advanced usage - prefer using create(PartitionAssignmentServiceSettings).
    */
-  @BetaApi("A restructuring of stub classes is planned, so this may break in the future")
   public static final PartitionAssignmentServiceClient create(PartitionAssignmentServiceStub stub) {
     return new PartitionAssignmentServiceClient(stub);
   }
@@ -143,7 +141,6 @@ public class PartitionAssignmentServiceClient implements BackgroundResource {
     this.stub = ((PartitionAssignmentServiceStubSettings) settings.getStubSettings()).createStub();
   }
 
-  @BetaApi("A restructuring of stub classes is planned, so this may break in the future")
   protected PartitionAssignmentServiceClient(PartitionAssignmentServiceStub stub) {
     this.settings = null;
     this.stub = stub;
@@ -153,7 +150,6 @@ public class PartitionAssignmentServiceClient implements BackgroundResource {
     return settings;
   }
 
-  @BetaApi("A restructuring of stub classes is planned, so this may break in the future")
   public PartitionAssignmentServiceStub getStub() {
     return stub;
   }

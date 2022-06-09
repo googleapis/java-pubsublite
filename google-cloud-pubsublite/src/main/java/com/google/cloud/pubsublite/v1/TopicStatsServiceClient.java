@@ -16,7 +16,6 @@
 
 package com.google.cloud.pubsublite.v1;
 
-import com.google.api.core.BetaApi;
 import com.google.api.gax.core.BackgroundResource;
 import com.google.api.gax.rpc.UnaryCallable;
 import com.google.cloud.pubsublite.proto.ComputeHeadCursorRequest;
@@ -129,7 +128,6 @@ public class TopicStatsServiceClient implements BackgroundResource {
    * Constructs an instance of TopicStatsServiceClient, using the given stub for making calls. This
    * is for advanced usage - prefer using create(TopicStatsServiceSettings).
    */
-  @BetaApi("A restructuring of stub classes is planned, so this may break in the future")
   public static final TopicStatsServiceClient create(TopicStatsServiceStub stub) {
     return new TopicStatsServiceClient(stub);
   }
@@ -144,7 +142,6 @@ public class TopicStatsServiceClient implements BackgroundResource {
     this.stub = ((TopicStatsServiceStubSettings) settings.getStubSettings()).createStub();
   }
 
-  @BetaApi("A restructuring of stub classes is planned, so this may break in the future")
   protected TopicStatsServiceClient(TopicStatsServiceStub stub) {
     this.settings = null;
     this.stub = stub;
@@ -154,7 +151,6 @@ public class TopicStatsServiceClient implements BackgroundResource {
     return settings;
   }
 
-  @BetaApi("A restructuring of stub classes is planned, so this may break in the future")
   public TopicStatsServiceStub getStub() {
     return stub;
   }

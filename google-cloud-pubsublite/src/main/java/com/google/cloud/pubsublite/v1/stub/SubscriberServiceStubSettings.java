@@ -90,7 +90,6 @@ public class SubscriberServiceStubSettings extends StubSettings<SubscriberServic
     return subscribeSettings;
   }
 
-  @BetaApi("A restructuring of stub classes is planned, so this may break in the future")
   public SubscriberServiceStub createStub() throws IOException {
     if (getTransportChannelProvider()
         .getTransportName()

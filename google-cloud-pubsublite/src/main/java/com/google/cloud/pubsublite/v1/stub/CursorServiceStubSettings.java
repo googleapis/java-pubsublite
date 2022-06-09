@@ -191,7 +191,6 @@ public class CursorServiceStubSettings extends StubSettings<CursorServiceStubSet
     return listPartitionCursorsSettings;
   }
 
-  @BetaApi("A restructuring of stub classes is planned, so this may break in the future")
   public CursorServiceStub createStub() throws IOException {
     if (getTransportChannelProvider()
         .getTransportName()

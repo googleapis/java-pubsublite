@@ -89,7 +89,6 @@ public class PublisherServiceStubSettings extends StubSettings<PublisherServiceS
     return publishSettings;
   }
 
-  @BetaApi("A restructuring of stub classes is planned, so this may break in the future")
   public PublisherServiceStub createStub() throws IOException {
     if (getTransportChannelProvider()
         .getTransportName()

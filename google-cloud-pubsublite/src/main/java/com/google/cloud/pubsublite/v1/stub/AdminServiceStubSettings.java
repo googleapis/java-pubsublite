@@ -585,7 +585,6 @@ public class AdminServiceStubSettings extends StubSettings<AdminServiceStubSetti
     return listReservationTopicsSettings;
   }
 
-  @BetaApi("A restructuring of stub classes is planned, so this may break in the future")
   public AdminServiceStub createStub() throws IOException {
     if (getTransportChannelProvider()
         .getTransportName()

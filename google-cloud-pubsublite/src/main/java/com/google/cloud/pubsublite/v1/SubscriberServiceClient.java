@@ -16,7 +16,6 @@
 
 package com.google.cloud.pubsublite.v1;
 
-import com.google.api.core.BetaApi;
 import com.google.api.gax.core.BackgroundResource;
 import com.google.api.gax.rpc.BidiStreamingCallable;
 import com.google.cloud.pubsublite.proto.SubscribeRequest;
@@ -125,7 +124,6 @@ public class SubscriberServiceClient implements BackgroundResource {
    * Constructs an instance of SubscriberServiceClient, using the given stub for making calls. This
    * is for advanced usage - prefer using create(SubscriberServiceSettings).
    */
-  @BetaApi("A restructuring of stub classes is planned, so this may break in the future")
   public static final SubscriberServiceClient create(SubscriberServiceStub stub) {
     return new SubscriberServiceClient(stub);
   }
@@ -140,7 +138,6 @@ public class SubscriberServiceClient implements BackgroundResource {
     this.stub = ((SubscriberServiceStubSettings) settings.getStubSettings()).createStub();
   }
 
-  @BetaApi("A restructuring of stub classes is planned, so this may break in the future")
   protected SubscriberServiceClient(SubscriberServiceStub stub) {
     this.settings = null;
     this.stub = stub;
@@ -150,7 +147,6 @@ public class SubscriberServiceClient implements BackgroundResource {
     return settings;
   }
 
-  @BetaApi("A restructuring of stub classes is planned, so this may break in the future")
   public SubscriberServiceStub getStub() {
     return stub;
   }

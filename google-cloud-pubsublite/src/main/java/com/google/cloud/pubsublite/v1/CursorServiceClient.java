@@ -384,7 +384,7 @@ public class CursorServiceClient implements BackgroundResource {
    *   while (true) {
    *     ListPartitionCursorsResponse response =
    *         cursorServiceClient.listPartitionCursorsCallable().call(request);
-   *     for (PartitionCursor element : response.getResponsesList()) {
+   *     for (PartitionCursor element : response.getPartitionCursorsList()) {
    *       // doThingsWith(element);
    *     }
    *     String nextPageToken = response.getNextPageToken();

@@ -649,7 +649,7 @@ public class AdminServiceClient implements BackgroundResource {
    *           .build();
    *   while (true) {
    *     ListTopicsResponse response = adminServiceClient.listTopicsCallable().call(request);
-   *     for (Topic element : response.getResponsesList()) {
+   *     for (Topic element : response.getTopicsList()) {
    *       // doThingsWith(element);
    *     }
    *     String nextPageToken = response.getNextPageToken();
@@ -972,7 +972,7 @@ public class AdminServiceClient implements BackgroundResource {
    *   while (true) {
    *     ListTopicSubscriptionsResponse response =
    *         adminServiceClient.listTopicSubscriptionsCallable().call(request);
-   *     for (String element : response.getResponsesList()) {
+   *     for (String element : response.getSubscriptionsList()) {
    *       // doThingsWith(element);
    *     }
    *     String nextPageToken = response.getNextPageToken();
@@ -1353,7 +1353,7 @@ public class AdminServiceClient implements BackgroundResource {
    *   while (true) {
    *     ListSubscriptionsResponse response =
    *         adminServiceClient.listSubscriptionsCallable().call(request);
-   *     for (Subscription element : response.getResponsesList()) {
+   *     for (Subscription element : response.getSubscriptionsList()) {
    *       // doThingsWith(element);
    *     }
    *     String nextPageToken = response.getNextPageToken();
@@ -2044,7 +2044,7 @@ public class AdminServiceClient implements BackgroundResource {
    *   while (true) {
    *     ListReservationsResponse response =
    *         adminServiceClient.listReservationsCallable().call(request);
-   *     for (Reservation element : response.getResponsesList()) {
+   *     for (Reservation element : response.getReservationsList()) {
    *       // doThingsWith(element);
    *     }
    *     String nextPageToken = response.getNextPageToken();
@@ -2378,7 +2378,7 @@ public class AdminServiceClient implements BackgroundResource {
    *   while (true) {
    *     ListReservationTopicsResponse response =
    *         adminServiceClient.listReservationTopicsCallable().call(request);
-   *     for (String element : response.getResponsesList()) {
+   *     for (String element : response.getTopicsList()) {
    *       // doThingsWith(element);
    *     }
    *     String nextPageToken = response.getNextPageToken();

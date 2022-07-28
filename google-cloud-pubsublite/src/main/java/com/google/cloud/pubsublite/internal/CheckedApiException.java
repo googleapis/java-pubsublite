@@ -28,11 +28,6 @@ import javax.annotation.Nullable;
 public class CheckedApiException extends Exception {
   public final ApiException underlying;
 
-  public CheckedApiException(ApiException underlying) {
-    super(underlying);
-    this.underlying = underlying;
-  }
-
   public static StatusCode fromCode(StatusCode.Code code) {
     return new StatusCode() {
       @Override
@@ -45,6 +40,11 @@ public class CheckedApiException extends Exception {
         return null;
       }
     };
+  }
+
+  public CheckedApiException(ApiException underlying) {
+    super(underlying.getMessage(), underlying);
+    this.underlying = underlying;
   }
 
   public CheckedApiException(String message, @Nullable Throwable cause, StatusCode.Code code) {

@@ -43,7 +43,7 @@ public class CheckedApiException extends Exception {
   }
 
   public CheckedApiException(ApiException underlying) {
-    super(underling.getMessage(), underlying);
+    super(underlying.getMessage(), underlying);
     this.underlying = underlying;
   }
 

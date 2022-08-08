@@ -92,6 +92,12 @@
     <dependency>
       <groupId>com.google.code.gson</groupId>
       <artifactId>gson</artifactId>
+      <!--
+       Within this repository this dependency is only used in tests. However,
+       making this test scope causes undeclared dependencies after the
+       flatten-maven-plugin.
+       https://github.com/mojohaus/flatten-maven-plugin/issues/185
+      -->
       <scope>runtime</scope>
     </dependency>
     <dependency>

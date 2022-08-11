@@ -1,5 +1,25 @@
 # Changelog
 
+## [1.6.2](https://github.com/googleapis/java-pubsublite/compare/v1.6.1...v1.6.2) (2022-08-08)
+
+
+### Bug Fixes
+
+* CheckedApiException should not prepend com.google.api.gax.rpc.ApiException to its message. ([#1178](https://github.com/googleapis/java-pubsublite/issues/1178)) ([b264d4a](https://github.com/googleapis/java-pubsublite/commit/b264d4a476d5a48a3942e56127b3278c849de8b7))
+* declaring test-scope artifact as runtime ([#1186](https://github.com/googleapis/java-pubsublite/issues/1186)) ([d3b0244](https://github.com/googleapis/java-pubsublite/commit/d3b0244eb5a418783e5cf89b8d4398674ac4b730))
+* enable longpaths support for windows test ([#1485](https://github.com/googleapis/java-pubsublite/issues/1485)) ([#1173](https://github.com/googleapis/java-pubsublite/issues/1173)) ([b0f5a0d](https://github.com/googleapis/java-pubsublite/commit/b0f5a0d96e24f7d043b5acaed85b27a368a1d16d))
+
+
+### Dependencies
+
+* update dependency com.google.cloud:google-cloud-bom to v0.176.0 ([#1171](https://github.com/googleapis/java-pubsublite/issues/1171)) ([1b905d8](https://github.com/googleapis/java-pubsublite/commit/1b905d88f9d9aa3b77cf78d1cbd4bc5884812185))
+* update dependency com.google.cloud:google-cloud-pubsub to v1.120.0 ([#1168](https://github.com/googleapis/java-pubsublite/issues/1168)) ([4aa90ce](https://github.com/googleapis/java-pubsublite/commit/4aa90ced9f15d5be15b7ef2374ee039decae5339))
+* update dependency com.google.cloud:google-cloud-pubsub to v1.120.10 ([#1184](https://github.com/googleapis/java-pubsublite/issues/1184)) ([94b6268](https://github.com/googleapis/java-pubsublite/commit/94b626892fd3d985f4d5f664177632f0ff90e478))
+* update dependency com.google.cloud:google-cloud-pubsub to v1.120.5 ([#1181](https://github.com/googleapis/java-pubsublite/issues/1181)) ([a3dd68f](https://github.com/googleapis/java-pubsublite/commit/a3dd68fd48dc5199d24e68556197338734bc48ae))
+* update dependency com.google.cloud:google-cloud-pubsub to v1.120.8 ([#1182](https://github.com/googleapis/java-pubsublite/issues/1182)) ([9f80889](https://github.com/googleapis/java-pubsublite/commit/9f8088978361638a8d9527ba8791cfbdd7d8fff6))
+* update dependency com.google.cloud:google-cloud-pubsub to v1.120.9 ([#1183](https://github.com/googleapis/java-pubsublite/issues/1183)) ([59b2f60](https://github.com/googleapis/java-pubsublite/commit/59b2f60f19a97ab5c4685927666908d6e757be04))
+* update dependency com.google.cloud:google-cloud-shared-dependencies to v3 ([#1179](https://github.com/googleapis/java-pubsublite/issues/1179)) ([b3cb990](https://github.com/googleapis/java-pubsublite/commit/b3cb990b6262856035fd50a486afa2d727b207b3))
+
 ## [1.6.1](https://github.com/googleapis/java-pubsublite/compare/v1.6.0...v1.6.1) (2022-06-30)
 
 

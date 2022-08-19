@@ -103,6 +103,22 @@ public final class Subscription extends com.google.protobuf.GeneratedMessageV3
 
               break;
             }
+          case 34:
+            {
+              com.google.cloud.pubsublite.proto.ExportConfig.Builder subBuilder = null;
+              if (exportConfig_ != null) {
+                subBuilder = exportConfig_.toBuilder();
+              }
+              exportConfig_ =
+                  input.readMessage(
+                      com.google.cloud.pubsublite.proto.ExportConfig.parser(), extensionRegistry);
+              if (subBuilder != null) {
+                subBuilder.mergeFrom(exportConfig_);
+                exportConfig_ = subBuilder.buildPartial();
+              }
+
+              break;
+            }
           default:
             {
               if (!parseUnknownField(input, unknownFields, extensionRegistry, tag)) {
@@ -1134,6 +1150,57 @@ public final class Subscription extends com.google.protobuf.GeneratedMessageV3
     return getDeliveryConfig();
   }
 
+  public static final int EXPORT_CONFIG_FIELD_NUMBER = 4;
+  private com.google.cloud.pubsublite.proto.ExportConfig exportConfig_;
+  /**
+   *
+   *
+   * <pre>
+   * If present, messages are automatically written from the Pub/Sub Lite topic
+   * associated with this subscription to a destination.
+   * </pre>
+   *
+   * <code>.google.cloud.pubsublite.v1.ExportConfig export_config = 4;</code>
+   *
+   * @return Whether the exportConfig field is set.
+   */
+  @java.lang.Override
+  public boolean hasExportConfig() {
+    return exportConfig_ != null;
+  }
+  /**
+   *
+   *
+   * <pre>
+   * If present, messages are automatically written from the Pub/Sub Lite topic
+   * associated with this subscription to a destination.
+   * </pre>
+   *
+   * <code>.google.cloud.pubsublite.v1.ExportConfig export_config = 4;</code>
+   *
+   * @return The exportConfig.
+   */
+  @java.lang.Override
+  public com.google.cloud.pubsublite.proto.ExportConfig getExportConfig() {
+    return exportConfig_ == null
+        ? com.google.cloud.pubsublite.proto.ExportConfig.getDefaultInstance()
+        : exportConfig_;
+  }
+  /**
+   *
+   *
+   * <pre>
+   * If present, messages are automatically written from the Pub/Sub Lite topic
+   * associated with this subscription to a destination.
+   * </pre>
+   *
+   * <code>.google.cloud.pubsublite.v1.ExportConfig export_config = 4;</code>
+   */
+  @java.lang.Override
+  public com.google.cloud.pubsublite.proto.ExportConfigOrBuilder getExportConfigOrBuilder() {
+    return getExportConfig();
+  }
+
   private byte memoizedIsInitialized = -1;
 
   @java.lang.Override
@@ -1157,6 +1224,9 @@ public final class Subscription extends com.google.protobuf.GeneratedMessageV3
     if (deliveryConfig_ != null) {
       output.writeMessage(3, getDeliveryConfig());
     }
+    if (exportConfig_ != null) {
+      output.writeMessage(4, getExportConfig());
+    }
     unknownFields.writeTo(output);
   }
 
@@ -1174,6 +1244,9 @@ public final class Subscription extends com.google.protobuf.GeneratedMessageV3
     }
     if (deliveryConfig_ != null) {
       size += com.google.protobuf.CodedOutputStream.computeMessageSize(3, getDeliveryConfig());
+    }
+    if (exportConfig_ != null) {
+      size += com.google.protobuf.CodedOutputStream.computeMessageSize(4, getExportConfig());
     }
     size += unknownFields.getSerializedSize();
     memoizedSize = size;
@@ -1197,6 +1270,10 @@ public final class Subscription extends com.google.protobuf.GeneratedMessageV3
     if (hasDeliveryConfig()) {
       if (!getDeliveryConfig().equals(other.getDeliveryConfig())) return false;
     }
+    if (hasExportConfig() != other.hasExportConfig()) return false;
+    if (hasExportConfig()) {
+      if (!getExportConfig().equals(other.getExportConfig())) return false;
+    }
     if (!unknownFields.equals(other.unknownFields)) return false;
     return true;
   }
@@ -1215,6 +1292,10 @@ public final class Subscription extends com.google.protobuf.GeneratedMessageV3
     if (hasDeliveryConfig()) {
       hash = (37 * hash) + DELIVERY_CONFIG_FIELD_NUMBER;
       hash = (53 * hash) + getDeliveryConfig().hashCode();
+    }
+    if (hasExportConfig()) {
+      hash = (37 * hash) + EXPORT_CONFIG_FIELD_NUMBER;
+      hash = (53 * hash) + getExportConfig().hashCode();
     }
     hash = (29 * hash) + unknownFields.hashCode();
     memoizedHashCode = hash;
@@ -1371,6 +1452,12 @@ public final class Subscription extends com.google.protobuf.GeneratedMessageV3
         deliveryConfig_ = null;
         deliveryConfigBuilder_ = null;
       }
+      if (exportConfigBuilder_ == null) {
+        exportConfig_ = null;
+      } else {
+        exportConfig_ = null;
+        exportConfigBuilder_ = null;
+      }
       return this;
     }
 
@@ -1404,6 +1491,11 @@ public final class Subscription extends com.google.protobuf.GeneratedMessageV3
         result.deliveryConfig_ = deliveryConfig_;
       } else {
         result.deliveryConfig_ = deliveryConfigBuilder_.build();
+      }
+      if (exportConfigBuilder_ == null) {
+        result.exportConfig_ = exportConfig_;
+      } else {
+        result.exportConfig_ = exportConfigBuilder_.build();
       }
       onBuilt();
       return result;
@@ -1464,6 +1556,9 @@ public final class Subscription extends com.google.protobuf.GeneratedMessageV3
       }
       if (other.hasDeliveryConfig()) {
         mergeDeliveryConfig(other.getDeliveryConfig());
+      }
+      if (other.hasExportConfig()) {
+        mergeExportConfig(other.getExportConfig());
       }
       this.mergeUnknownFields(other.unknownFields);
       onChanged();
@@ -1915,6 +2010,201 @@ public final class Subscription extends com.google.protobuf.GeneratedMessageV3
         deliveryConfig_ = null;
       }
       return deliveryConfigBuilder_;
+    }
+
+    private com.google.cloud.pubsublite.proto.ExportConfig exportConfig_;
+    private com.google.protobuf.SingleFieldBuilderV3<
+            com.google.cloud.pubsublite.proto.ExportConfig,
+            com.google.cloud.pubsublite.proto.ExportConfig.Builder,
+            com.google.cloud.pubsublite.proto.ExportConfigOrBuilder>
+        exportConfigBuilder_;
+    /**
+     *
+     *
+     * <pre>
+     * If present, messages are automatically written from the Pub/Sub Lite topic
+     * associated with this subscription to a destination.
+     * </pre>
+     *
+     * <code>.google.cloud.pubsublite.v1.ExportConfig export_config = 4;</code>
+     *
+     * @return Whether the exportConfig field is set.
+     */
+    public boolean hasExportConfig() {
+      return exportConfigBuilder_ != null || exportConfig_ != null;
+    }
+    /**
+     *
+     *
+     * <pre>
+     * If present, messages are automatically written from the Pub/Sub Lite topic
+     * associated with this subscription to a destination.
+     * </pre>
+     *
+     * <code>.google.cloud.pubsublite.v1.ExportConfig export_config = 4;</code>
+     *
+     * @return The exportConfig.
+     */
+    public com.google.cloud.pubsublite.proto.ExportConfig getExportConfig() {
+      if (exportConfigBuilder_ == null) {
+        return exportConfig_ == null
+            ? com.google.cloud.pubsublite.proto.ExportConfig.getDefaultInstance()
+            : exportConfig_;
+      } else {
+        return exportConfigBuilder_.getMessage();
+      }
+    }
+    /**
+     *
+     *
+     * <pre>
+     * If present, messages are automatically written from the Pub/Sub Lite topic
+     * associated with this subscription to a destination.
+     * </pre>
+     *
+     * <code>.google.cloud.pubsublite.v1.ExportConfig export_config = 4;</code>
+     */
+    public Builder setExportConfig(com.google.cloud.pubsublite.proto.ExportConfig value) {
+      if (exportConfigBuilder_ == null) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        exportConfig_ = value;
+        onChanged();
+      } else {
+        exportConfigBuilder_.setMessage(value);
+      }
+
+      return this;
+    }
+    /**
+     *
+     *
+     * <pre>
+     * If present, messages are automatically written from the Pub/Sub Lite topic
+     * associated with this subscription to a destination.
+     * </pre>
+     *
+     * <code>.google.cloud.pubsublite.v1.ExportConfig export_config = 4;</code>
+     */
+    public Builder setExportConfig(
+        com.google.cloud.pubsublite.proto.ExportConfig.Builder builderForValue) {
+      if (exportConfigBuilder_ == null) {
+        exportConfig_ = builderForValue.build();
+        onChanged();
+      } else {
+        exportConfigBuilder_.setMessage(builderForValue.build());
+      }
+
+      return this;
+    }
+    /**
+     *
+     *
+     * <pre>
+     * If present, messages are automatically written from the Pub/Sub Lite topic
+     * associated with this subscription to a destination.
+     * </pre>
+     *
+     * <code>.google.cloud.pubsublite.v1.ExportConfig export_config = 4;</code>
+     */
+    public Builder mergeExportConfig(com.google.cloud.pubsublite.proto.ExportConfig value) {
+      if (exportConfigBuilder_ == null) {
+        if (exportConfig_ != null) {
+          exportConfig_ =
+              com.google.cloud.pubsublite.proto.ExportConfig.newBuilder(exportConfig_)
+                  .mergeFrom(value)
+                  .buildPartial();
+        } else {
+          exportConfig_ = value;
+        }
+        onChanged();
+      } else {
+        exportConfigBuilder_.mergeFrom(value);
+      }
+
+      return this;
+    }
+    /**
+     *
+     *
+     * <pre>
+     * If present, messages are automatically written from the Pub/Sub Lite topic
+     * associated with this subscription to a destination.
+     * </pre>
+     *
+     * <code>.google.cloud.pubsublite.v1.ExportConfig export_config = 4;</code>
+     */
+    public Builder clearExportConfig() {
+      if (exportConfigBuilder_ == null) {
+        exportConfig_ = null;
+        onChanged();
+      } else {
+        exportConfig_ = null;
+        exportConfigBuilder_ = null;
+      }
+
+      return this;
+    }
+    /**
+     *
+     *
+     * <pre>
+     * If present, messages are automatically written from the Pub/Sub Lite topic
+     * associated with this subscription to a destination.
+     * </pre>
+     *
+     * <code>.google.cloud.pubsublite.v1.ExportConfig export_config = 4;</code>
+     */
+    public com.google.cloud.pubsublite.proto.ExportConfig.Builder getExportConfigBuilder() {
+
+      onChanged();
+      return getExportConfigFieldBuilder().getBuilder();
+    }
+    /**
+     *
+     *
+     * <pre>
+     * If present, messages are automatically written from the Pub/Sub Lite topic
+     * associated with this subscription to a destination.
+     * </pre>
+     *
+     * <code>.google.cloud.pubsublite.v1.ExportConfig export_config = 4;</code>
+     */
+    public com.google.cloud.pubsublite.proto.ExportConfigOrBuilder getExportConfigOrBuilder() {
+      if (exportConfigBuilder_ != null) {
+        return exportConfigBuilder_.getMessageOrBuilder();
+      } else {
+        return exportConfig_ == null
+            ? com.google.cloud.pubsublite.proto.ExportConfig.getDefaultInstance()
+            : exportConfig_;
+      }
+    }
+    /**
+     *
+     *
+     * <pre>
+     * If present, messages are automatically written from the Pub/Sub Lite topic
+     * associated with this subscription to a destination.
+     * </pre>
+     *
+     * <code>.google.cloud.pubsublite.v1.ExportConfig export_config = 4;</code>
+     */
+    private com.google.protobuf.SingleFieldBuilderV3<
+            com.google.cloud.pubsublite.proto.ExportConfig,
+            com.google.cloud.pubsublite.proto.ExportConfig.Builder,
+            com.google.cloud.pubsublite.proto.ExportConfigOrBuilder>
+        getExportConfigFieldBuilder() {
+      if (exportConfigBuilder_ == null) {
+        exportConfigBuilder_ =
+            new com.google.protobuf.SingleFieldBuilderV3<
+                com.google.cloud.pubsublite.proto.ExportConfig,
+                com.google.cloud.pubsublite.proto.ExportConfig.Builder,
+                com.google.cloud.pubsublite.proto.ExportConfigOrBuilder>(
+                getExportConfig(), getParentForChildren(), isClean());
+        exportConfig_ = null;
+      }
+      return exportConfigBuilder_;
     }
 
     @java.lang.Override

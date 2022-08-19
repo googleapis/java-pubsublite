@@ -116,4 +116,42 @@ public interface SubscriptionOrBuilder
    */
   com.google.cloud.pubsublite.proto.Subscription.DeliveryConfigOrBuilder
       getDeliveryConfigOrBuilder();
+
+  /**
+   *
+   *
+   * <pre>
+   * If present, messages are automatically written from the Pub/Sub Lite topic
+   * associated with this subscription to a destination.
+   * </pre>
+   *
+   * <code>.google.cloud.pubsublite.v1.ExportConfig export_config = 4;</code>
+   *
+   * @return Whether the exportConfig field is set.
+   */
+  boolean hasExportConfig();
+  /**
+   *
+   *
+   * <pre>
+   * If present, messages are automatically written from the Pub/Sub Lite topic
+   * associated with this subscription to a destination.
+   * </pre>
+   *
+   * <code>.google.cloud.pubsublite.v1.ExportConfig export_config = 4;</code>
+   *
+   * @return The exportConfig.
+   */
+  com.google.cloud.pubsublite.proto.ExportConfig getExportConfig();
+  /**
+   *
+   *
+   * <pre>
+   * If present, messages are automatically written from the Pub/Sub Lite topic
+   * associated with this subscription to a destination.
+   * </pre>
+   *
+   * <code>.google.cloud.pubsublite.v1.ExportConfig export_config = 4;</code>
+   */
+  com.google.cloud.pubsublite.proto.ExportConfigOrBuilder getExportConfigOrBuilder();
 }

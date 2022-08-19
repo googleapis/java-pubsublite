@@ -36,6 +36,7 @@ import com.google.cloud.pubsublite.proto.CreateTopicRequest;
 import com.google.cloud.pubsublite.proto.DeleteReservationRequest;
 import com.google.cloud.pubsublite.proto.DeleteSubscriptionRequest;
 import com.google.cloud.pubsublite.proto.DeleteTopicRequest;
+import com.google.cloud.pubsublite.proto.ExportConfig;
 import com.google.cloud.pubsublite.proto.GetReservationRequest;
 import com.google.cloud.pubsublite.proto.GetSubscriptionRequest;
 import com.google.cloud.pubsublite.proto.GetTopicPartitionsRequest;
@@ -666,6 +667,7 @@ public class AdminServiceClientTest {
             .setName(SubscriptionName.of("[PROJECT]", "[LOCATION]", "[SUBSCRIPTION]").toString())
             .setTopic(TopicName.of("[PROJECT]", "[LOCATION]", "[TOPIC]").toString())
             .setDeliveryConfig(Subscription.DeliveryConfig.newBuilder().build())
+            .setExportConfig(ExportConfig.newBuilder().build())
             .build();
     mockAdminService.addResponse(expectedResponse);
 
@@ -712,6 +714,7 @@ public class AdminServiceClientTest {
             .setName(SubscriptionName.of("[PROJECT]", "[LOCATION]", "[SUBSCRIPTION]").toString())
             .setTopic(TopicName.of("[PROJECT]", "[LOCATION]", "[TOPIC]").toString())
             .setDeliveryConfig(Subscription.DeliveryConfig.newBuilder().build())
+            .setExportConfig(ExportConfig.newBuilder().build())
             .build();
     mockAdminService.addResponse(expectedResponse);
 
@@ -758,6 +761,7 @@ public class AdminServiceClientTest {
             .setName(SubscriptionName.of("[PROJECT]", "[LOCATION]", "[SUBSCRIPTION]").toString())
             .setTopic(TopicName.of("[PROJECT]", "[LOCATION]", "[TOPIC]").toString())
             .setDeliveryConfig(Subscription.DeliveryConfig.newBuilder().build())
+            .setExportConfig(ExportConfig.newBuilder().build())
             .build();
     mockAdminService.addResponse(expectedResponse);
 
@@ -798,6 +802,7 @@ public class AdminServiceClientTest {
             .setName(SubscriptionName.of("[PROJECT]", "[LOCATION]", "[SUBSCRIPTION]").toString())
             .setTopic(TopicName.of("[PROJECT]", "[LOCATION]", "[TOPIC]").toString())
             .setDeliveryConfig(Subscription.DeliveryConfig.newBuilder().build())
+            .setExportConfig(ExportConfig.newBuilder().build())
             .build();
     mockAdminService.addResponse(expectedResponse);
 
@@ -926,6 +931,7 @@ public class AdminServiceClientTest {
             .setName(SubscriptionName.of("[PROJECT]", "[LOCATION]", "[SUBSCRIPTION]").toString())
             .setTopic(TopicName.of("[PROJECT]", "[LOCATION]", "[TOPIC]").toString())
             .setDeliveryConfig(Subscription.DeliveryConfig.newBuilder().build())
+            .setExportConfig(ExportConfig.newBuilder().build())
             .build();
     mockAdminService.addResponse(expectedResponse);
 

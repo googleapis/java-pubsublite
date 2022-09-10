@@ -231,11 +231,20 @@ public final class PublisherImpl extends ProxyService
     PubSubMessage proto = message.toProto();
     try (CloseableMonitor.Hold h = batcherMonitor.enter()) {
       ApiService.State currentState = state();
-      checkState(
-          currentState == ApiService.State.RUNNING,
-          "Cannot publish when Publisher state is %s.",
-          currentState.name());
-      return batcher.add(proto);
+      switch (currentState) {
+        case FAILED:
+          throw new CheckedApiException(
+              "Cannot publish when publisher has failed.",
+              failureCause(),
+              Code.FAILED_PRECONDITION);
+        case STARTING:
+        case RUNNING:
+          return batcher.add(proto);
+        default:
+          throw new CheckedApiException(
+              "Cannot publish when Publisher state is " + currentState.name(),
+              Code.FAILED_PRECONDITION);
+      }
     } catch (CheckedApiException e) {
       onPermanentError(e);
       return ApiFutures.immediateFailedFuture(e);

@@ -32,8 +32,8 @@ public class SystemExecutors {
   }
 
   public static ScheduledExecutorService newDaemonExecutor(String prefix) {
-    ScheduledThreadPoolExecutor executor = new ScheduledThreadPoolExecutor(
-        4, newDaemonThreadFactory(prefix));
+    ScheduledThreadPoolExecutor executor =
+        new ScheduledThreadPoolExecutor(4, newDaemonThreadFactory(prefix));
     // Remove scheduled tasks from the executor as soon as they are cancelled.
     executor.setRemoveOnCancelPolicy(true);
     return executor;

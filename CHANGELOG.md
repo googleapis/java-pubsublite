@@ -1,5 +1,24 @@
 # Changelog
 
+## [1.7.0](https://github.com/googleapis/java-pubsublite/compare/v1.6.3...v1.7.0) (2022-09-15)
+
+
+### Features
+
+* Add export config protos to API ([#1196](https://github.com/googleapis/java-pubsublite/issues/1196)) ([96ca781](https://github.com/googleapis/java-pubsublite/commit/96ca781227cfe9b1500be3c78669bcef93550b74))
+
+
+### Bug Fixes
+
+* Improve performance of CloudRegionOrZone.parse and error message from PublisherImpl ([#1206](https://github.com/googleapis/java-pubsublite/issues/1206)) ([acb95db](https://github.com/googleapis/java-pubsublite/commit/acb95db730e0188a45fedf3efffcf4723a4a17f1))
+
+
+### Dependencies
+
+* Update dependency com.google.cloud:google-cloud-pubsub to v1.120.12 ([#1197](https://github.com/googleapis/java-pubsublite/issues/1197)) ([4d4cb6a](https://github.com/googleapis/java-pubsublite/commit/4d4cb6a8186899eff3d2e73c1c86f4565dd1df14))
+* Update dependency com.google.cloud:google-cloud-pubsub to v1.120.13 ([#1199](https://github.com/googleapis/java-pubsublite/issues/1199)) ([34ecfaa](https://github.com/googleapis/java-pubsublite/commit/34ecfaa89a5659656ea62f12abad1e34f8bac656))
+* Update dependency com.google.cloud:google-cloud-shared-dependencies to v3.0.3 ([#1203](https://github.com/googleapis/java-pubsublite/issues/1203)) ([900159e](https://github.com/googleapis/java-pubsublite/commit/900159e0ff929ce38704985c57188ff706eef4ad))
+
 ## [1.6.3](https://github.com/googleapis/java-pubsublite/compare/v1.6.2...v1.6.3) (2022-08-12)
 
 

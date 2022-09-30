@@ -17,7 +17,9 @@
 package com.google.cloud.pubsublite;
 
 import com.google.api.gax.rpc.ApiException;
+import com.google.api.gax.rpc.StatusCode.Code;
 import com.google.auto.value.AutoOneOf;
+import com.google.cloud.pubsublite.internal.CheckedApiException;
 import java.io.Serializable;
 
 @AutoOneOf(CloudRegionOrZone.Kind.class)
@@ -54,12 +56,16 @@ public abstract class CloudRegionOrZone implements Serializable {
   }
 
   public static CloudRegionOrZone parse(String value) throws ApiException {
-    try {
-      return of(CloudZone.parse(value));
-    } catch (ApiException e) {
-      // pass
+    String[] splits = value.split("-", -1);
+    switch (splits.length) {
+      case 2:
+        return of(CloudRegion.of(value));
+      case 3:
+        return of(CloudZone.parse(value));
+      default:
+        throw new CheckedApiException("Invalid location: " + value, Code.INVALID_ARGUMENT)
+            .underlying;
     }
-    return of(CloudRegion.of(value));
   }
 
   /** {@inheritDoc} */

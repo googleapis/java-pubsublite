@@ -50,100 +50,6 @@ public final class SubscribeResponse extends com.google.protobuf.GeneratedMessag
     return this.unknownFields;
   }
 
-  private SubscribeResponse(
-      com.google.protobuf.CodedInputStream input,
-      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-      throws com.google.protobuf.InvalidProtocolBufferException {
-    this();
-    if (extensionRegistry == null) {
-      throw new java.lang.NullPointerException();
-    }
-    com.google.protobuf.UnknownFieldSet.Builder unknownFields =
-        com.google.protobuf.UnknownFieldSet.newBuilder();
-    try {
-      boolean done = false;
-      while (!done) {
-        int tag = input.readTag();
-        switch (tag) {
-          case 0:
-            done = true;
-            break;
-          case 10:
-            {
-              com.google.cloud.pubsublite.proto.InitialSubscribeResponse.Builder subBuilder = null;
-              if (responseCase_ == 1) {
-                subBuilder =
-                    ((com.google.cloud.pubsublite.proto.InitialSubscribeResponse) response_)
-                        .toBuilder();
-              }
-              response_ =
-                  input.readMessage(
-                      com.google.cloud.pubsublite.proto.InitialSubscribeResponse.parser(),
-                      extensionRegistry);
-              if (subBuilder != null) {
-                subBuilder.mergeFrom(
-                    (com.google.cloud.pubsublite.proto.InitialSubscribeResponse) response_);
-                response_ = subBuilder.buildPartial();
-              }
-              responseCase_ = 1;
-              break;
-            }
-          case 18:
-            {
-              com.google.cloud.pubsublite.proto.SeekResponse.Builder subBuilder = null;
-              if (responseCase_ == 2) {
-                subBuilder =
-                    ((com.google.cloud.pubsublite.proto.SeekResponse) response_).toBuilder();
-              }
-              response_ =
-                  input.readMessage(
-                      com.google.cloud.pubsublite.proto.SeekResponse.parser(), extensionRegistry);
-              if (subBuilder != null) {
-                subBuilder.mergeFrom((com.google.cloud.pubsublite.proto.SeekResponse) response_);
-                response_ = subBuilder.buildPartial();
-              }
-              responseCase_ = 2;
-              break;
-            }
-          case 26:
-            {
-              com.google.cloud.pubsublite.proto.MessageResponse.Builder subBuilder = null;
-              if (responseCase_ == 3) {
-                subBuilder =
-                    ((com.google.cloud.pubsublite.proto.MessageResponse) response_).toBuilder();
-              }
-              response_ =
-                  input.readMessage(
-                      com.google.cloud.pubsublite.proto.MessageResponse.parser(),
-                      extensionRegistry);
-              if (subBuilder != null) {
-                subBuilder.mergeFrom((com.google.cloud.pubsublite.proto.MessageResponse) response_);
-                response_ = subBuilder.buildPartial();
-              }
-              responseCase_ = 3;
-              break;
-            }
-          default:
-            {
-              if (!parseUnknownField(input, unknownFields, extensionRegistry, tag)) {
-                done = true;
-              }
-              break;
-            }
-        }
-      }
-    } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-      throw e.setUnfinishedMessage(this);
-    } catch (com.google.protobuf.UninitializedMessageException e) {
-      throw e.asInvalidProtocolBufferException().setUnfinishedMessage(this);
-    } catch (java.io.IOException e) {
-      throw new com.google.protobuf.InvalidProtocolBufferException(e).setUnfinishedMessage(this);
-    } finally {
-      this.unknownFields = unknownFields.build();
-      makeExtensionsImmutable();
-    }
-  }
-
   public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
     return com.google.cloud.pubsublite.proto.SubscriberProto
         .internal_static_google_cloud_pubsublite_v1_SubscribeResponse_descriptor;
@@ -386,7 +292,7 @@ public final class SubscribeResponse extends com.google.protobuf.GeneratedMessag
     if (responseCase_ == 3) {
       output.writeMessage(3, (com.google.cloud.pubsublite.proto.MessageResponse) response_);
     }
-    unknownFields.writeTo(output);
+    getUnknownFields().writeTo(output);
   }
 
   @java.lang.Override
@@ -410,7 +316,7 @@ public final class SubscribeResponse extends com.google.protobuf.GeneratedMessag
           com.google.protobuf.CodedOutputStream.computeMessageSize(
               3, (com.google.cloud.pubsublite.proto.MessageResponse) response_);
     }
-    size += unknownFields.getSerializedSize();
+    size += getUnknownFields().getSerializedSize();
     memoizedSize = size;
     return size;
   }
@@ -440,7 +346,7 @@ public final class SubscribeResponse extends com.google.protobuf.GeneratedMessag
       case 0:
       default:
     }
-    if (!unknownFields.equals(other.unknownFields)) return false;
+    if (!getUnknownFields().equals(other.getUnknownFields())) return false;
     return true;
   }
 
@@ -467,7 +373,7 @@ public final class SubscribeResponse extends com.google.protobuf.GeneratedMessag
       case 0:
       default:
     }
-    hash = (29 * hash) + unknownFields.hashCode();
+    hash = (29 * hash) + getUnknownFields().hashCode();
     memoizedHashCode = hash;
     return hash;
   }
@@ -596,22 +502,24 @@ public final class SubscribeResponse extends com.google.protobuf.GeneratedMessag
     }
 
     // Construct using com.google.cloud.pubsublite.proto.SubscribeResponse.newBuilder()
-    private Builder() {
-      maybeForceBuilderInitialization();
-    }
+    private Builder() {}
 
     private Builder(com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
       super(parent);
-      maybeForceBuilderInitialization();
-    }
-
-    private void maybeForceBuilderInitialization() {
-      if (com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders) {}
     }
 
     @java.lang.Override
     public Builder clear() {
       super.clear();
+      if (initialBuilder_ != null) {
+        initialBuilder_.clear();
+      }
+      if (seekBuilder_ != null) {
+        seekBuilder_.clear();
+      }
+      if (messagesBuilder_ != null) {
+        messagesBuilder_.clear();
+      }
       responseCase_ = 0;
       response_ = null;
       return this;
@@ -734,7 +642,7 @@ public final class SubscribeResponse extends com.google.protobuf.GeneratedMessag
             break;
           }
       }
-      this.mergeUnknownFields(other.unknownFields);
+      this.mergeUnknownFields(other.getUnknownFields());
       onChanged();
       return this;
     }
@@ -749,18 +657,49 @@ public final class SubscribeResponse extends com.google.protobuf.GeneratedMessag
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      com.google.cloud.pubsublite.proto.SubscribeResponse parsedMessage = null;
+      if (extensionRegistry == null) {
+        throw new java.lang.NullPointerException();
+      }
       try {
-        parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            case 10:
+              {
+                input.readMessage(getInitialFieldBuilder().getBuilder(), extensionRegistry);
+                responseCase_ = 1;
+                break;
+              } // case 10
+            case 18:
+              {
+                input.readMessage(getSeekFieldBuilder().getBuilder(), extensionRegistry);
+                responseCase_ = 2;
+                break;
+              } // case 18
+            case 26:
+              {
+                input.readMessage(getMessagesFieldBuilder().getBuilder(), extensionRegistry);
+                responseCase_ = 3;
+                break;
+              } // case 26
+            default:
+              {
+                if (!super.parseUnknownField(input, extensionRegistry, tag)) {
+                  done = true; // was an endgroup tag
+                }
+                break;
+              } // default:
+          } // switch (tag)
+        } // while (!done)
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        parsedMessage =
-            (com.google.cloud.pubsublite.proto.SubscribeResponse) e.getUnfinishedMessage();
         throw e.unwrapIOException();
       } finally {
-        if (parsedMessage != null) {
-          mergeFrom(parsedMessage);
-        }
-      }
+        onChanged();
+      } // finally
       return this;
     }
 
@@ -1444,7 +1383,18 @@ public final class SubscribeResponse extends com.google.protobuf.GeneratedMessag
             com.google.protobuf.CodedInputStream input,
             com.google.protobuf.ExtensionRegistryLite extensionRegistry)
             throws com.google.protobuf.InvalidProtocolBufferException {
-          return new SubscribeResponse(input, extensionRegistry);
+          Builder builder = newBuilder();
+          try {
+            builder.mergeFrom(input, extensionRegistry);
+          } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+            throw e.setUnfinishedMessage(builder.buildPartial());
+          } catch (com.google.protobuf.UninitializedMessageException e) {
+            throw e.asInvalidProtocolBufferException().setUnfinishedMessage(builder.buildPartial());
+          } catch (java.io.IOException e) {
+            throw new com.google.protobuf.InvalidProtocolBufferException(e)
+                .setUnfinishedMessage(builder.buildPartial());
+          }
+          return builder.buildPartial();
         }
       };
 

@@ -50,85 +50,6 @@ public final class PublishResponse extends com.google.protobuf.GeneratedMessageV
     return this.unknownFields;
   }
 
-  private PublishResponse(
-      com.google.protobuf.CodedInputStream input,
-      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-      throws com.google.protobuf.InvalidProtocolBufferException {
-    this();
-    if (extensionRegistry == null) {
-      throw new java.lang.NullPointerException();
-    }
-    com.google.protobuf.UnknownFieldSet.Builder unknownFields =
-        com.google.protobuf.UnknownFieldSet.newBuilder();
-    try {
-      boolean done = false;
-      while (!done) {
-        int tag = input.readTag();
-        switch (tag) {
-          case 0:
-            done = true;
-            break;
-          case 10:
-            {
-              com.google.cloud.pubsublite.proto.InitialPublishResponse.Builder subBuilder = null;
-              if (responseTypeCase_ == 1) {
-                subBuilder =
-                    ((com.google.cloud.pubsublite.proto.InitialPublishResponse) responseType_)
-                        .toBuilder();
-              }
-              responseType_ =
-                  input.readMessage(
-                      com.google.cloud.pubsublite.proto.InitialPublishResponse.parser(),
-                      extensionRegistry);
-              if (subBuilder != null) {
-                subBuilder.mergeFrom(
-                    (com.google.cloud.pubsublite.proto.InitialPublishResponse) responseType_);
-                responseType_ = subBuilder.buildPartial();
-              }
-              responseTypeCase_ = 1;
-              break;
-            }
-          case 18:
-            {
-              com.google.cloud.pubsublite.proto.MessagePublishResponse.Builder subBuilder = null;
-              if (responseTypeCase_ == 2) {
-                subBuilder =
-                    ((com.google.cloud.pubsublite.proto.MessagePublishResponse) responseType_)
-                        .toBuilder();
-              }
-              responseType_ =
-                  input.readMessage(
-                      com.google.cloud.pubsublite.proto.MessagePublishResponse.parser(),
-                      extensionRegistry);
-              if (subBuilder != null) {
-                subBuilder.mergeFrom(
-                    (com.google.cloud.pubsublite.proto.MessagePublishResponse) responseType_);
-                responseType_ = subBuilder.buildPartial();
-              }
-              responseTypeCase_ = 2;
-              break;
-            }
-          default:
-            {
-              if (!parseUnknownField(input, unknownFields, extensionRegistry, tag)) {
-                done = true;
-              }
-              break;
-            }
-        }
-      }
-    } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-      throw e.setUnfinishedMessage(this);
-    } catch (com.google.protobuf.UninitializedMessageException e) {
-      throw e.asInvalidProtocolBufferException().setUnfinishedMessage(this);
-    } catch (java.io.IOException e) {
-      throw new com.google.protobuf.InvalidProtocolBufferException(e).setUnfinishedMessage(this);
-    } finally {
-      this.unknownFields = unknownFields.build();
-      makeExtensionsImmutable();
-    }
-  }
-
   public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
     return com.google.cloud.pubsublite.proto.PublisherProto
         .internal_static_google_cloud_pubsublite_v1_PublishResponse_descriptor;
@@ -317,7 +238,7 @@ public final class PublishResponse extends com.google.protobuf.GeneratedMessageV
       output.writeMessage(
           2, (com.google.cloud.pubsublite.proto.MessagePublishResponse) responseType_);
     }
-    unknownFields.writeTo(output);
+    getUnknownFields().writeTo(output);
   }
 
   @java.lang.Override
@@ -336,7 +257,7 @@ public final class PublishResponse extends com.google.protobuf.GeneratedMessageV
           com.google.protobuf.CodedOutputStream.computeMessageSize(
               2, (com.google.cloud.pubsublite.proto.MessagePublishResponse) responseType_);
     }
-    size += unknownFields.getSerializedSize();
+    size += getUnknownFields().getSerializedSize();
     memoizedSize = size;
     return size;
   }
@@ -363,7 +284,7 @@ public final class PublishResponse extends com.google.protobuf.GeneratedMessageV
       case 0:
       default:
     }
-    if (!unknownFields.equals(other.unknownFields)) return false;
+    if (!getUnknownFields().equals(other.getUnknownFields())) return false;
     return true;
   }
 
@@ -386,7 +307,7 @@ public final class PublishResponse extends com.google.protobuf.GeneratedMessageV
       case 0:
       default:
     }
-    hash = (29 * hash) + unknownFields.hashCode();
+    hash = (29 * hash) + getUnknownFields().hashCode();
     memoizedHashCode = hash;
     return hash;
   }
@@ -515,22 +436,21 @@ public final class PublishResponse extends com.google.protobuf.GeneratedMessageV
     }
 
     // Construct using com.google.cloud.pubsublite.proto.PublishResponse.newBuilder()
-    private Builder() {
-      maybeForceBuilderInitialization();
-    }
+    private Builder() {}
 
     private Builder(com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
       super(parent);
-      maybeForceBuilderInitialization();
-    }
-
-    private void maybeForceBuilderInitialization() {
-      if (com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders) {}
     }
 
     @java.lang.Override
     public Builder clear() {
       super.clear();
+      if (initialResponseBuilder_ != null) {
+        initialResponseBuilder_.clear();
+      }
+      if (messageResponseBuilder_ != null) {
+        messageResponseBuilder_.clear();
+      }
       responseTypeCase_ = 0;
       responseType_ = null;
       return this;
@@ -641,7 +561,7 @@ public final class PublishResponse extends com.google.protobuf.GeneratedMessageV
             break;
           }
       }
-      this.mergeUnknownFields(other.unknownFields);
+      this.mergeUnknownFields(other.getUnknownFields());
       onChanged();
       return this;
     }
@@ -656,18 +576,43 @@ public final class PublishResponse extends com.google.protobuf.GeneratedMessageV
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      com.google.cloud.pubsublite.proto.PublishResponse parsedMessage = null;
+      if (extensionRegistry == null) {
+        throw new java.lang.NullPointerException();
+      }
       try {
-        parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            case 10:
+              {
+                input.readMessage(getInitialResponseFieldBuilder().getBuilder(), extensionRegistry);
+                responseTypeCase_ = 1;
+                break;
+              } // case 10
+            case 18:
+              {
+                input.readMessage(getMessageResponseFieldBuilder().getBuilder(), extensionRegistry);
+                responseTypeCase_ = 2;
+                break;
+              } // case 18
+            default:
+              {
+                if (!super.parseUnknownField(input, extensionRegistry, tag)) {
+                  done = true; // was an endgroup tag
+                }
+                break;
+              } // default:
+          } // switch (tag)
+        } // while (!done)
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        parsedMessage =
-            (com.google.cloud.pubsublite.proto.PublishResponse) e.getUnfinishedMessage();
         throw e.unwrapIOException();
       } finally {
-        if (parsedMessage != null) {
-          mergeFrom(parsedMessage);
-        }
-      }
+        onChanged();
+      } // finally
       return this;
     }
 
@@ -1149,7 +1094,18 @@ public final class PublishResponse extends com.google.protobuf.GeneratedMessageV
             com.google.protobuf.CodedInputStream input,
             com.google.protobuf.ExtensionRegistryLite extensionRegistry)
             throws com.google.protobuf.InvalidProtocolBufferException {
-          return new PublishResponse(input, extensionRegistry);
+          Builder builder = newBuilder();
+          try {
+            builder.mergeFrom(input, extensionRegistry);
+          } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+            throw e.setUnfinishedMessage(builder.buildPartial());
+          } catch (com.google.protobuf.UninitializedMessageException e) {
+            throw e.asInvalidProtocolBufferException().setUnfinishedMessage(builder.buildPartial());
+          } catch (java.io.IOException e) {
+            throw new com.google.protobuf.InvalidProtocolBufferException(e)
+                .setUnfinishedMessage(builder.buildPartial());
+          }
+          return builder.buildPartial();
         }
       };
 

@@ -28,6 +28,7 @@ import static org.mockito.MockitoAnnotations.initMocks;
 import com.google.api.core.ApiFuture;
 import com.google.api.core.ApiFutures;
 import com.google.api.gax.longrunning.OperationFuture;
+import com.google.api.gax.longrunning.OperationSnapshot;
 import com.google.api.gax.rpc.ApiException;
 import com.google.api.gax.rpc.OperationCallable;
 import com.google.api.gax.rpc.StatusCode.Code;
@@ -50,6 +51,8 @@ import com.google.cloud.pubsublite.proto.CreateTopicRequest;
 import com.google.cloud.pubsublite.proto.DeleteReservationRequest;
 import com.google.cloud.pubsublite.proto.DeleteSubscriptionRequest;
 import com.google.cloud.pubsublite.proto.DeleteTopicRequest;
+import com.google.cloud.pubsublite.proto.ExportConfig;
+import com.google.cloud.pubsublite.proto.ExportConfig.State;
 import com.google.cloud.pubsublite.proto.GetReservationRequest;
 import com.google.cloud.pubsublite.proto.GetSubscriptionRequest;
 import com.google.cloud.pubsublite.proto.GetTopicPartitionsRequest;
@@ -113,6 +116,24 @@ public class AdminClientImplTest {
           .toBuilder()
           .setThroughputCapacity(example(Reservation.class).getThroughputCapacity() + 1)
           .build();
+  private static final Subscription ACTIVE_EXPORT_SUBSCRIPTION =
+      example(Subscription.class)
+          .toBuilder()
+          .setExportConfig(example(ExportConfig.class).toBuilder().setDesiredState(State.ACTIVE))
+          .build();
+  private static final Subscription PAUSED_EXPORT_SUBSCRIPTION =
+      example(Subscription.class)
+          .toBuilder()
+          .setExportConfig(example(ExportConfig.class).toBuilder().setDesiredState(State.PAUSED))
+          .build();
+  private static final Subscription EXPORT_SUBSCRIPTION_RESPONSE =
+      example(Subscription.class)
+          .toBuilder()
+          .setDeliveryConfig(
+              DeliveryConfig.newBuilder()
+                  .setDeliveryRequirement(DeliveryConfig.DeliveryRequirement.DELIVER_IMMEDIATELY))
+          .setExportConfig(example(ExportConfig.class))
+          .build();
 
   private static final String OPERATION_PATH = "/path/for/operation";
 
@@ -145,6 +166,7 @@ public class AdminClientImplTest {
   OperationCallable<SeekSubscriptionRequest, SeekSubscriptionResponse, OperationMetadata>
       seekSubscriptionCallable;
 
+  @Mock OperationSnapshot operationSnapshot;
   @Mock OperationFuture<SeekSubscriptionResponse, OperationMetadata> seekFuture;
 
   @Mock UnaryCallable<CreateReservationRequest, Reservation> createReservationCallable;
@@ -450,6 +472,314 @@ public class AdminClientImplTest {
     assertFutureThrowsCode(
         client.createSubscription(example(Subscription.class), BacklogLocation.BEGINNING),
         Code.FAILED_PRECONDITION);
+  }
+
+  @Test
+  public void createSubscriptionAtTarget_endOk() throws Exception {
+    CreateSubscriptionRequest request =
+        CreateSubscriptionRequest.newBuilder()
+            .setParent(example(SubscriptionPath.class).locationPath().toString())
+            .setSubscription(example(Subscription.class))
+            .setSubscriptionId(example(SubscriptionName.class).value())
+            .setSkipBacklog(true)
+            .build();
+
+    when(createSubscriptionCallable.futureCall(request))
+        .thenReturn(immediateFuture(SUBSCRIPTION_2));
+
+    assertThat(
+            client
+                .createSubscription(example(Subscription.class), SeekTarget.of(BacklogLocation.END))
+                .get())
+        .isEqualTo(SUBSCRIPTION_2);
+  }
+
+  @Test
+  public void createSubscriptionAtTarget_beginningError() throws Exception {
+    CreateSubscriptionRequest request =
+        CreateSubscriptionRequest.newBuilder()
+            .setParent(example(SubscriptionPath.class).locationPath().toString())
+            .setSubscription(example(Subscription.class))
+            .setSubscriptionId(example(SubscriptionName.class).value())
+            .setSkipBacklog(false)
+            .build();
+
+    when(createSubscriptionCallable.futureCall(request)).thenReturn(failedPreconditionFuture());
+
+    assertFutureThrowsCode(
+        client.createSubscription(
+            example(Subscription.class), SeekTarget.of(BacklogLocation.BEGINNING)),
+        Code.FAILED_PRECONDITION);
+  }
+
+  @Test
+  public void createSubscriptionAtTarget_publishTimeOk() throws Exception {
+    CreateSubscriptionRequest createRequest =
+        CreateSubscriptionRequest.newBuilder()
+            .setParent(example(SubscriptionPath.class).locationPath().toString())
+            .setSubscription(example(Subscription.class))
+            .setSubscriptionId(example(SubscriptionName.class).value())
+            .setSkipBacklog(false)
+            .build();
+    Timestamp publishTime = Timestamp.newBuilder().setSeconds(123).build();
+    SeekSubscriptionRequest seekRequest =
+        SeekSubscriptionRequest.newBuilder()
+            .setName(example(SubscriptionPath.class).toString())
+            .setTimeTarget(TimeTarget.newBuilder().setPublishTime(publishTime))
+            .build();
+
+    when(createSubscriptionCallable.futureCall(createRequest))
+        .thenReturn(immediateFuture(SUBSCRIPTION_2));
+    when(seekFuture.getInitialFuture()).thenReturn(ApiFutures.immediateFuture(operationSnapshot));
+    when(seekSubscriptionCallable.futureCall(seekRequest)).thenReturn(seekFuture);
+
+    assertThat(
+            client
+                .createSubscription(
+                    example(Subscription.class), SeekTarget.ofPublishTime(publishTime))
+                .get())
+        .isEqualTo(SUBSCRIPTION_2);
+  }
+
+  @Test
+  public void createSubscriptionAtTarget_eventTimeCreateError() throws Exception {
+    CreateSubscriptionRequest createRequest =
+        CreateSubscriptionRequest.newBuilder()
+            .setParent(example(SubscriptionPath.class).locationPath().toString())
+            .setSubscription(example(Subscription.class))
+            .setSubscriptionId(example(SubscriptionName.class).value())
+            .setSkipBacklog(false)
+            .build();
+    Timestamp eventTime = Timestamp.newBuilder().setSeconds(456).build();
+    SeekSubscriptionRequest seekRequest =
+        SeekSubscriptionRequest.newBuilder()
+            .setName(example(SubscriptionPath.class).toString())
+            .setTimeTarget(TimeTarget.newBuilder().setEventTime(eventTime))
+            .build();
+
+    when(createSubscriptionCallable.futureCall(createRequest))
+        .thenReturn(failedPreconditionFuture());
+
+    assertFutureThrowsCode(
+        client.createSubscription(example(Subscription.class), SeekTarget.ofEventTime(eventTime)),
+        Code.FAILED_PRECONDITION);
+  }
+
+  @Test
+  public void createSubscriptionAtTarget_eventTimeSeekError() throws Exception {
+    CreateSubscriptionRequest createRequest =
+        CreateSubscriptionRequest.newBuilder()
+            .setParent(example(SubscriptionPath.class).locationPath().toString())
+            .setSubscription(example(Subscription.class))
+            .setSubscriptionId(example(SubscriptionName.class).value())
+            .setSkipBacklog(false)
+            .build();
+    Timestamp eventTime = Timestamp.newBuilder().setSeconds(456).build();
+    SeekSubscriptionRequest seekRequest =
+        SeekSubscriptionRequest.newBuilder()
+            .setName(example(SubscriptionPath.class).toString())
+            .setTimeTarget(TimeTarget.newBuilder().setEventTime(eventTime))
+            .build();
+
+    when(createSubscriptionCallable.futureCall(createRequest))
+        .thenReturn(immediateFuture(SUBSCRIPTION_2));
+    when(seekFuture.getInitialFuture()).thenReturn(failedPreconditionFuture());
+    when(seekSubscriptionCallable.futureCall(seekRequest)).thenReturn(seekFuture);
+
+    assertFutureThrowsCode(
+        client.createSubscription(example(Subscription.class), SeekTarget.ofEventTime(eventTime)),
+        Code.FAILED_PRECONDITION);
+  }
+
+  @Test
+  public void createSubscriptionAtTarget_activeExport_beginningOk() throws Exception {
+    CreateSubscriptionRequest request =
+        CreateSubscriptionRequest.newBuilder()
+            .setParent(example(SubscriptionPath.class).locationPath().toString())
+            .setSubscription(ACTIVE_EXPORT_SUBSCRIPTION)
+            .setSubscriptionId(example(SubscriptionName.class).value())
+            .setSkipBacklog(false)
+            .build();
+
+    when(createSubscriptionCallable.futureCall(request))
+        .thenReturn(immediateFuture(EXPORT_SUBSCRIPTION_RESPONSE));
+
+    assertThat(
+            client
+                .createSubscription(
+                    ACTIVE_EXPORT_SUBSCRIPTION, SeekTarget.of(BacklogLocation.BEGINNING))
+                .get())
+        .isEqualTo(EXPORT_SUBSCRIPTION_RESPONSE);
+  }
+
+  @Test
+  public void createSubscriptionAtTarget_pausedExport_endOk() throws Exception {
+    CreateSubscriptionRequest request =
+        CreateSubscriptionRequest.newBuilder()
+            .setParent(example(SubscriptionPath.class).locationPath().toString())
+            .setSubscription(PAUSED_EXPORT_SUBSCRIPTION)
+            .setSubscriptionId(example(SubscriptionName.class).value())
+            .setSkipBacklog(true)
+            .build();
+
+    when(createSubscriptionCallable.futureCall(request))
+        .thenReturn(immediateFuture(EXPORT_SUBSCRIPTION_RESPONSE));
+
+    assertThat(
+            client
+                .createSubscription(PAUSED_EXPORT_SUBSCRIPTION, SeekTarget.of(BacklogLocation.END))
+                .get())
+        .isEqualTo(EXPORT_SUBSCRIPTION_RESPONSE);
+  }
+
+  @Test
+  public void createSubscriptionAtTarget_activeExport_eventTimeOk() throws Exception {
+    CreateSubscriptionRequest createRequest =
+        CreateSubscriptionRequest.newBuilder()
+            .setParent(example(SubscriptionPath.class).locationPath().toString())
+            .setSubscription(PAUSED_EXPORT_SUBSCRIPTION)
+            .setSubscriptionId(example(SubscriptionName.class).value())
+            .setSkipBacklog(false)
+            .build();
+    Timestamp eventTime = Timestamp.newBuilder().setSeconds(123).build();
+    SeekSubscriptionRequest seekRequest =
+        SeekSubscriptionRequest.newBuilder()
+            .setName(example(SubscriptionPath.class).toString())
+            .setTimeTarget(TimeTarget.newBuilder().setEventTime(eventTime))
+            .build();
+    UpdateSubscriptionRequest updateRequest =
+        UpdateSubscriptionRequest.newBuilder()
+            .setSubscription(
+                Subscription.newBuilder()
+                    .setName(example(SubscriptionPath.class).toString())
+                    .setExportConfig(
+                        ExportConfig.newBuilder().setDesiredState(ExportConfig.State.ACTIVE)))
+            .setUpdateMask(FieldMask.newBuilder().addPaths("export_config.desired_state"))
+            .build();
+
+    when(createSubscriptionCallable.futureCall(createRequest))
+        .thenReturn(immediateFuture(PAUSED_EXPORT_SUBSCRIPTION));
+    when(seekFuture.getInitialFuture()).thenReturn(ApiFutures.immediateFuture(operationSnapshot));
+    when(seekSubscriptionCallable.futureCall(seekRequest)).thenReturn(seekFuture);
+    when(updateSubscriptionCallable.futureCall(updateRequest))
+        .thenReturn(immediateFuture(EXPORT_SUBSCRIPTION_RESPONSE));
+
+    assertThat(
+            client
+                .createSubscription(ACTIVE_EXPORT_SUBSCRIPTION, SeekTarget.ofEventTime(eventTime))
+                .get())
+        .isEqualTo(EXPORT_SUBSCRIPTION_RESPONSE);
+  }
+
+  @Test
+  public void createSubscriptionAtTarget_activeExport_eventTimeCreateError() throws Exception {
+    CreateSubscriptionRequest createRequest =
+        CreateSubscriptionRequest.newBuilder()
+            .setParent(example(SubscriptionPath.class).locationPath().toString())
+            .setSubscription(PAUSED_EXPORT_SUBSCRIPTION)
+            .setSubscriptionId(example(SubscriptionName.class).value())
+            .setSkipBacklog(false)
+            .build();
+    Timestamp eventTime = Timestamp.newBuilder().setSeconds(123).build();
+
+    when(createSubscriptionCallable.futureCall(createRequest))
+        .thenReturn(failedPreconditionFuture());
+
+    assertFutureThrowsCode(
+        client.createSubscription(ACTIVE_EXPORT_SUBSCRIPTION, SeekTarget.ofEventTime(eventTime)),
+        Code.FAILED_PRECONDITION);
+  }
+
+  @Test
+  public void createSubscriptionAtTarget_activeExport_eventTimeSeekError() throws Exception {
+    CreateSubscriptionRequest createRequest =
+        CreateSubscriptionRequest.newBuilder()
+            .setParent(example(SubscriptionPath.class).locationPath().toString())
+            .setSubscription(PAUSED_EXPORT_SUBSCRIPTION)
+            .setSubscriptionId(example(SubscriptionName.class).value())
+            .setSkipBacklog(false)
+            .build();
+    Timestamp eventTime = Timestamp.newBuilder().setSeconds(123).build();
+    SeekSubscriptionRequest seekRequest =
+        SeekSubscriptionRequest.newBuilder()
+            .setName(example(SubscriptionPath.class).toString())
+            .setTimeTarget(TimeTarget.newBuilder().setEventTime(eventTime))
+            .build();
+
+    when(createSubscriptionCallable.futureCall(createRequest))
+        .thenReturn(immediateFuture(PAUSED_EXPORT_SUBSCRIPTION));
+    when(seekFuture.getInitialFuture()).thenReturn(failedPreconditionFuture());
+    when(seekSubscriptionCallable.futureCall(seekRequest)).thenReturn(seekFuture);
+
+    assertFutureThrowsCode(
+        client.createSubscription(ACTIVE_EXPORT_SUBSCRIPTION, SeekTarget.ofEventTime(eventTime)),
+        Code.FAILED_PRECONDITION);
+  }
+
+  @Test
+  public void createSubscriptionAtTarget_activeExport_eventTimeUpdateError() throws Exception {
+    CreateSubscriptionRequest createRequest =
+        CreateSubscriptionRequest.newBuilder()
+            .setParent(example(SubscriptionPath.class).locationPath().toString())
+            .setSubscription(PAUSED_EXPORT_SUBSCRIPTION)
+            .setSubscriptionId(example(SubscriptionName.class).value())
+            .setSkipBacklog(false)
+            .build();
+    Timestamp eventTime = Timestamp.newBuilder().setSeconds(123).build();
+    SeekSubscriptionRequest seekRequest =
+        SeekSubscriptionRequest.newBuilder()
+            .setName(example(SubscriptionPath.class).toString())
+            .setTimeTarget(TimeTarget.newBuilder().setEventTime(eventTime))
+            .build();
+    UpdateSubscriptionRequest updateRequest =
+        UpdateSubscriptionRequest.newBuilder()
+            .setSubscription(
+                Subscription.newBuilder()
+                    .setName(example(SubscriptionPath.class).toString())
+                    .setExportConfig(
+                        ExportConfig.newBuilder().setDesiredState(ExportConfig.State.ACTIVE)))
+            .setUpdateMask(FieldMask.newBuilder().addPaths("export_config.desired_state"))
+            .build();
+
+    when(createSubscriptionCallable.futureCall(createRequest))
+        .thenReturn(immediateFuture(PAUSED_EXPORT_SUBSCRIPTION));
+    when(seekFuture.getInitialFuture()).thenReturn(ApiFutures.immediateFuture(operationSnapshot));
+    when(seekSubscriptionCallable.futureCall(seekRequest)).thenReturn(seekFuture);
+    when(updateSubscriptionCallable.futureCall(updateRequest))
+        .thenReturn(failedPreconditionFuture());
+
+    assertFutureThrowsCode(
+        client.createSubscription(ACTIVE_EXPORT_SUBSCRIPTION, SeekTarget.ofEventTime(eventTime)),
+        Code.FAILED_PRECONDITION);
+  }
+
+  @Test
+  public void createSubscriptionAtTarget_pausedExport_publishTimeOk() throws Exception {
+    CreateSubscriptionRequest createRequest =
+        CreateSubscriptionRequest.newBuilder()
+            .setParent(example(SubscriptionPath.class).locationPath().toString())
+            .setSubscription(PAUSED_EXPORT_SUBSCRIPTION)
+            .setSubscriptionId(example(SubscriptionName.class).value())
+            .setSkipBacklog(false)
+            .build();
+    Timestamp publishTime = Timestamp.newBuilder().setSeconds(123).build();
+    SeekSubscriptionRequest seekRequest =
+        SeekSubscriptionRequest.newBuilder()
+            .setName(example(SubscriptionPath.class).toString())
+            .setTimeTarget(TimeTarget.newBuilder().setPublishTime(publishTime))
+            .build();
+
+    when(createSubscriptionCallable.futureCall(createRequest))
+        .thenReturn(immediateFuture(EXPORT_SUBSCRIPTION_RESPONSE));
+    when(seekFuture.getInitialFuture()).thenReturn(ApiFutures.immediateFuture(operationSnapshot));
+    when(seekSubscriptionCallable.futureCall(seekRequest)).thenReturn(seekFuture);
+
+    assertThat(
+            client
+                .createSubscription(
+                    PAUSED_EXPORT_SUBSCRIPTION, SeekTarget.ofPublishTime(publishTime))
+                .get())
+        .isEqualTo(EXPORT_SUBSCRIPTION_RESPONSE);
   }
 
   @Test

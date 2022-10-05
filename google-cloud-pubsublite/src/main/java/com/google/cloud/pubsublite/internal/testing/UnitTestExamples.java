@@ -28,6 +28,9 @@ import com.google.cloud.pubsublite.SubscriptionName;
 import com.google.cloud.pubsublite.SubscriptionPath;
 import com.google.cloud.pubsublite.TopicName;
 import com.google.cloud.pubsublite.TopicPath;
+import com.google.cloud.pubsublite.proto.ExportConfig;
+import com.google.cloud.pubsublite.proto.ExportConfig.PubSubConfig;
+import com.google.cloud.pubsublite.proto.ExportConfig.State;
 import com.google.cloud.pubsublite.proto.Reservation;
 import com.google.cloud.pubsublite.proto.Subscription;
 import com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig;
@@ -58,6 +61,7 @@ public final class UnitTestExamples {
           .put(Reservation.class, exampleReservation())
           .put(LocationPath.class, exampleLocationPath())
           .put(Offset.class, exampleOffset())
+          .put(ExportConfig.class, exampleExportConfig())
           .build();
 
   public static <T> T example(Class<T> klass) {
@@ -121,6 +125,13 @@ public final class UnitTestExamples {
                 .setDeliveryRequirement(DeliveryConfig.DeliveryRequirement.DELIVER_AFTER_STORED))
         .setName(exampleSubscriptionPath().toString())
         .setTopic(exampleTopicPath().toString())
+        .build();
+  }
+
+  public static ExportConfig exampleExportConfig() {
+    return ExportConfig.newBuilder()
+        .setDesiredState(State.ACTIVE)
+        .setPubsubConfig(PubSubConfig.newBuilder().setTopic("pubsub_topic"))
         .build();
   }
 

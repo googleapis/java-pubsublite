@@ -34,6 +34,7 @@ import com.google.cloud.pubsublite.proto.CreateTopicRequest;
 import com.google.cloud.pubsublite.proto.DeleteReservationRequest;
 import com.google.cloud.pubsublite.proto.DeleteSubscriptionRequest;
 import com.google.cloud.pubsublite.proto.DeleteTopicRequest;
+import com.google.cloud.pubsublite.proto.ExportConfig;
 import com.google.cloud.pubsublite.proto.GetReservationRequest;
 import com.google.cloud.pubsublite.proto.GetSubscriptionRequest;
 import com.google.cloud.pubsublite.proto.GetTopicPartitionsRequest;
@@ -164,6 +165,54 @@ public class AdminClientImpl extends ApiResourceAggregation implements AdminClie
                 .setSubscriptionId(path.name().toString())
                 .setSkipBacklog(startingOffset == BacklogLocation.END)
                 .build());
+  }
+
+  @Override
+  public ApiFuture<Subscription> createSubscription(Subscription subscription, SeekTarget target) {
+    switch (target.getKind()) {
+      case BACKLOG_LOCATION:
+        return createSubscription(subscription, target.backlogLocation());
+      case PUBLISH_TIME:
+      case EVENT_TIME:
+        break;
+    }
+
+    // Export subscriptions must be paused while seeking. The state is later updated to active.
+    final boolean requiresUpdate =
+        subscription.hasExportConfig()
+            && subscription.getExportConfig().getDesiredState() == ExportConfig.State.ACTIVE;
+    if (requiresUpdate) {
+      Subscription.Builder builder = subscription.toBuilder();
+      builder.getExportConfigBuilder().setDesiredState(ExportConfig.State.PAUSED);
+      subscription = builder.build();
+    }
+
+    // Request 1: create the subscription.
+    return ApiFutures.transformAsync(
+        createSubscription(subscription, BacklogLocation.BEGINNING),
+        newSubscription -> {
+          // Request 2: seek the subscription.
+          SubscriptionPath path = SubscriptionPath.parse(newSubscription.getName());
+          return ApiFutures.transformAsync(
+              seekSubscription(path, target).getInitialFuture(),
+              operation -> {
+                if (!requiresUpdate) {
+                  return ApiFutures.immediateFuture(newSubscription);
+                }
+                // Request 3 (optional): make the export subscription active.
+                Subscription updatedSubscription =
+                    Subscription.newBuilder()
+                        .setName(newSubscription.getName())
+                        .setExportConfig(
+                            ExportConfig.newBuilder().setDesiredState(ExportConfig.State.ACTIVE))
+                        .build();
+                FieldMask fieldMask =
+                    FieldMask.newBuilder().addPaths("export_config.desired_state").build();
+                return updateSubscription(updatedSubscription, fieldMask);
+              },
+              SystemExecutors.getFuturesExecutor());
+        },
+        SystemExecutors.getFuturesExecutor());
   }
 
   @Override

@@ -1,5 +1,38 @@
 # Changelog
 
+## [1.7.1](https://github.com/googleapis/java-pubsublite/compare/v1.7.0...v1.7.1) (2022-10-04)
+
+
+### Bug Fixes
+
+* Update SystemExecutors to only use 4 threads, always ([#1209](https://github.com/googleapis/java-pubsublite/issues/1209)) ([65cfb99](https://github.com/googleapis/java-pubsublite/commit/65cfb99b9bea78b3baf07242167a3ebb2adae615))
+
+
+### Documentation
+
+* [owlbot-java] samples do not need deploy plugin and deps upgrade ([#1583](https://github.com/googleapis/java-pubsublite/issues/1583)) ([#1212](https://github.com/googleapis/java-pubsublite/issues/1212)) ([aee0dc7](https://github.com/googleapis/java-pubsublite/commit/aee0dc7f8d277af03cc1d6b586f9d721c6871f6f))
+
+
+### Dependencies
+
+* Update dependency certifi to v2022.9.24 ([#1215](https://github.com/googleapis/java-pubsublite/issues/1215)) ([57d72d6](https://github.com/googleapis/java-pubsublite/commit/57d72d62ffe270fc5a07aae21951e32000823337))
+* Update dependency charset-normalizer to v2.1.1 ([#1219](https://github.com/googleapis/java-pubsublite/issues/1219)) ([1cba3cb](https://github.com/googleapis/java-pubsublite/commit/1cba3cb6152593a13a307a0d503210f3a74c0115))
+* Update dependency click to v8.1.3 ([#1220](https://github.com/googleapis/java-pubsublite/issues/1220)) ([50beca0](https://github.com/googleapis/java-pubsublite/commit/50beca0121f82e964b16c7de8f2d92ca15646331))
+* Update dependency com.google.cloud:google-cloud-pubsub to v1.120.14 ([#1205](https://github.com/googleapis/java-pubsublite/issues/1205)) ([6a86c66](https://github.com/googleapis/java-pubsublite/commit/6a86c66c2b29724f8b248130cea22242bb8eb189))
+* Update dependency com.google.cloud:google-cloud-pubsub to v1.120.18 ([#1238](https://github.com/googleapis/java-pubsublite/issues/1238)) ([668f27c](https://github.com/googleapis/java-pubsublite/commit/668f27ca7cd324a348e3621100383a309e99e616))
+* Update dependency com.google.cloud:google-cloud-shared-dependencies to v3.0.4 ([#1239](https://github.com/googleapis/java-pubsublite/issues/1239)) ([08032ea](https://github.com/googleapis/java-pubsublite/commit/08032eac8045de849a5f6c2fff5d4272d5942eb6))
+* Update dependency gcp-releasetool to v1.8.8 ([#1216](https://github.com/googleapis/java-pubsublite/issues/1216)) ([0756bcc](https://github.com/googleapis/java-pubsublite/commit/0756bcc13ee6cd0b44295c5a62ef2953a9fc2a45))
+* Update dependency google-api-core to v2.10.1 ([#1221](https://github.com/googleapis/java-pubsublite/issues/1221)) ([5a8f382](https://github.com/googleapis/java-pubsublite/commit/5a8f3824efea4f7bb652223b07b3a1fe0e18e00a))
+* Update dependency google-auth to v2.12.0 ([#1222](https://github.com/googleapis/java-pubsublite/issues/1222)) ([87b8156](https://github.com/googleapis/java-pubsublite/commit/87b8156a803bccf8ed2b7bebaac57a0462b050e6))
+* Update dependency google-cloud-core to v2.3.2 ([#1217](https://github.com/googleapis/java-pubsublite/issues/1217)) ([36fe064](https://github.com/googleapis/java-pubsublite/commit/36fe064bec8e7ef0c6a995dd2cd8b965b7b83ddc))
+* Update dependency google-cloud-storage to v2.5.0 ([#1223](https://github.com/googleapis/java-pubsublite/issues/1223)) ([713d81a](https://github.com/googleapis/java-pubsublite/commit/713d81a83bd649fd1eeef147d29dffe417299a01))
+* Update dependency googleapis-common-protos to v1.56.4 ([#1218](https://github.com/googleapis/java-pubsublite/issues/1218)) ([db83057](https://github.com/googleapis/java-pubsublite/commit/db8305775326d8c157add42febe8de12f0e516ed))
+* Update dependency importlib-metadata to v4.12.0 ([#1235](https://github.com/googleapis/java-pubsublite/issues/1235)) ([a63b054](https://github.com/googleapis/java-pubsublite/commit/a63b0543fb5df96b1a3e5c33ee48d986c5dfd6f0))
+* Update dependency jeepney to v0.8.0 ([#1236](https://github.com/googleapis/java-pubsublite/issues/1236)) ([d9bb970](https://github.com/googleapis/java-pubsublite/commit/d9bb970a8145f08bdac5f321dfd99791cbe03c5a))
+* Update dependency keyring to v23.9.3 ([#1226](https://github.com/googleapis/java-pubsublite/issues/1226)) ([2bcea09](https://github.com/googleapis/java-pubsublite/commit/2bcea09f784b254434dd45b92da640ddfa994f4b))
+* Update dependency markupsafe to v2.1.1 ([#1227](https://github.com/googleapis/java-pubsublite/issues/1227)) ([12d22d0](https://github.com/googleapis/java-pubsublite/commit/12d22d076fb01aa225ae6dd4a46040c84a809899))
+* Update dependency protobuf to v3.20.2 ([#1228](https://github.com/googleapis/java-pubsublite/issues/1228)) ([4e2f572](https://github.com/googleapis/java-pubsublite/commit/4e2f5722df0a88ad05ea60d4e57c10bb50818842))
+
 ## [1.7.0](https://github.com/googleapis/java-pubsublite/compare/v1.6.3...v1.7.0) (2022-09-15)
 
 

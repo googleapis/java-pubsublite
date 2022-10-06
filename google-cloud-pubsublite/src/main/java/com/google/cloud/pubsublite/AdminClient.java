@@ -129,6 +129,20 @@ public interface AdminClient extends ApiBackgroundResource {
       Subscription subscription, BacklogLocation startingOffset);
 
   /**
+   * Create the provided subscription at the given target location within the message backlog, if it
+   * does not yet exist.
+   *
+   * <p>A seek is initiated if the target location is a publish or event time. If the seek fails,
+   * the created subscription is not deleted.
+   *
+   * @param subscription The subscription to create.
+   * @param target The target location that the subscription should be initialized to.
+   * @return A future that will have either an error {@link com.google.api.gax.rpc.ApiException} or
+   *     the subscription on success.
+   */
+  ApiFuture<Subscription> createSubscription(Subscription subscription, SeekTarget target);
+
+  /**
    * Get the subscription with id {@code id} if it exists.
    *
    * @param path The path of the subscription to retrieve.

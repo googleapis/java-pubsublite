@@ -19,12 +19,14 @@ package pubsublite;
 import static com.google.common.truth.Truth.assertThat;
 import static junit.framework.TestCase.assertNotNull;
 
+import com.google.cloud.pubsub.v1.TopicAdminClient;
 import com.google.cloud.pubsublite.BacklogLocation;
 import com.google.cloud.pubsublite.CloudRegion;
 import com.google.cloud.pubsublite.ProjectNumber;
 import com.google.cloud.pubsublite.ReservationName;
 import com.google.cloud.pubsublite.ReservationPath;
 import com.google.cloud.pubsublite.SeekTarget;
+import com.google.pubsub.v1.TopicName;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.util.Random;
@@ -38,27 +40,32 @@ import org.junit.rules.Timeout;
 
 public class QuickStartIT {
 
+  private TopicAdminClient topicAdminClient;
   private ByteArrayOutputStream bout;
   private PrintStream out;
-  Random rand = new Random();
 
+  private static Random rand = new Random();
   private static final Long projectNumber =
       Long.parseLong(System.getenv("GOOGLE_CLOUD_PROJECT_NUMBER"));
-  private String cloudRegion = "us-central1";
-  private final char zoneId = (char) (rand.nextInt(3) + 'a');
+  private static final String cloudRegion = "us-central1";
+  private static final char zoneId = (char) (rand.nextInt(3) + 'a');
   private static final String suffix = UUID.randomUUID().toString();
   private static final String reservationId = "lite-reservation-" + suffix;
   private static final String topicId = "lite-topic-" + suffix;
   private static final String subscriptionId = "lite-subscription-" + suffix;
+  private static final String exportSubscriptionId = "lite-export-subscription-" + suffix;
+  private static final String pubsubTopicId = "pubsub-topic-" + suffix;
   private static final int partitions = 2;
   private static final int messageCount = 10;
 
-  ReservationPath reservationPath =
+  private static final ReservationPath reservationPath =
       ReservationPath.newBuilder()
           .setProject(ProjectNumber.of(projectNumber))
           .setLocation(CloudRegion.of(cloudRegion))
           .setName(ReservationName.of(reservationId))
           .build();
+  private static final TopicName pubsubTopicName =
+      TopicName.of(projectNumber.toString(), pubsubTopicId);
 
   private static void requireEnvVar(String varName) {
     assertNotNull(
@@ -75,6 +82,8 @@ public class QuickStartIT {
 
   @Before
   public void setUp() throws Exception {
+    topicAdminClient = TopicAdminClient.create();
+    topicAdminClient.createTopic(pubsubTopicName);
     bout = new ByteArrayOutputStream();
     out = new PrintStream(bout);
     System.setOut(out);
@@ -82,6 +91,8 @@ public class QuickStartIT {
 
   @After
   public void tearDown() throws Exception {
+    topicAdminClient.deleteTopic(pubsubTopicName);
+    topicAdminClient.close();
     System.setOut(null);
   }
 
@@ -183,6 +194,34 @@ public class QuickStartIT {
         cloudRegion, zoneId, projectNumber, topicId, subscriptionId, /*regional=*/ false);
     assertThat(
         bout.toString().contains(cloudRegion + "-" + zoneId + "/subscriptions/" + subscriptionId));
+    assertThat(bout.toString()).contains("created successfully");
+
+    bout.reset();
+    // Create a regional export subscription.
+    CreatePubsubExportSubscriptionExample.createPubsubExportSubscriptionExample(
+        cloudRegion,
+        zoneId,
+        projectNumber,
+        topicId,
+        exportSubscriptionId,
+        pubsubTopicId,
+        /*regional=*/ true);
+    assertThat(bout.toString().contains(cloudRegion + "/subscriptions/" + exportSubscriptionId));
+    assertThat(bout.toString()).contains("created successfully");
+
+    bout.reset();
+    // Create a zonal export subscription.
+    CreatePubsubExportSubscriptionExample.createPubsubExportSubscriptionExample(
+        cloudRegion,
+        zoneId,
+        projectNumber,
+        topicId,
+        exportSubscriptionId,
+        pubsubTopicId,
+        /*regional=*/ false);
+    assertThat(
+        bout.toString()
+            .contains(cloudRegion + "-" + zoneId + "/subscriptions/" + exportSubscriptionId));
     assertThat(bout.toString()).contains("created successfully");
 
     bout.reset();
@@ -337,6 +376,18 @@ public class QuickStartIT {
     // Delete a zonal subscription.
     DeleteSubscriptionExample.deleteSubscriptionExample(
         cloudRegion, zoneId, projectNumber, subscriptionId, /*regional=*/ false);
+    assertThat(bout.toString()).contains(" deleted successfully");
+
+    bout.reset();
+    // Delete a regional export subscription.
+    DeleteSubscriptionExample.deleteSubscriptionExample(
+        cloudRegion, zoneId, projectNumber, exportSubscriptionId, /*regional=*/ true);
+    assertThat(bout.toString()).contains(" deleted successfully");
+
+    bout.reset();
+    // Delete a zonal export subscription.
+    DeleteSubscriptionExample.deleteSubscriptionExample(
+        cloudRegion, zoneId, projectNumber, exportSubscriptionId, /*regional=*/ false);
     assertThat(bout.toString()).contains(" deleted successfully");
 
     bout.reset();

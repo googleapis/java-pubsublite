@@ -20,10 +20,12 @@ package pubsublite;
 import com.google.api.gax.rpc.AlreadyExistsException;
 import com.google.cloud.pubsublite.AdminClient;
 import com.google.cloud.pubsublite.AdminClientSettings;
+import com.google.cloud.pubsublite.BacklogLocation;
 import com.google.cloud.pubsublite.CloudRegion;
 import com.google.cloud.pubsublite.CloudRegionOrZone;
 import com.google.cloud.pubsublite.CloudZone;
 import com.google.cloud.pubsublite.ProjectNumber;
+import com.google.cloud.pubsublite.SeekTarget;
 import com.google.cloud.pubsublite.SubscriptionName;
 import com.google.cloud.pubsublite.SubscriptionPath;
 import com.google.cloud.pubsublite.TopicName;
@@ -112,6 +114,9 @@ public class CreatePubsubExportSubscriptionExample {
             .setTopic(topicPath.toString())
             .build();
 
+    // Target location within the message backlog that the subscription should be initialized to.
+    SeekTarget initialLocation = SeekTarget.of(BacklogLocation.BEGINNING);
+
     AdminClientSettings adminClientSettings =
         AdminClientSettings.newBuilder().setRegion(location.extractRegion()).build();
 
@@ -120,7 +125,7 @@ public class CreatePubsubExportSubscriptionExample {
     // the "close" method on the client to safely clean up any remaining background resources, or
     // use "try-with-close" statement to do this automatically.
     try (AdminClient adminClient = AdminClient.create(adminClientSettings)) {
-      Subscription response = adminClient.createSubscription(subscription).get();
+      Subscription response = adminClient.createSubscription(subscription, initialLocation).get();
       System.out.println(response.getAllFields() + " created successfully.");
     } catch (ExecutionException e) {
       try {

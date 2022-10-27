@@ -1,5 +1,22 @@
 # Changelog
 
+## [1.8.0](https://github.com/googleapis/java-pubsublite/compare/v1.7.1...v1.8.0) (2022-10-27)
+
+
+### Features
+
+* Create subscriptions at a seek target ([#1243](https://github.com/googleapis/java-pubsublite/issues/1243)) ([c0802c3](https://github.com/googleapis/java-pubsublite/commit/c0802c37da35a29bd435d864b6503014c8552e77))
+
+
+### Dependencies
+
+* Update dependency com.google.auto.value:auto-value to v1.10 ([#1246](https://github.com/googleapis/java-pubsublite/issues/1246)) ([d566f8a](https://github.com/googleapis/java-pubsublite/commit/d566f8a6a9b8173d015b7faf3d4f5104dbe1eb13))
+* Update dependency com.google.cloud:google-cloud-pubsub to v1.120.19 ([#1240](https://github.com/googleapis/java-pubsublite/issues/1240)) ([90e5cbf](https://github.com/googleapis/java-pubsublite/commit/90e5cbfeea17d747623c2cf5b0ed1b8055adb96f))
+* Update dependency com.google.cloud:google-cloud-pubsub to v1.120.20 ([#1245](https://github.com/googleapis/java-pubsublite/issues/1245)) ([12fd28d](https://github.com/googleapis/java-pubsublite/commit/12fd28d544486e028e7bc19b7047a31d9ded5e98))
+* Update dependency com.google.cloud:google-cloud-pubsub to v1.120.21 ([#1248](https://github.com/googleapis/java-pubsublite/issues/1248)) ([f3c6622](https://github.com/googleapis/java-pubsublite/commit/f3c6622eee3fec7781bb56ac77dc14a985f896a9))
+* Update dependency com.google.cloud:google-cloud-pubsub to v1.120.22 ([#1249](https://github.com/googleapis/java-pubsublite/issues/1249)) ([0393aae](https://github.com/googleapis/java-pubsublite/commit/0393aae963bd1eb36763243890df80963dfad28b))
+* Update dependency com.google.cloud:google-cloud-shared-dependencies to v3.0.5 ([#1252](https://github.com/googleapis/java-pubsublite/issues/1252)) ([ed301d7](https://github.com/googleapis/java-pubsublite/commit/ed301d78186fcabcddc902a6807d5bea55fa2173))
+
 ## [1.7.1](https://github.com/googleapis/java-pubsublite/compare/v1.7.0...v1.7.1) (2022-10-04)
 
 

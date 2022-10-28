@@ -24,7 +24,7 @@ If you are using Maven, add this to your pom.xml file:
 <dependency>
   <groupId>com.google.cloud</groupId>
   <artifactId>google-cloud-pubsub</artifactId>
-  <version>1.120.23</version>
+  <version>1.120.24</version>
 </dependency>
 
 ```
@@ -32,13 +32,13 @@ If you are using Maven, add this to your pom.xml file:
 If you are using Gradle without BOM, add this to your dependencies:
 
 ```Groovy
-implementation 'com.google.cloud:google-cloud-pubsublite:1.7.1'
+implementation 'com.google.cloud:google-cloud-pubsublite:1.8.0'
 ```
 
 If you are using SBT, add this to your dependencies:
 
 ```Scala
-libraryDependencies += "com.google.cloud" % "google-cloud-pubsublite" % "1.7.1"
+libraryDependencies += "com.google.cloud" % "google-cloud-pubsublite" % "1.8.0"
 ```
 
 ## Authentication

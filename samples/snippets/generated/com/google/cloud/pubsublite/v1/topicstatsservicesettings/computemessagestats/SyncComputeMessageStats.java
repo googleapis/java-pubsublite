@@ -16,7 +16,7 @@
 
 package com.google.cloud.pubsublite.v1.samples;
 
-// [START pubsublite_v1_generated_topicstatsservicesettings_computemessagestats_sync]
+// [START pubsublite_v1_generated_TopicStatsServiceSettings_ComputeMessageStats_sync]
 import com.google.cloud.pubsublite.v1.TopicStatsServiceSettings;
 import java.time.Duration;
 
@@ -46,4 +46,4 @@ public class SyncComputeMessageStats {
     TopicStatsServiceSettings topicStatsServiceSettings = topicStatsServiceSettingsBuilder.build();
   }
 }
-// [END pubsublite_v1_generated_topicstatsservicesettings_computemessagestats_sync]
+// [END pubsublite_v1_generated_TopicStatsServiceSettings_ComputeMessageStats_sync]

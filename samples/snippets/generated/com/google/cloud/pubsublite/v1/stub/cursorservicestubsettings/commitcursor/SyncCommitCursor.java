@@ -16,7 +16,7 @@
 
 package com.google.cloud.pubsublite.v1.stub.samples;
 
-// [START pubsublite_v1_generated_cursorservicestubsettings_commitcursor_sync]
+// [START pubsublite_v1_generated_CursorServiceStubSettings_CommitCursor_sync]
 import com.google.cloud.pubsublite.v1.stub.CursorServiceStubSettings;
 import java.time.Duration;
 
@@ -43,4 +43,4 @@ public class SyncCommitCursor {
     CursorServiceStubSettings cursorServiceSettings = cursorServiceSettingsBuilder.build();
   }
 }
-// [END pubsublite_v1_generated_cursorservicestubsettings_commitcursor_sync]
+// [END pubsublite_v1_generated_CursorServiceStubSettings_CommitCursor_sync]

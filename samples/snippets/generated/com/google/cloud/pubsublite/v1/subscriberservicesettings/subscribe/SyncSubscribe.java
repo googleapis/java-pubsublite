@@ -16,7 +16,7 @@
 
 package com.google.cloud.pubsublite.v1.samples;
 
-// [START pubsublite_v1_generated_subscriberservicesettings_subscribe_sync]
+// [START pubsublite_v1_generated_SubscriberServiceSettings_Subscribe_sync]
 import com.google.cloud.pubsublite.v1.SubscriberServiceSettings;
 import java.time.Duration;
 
@@ -43,4 +43,4 @@ public class SyncSubscribe {
     SubscriberServiceSettings subscriberServiceSettings = subscriberServiceSettingsBuilder.build();
   }
 }
-// [END pubsublite_v1_generated_subscriberservicesettings_subscribe_sync]
+// [END pubsublite_v1_generated_SubscriberServiceSettings_Subscribe_sync]

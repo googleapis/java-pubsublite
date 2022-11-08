@@ -16,7 +16,7 @@
 
 package com.google.cloud.pubsublite.v1.stub.samples;
 
-// [START pubsublite_v1_generated_adminservicestubsettings_createtopic_sync]
+// [START pubsublite_v1_generated_AdminServiceStubSettings_CreateTopic_sync]
 import com.google.cloud.pubsublite.v1.stub.AdminServiceStubSettings;
 import java.time.Duration;
 
@@ -43,4 +43,4 @@ public class SyncCreateTopic {
     AdminServiceStubSettings adminServiceSettings = adminServiceSettingsBuilder.build();
   }
 }
-// [END pubsublite_v1_generated_adminservicestubsettings_createtopic_sync]
+// [END pubsublite_v1_generated_AdminServiceStubSettings_CreateTopic_sync]

@@ -16,7 +16,7 @@
 
 package com.google.cloud.pubsublite.v1.stub.samples;
 
-// [START pubsublite_v1_generated_partitionassignmentservicestubsettings_assignpartitions_sync]
+// [START pubsublite_v1_generated_PartitionAssignmentServiceStubSettings_AssignPartitions_sync]
 import com.google.cloud.pubsublite.v1.stub.PartitionAssignmentServiceStubSettings;
 import java.time.Duration;
 
@@ -47,4 +47,4 @@ public class SyncAssignPartitions {
         partitionAssignmentServiceSettingsBuilder.build();
   }
 }
-// [END pubsublite_v1_generated_partitionassignmentservicestubsettings_assignpartitions_sync]
+// [END pubsublite_v1_generated_PartitionAssignmentServiceStubSettings_AssignPartitions_sync]

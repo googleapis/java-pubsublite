@@ -40,6 +40,7 @@ public final class ExportConfig extends com.google.protobuf.GeneratedMessageV3
 
   private ExportConfig() {
     desiredState_ = 0;
+    currentState_ = 0;
     statuses_ = java.util.Collections.emptyList();
     deadLetterTopic_ = "";
   }
@@ -74,7 +75,7 @@ public final class ExportConfig extends com.google.protobuf.GeneratedMessageV3
    *
    *
    * <pre>
-   * An export state.
+   * The desired export state.
    * </pre>
    *
    * Protobuf enum {@code google.cloud.pubsublite.v1.ExportConfig.State}
@@ -110,6 +111,26 @@ public final class ExportConfig extends com.google.protobuf.GeneratedMessageV3
      * <code>PAUSED = 2;</code>
      */
     PAUSED(2),
+    /**
+     *
+     *
+     * <pre>
+     * Messages cannot be exported due to permission denied errors. Output only.
+     * </pre>
+     *
+     * <code>PERMISSION_DENIED = 3;</code>
+     */
+    PERMISSION_DENIED(3),
+    /**
+     *
+     *
+     * <pre>
+     * Messages cannot be exported due to missing resources. Output only.
+     * </pre>
+     *
+     * <code>NOT_FOUND = 4;</code>
+     */
+    NOT_FOUND(4),
     UNRECOGNIZED(-1),
     ;
 
@@ -143,6 +164,26 @@ public final class ExportConfig extends com.google.protobuf.GeneratedMessageV3
      * <code>PAUSED = 2;</code>
      */
     public static final int PAUSED_VALUE = 2;
+    /**
+     *
+     *
+     * <pre>
+     * Messages cannot be exported due to permission denied errors. Output only.
+     * </pre>
+     *
+     * <code>PERMISSION_DENIED = 3;</code>
+     */
+    public static final int PERMISSION_DENIED_VALUE = 3;
+    /**
+     *
+     *
+     * <pre>
+     * Messages cannot be exported due to missing resources. Output only.
+     * </pre>
+     *
+     * <code>NOT_FOUND = 4;</code>
+     */
+    public static final int NOT_FOUND_VALUE = 4;
 
     public final int getNumber() {
       if (this == UNRECOGNIZED) {
@@ -174,6 +215,10 @@ public final class ExportConfig extends com.google.protobuf.GeneratedMessageV3
           return ACTIVE;
         case 2:
           return PAUSED;
+        case 3:
+          return PERMISSION_DENIED;
+        case 4:
+          return NOT_FOUND;
         default:
           return null;
       }
@@ -1848,7 +1893,8 @@ public final class ExportConfig extends com.google.protobuf.GeneratedMessageV3
    *
    *
    * <pre>
-   * The desired state of this export.
+   * The desired state of this export. Setting this to values other than
+   * `ACTIVE` and `PAUSED` will result in an error.
    * </pre>
    *
    * <code>.google.cloud.pubsublite.v1.ExportConfig.State desired_state = 1;</code>
@@ -1863,7 +1909,8 @@ public final class ExportConfig extends com.google.protobuf.GeneratedMessageV3
    *
    *
    * <pre>
-   * The desired state of this export.
+   * The desired state of this export. Setting this to values other than
+   * `ACTIVE` and `PAUSED` will result in an error.
    * </pre>
    *
    * <code>.google.cloud.pubsublite.v1.ExportConfig.State desired_state = 1;</code>
@@ -1880,20 +1927,66 @@ public final class ExportConfig extends com.google.protobuf.GeneratedMessageV3
         : result;
   }
 
+  public static final int CURRENT_STATE_FIELD_NUMBER = 6;
+  private int currentState_;
+  /**
+   *
+   *
+   * <pre>
+   * Output only. The current state of the export, which may be different to the desired
+   * state due to errors.
+   * </pre>
+   *
+   * <code>
+   * .google.cloud.pubsublite.v1.ExportConfig.State current_state = 6 [(.google.api.field_behavior) = OUTPUT_ONLY];
+   * </code>
+   *
+   * @return The enum numeric value on the wire for currentState.
+   */
+  @java.lang.Override
+  public int getCurrentStateValue() {
+    return currentState_;
+  }
+  /**
+   *
+   *
+   * <pre>
+   * Output only. The current state of the export, which may be different to the desired
+   * state due to errors.
+   * </pre>
+   *
+   * <code>
+   * .google.cloud.pubsublite.v1.ExportConfig.State current_state = 6 [(.google.api.field_behavior) = OUTPUT_ONLY];
+   * </code>
+   *
+   * @return The currentState.
+   */
+  @java.lang.Override
+  public com.google.cloud.pubsublite.proto.ExportConfig.State getCurrentState() {
+    @SuppressWarnings("deprecation")
+    com.google.cloud.pubsublite.proto.ExportConfig.State result =
+        com.google.cloud.pubsublite.proto.ExportConfig.State.valueOf(currentState_);
+    return result == null
+        ? com.google.cloud.pubsublite.proto.ExportConfig.State.UNRECOGNIZED
+        : result;
+  }
+
   public static final int STATUSES_FIELD_NUMBER = 4;
   private java.util.List<com.google.cloud.pubsublite.proto.ExportConfig.PartitionStatus> statuses_;
   /**
    *
    *
    * <pre>
-   * Output only. The export statuses of each partition. This field is output only.
+   * Output only. Deprecated: replaced by `current_state`.
+   * The export statuses of each partition.
    * </pre>
    *
    * <code>
-   * repeated .google.cloud.pubsublite.v1.ExportConfig.PartitionStatus statuses = 4 [(.google.api.field_behavior) = OUTPUT_ONLY];
+   * repeated .google.cloud.pubsublite.v1.ExportConfig.PartitionStatus statuses = 4 [deprecated = true, (.google.api.field_behavior) = OUTPUT_ONLY];
    * </code>
    */
   @java.lang.Override
+  @java.lang.Deprecated
   public java.util.List<com.google.cloud.pubsublite.proto.ExportConfig.PartitionStatus>
       getStatusesList() {
     return statuses_;
@@ -1902,14 +1995,16 @@ public final class ExportConfig extends com.google.protobuf.GeneratedMessageV3
    *
    *
    * <pre>
-   * Output only. The export statuses of each partition. This field is output only.
+   * Output only. Deprecated: replaced by `current_state`.
+   * The export statuses of each partition.
    * </pre>
    *
    * <code>
-   * repeated .google.cloud.pubsublite.v1.ExportConfig.PartitionStatus statuses = 4 [(.google.api.field_behavior) = OUTPUT_ONLY];
+   * repeated .google.cloud.pubsublite.v1.ExportConfig.PartitionStatus statuses = 4 [deprecated = true, (.google.api.field_behavior) = OUTPUT_ONLY];
    * </code>
    */
   @java.lang.Override
+  @java.lang.Deprecated
   public java.util.List<
           ? extends com.google.cloud.pubsublite.proto.ExportConfig.PartitionStatusOrBuilder>
       getStatusesOrBuilderList() {
@@ -1919,14 +2014,16 @@ public final class ExportConfig extends com.google.protobuf.GeneratedMessageV3
    *
    *
    * <pre>
-   * Output only. The export statuses of each partition. This field is output only.
+   * Output only. Deprecated: replaced by `current_state`.
+   * The export statuses of each partition.
    * </pre>
    *
    * <code>
-   * repeated .google.cloud.pubsublite.v1.ExportConfig.PartitionStatus statuses = 4 [(.google.api.field_behavior) = OUTPUT_ONLY];
+   * repeated .google.cloud.pubsublite.v1.ExportConfig.PartitionStatus statuses = 4 [deprecated = true, (.google.api.field_behavior) = OUTPUT_ONLY];
    * </code>
    */
   @java.lang.Override
+  @java.lang.Deprecated
   public int getStatusesCount() {
     return statuses_.size();
   }
@@ -1934,14 +2031,16 @@ public final class ExportConfig extends com.google.protobuf.GeneratedMessageV3
    *
    *
    * <pre>
-   * Output only. The export statuses of each partition. This field is output only.
+   * Output only. Deprecated: replaced by `current_state`.
+   * The export statuses of each partition.
    * </pre>
    *
    * <code>
-   * repeated .google.cloud.pubsublite.v1.ExportConfig.PartitionStatus statuses = 4 [(.google.api.field_behavior) = OUTPUT_ONLY];
+   * repeated .google.cloud.pubsublite.v1.ExportConfig.PartitionStatus statuses = 4 [deprecated = true, (.google.api.field_behavior) = OUTPUT_ONLY];
    * </code>
    */
   @java.lang.Override
+  @java.lang.Deprecated
   public com.google.cloud.pubsublite.proto.ExportConfig.PartitionStatus getStatuses(int index) {
     return statuses_.get(index);
   }
@@ -1949,14 +2048,16 @@ public final class ExportConfig extends com.google.protobuf.GeneratedMessageV3
    *
    *
    * <pre>
-   * Output only. The export statuses of each partition. This field is output only.
+   * Output only. Deprecated: replaced by `current_state`.
+   * The export statuses of each partition.
    * </pre>
    *
    * <code>
-   * repeated .google.cloud.pubsublite.v1.ExportConfig.PartitionStatus statuses = 4 [(.google.api.field_behavior) = OUTPUT_ONLY];
+   * repeated .google.cloud.pubsublite.v1.ExportConfig.PartitionStatus statuses = 4 [deprecated = true, (.google.api.field_behavior) = OUTPUT_ONLY];
    * </code>
    */
   @java.lang.Override
+  @java.lang.Deprecated
   public com.google.cloud.pubsublite.proto.ExportConfig.PartitionStatusOrBuilder
       getStatusesOrBuilder(int index) {
     return statuses_.get(index);
@@ -2112,6 +2213,10 @@ public final class ExportConfig extends com.google.protobuf.GeneratedMessageV3
     if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(deadLetterTopic_)) {
       com.google.protobuf.GeneratedMessageV3.writeString(output, 5, deadLetterTopic_);
     }
+    if (currentState_
+        != com.google.cloud.pubsublite.proto.ExportConfig.State.STATE_UNSPECIFIED.getNumber()) {
+      output.writeEnum(6, currentState_);
+    }
     getUnknownFields().writeTo(output);
   }
 
@@ -2136,6 +2241,10 @@ public final class ExportConfig extends com.google.protobuf.GeneratedMessageV3
     if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(deadLetterTopic_)) {
       size += com.google.protobuf.GeneratedMessageV3.computeStringSize(5, deadLetterTopic_);
     }
+    if (currentState_
+        != com.google.cloud.pubsublite.proto.ExportConfig.State.STATE_UNSPECIFIED.getNumber()) {
+      size += com.google.protobuf.CodedOutputStream.computeEnumSize(6, currentState_);
+    }
     size += getUnknownFields().getSerializedSize();
     memoizedSize = size;
     return size;
@@ -2153,6 +2262,7 @@ public final class ExportConfig extends com.google.protobuf.GeneratedMessageV3
         (com.google.cloud.pubsublite.proto.ExportConfig) obj;
 
     if (desiredState_ != other.desiredState_) return false;
+    if (currentState_ != other.currentState_) return false;
     if (!getStatusesList().equals(other.getStatusesList())) return false;
     if (!getDeadLetterTopic().equals(other.getDeadLetterTopic())) return false;
     if (!getDestinationCase().equals(other.getDestinationCase())) return false;
@@ -2176,6 +2286,8 @@ public final class ExportConfig extends com.google.protobuf.GeneratedMessageV3
     hash = (19 * hash) + getDescriptor().hashCode();
     hash = (37 * hash) + DESIRED_STATE_FIELD_NUMBER;
     hash = (53 * hash) + desiredState_;
+    hash = (37 * hash) + CURRENT_STATE_FIELD_NUMBER;
+    hash = (53 * hash) + currentState_;
     if (getStatusesCount() > 0) {
       hash = (37 * hash) + STATUSES_FIELD_NUMBER;
       hash = (53 * hash) + getStatusesList().hashCode();
@@ -2331,6 +2443,8 @@ public final class ExportConfig extends com.google.protobuf.GeneratedMessageV3
       super.clear();
       desiredState_ = 0;
 
+      currentState_ = 0;
+
       if (statusesBuilder_ == null) {
         statuses_ = java.util.Collections.emptyList();
       } else {
@@ -2374,6 +2488,7 @@ public final class ExportConfig extends com.google.protobuf.GeneratedMessageV3
           new com.google.cloud.pubsublite.proto.ExportConfig(this);
       int from_bitField0_ = bitField0_;
       result.desiredState_ = desiredState_;
+      result.currentState_ = currentState_;
       if (statusesBuilder_ == null) {
         if (((bitField0_ & 0x00000001) != 0)) {
           statuses_ = java.util.Collections.unmodifiableList(statuses_);
@@ -2443,6 +2558,9 @@ public final class ExportConfig extends com.google.protobuf.GeneratedMessageV3
       if (other == com.google.cloud.pubsublite.proto.ExportConfig.getDefaultInstance()) return this;
       if (other.desiredState_ != 0) {
         setDesiredStateValue(other.getDesiredStateValue());
+      }
+      if (other.currentState_ != 0) {
+        setCurrentStateValue(other.getCurrentStateValue());
       }
       if (statusesBuilder_ == null) {
         if (!other.statuses_.isEmpty()) {
@@ -2544,6 +2662,12 @@ public final class ExportConfig extends com.google.protobuf.GeneratedMessageV3
 
                 break;
               } // case 42
+            case 48:
+              {
+                currentState_ = input.readEnum();
+
+                break;
+              } // case 48
             default:
               {
                 if (!super.parseUnknownField(input, extensionRegistry, tag)) {
@@ -2582,7 +2706,8 @@ public final class ExportConfig extends com.google.protobuf.GeneratedMessageV3
      *
      *
      * <pre>
-     * The desired state of this export.
+     * The desired state of this export. Setting this to values other than
+     * `ACTIVE` and `PAUSED` will result in an error.
      * </pre>
      *
      * <code>.google.cloud.pubsublite.v1.ExportConfig.State desired_state = 1;</code>
@@ -2597,7 +2722,8 @@ public final class ExportConfig extends com.google.protobuf.GeneratedMessageV3
      *
      *
      * <pre>
-     * The desired state of this export.
+     * The desired state of this export. Setting this to values other than
+     * `ACTIVE` and `PAUSED` will result in an error.
      * </pre>
      *
      * <code>.google.cloud.pubsublite.v1.ExportConfig.State desired_state = 1;</code>
@@ -2615,7 +2741,8 @@ public final class ExportConfig extends com.google.protobuf.GeneratedMessageV3
      *
      *
      * <pre>
-     * The desired state of this export.
+     * The desired state of this export. Setting this to values other than
+     * `ACTIVE` and `PAUSED` will result in an error.
      * </pre>
      *
      * <code>.google.cloud.pubsublite.v1.ExportConfig.State desired_state = 1;</code>
@@ -2635,7 +2762,8 @@ public final class ExportConfig extends com.google.protobuf.GeneratedMessageV3
      *
      *
      * <pre>
-     * The desired state of this export.
+     * The desired state of this export. Setting this to values other than
+     * `ACTIVE` and `PAUSED` will result in an error.
      * </pre>
      *
      * <code>.google.cloud.pubsublite.v1.ExportConfig.State desired_state = 1;</code>
@@ -2656,7 +2784,8 @@ public final class ExportConfig extends com.google.protobuf.GeneratedMessageV3
      *
      *
      * <pre>
-     * The desired state of this export.
+     * The desired state of this export. Setting this to values other than
+     * `ACTIVE` and `PAUSED` will result in an error.
      * </pre>
      *
      * <code>.google.cloud.pubsublite.v1.ExportConfig.State desired_state = 1;</code>
@@ -2666,6 +2795,114 @@ public final class ExportConfig extends com.google.protobuf.GeneratedMessageV3
     public Builder clearDesiredState() {
 
       desiredState_ = 0;
+      onChanged();
+      return this;
+    }
+
+    private int currentState_ = 0;
+    /**
+     *
+     *
+     * <pre>
+     * Output only. The current state of the export, which may be different to the desired
+     * state due to errors.
+     * </pre>
+     *
+     * <code>
+     * .google.cloud.pubsublite.v1.ExportConfig.State current_state = 6 [(.google.api.field_behavior) = OUTPUT_ONLY];
+     * </code>
+     *
+     * @return The enum numeric value on the wire for currentState.
+     */
+    @java.lang.Override
+    public int getCurrentStateValue() {
+      return currentState_;
+    }
+    /**
+     *
+     *
+     * <pre>
+     * Output only. The current state of the export, which may be different to the desired
+     * state due to errors.
+     * </pre>
+     *
+     * <code>
+     * .google.cloud.pubsublite.v1.ExportConfig.State current_state = 6 [(.google.api.field_behavior) = OUTPUT_ONLY];
+     * </code>
+     *
+     * @param value The enum numeric value on the wire for currentState to set.
+     * @return This builder for chaining.
+     */
+    public Builder setCurrentStateValue(int value) {
+
+      currentState_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     *
+     *
+     * <pre>
+     * Output only. The current state of the export, which may be different to the desired
+     * state due to errors.
+     * </pre>
+     *
+     * <code>
+     * .google.cloud.pubsublite.v1.ExportConfig.State current_state = 6 [(.google.api.field_behavior) = OUTPUT_ONLY];
+     * </code>
+     *
+     * @return The currentState.
+     */
+    @java.lang.Override
+    public com.google.cloud.pubsublite.proto.ExportConfig.State getCurrentState() {
+      @SuppressWarnings("deprecation")
+      com.google.cloud.pubsublite.proto.ExportConfig.State result =
+          com.google.cloud.pubsublite.proto.ExportConfig.State.valueOf(currentState_);
+      return result == null
+          ? com.google.cloud.pubsublite.proto.ExportConfig.State.UNRECOGNIZED
+          : result;
+    }
+    /**
+     *
+     *
+     * <pre>
+     * Output only. The current state of the export, which may be different to the desired
+     * state due to errors.
+     * </pre>
+     *
+     * <code>
+     * .google.cloud.pubsublite.v1.ExportConfig.State current_state = 6 [(.google.api.field_behavior) = OUTPUT_ONLY];
+     * </code>
+     *
+     * @param value The currentState to set.
+     * @return This builder for chaining.
+     */
+    public Builder setCurrentState(com.google.cloud.pubsublite.proto.ExportConfig.State value) {
+      if (value == null) {
+        throw new NullPointerException();
+      }
+
+      currentState_ = value.getNumber();
+      onChanged();
+      return this;
+    }
+    /**
+     *
+     *
+     * <pre>
+     * Output only. The current state of the export, which may be different to the desired
+     * state due to errors.
+     * </pre>
+     *
+     * <code>
+     * .google.cloud.pubsublite.v1.ExportConfig.State current_state = 6 [(.google.api.field_behavior) = OUTPUT_ONLY];
+     * </code>
+     *
+     * @return This builder for chaining.
+     */
+    public Builder clearCurrentState() {
+
+      currentState_ = 0;
       onChanged();
       return this;
     }
@@ -2692,13 +2929,15 @@ public final class ExportConfig extends com.google.protobuf.GeneratedMessageV3
      *
      *
      * <pre>
-     * Output only. The export statuses of each partition. This field is output only.
+     * Output only. Deprecated: replaced by `current_state`.
+     * The export statuses of each partition.
      * </pre>
      *
      * <code>
-     * repeated .google.cloud.pubsublite.v1.ExportConfig.PartitionStatus statuses = 4 [(.google.api.field_behavior) = OUTPUT_ONLY];
+     * repeated .google.cloud.pubsublite.v1.ExportConfig.PartitionStatus statuses = 4 [deprecated = true, (.google.api.field_behavior) = OUTPUT_ONLY];
      * </code>
      */
+    @java.lang.Deprecated
     public java.util.List<com.google.cloud.pubsublite.proto.ExportConfig.PartitionStatus>
         getStatusesList() {
       if (statusesBuilder_ == null) {
@@ -2711,13 +2950,15 @@ public final class ExportConfig extends com.google.protobuf.GeneratedMessageV3
      *
      *
      * <pre>
-     * Output only. The export statuses of each partition. This field is output only.
+     * Output only. Deprecated: replaced by `current_state`.
+     * The export statuses of each partition.
      * </pre>
      *
      * <code>
-     * repeated .google.cloud.pubsublite.v1.ExportConfig.PartitionStatus statuses = 4 [(.google.api.field_behavior) = OUTPUT_ONLY];
+     * repeated .google.cloud.pubsublite.v1.ExportConfig.PartitionStatus statuses = 4 [deprecated = true, (.google.api.field_behavior) = OUTPUT_ONLY];
      * </code>
      */
+    @java.lang.Deprecated
     public int getStatusesCount() {
       if (statusesBuilder_ == null) {
         return statuses_.size();
@@ -2729,13 +2970,15 @@ public final class ExportConfig extends com.google.protobuf.GeneratedMessageV3
      *
      *
      * <pre>
-     * Output only. The export statuses of each partition. This field is output only.
+     * Output only. Deprecated: replaced by `current_state`.
+     * The export statuses of each partition.
      * </pre>
      *
      * <code>
-     * repeated .google.cloud.pubsublite.v1.ExportConfig.PartitionStatus statuses = 4 [(.google.api.field_behavior) = OUTPUT_ONLY];
+     * repeated .google.cloud.pubsublite.v1.ExportConfig.PartitionStatus statuses = 4 [deprecated = true, (.google.api.field_behavior) = OUTPUT_ONLY];
      * </code>
      */
+    @java.lang.Deprecated
     public com.google.cloud.pubsublite.proto.ExportConfig.PartitionStatus getStatuses(int index) {
       if (statusesBuilder_ == null) {
         return statuses_.get(index);
@@ -2747,13 +2990,15 @@ public final class ExportConfig extends com.google.protobuf.GeneratedMessageV3
      *
      *
      * <pre>
-     * Output only. The export statuses of each partition. This field is output only.
+     * Output only. Deprecated: replaced by `current_state`.
+     * The export statuses of each partition.
      * </pre>
      *
      * <code>
-     * repeated .google.cloud.pubsublite.v1.ExportConfig.PartitionStatus statuses = 4 [(.google.api.field_behavior) = OUTPUT_ONLY];
+     * repeated .google.cloud.pubsublite.v1.ExportConfig.PartitionStatus statuses = 4 [deprecated = true, (.google.api.field_behavior) = OUTPUT_ONLY];
      * </code>
      */
+    @java.lang.Deprecated
     public Builder setStatuses(
         int index, com.google.cloud.pubsublite.proto.ExportConfig.PartitionStatus value) {
       if (statusesBuilder_ == null) {
@@ -2772,13 +3017,15 @@ public final class ExportConfig extends com.google.protobuf.GeneratedMessageV3
      *
      *
      * <pre>
-     * Output only. The export statuses of each partition. This field is output only.
+     * Output only. Deprecated: replaced by `current_state`.
+     * The export statuses of each partition.
      * </pre>
      *
      * <code>
-     * repeated .google.cloud.pubsublite.v1.ExportConfig.PartitionStatus statuses = 4 [(.google.api.field_behavior) = OUTPUT_ONLY];
+     * repeated .google.cloud.pubsublite.v1.ExportConfig.PartitionStatus statuses = 4 [deprecated = true, (.google.api.field_behavior) = OUTPUT_ONLY];
      * </code>
      */
+    @java.lang.Deprecated
     public Builder setStatuses(
         int index,
         com.google.cloud.pubsublite.proto.ExportConfig.PartitionStatus.Builder builderForValue) {
@@ -2795,13 +3042,15 @@ public final class ExportConfig extends com.google.protobuf.GeneratedMessageV3
      *
      *
      * <pre>
-     * Output only. The export statuses of each partition. This field is output only.
+     * Output only. Deprecated: replaced by `current_state`.
+     * The export statuses of each partition.
      * </pre>
      *
      * <code>
-     * repeated .google.cloud.pubsublite.v1.ExportConfig.PartitionStatus statuses = 4 [(.google.api.field_behavior) = OUTPUT_ONLY];
+     * repeated .google.cloud.pubsublite.v1.ExportConfig.PartitionStatus statuses = 4 [deprecated = true, (.google.api.field_behavior) = OUTPUT_ONLY];
      * </code>
      */
+    @java.lang.Deprecated
     public Builder addStatuses(
         com.google.cloud.pubsublite.proto.ExportConfig.PartitionStatus value) {
       if (statusesBuilder_ == null) {
@@ -2820,13 +3069,15 @@ public final class ExportConfig extends com.google.protobuf.GeneratedMessageV3
      *
      *
      * <pre>
-     * Output only. The export statuses of each partition. This field is output only.
+     * Output only. Deprecated: replaced by `current_state`.
+     * The export statuses of each partition.
      * </pre>
      *
      * <code>
-     * repeated .google.cloud.pubsublite.v1.ExportConfig.PartitionStatus statuses = 4 [(.google.api.field_behavior) = OUTPUT_ONLY];
+     * repeated .google.cloud.pubsublite.v1.ExportConfig.PartitionStatus statuses = 4 [deprecated = true, (.google.api.field_behavior) = OUTPUT_ONLY];
      * </code>
      */
+    @java.lang.Deprecated
     public Builder addStatuses(
         int index, com.google.cloud.pubsublite.proto.ExportConfig.PartitionStatus value) {
       if (statusesBuilder_ == null) {
@@ -2845,13 +3096,15 @@ public final class ExportConfig extends com.google.protobuf.GeneratedMessageV3
      *
      *
      * <pre>
-     * Output only. The export statuses of each partition. This field is output only.
+     * Output only. Deprecated: replaced by `current_state`.
+     * The export statuses of each partition.
      * </pre>
      *
      * <code>
-     * repeated .google.cloud.pubsublite.v1.ExportConfig.PartitionStatus statuses = 4 [(.google.api.field_behavior) = OUTPUT_ONLY];
+     * repeated .google.cloud.pubsublite.v1.ExportConfig.PartitionStatus statuses = 4 [deprecated = true, (.google.api.field_behavior) = OUTPUT_ONLY];
      * </code>
      */
+    @java.lang.Deprecated
     public Builder addStatuses(
         com.google.cloud.pubsublite.proto.ExportConfig.PartitionStatus.Builder builderForValue) {
       if (statusesBuilder_ == null) {
@@ -2867,13 +3120,15 @@ public final class ExportConfig extends com.google.protobuf.GeneratedMessageV3
      *
      *
      * <pre>
-     * Output only. The export statuses of each partition. This field is output only.
+     * Output only. Deprecated: replaced by `current_state`.
+     * The export statuses of each partition.
      * </pre>
      *
      * <code>
-     * repeated .google.cloud.pubsublite.v1.ExportConfig.PartitionStatus statuses = 4 [(.google.api.field_behavior) = OUTPUT_ONLY];
+     * repeated .google.cloud.pubsublite.v1.ExportConfig.PartitionStatus statuses = 4 [deprecated = true, (.google.api.field_behavior) = OUTPUT_ONLY];
      * </code>
      */
+    @java.lang.Deprecated
     public Builder addStatuses(
         int index,
         com.google.cloud.pubsublite.proto.ExportConfig.PartitionStatus.Builder builderForValue) {
@@ -2890,13 +3145,15 @@ public final class ExportConfig extends com.google.protobuf.GeneratedMessageV3
      *
      *
      * <pre>
-     * Output only. The export statuses of each partition. This field is output only.
+     * Output only. Deprecated: replaced by `current_state`.
+     * The export statuses of each partition.
      * </pre>
      *
      * <code>
-     * repeated .google.cloud.pubsublite.v1.ExportConfig.PartitionStatus statuses = 4 [(.google.api.field_behavior) = OUTPUT_ONLY];
+     * repeated .google.cloud.pubsublite.v1.ExportConfig.PartitionStatus statuses = 4 [deprecated = true, (.google.api.field_behavior) = OUTPUT_ONLY];
      * </code>
      */
+    @java.lang.Deprecated
     public Builder addAllStatuses(
         java.lang.Iterable<? extends com.google.cloud.pubsublite.proto.ExportConfig.PartitionStatus>
             values) {
@@ -2913,13 +3170,15 @@ public final class ExportConfig extends com.google.protobuf.GeneratedMessageV3
      *
      *
      * <pre>
-     * Output only. The export statuses of each partition. This field is output only.
+     * Output only. Deprecated: replaced by `current_state`.
+     * The export statuses of each partition.
      * </pre>
      *
      * <code>
-     * repeated .google.cloud.pubsublite.v1.ExportConfig.PartitionStatus statuses = 4 [(.google.api.field_behavior) = OUTPUT_ONLY];
+     * repeated .google.cloud.pubsublite.v1.ExportConfig.PartitionStatus statuses = 4 [deprecated = true, (.google.api.field_behavior) = OUTPUT_ONLY];
      * </code>
      */
+    @java.lang.Deprecated
     public Builder clearStatuses() {
       if (statusesBuilder_ == null) {
         statuses_ = java.util.Collections.emptyList();
@@ -2934,13 +3193,15 @@ public final class ExportConfig extends com.google.protobuf.GeneratedMessageV3
      *
      *
      * <pre>
-     * Output only. The export statuses of each partition. This field is output only.
+     * Output only. Deprecated: replaced by `current_state`.
+     * The export statuses of each partition.
      * </pre>
      *
      * <code>
-     * repeated .google.cloud.pubsublite.v1.ExportConfig.PartitionStatus statuses = 4 [(.google.api.field_behavior) = OUTPUT_ONLY];
+     * repeated .google.cloud.pubsublite.v1.ExportConfig.PartitionStatus statuses = 4 [deprecated = true, (.google.api.field_behavior) = OUTPUT_ONLY];
      * </code>
      */
+    @java.lang.Deprecated
     public Builder removeStatuses(int index) {
       if (statusesBuilder_ == null) {
         ensureStatusesIsMutable();
@@ -2955,13 +3216,15 @@ public final class ExportConfig extends com.google.protobuf.GeneratedMessageV3
      *
      *
      * <pre>
-     * Output only. The export statuses of each partition. This field is output only.
+     * Output only. Deprecated: replaced by `current_state`.
+     * The export statuses of each partition.
      * </pre>
      *
      * <code>
-     * repeated .google.cloud.pubsublite.v1.ExportConfig.PartitionStatus statuses = 4 [(.google.api.field_behavior) = OUTPUT_ONLY];
+     * repeated .google.cloud.pubsublite.v1.ExportConfig.PartitionStatus statuses = 4 [deprecated = true, (.google.api.field_behavior) = OUTPUT_ONLY];
      * </code>
      */
+    @java.lang.Deprecated
     public com.google.cloud.pubsublite.proto.ExportConfig.PartitionStatus.Builder
         getStatusesBuilder(int index) {
       return getStatusesFieldBuilder().getBuilder(index);
@@ -2970,13 +3233,15 @@ public final class ExportConfig extends com.google.protobuf.GeneratedMessageV3
      *
      *
      * <pre>
-     * Output only. The export statuses of each partition. This field is output only.
+     * Output only. Deprecated: replaced by `current_state`.
+     * The export statuses of each partition.
      * </pre>
      *
      * <code>
-     * repeated .google.cloud.pubsublite.v1.ExportConfig.PartitionStatus statuses = 4 [(.google.api.field_behavior) = OUTPUT_ONLY];
+     * repeated .google.cloud.pubsublite.v1.ExportConfig.PartitionStatus statuses = 4 [deprecated = true, (.google.api.field_behavior) = OUTPUT_ONLY];
      * </code>
      */
+    @java.lang.Deprecated
     public com.google.cloud.pubsublite.proto.ExportConfig.PartitionStatusOrBuilder
         getStatusesOrBuilder(int index) {
       if (statusesBuilder_ == null) {
@@ -2989,13 +3254,15 @@ public final class ExportConfig extends com.google.protobuf.GeneratedMessageV3
      *
      *
      * <pre>
-     * Output only. The export statuses of each partition. This field is output only.
+     * Output only. Deprecated: replaced by `current_state`.
+     * The export statuses of each partition.
      * </pre>
      *
      * <code>
-     * repeated .google.cloud.pubsublite.v1.ExportConfig.PartitionStatus statuses = 4 [(.google.api.field_behavior) = OUTPUT_ONLY];
+     * repeated .google.cloud.pubsublite.v1.ExportConfig.PartitionStatus statuses = 4 [deprecated = true, (.google.api.field_behavior) = OUTPUT_ONLY];
      * </code>
      */
+    @java.lang.Deprecated
     public java.util.List<
             ? extends com.google.cloud.pubsublite.proto.ExportConfig.PartitionStatusOrBuilder>
         getStatusesOrBuilderList() {
@@ -3009,13 +3276,15 @@ public final class ExportConfig extends com.google.protobuf.GeneratedMessageV3
      *
      *
      * <pre>
-     * Output only. The export statuses of each partition. This field is output only.
+     * Output only. Deprecated: replaced by `current_state`.
+     * The export statuses of each partition.
      * </pre>
      *
      * <code>
-     * repeated .google.cloud.pubsublite.v1.ExportConfig.PartitionStatus statuses = 4 [(.google.api.field_behavior) = OUTPUT_ONLY];
+     * repeated .google.cloud.pubsublite.v1.ExportConfig.PartitionStatus statuses = 4 [deprecated = true, (.google.api.field_behavior) = OUTPUT_ONLY];
      * </code>
      */
+    @java.lang.Deprecated
     public com.google.cloud.pubsublite.proto.ExportConfig.PartitionStatus.Builder
         addStatusesBuilder() {
       return getStatusesFieldBuilder()
@@ -3026,13 +3295,15 @@ public final class ExportConfig extends com.google.protobuf.GeneratedMessageV3
      *
      *
      * <pre>
-     * Output only. The export statuses of each partition. This field is output only.
+     * Output only. Deprecated: replaced by `current_state`.
+     * The export statuses of each partition.
      * </pre>
      *
      * <code>
-     * repeated .google.cloud.pubsublite.v1.ExportConfig.PartitionStatus statuses = 4 [(.google.api.field_behavior) = OUTPUT_ONLY];
+     * repeated .google.cloud.pubsublite.v1.ExportConfig.PartitionStatus statuses = 4 [deprecated = true, (.google.api.field_behavior) = OUTPUT_ONLY];
      * </code>
      */
+    @java.lang.Deprecated
     public com.google.cloud.pubsublite.proto.ExportConfig.PartitionStatus.Builder
         addStatusesBuilder(int index) {
       return getStatusesFieldBuilder()
@@ -3044,13 +3315,15 @@ public final class ExportConfig extends com.google.protobuf.GeneratedMessageV3
      *
      *
      * <pre>
-     * Output only. The export statuses of each partition. This field is output only.
+     * Output only. Deprecated: replaced by `current_state`.
+     * The export statuses of each partition.
      * </pre>
      *
      * <code>
-     * repeated .google.cloud.pubsublite.v1.ExportConfig.PartitionStatus statuses = 4 [(.google.api.field_behavior) = OUTPUT_ONLY];
+     * repeated .google.cloud.pubsublite.v1.ExportConfig.PartitionStatus statuses = 4 [deprecated = true, (.google.api.field_behavior) = OUTPUT_ONLY];
      * </code>
      */
+    @java.lang.Deprecated
     public java.util.List<com.google.cloud.pubsublite.proto.ExportConfig.PartitionStatus.Builder>
         getStatusesBuilderList() {
       return getStatusesFieldBuilder().getBuilderList();

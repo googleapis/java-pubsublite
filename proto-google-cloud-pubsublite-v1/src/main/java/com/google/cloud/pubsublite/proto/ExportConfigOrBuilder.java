@@ -27,7 +27,8 @@ public interface ExportConfigOrBuilder
    *
    *
    * <pre>
-   * The desired state of this export.
+   * The desired state of this export. Setting this to values other than
+   * `ACTIVE` and `PAUSED` will result in an error.
    * </pre>
    *
    * <code>.google.cloud.pubsublite.v1.ExportConfig.State desired_state = 1;</code>
@@ -39,7 +40,8 @@ public interface ExportConfigOrBuilder
    *
    *
    * <pre>
-   * The desired state of this export.
+   * The desired state of this export. Setting this to values other than
+   * `ACTIVE` and `PAUSED` will result in an error.
    * </pre>
    *
    * <code>.google.cloud.pubsublite.v1.ExportConfig.State desired_state = 1;</code>
@@ -52,62 +54,103 @@ public interface ExportConfigOrBuilder
    *
    *
    * <pre>
-   * Output only. The export statuses of each partition. This field is output only.
+   * Output only. The current state of the export, which may be different to the desired
+   * state due to errors.
    * </pre>
    *
    * <code>
-   * repeated .google.cloud.pubsublite.v1.ExportConfig.PartitionStatus statuses = 4 [(.google.api.field_behavior) = OUTPUT_ONLY];
+   * .google.cloud.pubsublite.v1.ExportConfig.State current_state = 6 [(.google.api.field_behavior) = OUTPUT_ONLY];
+   * </code>
+   *
+   * @return The enum numeric value on the wire for currentState.
+   */
+  int getCurrentStateValue();
+  /**
+   *
+   *
+   * <pre>
+   * Output only. The current state of the export, which may be different to the desired
+   * state due to errors.
+   * </pre>
+   *
+   * <code>
+   * .google.cloud.pubsublite.v1.ExportConfig.State current_state = 6 [(.google.api.field_behavior) = OUTPUT_ONLY];
+   * </code>
+   *
+   * @return The currentState.
+   */
+  com.google.cloud.pubsublite.proto.ExportConfig.State getCurrentState();
+
+  /**
+   *
+   *
+   * <pre>
+   * Output only. Deprecated: replaced by `current_state`.
+   * The export statuses of each partition.
+   * </pre>
+   *
+   * <code>
+   * repeated .google.cloud.pubsublite.v1.ExportConfig.PartitionStatus statuses = 4 [deprecated = true, (.google.api.field_behavior) = OUTPUT_ONLY];
    * </code>
    */
+  @java.lang.Deprecated
   java.util.List<com.google.cloud.pubsublite.proto.ExportConfig.PartitionStatus> getStatusesList();
   /**
    *
    *
    * <pre>
-   * Output only. The export statuses of each partition. This field is output only.
+   * Output only. Deprecated: replaced by `current_state`.
+   * The export statuses of each partition.
    * </pre>
    *
    * <code>
-   * repeated .google.cloud.pubsublite.v1.ExportConfig.PartitionStatus statuses = 4 [(.google.api.field_behavior) = OUTPUT_ONLY];
+   * repeated .google.cloud.pubsublite.v1.ExportConfig.PartitionStatus statuses = 4 [deprecated = true, (.google.api.field_behavior) = OUTPUT_ONLY];
    * </code>
    */
+  @java.lang.Deprecated
   com.google.cloud.pubsublite.proto.ExportConfig.PartitionStatus getStatuses(int index);
   /**
    *
    *
    * <pre>
-   * Output only. The export statuses of each partition. This field is output only.
+   * Output only. Deprecated: replaced by `current_state`.
+   * The export statuses of each partition.
    * </pre>
    *
    * <code>
-   * repeated .google.cloud.pubsublite.v1.ExportConfig.PartitionStatus statuses = 4 [(.google.api.field_behavior) = OUTPUT_ONLY];
+   * repeated .google.cloud.pubsublite.v1.ExportConfig.PartitionStatus statuses = 4 [deprecated = true, (.google.api.field_behavior) = OUTPUT_ONLY];
    * </code>
    */
+  @java.lang.Deprecated
   int getStatusesCount();
   /**
    *
    *
    * <pre>
-   * Output only. The export statuses of each partition. This field is output only.
+   * Output only. Deprecated: replaced by `current_state`.
+   * The export statuses of each partition.
    * </pre>
    *
    * <code>
-   * repeated .google.cloud.pubsublite.v1.ExportConfig.PartitionStatus statuses = 4 [(.google.api.field_behavior) = OUTPUT_ONLY];
+   * repeated .google.cloud.pubsublite.v1.ExportConfig.PartitionStatus statuses = 4 [deprecated = true, (.google.api.field_behavior) = OUTPUT_ONLY];
    * </code>
    */
+  @java.lang.Deprecated
   java.util.List<? extends com.google.cloud.pubsublite.proto.ExportConfig.PartitionStatusOrBuilder>
       getStatusesOrBuilderList();
   /**
    *
    *
    * <pre>
-   * Output only. The export statuses of each partition. This field is output only.
+   * Output only. Deprecated: replaced by `current_state`.
+   * The export statuses of each partition.
    * </pre>
    *
    * <code>
-   * repeated .google.cloud.pubsublite.v1.ExportConfig.PartitionStatus statuses = 4 [(.google.api.field_behavior) = OUTPUT_ONLY];
+   * repeated .google.cloud.pubsublite.v1.ExportConfig.PartitionStatus statuses = 4 [deprecated = true, (.google.api.field_behavior) = OUTPUT_ONLY];
    * </code>
    */
+  @java.lang.Deprecated
   com.google.cloud.pubsublite.proto.ExportConfig.PartitionStatusOrBuilder getStatusesOrBuilder(
       int index);
 

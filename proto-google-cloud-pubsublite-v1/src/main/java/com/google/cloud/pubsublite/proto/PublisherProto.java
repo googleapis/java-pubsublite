@@ -61,43 +61,45 @@ public final class PublisherProto {
   static {
     java.lang.String[] descriptorData = {
       "\n*google/cloud/pubsublite/v1/publisher.p"
-          + "roto\022\032google.cloud.pubsublite.v1\032\'google"
-          + "/cloud/pubsublite/v1/common.proto\032\027googl"
-          + "e/api/client.proto\"9\n\025InitialPublishRequ"
-          + "est\022\r\n\005topic\030\001 \001(\t\022\021\n\tpartition\030\002 \001(\003\"\030\n"
-          + "\026InitialPublishResponse\"T\n\025MessagePublis"
-          + "hRequest\022;\n\010messages\030\001 \003(\0132).google.clou"
-          + "d.pubsublite.v1.PubSubMessage\"R\n\026Message"
-          + "PublishResponse\0228\n\014start_cursor\030\001 \001(\0132\"."
-          + "google.cloud.pubsublite.v1.Cursor\"\304\001\n\016Pu"
-          + "blishRequest\022L\n\017initial_request\030\001 \001(\01321."
-          + "google.cloud.pubsublite.v1.InitialPublis"
-          + "hRequestH\000\022T\n\027message_publish_request\030\002 "
-          + "\001(\01321.google.cloud.pubsublite.v1.Message"
-          + "PublishRequestH\000B\016\n\014request_type\"\302\001\n\017Pub"
-          + "lishResponse\022N\n\020initial_response\030\001 \001(\01322"
-          + ".google.cloud.pubsublite.v1.InitialPubli"
-          + "shResponseH\000\022N\n\020message_response\030\002 \001(\01322"
-          + ".google.cloud.pubsublite.v1.MessagePubli"
-          + "shResponseH\000B\017\n\rresponse_type2\313\001\n\020Publis"
-          + "herService\022h\n\007Publish\022*.google.cloud.pub"
-          + "sublite.v1.PublishRequest\032+.google.cloud"
-          + ".pubsublite.v1.PublishResponse\"\000(\0010\001\032M\312A"
-          + "\031pubsublite.googleapis.com\322A.https://www"
-          + ".googleapis.com/auth/cloud-platformB\330\001\n!"
-          + "com.google.cloud.pubsublite.protoB\016Publi"
-          + "sherProtoP\001ZDgoogle.golang.org/genproto/"
-          + "googleapis/cloud/pubsublite/v1;pubsublit"
-          + "e\370\001\001\252\002\032Google.Cloud.PubSubLite.V1\312\002\032Goog"
-          + "le\\Cloud\\PubSubLite\\V1\352\002\035Google::Cloud::"
-          + "PubSubLite::V1b\006proto3"
+          + "roto\022\032google.cloud.pubsublite.v1\032\034google"
+          + "/api/annotations.proto\032\027google/api/clien"
+          + "t.proto\032\'google/cloud/pubsublite/v1/comm"
+          + "on.proto\"9\n\025InitialPublishRequest\022\r\n\005top"
+          + "ic\030\001 \001(\t\022\021\n\tpartition\030\002 \001(\003\"\030\n\026InitialPu"
+          + "blishResponse\"T\n\025MessagePublishRequest\022;"
+          + "\n\010messages\030\001 \003(\0132).google.cloud.pubsubli"
+          + "te.v1.PubSubMessage\"R\n\026MessagePublishRes"
+          + "ponse\0228\n\014start_cursor\030\001 \001(\0132\".google.clo"
+          + "ud.pubsublite.v1.Cursor\"\304\001\n\016PublishReque"
+          + "st\022L\n\017initial_request\030\001 \001(\01321.google.clo"
+          + "ud.pubsublite.v1.InitialPublishRequestH\000"
+          + "\022T\n\027message_publish_request\030\002 \001(\01321.goog"
+          + "le.cloud.pubsublite.v1.MessagePublishReq"
+          + "uestH\000B\016\n\014request_type\"\302\001\n\017PublishRespon"
+          + "se\022N\n\020initial_response\030\001 \001(\01322.google.cl"
+          + "oud.pubsublite.v1.InitialPublishResponse"
+          + "H\000\022N\n\020message_response\030\002 \001(\01322.google.cl"
+          + "oud.pubsublite.v1.MessagePublishResponse"
+          + "H\000B\017\n\rresponse_type2\313\001\n\020PublisherService"
+          + "\022h\n\007Publish\022*.google.cloud.pubsublite.v1"
+          + ".PublishRequest\032+.google.cloud.pubsublit"
+          + "e.v1.PublishResponse\"\000(\0010\001\032M\312A\031pubsublit"
+          + "e.googleapis.com\322A.https://www.googleapi"
+          + "s.com/auth/cloud-platformB\330\001\n!com.google"
+          + ".cloud.pubsublite.protoB\016PublisherProtoP"
+          + "\001ZDgoogle.golang.org/genproto/googleapis"
+          + "/cloud/pubsublite/v1;pubsublite\370\001\001\252\002\032Goo"
+          + "gle.Cloud.PubSubLite.V1\312\002\032Google\\Cloud\\P"
+          + "ubSubLite\\V1\352\002\035Google::Cloud::PubSubLite"
+          + "::V1b\006proto3"
     };
     descriptor =
         com.google.protobuf.Descriptors.FileDescriptor.internalBuildGeneratedFileFrom(
             descriptorData,
             new com.google.protobuf.Descriptors.FileDescriptor[] {
-              com.google.cloud.pubsublite.proto.CommonProto.getDescriptor(),
+              com.google.api.AnnotationsProto.getDescriptor(),
               com.google.api.ClientProto.getDescriptor(),
+              com.google.cloud.pubsublite.proto.CommonProto.getDescriptor(),
             });
     internal_static_google_cloud_pubsublite_v1_InitialPublishRequest_descriptor =
         getDescriptor().getMessageTypes().get(0);
@@ -151,8 +153,9 @@ public final class PublisherProto {
     registry.add(com.google.api.ClientProto.oauthScopes);
     com.google.protobuf.Descriptors.FileDescriptor.internalUpdateFileDescriptor(
         descriptor, registry);
-    com.google.cloud.pubsublite.proto.CommonProto.getDescriptor();
+    com.google.api.AnnotationsProto.getDescriptor();
     com.google.api.ClientProto.getDescriptor();
+    com.google.cloud.pubsublite.proto.CommonProto.getDescriptor();
   }
 
   // @@protoc_insertion_point(outer_class_scope)

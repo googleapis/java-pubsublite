@@ -160,28 +160,31 @@ public final class CommonProto {
           + "ATELY\020\001\022\030\n\024DELIVER_AFTER_STORED\020\002:q\352An\n&"
           + "pubsublite.googleapis.com/Subscription\022D"
           + "projects/{project}/locations/{location}/"
-          + "subscriptions/{subscription}\"\352\003\n\014ExportC"
+          + "subscriptions/{subscription}\"\336\004\n\014ExportC"
           + "onfig\022E\n\rdesired_state\030\001 \001(\0162..google.cl"
-          + "oud.pubsublite.v1.ExportConfig.State\022O\n\010"
-          + "statuses\030\004 \003(\01328.google.cloud.pubsublite"
-          + ".v1.ExportConfig.PartitionStatusB\003\340A\003\022B\n"
-          + "\021dead_letter_topic\030\005 \001(\tB\'\340A\001\372A!\n\037pubsub"
-          + "lite.googleapis.com/Topic\022N\n\rpubsub_conf"
-          + "ig\030\003 \001(\01325.google.cloud.pubsublite.v1.Ex"
-          + "portConfig.PubSubConfigH\000\032H\n\017PartitionSt"
-          + "atus\022\021\n\tpartition\030\001 \001(\003\022\"\n\006status\030\002 \001(\0132"
-          + "\022.google.rpc.Status\032\035\n\014PubSubConfig\022\r\n\005t"
-          + "opic\030\001 \001(\t\"6\n\005State\022\025\n\021STATE_UNSPECIFIED"
-          + "\020\000\022\n\n\006ACTIVE\020\001\022\n\n\006PAUSED\020\002B\r\n\013destinatio"
-          + "n\"z\n\nTimeTarget\0222\n\014publish_time\030\001 \001(\0132\032."
-          + "google.protobuf.TimestampH\000\0220\n\nevent_tim"
-          + "e\030\002 \001(\0132\032.google.protobuf.TimestampH\000B\006\n"
-          + "\004timeB\325\001\n!com.google.cloud.pubsublite.pr"
-          + "otoB\013CommonProtoP\001ZDgoogle.golang.org/ge"
-          + "nproto/googleapis/cloud/pubsublite/v1;pu"
-          + "bsublite\370\001\001\252\002\032Google.Cloud.PubSubLite.V1"
-          + "\312\002\032Google\\Cloud\\PubSubLite\\V1\352\002\035Google::"
-          + "Cloud::PubSubLite::V1b\006proto3"
+          + "oud.pubsublite.v1.ExportConfig.State\022J\n\r"
+          + "current_state\030\006 \001(\0162..google.cloud.pubsu"
+          + "blite.v1.ExportConfig.StateB\003\340A\003\022Q\n\010stat"
+          + "uses\030\004 \003(\01328.google.cloud.pubsublite.v1."
+          + "ExportConfig.PartitionStatusB\005\030\001\340A\003\022B\n\021d"
+          + "ead_letter_topic\030\005 \001(\tB\'\340A\001\372A!\n\037pubsubli"
+          + "te.googleapis.com/Topic\022N\n\rpubsub_config"
+          + "\030\003 \001(\01325.google.cloud.pubsublite.v1.Expo"
+          + "rtConfig.PubSubConfigH\000\032H\n\017PartitionStat"
+          + "us\022\021\n\tpartition\030\001 \001(\003\022\"\n\006status\030\002 \001(\0132\022."
+          + "google.rpc.Status\032\035\n\014PubSubConfig\022\r\n\005top"
+          + "ic\030\001 \001(\t\"\\\n\005State\022\025\n\021STATE_UNSPECIFIED\020\000"
+          + "\022\n\n\006ACTIVE\020\001\022\n\n\006PAUSED\020\002\022\025\n\021PERMISSION_D"
+          + "ENIED\020\003\022\r\n\tNOT_FOUND\020\004B\r\n\013destination\"z\n"
+          + "\nTimeTarget\0222\n\014publish_time\030\001 \001(\0132\032.goog"
+          + "le.protobuf.TimestampH\000\0220\n\nevent_time\030\002 "
+          + "\001(\0132\032.google.protobuf.TimestampH\000B\006\n\004tim"
+          + "eB\325\001\n!com.google.cloud.pubsublite.protoB"
+          + "\013CommonProtoP\001ZDgoogle.golang.org/genpro"
+          + "to/googleapis/cloud/pubsublite/v1;pubsub"
+          + "lite\370\001\001\252\002\032Google.Cloud.PubSubLite.V1\312\002\032G"
+          + "oogle\\Cloud\\PubSubLite\\V1\352\002\035Google::Clou"
+          + "d::PubSubLite::V1b\006proto3"
     };
     descriptor =
         com.google.protobuf.Descriptors.FileDescriptor.internalBuildGeneratedFileFrom(
@@ -305,7 +308,12 @@ public final class CommonProto {
         new com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
             internal_static_google_cloud_pubsublite_v1_ExportConfig_descriptor,
             new java.lang.String[] {
-              "DesiredState", "Statuses", "DeadLetterTopic", "PubsubConfig", "Destination",
+              "DesiredState",
+              "CurrentState",
+              "Statuses",
+              "DeadLetterTopic",
+              "PubsubConfig",
+              "Destination",
             });
     internal_static_google_cloud_pubsublite_v1_ExportConfig_PartitionStatus_descriptor =
         internal_static_google_cloud_pubsublite_v1_ExportConfig_descriptor.getNestedTypes().get(0);

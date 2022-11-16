@@ -62,11 +62,11 @@ public final class TopicStatsProto {
     java.lang.String[] descriptorData = {
       "\n,google/cloud/pubsublite/v1/topic_stats"
           + ".proto\022\032google.cloud.pubsublite.v1\032\034goog"
-          + "le/api/annotations.proto\032\037google/api/fie"
-          + "ld_behavior.proto\032\031google/api/resource.p"
-          + "roto\032\'google/cloud/pubsublite/v1/common."
-          + "proto\032\037google/protobuf/timestamp.proto\032\027"
-          + "google/api/client.proto\"\336\001\n\032ComputeMessa"
+          + "le/api/annotations.proto\032\027google/api/cli"
+          + "ent.proto\032\037google/api/field_behavior.pro"
+          + "to\032\031google/api/resource.proto\032\'google/cl"
+          + "oud/pubsublite/v1/common.proto\032\037google/p"
+          + "rotobuf/timestamp.proto\"\336\001\n\032ComputeMessa"
           + "geStatsRequest\0226\n\005topic\030\001 \001(\tB\'\340A\002\372A!\n\037p"
           + "ubsublite.googleapis.com/Topic\022\026\n\tpartit"
           + "ion\030\002 \001(\003B\003\340A\002\0228\n\014start_cursor\030\003 \001(\0132\".g"
@@ -119,11 +119,11 @@ public final class TopicStatsProto {
             descriptorData,
             new com.google.protobuf.Descriptors.FileDescriptor[] {
               com.google.api.AnnotationsProto.getDescriptor(),
+              com.google.api.ClientProto.getDescriptor(),
               com.google.api.FieldBehaviorProto.getDescriptor(),
               com.google.api.ResourceProto.getDescriptor(),
               com.google.cloud.pubsublite.proto.CommonProto.getDescriptor(),
               com.google.protobuf.TimestampProto.getDescriptor(),
-              com.google.api.ClientProto.getDescriptor(),
             });
     internal_static_google_cloud_pubsublite_v1_ComputeMessageStatsRequest_descriptor =
         getDescriptor().getMessageTypes().get(0);
@@ -183,11 +183,11 @@ public final class TopicStatsProto {
     com.google.protobuf.Descriptors.FileDescriptor.internalUpdateFileDescriptor(
         descriptor, registry);
     com.google.api.AnnotationsProto.getDescriptor();
+    com.google.api.ClientProto.getDescriptor();
     com.google.api.FieldBehaviorProto.getDescriptor();
     com.google.api.ResourceProto.getDescriptor();
     com.google.cloud.pubsublite.proto.CommonProto.getDescriptor();
     com.google.protobuf.TimestampProto.getDescriptor();
-    com.google.api.ClientProto.getDescriptor();
   }
 
   // @@protoc_insertion_point(outer_class_scope)

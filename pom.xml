@@ -109,7 +109,7 @@
             <path>
               <groupId>com.google.auto.value</groupId>
               <artifactId>auto-value</artifactId>
-              <version>1.10</version>
+              <version>1.10.1</version>
             </path>
             <path>
               <groupId>com.google.auto.service</groupId>

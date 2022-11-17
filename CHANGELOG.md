@@ -1,5 +1,21 @@
 # Changelog
 
+## [1.9.0](https://github.com/googleapis/java-pubsublite/compare/v1.8.0...v1.9.0) (2022-11-17)
+
+
+### Features
+
+* Add current state of export subscriptions to API ([#1269](https://github.com/googleapis/java-pubsublite/issues/1269)) ([59d3e2a](https://github.com/googleapis/java-pubsublite/commit/59d3e2a53197f4c94a79155e1de47de5966b68ea))
+
+
+### Dependencies
+
+* Update dependency com.google.cloud:google-cloud-bom to v0.181.0 ([#1192](https://github.com/googleapis/java-pubsublite/issues/1192)) ([2621ea3](https://github.com/googleapis/java-pubsublite/commit/2621ea3fec5387d5e6f26d9688c7db79f89518ea))
+* Update dependency com.google.cloud:google-cloud-pubsub to v1.120.23 ([#1255](https://github.com/googleapis/java-pubsublite/issues/1255)) ([bda2a35](https://github.com/googleapis/java-pubsublite/commit/bda2a35be164b8473d3a0ba266afb3af2b1a3d1c))
+* Update dependency com.google.cloud:google-cloud-pubsub to v1.120.24 ([#1260](https://github.com/googleapis/java-pubsublite/issues/1260)) ([4499c27](https://github.com/googleapis/java-pubsublite/commit/4499c27782d929b2a51ada14c32257cd6798ef10))
+* Update dependency com.google.cloud:google-cloud-pubsub to v1.120.25 ([#1267](https://github.com/googleapis/java-pubsublite/issues/1267)) ([9c63e72](https://github.com/googleapis/java-pubsublite/commit/9c63e728a3f737334a8e7ff81e65dfa593deaa96))
+* Update dependency com.google.cloud:google-cloud-shared-dependencies to v3.0.6 ([#1264](https://github.com/googleapis/java-pubsublite/issues/1264)) ([c3fb1e6](https://github.com/googleapis/java-pubsublite/commit/c3fb1e6ba4dc6b810fd3e91b9ea75fdd8ee92982))
+
 ## [1.8.0](https://github.com/googleapis/java-pubsublite/compare/v1.7.1...v1.8.0) (2022-10-27)
 
 

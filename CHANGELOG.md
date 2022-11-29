@@ -1,5 +1,20 @@
 # Changelog
 
+## [1.9.1](https://github.com/googleapis/java-pubsublite/compare/v1.9.0...v1.9.1) (2022-11-29)
+
+
+### Bug Fixes
+
+* Remove obsolete export subscription statuses field from API ([#1279](https://github.com/googleapis/java-pubsublite/issues/1279)) ([c0bc73e](https://github.com/googleapis/java-pubsublite/commit/c0bc73e6635b07245272dda84f98c99c77203ca2))
+
+
+### Dependencies
+
+* Update dependency com.google.auto.value:auto-value to v1.10.1 ([#1272](https://github.com/googleapis/java-pubsublite/issues/1272)) ([e66c8aa](https://github.com/googleapis/java-pubsublite/commit/e66c8aa8450b5e95e21a26ad6aa8e6aa5bdc7d48))
+* Update dependency com.google.cloud:google-cloud-bom to v0.182.0 ([#1276](https://github.com/googleapis/java-pubsublite/issues/1276)) ([a6372e0](https://github.com/googleapis/java-pubsublite/commit/a6372e076c8373fe2ac03d44e6be893bb49061fa))
+* Update dependency com.google.cloud:google-cloud-pubsub to v1.121.0 ([#1274](https://github.com/googleapis/java-pubsublite/issues/1274)) ([5830c6e](https://github.com/googleapis/java-pubsublite/commit/5830c6e6f741df653edabf19e12af51307c42d86))
+* Update dependency com.google.cloud:google-cloud-pubsub to v1.121.1 ([#1278](https://github.com/googleapis/java-pubsublite/issues/1278)) ([65eaffd](https://github.com/googleapis/java-pubsublite/commit/65eaffd8005a9734e6cc19d11d2d86dc72bb381c))
+
 ## [1.9.0](https://github.com/googleapis/java-pubsublite/compare/v1.8.0...v1.9.0) (2022-11-17)
 
 

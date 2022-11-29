@@ -105,7 +105,7 @@ public final class Topic extends com.google.protobuf.GeneratedMessageV3
      * <code>int32 scale = 2 [deprecated = true];</code>
      *
      * @deprecated google.cloud.pubsublite.v1.Topic.PartitionConfig.scale is deprecated. See
-     *     google/cloud/pubsublite/v1/common.proto;l=139
+     *     google/cloud/pubsublite/v1/common.proto;l=138
      * @return Whether the scale field is set.
      */
     @java.lang.Deprecated
@@ -126,7 +126,7 @@ public final class Topic extends com.google.protobuf.GeneratedMessageV3
      * <code>int32 scale = 2 [deprecated = true];</code>
      *
      * @deprecated google.cloud.pubsublite.v1.Topic.PartitionConfig.scale is deprecated. See
-     *     google/cloud/pubsublite/v1/common.proto;l=139
+     *     google/cloud/pubsublite/v1/common.proto;l=138
      * @return The scale.
      */
     @java.lang.Deprecated
@@ -962,7 +962,7 @@ public final class Topic extends com.google.protobuf.GeneratedMessageV3
      * <code>int32 scale = 2 [deprecated = true];</code>
      *
      * @deprecated google.cloud.pubsublite.v1.Topic.PartitionConfig.scale is deprecated. See
-     *     google/cloud/pubsublite/v1/common.proto;l=139
+     *     google/cloud/pubsublite/v1/common.proto;l=138
      * @return Whether the scale field is set.
      */
     @java.lang.Override
@@ -986,7 +986,7 @@ public final class Topic extends com.google.protobuf.GeneratedMessageV3
      * <code>int32 scale = 2 [deprecated = true];</code>
      *
      * @deprecated google.cloud.pubsublite.v1.Topic.PartitionConfig.scale is deprecated. See
-     *     google/cloud/pubsublite/v1/common.proto;l=139
+     *     google/cloud/pubsublite/v1/common.proto;l=138
      * @return The scale.
      */
     @java.lang.Override
@@ -1562,7 +1562,7 @@ public final class Topic extends com.google.protobuf.GeneratedMessageV3
        * <code>int32 scale = 2 [deprecated = true];</code>
        *
        * @deprecated google.cloud.pubsublite.v1.Topic.PartitionConfig.scale is deprecated. See
-       *     google/cloud/pubsublite/v1/common.proto;l=139
+       *     google/cloud/pubsublite/v1/common.proto;l=138
        * @return Whether the scale field is set.
        */
       @java.lang.Deprecated
@@ -1585,7 +1585,7 @@ public final class Topic extends com.google.protobuf.GeneratedMessageV3
        * <code>int32 scale = 2 [deprecated = true];</code>
        *
        * @deprecated google.cloud.pubsublite.v1.Topic.PartitionConfig.scale is deprecated. See
-       *     google/cloud/pubsublite/v1/common.proto;l=139
+       *     google/cloud/pubsublite/v1/common.proto;l=138
        * @return The scale.
        */
       @java.lang.Deprecated
@@ -1611,7 +1611,7 @@ public final class Topic extends com.google.protobuf.GeneratedMessageV3
        * <code>int32 scale = 2 [deprecated = true];</code>
        *
        * @deprecated google.cloud.pubsublite.v1.Topic.PartitionConfig.scale is deprecated. See
-       *     google/cloud/pubsublite/v1/common.proto;l=139
+       *     google/cloud/pubsublite/v1/common.proto;l=138
        * @param value The scale to set.
        * @return This builder for chaining.
        */
@@ -1638,7 +1638,7 @@ public final class Topic extends com.google.protobuf.GeneratedMessageV3
        * <code>int32 scale = 2 [deprecated = true];</code>
        *
        * @deprecated google.cloud.pubsublite.v1.Topic.PartitionConfig.scale is deprecated. See
-       *     google/cloud/pubsublite/v1/common.proto;l=139
+       *     google/cloud/pubsublite/v1/common.proto;l=138
        * @return This builder for chaining.
        */
       @java.lang.Deprecated

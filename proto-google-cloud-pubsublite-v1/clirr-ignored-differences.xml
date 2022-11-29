@@ -8,8 +8,8 @@
   </difference>
   <difference>
     <differenceType>7002</differenceType>
-    <className>com/google/cloud/pubsublite/proto/ExportConfig</className>
-    <method>* *Statuses*(*)</method>
+    <className>com/google/cloud/pubsublite/proto/ExportConfig/*</className>
+    <method>*</method>
   </difference>
   <difference>
     <differenceType>8001</differenceType>

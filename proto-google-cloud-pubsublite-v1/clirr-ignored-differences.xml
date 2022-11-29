@@ -2,6 +2,20 @@
 <!-- see http://www.mojohaus.org/clirr-maven-plugin/examples/ignored-differences.html -->
 <differences>
   <difference>
+    <differenceType>6011</differenceType>
+    <className>com/google/cloud/pubsublite/proto/ExportConfig</className>
+    <field>STATUSES_FIELD_NUMBER</field>
+  </difference>
+  <difference>
+    <differenceType>7002</differenceType>
+    <className>com/google/cloud/pubsublite/proto/ExportConfig</className>
+    <method>* *Statuses*(*)</method>
+  </difference>
+  <difference>
+    <differenceType>8001</differenceType>
+    <className>com/google/cloud/pubsublite/proto/ExportConfig/*</className>
+  </difference>
+  <difference>
     <differenceType>7012</differenceType>
     <className>com/google/cloud/pubsublite/proto/*OrBuilder</className>
     <method>* get*(*)</method>

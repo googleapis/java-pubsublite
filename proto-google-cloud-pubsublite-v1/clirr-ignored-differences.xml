@@ -8,7 +8,7 @@
   </difference>
   <difference>
     <differenceType>7002</differenceType>
-    <className>com/google/cloud/pubsublite/proto/ExportConfig/*</className>
+    <className>com/google/cloud/pubsublite/proto/ExportConfig*</className>
     <method>*</method>
   </difference>
   <difference>

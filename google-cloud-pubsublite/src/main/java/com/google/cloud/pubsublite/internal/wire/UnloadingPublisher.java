@@ -54,6 +54,7 @@ class UnloadingPublisher extends AbstractApiService implements Publisher<Message
     alarmFuture.cancel(false);
     if (!publisher.isPresent()) {
       notifyStopped();
+      return;
     }
     publisher
         .get()

@@ -40,7 +40,7 @@ public final class ExportConfig extends com.google.protobuf.GeneratedMessageV3
 
   private ExportConfig() {
     desiredState_ = 0;
-    statuses_ = java.util.Collections.emptyList();
+    currentState_ = 0;
     deadLetterTopic_ = "";
   }
 
@@ -74,7 +74,7 @@ public final class ExportConfig extends com.google.protobuf.GeneratedMessageV3
    *
    *
    * <pre>
-   * An export state.
+   * The desired export state.
    * </pre>
    *
    * Protobuf enum {@code google.cloud.pubsublite.v1.ExportConfig.State}
@@ -110,6 +110,26 @@ public final class ExportConfig extends com.google.protobuf.GeneratedMessageV3
      * <code>PAUSED = 2;</code>
      */
     PAUSED(2),
+    /**
+     *
+     *
+     * <pre>
+     * Messages cannot be exported due to permission denied errors. Output only.
+     * </pre>
+     *
+     * <code>PERMISSION_DENIED = 3;</code>
+     */
+    PERMISSION_DENIED(3),
+    /**
+     *
+     *
+     * <pre>
+     * Messages cannot be exported due to missing resources. Output only.
+     * </pre>
+     *
+     * <code>NOT_FOUND = 4;</code>
+     */
+    NOT_FOUND(4),
     UNRECOGNIZED(-1),
     ;
 
@@ -143,6 +163,26 @@ public final class ExportConfig extends com.google.protobuf.GeneratedMessageV3
      * <code>PAUSED = 2;</code>
      */
     public static final int PAUSED_VALUE = 2;
+    /**
+     *
+     *
+     * <pre>
+     * Messages cannot be exported due to permission denied errors. Output only.
+     * </pre>
+     *
+     * <code>PERMISSION_DENIED = 3;</code>
+     */
+    public static final int PERMISSION_DENIED_VALUE = 3;
+    /**
+     *
+     *
+     * <pre>
+     * Messages cannot be exported due to missing resources. Output only.
+     * </pre>
+     *
+     * <code>NOT_FOUND = 4;</code>
+     */
+    public static final int NOT_FOUND_VALUE = 4;
 
     public final int getNumber() {
       if (this == UNRECOGNIZED) {
@@ -174,6 +214,10 @@ public final class ExportConfig extends com.google.protobuf.GeneratedMessageV3
           return ACTIVE;
         case 2:
           return PAUSED;
+        case 3:
+          return PERMISSION_DENIED;
+        case 4:
+          return NOT_FOUND;
         default:
           return null;
       }
@@ -225,923 +269,6 @@ public final class ExportConfig extends com.google.protobuf.GeneratedMessageV3
     }
 
     // @@protoc_insertion_point(enum_scope:google.cloud.pubsublite.v1.ExportConfig.State)
-  }
-
-  public interface PartitionStatusOrBuilder
-      extends
-      // @@protoc_insertion_point(interface_extends:google.cloud.pubsublite.v1.ExportConfig.PartitionStatus)
-      com.google.protobuf.MessageOrBuilder {
-
-    /**
-     *
-     *
-     * <pre>
-     * The partition number.
-     * </pre>
-     *
-     * <code>int64 partition = 1;</code>
-     *
-     * @return The partition.
-     */
-    long getPartition();
-
-    /**
-     *
-     *
-     * <pre>
-     * If the export for a partition is healthy and the desired state is
-     * `ACTIVE`, the status code will be `OK` (zero). If the desired state of
-     * the export is `PAUSED`, the status code will be `CANCELLED`.
-     * If the export has been suspended due to an error, the status will be
-     * populated with an error code and details. The service will automatically
-     * retry after a period of time, and will update the status code to `OK` if
-     * export subsequently succeeds.
-     * </pre>
-     *
-     * <code>.google.rpc.Status status = 2;</code>
-     *
-     * @return Whether the status field is set.
-     */
-    boolean hasStatus();
-    /**
-     *
-     *
-     * <pre>
-     * If the export for a partition is healthy and the desired state is
-     * `ACTIVE`, the status code will be `OK` (zero). If the desired state of
-     * the export is `PAUSED`, the status code will be `CANCELLED`.
-     * If the export has been suspended due to an error, the status will be
-     * populated with an error code and details. The service will automatically
-     * retry after a period of time, and will update the status code to `OK` if
-     * export subsequently succeeds.
-     * </pre>
-     *
-     * <code>.google.rpc.Status status = 2;</code>
-     *
-     * @return The status.
-     */
-    com.google.rpc.Status getStatus();
-    /**
-     *
-     *
-     * <pre>
-     * If the export for a partition is healthy and the desired state is
-     * `ACTIVE`, the status code will be `OK` (zero). If the desired state of
-     * the export is `PAUSED`, the status code will be `CANCELLED`.
-     * If the export has been suspended due to an error, the status will be
-     * populated with an error code and details. The service will automatically
-     * retry after a period of time, and will update the status code to `OK` if
-     * export subsequently succeeds.
-     * </pre>
-     *
-     * <code>.google.rpc.Status status = 2;</code>
-     */
-    com.google.rpc.StatusOrBuilder getStatusOrBuilder();
-  }
-  /**
-   *
-   *
-   * <pre>
-   * The export status of a partition.
-   * </pre>
-   *
-   * Protobuf type {@code google.cloud.pubsublite.v1.ExportConfig.PartitionStatus}
-   */
-  public static final class PartitionStatus extends com.google.protobuf.GeneratedMessageV3
-      implements
-      // @@protoc_insertion_point(message_implements:google.cloud.pubsublite.v1.ExportConfig.PartitionStatus)
-      PartitionStatusOrBuilder {
-    private static final long serialVersionUID = 0L;
-    // Use PartitionStatus.newBuilder() to construct.
-    private PartitionStatus(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
-      super(builder);
-    }
-
-    private PartitionStatus() {}
-
-    @java.lang.Override
-    @SuppressWarnings({"unused"})
-    protected java.lang.Object newInstance(UnusedPrivateParameter unused) {
-      return new PartitionStatus();
-    }
-
-    @java.lang.Override
-    public final com.google.protobuf.UnknownFieldSet getUnknownFields() {
-      return this.unknownFields;
-    }
-
-    public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
-      return com.google.cloud.pubsublite.proto.CommonProto
-          .internal_static_google_cloud_pubsublite_v1_ExportConfig_PartitionStatus_descriptor;
-    }
-
-    @java.lang.Override
-    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-        internalGetFieldAccessorTable() {
-      return com.google.cloud.pubsublite.proto.CommonProto
-          .internal_static_google_cloud_pubsublite_v1_ExportConfig_PartitionStatus_fieldAccessorTable
-          .ensureFieldAccessorsInitialized(
-              com.google.cloud.pubsublite.proto.ExportConfig.PartitionStatus.class,
-              com.google.cloud.pubsublite.proto.ExportConfig.PartitionStatus.Builder.class);
-    }
-
-    public static final int PARTITION_FIELD_NUMBER = 1;
-    private long partition_;
-    /**
-     *
-     *
-     * <pre>
-     * The partition number.
-     * </pre>
-     *
-     * <code>int64 partition = 1;</code>
-     *
-     * @return The partition.
-     */
-    @java.lang.Override
-    public long getPartition() {
-      return partition_;
-    }
-
-    public static final int STATUS_FIELD_NUMBER = 2;
-    private com.google.rpc.Status status_;
-    /**
-     *
-     *
-     * <pre>
-     * If the export for a partition is healthy and the desired state is
-     * `ACTIVE`, the status code will be `OK` (zero). If the desired state of
-     * the export is `PAUSED`, the status code will be `CANCELLED`.
-     * If the export has been suspended due to an error, the status will be
-     * populated with an error code and details. The service will automatically
-     * retry after a period of time, and will update the status code to `OK` if
-     * export subsequently succeeds.
-     * </pre>
-     *
-     * <code>.google.rpc.Status status = 2;</code>
-     *
-     * @return Whether the status field is set.
-     */
-    @java.lang.Override
-    public boolean hasStatus() {
-      return status_ != null;
-    }
-    /**
-     *
-     *
-     * <pre>
-     * If the export for a partition is healthy and the desired state is
-     * `ACTIVE`, the status code will be `OK` (zero). If the desired state of
-     * the export is `PAUSED`, the status code will be `CANCELLED`.
-     * If the export has been suspended due to an error, the status will be
-     * populated with an error code and details. The service will automatically
-     * retry after a period of time, and will update the status code to `OK` if
-     * export subsequently succeeds.
-     * </pre>
-     *
-     * <code>.google.rpc.Status status = 2;</code>
-     *
-     * @return The status.
-     */
-    @java.lang.Override
-    public com.google.rpc.Status getStatus() {
-      return status_ == null ? com.google.rpc.Status.getDefaultInstance() : status_;
-    }
-    /**
-     *
-     *
-     * <pre>
-     * If the export for a partition is healthy and the desired state is
-     * `ACTIVE`, the status code will be `OK` (zero). If the desired state of
-     * the export is `PAUSED`, the status code will be `CANCELLED`.
-     * If the export has been suspended due to an error, the status will be
-     * populated with an error code and details. The service will automatically
-     * retry after a period of time, and will update the status code to `OK` if
-     * export subsequently succeeds.
-     * </pre>
-     *
-     * <code>.google.rpc.Status status = 2;</code>
-     */
-    @java.lang.Override
-    public com.google.rpc.StatusOrBuilder getStatusOrBuilder() {
-      return getStatus();
-    }
-
-    private byte memoizedIsInitialized = -1;
-
-    @java.lang.Override
-    public final boolean isInitialized() {
-      byte isInitialized = memoizedIsInitialized;
-      if (isInitialized == 1) return true;
-      if (isInitialized == 0) return false;
-
-      memoizedIsInitialized = 1;
-      return true;
-    }
-
-    @java.lang.Override
-    public void writeTo(com.google.protobuf.CodedOutputStream output) throws java.io.IOException {
-      if (partition_ != 0L) {
-        output.writeInt64(1, partition_);
-      }
-      if (status_ != null) {
-        output.writeMessage(2, getStatus());
-      }
-      getUnknownFields().writeTo(output);
-    }
-
-    @java.lang.Override
-    public int getSerializedSize() {
-      int size = memoizedSize;
-      if (size != -1) return size;
-
-      size = 0;
-      if (partition_ != 0L) {
-        size += com.google.protobuf.CodedOutputStream.computeInt64Size(1, partition_);
-      }
-      if (status_ != null) {
-        size += com.google.protobuf.CodedOutputStream.computeMessageSize(2, getStatus());
-      }
-      size += getUnknownFields().getSerializedSize();
-      memoizedSize = size;
-      return size;
-    }
-
-    @java.lang.Override
-    public boolean equals(final java.lang.Object obj) {
-      if (obj == this) {
-        return true;
-      }
-      if (!(obj instanceof com.google.cloud.pubsublite.proto.ExportConfig.PartitionStatus)) {
-        return super.equals(obj);
-      }
-      com.google.cloud.pubsublite.proto.ExportConfig.PartitionStatus other =
-          (com.google.cloud.pubsublite.proto.ExportConfig.PartitionStatus) obj;
-
-      if (getPartition() != other.getPartition()) return false;
-      if (hasStatus() != other.hasStatus()) return false;
-      if (hasStatus()) {
-        if (!getStatus().equals(other.getStatus())) return false;
-      }
-      if (!getUnknownFields().equals(other.getUnknownFields())) return false;
-      return true;
-    }
-
-    @java.lang.Override
-    public int hashCode() {
-      if (memoizedHashCode != 0) {
-        return memoizedHashCode;
-      }
-      int hash = 41;
-      hash = (19 * hash) + getDescriptor().hashCode();
-      hash = (37 * hash) + PARTITION_FIELD_NUMBER;
-      hash = (53 * hash) + com.google.protobuf.Internal.hashLong(getPartition());
-      if (hasStatus()) {
-        hash = (37 * hash) + STATUS_FIELD_NUMBER;
-        hash = (53 * hash) + getStatus().hashCode();
-      }
-      hash = (29 * hash) + getUnknownFields().hashCode();
-      memoizedHashCode = hash;
-      return hash;
-    }
-
-    public static com.google.cloud.pubsublite.proto.ExportConfig.PartitionStatus parseFrom(
-        java.nio.ByteBuffer data) throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data);
-    }
-
-    public static com.google.cloud.pubsublite.proto.ExportConfig.PartitionStatus parseFrom(
-        java.nio.ByteBuffer data, com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data, extensionRegistry);
-    }
-
-    public static com.google.cloud.pubsublite.proto.ExportConfig.PartitionStatus parseFrom(
-        com.google.protobuf.ByteString data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data);
-    }
-
-    public static com.google.cloud.pubsublite.proto.ExportConfig.PartitionStatus parseFrom(
-        com.google.protobuf.ByteString data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data, extensionRegistry);
-    }
-
-    public static com.google.cloud.pubsublite.proto.ExportConfig.PartitionStatus parseFrom(
-        byte[] data) throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data);
-    }
-
-    public static com.google.cloud.pubsublite.proto.ExportConfig.PartitionStatus parseFrom(
-        byte[] data, com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data, extensionRegistry);
-    }
-
-    public static com.google.cloud.pubsublite.proto.ExportConfig.PartitionStatus parseFrom(
-        java.io.InputStream input) throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3.parseWithIOException(PARSER, input);
-    }
-
-    public static com.google.cloud.pubsublite.proto.ExportConfig.PartitionStatus parseFrom(
-        java.io.InputStream input, com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3.parseWithIOException(
-          PARSER, input, extensionRegistry);
-    }
-
-    public static com.google.cloud.pubsublite.proto.ExportConfig.PartitionStatus parseDelimitedFrom(
-        java.io.InputStream input) throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3.parseDelimitedWithIOException(PARSER, input);
-    }
-
-    public static com.google.cloud.pubsublite.proto.ExportConfig.PartitionStatus parseDelimitedFrom(
-        java.io.InputStream input, com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3.parseDelimitedWithIOException(
-          PARSER, input, extensionRegistry);
-    }
-
-    public static com.google.cloud.pubsublite.proto.ExportConfig.PartitionStatus parseFrom(
-        com.google.protobuf.CodedInputStream input) throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3.parseWithIOException(PARSER, input);
-    }
-
-    public static com.google.cloud.pubsublite.proto.ExportConfig.PartitionStatus parseFrom(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3.parseWithIOException(
-          PARSER, input, extensionRegistry);
-    }
-
-    @java.lang.Override
-    public Builder newBuilderForType() {
-      return newBuilder();
-    }
-
-    public static Builder newBuilder() {
-      return DEFAULT_INSTANCE.toBuilder();
-    }
-
-    public static Builder newBuilder(
-        com.google.cloud.pubsublite.proto.ExportConfig.PartitionStatus prototype) {
-      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
-    }
-
-    @java.lang.Override
-    public Builder toBuilder() {
-      return this == DEFAULT_INSTANCE ? new Builder() : new Builder().mergeFrom(this);
-    }
-
-    @java.lang.Override
-    protected Builder newBuilderForType(
-        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
-      Builder builder = new Builder(parent);
-      return builder;
-    }
-    /**
-     *
-     *
-     * <pre>
-     * The export status of a partition.
-     * </pre>
-     *
-     * Protobuf type {@code google.cloud.pubsublite.v1.ExportConfig.PartitionStatus}
-     */
-    public static final class Builder
-        extends com.google.protobuf.GeneratedMessageV3.Builder<Builder>
-        implements
-        // @@protoc_insertion_point(builder_implements:google.cloud.pubsublite.v1.ExportConfig.PartitionStatus)
-        com.google.cloud.pubsublite.proto.ExportConfig.PartitionStatusOrBuilder {
-      public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
-        return com.google.cloud.pubsublite.proto.CommonProto
-            .internal_static_google_cloud_pubsublite_v1_ExportConfig_PartitionStatus_descriptor;
-      }
-
-      @java.lang.Override
-      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-          internalGetFieldAccessorTable() {
-        return com.google.cloud.pubsublite.proto.CommonProto
-            .internal_static_google_cloud_pubsublite_v1_ExportConfig_PartitionStatus_fieldAccessorTable
-            .ensureFieldAccessorsInitialized(
-                com.google.cloud.pubsublite.proto.ExportConfig.PartitionStatus.class,
-                com.google.cloud.pubsublite.proto.ExportConfig.PartitionStatus.Builder.class);
-      }
-
-      // Construct using com.google.cloud.pubsublite.proto.ExportConfig.PartitionStatus.newBuilder()
-      private Builder() {}
-
-      private Builder(com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
-        super(parent);
-      }
-
-      @java.lang.Override
-      public Builder clear() {
-        super.clear();
-        partition_ = 0L;
-
-        if (statusBuilder_ == null) {
-          status_ = null;
-        } else {
-          status_ = null;
-          statusBuilder_ = null;
-        }
-        return this;
-      }
-
-      @java.lang.Override
-      public com.google.protobuf.Descriptors.Descriptor getDescriptorForType() {
-        return com.google.cloud.pubsublite.proto.CommonProto
-            .internal_static_google_cloud_pubsublite_v1_ExportConfig_PartitionStatus_descriptor;
-      }
-
-      @java.lang.Override
-      public com.google.cloud.pubsublite.proto.ExportConfig.PartitionStatus
-          getDefaultInstanceForType() {
-        return com.google.cloud.pubsublite.proto.ExportConfig.PartitionStatus.getDefaultInstance();
-      }
-
-      @java.lang.Override
-      public com.google.cloud.pubsublite.proto.ExportConfig.PartitionStatus build() {
-        com.google.cloud.pubsublite.proto.ExportConfig.PartitionStatus result = buildPartial();
-        if (!result.isInitialized()) {
-          throw newUninitializedMessageException(result);
-        }
-        return result;
-      }
-
-      @java.lang.Override
-      public com.google.cloud.pubsublite.proto.ExportConfig.PartitionStatus buildPartial() {
-        com.google.cloud.pubsublite.proto.ExportConfig.PartitionStatus result =
-            new com.google.cloud.pubsublite.proto.ExportConfig.PartitionStatus(this);
-        result.partition_ = partition_;
-        if (statusBuilder_ == null) {
-          result.status_ = status_;
-        } else {
-          result.status_ = statusBuilder_.build();
-        }
-        onBuilt();
-        return result;
-      }
-
-      @java.lang.Override
-      public Builder clone() {
-        return super.clone();
-      }
-
-      @java.lang.Override
-      public Builder setField(
-          com.google.protobuf.Descriptors.FieldDescriptor field, java.lang.Object value) {
-        return super.setField(field, value);
-      }
-
-      @java.lang.Override
-      public Builder clearField(com.google.protobuf.Descriptors.FieldDescriptor field) {
-        return super.clearField(field);
-      }
-
-      @java.lang.Override
-      public Builder clearOneof(com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-        return super.clearOneof(oneof);
-      }
-
-      @java.lang.Override
-      public Builder setRepeatedField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          int index,
-          java.lang.Object value) {
-        return super.setRepeatedField(field, index, value);
-      }
-
-      @java.lang.Override
-      public Builder addRepeatedField(
-          com.google.protobuf.Descriptors.FieldDescriptor field, java.lang.Object value) {
-        return super.addRepeatedField(field, value);
-      }
-
-      @java.lang.Override
-      public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof com.google.cloud.pubsublite.proto.ExportConfig.PartitionStatus) {
-          return mergeFrom((com.google.cloud.pubsublite.proto.ExportConfig.PartitionStatus) other);
-        } else {
-          super.mergeFrom(other);
-          return this;
-        }
-      }
-
-      public Builder mergeFrom(
-          com.google.cloud.pubsublite.proto.ExportConfig.PartitionStatus other) {
-        if (other
-            == com.google.cloud.pubsublite.proto.ExportConfig.PartitionStatus.getDefaultInstance())
-          return this;
-        if (other.getPartition() != 0L) {
-          setPartition(other.getPartition());
-        }
-        if (other.hasStatus()) {
-          mergeStatus(other.getStatus());
-        }
-        this.mergeUnknownFields(other.getUnknownFields());
-        onChanged();
-        return this;
-      }
-
-      @java.lang.Override
-      public final boolean isInitialized() {
-        return true;
-      }
-
-      @java.lang.Override
-      public Builder mergeFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws java.io.IOException {
-        if (extensionRegistry == null) {
-          throw new java.lang.NullPointerException();
-        }
-        try {
-          boolean done = false;
-          while (!done) {
-            int tag = input.readTag();
-            switch (tag) {
-              case 0:
-                done = true;
-                break;
-              case 8:
-                {
-                  partition_ = input.readInt64();
-
-                  break;
-                } // case 8
-              case 18:
-                {
-                  input.readMessage(getStatusFieldBuilder().getBuilder(), extensionRegistry);
-
-                  break;
-                } // case 18
-              default:
-                {
-                  if (!super.parseUnknownField(input, extensionRegistry, tag)) {
-                    done = true; // was an endgroup tag
-                  }
-                  break;
-                } // default:
-            } // switch (tag)
-          } // while (!done)
-        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          throw e.unwrapIOException();
-        } finally {
-          onChanged();
-        } // finally
-        return this;
-      }
-
-      private long partition_;
-      /**
-       *
-       *
-       * <pre>
-       * The partition number.
-       * </pre>
-       *
-       * <code>int64 partition = 1;</code>
-       *
-       * @return The partition.
-       */
-      @java.lang.Override
-      public long getPartition() {
-        return partition_;
-      }
-      /**
-       *
-       *
-       * <pre>
-       * The partition number.
-       * </pre>
-       *
-       * <code>int64 partition = 1;</code>
-       *
-       * @param value The partition to set.
-       * @return This builder for chaining.
-       */
-      public Builder setPartition(long value) {
-
-        partition_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       *
-       *
-       * <pre>
-       * The partition number.
-       * </pre>
-       *
-       * <code>int64 partition = 1;</code>
-       *
-       * @return This builder for chaining.
-       */
-      public Builder clearPartition() {
-
-        partition_ = 0L;
-        onChanged();
-        return this;
-      }
-
-      private com.google.rpc.Status status_;
-      private com.google.protobuf.SingleFieldBuilderV3<
-              com.google.rpc.Status, com.google.rpc.Status.Builder, com.google.rpc.StatusOrBuilder>
-          statusBuilder_;
-      /**
-       *
-       *
-       * <pre>
-       * If the export for a partition is healthy and the desired state is
-       * `ACTIVE`, the status code will be `OK` (zero). If the desired state of
-       * the export is `PAUSED`, the status code will be `CANCELLED`.
-       * If the export has been suspended due to an error, the status will be
-       * populated with an error code and details. The service will automatically
-       * retry after a period of time, and will update the status code to `OK` if
-       * export subsequently succeeds.
-       * </pre>
-       *
-       * <code>.google.rpc.Status status = 2;</code>
-       *
-       * @return Whether the status field is set.
-       */
-      public boolean hasStatus() {
-        return statusBuilder_ != null || status_ != null;
-      }
-      /**
-       *
-       *
-       * <pre>
-       * If the export for a partition is healthy and the desired state is
-       * `ACTIVE`, the status code will be `OK` (zero). If the desired state of
-       * the export is `PAUSED`, the status code will be `CANCELLED`.
-       * If the export has been suspended due to an error, the status will be
-       * populated with an error code and details. The service will automatically
-       * retry after a period of time, and will update the status code to `OK` if
-       * export subsequently succeeds.
-       * </pre>
-       *
-       * <code>.google.rpc.Status status = 2;</code>
-       *
-       * @return The status.
-       */
-      public com.google.rpc.Status getStatus() {
-        if (statusBuilder_ == null) {
-          return status_ == null ? com.google.rpc.Status.getDefaultInstance() : status_;
-        } else {
-          return statusBuilder_.getMessage();
-        }
-      }
-      /**
-       *
-       *
-       * <pre>
-       * If the export for a partition is healthy and the desired state is
-       * `ACTIVE`, the status code will be `OK` (zero). If the desired state of
-       * the export is `PAUSED`, the status code will be `CANCELLED`.
-       * If the export has been suspended due to an error, the status will be
-       * populated with an error code and details. The service will automatically
-       * retry after a period of time, and will update the status code to `OK` if
-       * export subsequently succeeds.
-       * </pre>
-       *
-       * <code>.google.rpc.Status status = 2;</code>
-       */
-      public Builder setStatus(com.google.rpc.Status value) {
-        if (statusBuilder_ == null) {
-          if (value == null) {
-            throw new NullPointerException();
-          }
-          status_ = value;
-          onChanged();
-        } else {
-          statusBuilder_.setMessage(value);
-        }
-
-        return this;
-      }
-      /**
-       *
-       *
-       * <pre>
-       * If the export for a partition is healthy and the desired state is
-       * `ACTIVE`, the status code will be `OK` (zero). If the desired state of
-       * the export is `PAUSED`, the status code will be `CANCELLED`.
-       * If the export has been suspended due to an error, the status will be
-       * populated with an error code and details. The service will automatically
-       * retry after a period of time, and will update the status code to `OK` if
-       * export subsequently succeeds.
-       * </pre>
-       *
-       * <code>.google.rpc.Status status = 2;</code>
-       */
-      public Builder setStatus(com.google.rpc.Status.Builder builderForValue) {
-        if (statusBuilder_ == null) {
-          status_ = builderForValue.build();
-          onChanged();
-        } else {
-          statusBuilder_.setMessage(builderForValue.build());
-        }
-
-        return this;
-      }
-      /**
-       *
-       *
-       * <pre>
-       * If the export for a partition is healthy and the desired state is
-       * `ACTIVE`, the status code will be `OK` (zero). If the desired state of
-       * the export is `PAUSED`, the status code will be `CANCELLED`.
-       * If the export has been suspended due to an error, the status will be
-       * populated with an error code and details. The service will automatically
-       * retry after a period of time, and will update the status code to `OK` if
-       * export subsequently succeeds.
-       * </pre>
-       *
-       * <code>.google.rpc.Status status = 2;</code>
-       */
-      public Builder mergeStatus(com.google.rpc.Status value) {
-        if (statusBuilder_ == null) {
-          if (status_ != null) {
-            status_ = com.google.rpc.Status.newBuilder(status_).mergeFrom(value).buildPartial();
-          } else {
-            status_ = value;
-          }
-          onChanged();
-        } else {
-          statusBuilder_.mergeFrom(value);
-        }
-
-        return this;
-      }
-      /**
-       *
-       *
-       * <pre>
-       * If the export for a partition is healthy and the desired state is
-       * `ACTIVE`, the status code will be `OK` (zero). If the desired state of
-       * the export is `PAUSED`, the status code will be `CANCELLED`.
-       * If the export has been suspended due to an error, the status will be
-       * populated with an error code and details. The service will automatically
-       * retry after a period of time, and will update the status code to `OK` if
-       * export subsequently succeeds.
-       * </pre>
-       *
-       * <code>.google.rpc.Status status = 2;</code>
-       */
-      public Builder clearStatus() {
-        if (statusBuilder_ == null) {
-          status_ = null;
-          onChanged();
-        } else {
-          status_ = null;
-          statusBuilder_ = null;
-        }
-
-        return this;
-      }
-      /**
-       *
-       *
-       * <pre>
-       * If the export for a partition is healthy and the desired state is
-       * `ACTIVE`, the status code will be `OK` (zero). If the desired state of
-       * the export is `PAUSED`, the status code will be `CANCELLED`.
-       * If the export has been suspended due to an error, the status will be
-       * populated with an error code and details. The service will automatically
-       * retry after a period of time, and will update the status code to `OK` if
-       * export subsequently succeeds.
-       * </pre>
-       *
-       * <code>.google.rpc.Status status = 2;</code>
-       */
-      public com.google.rpc.Status.Builder getStatusBuilder() {
-
-        onChanged();
-        return getStatusFieldBuilder().getBuilder();
-      }
-      /**
-       *
-       *
-       * <pre>
-       * If the export for a partition is healthy and the desired state is
-       * `ACTIVE`, the status code will be `OK` (zero). If the desired state of
-       * the export is `PAUSED`, the status code will be `CANCELLED`.
-       * If the export has been suspended due to an error, the status will be
-       * populated with an error code and details. The service will automatically
-       * retry after a period of time, and will update the status code to `OK` if
-       * export subsequently succeeds.
-       * </pre>
-       *
-       * <code>.google.rpc.Status status = 2;</code>
-       */
-      public com.google.rpc.StatusOrBuilder getStatusOrBuilder() {
-        if (statusBuilder_ != null) {
-          return statusBuilder_.getMessageOrBuilder();
-        } else {
-          return status_ == null ? com.google.rpc.Status.getDefaultInstance() : status_;
-        }
-      }
-      /**
-       *
-       *
-       * <pre>
-       * If the export for a partition is healthy and the desired state is
-       * `ACTIVE`, the status code will be `OK` (zero). If the desired state of
-       * the export is `PAUSED`, the status code will be `CANCELLED`.
-       * If the export has been suspended due to an error, the status will be
-       * populated with an error code and details. The service will automatically
-       * retry after a period of time, and will update the status code to `OK` if
-       * export subsequently succeeds.
-       * </pre>
-       *
-       * <code>.google.rpc.Status status = 2;</code>
-       */
-      private com.google.protobuf.SingleFieldBuilderV3<
-              com.google.rpc.Status, com.google.rpc.Status.Builder, com.google.rpc.StatusOrBuilder>
-          getStatusFieldBuilder() {
-        if (statusBuilder_ == null) {
-          statusBuilder_ =
-              new com.google.protobuf.SingleFieldBuilderV3<
-                  com.google.rpc.Status,
-                  com.google.rpc.Status.Builder,
-                  com.google.rpc.StatusOrBuilder>(getStatus(), getParentForChildren(), isClean());
-          status_ = null;
-        }
-        return statusBuilder_;
-      }
-
-      @java.lang.Override
-      public final Builder setUnknownFields(
-          final com.google.protobuf.UnknownFieldSet unknownFields) {
-        return super.setUnknownFields(unknownFields);
-      }
-
-      @java.lang.Override
-      public final Builder mergeUnknownFields(
-          final com.google.protobuf.UnknownFieldSet unknownFields) {
-        return super.mergeUnknownFields(unknownFields);
-      }
-
-      // @@protoc_insertion_point(builder_scope:google.cloud.pubsublite.v1.ExportConfig.PartitionStatus)
-    }
-
-    // @@protoc_insertion_point(class_scope:google.cloud.pubsublite.v1.ExportConfig.PartitionStatus)
-    private static final com.google.cloud.pubsublite.proto.ExportConfig.PartitionStatus
-        DEFAULT_INSTANCE;
-
-    static {
-      DEFAULT_INSTANCE = new com.google.cloud.pubsublite.proto.ExportConfig.PartitionStatus();
-    }
-
-    public static com.google.cloud.pubsublite.proto.ExportConfig.PartitionStatus
-        getDefaultInstance() {
-      return DEFAULT_INSTANCE;
-    }
-
-    private static final com.google.protobuf.Parser<PartitionStatus> PARSER =
-        new com.google.protobuf.AbstractParser<PartitionStatus>() {
-          @java.lang.Override
-          public PartitionStatus parsePartialFrom(
-              com.google.protobuf.CodedInputStream input,
-              com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-              throws com.google.protobuf.InvalidProtocolBufferException {
-            Builder builder = newBuilder();
-            try {
-              builder.mergeFrom(input, extensionRegistry);
-            } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-              throw e.setUnfinishedMessage(builder.buildPartial());
-            } catch (com.google.protobuf.UninitializedMessageException e) {
-              throw e.asInvalidProtocolBufferException()
-                  .setUnfinishedMessage(builder.buildPartial());
-            } catch (java.io.IOException e) {
-              throw new com.google.protobuf.InvalidProtocolBufferException(e)
-                  .setUnfinishedMessage(builder.buildPartial());
-            }
-            return builder.buildPartial();
-          }
-        };
-
-    public static com.google.protobuf.Parser<PartitionStatus> parser() {
-      return PARSER;
-    }
-
-    @java.lang.Override
-    public com.google.protobuf.Parser<PartitionStatus> getParserForType() {
-      return PARSER;
-    }
-
-    @java.lang.Override
-    public com.google.cloud.pubsublite.proto.ExportConfig.PartitionStatus
-        getDefaultInstanceForType() {
-      return DEFAULT_INSTANCE;
-    }
   }
 
   public interface PubSubConfigOrBuilder
@@ -1848,7 +975,8 @@ public final class ExportConfig extends com.google.protobuf.GeneratedMessageV3
    *
    *
    * <pre>
-   * The desired state of this export.
+   * The desired state of this export. Setting this to values other than
+   * `ACTIVE` and `PAUSED` will result in an error.
    * </pre>
    *
    * <code>.google.cloud.pubsublite.v1.ExportConfig.State desired_state = 1;</code>
@@ -1863,7 +991,8 @@ public final class ExportConfig extends com.google.protobuf.GeneratedMessageV3
    *
    *
    * <pre>
-   * The desired state of this export.
+   * The desired state of this export. Setting this to values other than
+   * `ACTIVE` and `PAUSED` will result in an error.
    * </pre>
    *
    * <code>.google.cloud.pubsublite.v1.ExportConfig.State desired_state = 1;</code>
@@ -1880,86 +1009,48 @@ public final class ExportConfig extends com.google.protobuf.GeneratedMessageV3
         : result;
   }
 
-  public static final int STATUSES_FIELD_NUMBER = 4;
-  private java.util.List<com.google.cloud.pubsublite.proto.ExportConfig.PartitionStatus> statuses_;
+  public static final int CURRENT_STATE_FIELD_NUMBER = 6;
+  private int currentState_;
   /**
    *
    *
    * <pre>
-   * Output only. The export statuses of each partition. This field is output only.
+   * Output only. The current state of the export, which may be different to the desired
+   * state due to errors.
    * </pre>
    *
    * <code>
-   * repeated .google.cloud.pubsublite.v1.ExportConfig.PartitionStatus statuses = 4 [(.google.api.field_behavior) = OUTPUT_ONLY];
+   * .google.cloud.pubsublite.v1.ExportConfig.State current_state = 6 [(.google.api.field_behavior) = OUTPUT_ONLY];
    * </code>
+   *
+   * @return The enum numeric value on the wire for currentState.
    */
   @java.lang.Override
-  public java.util.List<com.google.cloud.pubsublite.proto.ExportConfig.PartitionStatus>
-      getStatusesList() {
-    return statuses_;
+  public int getCurrentStateValue() {
+    return currentState_;
   }
   /**
    *
    *
    * <pre>
-   * Output only. The export statuses of each partition. This field is output only.
+   * Output only. The current state of the export, which may be different to the desired
+   * state due to errors.
    * </pre>
    *
    * <code>
-   * repeated .google.cloud.pubsublite.v1.ExportConfig.PartitionStatus statuses = 4 [(.google.api.field_behavior) = OUTPUT_ONLY];
+   * .google.cloud.pubsublite.v1.ExportConfig.State current_state = 6 [(.google.api.field_behavior) = OUTPUT_ONLY];
    * </code>
+   *
+   * @return The currentState.
    */
   @java.lang.Override
-  public java.util.List<
-          ? extends com.google.cloud.pubsublite.proto.ExportConfig.PartitionStatusOrBuilder>
-      getStatusesOrBuilderList() {
-    return statuses_;
-  }
-  /**
-   *
-   *
-   * <pre>
-   * Output only. The export statuses of each partition. This field is output only.
-   * </pre>
-   *
-   * <code>
-   * repeated .google.cloud.pubsublite.v1.ExportConfig.PartitionStatus statuses = 4 [(.google.api.field_behavior) = OUTPUT_ONLY];
-   * </code>
-   */
-  @java.lang.Override
-  public int getStatusesCount() {
-    return statuses_.size();
-  }
-  /**
-   *
-   *
-   * <pre>
-   * Output only. The export statuses of each partition. This field is output only.
-   * </pre>
-   *
-   * <code>
-   * repeated .google.cloud.pubsublite.v1.ExportConfig.PartitionStatus statuses = 4 [(.google.api.field_behavior) = OUTPUT_ONLY];
-   * </code>
-   */
-  @java.lang.Override
-  public com.google.cloud.pubsublite.proto.ExportConfig.PartitionStatus getStatuses(int index) {
-    return statuses_.get(index);
-  }
-  /**
-   *
-   *
-   * <pre>
-   * Output only. The export statuses of each partition. This field is output only.
-   * </pre>
-   *
-   * <code>
-   * repeated .google.cloud.pubsublite.v1.ExportConfig.PartitionStatus statuses = 4 [(.google.api.field_behavior) = OUTPUT_ONLY];
-   * </code>
-   */
-  @java.lang.Override
-  public com.google.cloud.pubsublite.proto.ExportConfig.PartitionStatusOrBuilder
-      getStatusesOrBuilder(int index) {
-    return statuses_.get(index);
+  public com.google.cloud.pubsublite.proto.ExportConfig.State getCurrentState() {
+    @SuppressWarnings("deprecation")
+    com.google.cloud.pubsublite.proto.ExportConfig.State result =
+        com.google.cloud.pubsublite.proto.ExportConfig.State.valueOf(currentState_);
+    return result == null
+        ? com.google.cloud.pubsublite.proto.ExportConfig.State.UNRECOGNIZED
+        : result;
   }
 
   public static final int DEAD_LETTER_TOPIC_FIELD_NUMBER = 5;
@@ -2106,11 +1197,12 @@ public final class ExportConfig extends com.google.protobuf.GeneratedMessageV3
       output.writeMessage(
           3, (com.google.cloud.pubsublite.proto.ExportConfig.PubSubConfig) destination_);
     }
-    for (int i = 0; i < statuses_.size(); i++) {
-      output.writeMessage(4, statuses_.get(i));
-    }
     if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(deadLetterTopic_)) {
       com.google.protobuf.GeneratedMessageV3.writeString(output, 5, deadLetterTopic_);
+    }
+    if (currentState_
+        != com.google.cloud.pubsublite.proto.ExportConfig.State.STATE_UNSPECIFIED.getNumber()) {
+      output.writeEnum(6, currentState_);
     }
     getUnknownFields().writeTo(output);
   }
@@ -2130,11 +1222,12 @@ public final class ExportConfig extends com.google.protobuf.GeneratedMessageV3
           com.google.protobuf.CodedOutputStream.computeMessageSize(
               3, (com.google.cloud.pubsublite.proto.ExportConfig.PubSubConfig) destination_);
     }
-    for (int i = 0; i < statuses_.size(); i++) {
-      size += com.google.protobuf.CodedOutputStream.computeMessageSize(4, statuses_.get(i));
-    }
     if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(deadLetterTopic_)) {
       size += com.google.protobuf.GeneratedMessageV3.computeStringSize(5, deadLetterTopic_);
+    }
+    if (currentState_
+        != com.google.cloud.pubsublite.proto.ExportConfig.State.STATE_UNSPECIFIED.getNumber()) {
+      size += com.google.protobuf.CodedOutputStream.computeEnumSize(6, currentState_);
     }
     size += getUnknownFields().getSerializedSize();
     memoizedSize = size;
@@ -2153,7 +1246,7 @@ public final class ExportConfig extends com.google.protobuf.GeneratedMessageV3
         (com.google.cloud.pubsublite.proto.ExportConfig) obj;
 
     if (desiredState_ != other.desiredState_) return false;
-    if (!getStatusesList().equals(other.getStatusesList())) return false;
+    if (currentState_ != other.currentState_) return false;
     if (!getDeadLetterTopic().equals(other.getDeadLetterTopic())) return false;
     if (!getDestinationCase().equals(other.getDestinationCase())) return false;
     switch (destinationCase_) {
@@ -2176,10 +1269,8 @@ public final class ExportConfig extends com.google.protobuf.GeneratedMessageV3
     hash = (19 * hash) + getDescriptor().hashCode();
     hash = (37 * hash) + DESIRED_STATE_FIELD_NUMBER;
     hash = (53 * hash) + desiredState_;
-    if (getStatusesCount() > 0) {
-      hash = (37 * hash) + STATUSES_FIELD_NUMBER;
-      hash = (53 * hash) + getStatusesList().hashCode();
-    }
+    hash = (37 * hash) + CURRENT_STATE_FIELD_NUMBER;
+    hash = (53 * hash) + currentState_;
     hash = (37 * hash) + DEAD_LETTER_TOPIC_FIELD_NUMBER;
     hash = (53 * hash) + getDeadLetterTopic().hashCode();
     switch (destinationCase_) {
@@ -2331,13 +1422,8 @@ public final class ExportConfig extends com.google.protobuf.GeneratedMessageV3
       super.clear();
       desiredState_ = 0;
 
-      if (statusesBuilder_ == null) {
-        statuses_ = java.util.Collections.emptyList();
-      } else {
-        statuses_ = null;
-        statusesBuilder_.clear();
-      }
-      bitField0_ = (bitField0_ & ~0x00000001);
+      currentState_ = 0;
+
       deadLetterTopic_ = "";
 
       if (pubsubConfigBuilder_ != null) {
@@ -2372,17 +1458,8 @@ public final class ExportConfig extends com.google.protobuf.GeneratedMessageV3
     public com.google.cloud.pubsublite.proto.ExportConfig buildPartial() {
       com.google.cloud.pubsublite.proto.ExportConfig result =
           new com.google.cloud.pubsublite.proto.ExportConfig(this);
-      int from_bitField0_ = bitField0_;
       result.desiredState_ = desiredState_;
-      if (statusesBuilder_ == null) {
-        if (((bitField0_ & 0x00000001) != 0)) {
-          statuses_ = java.util.Collections.unmodifiableList(statuses_);
-          bitField0_ = (bitField0_ & ~0x00000001);
-        }
-        result.statuses_ = statuses_;
-      } else {
-        result.statuses_ = statusesBuilder_.build();
-      }
+      result.currentState_ = currentState_;
       result.deadLetterTopic_ = deadLetterTopic_;
       if (destinationCase_ == 3) {
         if (pubsubConfigBuilder_ == null) {
@@ -2444,32 +1521,8 @@ public final class ExportConfig extends com.google.protobuf.GeneratedMessageV3
       if (other.desiredState_ != 0) {
         setDesiredStateValue(other.getDesiredStateValue());
       }
-      if (statusesBuilder_ == null) {
-        if (!other.statuses_.isEmpty()) {
-          if (statuses_.isEmpty()) {
-            statuses_ = other.statuses_;
-            bitField0_ = (bitField0_ & ~0x00000001);
-          } else {
-            ensureStatusesIsMutable();
-            statuses_.addAll(other.statuses_);
-          }
-          onChanged();
-        }
-      } else {
-        if (!other.statuses_.isEmpty()) {
-          if (statusesBuilder_.isEmpty()) {
-            statusesBuilder_.dispose();
-            statusesBuilder_ = null;
-            statuses_ = other.statuses_;
-            bitField0_ = (bitField0_ & ~0x00000001);
-            statusesBuilder_ =
-                com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders
-                    ? getStatusesFieldBuilder()
-                    : null;
-          } else {
-            statusesBuilder_.addAllMessages(other.statuses_);
-          }
-        }
+      if (other.currentState_ != 0) {
+        setCurrentStateValue(other.getCurrentStateValue());
       }
       if (!other.getDeadLetterTopic().isEmpty()) {
         deadLetterTopic_ = other.deadLetterTopic_;
@@ -2524,26 +1577,18 @@ public final class ExportConfig extends com.google.protobuf.GeneratedMessageV3
                 destinationCase_ = 3;
                 break;
               } // case 26
-            case 34:
-              {
-                com.google.cloud.pubsublite.proto.ExportConfig.PartitionStatus m =
-                    input.readMessage(
-                        com.google.cloud.pubsublite.proto.ExportConfig.PartitionStatus.parser(),
-                        extensionRegistry);
-                if (statusesBuilder_ == null) {
-                  ensureStatusesIsMutable();
-                  statuses_.add(m);
-                } else {
-                  statusesBuilder_.addMessage(m);
-                }
-                break;
-              } // case 34
             case 42:
               {
                 deadLetterTopic_ = input.readStringRequireUtf8();
 
                 break;
               } // case 42
+            case 48:
+              {
+                currentState_ = input.readEnum();
+
+                break;
+              } // case 48
             default:
               {
                 if (!super.parseUnknownField(input, extensionRegistry, tag)) {
@@ -2575,14 +1620,13 @@ public final class ExportConfig extends com.google.protobuf.GeneratedMessageV3
       return this;
     }
 
-    private int bitField0_;
-
     private int desiredState_ = 0;
     /**
      *
      *
      * <pre>
-     * The desired state of this export.
+     * The desired state of this export. Setting this to values other than
+     * `ACTIVE` and `PAUSED` will result in an error.
      * </pre>
      *
      * <code>.google.cloud.pubsublite.v1.ExportConfig.State desired_state = 1;</code>
@@ -2597,7 +1641,8 @@ public final class ExportConfig extends com.google.protobuf.GeneratedMessageV3
      *
      *
      * <pre>
-     * The desired state of this export.
+     * The desired state of this export. Setting this to values other than
+     * `ACTIVE` and `PAUSED` will result in an error.
      * </pre>
      *
      * <code>.google.cloud.pubsublite.v1.ExportConfig.State desired_state = 1;</code>
@@ -2615,7 +1660,8 @@ public final class ExportConfig extends com.google.protobuf.GeneratedMessageV3
      *
      *
      * <pre>
-     * The desired state of this export.
+     * The desired state of this export. Setting this to values other than
+     * `ACTIVE` and `PAUSED` will result in an error.
      * </pre>
      *
      * <code>.google.cloud.pubsublite.v1.ExportConfig.State desired_state = 1;</code>
@@ -2635,7 +1681,8 @@ public final class ExportConfig extends com.google.protobuf.GeneratedMessageV3
      *
      *
      * <pre>
-     * The desired state of this export.
+     * The desired state of this export. Setting this to values other than
+     * `ACTIVE` and `PAUSED` will result in an error.
      * </pre>
      *
      * <code>.google.cloud.pubsublite.v1.ExportConfig.State desired_state = 1;</code>
@@ -2656,7 +1703,8 @@ public final class ExportConfig extends com.google.protobuf.GeneratedMessageV3
      *
      *
      * <pre>
-     * The desired state of this export.
+     * The desired state of this export. Setting this to values other than
+     * `ACTIVE` and `PAUSED` will result in an error.
      * </pre>
      *
      * <code>.google.cloud.pubsublite.v1.ExportConfig.State desired_state = 1;</code>
@@ -2670,407 +1718,112 @@ public final class ExportConfig extends com.google.protobuf.GeneratedMessageV3
       return this;
     }
 
-    private java.util.List<com.google.cloud.pubsublite.proto.ExportConfig.PartitionStatus>
-        statuses_ = java.util.Collections.emptyList();
+    private int currentState_ = 0;
+    /**
+     *
+     *
+     * <pre>
+     * Output only. The current state of the export, which may be different to the desired
+     * state due to errors.
+     * </pre>
+     *
+     * <code>
+     * .google.cloud.pubsublite.v1.ExportConfig.State current_state = 6 [(.google.api.field_behavior) = OUTPUT_ONLY];
+     * </code>
+     *
+     * @return The enum numeric value on the wire for currentState.
+     */
+    @java.lang.Override
+    public int getCurrentStateValue() {
+      return currentState_;
+    }
+    /**
+     *
+     *
+     * <pre>
+     * Output only. The current state of the export, which may be different to the desired
+     * state due to errors.
+     * </pre>
+     *
+     * <code>
+     * .google.cloud.pubsublite.v1.ExportConfig.State current_state = 6 [(.google.api.field_behavior) = OUTPUT_ONLY];
+     * </code>
+     *
+     * @param value The enum numeric value on the wire for currentState to set.
+     * @return This builder for chaining.
+     */
+    public Builder setCurrentStateValue(int value) {
 
-    private void ensureStatusesIsMutable() {
-      if (!((bitField0_ & 0x00000001) != 0)) {
-        statuses_ =
-            new java.util.ArrayList<com.google.cloud.pubsublite.proto.ExportConfig.PartitionStatus>(
-                statuses_);
-        bitField0_ |= 0x00000001;
-      }
+      currentState_ = value;
+      onChanged();
+      return this;
     }
+    /**
+     *
+     *
+     * <pre>
+     * Output only. The current state of the export, which may be different to the desired
+     * state due to errors.
+     * </pre>
+     *
+     * <code>
+     * .google.cloud.pubsublite.v1.ExportConfig.State current_state = 6 [(.google.api.field_behavior) = OUTPUT_ONLY];
+     * </code>
+     *
+     * @return The currentState.
+     */
+    @java.lang.Override
+    public com.google.cloud.pubsublite.proto.ExportConfig.State getCurrentState() {
+      @SuppressWarnings("deprecation")
+      com.google.cloud.pubsublite.proto.ExportConfig.State result =
+          com.google.cloud.pubsublite.proto.ExportConfig.State.valueOf(currentState_);
+      return result == null
+          ? com.google.cloud.pubsublite.proto.ExportConfig.State.UNRECOGNIZED
+          : result;
+    }
+    /**
+     *
+     *
+     * <pre>
+     * Output only. The current state of the export, which may be different to the desired
+     * state due to errors.
+     * </pre>
+     *
+     * <code>
+     * .google.cloud.pubsublite.v1.ExportConfig.State current_state = 6 [(.google.api.field_behavior) = OUTPUT_ONLY];
+     * </code>
+     *
+     * @param value The currentState to set.
+     * @return This builder for chaining.
+     */
+    public Builder setCurrentState(com.google.cloud.pubsublite.proto.ExportConfig.State value) {
+      if (value == null) {
+        throw new NullPointerException();
+      }
 
-    private com.google.protobuf.RepeatedFieldBuilderV3<
-            com.google.cloud.pubsublite.proto.ExportConfig.PartitionStatus,
-            com.google.cloud.pubsublite.proto.ExportConfig.PartitionStatus.Builder,
-            com.google.cloud.pubsublite.proto.ExportConfig.PartitionStatusOrBuilder>
-        statusesBuilder_;
+      currentState_ = value.getNumber();
+      onChanged();
+      return this;
+    }
+    /**
+     *
+     *
+     * <pre>
+     * Output only. The current state of the export, which may be different to the desired
+     * state due to errors.
+     * </pre>
+     *
+     * <code>
+     * .google.cloud.pubsublite.v1.ExportConfig.State current_state = 6 [(.google.api.field_behavior) = OUTPUT_ONLY];
+     * </code>
+     *
+     * @return This builder for chaining.
+     */
+    public Builder clearCurrentState() {
 
-    /**
-     *
-     *
-     * <pre>
-     * Output only. The export statuses of each partition. This field is output only.
-     * </pre>
-     *
-     * <code>
-     * repeated .google.cloud.pubsublite.v1.ExportConfig.PartitionStatus statuses = 4 [(.google.api.field_behavior) = OUTPUT_ONLY];
-     * </code>
-     */
-    public java.util.List<com.google.cloud.pubsublite.proto.ExportConfig.PartitionStatus>
-        getStatusesList() {
-      if (statusesBuilder_ == null) {
-        return java.util.Collections.unmodifiableList(statuses_);
-      } else {
-        return statusesBuilder_.getMessageList();
-      }
-    }
-    /**
-     *
-     *
-     * <pre>
-     * Output only. The export statuses of each partition. This field is output only.
-     * </pre>
-     *
-     * <code>
-     * repeated .google.cloud.pubsublite.v1.ExportConfig.PartitionStatus statuses = 4 [(.google.api.field_behavior) = OUTPUT_ONLY];
-     * </code>
-     */
-    public int getStatusesCount() {
-      if (statusesBuilder_ == null) {
-        return statuses_.size();
-      } else {
-        return statusesBuilder_.getCount();
-      }
-    }
-    /**
-     *
-     *
-     * <pre>
-     * Output only. The export statuses of each partition. This field is output only.
-     * </pre>
-     *
-     * <code>
-     * repeated .google.cloud.pubsublite.v1.ExportConfig.PartitionStatus statuses = 4 [(.google.api.field_behavior) = OUTPUT_ONLY];
-     * </code>
-     */
-    public com.google.cloud.pubsublite.proto.ExportConfig.PartitionStatus getStatuses(int index) {
-      if (statusesBuilder_ == null) {
-        return statuses_.get(index);
-      } else {
-        return statusesBuilder_.getMessage(index);
-      }
-    }
-    /**
-     *
-     *
-     * <pre>
-     * Output only. The export statuses of each partition. This field is output only.
-     * </pre>
-     *
-     * <code>
-     * repeated .google.cloud.pubsublite.v1.ExportConfig.PartitionStatus statuses = 4 [(.google.api.field_behavior) = OUTPUT_ONLY];
-     * </code>
-     */
-    public Builder setStatuses(
-        int index, com.google.cloud.pubsublite.proto.ExportConfig.PartitionStatus value) {
-      if (statusesBuilder_ == null) {
-        if (value == null) {
-          throw new NullPointerException();
-        }
-        ensureStatusesIsMutable();
-        statuses_.set(index, value);
-        onChanged();
-      } else {
-        statusesBuilder_.setMessage(index, value);
-      }
+      currentState_ = 0;
+      onChanged();
       return this;
-    }
-    /**
-     *
-     *
-     * <pre>
-     * Output only. The export statuses of each partition. This field is output only.
-     * </pre>
-     *
-     * <code>
-     * repeated .google.cloud.pubsublite.v1.ExportConfig.PartitionStatus statuses = 4 [(.google.api.field_behavior) = OUTPUT_ONLY];
-     * </code>
-     */
-    public Builder setStatuses(
-        int index,
-        com.google.cloud.pubsublite.proto.ExportConfig.PartitionStatus.Builder builderForValue) {
-      if (statusesBuilder_ == null) {
-        ensureStatusesIsMutable();
-        statuses_.set(index, builderForValue.build());
-        onChanged();
-      } else {
-        statusesBuilder_.setMessage(index, builderForValue.build());
-      }
-      return this;
-    }
-    /**
-     *
-     *
-     * <pre>
-     * Output only. The export statuses of each partition. This field is output only.
-     * </pre>
-     *
-     * <code>
-     * repeated .google.cloud.pubsublite.v1.ExportConfig.PartitionStatus statuses = 4 [(.google.api.field_behavior) = OUTPUT_ONLY];
-     * </code>
-     */
-    public Builder addStatuses(
-        com.google.cloud.pubsublite.proto.ExportConfig.PartitionStatus value) {
-      if (statusesBuilder_ == null) {
-        if (value == null) {
-          throw new NullPointerException();
-        }
-        ensureStatusesIsMutable();
-        statuses_.add(value);
-        onChanged();
-      } else {
-        statusesBuilder_.addMessage(value);
-      }
-      return this;
-    }
-    /**
-     *
-     *
-     * <pre>
-     * Output only. The export statuses of each partition. This field is output only.
-     * </pre>
-     *
-     * <code>
-     * repeated .google.cloud.pubsublite.v1.ExportConfig.PartitionStatus statuses = 4 [(.google.api.field_behavior) = OUTPUT_ONLY];
-     * </code>
-     */
-    public Builder addStatuses(
-        int index, com.google.cloud.pubsublite.proto.ExportConfig.PartitionStatus value) {
-      if (statusesBuilder_ == null) {
-        if (value == null) {
-          throw new NullPointerException();
-        }
-        ensureStatusesIsMutable();
-        statuses_.add(index, value);
-        onChanged();
-      } else {
-        statusesBuilder_.addMessage(index, value);
-      }
-      return this;
-    }
-    /**
-     *
-     *
-     * <pre>
-     * Output only. The export statuses of each partition. This field is output only.
-     * </pre>
-     *
-     * <code>
-     * repeated .google.cloud.pubsublite.v1.ExportConfig.PartitionStatus statuses = 4 [(.google.api.field_behavior) = OUTPUT_ONLY];
-     * </code>
-     */
-    public Builder addStatuses(
-        com.google.cloud.pubsublite.proto.ExportConfig.PartitionStatus.Builder builderForValue) {
-      if (statusesBuilder_ == null) {
-        ensureStatusesIsMutable();
-        statuses_.add(builderForValue.build());
-        onChanged();
-      } else {
-        statusesBuilder_.addMessage(builderForValue.build());
-      }
-      return this;
-    }
-    /**
-     *
-     *
-     * <pre>
-     * Output only. The export statuses of each partition. This field is output only.
-     * </pre>
-     *
-     * <code>
-     * repeated .google.cloud.pubsublite.v1.ExportConfig.PartitionStatus statuses = 4 [(.google.api.field_behavior) = OUTPUT_ONLY];
-     * </code>
-     */
-    public Builder addStatuses(
-        int index,
-        com.google.cloud.pubsublite.proto.ExportConfig.PartitionStatus.Builder builderForValue) {
-      if (statusesBuilder_ == null) {
-        ensureStatusesIsMutable();
-        statuses_.add(index, builderForValue.build());
-        onChanged();
-      } else {
-        statusesBuilder_.addMessage(index, builderForValue.build());
-      }
-      return this;
-    }
-    /**
-     *
-     *
-     * <pre>
-     * Output only. The export statuses of each partition. This field is output only.
-     * </pre>
-     *
-     * <code>
-     * repeated .google.cloud.pubsublite.v1.ExportConfig.PartitionStatus statuses = 4 [(.google.api.field_behavior) = OUTPUT_ONLY];
-     * </code>
-     */
-    public Builder addAllStatuses(
-        java.lang.Iterable<? extends com.google.cloud.pubsublite.proto.ExportConfig.PartitionStatus>
-            values) {
-      if (statusesBuilder_ == null) {
-        ensureStatusesIsMutable();
-        com.google.protobuf.AbstractMessageLite.Builder.addAll(values, statuses_);
-        onChanged();
-      } else {
-        statusesBuilder_.addAllMessages(values);
-      }
-      return this;
-    }
-    /**
-     *
-     *
-     * <pre>
-     * Output only. The export statuses of each partition. This field is output only.
-     * </pre>
-     *
-     * <code>
-     * repeated .google.cloud.pubsublite.v1.ExportConfig.PartitionStatus statuses = 4 [(.google.api.field_behavior) = OUTPUT_ONLY];
-     * </code>
-     */
-    public Builder clearStatuses() {
-      if (statusesBuilder_ == null) {
-        statuses_ = java.util.Collections.emptyList();
-        bitField0_ = (bitField0_ & ~0x00000001);
-        onChanged();
-      } else {
-        statusesBuilder_.clear();
-      }
-      return this;
-    }
-    /**
-     *
-     *
-     * <pre>
-     * Output only. The export statuses of each partition. This field is output only.
-     * </pre>
-     *
-     * <code>
-     * repeated .google.cloud.pubsublite.v1.ExportConfig.PartitionStatus statuses = 4 [(.google.api.field_behavior) = OUTPUT_ONLY];
-     * </code>
-     */
-    public Builder removeStatuses(int index) {
-      if (statusesBuilder_ == null) {
-        ensureStatusesIsMutable();
-        statuses_.remove(index);
-        onChanged();
-      } else {
-        statusesBuilder_.remove(index);
-      }
-      return this;
-    }
-    /**
-     *
-     *
-     * <pre>
-     * Output only. The export statuses of each partition. This field is output only.
-     * </pre>
-     *
-     * <code>
-     * repeated .google.cloud.pubsublite.v1.ExportConfig.PartitionStatus statuses = 4 [(.google.api.field_behavior) = OUTPUT_ONLY];
-     * </code>
-     */
-    public com.google.cloud.pubsublite.proto.ExportConfig.PartitionStatus.Builder
-        getStatusesBuilder(int index) {
-      return getStatusesFieldBuilder().getBuilder(index);
-    }
-    /**
-     *
-     *
-     * <pre>
-     * Output only. The export statuses of each partition. This field is output only.
-     * </pre>
-     *
-     * <code>
-     * repeated .google.cloud.pubsublite.v1.ExportConfig.PartitionStatus statuses = 4 [(.google.api.field_behavior) = OUTPUT_ONLY];
-     * </code>
-     */
-    public com.google.cloud.pubsublite.proto.ExportConfig.PartitionStatusOrBuilder
-        getStatusesOrBuilder(int index) {
-      if (statusesBuilder_ == null) {
-        return statuses_.get(index);
-      } else {
-        return statusesBuilder_.getMessageOrBuilder(index);
-      }
-    }
-    /**
-     *
-     *
-     * <pre>
-     * Output only. The export statuses of each partition. This field is output only.
-     * </pre>
-     *
-     * <code>
-     * repeated .google.cloud.pubsublite.v1.ExportConfig.PartitionStatus statuses = 4 [(.google.api.field_behavior) = OUTPUT_ONLY];
-     * </code>
-     */
-    public java.util.List<
-            ? extends com.google.cloud.pubsublite.proto.ExportConfig.PartitionStatusOrBuilder>
-        getStatusesOrBuilderList() {
-      if (statusesBuilder_ != null) {
-        return statusesBuilder_.getMessageOrBuilderList();
-      } else {
-        return java.util.Collections.unmodifiableList(statuses_);
-      }
-    }
-    /**
-     *
-     *
-     * <pre>
-     * Output only. The export statuses of each partition. This field is output only.
-     * </pre>
-     *
-     * <code>
-     * repeated .google.cloud.pubsublite.v1.ExportConfig.PartitionStatus statuses = 4 [(.google.api.field_behavior) = OUTPUT_ONLY];
-     * </code>
-     */
-    public com.google.cloud.pubsublite.proto.ExportConfig.PartitionStatus.Builder
-        addStatusesBuilder() {
-      return getStatusesFieldBuilder()
-          .addBuilder(
-              com.google.cloud.pubsublite.proto.ExportConfig.PartitionStatus.getDefaultInstance());
-    }
-    /**
-     *
-     *
-     * <pre>
-     * Output only. The export statuses of each partition. This field is output only.
-     * </pre>
-     *
-     * <code>
-     * repeated .google.cloud.pubsublite.v1.ExportConfig.PartitionStatus statuses = 4 [(.google.api.field_behavior) = OUTPUT_ONLY];
-     * </code>
-     */
-    public com.google.cloud.pubsublite.proto.ExportConfig.PartitionStatus.Builder
-        addStatusesBuilder(int index) {
-      return getStatusesFieldBuilder()
-          .addBuilder(
-              index,
-              com.google.cloud.pubsublite.proto.ExportConfig.PartitionStatus.getDefaultInstance());
-    }
-    /**
-     *
-     *
-     * <pre>
-     * Output only. The export statuses of each partition. This field is output only.
-     * </pre>
-     *
-     * <code>
-     * repeated .google.cloud.pubsublite.v1.ExportConfig.PartitionStatus statuses = 4 [(.google.api.field_behavior) = OUTPUT_ONLY];
-     * </code>
-     */
-    public java.util.List<com.google.cloud.pubsublite.proto.ExportConfig.PartitionStatus.Builder>
-        getStatusesBuilderList() {
-      return getStatusesFieldBuilder().getBuilderList();
-    }
-
-    private com.google.protobuf.RepeatedFieldBuilderV3<
-            com.google.cloud.pubsublite.proto.ExportConfig.PartitionStatus,
-            com.google.cloud.pubsublite.proto.ExportConfig.PartitionStatus.Builder,
-            com.google.cloud.pubsublite.proto.ExportConfig.PartitionStatusOrBuilder>
-        getStatusesFieldBuilder() {
-      if (statusesBuilder_ == null) {
-        statusesBuilder_ =
-            new com.google.protobuf.RepeatedFieldBuilderV3<
-                com.google.cloud.pubsublite.proto.ExportConfig.PartitionStatus,
-                com.google.cloud.pubsublite.proto.ExportConfig.PartitionStatus.Builder,
-                com.google.cloud.pubsublite.proto.ExportConfig.PartitionStatusOrBuilder>(
-                statuses_, ((bitField0_ & 0x00000001) != 0), getParentForChildren(), isClean());
-        statuses_ = null;
-      }
-      return statusesBuilder_;
     }
 
     private java.lang.Object deadLetterTopic_ = "";

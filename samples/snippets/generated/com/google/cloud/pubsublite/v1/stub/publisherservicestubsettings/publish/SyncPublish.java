@@ -16,7 +16,7 @@
 
 package com.google.cloud.pubsublite.v1.stub.samples;
 
-// [START pubsublite_v1_generated_publisherservicestubsettings_publish_sync]
+// [START pubsublite_v1_generated_PublisherServiceStubSettings_Publish_sync]
 import com.google.cloud.pubsublite.v1.stub.PublisherServiceStubSettings;
 import java.time.Duration;
 
@@ -43,4 +43,4 @@ public class SyncPublish {
     PublisherServiceStubSettings publisherServiceSettings = publisherServiceSettingsBuilder.build();
   }
 }
-// [END pubsublite_v1_generated_publisherservicestubsettings_publish_sync]
+// [END pubsublite_v1_generated_PublisherServiceStubSettings_Publish_sync]

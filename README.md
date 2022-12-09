@@ -32,13 +32,13 @@ If you are using Maven, add this to your pom.xml file:
 If you are using Gradle without BOM, add this to your dependencies:
 
 ```Groovy
-implementation 'com.google.cloud:google-cloud-pubsublite:1.9.0'
+implementation 'com.google.cloud:google-cloud-pubsublite:1.9.1'
 ```
 
 If you are using SBT, add this to your dependencies:
 
 ```Scala
-libraryDependencies += "com.google.cloud" % "google-cloud-pubsublite" % "1.9.0"
+libraryDependencies += "com.google.cloud" % "google-cloud-pubsublite" % "1.9.1"
 ```
 
 ## Authentication
@@ -355,6 +355,7 @@ Samples are in the [`samples/`](https://github.com/googleapis/java-pubsublite/tr
 
 | Sample                      | Source Code                       | Try it |
 | --------------------------- | --------------------------------- | ------ |
+| Create Pubsub Export Subscription Example | [source code](https://github.com/googleapis/java-pubsublite/blob/main/samples/snippets/src/main/java/pubsublite/CreatePubsubExportSubscriptionExample.java) | [![Open in Cloud Shell][shell_img]](https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/googleapis/java-pubsublite&page=editor&open_in_editor=samples/snippets/src/main/java/pubsublite/CreatePubsubExportSubscriptionExample.java) |
 | Create Reservation Example | [source code](https://github.com/googleapis/java-pubsublite/blob/main/samples/snippets/src/main/java/pubsublite/CreateReservationExample.java) | [![Open in Cloud Shell][shell_img]](https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/googleapis/java-pubsublite&page=editor&open_in_editor=samples/snippets/src/main/java/pubsublite/CreateReservationExample.java) |
 | Create Subscription Example | [source code](https://github.com/googleapis/java-pubsublite/blob/main/samples/snippets/src/main/java/pubsublite/CreateSubscriptionExample.java) | [![Open in Cloud Shell][shell_img]](https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/googleapis/java-pubsublite&page=editor&open_in_editor=samples/snippets/src/main/java/pubsublite/CreateSubscriptionExample.java) |
 | Create Topic Example | [source code](https://github.com/googleapis/java-pubsublite/blob/main/samples/snippets/src/main/java/pubsublite/CreateTopicExample.java) | [![Open in Cloud Shell][shell_img]](https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/googleapis/java-pubsublite&page=editor&open_in_editor=samples/snippets/src/main/java/pubsublite/CreateTopicExample.java) |

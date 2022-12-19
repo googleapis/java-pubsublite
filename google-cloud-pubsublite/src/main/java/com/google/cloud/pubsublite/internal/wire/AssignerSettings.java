@@ -35,8 +35,11 @@ public abstract class AssignerSettings {
 
   abstract PartitionAssignmentServiceClient serviceClient();
 
+  // Optional parameters.
+  abstract UUID uuid();
+
   public static Builder newBuilder() {
-    return new AutoValue_AssignerSettings.Builder();
+    return new AutoValue_AssignerSettings.Builder().setUuid(UUID.randomUUID());
   }
 
   @AutoValue.Builder
@@ -48,15 +51,17 @@ public abstract class AssignerSettings {
 
     public abstract Builder setServiceClient(PartitionAssignmentServiceClient serviceClient);
 
+    // Optional parameters.
+    public abstract Builder setUuid(UUID uuid);
+
     public abstract AssignerSettings build();
   }
 
   public Assigner instantiate() {
-    UUID uuid = UUID.randomUUID();
     ByteBuffer uuidBuffer = ByteBuffer.allocate(16);
-    uuidBuffer.putLong(uuid.getMostSignificantBits());
-    uuidBuffer.putLong(uuid.getLeastSignificantBits());
-    logger.atInfo().log("Subscription %s using UUID %s for assignment.", subscriptionPath(), uuid);
+    uuidBuffer.putLong(uuid().getMostSignificantBits());
+    uuidBuffer.putLong(uuid().getLeastSignificantBits());
+    logger.atInfo().log("Subscription %s using UUID %s for assignment.", subscriptionPath(), uuid());
 
     InitialPartitionAssignmentRequest initial =
         InitialPartitionAssignmentRequest.newBuilder()

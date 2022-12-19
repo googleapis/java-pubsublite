@@ -61,7 +61,8 @@ public abstract class AssignerSettings {
     ByteBuffer uuidBuffer = ByteBuffer.allocate(16);
     uuidBuffer.putLong(uuid().getMostSignificantBits());
     uuidBuffer.putLong(uuid().getLeastSignificantBits());
-    logger.atInfo().log("Subscription %s using UUID %s for assignment.", subscriptionPath(), uuid());
+    logger.atInfo().log(
+        "Subscription %s using UUID %s for assignment.", subscriptionPath(), uuid());
 
     InitialPartitionAssignmentRequest initial =
         InitialPartitionAssignmentRequest.newBuilder()

@@ -37,7 +37,10 @@ public class SyncPublish {
     publisherServiceSettingsBuilder
         .publishSettings()
         .setRetrySettings(
-            publisherServiceSettingsBuilder.publishSettings().getRetrySettings().toBuilder()
+            publisherServiceSettingsBuilder
+                .publishSettings()
+                .getRetrySettings()
+                .toBuilder()
                 .setTotalTimeout(Duration.ofSeconds(30))
                 .build());
     PublisherServiceStubSettings publisherServiceSettings = publisherServiceSettingsBuilder.build();

@@ -68,7 +68,10 @@ import javax.annotation.Generated;
  * cursorServiceSettingsBuilder
  *     .commitCursorSettings()
  *     .setRetrySettings(
- *         cursorServiceSettingsBuilder.commitCursorSettings().getRetrySettings().toBuilder()
+ *         cursorServiceSettingsBuilder
+ *             .commitCursorSettings()
+ *             .getRetrySettings()
+ *             .toBuilder()
  *             .setTotalTimeout(Duration.ofSeconds(30))
  *             .build());
  * CursorServiceSettings cursorServiceSettings = cursorServiceSettingsBuilder.build();

@@ -37,7 +37,10 @@ public class SyncCreateTopic {
     adminServiceSettingsBuilder
         .createTopicSettings()
         .setRetrySettings(
-            adminServiceSettingsBuilder.createTopicSettings().getRetrySettings().toBuilder()
+            adminServiceSettingsBuilder
+                .createTopicSettings()
+                .getRetrySettings()
+                .toBuilder()
                 .setTotalTimeout(Duration.ofSeconds(30))
                 .build());
     AdminServiceStubSettings adminServiceSettings = adminServiceSettingsBuilder.build();

@@ -37,7 +37,10 @@ public class SyncSubscribe {
     subscriberServiceSettingsBuilder
         .subscribeSettings()
         .setRetrySettings(
-            subscriberServiceSettingsBuilder.subscribeSettings().getRetrySettings().toBuilder()
+            subscriberServiceSettingsBuilder
+                .subscribeSettings()
+                .getRetrySettings()
+                .toBuilder()
                 .setTotalTimeout(Duration.ofSeconds(30))
                 .build());
     SubscriberServiceStubSettings subscriberServiceSettings =

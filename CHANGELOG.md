@@ -1,5 +1,21 @@
 # Changelog
 
+## [1.9.3](https://github.com/googleapis/java-pubsublite/compare/v1.9.2...v1.9.3) (2023-01-17)
+
+
+### Bug Fixes
+
+* Add the ability to set UUID in AssignerSettings ([#1296](https://github.com/googleapis/java-pubsublite/issues/1296)) ([cade129](https://github.com/googleapis/java-pubsublite/commit/cade1291dabbba1e6a7576d0222284f75b47239a))
+
+
+### Dependencies
+
+* Update dependency com.google.cloud:google-cloud-bom to v0.183.0 ([#1295](https://github.com/googleapis/java-pubsublite/issues/1295)) ([533aeaf](https://github.com/googleapis/java-pubsublite/commit/533aeaf661bb42a70d6b8ae035c0e1727c2e5886))
+* Update dependency com.google.cloud:google-cloud-bom to v0.184.0 ([#1302](https://github.com/googleapis/java-pubsublite/issues/1302)) ([cad11d4](https://github.com/googleapis/java-pubsublite/commit/cad11d4d20514d6c52566c64c33682d653f33680))
+* Update dependency com.google.cloud:google-cloud-pubsub to v1.122.2 ([#1292](https://github.com/googleapis/java-pubsublite/issues/1292)) ([1a47b2b](https://github.com/googleapis/java-pubsublite/commit/1a47b2bee5b618f1734b6cf6a21607f86a9b3b6a))
+* Update dependency com.google.cloud:google-cloud-pubsub to v1.123.0 ([#1303](https://github.com/googleapis/java-pubsublite/issues/1303)) ([d23b398](https://github.com/googleapis/java-pubsublite/commit/d23b39868b0fda9c7670a477b7d065977951d135))
+* Update dependency com.google.cloud:google-cloud-shared-dependencies to v3.1.1 ([#1300](https://github.com/googleapis/java-pubsublite/issues/1300)) ([bef5abc](https://github.com/googleapis/java-pubsublite/commit/bef5abc3f4b358635b29df092796f641d0f76f12))
+
 ## [1.9.2](https://github.com/googleapis/java-pubsublite/compare/v1.9.1...v1.9.2) (2022-12-15)
 
 

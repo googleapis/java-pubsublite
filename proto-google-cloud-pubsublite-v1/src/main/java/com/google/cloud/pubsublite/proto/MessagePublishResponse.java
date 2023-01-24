@@ -113,7 +113,9 @@ public final class MessagePublishResponse extends com.google.protobuf.GeneratedM
    */
   @java.lang.Override
   public com.google.cloud.pubsublite.proto.CursorOrBuilder getStartCursorOrBuilder() {
-    return getStartCursor();
+    return startCursor_ == null
+        ? com.google.cloud.pubsublite.proto.Cursor.getDefaultInstance()
+        : startCursor_;
   }
 
   private byte memoizedIsInitialized = -1;
@@ -319,10 +321,10 @@ public final class MessagePublishResponse extends com.google.protobuf.GeneratedM
     @java.lang.Override
     public Builder clear() {
       super.clear();
-      if (startCursorBuilder_ == null) {
-        startCursor_ = null;
-      } else {
-        startCursor_ = null;
+      bitField0_ = 0;
+      startCursor_ = null;
+      if (startCursorBuilder_ != null) {
+        startCursorBuilder_.dispose();
         startCursorBuilder_ = null;
       }
       return this;
@@ -352,13 +354,19 @@ public final class MessagePublishResponse extends com.google.protobuf.GeneratedM
     public com.google.cloud.pubsublite.proto.MessagePublishResponse buildPartial() {
       com.google.cloud.pubsublite.proto.MessagePublishResponse result =
           new com.google.cloud.pubsublite.proto.MessagePublishResponse(this);
-      if (startCursorBuilder_ == null) {
-        result.startCursor_ = startCursor_;
-      } else {
-        result.startCursor_ = startCursorBuilder_.build();
+      if (bitField0_ != 0) {
+        buildPartial0(result);
       }
       onBuilt();
       return result;
+    }
+
+    private void buildPartial0(com.google.cloud.pubsublite.proto.MessagePublishResponse result) {
+      int from_bitField0_ = bitField0_;
+      if (((from_bitField0_ & 0x00000001) != 0)) {
+        result.startCursor_ =
+            startCursorBuilder_ == null ? startCursor_ : startCursorBuilder_.build();
+      }
     }
 
     @java.lang.Override
@@ -439,7 +447,7 @@ public final class MessagePublishResponse extends com.google.protobuf.GeneratedM
             case 10:
               {
                 input.readMessage(getStartCursorFieldBuilder().getBuilder(), extensionRegistry);
-
+                bitField0_ |= 0x00000001;
                 break;
               } // case 10
             default:
@@ -458,6 +466,8 @@ public final class MessagePublishResponse extends com.google.protobuf.GeneratedM
       } // finally
       return this;
     }
+
+    private int bitField0_;
 
     private com.google.cloud.pubsublite.proto.Cursor startCursor_;
     private com.google.protobuf.SingleFieldBuilderV3<
@@ -478,7 +488,7 @@ public final class MessagePublishResponse extends com.google.protobuf.GeneratedM
      * @return Whether the startCursor field is set.
      */
     public boolean hasStartCursor() {
-      return startCursorBuilder_ != null || startCursor_ != null;
+      return ((bitField0_ & 0x00000001) != 0);
     }
     /**
      *
@@ -517,11 +527,11 @@ public final class MessagePublishResponse extends com.google.protobuf.GeneratedM
           throw new NullPointerException();
         }
         startCursor_ = value;
-        onChanged();
       } else {
         startCursorBuilder_.setMessage(value);
       }
-
+      bitField0_ |= 0x00000001;
+      onChanged();
       return this;
     }
     /**
@@ -538,11 +548,11 @@ public final class MessagePublishResponse extends com.google.protobuf.GeneratedM
         com.google.cloud.pubsublite.proto.Cursor.Builder builderForValue) {
       if (startCursorBuilder_ == null) {
         startCursor_ = builderForValue.build();
-        onChanged();
       } else {
         startCursorBuilder_.setMessage(builderForValue.build());
       }
-
+      bitField0_ |= 0x00000001;
+      onChanged();
       return this;
     }
     /**
@@ -557,19 +567,18 @@ public final class MessagePublishResponse extends com.google.protobuf.GeneratedM
      */
     public Builder mergeStartCursor(com.google.cloud.pubsublite.proto.Cursor value) {
       if (startCursorBuilder_ == null) {
-        if (startCursor_ != null) {
-          startCursor_ =
-              com.google.cloud.pubsublite.proto.Cursor.newBuilder(startCursor_)
-                  .mergeFrom(value)
-                  .buildPartial();
+        if (((bitField0_ & 0x00000001) != 0)
+            && startCursor_ != null
+            && startCursor_ != com.google.cloud.pubsublite.proto.Cursor.getDefaultInstance()) {
+          getStartCursorBuilder().mergeFrom(value);
         } else {
           startCursor_ = value;
         }
-        onChanged();
       } else {
         startCursorBuilder_.mergeFrom(value);
       }
-
+      bitField0_ |= 0x00000001;
+      onChanged();
       return this;
     }
     /**
@@ -583,14 +592,13 @@ public final class MessagePublishResponse extends com.google.protobuf.GeneratedM
      * <code>.google.cloud.pubsublite.v1.Cursor start_cursor = 1;</code>
      */
     public Builder clearStartCursor() {
-      if (startCursorBuilder_ == null) {
-        startCursor_ = null;
-        onChanged();
-      } else {
-        startCursor_ = null;
+      bitField0_ = (bitField0_ & ~0x00000001);
+      startCursor_ = null;
+      if (startCursorBuilder_ != null) {
+        startCursorBuilder_.dispose();
         startCursorBuilder_ = null;
       }
-
+      onChanged();
       return this;
     }
     /**
@@ -604,7 +612,7 @@ public final class MessagePublishResponse extends com.google.protobuf.GeneratedM
      * <code>.google.cloud.pubsublite.v1.Cursor start_cursor = 1;</code>
      */
     public com.google.cloud.pubsublite.proto.Cursor.Builder getStartCursorBuilder() {
-
+      bitField0_ |= 0x00000001;
       onChanged();
       return getStartCursorFieldBuilder().getBuilder();
     }

@@ -69,7 +69,9 @@ public final class InitialSubscribeRequest extends com.google.protobuf.Generated
   }
 
   public static final int SUBSCRIPTION_FIELD_NUMBER = 1;
-  private volatile java.lang.Object subscription_;
+
+  @SuppressWarnings("serial")
+  private volatile java.lang.Object subscription_ = "";
   /**
    *
    *
@@ -118,7 +120,7 @@ public final class InitialSubscribeRequest extends com.google.protobuf.Generated
   }
 
   public static final int PARTITION_FIELD_NUMBER = 2;
-  private long partition_;
+  private long partition_ = 0L;
   /**
    *
    *
@@ -193,7 +195,9 @@ public final class InitialSubscribeRequest extends com.google.protobuf.Generated
    */
   @java.lang.Override
   public com.google.cloud.pubsublite.proto.SeekRequestOrBuilder getInitialLocationOrBuilder() {
-    return getInitialLocation();
+    return initialLocation_ == null
+        ? com.google.cloud.pubsublite.proto.SeekRequest.getDefaultInstance()
+        : initialLocation_;
   }
 
   private byte memoizedIsInitialized = -1;
@@ -418,14 +422,12 @@ public final class InitialSubscribeRequest extends com.google.protobuf.Generated
     @java.lang.Override
     public Builder clear() {
       super.clear();
+      bitField0_ = 0;
       subscription_ = "";
-
       partition_ = 0L;
-
-      if (initialLocationBuilder_ == null) {
-        initialLocation_ = null;
-      } else {
-        initialLocation_ = null;
+      initialLocation_ = null;
+      if (initialLocationBuilder_ != null) {
+        initialLocationBuilder_.dispose();
         initialLocationBuilder_ = null;
       }
       return this;
@@ -455,15 +457,25 @@ public final class InitialSubscribeRequest extends com.google.protobuf.Generated
     public com.google.cloud.pubsublite.proto.InitialSubscribeRequest buildPartial() {
       com.google.cloud.pubsublite.proto.InitialSubscribeRequest result =
           new com.google.cloud.pubsublite.proto.InitialSubscribeRequest(this);
-      result.subscription_ = subscription_;
-      result.partition_ = partition_;
-      if (initialLocationBuilder_ == null) {
-        result.initialLocation_ = initialLocation_;
-      } else {
-        result.initialLocation_ = initialLocationBuilder_.build();
+      if (bitField0_ != 0) {
+        buildPartial0(result);
       }
       onBuilt();
       return result;
+    }
+
+    private void buildPartial0(com.google.cloud.pubsublite.proto.InitialSubscribeRequest result) {
+      int from_bitField0_ = bitField0_;
+      if (((from_bitField0_ & 0x00000001) != 0)) {
+        result.subscription_ = subscription_;
+      }
+      if (((from_bitField0_ & 0x00000002) != 0)) {
+        result.partition_ = partition_;
+      }
+      if (((from_bitField0_ & 0x00000004) != 0)) {
+        result.initialLocation_ =
+            initialLocationBuilder_ == null ? initialLocation_ : initialLocationBuilder_.build();
+      }
     }
 
     @java.lang.Override
@@ -514,6 +526,7 @@ public final class InitialSubscribeRequest extends com.google.protobuf.Generated
         return this;
       if (!other.getSubscription().isEmpty()) {
         subscription_ = other.subscription_;
+        bitField0_ |= 0x00000001;
         onChanged();
       }
       if (other.getPartition() != 0L) {
@@ -551,19 +564,19 @@ public final class InitialSubscribeRequest extends com.google.protobuf.Generated
             case 10:
               {
                 subscription_ = input.readStringRequireUtf8();
-
+                bitField0_ |= 0x00000001;
                 break;
               } // case 10
             case 16:
               {
                 partition_ = input.readInt64();
-
+                bitField0_ |= 0x00000002;
                 break;
               } // case 16
             case 34:
               {
                 input.readMessage(getInitialLocationFieldBuilder().getBuilder(), extensionRegistry);
-
+                bitField0_ |= 0x00000004;
                 break;
               } // case 34
             default:
@@ -582,6 +595,8 @@ public final class InitialSubscribeRequest extends com.google.protobuf.Generated
       } // finally
       return this;
     }
+
+    private int bitField0_;
 
     private java.lang.Object subscription_ = "";
     /**
@@ -644,8 +659,8 @@ public final class InitialSubscribeRequest extends com.google.protobuf.Generated
       if (value == null) {
         throw new NullPointerException();
       }
-
       subscription_ = value;
+      bitField0_ |= 0x00000001;
       onChanged();
       return this;
     }
@@ -661,8 +676,8 @@ public final class InitialSubscribeRequest extends com.google.protobuf.Generated
      * @return This builder for chaining.
      */
     public Builder clearSubscription() {
-
       subscription_ = getDefaultInstance().getSubscription();
+      bitField0_ = (bitField0_ & ~0x00000001);
       onChanged();
       return this;
     }
@@ -683,8 +698,8 @@ public final class InitialSubscribeRequest extends com.google.protobuf.Generated
         throw new NullPointerException();
       }
       checkByteStringIsUtf8(value);
-
       subscription_ = value;
+      bitField0_ |= 0x00000001;
       onChanged();
       return this;
     }
@@ -722,6 +737,7 @@ public final class InitialSubscribeRequest extends com.google.protobuf.Generated
     public Builder setPartition(long value) {
 
       partition_ = value;
+      bitField0_ |= 0x00000002;
       onChanged();
       return this;
     }
@@ -738,7 +754,7 @@ public final class InitialSubscribeRequest extends com.google.protobuf.Generated
      * @return This builder for chaining.
      */
     public Builder clearPartition() {
-
+      bitField0_ = (bitField0_ & ~0x00000002);
       partition_ = 0L;
       onChanged();
       return this;
@@ -766,7 +782,7 @@ public final class InitialSubscribeRequest extends com.google.protobuf.Generated
      * @return Whether the initialLocation field is set.
      */
     public boolean hasInitialLocation() {
-      return initialLocationBuilder_ != null || initialLocation_ != null;
+      return ((bitField0_ & 0x00000004) != 0);
     }
     /**
      *
@@ -811,11 +827,11 @@ public final class InitialSubscribeRequest extends com.google.protobuf.Generated
           throw new NullPointerException();
         }
         initialLocation_ = value;
-        onChanged();
       } else {
         initialLocationBuilder_.setMessage(value);
       }
-
+      bitField0_ |= 0x00000004;
+      onChanged();
       return this;
     }
     /**
@@ -835,11 +851,11 @@ public final class InitialSubscribeRequest extends com.google.protobuf.Generated
         com.google.cloud.pubsublite.proto.SeekRequest.Builder builderForValue) {
       if (initialLocationBuilder_ == null) {
         initialLocation_ = builderForValue.build();
-        onChanged();
       } else {
         initialLocationBuilder_.setMessage(builderForValue.build());
       }
-
+      bitField0_ |= 0x00000004;
+      onChanged();
       return this;
     }
     /**
@@ -857,19 +873,19 @@ public final class InitialSubscribeRequest extends com.google.protobuf.Generated
      */
     public Builder mergeInitialLocation(com.google.cloud.pubsublite.proto.SeekRequest value) {
       if (initialLocationBuilder_ == null) {
-        if (initialLocation_ != null) {
-          initialLocation_ =
-              com.google.cloud.pubsublite.proto.SeekRequest.newBuilder(initialLocation_)
-                  .mergeFrom(value)
-                  .buildPartial();
+        if (((bitField0_ & 0x00000004) != 0)
+            && initialLocation_ != null
+            && initialLocation_
+                != com.google.cloud.pubsublite.proto.SeekRequest.getDefaultInstance()) {
+          getInitialLocationBuilder().mergeFrom(value);
         } else {
           initialLocation_ = value;
         }
-        onChanged();
       } else {
         initialLocationBuilder_.mergeFrom(value);
       }
-
+      bitField0_ |= 0x00000004;
+      onChanged();
       return this;
     }
     /**
@@ -886,14 +902,13 @@ public final class InitialSubscribeRequest extends com.google.protobuf.Generated
      * </code>
      */
     public Builder clearInitialLocation() {
-      if (initialLocationBuilder_ == null) {
-        initialLocation_ = null;
-        onChanged();
-      } else {
-        initialLocation_ = null;
+      bitField0_ = (bitField0_ & ~0x00000004);
+      initialLocation_ = null;
+      if (initialLocationBuilder_ != null) {
+        initialLocationBuilder_.dispose();
         initialLocationBuilder_ = null;
       }
-
+      onChanged();
       return this;
     }
     /**
@@ -910,7 +925,7 @@ public final class InitialSubscribeRequest extends com.google.protobuf.Generated
      * </code>
      */
     public com.google.cloud.pubsublite.proto.SeekRequest.Builder getInitialLocationBuilder() {
-
+      bitField0_ |= 0x00000004;
       onChanged();
       return getInitialLocationFieldBuilder().getBuilder();
     }

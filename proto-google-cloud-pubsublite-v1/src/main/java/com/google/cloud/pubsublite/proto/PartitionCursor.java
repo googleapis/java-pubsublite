@@ -66,7 +66,7 @@ public final class PartitionCursor extends com.google.protobuf.GeneratedMessageV
   }
 
   public static final int PARTITION_FIELD_NUMBER = 1;
-  private long partition_;
+  private long partition_ = 0L;
   /**
    *
    *
@@ -128,7 +128,9 @@ public final class PartitionCursor extends com.google.protobuf.GeneratedMessageV
    */
   @java.lang.Override
   public com.google.cloud.pubsublite.proto.CursorOrBuilder getCursorOrBuilder() {
-    return getCursor();
+    return cursor_ == null
+        ? com.google.cloud.pubsublite.proto.Cursor.getDefaultInstance()
+        : cursor_;
   }
 
   private byte memoizedIsInitialized = -1;
@@ -342,12 +344,11 @@ public final class PartitionCursor extends com.google.protobuf.GeneratedMessageV
     @java.lang.Override
     public Builder clear() {
       super.clear();
+      bitField0_ = 0;
       partition_ = 0L;
-
-      if (cursorBuilder_ == null) {
-        cursor_ = null;
-      } else {
-        cursor_ = null;
+      cursor_ = null;
+      if (cursorBuilder_ != null) {
+        cursorBuilder_.dispose();
         cursorBuilder_ = null;
       }
       return this;
@@ -377,14 +378,21 @@ public final class PartitionCursor extends com.google.protobuf.GeneratedMessageV
     public com.google.cloud.pubsublite.proto.PartitionCursor buildPartial() {
       com.google.cloud.pubsublite.proto.PartitionCursor result =
           new com.google.cloud.pubsublite.proto.PartitionCursor(this);
-      result.partition_ = partition_;
-      if (cursorBuilder_ == null) {
-        result.cursor_ = cursor_;
-      } else {
-        result.cursor_ = cursorBuilder_.build();
+      if (bitField0_ != 0) {
+        buildPartial0(result);
       }
       onBuilt();
       return result;
+    }
+
+    private void buildPartial0(com.google.cloud.pubsublite.proto.PartitionCursor result) {
+      int from_bitField0_ = bitField0_;
+      if (((from_bitField0_ & 0x00000001) != 0)) {
+        result.partition_ = partition_;
+      }
+      if (((from_bitField0_ & 0x00000002) != 0)) {
+        result.cursor_ = cursorBuilder_ == null ? cursor_ : cursorBuilder_.build();
+      }
     }
 
     @java.lang.Override
@@ -468,13 +476,13 @@ public final class PartitionCursor extends com.google.protobuf.GeneratedMessageV
             case 8:
               {
                 partition_ = input.readInt64();
-
+                bitField0_ |= 0x00000001;
                 break;
               } // case 8
             case 18:
               {
                 input.readMessage(getCursorFieldBuilder().getBuilder(), extensionRegistry);
-
+                bitField0_ |= 0x00000002;
                 break;
               } // case 18
             default:
@@ -493,6 +501,8 @@ public final class PartitionCursor extends com.google.protobuf.GeneratedMessageV
       } // finally
       return this;
     }
+
+    private int bitField0_;
 
     private long partition_;
     /**
@@ -525,6 +535,7 @@ public final class PartitionCursor extends com.google.protobuf.GeneratedMessageV
     public Builder setPartition(long value) {
 
       partition_ = value;
+      bitField0_ |= 0x00000001;
       onChanged();
       return this;
     }
@@ -540,7 +551,7 @@ public final class PartitionCursor extends com.google.protobuf.GeneratedMessageV
      * @return This builder for chaining.
      */
     public Builder clearPartition() {
-
+      bitField0_ = (bitField0_ & ~0x00000001);
       partition_ = 0L;
       onChanged();
       return this;
@@ -564,7 +575,7 @@ public final class PartitionCursor extends com.google.protobuf.GeneratedMessageV
      * @return Whether the cursor field is set.
      */
     public boolean hasCursor() {
-      return cursorBuilder_ != null || cursor_ != null;
+      return ((bitField0_ & 0x00000002) != 0);
     }
     /**
      *
@@ -601,11 +612,11 @@ public final class PartitionCursor extends com.google.protobuf.GeneratedMessageV
           throw new NullPointerException();
         }
         cursor_ = value;
-        onChanged();
       } else {
         cursorBuilder_.setMessage(value);
       }
-
+      bitField0_ |= 0x00000002;
+      onChanged();
       return this;
     }
     /**
@@ -620,11 +631,11 @@ public final class PartitionCursor extends com.google.protobuf.GeneratedMessageV
     public Builder setCursor(com.google.cloud.pubsublite.proto.Cursor.Builder builderForValue) {
       if (cursorBuilder_ == null) {
         cursor_ = builderForValue.build();
-        onChanged();
       } else {
         cursorBuilder_.setMessage(builderForValue.build());
       }
-
+      bitField0_ |= 0x00000002;
+      onChanged();
       return this;
     }
     /**
@@ -638,19 +649,18 @@ public final class PartitionCursor extends com.google.protobuf.GeneratedMessageV
      */
     public Builder mergeCursor(com.google.cloud.pubsublite.proto.Cursor value) {
       if (cursorBuilder_ == null) {
-        if (cursor_ != null) {
-          cursor_ =
-              com.google.cloud.pubsublite.proto.Cursor.newBuilder(cursor_)
-                  .mergeFrom(value)
-                  .buildPartial();
+        if (((bitField0_ & 0x00000002) != 0)
+            && cursor_ != null
+            && cursor_ != com.google.cloud.pubsublite.proto.Cursor.getDefaultInstance()) {
+          getCursorBuilder().mergeFrom(value);
         } else {
           cursor_ = value;
         }
-        onChanged();
       } else {
         cursorBuilder_.mergeFrom(value);
       }
-
+      bitField0_ |= 0x00000002;
+      onChanged();
       return this;
     }
     /**
@@ -663,14 +673,13 @@ public final class PartitionCursor extends com.google.protobuf.GeneratedMessageV
      * <code>.google.cloud.pubsublite.v1.Cursor cursor = 2;</code>
      */
     public Builder clearCursor() {
-      if (cursorBuilder_ == null) {
-        cursor_ = null;
-        onChanged();
-      } else {
-        cursor_ = null;
+      bitField0_ = (bitField0_ & ~0x00000002);
+      cursor_ = null;
+      if (cursorBuilder_ != null) {
+        cursorBuilder_.dispose();
         cursorBuilder_ = null;
       }
-
+      onChanged();
       return this;
     }
     /**
@@ -683,7 +692,7 @@ public final class PartitionCursor extends com.google.protobuf.GeneratedMessageV
      * <code>.google.cloud.pubsublite.v1.Cursor cursor = 2;</code>
      */
     public com.google.cloud.pubsublite.proto.Cursor.Builder getCursorBuilder() {
-
+      bitField0_ |= 0x00000002;
       onChanged();
       return getCursorFieldBuilder().getBuilder();
     }

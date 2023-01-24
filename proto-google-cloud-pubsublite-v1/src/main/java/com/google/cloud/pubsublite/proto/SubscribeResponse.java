@@ -511,6 +511,7 @@ public final class SubscribeResponse extends com.google.protobuf.GeneratedMessag
     @java.lang.Override
     public Builder clear() {
       super.clear();
+      bitField0_ = 0;
       if (initialBuilder_ != null) {
         initialBuilder_.clear();
       }
@@ -549,30 +550,30 @@ public final class SubscribeResponse extends com.google.protobuf.GeneratedMessag
     public com.google.cloud.pubsublite.proto.SubscribeResponse buildPartial() {
       com.google.cloud.pubsublite.proto.SubscribeResponse result =
           new com.google.cloud.pubsublite.proto.SubscribeResponse(this);
-      if (responseCase_ == 1) {
-        if (initialBuilder_ == null) {
-          result.response_ = response_;
-        } else {
-          result.response_ = initialBuilder_.build();
-        }
+      if (bitField0_ != 0) {
+        buildPartial0(result);
       }
-      if (responseCase_ == 2) {
-        if (seekBuilder_ == null) {
-          result.response_ = response_;
-        } else {
-          result.response_ = seekBuilder_.build();
-        }
-      }
-      if (responseCase_ == 3) {
-        if (messagesBuilder_ == null) {
-          result.response_ = response_;
-        } else {
-          result.response_ = messagesBuilder_.build();
-        }
-      }
-      result.responseCase_ = responseCase_;
+      buildPartialOneofs(result);
       onBuilt();
       return result;
+    }
+
+    private void buildPartial0(com.google.cloud.pubsublite.proto.SubscribeResponse result) {
+      int from_bitField0_ = bitField0_;
+    }
+
+    private void buildPartialOneofs(com.google.cloud.pubsublite.proto.SubscribeResponse result) {
+      result.responseCase_ = responseCase_;
+      result.response_ = this.response_;
+      if (responseCase_ == 1 && initialBuilder_ != null) {
+        result.response_ = initialBuilder_.build();
+      }
+      if (responseCase_ == 2 && seekBuilder_ != null) {
+        result.response_ = seekBuilder_.build();
+      }
+      if (responseCase_ == 3 && messagesBuilder_ != null) {
+        result.response_ = messagesBuilder_.build();
+      }
     }
 
     @java.lang.Override
@@ -716,6 +717,8 @@ public final class SubscribeResponse extends com.google.protobuf.GeneratedMessag
       onChanged();
       return this;
     }
+
+    private int bitField0_;
 
     private com.google.protobuf.SingleFieldBuilderV3<
             com.google.cloud.pubsublite.proto.InitialSubscribeResponse,
@@ -927,7 +930,6 @@ public final class SubscribeResponse extends com.google.protobuf.GeneratedMessag
       }
       responseCase_ = 1;
       onChanged();
-      ;
       return initialBuilder_;
     }
 
@@ -1136,7 +1138,6 @@ public final class SubscribeResponse extends com.google.protobuf.GeneratedMessag
       }
       responseCase_ = 2;
       onChanged();
-      ;
       return seekBuilder_;
     }
 
@@ -1347,7 +1348,6 @@ public final class SubscribeResponse extends com.google.protobuf.GeneratedMessag
       }
       responseCase_ = 3;
       onChanged();
-      ;
       return messagesBuilder_;
     }
 

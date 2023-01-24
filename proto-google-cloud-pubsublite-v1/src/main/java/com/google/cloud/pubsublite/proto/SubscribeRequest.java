@@ -510,6 +510,7 @@ public final class SubscribeRequest extends com.google.protobuf.GeneratedMessage
     @java.lang.Override
     public Builder clear() {
       super.clear();
+      bitField0_ = 0;
       if (initialBuilder_ != null) {
         initialBuilder_.clear();
       }
@@ -548,30 +549,30 @@ public final class SubscribeRequest extends com.google.protobuf.GeneratedMessage
     public com.google.cloud.pubsublite.proto.SubscribeRequest buildPartial() {
       com.google.cloud.pubsublite.proto.SubscribeRequest result =
           new com.google.cloud.pubsublite.proto.SubscribeRequest(this);
-      if (requestCase_ == 1) {
-        if (initialBuilder_ == null) {
-          result.request_ = request_;
-        } else {
-          result.request_ = initialBuilder_.build();
-        }
+      if (bitField0_ != 0) {
+        buildPartial0(result);
       }
-      if (requestCase_ == 2) {
-        if (seekBuilder_ == null) {
-          result.request_ = request_;
-        } else {
-          result.request_ = seekBuilder_.build();
-        }
-      }
-      if (requestCase_ == 3) {
-        if (flowControlBuilder_ == null) {
-          result.request_ = request_;
-        } else {
-          result.request_ = flowControlBuilder_.build();
-        }
-      }
-      result.requestCase_ = requestCase_;
+      buildPartialOneofs(result);
       onBuilt();
       return result;
+    }
+
+    private void buildPartial0(com.google.cloud.pubsublite.proto.SubscribeRequest result) {
+      int from_bitField0_ = bitField0_;
+    }
+
+    private void buildPartialOneofs(com.google.cloud.pubsublite.proto.SubscribeRequest result) {
+      result.requestCase_ = requestCase_;
+      result.request_ = this.request_;
+      if (requestCase_ == 1 && initialBuilder_ != null) {
+        result.request_ = initialBuilder_.build();
+      }
+      if (requestCase_ == 2 && seekBuilder_ != null) {
+        result.request_ = seekBuilder_.build();
+      }
+      if (requestCase_ == 3 && flowControlBuilder_ != null) {
+        result.request_ = flowControlBuilder_.build();
+      }
     }
 
     @java.lang.Override
@@ -715,6 +716,8 @@ public final class SubscribeRequest extends com.google.protobuf.GeneratedMessage
       onChanged();
       return this;
     }
+
+    private int bitField0_;
 
     private com.google.protobuf.SingleFieldBuilderV3<
             com.google.cloud.pubsublite.proto.InitialSubscribeRequest,
@@ -924,7 +927,6 @@ public final class SubscribeRequest extends com.google.protobuf.GeneratedMessage
       }
       requestCase_ = 1;
       onChanged();
-      ;
       return initialBuilder_;
     }
 
@@ -1133,7 +1135,6 @@ public final class SubscribeRequest extends com.google.protobuf.GeneratedMessage
       }
       requestCase_ = 2;
       onChanged();
-      ;
       return seekBuilder_;
     }
 
@@ -1344,7 +1345,6 @@ public final class SubscribeRequest extends com.google.protobuf.GeneratedMessage
       }
       requestCase_ = 3;
       onChanged();
-      ;
       return flowControlBuilder_;
     }
 

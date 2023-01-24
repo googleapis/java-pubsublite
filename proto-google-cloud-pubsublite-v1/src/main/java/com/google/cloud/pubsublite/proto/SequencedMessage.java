@@ -110,7 +110,9 @@ public final class SequencedMessage extends com.google.protobuf.GeneratedMessage
    */
   @java.lang.Override
   public com.google.cloud.pubsublite.proto.CursorOrBuilder getCursorOrBuilder() {
-    return getCursor();
+    return cursor_ == null
+        ? com.google.cloud.pubsublite.proto.Cursor.getDefaultInstance()
+        : cursor_;
   }
 
   public static final int PUBLISH_TIME_FIELD_NUMBER = 2;
@@ -159,7 +161,7 @@ public final class SequencedMessage extends com.google.protobuf.GeneratedMessage
    */
   @java.lang.Override
   public com.google.protobuf.TimestampOrBuilder getPublishTimeOrBuilder() {
-    return getPublishTime();
+    return publishTime_ == null ? com.google.protobuf.Timestamp.getDefaultInstance() : publishTime_;
   }
 
   public static final int MESSAGE_FIELD_NUMBER = 3;
@@ -207,11 +209,13 @@ public final class SequencedMessage extends com.google.protobuf.GeneratedMessage
    */
   @java.lang.Override
   public com.google.cloud.pubsublite.proto.PubSubMessageOrBuilder getMessageOrBuilder() {
-    return getMessage();
+    return message_ == null
+        ? com.google.cloud.pubsublite.proto.PubSubMessage.getDefaultInstance()
+        : message_;
   }
 
   public static final int SIZE_BYTES_FIELD_NUMBER = 4;
-  private long sizeBytes_;
+  private long sizeBytes_ = 0L;
   /**
    *
    *
@@ -467,26 +471,23 @@ public final class SequencedMessage extends com.google.protobuf.GeneratedMessage
     @java.lang.Override
     public Builder clear() {
       super.clear();
-      if (cursorBuilder_ == null) {
-        cursor_ = null;
-      } else {
-        cursor_ = null;
+      bitField0_ = 0;
+      cursor_ = null;
+      if (cursorBuilder_ != null) {
+        cursorBuilder_.dispose();
         cursorBuilder_ = null;
       }
-      if (publishTimeBuilder_ == null) {
-        publishTime_ = null;
-      } else {
-        publishTime_ = null;
+      publishTime_ = null;
+      if (publishTimeBuilder_ != null) {
+        publishTimeBuilder_.dispose();
         publishTimeBuilder_ = null;
       }
-      if (messageBuilder_ == null) {
-        message_ = null;
-      } else {
-        message_ = null;
+      message_ = null;
+      if (messageBuilder_ != null) {
+        messageBuilder_.dispose();
         messageBuilder_ = null;
       }
       sizeBytes_ = 0L;
-
       return this;
     }
 
@@ -514,24 +515,28 @@ public final class SequencedMessage extends com.google.protobuf.GeneratedMessage
     public com.google.cloud.pubsublite.proto.SequencedMessage buildPartial() {
       com.google.cloud.pubsublite.proto.SequencedMessage result =
           new com.google.cloud.pubsublite.proto.SequencedMessage(this);
-      if (cursorBuilder_ == null) {
-        result.cursor_ = cursor_;
-      } else {
-        result.cursor_ = cursorBuilder_.build();
+      if (bitField0_ != 0) {
+        buildPartial0(result);
       }
-      if (publishTimeBuilder_ == null) {
-        result.publishTime_ = publishTime_;
-      } else {
-        result.publishTime_ = publishTimeBuilder_.build();
-      }
-      if (messageBuilder_ == null) {
-        result.message_ = message_;
-      } else {
-        result.message_ = messageBuilder_.build();
-      }
-      result.sizeBytes_ = sizeBytes_;
       onBuilt();
       return result;
+    }
+
+    private void buildPartial0(com.google.cloud.pubsublite.proto.SequencedMessage result) {
+      int from_bitField0_ = bitField0_;
+      if (((from_bitField0_ & 0x00000001) != 0)) {
+        result.cursor_ = cursorBuilder_ == null ? cursor_ : cursorBuilder_.build();
+      }
+      if (((from_bitField0_ & 0x00000002) != 0)) {
+        result.publishTime_ =
+            publishTimeBuilder_ == null ? publishTime_ : publishTimeBuilder_.build();
+      }
+      if (((from_bitField0_ & 0x00000004) != 0)) {
+        result.message_ = messageBuilder_ == null ? message_ : messageBuilder_.build();
+      }
+      if (((from_bitField0_ & 0x00000008) != 0)) {
+        result.sizeBytes_ = sizeBytes_;
+      }
     }
 
     @java.lang.Override
@@ -621,25 +626,25 @@ public final class SequencedMessage extends com.google.protobuf.GeneratedMessage
             case 10:
               {
                 input.readMessage(getCursorFieldBuilder().getBuilder(), extensionRegistry);
-
+                bitField0_ |= 0x00000001;
                 break;
               } // case 10
             case 18:
               {
                 input.readMessage(getPublishTimeFieldBuilder().getBuilder(), extensionRegistry);
-
+                bitField0_ |= 0x00000002;
                 break;
               } // case 18
             case 26:
               {
                 input.readMessage(getMessageFieldBuilder().getBuilder(), extensionRegistry);
-
+                bitField0_ |= 0x00000004;
                 break;
               } // case 26
             case 32:
               {
                 sizeBytes_ = input.readInt64();
-
+                bitField0_ |= 0x00000008;
                 break;
               } // case 32
             default:
@@ -659,6 +664,8 @@ public final class SequencedMessage extends com.google.protobuf.GeneratedMessage
       return this;
     }
 
+    private int bitField0_;
+
     private com.google.cloud.pubsublite.proto.Cursor cursor_;
     private com.google.protobuf.SingleFieldBuilderV3<
             com.google.cloud.pubsublite.proto.Cursor,
@@ -677,7 +684,7 @@ public final class SequencedMessage extends com.google.protobuf.GeneratedMessage
      * @return Whether the cursor field is set.
      */
     public boolean hasCursor() {
-      return cursorBuilder_ != null || cursor_ != null;
+      return ((bitField0_ & 0x00000001) != 0);
     }
     /**
      *
@@ -714,11 +721,11 @@ public final class SequencedMessage extends com.google.protobuf.GeneratedMessage
           throw new NullPointerException();
         }
         cursor_ = value;
-        onChanged();
       } else {
         cursorBuilder_.setMessage(value);
       }
-
+      bitField0_ |= 0x00000001;
+      onChanged();
       return this;
     }
     /**
@@ -733,11 +740,11 @@ public final class SequencedMessage extends com.google.protobuf.GeneratedMessage
     public Builder setCursor(com.google.cloud.pubsublite.proto.Cursor.Builder builderForValue) {
       if (cursorBuilder_ == null) {
         cursor_ = builderForValue.build();
-        onChanged();
       } else {
         cursorBuilder_.setMessage(builderForValue.build());
       }
-
+      bitField0_ |= 0x00000001;
+      onChanged();
       return this;
     }
     /**
@@ -751,19 +758,18 @@ public final class SequencedMessage extends com.google.protobuf.GeneratedMessage
      */
     public Builder mergeCursor(com.google.cloud.pubsublite.proto.Cursor value) {
       if (cursorBuilder_ == null) {
-        if (cursor_ != null) {
-          cursor_ =
-              com.google.cloud.pubsublite.proto.Cursor.newBuilder(cursor_)
-                  .mergeFrom(value)
-                  .buildPartial();
+        if (((bitField0_ & 0x00000001) != 0)
+            && cursor_ != null
+            && cursor_ != com.google.cloud.pubsublite.proto.Cursor.getDefaultInstance()) {
+          getCursorBuilder().mergeFrom(value);
         } else {
           cursor_ = value;
         }
-        onChanged();
       } else {
         cursorBuilder_.mergeFrom(value);
       }
-
+      bitField0_ |= 0x00000001;
+      onChanged();
       return this;
     }
     /**
@@ -776,14 +782,13 @@ public final class SequencedMessage extends com.google.protobuf.GeneratedMessage
      * <code>.google.cloud.pubsublite.v1.Cursor cursor = 1;</code>
      */
     public Builder clearCursor() {
-      if (cursorBuilder_ == null) {
-        cursor_ = null;
-        onChanged();
-      } else {
-        cursor_ = null;
+      bitField0_ = (bitField0_ & ~0x00000001);
+      cursor_ = null;
+      if (cursorBuilder_ != null) {
+        cursorBuilder_.dispose();
         cursorBuilder_ = null;
       }
-
+      onChanged();
       return this;
     }
     /**
@@ -796,7 +801,7 @@ public final class SequencedMessage extends com.google.protobuf.GeneratedMessage
      * <code>.google.cloud.pubsublite.v1.Cursor cursor = 1;</code>
      */
     public com.google.cloud.pubsublite.proto.Cursor.Builder getCursorBuilder() {
-
+      bitField0_ |= 0x00000001;
       onChanged();
       return getCursorFieldBuilder().getBuilder();
     }
@@ -863,7 +868,7 @@ public final class SequencedMessage extends com.google.protobuf.GeneratedMessage
      * @return Whether the publishTime field is set.
      */
     public boolean hasPublishTime() {
-      return publishTimeBuilder_ != null || publishTime_ != null;
+      return ((bitField0_ & 0x00000002) != 0);
     }
     /**
      *
@@ -902,11 +907,11 @@ public final class SequencedMessage extends com.google.protobuf.GeneratedMessage
           throw new NullPointerException();
         }
         publishTime_ = value;
-        onChanged();
       } else {
         publishTimeBuilder_.setMessage(value);
       }
-
+      bitField0_ |= 0x00000002;
+      onChanged();
       return this;
     }
     /**
@@ -922,11 +927,11 @@ public final class SequencedMessage extends com.google.protobuf.GeneratedMessage
     public Builder setPublishTime(com.google.protobuf.Timestamp.Builder builderForValue) {
       if (publishTimeBuilder_ == null) {
         publishTime_ = builderForValue.build();
-        onChanged();
       } else {
         publishTimeBuilder_.setMessage(builderForValue.build());
       }
-
+      bitField0_ |= 0x00000002;
+      onChanged();
       return this;
     }
     /**
@@ -941,19 +946,18 @@ public final class SequencedMessage extends com.google.protobuf.GeneratedMessage
      */
     public Builder mergePublishTime(com.google.protobuf.Timestamp value) {
       if (publishTimeBuilder_ == null) {
-        if (publishTime_ != null) {
-          publishTime_ =
-              com.google.protobuf.Timestamp.newBuilder(publishTime_)
-                  .mergeFrom(value)
-                  .buildPartial();
+        if (((bitField0_ & 0x00000002) != 0)
+            && publishTime_ != null
+            && publishTime_ != com.google.protobuf.Timestamp.getDefaultInstance()) {
+          getPublishTimeBuilder().mergeFrom(value);
         } else {
           publishTime_ = value;
         }
-        onChanged();
       } else {
         publishTimeBuilder_.mergeFrom(value);
       }
-
+      bitField0_ |= 0x00000002;
+      onChanged();
       return this;
     }
     /**
@@ -967,14 +971,13 @@ public final class SequencedMessage extends com.google.protobuf.GeneratedMessage
      * <code>.google.protobuf.Timestamp publish_time = 2;</code>
      */
     public Builder clearPublishTime() {
-      if (publishTimeBuilder_ == null) {
-        publishTime_ = null;
-        onChanged();
-      } else {
-        publishTime_ = null;
+      bitField0_ = (bitField0_ & ~0x00000002);
+      publishTime_ = null;
+      if (publishTimeBuilder_ != null) {
+        publishTimeBuilder_.dispose();
         publishTimeBuilder_ = null;
       }
-
+      onChanged();
       return this;
     }
     /**
@@ -988,7 +991,7 @@ public final class SequencedMessage extends com.google.protobuf.GeneratedMessage
      * <code>.google.protobuf.Timestamp publish_time = 2;</code>
      */
     public com.google.protobuf.Timestamp.Builder getPublishTimeBuilder() {
-
+      bitField0_ |= 0x00000002;
       onChanged();
       return getPublishTimeFieldBuilder().getBuilder();
     }
@@ -1056,7 +1059,7 @@ public final class SequencedMessage extends com.google.protobuf.GeneratedMessage
      * @return Whether the message field is set.
      */
     public boolean hasMessage() {
-      return messageBuilder_ != null || message_ != null;
+      return ((bitField0_ & 0x00000004) != 0);
     }
     /**
      *
@@ -1093,11 +1096,11 @@ public final class SequencedMessage extends com.google.protobuf.GeneratedMessage
           throw new NullPointerException();
         }
         message_ = value;
-        onChanged();
       } else {
         messageBuilder_.setMessage(value);
       }
-
+      bitField0_ |= 0x00000004;
+      onChanged();
       return this;
     }
     /**
@@ -1113,11 +1116,11 @@ public final class SequencedMessage extends com.google.protobuf.GeneratedMessage
         com.google.cloud.pubsublite.proto.PubSubMessage.Builder builderForValue) {
       if (messageBuilder_ == null) {
         message_ = builderForValue.build();
-        onChanged();
       } else {
         messageBuilder_.setMessage(builderForValue.build());
       }
-
+      bitField0_ |= 0x00000004;
+      onChanged();
       return this;
     }
     /**
@@ -1131,19 +1134,18 @@ public final class SequencedMessage extends com.google.protobuf.GeneratedMessage
      */
     public Builder mergeMessage(com.google.cloud.pubsublite.proto.PubSubMessage value) {
       if (messageBuilder_ == null) {
-        if (message_ != null) {
-          message_ =
-              com.google.cloud.pubsublite.proto.PubSubMessage.newBuilder(message_)
-                  .mergeFrom(value)
-                  .buildPartial();
+        if (((bitField0_ & 0x00000004) != 0)
+            && message_ != null
+            && message_ != com.google.cloud.pubsublite.proto.PubSubMessage.getDefaultInstance()) {
+          getMessageBuilder().mergeFrom(value);
         } else {
           message_ = value;
         }
-        onChanged();
       } else {
         messageBuilder_.mergeFrom(value);
       }
-
+      bitField0_ |= 0x00000004;
+      onChanged();
       return this;
     }
     /**
@@ -1156,14 +1158,13 @@ public final class SequencedMessage extends com.google.protobuf.GeneratedMessage
      * <code>.google.cloud.pubsublite.v1.PubSubMessage message = 3;</code>
      */
     public Builder clearMessage() {
-      if (messageBuilder_ == null) {
-        message_ = null;
-        onChanged();
-      } else {
-        message_ = null;
+      bitField0_ = (bitField0_ & ~0x00000004);
+      message_ = null;
+      if (messageBuilder_ != null) {
+        messageBuilder_.dispose();
         messageBuilder_ = null;
       }
-
+      onChanged();
       return this;
     }
     /**
@@ -1176,7 +1177,7 @@ public final class SequencedMessage extends com.google.protobuf.GeneratedMessage
      * <code>.google.cloud.pubsublite.v1.PubSubMessage message = 3;</code>
      */
     public com.google.cloud.pubsublite.proto.PubSubMessage.Builder getMessageBuilder() {
-
+      bitField0_ |= 0x00000004;
       onChanged();
       return getMessageFieldBuilder().getBuilder();
     }
@@ -1255,6 +1256,7 @@ public final class SequencedMessage extends com.google.protobuf.GeneratedMessage
     public Builder setSizeBytes(long value) {
 
       sizeBytes_ = value;
+      bitField0_ |= 0x00000008;
       onChanged();
       return this;
     }
@@ -1270,7 +1272,7 @@ public final class SequencedMessage extends com.google.protobuf.GeneratedMessage
      * @return This builder for chaining.
      */
     public Builder clearSizeBytes() {
-
+      bitField0_ = (bitField0_ & ~0x00000008);
       sizeBytes_ = 0L;
       onChanged();
       return this;

@@ -111,7 +111,9 @@ public final class SequencedCommitCursorRequest extends com.google.protobuf.Gene
    */
   @java.lang.Override
   public com.google.cloud.pubsublite.proto.CursorOrBuilder getCursorOrBuilder() {
-    return getCursor();
+    return cursor_ == null
+        ? com.google.cloud.pubsublite.proto.Cursor.getDefaultInstance()
+        : cursor_;
   }
 
   private byte memoizedIsInitialized = -1;
@@ -318,10 +320,10 @@ public final class SequencedCommitCursorRequest extends com.google.protobuf.Gene
     @java.lang.Override
     public Builder clear() {
       super.clear();
-      if (cursorBuilder_ == null) {
-        cursor_ = null;
-      } else {
-        cursor_ = null;
+      bitField0_ = 0;
+      cursor_ = null;
+      if (cursorBuilder_ != null) {
+        cursorBuilder_.dispose();
         cursorBuilder_ = null;
       }
       return this;
@@ -352,13 +354,19 @@ public final class SequencedCommitCursorRequest extends com.google.protobuf.Gene
     public com.google.cloud.pubsublite.proto.SequencedCommitCursorRequest buildPartial() {
       com.google.cloud.pubsublite.proto.SequencedCommitCursorRequest result =
           new com.google.cloud.pubsublite.proto.SequencedCommitCursorRequest(this);
-      if (cursorBuilder_ == null) {
-        result.cursor_ = cursor_;
-      } else {
-        result.cursor_ = cursorBuilder_.build();
+      if (bitField0_ != 0) {
+        buildPartial0(result);
       }
       onBuilt();
       return result;
+    }
+
+    private void buildPartial0(
+        com.google.cloud.pubsublite.proto.SequencedCommitCursorRequest result) {
+      int from_bitField0_ = bitField0_;
+      if (((from_bitField0_ & 0x00000001) != 0)) {
+        result.cursor_ = cursorBuilder_ == null ? cursor_ : cursorBuilder_.build();
+      }
     }
 
     @java.lang.Override
@@ -440,7 +448,7 @@ public final class SequencedCommitCursorRequest extends com.google.protobuf.Gene
             case 10:
               {
                 input.readMessage(getCursorFieldBuilder().getBuilder(), extensionRegistry);
-
+                bitField0_ |= 0x00000001;
                 break;
               } // case 10
             default:
@@ -460,6 +468,8 @@ public final class SequencedCommitCursorRequest extends com.google.protobuf.Gene
       return this;
     }
 
+    private int bitField0_;
+
     private com.google.cloud.pubsublite.proto.Cursor cursor_;
     private com.google.protobuf.SingleFieldBuilderV3<
             com.google.cloud.pubsublite.proto.Cursor,
@@ -478,7 +488,7 @@ public final class SequencedCommitCursorRequest extends com.google.protobuf.Gene
      * @return Whether the cursor field is set.
      */
     public boolean hasCursor() {
-      return cursorBuilder_ != null || cursor_ != null;
+      return ((bitField0_ & 0x00000001) != 0);
     }
     /**
      *
@@ -515,11 +525,11 @@ public final class SequencedCommitCursorRequest extends com.google.protobuf.Gene
           throw new NullPointerException();
         }
         cursor_ = value;
-        onChanged();
       } else {
         cursorBuilder_.setMessage(value);
       }
-
+      bitField0_ |= 0x00000001;
+      onChanged();
       return this;
     }
     /**
@@ -534,11 +544,11 @@ public final class SequencedCommitCursorRequest extends com.google.protobuf.Gene
     public Builder setCursor(com.google.cloud.pubsublite.proto.Cursor.Builder builderForValue) {
       if (cursorBuilder_ == null) {
         cursor_ = builderForValue.build();
-        onChanged();
       } else {
         cursorBuilder_.setMessage(builderForValue.build());
       }
-
+      bitField0_ |= 0x00000001;
+      onChanged();
       return this;
     }
     /**
@@ -552,19 +562,18 @@ public final class SequencedCommitCursorRequest extends com.google.protobuf.Gene
      */
     public Builder mergeCursor(com.google.cloud.pubsublite.proto.Cursor value) {
       if (cursorBuilder_ == null) {
-        if (cursor_ != null) {
-          cursor_ =
-              com.google.cloud.pubsublite.proto.Cursor.newBuilder(cursor_)
-                  .mergeFrom(value)
-                  .buildPartial();
+        if (((bitField0_ & 0x00000001) != 0)
+            && cursor_ != null
+            && cursor_ != com.google.cloud.pubsublite.proto.Cursor.getDefaultInstance()) {
+          getCursorBuilder().mergeFrom(value);
         } else {
           cursor_ = value;
         }
-        onChanged();
       } else {
         cursorBuilder_.mergeFrom(value);
       }
-
+      bitField0_ |= 0x00000001;
+      onChanged();
       return this;
     }
     /**
@@ -577,14 +586,13 @@ public final class SequencedCommitCursorRequest extends com.google.protobuf.Gene
      * <code>.google.cloud.pubsublite.v1.Cursor cursor = 1;</code>
      */
     public Builder clearCursor() {
-      if (cursorBuilder_ == null) {
-        cursor_ = null;
-        onChanged();
-      } else {
-        cursor_ = null;
+      bitField0_ = (bitField0_ & ~0x00000001);
+      cursor_ = null;
+      if (cursorBuilder_ != null) {
+        cursorBuilder_.dispose();
         cursorBuilder_ = null;
       }
-
+      onChanged();
       return this;
     }
     /**
@@ -597,7 +605,7 @@ public final class SequencedCommitCursorRequest extends com.google.protobuf.Gene
      * <code>.google.cloud.pubsublite.v1.Cursor cursor = 1;</code>
      */
     public com.google.cloud.pubsublite.proto.Cursor.Builder getCursorBuilder() {
-
+      bitField0_ |= 0x00000001;
       onChanged();
       return getCursorFieldBuilder().getBuilder();
     }

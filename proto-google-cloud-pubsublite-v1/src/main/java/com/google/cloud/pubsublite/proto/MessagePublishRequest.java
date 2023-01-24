@@ -68,6 +68,8 @@ public final class MessagePublishRequest extends com.google.protobuf.GeneratedMe
   }
 
   public static final int MESSAGES_FIELD_NUMBER = 1;
+
+  @SuppressWarnings("serial")
   private java.util.List<com.google.cloud.pubsublite.proto.PubSubMessage> messages_;
   /**
    *
@@ -336,6 +338,7 @@ public final class MessagePublishRequest extends com.google.protobuf.GeneratedMe
     @java.lang.Override
     public Builder clear() {
       super.clear();
+      bitField0_ = 0;
       if (messagesBuilder_ == null) {
         messages_ = java.util.Collections.emptyList();
       } else {
@@ -370,7 +373,16 @@ public final class MessagePublishRequest extends com.google.protobuf.GeneratedMe
     public com.google.cloud.pubsublite.proto.MessagePublishRequest buildPartial() {
       com.google.cloud.pubsublite.proto.MessagePublishRequest result =
           new com.google.cloud.pubsublite.proto.MessagePublishRequest(this);
-      int from_bitField0_ = bitField0_;
+      buildPartialRepeatedFields(result);
+      if (bitField0_ != 0) {
+        buildPartial0(result);
+      }
+      onBuilt();
+      return result;
+    }
+
+    private void buildPartialRepeatedFields(
+        com.google.cloud.pubsublite.proto.MessagePublishRequest result) {
       if (messagesBuilder_ == null) {
         if (((bitField0_ & 0x00000001) != 0)) {
           messages_ = java.util.Collections.unmodifiableList(messages_);
@@ -380,8 +392,10 @@ public final class MessagePublishRequest extends com.google.protobuf.GeneratedMe
       } else {
         result.messages_ = messagesBuilder_.build();
       }
-      onBuilt();
-      return result;
+    }
+
+    private void buildPartial0(com.google.cloud.pubsublite.proto.MessagePublishRequest result) {
+      int from_bitField0_ = bitField0_;
     }
 
     @java.lang.Override

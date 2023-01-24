@@ -66,7 +66,7 @@ public final class ComputeMessageStatsResponse extends com.google.protobuf.Gener
   }
 
   public static final int MESSAGE_COUNT_FIELD_NUMBER = 1;
-  private long messageCount_;
+  private long messageCount_ = 0L;
   /**
    *
    *
@@ -84,7 +84,7 @@ public final class ComputeMessageStatsResponse extends com.google.protobuf.Gener
   }
 
   public static final int MESSAGE_BYTES_FIELD_NUMBER = 2;
-  private long messageBytes_;
+  private long messageBytes_ = 0L;
   /**
    *
    *
@@ -152,7 +152,9 @@ public final class ComputeMessageStatsResponse extends com.google.protobuf.Gener
    */
   @java.lang.Override
   public com.google.protobuf.TimestampOrBuilder getMinimumPublishTimeOrBuilder() {
-    return getMinimumPublishTime();
+    return minimumPublishTime_ == null
+        ? com.google.protobuf.Timestamp.getDefaultInstance()
+        : minimumPublishTime_;
   }
 
   public static final int MINIMUM_EVENT_TIME_FIELD_NUMBER = 4;
@@ -206,7 +208,9 @@ public final class ComputeMessageStatsResponse extends com.google.protobuf.Gener
    */
   @java.lang.Override
   public com.google.protobuf.TimestampOrBuilder getMinimumEventTimeOrBuilder() {
-    return getMinimumEventTime();
+    return minimumEventTime_ == null
+        ? com.google.protobuf.Timestamp.getDefaultInstance()
+        : minimumEventTime_;
   }
 
   private byte memoizedIsInitialized = -1;
@@ -444,20 +448,17 @@ public final class ComputeMessageStatsResponse extends com.google.protobuf.Gener
     @java.lang.Override
     public Builder clear() {
       super.clear();
+      bitField0_ = 0;
       messageCount_ = 0L;
-
       messageBytes_ = 0L;
-
-      if (minimumPublishTimeBuilder_ == null) {
-        minimumPublishTime_ = null;
-      } else {
-        minimumPublishTime_ = null;
+      minimumPublishTime_ = null;
+      if (minimumPublishTimeBuilder_ != null) {
+        minimumPublishTimeBuilder_.dispose();
         minimumPublishTimeBuilder_ = null;
       }
-      if (minimumEventTimeBuilder_ == null) {
-        minimumEventTime_ = null;
-      } else {
-        minimumEventTime_ = null;
+      minimumEventTime_ = null;
+      if (minimumEventTimeBuilder_ != null) {
+        minimumEventTimeBuilder_.dispose();
         minimumEventTimeBuilder_ = null;
       }
       return this;
@@ -488,20 +489,32 @@ public final class ComputeMessageStatsResponse extends com.google.protobuf.Gener
     public com.google.cloud.pubsublite.proto.ComputeMessageStatsResponse buildPartial() {
       com.google.cloud.pubsublite.proto.ComputeMessageStatsResponse result =
           new com.google.cloud.pubsublite.proto.ComputeMessageStatsResponse(this);
-      result.messageCount_ = messageCount_;
-      result.messageBytes_ = messageBytes_;
-      if (minimumPublishTimeBuilder_ == null) {
-        result.minimumPublishTime_ = minimumPublishTime_;
-      } else {
-        result.minimumPublishTime_ = minimumPublishTimeBuilder_.build();
-      }
-      if (minimumEventTimeBuilder_ == null) {
-        result.minimumEventTime_ = minimumEventTime_;
-      } else {
-        result.minimumEventTime_ = minimumEventTimeBuilder_.build();
+      if (bitField0_ != 0) {
+        buildPartial0(result);
       }
       onBuilt();
       return result;
+    }
+
+    private void buildPartial0(
+        com.google.cloud.pubsublite.proto.ComputeMessageStatsResponse result) {
+      int from_bitField0_ = bitField0_;
+      if (((from_bitField0_ & 0x00000001) != 0)) {
+        result.messageCount_ = messageCount_;
+      }
+      if (((from_bitField0_ & 0x00000002) != 0)) {
+        result.messageBytes_ = messageBytes_;
+      }
+      if (((from_bitField0_ & 0x00000004) != 0)) {
+        result.minimumPublishTime_ =
+            minimumPublishTimeBuilder_ == null
+                ? minimumPublishTime_
+                : minimumPublishTimeBuilder_.build();
+      }
+      if (((from_bitField0_ & 0x00000008) != 0)) {
+        result.minimumEventTime_ =
+            minimumEventTimeBuilder_ == null ? minimumEventTime_ : minimumEventTimeBuilder_.build();
+      }
     }
 
     @java.lang.Override
@@ -592,27 +605,27 @@ public final class ComputeMessageStatsResponse extends com.google.protobuf.Gener
             case 8:
               {
                 messageCount_ = input.readInt64();
-
+                bitField0_ |= 0x00000001;
                 break;
               } // case 8
             case 16:
               {
                 messageBytes_ = input.readInt64();
-
+                bitField0_ |= 0x00000002;
                 break;
               } // case 16
             case 26:
               {
                 input.readMessage(
                     getMinimumPublishTimeFieldBuilder().getBuilder(), extensionRegistry);
-
+                bitField0_ |= 0x00000004;
                 break;
               } // case 26
             case 34:
               {
                 input.readMessage(
                     getMinimumEventTimeFieldBuilder().getBuilder(), extensionRegistry);
-
+                bitField0_ |= 0x00000008;
                 break;
               } // case 34
             default:
@@ -631,6 +644,8 @@ public final class ComputeMessageStatsResponse extends com.google.protobuf.Gener
       } // finally
       return this;
     }
+
+    private int bitField0_;
 
     private long messageCount_;
     /**
@@ -663,6 +678,7 @@ public final class ComputeMessageStatsResponse extends com.google.protobuf.Gener
     public Builder setMessageCount(long value) {
 
       messageCount_ = value;
+      bitField0_ |= 0x00000001;
       onChanged();
       return this;
     }
@@ -678,7 +694,7 @@ public final class ComputeMessageStatsResponse extends com.google.protobuf.Gener
      * @return This builder for chaining.
      */
     public Builder clearMessageCount() {
-
+      bitField0_ = (bitField0_ & ~0x00000001);
       messageCount_ = 0L;
       onChanged();
       return this;
@@ -715,6 +731,7 @@ public final class ComputeMessageStatsResponse extends com.google.protobuf.Gener
     public Builder setMessageBytes(long value) {
 
       messageBytes_ = value;
+      bitField0_ |= 0x00000002;
       onChanged();
       return this;
     }
@@ -730,7 +747,7 @@ public final class ComputeMessageStatsResponse extends com.google.protobuf.Gener
      * @return This builder for chaining.
      */
     public Builder clearMessageBytes() {
-
+      bitField0_ = (bitField0_ & ~0x00000002);
       messageBytes_ = 0L;
       onChanged();
       return this;
@@ -756,7 +773,7 @@ public final class ComputeMessageStatsResponse extends com.google.protobuf.Gener
      * @return Whether the minimumPublishTime field is set.
      */
     public boolean hasMinimumPublishTime() {
-      return minimumPublishTimeBuilder_ != null || minimumPublishTime_ != null;
+      return ((bitField0_ & 0x00000004) != 0);
     }
     /**
      *
@@ -797,11 +814,11 @@ public final class ComputeMessageStatsResponse extends com.google.protobuf.Gener
           throw new NullPointerException();
         }
         minimumPublishTime_ = value;
-        onChanged();
       } else {
         minimumPublishTimeBuilder_.setMessage(value);
       }
-
+      bitField0_ |= 0x00000004;
+      onChanged();
       return this;
     }
     /**
@@ -818,11 +835,11 @@ public final class ComputeMessageStatsResponse extends com.google.protobuf.Gener
     public Builder setMinimumPublishTime(com.google.protobuf.Timestamp.Builder builderForValue) {
       if (minimumPublishTimeBuilder_ == null) {
         minimumPublishTime_ = builderForValue.build();
-        onChanged();
       } else {
         minimumPublishTimeBuilder_.setMessage(builderForValue.build());
       }
-
+      bitField0_ |= 0x00000004;
+      onChanged();
       return this;
     }
     /**
@@ -838,19 +855,18 @@ public final class ComputeMessageStatsResponse extends com.google.protobuf.Gener
      */
     public Builder mergeMinimumPublishTime(com.google.protobuf.Timestamp value) {
       if (minimumPublishTimeBuilder_ == null) {
-        if (minimumPublishTime_ != null) {
-          minimumPublishTime_ =
-              com.google.protobuf.Timestamp.newBuilder(minimumPublishTime_)
-                  .mergeFrom(value)
-                  .buildPartial();
+        if (((bitField0_ & 0x00000004) != 0)
+            && minimumPublishTime_ != null
+            && minimumPublishTime_ != com.google.protobuf.Timestamp.getDefaultInstance()) {
+          getMinimumPublishTimeBuilder().mergeFrom(value);
         } else {
           minimumPublishTime_ = value;
         }
-        onChanged();
       } else {
         minimumPublishTimeBuilder_.mergeFrom(value);
       }
-
+      bitField0_ |= 0x00000004;
+      onChanged();
       return this;
     }
     /**
@@ -865,14 +881,13 @@ public final class ComputeMessageStatsResponse extends com.google.protobuf.Gener
      * <code>.google.protobuf.Timestamp minimum_publish_time = 3;</code>
      */
     public Builder clearMinimumPublishTime() {
-      if (minimumPublishTimeBuilder_ == null) {
-        minimumPublishTime_ = null;
-        onChanged();
-      } else {
-        minimumPublishTime_ = null;
+      bitField0_ = (bitField0_ & ~0x00000004);
+      minimumPublishTime_ = null;
+      if (minimumPublishTimeBuilder_ != null) {
+        minimumPublishTimeBuilder_.dispose();
         minimumPublishTimeBuilder_ = null;
       }
-
+      onChanged();
       return this;
     }
     /**
@@ -887,7 +902,7 @@ public final class ComputeMessageStatsResponse extends com.google.protobuf.Gener
      * <code>.google.protobuf.Timestamp minimum_publish_time = 3;</code>
      */
     public com.google.protobuf.Timestamp.Builder getMinimumPublishTimeBuilder() {
-
+      bitField0_ |= 0x00000004;
       onChanged();
       return getMinimumPublishTimeFieldBuilder().getBuilder();
     }
@@ -959,7 +974,7 @@ public final class ComputeMessageStatsResponse extends com.google.protobuf.Gener
      * @return Whether the minimumEventTime field is set.
      */
     public boolean hasMinimumEventTime() {
-      return minimumEventTimeBuilder_ != null || minimumEventTime_ != null;
+      return ((bitField0_ & 0x00000008) != 0);
     }
     /**
      *
@@ -1000,11 +1015,11 @@ public final class ComputeMessageStatsResponse extends com.google.protobuf.Gener
           throw new NullPointerException();
         }
         minimumEventTime_ = value;
-        onChanged();
       } else {
         minimumEventTimeBuilder_.setMessage(value);
       }
-
+      bitField0_ |= 0x00000008;
+      onChanged();
       return this;
     }
     /**
@@ -1021,11 +1036,11 @@ public final class ComputeMessageStatsResponse extends com.google.protobuf.Gener
     public Builder setMinimumEventTime(com.google.protobuf.Timestamp.Builder builderForValue) {
       if (minimumEventTimeBuilder_ == null) {
         minimumEventTime_ = builderForValue.build();
-        onChanged();
       } else {
         minimumEventTimeBuilder_.setMessage(builderForValue.build());
       }
-
+      bitField0_ |= 0x00000008;
+      onChanged();
       return this;
     }
     /**
@@ -1041,19 +1056,18 @@ public final class ComputeMessageStatsResponse extends com.google.protobuf.Gener
      */
     public Builder mergeMinimumEventTime(com.google.protobuf.Timestamp value) {
       if (minimumEventTimeBuilder_ == null) {
-        if (minimumEventTime_ != null) {
-          minimumEventTime_ =
-              com.google.protobuf.Timestamp.newBuilder(minimumEventTime_)
-                  .mergeFrom(value)
-                  .buildPartial();
+        if (((bitField0_ & 0x00000008) != 0)
+            && minimumEventTime_ != null
+            && minimumEventTime_ != com.google.protobuf.Timestamp.getDefaultInstance()) {
+          getMinimumEventTimeBuilder().mergeFrom(value);
         } else {
           minimumEventTime_ = value;
         }
-        onChanged();
       } else {
         minimumEventTimeBuilder_.mergeFrom(value);
       }
-
+      bitField0_ |= 0x00000008;
+      onChanged();
       return this;
     }
     /**
@@ -1068,14 +1082,13 @@ public final class ComputeMessageStatsResponse extends com.google.protobuf.Gener
      * <code>.google.protobuf.Timestamp minimum_event_time = 4;</code>
      */
     public Builder clearMinimumEventTime() {
-      if (minimumEventTimeBuilder_ == null) {
-        minimumEventTime_ = null;
-        onChanged();
-      } else {
-        minimumEventTime_ = null;
+      bitField0_ = (bitField0_ & ~0x00000008);
+      minimumEventTime_ = null;
+      if (minimumEventTimeBuilder_ != null) {
+        minimumEventTimeBuilder_.dispose();
         minimumEventTimeBuilder_ = null;
       }
-
+      onChanged();
       return this;
     }
     /**
@@ -1090,7 +1103,7 @@ public final class ComputeMessageStatsResponse extends com.google.protobuf.Gener
      * <code>.google.protobuf.Timestamp minimum_event_time = 4;</code>
      */
     public com.google.protobuf.Timestamp.Builder getMinimumEventTimeBuilder() {
-
+      bitField0_ |= 0x00000008;
       onChanged();
       return getMinimumEventTimeFieldBuilder().getBuilder();
     }

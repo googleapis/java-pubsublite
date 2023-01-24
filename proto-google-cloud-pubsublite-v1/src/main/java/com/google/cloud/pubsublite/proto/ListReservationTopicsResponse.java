@@ -69,6 +69,8 @@ public final class ListReservationTopicsResponse extends com.google.protobuf.Gen
   }
 
   public static final int TOPICS_FIELD_NUMBER = 1;
+
+  @SuppressWarnings("serial")
   private com.google.protobuf.LazyStringList topics_;
   /**
    *
@@ -134,7 +136,9 @@ public final class ListReservationTopicsResponse extends com.google.protobuf.Gen
   }
 
   public static final int NEXT_PAGE_TOKEN_FIELD_NUMBER = 2;
-  private volatile java.lang.Object nextPageToken_;
+
+  @SuppressWarnings("serial")
+  private volatile java.lang.Object nextPageToken_ = "";
   /**
    *
    *
@@ -398,10 +402,10 @@ public final class ListReservationTopicsResponse extends com.google.protobuf.Gen
     @java.lang.Override
     public Builder clear() {
       super.clear();
+      bitField0_ = 0;
       topics_ = com.google.protobuf.LazyStringArrayList.EMPTY;
       bitField0_ = (bitField0_ & ~0x00000001);
       nextPageToken_ = "";
-
       return this;
     }
 
@@ -430,15 +434,29 @@ public final class ListReservationTopicsResponse extends com.google.protobuf.Gen
     public com.google.cloud.pubsublite.proto.ListReservationTopicsResponse buildPartial() {
       com.google.cloud.pubsublite.proto.ListReservationTopicsResponse result =
           new com.google.cloud.pubsublite.proto.ListReservationTopicsResponse(this);
-      int from_bitField0_ = bitField0_;
+      buildPartialRepeatedFields(result);
+      if (bitField0_ != 0) {
+        buildPartial0(result);
+      }
+      onBuilt();
+      return result;
+    }
+
+    private void buildPartialRepeatedFields(
+        com.google.cloud.pubsublite.proto.ListReservationTopicsResponse result) {
       if (((bitField0_ & 0x00000001) != 0)) {
         topics_ = topics_.getUnmodifiableView();
         bitField0_ = (bitField0_ & ~0x00000001);
       }
       result.topics_ = topics_;
-      result.nextPageToken_ = nextPageToken_;
-      onBuilt();
-      return result;
+    }
+
+    private void buildPartial0(
+        com.google.cloud.pubsublite.proto.ListReservationTopicsResponse result) {
+      int from_bitField0_ = bitField0_;
+      if (((from_bitField0_ & 0x00000002) != 0)) {
+        result.nextPageToken_ = nextPageToken_;
+      }
     }
 
     @java.lang.Override
@@ -501,6 +519,7 @@ public final class ListReservationTopicsResponse extends com.google.protobuf.Gen
       }
       if (!other.getNextPageToken().isEmpty()) {
         nextPageToken_ = other.nextPageToken_;
+        bitField0_ |= 0x00000002;
         onChanged();
       }
       this.mergeUnknownFields(other.getUnknownFields());
@@ -539,7 +558,7 @@ public final class ListReservationTopicsResponse extends com.google.protobuf.Gen
             case 18:
               {
                 nextPageToken_ = input.readStringRequireUtf8();
-
+                bitField0_ |= 0x00000002;
                 break;
               } // case 18
             default:
@@ -802,8 +821,8 @@ public final class ListReservationTopicsResponse extends com.google.protobuf.Gen
       if (value == null) {
         throw new NullPointerException();
       }
-
       nextPageToken_ = value;
+      bitField0_ |= 0x00000002;
       onChanged();
       return this;
     }
@@ -820,8 +839,8 @@ public final class ListReservationTopicsResponse extends com.google.protobuf.Gen
      * @return This builder for chaining.
      */
     public Builder clearNextPageToken() {
-
       nextPageToken_ = getDefaultInstance().getNextPageToken();
+      bitField0_ = (bitField0_ & ~0x00000002);
       onChanged();
       return this;
     }
@@ -843,8 +862,8 @@ public final class ListReservationTopicsResponse extends com.google.protobuf.Gen
         throw new NullPointerException();
       }
       checkByteStringIsUtf8(value);
-
       nextPageToken_ = value;
+      bitField0_ |= 0x00000002;
       onChanged();
       return this;
     }

@@ -66,7 +66,7 @@ public final class SequencedCommitCursorResponse extends com.google.protobuf.Gen
   }
 
   public static final int ACKNOWLEDGED_COMMITS_FIELD_NUMBER = 1;
-  private long acknowledgedCommits_;
+  private long acknowledgedCommits_ = 0L;
   /**
    *
    *
@@ -283,8 +283,8 @@ public final class SequencedCommitCursorResponse extends com.google.protobuf.Gen
     @java.lang.Override
     public Builder clear() {
       super.clear();
+      bitField0_ = 0;
       acknowledgedCommits_ = 0L;
-
       return this;
     }
 
@@ -313,9 +313,19 @@ public final class SequencedCommitCursorResponse extends com.google.protobuf.Gen
     public com.google.cloud.pubsublite.proto.SequencedCommitCursorResponse buildPartial() {
       com.google.cloud.pubsublite.proto.SequencedCommitCursorResponse result =
           new com.google.cloud.pubsublite.proto.SequencedCommitCursorResponse(this);
-      result.acknowledgedCommits_ = acknowledgedCommits_;
+      if (bitField0_ != 0) {
+        buildPartial0(result);
+      }
       onBuilt();
       return result;
+    }
+
+    private void buildPartial0(
+        com.google.cloud.pubsublite.proto.SequencedCommitCursorResponse result) {
+      int from_bitField0_ = bitField0_;
+      if (((from_bitField0_ & 0x00000001) != 0)) {
+        result.acknowledgedCommits_ = acknowledgedCommits_;
+      }
     }
 
     @java.lang.Override
@@ -398,7 +408,7 @@ public final class SequencedCommitCursorResponse extends com.google.protobuf.Gen
             case 8:
               {
                 acknowledgedCommits_ = input.readInt64();
-
+                bitField0_ |= 0x00000001;
                 break;
               } // case 8
             default:
@@ -417,6 +427,8 @@ public final class SequencedCommitCursorResponse extends com.google.protobuf.Gen
       } // finally
       return this;
     }
+
+    private int bitField0_;
 
     private long acknowledgedCommits_;
     /**
@@ -453,6 +465,7 @@ public final class SequencedCommitCursorResponse extends com.google.protobuf.Gen
     public Builder setAcknowledgedCommits(long value) {
 
       acknowledgedCommits_ = value;
+      bitField0_ |= 0x00000001;
       onChanged();
       return this;
     }
@@ -470,7 +483,7 @@ public final class SequencedCommitCursorResponse extends com.google.protobuf.Gen
      * @return This builder for chaining.
      */
     public Builder clearAcknowledgedCommits() {
-
+      bitField0_ = (bitField0_ & ~0x00000001);
       acknowledgedCommits_ = 0L;
       onChanged();
       return this;

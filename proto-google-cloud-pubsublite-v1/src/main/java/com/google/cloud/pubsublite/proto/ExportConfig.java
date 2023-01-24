@@ -355,7 +355,9 @@ public final class ExportConfig extends com.google.protobuf.GeneratedMessageV3
     }
 
     public static final int TOPIC_FIELD_NUMBER = 1;
-    private volatile java.lang.Object topic_;
+
+    @SuppressWarnings("serial")
+    private volatile java.lang.Object topic_ = "";
     /**
      *
      *
@@ -607,8 +609,8 @@ public final class ExportConfig extends com.google.protobuf.GeneratedMessageV3
       @java.lang.Override
       public Builder clear() {
         super.clear();
+        bitField0_ = 0;
         topic_ = "";
-
         return this;
       }
 
@@ -637,9 +639,19 @@ public final class ExportConfig extends com.google.protobuf.GeneratedMessageV3
       public com.google.cloud.pubsublite.proto.ExportConfig.PubSubConfig buildPartial() {
         com.google.cloud.pubsublite.proto.ExportConfig.PubSubConfig result =
             new com.google.cloud.pubsublite.proto.ExportConfig.PubSubConfig(this);
-        result.topic_ = topic_;
+        if (bitField0_ != 0) {
+          buildPartial0(result);
+        }
         onBuilt();
         return result;
+      }
+
+      private void buildPartial0(
+          com.google.cloud.pubsublite.proto.ExportConfig.PubSubConfig result) {
+        int from_bitField0_ = bitField0_;
+        if (((from_bitField0_ & 0x00000001) != 0)) {
+          result.topic_ = topic_;
+        }
       }
 
       @java.lang.Override
@@ -693,6 +705,7 @@ public final class ExportConfig extends com.google.protobuf.GeneratedMessageV3
           return this;
         if (!other.getTopic().isEmpty()) {
           topic_ = other.topic_;
+          bitField0_ |= 0x00000001;
           onChanged();
         }
         this.mergeUnknownFields(other.getUnknownFields());
@@ -724,7 +737,7 @@ public final class ExportConfig extends com.google.protobuf.GeneratedMessageV3
               case 10:
                 {
                   topic_ = input.readStringRequireUtf8();
-
+                  bitField0_ |= 0x00000001;
                   break;
                 } // case 10
               default:
@@ -743,6 +756,8 @@ public final class ExportConfig extends com.google.protobuf.GeneratedMessageV3
         } // finally
         return this;
       }
+
+      private int bitField0_;
 
       private java.lang.Object topic_ = "";
       /**
@@ -811,8 +826,8 @@ public final class ExportConfig extends com.google.protobuf.GeneratedMessageV3
         if (value == null) {
           throw new NullPointerException();
         }
-
         topic_ = value;
+        bitField0_ |= 0x00000001;
         onChanged();
         return this;
       }
@@ -830,8 +845,8 @@ public final class ExportConfig extends com.google.protobuf.GeneratedMessageV3
        * @return This builder for chaining.
        */
       public Builder clearTopic() {
-
         topic_ = getDefaultInstance().getTopic();
+        bitField0_ = (bitField0_ & ~0x00000001);
         onChanged();
         return this;
       }
@@ -854,8 +869,8 @@ public final class ExportConfig extends com.google.protobuf.GeneratedMessageV3
           throw new NullPointerException();
         }
         checkByteStringIsUtf8(value);
-
         topic_ = value;
+        bitField0_ |= 0x00000001;
         onChanged();
         return this;
       }
@@ -970,7 +985,7 @@ public final class ExportConfig extends com.google.protobuf.GeneratedMessageV3
   }
 
   public static final int DESIRED_STATE_FIELD_NUMBER = 1;
-  private int desiredState_;
+  private int desiredState_ = 0;
   /**
    *
    *
@@ -1001,16 +1016,15 @@ public final class ExportConfig extends com.google.protobuf.GeneratedMessageV3
    */
   @java.lang.Override
   public com.google.cloud.pubsublite.proto.ExportConfig.State getDesiredState() {
-    @SuppressWarnings("deprecation")
     com.google.cloud.pubsublite.proto.ExportConfig.State result =
-        com.google.cloud.pubsublite.proto.ExportConfig.State.valueOf(desiredState_);
+        com.google.cloud.pubsublite.proto.ExportConfig.State.forNumber(desiredState_);
     return result == null
         ? com.google.cloud.pubsublite.proto.ExportConfig.State.UNRECOGNIZED
         : result;
   }
 
   public static final int CURRENT_STATE_FIELD_NUMBER = 6;
-  private int currentState_;
+  private int currentState_ = 0;
   /**
    *
    *
@@ -1045,16 +1059,17 @@ public final class ExportConfig extends com.google.protobuf.GeneratedMessageV3
    */
   @java.lang.Override
   public com.google.cloud.pubsublite.proto.ExportConfig.State getCurrentState() {
-    @SuppressWarnings("deprecation")
     com.google.cloud.pubsublite.proto.ExportConfig.State result =
-        com.google.cloud.pubsublite.proto.ExportConfig.State.valueOf(currentState_);
+        com.google.cloud.pubsublite.proto.ExportConfig.State.forNumber(currentState_);
     return result == null
         ? com.google.cloud.pubsublite.proto.ExportConfig.State.UNRECOGNIZED
         : result;
   }
 
   public static final int DEAD_LETTER_TOPIC_FIELD_NUMBER = 5;
-  private volatile java.lang.Object deadLetterTopic_;
+
+  @SuppressWarnings("serial")
+  private volatile java.lang.Object deadLetterTopic_ = "";
   /**
    *
    *
@@ -1420,12 +1435,10 @@ public final class ExportConfig extends com.google.protobuf.GeneratedMessageV3
     @java.lang.Override
     public Builder clear() {
       super.clear();
+      bitField0_ = 0;
       desiredState_ = 0;
-
       currentState_ = 0;
-
       deadLetterTopic_ = "";
-
       if (pubsubConfigBuilder_ != null) {
         pubsubConfigBuilder_.clear();
       }
@@ -1458,19 +1471,33 @@ public final class ExportConfig extends com.google.protobuf.GeneratedMessageV3
     public com.google.cloud.pubsublite.proto.ExportConfig buildPartial() {
       com.google.cloud.pubsublite.proto.ExportConfig result =
           new com.google.cloud.pubsublite.proto.ExportConfig(this);
-      result.desiredState_ = desiredState_;
-      result.currentState_ = currentState_;
-      result.deadLetterTopic_ = deadLetterTopic_;
-      if (destinationCase_ == 3) {
-        if (pubsubConfigBuilder_ == null) {
-          result.destination_ = destination_;
-        } else {
-          result.destination_ = pubsubConfigBuilder_.build();
-        }
+      if (bitField0_ != 0) {
+        buildPartial0(result);
       }
-      result.destinationCase_ = destinationCase_;
+      buildPartialOneofs(result);
       onBuilt();
       return result;
+    }
+
+    private void buildPartial0(com.google.cloud.pubsublite.proto.ExportConfig result) {
+      int from_bitField0_ = bitField0_;
+      if (((from_bitField0_ & 0x00000001) != 0)) {
+        result.desiredState_ = desiredState_;
+      }
+      if (((from_bitField0_ & 0x00000002) != 0)) {
+        result.currentState_ = currentState_;
+      }
+      if (((from_bitField0_ & 0x00000004) != 0)) {
+        result.deadLetterTopic_ = deadLetterTopic_;
+      }
+    }
+
+    private void buildPartialOneofs(com.google.cloud.pubsublite.proto.ExportConfig result) {
+      result.destinationCase_ = destinationCase_;
+      result.destination_ = this.destination_;
+      if (destinationCase_ == 3 && pubsubConfigBuilder_ != null) {
+        result.destination_ = pubsubConfigBuilder_.build();
+      }
     }
 
     @java.lang.Override
@@ -1526,6 +1553,7 @@ public final class ExportConfig extends com.google.protobuf.GeneratedMessageV3
       }
       if (!other.getDeadLetterTopic().isEmpty()) {
         deadLetterTopic_ = other.deadLetterTopic_;
+        bitField0_ |= 0x00000004;
         onChanged();
       }
       switch (other.getDestinationCase()) {
@@ -1568,7 +1596,7 @@ public final class ExportConfig extends com.google.protobuf.GeneratedMessageV3
             case 8:
               {
                 desiredState_ = input.readEnum();
-
+                bitField0_ |= 0x00000001;
                 break;
               } // case 8
             case 26:
@@ -1580,13 +1608,13 @@ public final class ExportConfig extends com.google.protobuf.GeneratedMessageV3
             case 42:
               {
                 deadLetterTopic_ = input.readStringRequireUtf8();
-
+                bitField0_ |= 0x00000004;
                 break;
               } // case 42
             case 48:
               {
                 currentState_ = input.readEnum();
-
+                bitField0_ |= 0x00000002;
                 break;
               } // case 48
             default:
@@ -1620,6 +1648,8 @@ public final class ExportConfig extends com.google.protobuf.GeneratedMessageV3
       return this;
     }
 
+    private int bitField0_;
+
     private int desiredState_ = 0;
     /**
      *
@@ -1651,8 +1681,8 @@ public final class ExportConfig extends com.google.protobuf.GeneratedMessageV3
      * @return This builder for chaining.
      */
     public Builder setDesiredStateValue(int value) {
-
       desiredState_ = value;
+      bitField0_ |= 0x00000001;
       onChanged();
       return this;
     }
@@ -1670,9 +1700,8 @@ public final class ExportConfig extends com.google.protobuf.GeneratedMessageV3
      */
     @java.lang.Override
     public com.google.cloud.pubsublite.proto.ExportConfig.State getDesiredState() {
-      @SuppressWarnings("deprecation")
       com.google.cloud.pubsublite.proto.ExportConfig.State result =
-          com.google.cloud.pubsublite.proto.ExportConfig.State.valueOf(desiredState_);
+          com.google.cloud.pubsublite.proto.ExportConfig.State.forNumber(desiredState_);
       return result == null
           ? com.google.cloud.pubsublite.proto.ExportConfig.State.UNRECOGNIZED
           : result;
@@ -1694,7 +1723,7 @@ public final class ExportConfig extends com.google.protobuf.GeneratedMessageV3
       if (value == null) {
         throw new NullPointerException();
       }
-
+      bitField0_ |= 0x00000001;
       desiredState_ = value.getNumber();
       onChanged();
       return this;
@@ -1712,7 +1741,7 @@ public final class ExportConfig extends com.google.protobuf.GeneratedMessageV3
      * @return This builder for chaining.
      */
     public Builder clearDesiredState() {
-
+      bitField0_ = (bitField0_ & ~0x00000001);
       desiredState_ = 0;
       onChanged();
       return this;
@@ -1753,8 +1782,8 @@ public final class ExportConfig extends com.google.protobuf.GeneratedMessageV3
      * @return This builder for chaining.
      */
     public Builder setCurrentStateValue(int value) {
-
       currentState_ = value;
+      bitField0_ |= 0x00000002;
       onChanged();
       return this;
     }
@@ -1774,9 +1803,8 @@ public final class ExportConfig extends com.google.protobuf.GeneratedMessageV3
      */
     @java.lang.Override
     public com.google.cloud.pubsublite.proto.ExportConfig.State getCurrentState() {
-      @SuppressWarnings("deprecation")
       com.google.cloud.pubsublite.proto.ExportConfig.State result =
-          com.google.cloud.pubsublite.proto.ExportConfig.State.valueOf(currentState_);
+          com.google.cloud.pubsublite.proto.ExportConfig.State.forNumber(currentState_);
       return result == null
           ? com.google.cloud.pubsublite.proto.ExportConfig.State.UNRECOGNIZED
           : result;
@@ -1800,7 +1828,7 @@ public final class ExportConfig extends com.google.protobuf.GeneratedMessageV3
       if (value == null) {
         throw new NullPointerException();
       }
-
+      bitField0_ |= 0x00000002;
       currentState_ = value.getNumber();
       onChanged();
       return this;
@@ -1820,7 +1848,7 @@ public final class ExportConfig extends com.google.protobuf.GeneratedMessageV3
      * @return This builder for chaining.
      */
     public Builder clearCurrentState() {
-
+      bitField0_ = (bitField0_ & ~0x00000002);
       currentState_ = 0;
       onChanged();
       return this;
@@ -1914,8 +1942,8 @@ public final class ExportConfig extends com.google.protobuf.GeneratedMessageV3
       if (value == null) {
         throw new NullPointerException();
       }
-
       deadLetterTopic_ = value;
+      bitField0_ |= 0x00000004;
       onChanged();
       return this;
     }
@@ -1940,8 +1968,8 @@ public final class ExportConfig extends com.google.protobuf.GeneratedMessageV3
      * @return This builder for chaining.
      */
     public Builder clearDeadLetterTopic() {
-
       deadLetterTopic_ = getDefaultInstance().getDeadLetterTopic();
+      bitField0_ = (bitField0_ & ~0x00000004);
       onChanged();
       return this;
     }
@@ -1971,8 +1999,8 @@ public final class ExportConfig extends com.google.protobuf.GeneratedMessageV3
         throw new NullPointerException();
       }
       checkByteStringIsUtf8(value);
-
       deadLetterTopic_ = value;
+      bitField0_ |= 0x00000004;
       onChanged();
       return this;
     }
@@ -2199,7 +2227,6 @@ public final class ExportConfig extends com.google.protobuf.GeneratedMessageV3
       }
       destinationCase_ = 3;
       onChanged();
-      ;
       return pubsubConfigBuilder_;
     }
 

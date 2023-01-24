@@ -446,6 +446,7 @@ public final class StreamingCommitCursorResponse extends com.google.protobuf.Gen
     @java.lang.Override
     public Builder clear() {
       super.clear();
+      bitField0_ = 0;
       if (initialBuilder_ != null) {
         initialBuilder_.clear();
       }
@@ -482,23 +483,29 @@ public final class StreamingCommitCursorResponse extends com.google.protobuf.Gen
     public com.google.cloud.pubsublite.proto.StreamingCommitCursorResponse buildPartial() {
       com.google.cloud.pubsublite.proto.StreamingCommitCursorResponse result =
           new com.google.cloud.pubsublite.proto.StreamingCommitCursorResponse(this);
-      if (requestCase_ == 1) {
-        if (initialBuilder_ == null) {
-          result.request_ = request_;
-        } else {
-          result.request_ = initialBuilder_.build();
-        }
+      if (bitField0_ != 0) {
+        buildPartial0(result);
       }
-      if (requestCase_ == 2) {
-        if (commitBuilder_ == null) {
-          result.request_ = request_;
-        } else {
-          result.request_ = commitBuilder_.build();
-        }
-      }
-      result.requestCase_ = requestCase_;
+      buildPartialOneofs(result);
       onBuilt();
       return result;
+    }
+
+    private void buildPartial0(
+        com.google.cloud.pubsublite.proto.StreamingCommitCursorResponse result) {
+      int from_bitField0_ = bitField0_;
+    }
+
+    private void buildPartialOneofs(
+        com.google.cloud.pubsublite.proto.StreamingCommitCursorResponse result) {
+      result.requestCase_ = requestCase_;
+      result.request_ = this.request_;
+      if (requestCase_ == 1 && initialBuilder_ != null) {
+        result.request_ = initialBuilder_.build();
+      }
+      if (requestCase_ == 2 && commitBuilder_ != null) {
+        result.request_ = commitBuilder_.build();
+      }
     }
 
     @java.lang.Override
@@ -633,6 +640,8 @@ public final class StreamingCommitCursorResponse extends com.google.protobuf.Gen
       onChanged();
       return this;
     }
+
+    private int bitField0_;
 
     private com.google.protobuf.SingleFieldBuilderV3<
             com.google.cloud.pubsublite.proto.InitialCommitCursorResponse,
@@ -846,7 +855,6 @@ public final class StreamingCommitCursorResponse extends com.google.protobuf.Gen
       }
       requestCase_ = 1;
       onChanged();
-      ;
       return initialBuilder_;
     }
 
@@ -1063,7 +1071,6 @@ public final class StreamingCommitCursorResponse extends com.google.protobuf.Gen
       }
       requestCase_ = 2;
       onChanged();
-      ;
       return commitBuilder_;
     }
 

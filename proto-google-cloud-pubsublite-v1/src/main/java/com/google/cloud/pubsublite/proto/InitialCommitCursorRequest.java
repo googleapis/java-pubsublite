@@ -70,7 +70,9 @@ public final class InitialCommitCursorRequest extends com.google.protobuf.Genera
   }
 
   public static final int SUBSCRIPTION_FIELD_NUMBER = 1;
-  private volatile java.lang.Object subscription_;
+
+  @SuppressWarnings("serial")
+  private volatile java.lang.Object subscription_ = "";
   /**
    *
    *
@@ -119,7 +121,7 @@ public final class InitialCommitCursorRequest extends com.google.protobuf.Genera
   }
 
   public static final int PARTITION_FIELD_NUMBER = 2;
-  private long partition_;
+  private long partition_ = 0L;
   /**
    *
    *
@@ -346,10 +348,9 @@ public final class InitialCommitCursorRequest extends com.google.protobuf.Genera
     @java.lang.Override
     public Builder clear() {
       super.clear();
+      bitField0_ = 0;
       subscription_ = "";
-
       partition_ = 0L;
-
       return this;
     }
 
@@ -378,10 +379,22 @@ public final class InitialCommitCursorRequest extends com.google.protobuf.Genera
     public com.google.cloud.pubsublite.proto.InitialCommitCursorRequest buildPartial() {
       com.google.cloud.pubsublite.proto.InitialCommitCursorRequest result =
           new com.google.cloud.pubsublite.proto.InitialCommitCursorRequest(this);
-      result.subscription_ = subscription_;
-      result.partition_ = partition_;
+      if (bitField0_ != 0) {
+        buildPartial0(result);
+      }
       onBuilt();
       return result;
+    }
+
+    private void buildPartial0(
+        com.google.cloud.pubsublite.proto.InitialCommitCursorRequest result) {
+      int from_bitField0_ = bitField0_;
+      if (((from_bitField0_ & 0x00000001) != 0)) {
+        result.subscription_ = subscription_;
+      }
+      if (((from_bitField0_ & 0x00000002) != 0)) {
+        result.partition_ = partition_;
+      }
     }
 
     @java.lang.Override
@@ -433,6 +446,7 @@ public final class InitialCommitCursorRequest extends com.google.protobuf.Genera
         return this;
       if (!other.getSubscription().isEmpty()) {
         subscription_ = other.subscription_;
+        bitField0_ |= 0x00000001;
         onChanged();
       }
       if (other.getPartition() != 0L) {
@@ -467,13 +481,13 @@ public final class InitialCommitCursorRequest extends com.google.protobuf.Genera
             case 10:
               {
                 subscription_ = input.readStringRequireUtf8();
-
+                bitField0_ |= 0x00000001;
                 break;
               } // case 10
             case 16:
               {
                 partition_ = input.readInt64();
-
+                bitField0_ |= 0x00000002;
                 break;
               } // case 16
             default:
@@ -492,6 +506,8 @@ public final class InitialCommitCursorRequest extends com.google.protobuf.Genera
       } // finally
       return this;
     }
+
+    private int bitField0_;
 
     private java.lang.Object subscription_ = "";
     /**
@@ -554,8 +570,8 @@ public final class InitialCommitCursorRequest extends com.google.protobuf.Genera
       if (value == null) {
         throw new NullPointerException();
       }
-
       subscription_ = value;
+      bitField0_ |= 0x00000001;
       onChanged();
       return this;
     }
@@ -571,8 +587,8 @@ public final class InitialCommitCursorRequest extends com.google.protobuf.Genera
      * @return This builder for chaining.
      */
     public Builder clearSubscription() {
-
       subscription_ = getDefaultInstance().getSubscription();
+      bitField0_ = (bitField0_ & ~0x00000001);
       onChanged();
       return this;
     }
@@ -593,8 +609,8 @@ public final class InitialCommitCursorRequest extends com.google.protobuf.Genera
         throw new NullPointerException();
       }
       checkByteStringIsUtf8(value);
-
       subscription_ = value;
+      bitField0_ |= 0x00000001;
       onChanged();
       return this;
     }
@@ -632,6 +648,7 @@ public final class InitialCommitCursorRequest extends com.google.protobuf.Genera
     public Builder setPartition(long value) {
 
       partition_ = value;
+      bitField0_ |= 0x00000002;
       onChanged();
       return this;
     }
@@ -648,7 +665,7 @@ public final class InitialCommitCursorRequest extends com.google.protobuf.Genera
      * @return This builder for chaining.
      */
     public Builder clearPartition() {
-
+      bitField0_ = (bitField0_ & ~0x00000002);
       partition_ = 0L;
       onChanged();
       return this;

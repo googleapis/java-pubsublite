@@ -69,7 +69,9 @@ public final class ComputeTimeCursorRequest extends com.google.protobuf.Generate
   }
 
   public static final int TOPIC_FIELD_NUMBER = 1;
-  private volatile java.lang.Object topic_;
+
+  @SuppressWarnings("serial")
+  private volatile java.lang.Object topic_ = "";
   /**
    *
    *
@@ -122,7 +124,7 @@ public final class ComputeTimeCursorRequest extends com.google.protobuf.Generate
   }
 
   public static final int PARTITION_FIELD_NUMBER = 2;
-  private long partition_;
+  private long partition_ = 0L;
   /**
    *
    *
@@ -193,7 +195,9 @@ public final class ComputeTimeCursorRequest extends com.google.protobuf.Generate
    */
   @java.lang.Override
   public com.google.cloud.pubsublite.proto.TimeTargetOrBuilder getTargetOrBuilder() {
-    return getTarget();
+    return target_ == null
+        ? com.google.cloud.pubsublite.proto.TimeTarget.getDefaultInstance()
+        : target_;
   }
 
   private byte memoizedIsInitialized = -1;
@@ -418,14 +422,12 @@ public final class ComputeTimeCursorRequest extends com.google.protobuf.Generate
     @java.lang.Override
     public Builder clear() {
       super.clear();
+      bitField0_ = 0;
       topic_ = "";
-
       partition_ = 0L;
-
-      if (targetBuilder_ == null) {
-        target_ = null;
-      } else {
-        target_ = null;
+      target_ = null;
+      if (targetBuilder_ != null) {
+        targetBuilder_.dispose();
         targetBuilder_ = null;
       }
       return this;
@@ -455,15 +457,24 @@ public final class ComputeTimeCursorRequest extends com.google.protobuf.Generate
     public com.google.cloud.pubsublite.proto.ComputeTimeCursorRequest buildPartial() {
       com.google.cloud.pubsublite.proto.ComputeTimeCursorRequest result =
           new com.google.cloud.pubsublite.proto.ComputeTimeCursorRequest(this);
-      result.topic_ = topic_;
-      result.partition_ = partition_;
-      if (targetBuilder_ == null) {
-        result.target_ = target_;
-      } else {
-        result.target_ = targetBuilder_.build();
+      if (bitField0_ != 0) {
+        buildPartial0(result);
       }
       onBuilt();
       return result;
+    }
+
+    private void buildPartial0(com.google.cloud.pubsublite.proto.ComputeTimeCursorRequest result) {
+      int from_bitField0_ = bitField0_;
+      if (((from_bitField0_ & 0x00000001) != 0)) {
+        result.topic_ = topic_;
+      }
+      if (((from_bitField0_ & 0x00000002) != 0)) {
+        result.partition_ = partition_;
+      }
+      if (((from_bitField0_ & 0x00000004) != 0)) {
+        result.target_ = targetBuilder_ == null ? target_ : targetBuilder_.build();
+      }
     }
 
     @java.lang.Override
@@ -514,6 +525,7 @@ public final class ComputeTimeCursorRequest extends com.google.protobuf.Generate
         return this;
       if (!other.getTopic().isEmpty()) {
         topic_ = other.topic_;
+        bitField0_ |= 0x00000001;
         onChanged();
       }
       if (other.getPartition() != 0L) {
@@ -551,19 +563,19 @@ public final class ComputeTimeCursorRequest extends com.google.protobuf.Generate
             case 10:
               {
                 topic_ = input.readStringRequireUtf8();
-
+                bitField0_ |= 0x00000001;
                 break;
               } // case 10
             case 16:
               {
                 partition_ = input.readInt64();
-
+                bitField0_ |= 0x00000002;
                 break;
               } // case 16
             case 26:
               {
                 input.readMessage(getTargetFieldBuilder().getBuilder(), extensionRegistry);
-
+                bitField0_ |= 0x00000004;
                 break;
               } // case 26
             default:
@@ -582,6 +594,8 @@ public final class ComputeTimeCursorRequest extends com.google.protobuf.Generate
       } // finally
       return this;
     }
+
+    private int bitField0_;
 
     private java.lang.Object topic_ = "";
     /**
@@ -650,8 +664,8 @@ public final class ComputeTimeCursorRequest extends com.google.protobuf.Generate
       if (value == null) {
         throw new NullPointerException();
       }
-
       topic_ = value;
+      bitField0_ |= 0x00000001;
       onChanged();
       return this;
     }
@@ -669,8 +683,8 @@ public final class ComputeTimeCursorRequest extends com.google.protobuf.Generate
      * @return This builder for chaining.
      */
     public Builder clearTopic() {
-
       topic_ = getDefaultInstance().getTopic();
+      bitField0_ = (bitField0_ & ~0x00000001);
       onChanged();
       return this;
     }
@@ -693,8 +707,8 @@ public final class ComputeTimeCursorRequest extends com.google.protobuf.Generate
         throw new NullPointerException();
       }
       checkByteStringIsUtf8(value);
-
       topic_ = value;
+      bitField0_ |= 0x00000001;
       onChanged();
       return this;
     }
@@ -730,6 +744,7 @@ public final class ComputeTimeCursorRequest extends com.google.protobuf.Generate
     public Builder setPartition(long value) {
 
       partition_ = value;
+      bitField0_ |= 0x00000002;
       onChanged();
       return this;
     }
@@ -745,7 +760,7 @@ public final class ComputeTimeCursorRequest extends com.google.protobuf.Generate
      * @return This builder for chaining.
      */
     public Builder clearPartition() {
-
+      bitField0_ = (bitField0_ & ~0x00000002);
       partition_ = 0L;
       onChanged();
       return this;
@@ -772,7 +787,7 @@ public final class ComputeTimeCursorRequest extends com.google.protobuf.Generate
      * @return Whether the target field is set.
      */
     public boolean hasTarget() {
-      return targetBuilder_ != null || target_ != null;
+      return ((bitField0_ & 0x00000004) != 0);
     }
     /**
      *
@@ -815,11 +830,11 @@ public final class ComputeTimeCursorRequest extends com.google.protobuf.Generate
           throw new NullPointerException();
         }
         target_ = value;
-        onChanged();
       } else {
         targetBuilder_.setMessage(value);
       }
-
+      bitField0_ |= 0x00000004;
+      onChanged();
       return this;
     }
     /**
@@ -837,11 +852,11 @@ public final class ComputeTimeCursorRequest extends com.google.protobuf.Generate
     public Builder setTarget(com.google.cloud.pubsublite.proto.TimeTarget.Builder builderForValue) {
       if (targetBuilder_ == null) {
         target_ = builderForValue.build();
-        onChanged();
       } else {
         targetBuilder_.setMessage(builderForValue.build());
       }
-
+      bitField0_ |= 0x00000004;
+      onChanged();
       return this;
     }
     /**
@@ -858,19 +873,18 @@ public final class ComputeTimeCursorRequest extends com.google.protobuf.Generate
      */
     public Builder mergeTarget(com.google.cloud.pubsublite.proto.TimeTarget value) {
       if (targetBuilder_ == null) {
-        if (target_ != null) {
-          target_ =
-              com.google.cloud.pubsublite.proto.TimeTarget.newBuilder(target_)
-                  .mergeFrom(value)
-                  .buildPartial();
+        if (((bitField0_ & 0x00000004) != 0)
+            && target_ != null
+            && target_ != com.google.cloud.pubsublite.proto.TimeTarget.getDefaultInstance()) {
+          getTargetBuilder().mergeFrom(value);
         } else {
           target_ = value;
         }
-        onChanged();
       } else {
         targetBuilder_.mergeFrom(value);
       }
-
+      bitField0_ |= 0x00000004;
+      onChanged();
       return this;
     }
     /**
@@ -886,14 +900,13 @@ public final class ComputeTimeCursorRequest extends com.google.protobuf.Generate
      * </code>
      */
     public Builder clearTarget() {
-      if (targetBuilder_ == null) {
-        target_ = null;
-        onChanged();
-      } else {
-        target_ = null;
+      bitField0_ = (bitField0_ & ~0x00000004);
+      target_ = null;
+      if (targetBuilder_ != null) {
+        targetBuilder_.dispose();
         targetBuilder_ = null;
       }
-
+      onChanged();
       return this;
     }
     /**
@@ -909,7 +922,7 @@ public final class ComputeTimeCursorRequest extends com.google.protobuf.Generate
      * </code>
      */
     public com.google.cloud.pubsublite.proto.TimeTarget.Builder getTargetBuilder() {
-
+      bitField0_ |= 0x00000004;
       onChanged();
       return getTargetFieldBuilder().getBuilder();
     }

@@ -68,6 +68,8 @@ public final class AttributeValues extends com.google.protobuf.GeneratedMessageV
   }
 
   public static final int VALUES_FIELD_NUMBER = 1;
+
+  @SuppressWarnings("serial")
   private java.util.List<com.google.protobuf.ByteString> values_;
   /**
    *
@@ -318,8 +320,8 @@ public final class AttributeValues extends com.google.protobuf.GeneratedMessageV
     @java.lang.Override
     public Builder clear() {
       super.clear();
+      bitField0_ = 0;
       values_ = java.util.Collections.emptyList();
-      bitField0_ = (bitField0_ & ~0x00000001);
       return this;
     }
 
@@ -347,14 +349,25 @@ public final class AttributeValues extends com.google.protobuf.GeneratedMessageV
     public com.google.cloud.pubsublite.proto.AttributeValues buildPartial() {
       com.google.cloud.pubsublite.proto.AttributeValues result =
           new com.google.cloud.pubsublite.proto.AttributeValues(this);
-      int from_bitField0_ = bitField0_;
+      buildPartialRepeatedFields(result);
+      if (bitField0_ != 0) {
+        buildPartial0(result);
+      }
+      onBuilt();
+      return result;
+    }
+
+    private void buildPartialRepeatedFields(
+        com.google.cloud.pubsublite.proto.AttributeValues result) {
       if (((bitField0_ & 0x00000001) != 0)) {
         values_ = java.util.Collections.unmodifiableList(values_);
         bitField0_ = (bitField0_ & ~0x00000001);
       }
       result.values_ = values_;
-      onBuilt();
-      return result;
+    }
+
+    private void buildPartial0(com.google.cloud.pubsublite.proto.AttributeValues result) {
+      int from_bitField0_ = bitField0_;
     }
 
     @java.lang.Override

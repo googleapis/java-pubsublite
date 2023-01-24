@@ -67,7 +67,7 @@ public final class FlowControlRequest extends com.google.protobuf.GeneratedMessa
   }
 
   public static final int ALLOWED_MESSAGES_FIELD_NUMBER = 1;
-  private long allowedMessages_;
+  private long allowedMessages_ = 0L;
   /**
    *
    *
@@ -85,7 +85,7 @@ public final class FlowControlRequest extends com.google.protobuf.GeneratedMessa
   }
 
   public static final int ALLOWED_BYTES_FIELD_NUMBER = 2;
-  private long allowedBytes_;
+  private long allowedBytes_ = 0L;
   /**
    *
    *
@@ -309,10 +309,9 @@ public final class FlowControlRequest extends com.google.protobuf.GeneratedMessa
     @java.lang.Override
     public Builder clear() {
       super.clear();
+      bitField0_ = 0;
       allowedMessages_ = 0L;
-
       allowedBytes_ = 0L;
-
       return this;
     }
 
@@ -340,10 +339,21 @@ public final class FlowControlRequest extends com.google.protobuf.GeneratedMessa
     public com.google.cloud.pubsublite.proto.FlowControlRequest buildPartial() {
       com.google.cloud.pubsublite.proto.FlowControlRequest result =
           new com.google.cloud.pubsublite.proto.FlowControlRequest(this);
-      result.allowedMessages_ = allowedMessages_;
-      result.allowedBytes_ = allowedBytes_;
+      if (bitField0_ != 0) {
+        buildPartial0(result);
+      }
       onBuilt();
       return result;
+    }
+
+    private void buildPartial0(com.google.cloud.pubsublite.proto.FlowControlRequest result) {
+      int from_bitField0_ = bitField0_;
+      if (((from_bitField0_ & 0x00000001) != 0)) {
+        result.allowedMessages_ = allowedMessages_;
+      }
+      if (((from_bitField0_ & 0x00000002) != 0)) {
+        result.allowedBytes_ = allowedBytes_;
+      }
     }
 
     @java.lang.Override
@@ -427,13 +437,13 @@ public final class FlowControlRequest extends com.google.protobuf.GeneratedMessa
             case 8:
               {
                 allowedMessages_ = input.readInt64();
-
+                bitField0_ |= 0x00000001;
                 break;
               } // case 8
             case 16:
               {
                 allowedBytes_ = input.readInt64();
-
+                bitField0_ |= 0x00000002;
                 break;
               } // case 16
             default:
@@ -452,6 +462,8 @@ public final class FlowControlRequest extends com.google.protobuf.GeneratedMessa
       } // finally
       return this;
     }
+
+    private int bitField0_;
 
     private long allowedMessages_;
     /**
@@ -484,6 +496,7 @@ public final class FlowControlRequest extends com.google.protobuf.GeneratedMessa
     public Builder setAllowedMessages(long value) {
 
       allowedMessages_ = value;
+      bitField0_ |= 0x00000001;
       onChanged();
       return this;
     }
@@ -499,7 +512,7 @@ public final class FlowControlRequest extends com.google.protobuf.GeneratedMessa
      * @return This builder for chaining.
      */
     public Builder clearAllowedMessages() {
-
+      bitField0_ = (bitField0_ & ~0x00000001);
       allowedMessages_ = 0L;
       onChanged();
       return this;
@@ -536,6 +549,7 @@ public final class FlowControlRequest extends com.google.protobuf.GeneratedMessa
     public Builder setAllowedBytes(long value) {
 
       allowedBytes_ = value;
+      bitField0_ |= 0x00000002;
       onChanged();
       return this;
     }
@@ -551,7 +565,7 @@ public final class FlowControlRequest extends com.google.protobuf.GeneratedMessa
      * @return This builder for chaining.
      */
     public Builder clearAllowedBytes() {
-
+      bitField0_ = (bitField0_ & ~0x00000002);
       allowedBytes_ = 0L;
       onChanged();
       return this;

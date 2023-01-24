@@ -445,6 +445,7 @@ public final class PublishResponse extends com.google.protobuf.GeneratedMessageV
     @java.lang.Override
     public Builder clear() {
       super.clear();
+      bitField0_ = 0;
       if (initialResponseBuilder_ != null) {
         initialResponseBuilder_.clear();
       }
@@ -480,23 +481,27 @@ public final class PublishResponse extends com.google.protobuf.GeneratedMessageV
     public com.google.cloud.pubsublite.proto.PublishResponse buildPartial() {
       com.google.cloud.pubsublite.proto.PublishResponse result =
           new com.google.cloud.pubsublite.proto.PublishResponse(this);
-      if (responseTypeCase_ == 1) {
-        if (initialResponseBuilder_ == null) {
-          result.responseType_ = responseType_;
-        } else {
-          result.responseType_ = initialResponseBuilder_.build();
-        }
+      if (bitField0_ != 0) {
+        buildPartial0(result);
       }
-      if (responseTypeCase_ == 2) {
-        if (messageResponseBuilder_ == null) {
-          result.responseType_ = responseType_;
-        } else {
-          result.responseType_ = messageResponseBuilder_.build();
-        }
-      }
-      result.responseTypeCase_ = responseTypeCase_;
+      buildPartialOneofs(result);
       onBuilt();
       return result;
+    }
+
+    private void buildPartial0(com.google.cloud.pubsublite.proto.PublishResponse result) {
+      int from_bitField0_ = bitField0_;
+    }
+
+    private void buildPartialOneofs(com.google.cloud.pubsublite.proto.PublishResponse result) {
+      result.responseTypeCase_ = responseTypeCase_;
+      result.responseType_ = this.responseType_;
+      if (responseTypeCase_ == 1 && initialResponseBuilder_ != null) {
+        result.responseType_ = initialResponseBuilder_.build();
+      }
+      if (responseTypeCase_ == 2 && messageResponseBuilder_ != null) {
+        result.responseType_ = messageResponseBuilder_.build();
+      }
     }
 
     @java.lang.Override
@@ -629,6 +634,8 @@ public final class PublishResponse extends com.google.protobuf.GeneratedMessageV
       onChanged();
       return this;
     }
+
+    private int bitField0_;
 
     private com.google.protobuf.SingleFieldBuilderV3<
             com.google.cloud.pubsublite.proto.InitialPublishResponse,
@@ -842,7 +849,6 @@ public final class PublishResponse extends com.google.protobuf.GeneratedMessageV
       }
       responseTypeCase_ = 1;
       onChanged();
-      ;
       return initialResponseBuilder_;
     }
 
@@ -1058,7 +1064,6 @@ public final class PublishResponse extends com.google.protobuf.GeneratedMessageV
       }
       responseTypeCase_ = 2;
       onChanged();
-      ;
       return messageResponseBuilder_;
     }
 

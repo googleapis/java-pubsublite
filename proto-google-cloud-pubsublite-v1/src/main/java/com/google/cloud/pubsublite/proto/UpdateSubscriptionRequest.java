@@ -119,7 +119,9 @@ public final class UpdateSubscriptionRequest extends com.google.protobuf.Generat
    */
   @java.lang.Override
   public com.google.cloud.pubsublite.proto.SubscriptionOrBuilder getSubscriptionOrBuilder() {
-    return getSubscription();
+    return subscription_ == null
+        ? com.google.cloud.pubsublite.proto.Subscription.getDefaultInstance()
+        : subscription_;
   }
 
   public static final int UPDATE_MASK_FIELD_NUMBER = 2;
@@ -168,7 +170,7 @@ public final class UpdateSubscriptionRequest extends com.google.protobuf.Generat
    */
   @java.lang.Override
   public com.google.protobuf.FieldMaskOrBuilder getUpdateMaskOrBuilder() {
-    return getUpdateMask();
+    return updateMask_ == null ? com.google.protobuf.FieldMask.getDefaultInstance() : updateMask_;
   }
 
   private byte memoizedIsInitialized = -1;
@@ -388,16 +390,15 @@ public final class UpdateSubscriptionRequest extends com.google.protobuf.Generat
     @java.lang.Override
     public Builder clear() {
       super.clear();
-      if (subscriptionBuilder_ == null) {
-        subscription_ = null;
-      } else {
-        subscription_ = null;
+      bitField0_ = 0;
+      subscription_ = null;
+      if (subscriptionBuilder_ != null) {
+        subscriptionBuilder_.dispose();
         subscriptionBuilder_ = null;
       }
-      if (updateMaskBuilder_ == null) {
-        updateMask_ = null;
-      } else {
-        updateMask_ = null;
+      updateMask_ = null;
+      if (updateMaskBuilder_ != null) {
+        updateMaskBuilder_.dispose();
         updateMaskBuilder_ = null;
       }
       return this;
@@ -427,18 +428,22 @@ public final class UpdateSubscriptionRequest extends com.google.protobuf.Generat
     public com.google.cloud.pubsublite.proto.UpdateSubscriptionRequest buildPartial() {
       com.google.cloud.pubsublite.proto.UpdateSubscriptionRequest result =
           new com.google.cloud.pubsublite.proto.UpdateSubscriptionRequest(this);
-      if (subscriptionBuilder_ == null) {
-        result.subscription_ = subscription_;
-      } else {
-        result.subscription_ = subscriptionBuilder_.build();
-      }
-      if (updateMaskBuilder_ == null) {
-        result.updateMask_ = updateMask_;
-      } else {
-        result.updateMask_ = updateMaskBuilder_.build();
+      if (bitField0_ != 0) {
+        buildPartial0(result);
       }
       onBuilt();
       return result;
+    }
+
+    private void buildPartial0(com.google.cloud.pubsublite.proto.UpdateSubscriptionRequest result) {
+      int from_bitField0_ = bitField0_;
+      if (((from_bitField0_ & 0x00000001) != 0)) {
+        result.subscription_ =
+            subscriptionBuilder_ == null ? subscription_ : subscriptionBuilder_.build();
+      }
+      if (((from_bitField0_ & 0x00000002) != 0)) {
+        result.updateMask_ = updateMaskBuilder_ == null ? updateMask_ : updateMaskBuilder_.build();
+      }
     }
 
     @java.lang.Override
@@ -522,13 +527,13 @@ public final class UpdateSubscriptionRequest extends com.google.protobuf.Generat
             case 10:
               {
                 input.readMessage(getSubscriptionFieldBuilder().getBuilder(), extensionRegistry);
-
+                bitField0_ |= 0x00000001;
                 break;
               } // case 10
             case 18:
               {
                 input.readMessage(getUpdateMaskFieldBuilder().getBuilder(), extensionRegistry);
-
+                bitField0_ |= 0x00000002;
                 break;
               } // case 18
             default:
@@ -547,6 +552,8 @@ public final class UpdateSubscriptionRequest extends com.google.protobuf.Generat
       } // finally
       return this;
     }
+
+    private int bitField0_;
 
     private com.google.cloud.pubsublite.proto.Subscription subscription_;
     private com.google.protobuf.SingleFieldBuilderV3<
@@ -569,7 +576,7 @@ public final class UpdateSubscriptionRequest extends com.google.protobuf.Generat
      * @return Whether the subscription field is set.
      */
     public boolean hasSubscription() {
-      return subscriptionBuilder_ != null || subscription_ != null;
+      return ((bitField0_ & 0x00000001) != 0);
     }
     /**
      *
@@ -612,11 +619,11 @@ public final class UpdateSubscriptionRequest extends com.google.protobuf.Generat
           throw new NullPointerException();
         }
         subscription_ = value;
-        onChanged();
       } else {
         subscriptionBuilder_.setMessage(value);
       }
-
+      bitField0_ |= 0x00000001;
+      onChanged();
       return this;
     }
     /**
@@ -635,11 +642,11 @@ public final class UpdateSubscriptionRequest extends com.google.protobuf.Generat
         com.google.cloud.pubsublite.proto.Subscription.Builder builderForValue) {
       if (subscriptionBuilder_ == null) {
         subscription_ = builderForValue.build();
-        onChanged();
       } else {
         subscriptionBuilder_.setMessage(builderForValue.build());
       }
-
+      bitField0_ |= 0x00000001;
+      onChanged();
       return this;
     }
     /**
@@ -656,19 +663,19 @@ public final class UpdateSubscriptionRequest extends com.google.protobuf.Generat
      */
     public Builder mergeSubscription(com.google.cloud.pubsublite.proto.Subscription value) {
       if (subscriptionBuilder_ == null) {
-        if (subscription_ != null) {
-          subscription_ =
-              com.google.cloud.pubsublite.proto.Subscription.newBuilder(subscription_)
-                  .mergeFrom(value)
-                  .buildPartial();
+        if (((bitField0_ & 0x00000001) != 0)
+            && subscription_ != null
+            && subscription_
+                != com.google.cloud.pubsublite.proto.Subscription.getDefaultInstance()) {
+          getSubscriptionBuilder().mergeFrom(value);
         } else {
           subscription_ = value;
         }
-        onChanged();
       } else {
         subscriptionBuilder_.mergeFrom(value);
       }
-
+      bitField0_ |= 0x00000001;
+      onChanged();
       return this;
     }
     /**
@@ -684,14 +691,13 @@ public final class UpdateSubscriptionRequest extends com.google.protobuf.Generat
      * </code>
      */
     public Builder clearSubscription() {
-      if (subscriptionBuilder_ == null) {
-        subscription_ = null;
-        onChanged();
-      } else {
-        subscription_ = null;
+      bitField0_ = (bitField0_ & ~0x00000001);
+      subscription_ = null;
+      if (subscriptionBuilder_ != null) {
+        subscriptionBuilder_.dispose();
         subscriptionBuilder_ = null;
       }
-
+      onChanged();
       return this;
     }
     /**
@@ -707,7 +713,7 @@ public final class UpdateSubscriptionRequest extends com.google.protobuf.Generat
      * </code>
      */
     public com.google.cloud.pubsublite.proto.Subscription.Builder getSubscriptionBuilder() {
-
+      bitField0_ |= 0x00000001;
       onChanged();
       return getSubscriptionFieldBuilder().getBuilder();
     }
@@ -780,7 +786,7 @@ public final class UpdateSubscriptionRequest extends com.google.protobuf.Generat
      * @return Whether the updateMask field is set.
      */
     public boolean hasUpdateMask() {
-      return updateMaskBuilder_ != null || updateMask_ != null;
+      return ((bitField0_ & 0x00000002) != 0);
     }
     /**
      *
@@ -819,11 +825,11 @@ public final class UpdateSubscriptionRequest extends com.google.protobuf.Generat
           throw new NullPointerException();
         }
         updateMask_ = value;
-        onChanged();
       } else {
         updateMaskBuilder_.setMessage(value);
       }
-
+      bitField0_ |= 0x00000002;
+      onChanged();
       return this;
     }
     /**
@@ -839,11 +845,11 @@ public final class UpdateSubscriptionRequest extends com.google.protobuf.Generat
     public Builder setUpdateMask(com.google.protobuf.FieldMask.Builder builderForValue) {
       if (updateMaskBuilder_ == null) {
         updateMask_ = builderForValue.build();
-        onChanged();
       } else {
         updateMaskBuilder_.setMessage(builderForValue.build());
       }
-
+      bitField0_ |= 0x00000002;
+      onChanged();
       return this;
     }
     /**
@@ -858,17 +864,18 @@ public final class UpdateSubscriptionRequest extends com.google.protobuf.Generat
      */
     public Builder mergeUpdateMask(com.google.protobuf.FieldMask value) {
       if (updateMaskBuilder_ == null) {
-        if (updateMask_ != null) {
-          updateMask_ =
-              com.google.protobuf.FieldMask.newBuilder(updateMask_).mergeFrom(value).buildPartial();
+        if (((bitField0_ & 0x00000002) != 0)
+            && updateMask_ != null
+            && updateMask_ != com.google.protobuf.FieldMask.getDefaultInstance()) {
+          getUpdateMaskBuilder().mergeFrom(value);
         } else {
           updateMask_ = value;
         }
-        onChanged();
       } else {
         updateMaskBuilder_.mergeFrom(value);
       }
-
+      bitField0_ |= 0x00000002;
+      onChanged();
       return this;
     }
     /**
@@ -882,14 +889,13 @@ public final class UpdateSubscriptionRequest extends com.google.protobuf.Generat
      * </code>
      */
     public Builder clearUpdateMask() {
-      if (updateMaskBuilder_ == null) {
-        updateMask_ = null;
-        onChanged();
-      } else {
-        updateMask_ = null;
+      bitField0_ = (bitField0_ & ~0x00000002);
+      updateMask_ = null;
+      if (updateMaskBuilder_ != null) {
+        updateMaskBuilder_.dispose();
         updateMaskBuilder_ = null;
       }
-
+      onChanged();
       return this;
     }
     /**
@@ -903,7 +909,7 @@ public final class UpdateSubscriptionRequest extends com.google.protobuf.Generat
      * </code>
      */
     public com.google.protobuf.FieldMask.Builder getUpdateMaskBuilder() {
-
+      bitField0_ |= 0x00000002;
       onChanged();
       return getUpdateMaskFieldBuilder().getBuilder();
     }

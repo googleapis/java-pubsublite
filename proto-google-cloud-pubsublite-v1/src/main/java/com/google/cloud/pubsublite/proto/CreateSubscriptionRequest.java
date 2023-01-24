@@ -69,7 +69,9 @@ public final class CreateSubscriptionRequest extends com.google.protobuf.Generat
   }
 
   public static final int PARENT_FIELD_NUMBER = 1;
-  private volatile java.lang.Object parent_;
+
+  @SuppressWarnings("serial")
+  private volatile java.lang.Object parent_ = "";
   /**
    *
    *
@@ -174,11 +176,15 @@ public final class CreateSubscriptionRequest extends com.google.protobuf.Generat
    */
   @java.lang.Override
   public com.google.cloud.pubsublite.proto.SubscriptionOrBuilder getSubscriptionOrBuilder() {
-    return getSubscription();
+    return subscription_ == null
+        ? com.google.cloud.pubsublite.proto.Subscription.getDefaultInstance()
+        : subscription_;
   }
 
   public static final int SUBSCRIPTION_ID_FIELD_NUMBER = 3;
-  private volatile java.lang.Object subscriptionId_;
+
+  @SuppressWarnings("serial")
+  private volatile java.lang.Object subscriptionId_ = "";
   /**
    *
    *
@@ -231,7 +237,7 @@ public final class CreateSubscriptionRequest extends com.google.protobuf.Generat
   }
 
   public static final int SKIP_BACKLOG_FIELD_NUMBER = 4;
-  private boolean skipBacklog_;
+  private boolean skipBacklog_ = false;
   /**
    *
    *
@@ -480,18 +486,15 @@ public final class CreateSubscriptionRequest extends com.google.protobuf.Generat
     @java.lang.Override
     public Builder clear() {
       super.clear();
+      bitField0_ = 0;
       parent_ = "";
-
-      if (subscriptionBuilder_ == null) {
-        subscription_ = null;
-      } else {
-        subscription_ = null;
+      subscription_ = null;
+      if (subscriptionBuilder_ != null) {
+        subscriptionBuilder_.dispose();
         subscriptionBuilder_ = null;
       }
       subscriptionId_ = "";
-
       skipBacklog_ = false;
-
       return this;
     }
 
@@ -519,16 +522,28 @@ public final class CreateSubscriptionRequest extends com.google.protobuf.Generat
     public com.google.cloud.pubsublite.proto.CreateSubscriptionRequest buildPartial() {
       com.google.cloud.pubsublite.proto.CreateSubscriptionRequest result =
           new com.google.cloud.pubsublite.proto.CreateSubscriptionRequest(this);
-      result.parent_ = parent_;
-      if (subscriptionBuilder_ == null) {
-        result.subscription_ = subscription_;
-      } else {
-        result.subscription_ = subscriptionBuilder_.build();
+      if (bitField0_ != 0) {
+        buildPartial0(result);
       }
-      result.subscriptionId_ = subscriptionId_;
-      result.skipBacklog_ = skipBacklog_;
       onBuilt();
       return result;
+    }
+
+    private void buildPartial0(com.google.cloud.pubsublite.proto.CreateSubscriptionRequest result) {
+      int from_bitField0_ = bitField0_;
+      if (((from_bitField0_ & 0x00000001) != 0)) {
+        result.parent_ = parent_;
+      }
+      if (((from_bitField0_ & 0x00000002) != 0)) {
+        result.subscription_ =
+            subscriptionBuilder_ == null ? subscription_ : subscriptionBuilder_.build();
+      }
+      if (((from_bitField0_ & 0x00000004) != 0)) {
+        result.subscriptionId_ = subscriptionId_;
+      }
+      if (((from_bitField0_ & 0x00000008) != 0)) {
+        result.skipBacklog_ = skipBacklog_;
+      }
     }
 
     @java.lang.Override
@@ -579,6 +594,7 @@ public final class CreateSubscriptionRequest extends com.google.protobuf.Generat
         return this;
       if (!other.getParent().isEmpty()) {
         parent_ = other.parent_;
+        bitField0_ |= 0x00000001;
         onChanged();
       }
       if (other.hasSubscription()) {
@@ -586,6 +602,7 @@ public final class CreateSubscriptionRequest extends com.google.protobuf.Generat
       }
       if (!other.getSubscriptionId().isEmpty()) {
         subscriptionId_ = other.subscriptionId_;
+        bitField0_ |= 0x00000004;
         onChanged();
       }
       if (other.getSkipBacklog() != false) {
@@ -620,25 +637,25 @@ public final class CreateSubscriptionRequest extends com.google.protobuf.Generat
             case 10:
               {
                 parent_ = input.readStringRequireUtf8();
-
+                bitField0_ |= 0x00000001;
                 break;
               } // case 10
             case 18:
               {
                 input.readMessage(getSubscriptionFieldBuilder().getBuilder(), extensionRegistry);
-
+                bitField0_ |= 0x00000002;
                 break;
               } // case 18
             case 26:
               {
                 subscriptionId_ = input.readStringRequireUtf8();
-
+                bitField0_ |= 0x00000004;
                 break;
               } // case 26
             case 32:
               {
                 skipBacklog_ = input.readBool();
-
+                bitField0_ |= 0x00000008;
                 break;
               } // case 32
             default:
@@ -657,6 +674,8 @@ public final class CreateSubscriptionRequest extends com.google.protobuf.Generat
       } // finally
       return this;
     }
+
+    private int bitField0_;
 
     private java.lang.Object parent_ = "";
     /**
@@ -728,8 +747,8 @@ public final class CreateSubscriptionRequest extends com.google.protobuf.Generat
       if (value == null) {
         throw new NullPointerException();
       }
-
       parent_ = value;
+      bitField0_ |= 0x00000001;
       onChanged();
       return this;
     }
@@ -748,8 +767,8 @@ public final class CreateSubscriptionRequest extends com.google.protobuf.Generat
      * @return This builder for chaining.
      */
     public Builder clearParent() {
-
       parent_ = getDefaultInstance().getParent();
+      bitField0_ = (bitField0_ & ~0x00000001);
       onChanged();
       return this;
     }
@@ -773,8 +792,8 @@ public final class CreateSubscriptionRequest extends com.google.protobuf.Generat
         throw new NullPointerException();
       }
       checkByteStringIsUtf8(value);
-
       parent_ = value;
+      bitField0_ |= 0x00000001;
       onChanged();
       return this;
     }
@@ -799,7 +818,7 @@ public final class CreateSubscriptionRequest extends com.google.protobuf.Generat
      * @return Whether the subscription field is set.
      */
     public boolean hasSubscription() {
-      return subscriptionBuilder_ != null || subscription_ != null;
+      return ((bitField0_ & 0x00000002) != 0);
     }
     /**
      *
@@ -840,11 +859,11 @@ public final class CreateSubscriptionRequest extends com.google.protobuf.Generat
           throw new NullPointerException();
         }
         subscription_ = value;
-        onChanged();
       } else {
         subscriptionBuilder_.setMessage(value);
       }
-
+      bitField0_ |= 0x00000002;
+      onChanged();
       return this;
     }
     /**
@@ -862,11 +881,11 @@ public final class CreateSubscriptionRequest extends com.google.protobuf.Generat
         com.google.cloud.pubsublite.proto.Subscription.Builder builderForValue) {
       if (subscriptionBuilder_ == null) {
         subscription_ = builderForValue.build();
-        onChanged();
       } else {
         subscriptionBuilder_.setMessage(builderForValue.build());
       }
-
+      bitField0_ |= 0x00000002;
+      onChanged();
       return this;
     }
     /**
@@ -882,19 +901,19 @@ public final class CreateSubscriptionRequest extends com.google.protobuf.Generat
      */
     public Builder mergeSubscription(com.google.cloud.pubsublite.proto.Subscription value) {
       if (subscriptionBuilder_ == null) {
-        if (subscription_ != null) {
-          subscription_ =
-              com.google.cloud.pubsublite.proto.Subscription.newBuilder(subscription_)
-                  .mergeFrom(value)
-                  .buildPartial();
+        if (((bitField0_ & 0x00000002) != 0)
+            && subscription_ != null
+            && subscription_
+                != com.google.cloud.pubsublite.proto.Subscription.getDefaultInstance()) {
+          getSubscriptionBuilder().mergeFrom(value);
         } else {
           subscription_ = value;
         }
-        onChanged();
       } else {
         subscriptionBuilder_.mergeFrom(value);
       }
-
+      bitField0_ |= 0x00000002;
+      onChanged();
       return this;
     }
     /**
@@ -909,14 +928,13 @@ public final class CreateSubscriptionRequest extends com.google.protobuf.Generat
      * </code>
      */
     public Builder clearSubscription() {
-      if (subscriptionBuilder_ == null) {
-        subscription_ = null;
-        onChanged();
-      } else {
-        subscription_ = null;
+      bitField0_ = (bitField0_ & ~0x00000002);
+      subscription_ = null;
+      if (subscriptionBuilder_ != null) {
+        subscriptionBuilder_.dispose();
         subscriptionBuilder_ = null;
       }
-
+      onChanged();
       return this;
     }
     /**
@@ -931,7 +949,7 @@ public final class CreateSubscriptionRequest extends com.google.protobuf.Generat
      * </code>
      */
     public com.google.cloud.pubsublite.proto.Subscription.Builder getSubscriptionBuilder() {
-
+      bitField0_ |= 0x00000002;
       onChanged();
       return getSubscriptionFieldBuilder().getBuilder();
     }
@@ -1050,8 +1068,8 @@ public final class CreateSubscriptionRequest extends com.google.protobuf.Generat
       if (value == null) {
         throw new NullPointerException();
       }
-
       subscriptionId_ = value;
+      bitField0_ |= 0x00000004;
       onChanged();
       return this;
     }
@@ -1069,8 +1087,8 @@ public final class CreateSubscriptionRequest extends com.google.protobuf.Generat
      * @return This builder for chaining.
      */
     public Builder clearSubscriptionId() {
-
       subscriptionId_ = getDefaultInstance().getSubscriptionId();
+      bitField0_ = (bitField0_ & ~0x00000004);
       onChanged();
       return this;
     }
@@ -1093,8 +1111,8 @@ public final class CreateSubscriptionRequest extends com.google.protobuf.Generat
         throw new NullPointerException();
       }
       checkByteStringIsUtf8(value);
-
       subscriptionId_ = value;
+      bitField0_ |= 0x00000004;
       onChanged();
       return this;
     }
@@ -1134,6 +1152,7 @@ public final class CreateSubscriptionRequest extends com.google.protobuf.Generat
     public Builder setSkipBacklog(boolean value) {
 
       skipBacklog_ = value;
+      bitField0_ |= 0x00000008;
       onChanged();
       return this;
     }
@@ -1151,7 +1170,7 @@ public final class CreateSubscriptionRequest extends com.google.protobuf.Generat
      * @return This builder for chaining.
      */
     public Builder clearSkipBacklog() {
-
+      bitField0_ = (bitField0_ & ~0x00000008);
       skipBacklog_ = false;
       onChanged();
       return this;

@@ -444,6 +444,7 @@ public final class PartitionAssignmentRequest extends com.google.protobuf.Genera
     @java.lang.Override
     public Builder clear() {
       super.clear();
+      bitField0_ = 0;
       if (initialBuilder_ != null) {
         initialBuilder_.clear();
       }
@@ -480,23 +481,29 @@ public final class PartitionAssignmentRequest extends com.google.protobuf.Genera
     public com.google.cloud.pubsublite.proto.PartitionAssignmentRequest buildPartial() {
       com.google.cloud.pubsublite.proto.PartitionAssignmentRequest result =
           new com.google.cloud.pubsublite.proto.PartitionAssignmentRequest(this);
-      if (requestCase_ == 1) {
-        if (initialBuilder_ == null) {
-          result.request_ = request_;
-        } else {
-          result.request_ = initialBuilder_.build();
-        }
+      if (bitField0_ != 0) {
+        buildPartial0(result);
       }
-      if (requestCase_ == 2) {
-        if (ackBuilder_ == null) {
-          result.request_ = request_;
-        } else {
-          result.request_ = ackBuilder_.build();
-        }
-      }
-      result.requestCase_ = requestCase_;
+      buildPartialOneofs(result);
       onBuilt();
       return result;
+    }
+
+    private void buildPartial0(
+        com.google.cloud.pubsublite.proto.PartitionAssignmentRequest result) {
+      int from_bitField0_ = bitField0_;
+    }
+
+    private void buildPartialOneofs(
+        com.google.cloud.pubsublite.proto.PartitionAssignmentRequest result) {
+      result.requestCase_ = requestCase_;
+      result.request_ = this.request_;
+      if (requestCase_ == 1 && initialBuilder_ != null) {
+        result.request_ = initialBuilder_.build();
+      }
+      if (requestCase_ == 2 && ackBuilder_ != null) {
+        result.request_ = ackBuilder_.build();
+      }
     }
 
     @java.lang.Override
@@ -630,6 +637,8 @@ public final class PartitionAssignmentRequest extends com.google.protobuf.Genera
       onChanged();
       return this;
     }
+
+    private int bitField0_;
 
     private com.google.protobuf.SingleFieldBuilderV3<
             com.google.cloud.pubsublite.proto.InitialPartitionAssignmentRequest,
@@ -850,7 +859,6 @@ public final class PartitionAssignmentRequest extends com.google.protobuf.Genera
       }
       requestCase_ = 1;
       onChanged();
-      ;
       return initialBuilder_;
     }
 
@@ -1061,7 +1069,6 @@ public final class PartitionAssignmentRequest extends com.google.protobuf.Genera
       }
       requestCase_ = 2;
       onChanged();
-      ;
       return ackBuilder_;
     }
 

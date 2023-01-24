@@ -71,7 +71,9 @@ public final class InitialPartitionAssignmentRequest extends com.google.protobuf
   }
 
   public static final int SUBSCRIPTION_FIELD_NUMBER = 1;
-  private volatile java.lang.Object subscription_;
+
+  @SuppressWarnings("serial")
+  private volatile java.lang.Object subscription_ = "";
   /**
    *
    *
@@ -124,7 +126,7 @@ public final class InitialPartitionAssignmentRequest extends com.google.protobuf
   }
 
   public static final int CLIENT_ID_FIELD_NUMBER = 2;
-  private com.google.protobuf.ByteString clientId_;
+  private com.google.protobuf.ByteString clientId_ = com.google.protobuf.ByteString.EMPTY;
   /**
    *
    *
@@ -357,10 +359,9 @@ public final class InitialPartitionAssignmentRequest extends com.google.protobuf
     @java.lang.Override
     public Builder clear() {
       super.clear();
+      bitField0_ = 0;
       subscription_ = "";
-
       clientId_ = com.google.protobuf.ByteString.EMPTY;
-
       return this;
     }
 
@@ -390,10 +391,22 @@ public final class InitialPartitionAssignmentRequest extends com.google.protobuf
     public com.google.cloud.pubsublite.proto.InitialPartitionAssignmentRequest buildPartial() {
       com.google.cloud.pubsublite.proto.InitialPartitionAssignmentRequest result =
           new com.google.cloud.pubsublite.proto.InitialPartitionAssignmentRequest(this);
-      result.subscription_ = subscription_;
-      result.clientId_ = clientId_;
+      if (bitField0_ != 0) {
+        buildPartial0(result);
+      }
       onBuilt();
       return result;
+    }
+
+    private void buildPartial0(
+        com.google.cloud.pubsublite.proto.InitialPartitionAssignmentRequest result) {
+      int from_bitField0_ = bitField0_;
+      if (((from_bitField0_ & 0x00000001) != 0)) {
+        result.subscription_ = subscription_;
+      }
+      if (((from_bitField0_ & 0x00000002) != 0)) {
+        result.clientId_ = clientId_;
+      }
     }
 
     @java.lang.Override
@@ -447,6 +460,7 @@ public final class InitialPartitionAssignmentRequest extends com.google.protobuf
               .getDefaultInstance()) return this;
       if (!other.getSubscription().isEmpty()) {
         subscription_ = other.subscription_;
+        bitField0_ |= 0x00000001;
         onChanged();
       }
       if (other.getClientId() != com.google.protobuf.ByteString.EMPTY) {
@@ -481,13 +495,13 @@ public final class InitialPartitionAssignmentRequest extends com.google.protobuf
             case 10:
               {
                 subscription_ = input.readStringRequireUtf8();
-
+                bitField0_ |= 0x00000001;
                 break;
               } // case 10
             case 18:
               {
                 clientId_ = input.readBytes();
-
+                bitField0_ |= 0x00000002;
                 break;
               } // case 18
             default:
@@ -506,6 +520,8 @@ public final class InitialPartitionAssignmentRequest extends com.google.protobuf
       } // finally
       return this;
     }
+
+    private int bitField0_;
 
     private java.lang.Object subscription_ = "";
     /**
@@ -574,8 +590,8 @@ public final class InitialPartitionAssignmentRequest extends com.google.protobuf
       if (value == null) {
         throw new NullPointerException();
       }
-
       subscription_ = value;
+      bitField0_ |= 0x00000001;
       onChanged();
       return this;
     }
@@ -593,8 +609,8 @@ public final class InitialPartitionAssignmentRequest extends com.google.protobuf
      * @return This builder for chaining.
      */
     public Builder clearSubscription() {
-
       subscription_ = getDefaultInstance().getSubscription();
+      bitField0_ = (bitField0_ & ~0x00000001);
       onChanged();
       return this;
     }
@@ -617,8 +633,8 @@ public final class InitialPartitionAssignmentRequest extends com.google.protobuf
         throw new NullPointerException();
       }
       checkByteStringIsUtf8(value);
-
       subscription_ = value;
+      bitField0_ |= 0x00000001;
       onChanged();
       return this;
     }
@@ -667,8 +683,8 @@ public final class InitialPartitionAssignmentRequest extends com.google.protobuf
       if (value == null) {
         throw new NullPointerException();
       }
-
       clientId_ = value;
+      bitField0_ |= 0x00000002;
       onChanged();
       return this;
     }
@@ -690,7 +706,7 @@ public final class InitialPartitionAssignmentRequest extends com.google.protobuf
      * @return This builder for chaining.
      */
     public Builder clearClientId() {
-
+      bitField0_ = (bitField0_ & ~0x00000002);
       clientId_ = getDefaultInstance().getClientId();
       onChanged();
       return this;

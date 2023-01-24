@@ -322,9 +322,8 @@ public final class SeekRequest extends com.google.protobuf.GeneratedMessageV3
    */
   public com.google.cloud.pubsublite.proto.SeekRequest.NamedTarget getNamedTarget() {
     if (targetCase_ == 1) {
-      @SuppressWarnings("deprecation")
       com.google.cloud.pubsublite.proto.SeekRequest.NamedTarget result =
-          com.google.cloud.pubsublite.proto.SeekRequest.NamedTarget.valueOf(
+          com.google.cloud.pubsublite.proto.SeekRequest.NamedTarget.forNumber(
               (java.lang.Integer) target_);
       return result == null
           ? com.google.cloud.pubsublite.proto.SeekRequest.NamedTarget.UNRECOGNIZED
@@ -617,6 +616,7 @@ public final class SeekRequest extends com.google.protobuf.GeneratedMessageV3
     @java.lang.Override
     public Builder clear() {
       super.clear();
+      bitField0_ = 0;
       if (cursorBuilder_ != null) {
         cursorBuilder_.clear();
       }
@@ -649,19 +649,24 @@ public final class SeekRequest extends com.google.protobuf.GeneratedMessageV3
     public com.google.cloud.pubsublite.proto.SeekRequest buildPartial() {
       com.google.cloud.pubsublite.proto.SeekRequest result =
           new com.google.cloud.pubsublite.proto.SeekRequest(this);
-      if (targetCase_ == 1) {
-        result.target_ = target_;
+      if (bitField0_ != 0) {
+        buildPartial0(result);
       }
-      if (targetCase_ == 2) {
-        if (cursorBuilder_ == null) {
-          result.target_ = target_;
-        } else {
-          result.target_ = cursorBuilder_.build();
-        }
-      }
-      result.targetCase_ = targetCase_;
+      buildPartialOneofs(result);
       onBuilt();
       return result;
+    }
+
+    private void buildPartial0(com.google.cloud.pubsublite.proto.SeekRequest result) {
+      int from_bitField0_ = bitField0_;
+    }
+
+    private void buildPartialOneofs(com.google.cloud.pubsublite.proto.SeekRequest result) {
+      result.targetCase_ = targetCase_;
+      result.target_ = this.target_;
+      if (targetCase_ == 2 && cursorBuilder_ != null) {
+        result.target_ = cursorBuilder_.build();
+      }
     }
 
     @java.lang.Override
@@ -795,6 +800,8 @@ public final class SeekRequest extends com.google.protobuf.GeneratedMessageV3
       return this;
     }
 
+    private int bitField0_;
+
     /**
      *
      *
@@ -860,9 +867,8 @@ public final class SeekRequest extends com.google.protobuf.GeneratedMessageV3
     @java.lang.Override
     public com.google.cloud.pubsublite.proto.SeekRequest.NamedTarget getNamedTarget() {
       if (targetCase_ == 1) {
-        @SuppressWarnings("deprecation")
         com.google.cloud.pubsublite.proto.SeekRequest.NamedTarget result =
-            com.google.cloud.pubsublite.proto.SeekRequest.NamedTarget.valueOf(
+            com.google.cloud.pubsublite.proto.SeekRequest.NamedTarget.forNumber(
                 (java.lang.Integer) target_);
         return result == null
             ? com.google.cloud.pubsublite.proto.SeekRequest.NamedTarget.UNRECOGNIZED
@@ -1125,7 +1131,6 @@ public final class SeekRequest extends com.google.protobuf.GeneratedMessageV3
       }
       targetCase_ = 2;
       onChanged();
-      ;
       return cursorBuilder_;
     }
 

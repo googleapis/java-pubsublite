@@ -70,6 +70,8 @@ public final class PartitionAssignment extends com.google.protobuf.GeneratedMess
   }
 
   public static final int PARTITIONS_FIELD_NUMBER = 1;
+
+  @SuppressWarnings("serial")
   private com.google.protobuf.Internal.LongList partitions_;
   /**
    *
@@ -335,8 +337,8 @@ public final class PartitionAssignment extends com.google.protobuf.GeneratedMess
     @java.lang.Override
     public Builder clear() {
       super.clear();
+      bitField0_ = 0;
       partitions_ = emptyLongList();
-      bitField0_ = (bitField0_ & ~0x00000001);
       return this;
     }
 
@@ -364,14 +366,25 @@ public final class PartitionAssignment extends com.google.protobuf.GeneratedMess
     public com.google.cloud.pubsublite.proto.PartitionAssignment buildPartial() {
       com.google.cloud.pubsublite.proto.PartitionAssignment result =
           new com.google.cloud.pubsublite.proto.PartitionAssignment(this);
-      int from_bitField0_ = bitField0_;
+      buildPartialRepeatedFields(result);
+      if (bitField0_ != 0) {
+        buildPartial0(result);
+      }
+      onBuilt();
+      return result;
+    }
+
+    private void buildPartialRepeatedFields(
+        com.google.cloud.pubsublite.proto.PartitionAssignment result) {
       if (((bitField0_ & 0x00000001) != 0)) {
         partitions_.makeImmutable();
         bitField0_ = (bitField0_ & ~0x00000001);
       }
       result.partitions_ = partitions_;
-      onBuilt();
-      return result;
+    }
+
+    private void buildPartial0(com.google.cloud.pubsublite.proto.PartitionAssignment result) {
+      int from_bitField0_ = bitField0_;
     }
 
     @java.lang.Override
@@ -560,6 +573,7 @@ public final class PartitionAssignment extends com.google.protobuf.GeneratedMess
      * @return This builder for chaining.
      */
     public Builder setPartitions(int index, long value) {
+
       ensurePartitionsIsMutable();
       partitions_.setLong(index, value);
       onChanged();
@@ -578,6 +592,7 @@ public final class PartitionAssignment extends com.google.protobuf.GeneratedMess
      * @return This builder for chaining.
      */
     public Builder addPartitions(long value) {
+
       ensurePartitionsIsMutable();
       partitions_.addLong(value);
       onChanged();

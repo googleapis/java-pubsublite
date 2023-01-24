@@ -80,7 +80,7 @@ public final class PubSubMessage extends com.google.protobuf.GeneratedMessageV3
   }
 
   public static final int KEY_FIELD_NUMBER = 1;
-  private com.google.protobuf.ByteString key_;
+  private com.google.protobuf.ByteString key_ = com.google.protobuf.ByteString.EMPTY;
   /**
    *
    *
@@ -100,7 +100,7 @@ public final class PubSubMessage extends com.google.protobuf.GeneratedMessageV3
   }
 
   public static final int DATA_FIELD_NUMBER = 2;
-  private com.google.protobuf.ByteString data_;
+  private com.google.protobuf.ByteString data_ = com.google.protobuf.ByteString.EMPTY;
   /**
    *
    *
@@ -134,6 +134,7 @@ public final class PubSubMessage extends com.google.protobuf.GeneratedMessageV3
                         com.google.cloud.pubsublite.proto.AttributeValues.getDefaultInstance());
   }
 
+  @SuppressWarnings("serial")
   private com.google.protobuf.MapField<
           java.lang.String, com.google.cloud.pubsublite.proto.AttributeValues>
       attributes_;
@@ -197,8 +198,10 @@ public final class PubSubMessage extends com.google.protobuf.GeneratedMessageV3
    * <code>map&lt;string, .google.cloud.pubsublite.v1.AttributeValues&gt; attributes = 3;</code>
    */
   @java.lang.Override
-  public com.google.cloud.pubsublite.proto.AttributeValues getAttributesOrDefault(
-      java.lang.String key, com.google.cloud.pubsublite.proto.AttributeValues defaultValue) {
+  public /* nullable */ com.google.cloud.pubsublite.proto.AttributeValues getAttributesOrDefault(
+      java.lang.String key,
+      /* nullable */
+      com.google.cloud.pubsublite.proto.AttributeValues defaultValue) {
     if (key == null) {
       throw new NullPointerException("map key");
     }
@@ -272,7 +275,7 @@ public final class PubSubMessage extends com.google.protobuf.GeneratedMessageV3
    */
   @java.lang.Override
   public com.google.protobuf.TimestampOrBuilder getEventTimeOrBuilder() {
-    return getEventTime();
+    return eventTime_ == null ? com.google.protobuf.Timestamp.getDefaultInstance() : eventTime_;
   }
 
   private byte memoizedIsInitialized = -1;
@@ -534,15 +537,13 @@ public final class PubSubMessage extends com.google.protobuf.GeneratedMessageV3
     @java.lang.Override
     public Builder clear() {
       super.clear();
+      bitField0_ = 0;
       key_ = com.google.protobuf.ByteString.EMPTY;
-
       data_ = com.google.protobuf.ByteString.EMPTY;
-
       internalGetMutableAttributes().clear();
-      if (eventTimeBuilder_ == null) {
-        eventTime_ = null;
-      } else {
-        eventTime_ = null;
+      eventTime_ = null;
+      if (eventTimeBuilder_ != null) {
+        eventTimeBuilder_.dispose();
         eventTimeBuilder_ = null;
       }
       return this;
@@ -572,18 +573,28 @@ public final class PubSubMessage extends com.google.protobuf.GeneratedMessageV3
     public com.google.cloud.pubsublite.proto.PubSubMessage buildPartial() {
       com.google.cloud.pubsublite.proto.PubSubMessage result =
           new com.google.cloud.pubsublite.proto.PubSubMessage(this);
-      int from_bitField0_ = bitField0_;
-      result.key_ = key_;
-      result.data_ = data_;
-      result.attributes_ = internalGetAttributes();
-      result.attributes_.makeImmutable();
-      if (eventTimeBuilder_ == null) {
-        result.eventTime_ = eventTime_;
-      } else {
-        result.eventTime_ = eventTimeBuilder_.build();
+      if (bitField0_ != 0) {
+        buildPartial0(result);
       }
       onBuilt();
       return result;
+    }
+
+    private void buildPartial0(com.google.cloud.pubsublite.proto.PubSubMessage result) {
+      int from_bitField0_ = bitField0_;
+      if (((from_bitField0_ & 0x00000001) != 0)) {
+        result.key_ = key_;
+      }
+      if (((from_bitField0_ & 0x00000002) != 0)) {
+        result.data_ = data_;
+      }
+      if (((from_bitField0_ & 0x00000004) != 0)) {
+        result.attributes_ = internalGetAttributes();
+        result.attributes_.makeImmutable();
+      }
+      if (((from_bitField0_ & 0x00000008) != 0)) {
+        result.eventTime_ = eventTimeBuilder_ == null ? eventTime_ : eventTimeBuilder_.build();
+      }
     }
 
     @java.lang.Override
@@ -639,6 +650,7 @@ public final class PubSubMessage extends com.google.protobuf.GeneratedMessageV3
         setData(other.getData());
       }
       internalGetMutableAttributes().mergeFrom(other.internalGetAttributes());
+      bitField0_ |= 0x00000004;
       if (other.hasEventTime()) {
         mergeEventTime(other.getEventTime());
       }
@@ -671,13 +683,13 @@ public final class PubSubMessage extends com.google.protobuf.GeneratedMessageV3
             case 10:
               {
                 key_ = input.readBytes();
-
+                bitField0_ |= 0x00000001;
                 break;
               } // case 10
             case 18:
               {
                 data_ = input.readBytes();
-
+                bitField0_ |= 0x00000002;
                 break;
               } // case 18
             case 26:
@@ -691,12 +703,13 @@ public final class PubSubMessage extends com.google.protobuf.GeneratedMessageV3
                 internalGetMutableAttributes()
                     .getMutableMap()
                     .put(attributes__.getKey(), attributes__.getValue());
+                bitField0_ |= 0x00000004;
                 break;
               } // case 26
             case 34:
               {
                 input.readMessage(getEventTimeFieldBuilder().getBuilder(), extensionRegistry);
-
+                bitField0_ |= 0x00000008;
                 break;
               } // case 34
             default:
@@ -754,8 +767,8 @@ public final class PubSubMessage extends com.google.protobuf.GeneratedMessageV3
       if (value == null) {
         throw new NullPointerException();
       }
-
       key_ = value;
+      bitField0_ |= 0x00000001;
       onChanged();
       return this;
     }
@@ -773,7 +786,7 @@ public final class PubSubMessage extends com.google.protobuf.GeneratedMessageV3
      * @return This builder for chaining.
      */
     public Builder clearKey() {
-
+      bitField0_ = (bitField0_ & ~0x00000001);
       key_ = getDefaultInstance().getKey();
       onChanged();
       return this;
@@ -811,8 +824,8 @@ public final class PubSubMessage extends com.google.protobuf.GeneratedMessageV3
       if (value == null) {
         throw new NullPointerException();
       }
-
       data_ = value;
+      bitField0_ |= 0x00000002;
       onChanged();
       return this;
     }
@@ -828,7 +841,7 @@ public final class PubSubMessage extends com.google.protobuf.GeneratedMessageV3
      * @return This builder for chaining.
      */
     public Builder clearData() {
-
+      bitField0_ = (bitField0_ & ~0x00000002);
       data_ = getDefaultInstance().getData();
       onChanged();
       return this;
@@ -851,8 +864,6 @@ public final class PubSubMessage extends com.google.protobuf.GeneratedMessageV3
     private com.google.protobuf.MapField<
             java.lang.String, com.google.cloud.pubsublite.proto.AttributeValues>
         internalGetMutableAttributes() {
-      onChanged();
-      ;
       if (attributes_ == null) {
         attributes_ =
             com.google.protobuf.MapField.newMapField(AttributesDefaultEntryHolder.defaultEntry);
@@ -860,6 +871,8 @@ public final class PubSubMessage extends com.google.protobuf.GeneratedMessageV3
       if (!attributes_.isMutable()) {
         attributes_ = attributes_.copy();
       }
+      bitField0_ |= 0x00000004;
+      onChanged();
       return attributes_;
     }
 
@@ -913,8 +926,10 @@ public final class PubSubMessage extends com.google.protobuf.GeneratedMessageV3
      * <code>map&lt;string, .google.cloud.pubsublite.v1.AttributeValues&gt; attributes = 3;</code>
      */
     @java.lang.Override
-    public com.google.cloud.pubsublite.proto.AttributeValues getAttributesOrDefault(
-        java.lang.String key, com.google.cloud.pubsublite.proto.AttributeValues defaultValue) {
+    public /* nullable */ com.google.cloud.pubsublite.proto.AttributeValues getAttributesOrDefault(
+        java.lang.String key,
+        /* nullable */
+        com.google.cloud.pubsublite.proto.AttributeValues defaultValue) {
       if (key == null) {
         throw new NullPointerException("map key");
       }
@@ -946,6 +961,7 @@ public final class PubSubMessage extends com.google.protobuf.GeneratedMessageV3
     }
 
     public Builder clearAttributes() {
+      bitField0_ = (bitField0_ & ~0x00000004);
       internalGetMutableAttributes().getMutableMap().clear();
       return this;
     }
@@ -969,6 +985,7 @@ public final class PubSubMessage extends com.google.protobuf.GeneratedMessageV3
     @java.lang.Deprecated
     public java.util.Map<java.lang.String, com.google.cloud.pubsublite.proto.AttributeValues>
         getMutableAttributes() {
+      bitField0_ |= 0x00000004;
       return internalGetMutableAttributes().getMutableMap();
     }
     /**
@@ -988,8 +1005,8 @@ public final class PubSubMessage extends com.google.protobuf.GeneratedMessageV3
       if (value == null) {
         throw new NullPointerException("map value");
       }
-
       internalGetMutableAttributes().getMutableMap().put(key, value);
+      bitField0_ |= 0x00000004;
       return this;
     }
     /**
@@ -1004,6 +1021,7 @@ public final class PubSubMessage extends com.google.protobuf.GeneratedMessageV3
     public Builder putAllAttributes(
         java.util.Map<java.lang.String, com.google.cloud.pubsublite.proto.AttributeValues> values) {
       internalGetMutableAttributes().getMutableMap().putAll(values);
+      bitField0_ |= 0x00000004;
       return this;
     }
 
@@ -1025,7 +1043,7 @@ public final class PubSubMessage extends com.google.protobuf.GeneratedMessageV3
      * @return Whether the eventTime field is set.
      */
     public boolean hasEventTime() {
-      return eventTimeBuilder_ != null || eventTime_ != null;
+      return ((bitField0_ & 0x00000008) != 0);
     }
     /**
      *
@@ -1060,11 +1078,11 @@ public final class PubSubMessage extends com.google.protobuf.GeneratedMessageV3
           throw new NullPointerException();
         }
         eventTime_ = value;
-        onChanged();
       } else {
         eventTimeBuilder_.setMessage(value);
       }
-
+      bitField0_ |= 0x00000008;
+      onChanged();
       return this;
     }
     /**
@@ -1079,11 +1097,11 @@ public final class PubSubMessage extends com.google.protobuf.GeneratedMessageV3
     public Builder setEventTime(com.google.protobuf.Timestamp.Builder builderForValue) {
       if (eventTimeBuilder_ == null) {
         eventTime_ = builderForValue.build();
-        onChanged();
       } else {
         eventTimeBuilder_.setMessage(builderForValue.build());
       }
-
+      bitField0_ |= 0x00000008;
+      onChanged();
       return this;
     }
     /**
@@ -1097,17 +1115,18 @@ public final class PubSubMessage extends com.google.protobuf.GeneratedMessageV3
      */
     public Builder mergeEventTime(com.google.protobuf.Timestamp value) {
       if (eventTimeBuilder_ == null) {
-        if (eventTime_ != null) {
-          eventTime_ =
-              com.google.protobuf.Timestamp.newBuilder(eventTime_).mergeFrom(value).buildPartial();
+        if (((bitField0_ & 0x00000008) != 0)
+            && eventTime_ != null
+            && eventTime_ != com.google.protobuf.Timestamp.getDefaultInstance()) {
+          getEventTimeBuilder().mergeFrom(value);
         } else {
           eventTime_ = value;
         }
-        onChanged();
       } else {
         eventTimeBuilder_.mergeFrom(value);
       }
-
+      bitField0_ |= 0x00000008;
+      onChanged();
       return this;
     }
     /**
@@ -1120,14 +1139,13 @@ public final class PubSubMessage extends com.google.protobuf.GeneratedMessageV3
      * <code>.google.protobuf.Timestamp event_time = 4;</code>
      */
     public Builder clearEventTime() {
-      if (eventTimeBuilder_ == null) {
-        eventTime_ = null;
-        onChanged();
-      } else {
-        eventTime_ = null;
+      bitField0_ = (bitField0_ & ~0x00000008);
+      eventTime_ = null;
+      if (eventTimeBuilder_ != null) {
+        eventTimeBuilder_.dispose();
         eventTimeBuilder_ = null;
       }
-
+      onChanged();
       return this;
     }
     /**
@@ -1140,7 +1158,7 @@ public final class PubSubMessage extends com.google.protobuf.GeneratedMessageV3
      * <code>.google.protobuf.Timestamp event_time = 4;</code>
      */
     public com.google.protobuf.Timestamp.Builder getEventTimeBuilder() {
-
+      bitField0_ |= 0x00000008;
       onChanged();
       return getEventTimeFieldBuilder().getBuilder();
     }

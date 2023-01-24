@@ -324,7 +324,7 @@ public final class Subscription extends com.google.protobuf.GeneratedMessageV3
     }
 
     public static final int DELIVERY_REQUIREMENT_FIELD_NUMBER = 3;
-    private int deliveryRequirement_;
+    private int deliveryRequirement_ = 0;
     /**
      *
      *
@@ -358,10 +358,9 @@ public final class Subscription extends com.google.protobuf.GeneratedMessageV3
     @java.lang.Override
     public com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig.DeliveryRequirement
         getDeliveryRequirement() {
-      @SuppressWarnings("deprecation")
       com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig.DeliveryRequirement result =
-          com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig.DeliveryRequirement.valueOf(
-              deliveryRequirement_);
+          com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig.DeliveryRequirement
+              .forNumber(deliveryRequirement_);
       return result == null
           ? com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig.DeliveryRequirement
               .UNRECOGNIZED
@@ -574,8 +573,8 @@ public final class Subscription extends com.google.protobuf.GeneratedMessageV3
       @java.lang.Override
       public Builder clear() {
         super.clear();
+        bitField0_ = 0;
         deliveryRequirement_ = 0;
-
         return this;
       }
 
@@ -604,9 +603,19 @@ public final class Subscription extends com.google.protobuf.GeneratedMessageV3
       public com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig buildPartial() {
         com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig result =
             new com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig(this);
-        result.deliveryRequirement_ = deliveryRequirement_;
+        if (bitField0_ != 0) {
+          buildPartial0(result);
+        }
         onBuilt();
         return result;
+      }
+
+      private void buildPartial0(
+          com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig result) {
+        int from_bitField0_ = bitField0_;
+        if (((from_bitField0_ & 0x00000001) != 0)) {
+          result.deliveryRequirement_ = deliveryRequirement_;
+        }
       }
 
       @java.lang.Override
@@ -691,7 +700,7 @@ public final class Subscription extends com.google.protobuf.GeneratedMessageV3
               case 24:
                 {
                   deliveryRequirement_ = input.readEnum();
-
+                  bitField0_ |= 0x00000001;
                   break;
                 } // case 24
               default:
@@ -710,6 +719,8 @@ public final class Subscription extends com.google.protobuf.GeneratedMessageV3
         } // finally
         return this;
       }
+
+      private int bitField0_;
 
       private int deliveryRequirement_ = 0;
       /**
@@ -744,8 +755,8 @@ public final class Subscription extends com.google.protobuf.GeneratedMessageV3
        * @return This builder for chaining.
        */
       public Builder setDeliveryRequirementValue(int value) {
-
         deliveryRequirement_ = value;
+        bitField0_ |= 0x00000001;
         onChanged();
         return this;
       }
@@ -765,10 +776,9 @@ public final class Subscription extends com.google.protobuf.GeneratedMessageV3
       @java.lang.Override
       public com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig.DeliveryRequirement
           getDeliveryRequirement() {
-        @SuppressWarnings("deprecation")
         com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig.DeliveryRequirement result =
             com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig.DeliveryRequirement
-                .valueOf(deliveryRequirement_);
+                .forNumber(deliveryRequirement_);
         return result == null
             ? com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig.DeliveryRequirement
                 .UNRECOGNIZED
@@ -793,7 +803,7 @@ public final class Subscription extends com.google.protobuf.GeneratedMessageV3
         if (value == null) {
           throw new NullPointerException();
         }
-
+        bitField0_ |= 0x00000001;
         deliveryRequirement_ = value.getNumber();
         onChanged();
         return this;
@@ -812,7 +822,7 @@ public final class Subscription extends com.google.protobuf.GeneratedMessageV3
        * @return This builder for chaining.
        */
       public Builder clearDeliveryRequirement() {
-
+        bitField0_ = (bitField0_ & ~0x00000001);
         deliveryRequirement_ = 0;
         onChanged();
         return this;
@@ -886,7 +896,9 @@ public final class Subscription extends com.google.protobuf.GeneratedMessageV3
   }
 
   public static final int NAME_FIELD_NUMBER = 1;
-  private volatile java.lang.Object name_;
+
+  @SuppressWarnings("serial")
+  private volatile java.lang.Object name_ = "";
   /**
    *
    *
@@ -939,7 +951,9 @@ public final class Subscription extends com.google.protobuf.GeneratedMessageV3
   }
 
   public static final int TOPIC_FIELD_NUMBER = 2;
-  private volatile java.lang.Object topic_;
+
+  @SuppressWarnings("serial")
+  private volatile java.lang.Object topic_ = "";
   /**
    *
    *
@@ -1037,7 +1051,9 @@ public final class Subscription extends com.google.protobuf.GeneratedMessageV3
   @java.lang.Override
   public com.google.cloud.pubsublite.proto.Subscription.DeliveryConfigOrBuilder
       getDeliveryConfigOrBuilder() {
-    return getDeliveryConfig();
+    return deliveryConfig_ == null
+        ? com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig.getDefaultInstance()
+        : deliveryConfig_;
   }
 
   public static final int EXPORT_CONFIG_FIELD_NUMBER = 4;
@@ -1088,7 +1104,9 @@ public final class Subscription extends com.google.protobuf.GeneratedMessageV3
    */
   @java.lang.Override
   public com.google.cloud.pubsublite.proto.ExportConfigOrBuilder getExportConfigOrBuilder() {
-    return getExportConfig();
+    return exportConfig_ == null
+        ? com.google.cloud.pubsublite.proto.ExportConfig.getDefaultInstance()
+        : exportConfig_;
   }
 
   private byte memoizedIsInitialized = -1;
@@ -1325,20 +1343,17 @@ public final class Subscription extends com.google.protobuf.GeneratedMessageV3
     @java.lang.Override
     public Builder clear() {
       super.clear();
+      bitField0_ = 0;
       name_ = "";
-
       topic_ = "";
-
-      if (deliveryConfigBuilder_ == null) {
-        deliveryConfig_ = null;
-      } else {
-        deliveryConfig_ = null;
+      deliveryConfig_ = null;
+      if (deliveryConfigBuilder_ != null) {
+        deliveryConfigBuilder_.dispose();
         deliveryConfigBuilder_ = null;
       }
-      if (exportConfigBuilder_ == null) {
-        exportConfig_ = null;
-      } else {
-        exportConfig_ = null;
+      exportConfig_ = null;
+      if (exportConfigBuilder_ != null) {
+        exportConfigBuilder_.dispose();
         exportConfigBuilder_ = null;
       }
       return this;
@@ -1368,20 +1383,29 @@ public final class Subscription extends com.google.protobuf.GeneratedMessageV3
     public com.google.cloud.pubsublite.proto.Subscription buildPartial() {
       com.google.cloud.pubsublite.proto.Subscription result =
           new com.google.cloud.pubsublite.proto.Subscription(this);
-      result.name_ = name_;
-      result.topic_ = topic_;
-      if (deliveryConfigBuilder_ == null) {
-        result.deliveryConfig_ = deliveryConfig_;
-      } else {
-        result.deliveryConfig_ = deliveryConfigBuilder_.build();
-      }
-      if (exportConfigBuilder_ == null) {
-        result.exportConfig_ = exportConfig_;
-      } else {
-        result.exportConfig_ = exportConfigBuilder_.build();
+      if (bitField0_ != 0) {
+        buildPartial0(result);
       }
       onBuilt();
       return result;
+    }
+
+    private void buildPartial0(com.google.cloud.pubsublite.proto.Subscription result) {
+      int from_bitField0_ = bitField0_;
+      if (((from_bitField0_ & 0x00000001) != 0)) {
+        result.name_ = name_;
+      }
+      if (((from_bitField0_ & 0x00000002) != 0)) {
+        result.topic_ = topic_;
+      }
+      if (((from_bitField0_ & 0x00000004) != 0)) {
+        result.deliveryConfig_ =
+            deliveryConfigBuilder_ == null ? deliveryConfig_ : deliveryConfigBuilder_.build();
+      }
+      if (((from_bitField0_ & 0x00000008) != 0)) {
+        result.exportConfig_ =
+            exportConfigBuilder_ == null ? exportConfig_ : exportConfigBuilder_.build();
+      }
     }
 
     @java.lang.Override
@@ -1431,10 +1455,12 @@ public final class Subscription extends com.google.protobuf.GeneratedMessageV3
       if (other == com.google.cloud.pubsublite.proto.Subscription.getDefaultInstance()) return this;
       if (!other.getName().isEmpty()) {
         name_ = other.name_;
+        bitField0_ |= 0x00000001;
         onChanged();
       }
       if (!other.getTopic().isEmpty()) {
         topic_ = other.topic_;
+        bitField0_ |= 0x00000002;
         onChanged();
       }
       if (other.hasDeliveryConfig()) {
@@ -1472,25 +1498,25 @@ public final class Subscription extends com.google.protobuf.GeneratedMessageV3
             case 10:
               {
                 name_ = input.readStringRequireUtf8();
-
+                bitField0_ |= 0x00000001;
                 break;
               } // case 10
             case 18:
               {
                 topic_ = input.readStringRequireUtf8();
-
+                bitField0_ |= 0x00000002;
                 break;
               } // case 18
             case 26:
               {
                 input.readMessage(getDeliveryConfigFieldBuilder().getBuilder(), extensionRegistry);
-
+                bitField0_ |= 0x00000004;
                 break;
               } // case 26
             case 34:
               {
                 input.readMessage(getExportConfigFieldBuilder().getBuilder(), extensionRegistry);
-
+                bitField0_ |= 0x00000008;
                 break;
               } // case 34
             default:
@@ -1509,6 +1535,8 @@ public final class Subscription extends com.google.protobuf.GeneratedMessageV3
       } // finally
       return this;
     }
+
+    private int bitField0_;
 
     private java.lang.Object name_ = "";
     /**
@@ -1577,8 +1605,8 @@ public final class Subscription extends com.google.protobuf.GeneratedMessageV3
       if (value == null) {
         throw new NullPointerException();
       }
-
       name_ = value;
+      bitField0_ |= 0x00000001;
       onChanged();
       return this;
     }
@@ -1596,8 +1624,8 @@ public final class Subscription extends com.google.protobuf.GeneratedMessageV3
      * @return This builder for chaining.
      */
     public Builder clearName() {
-
       name_ = getDefaultInstance().getName();
+      bitField0_ = (bitField0_ & ~0x00000001);
       onChanged();
       return this;
     }
@@ -1620,8 +1648,8 @@ public final class Subscription extends com.google.protobuf.GeneratedMessageV3
         throw new NullPointerException();
       }
       checkByteStringIsUtf8(value);
-
       name_ = value;
+      bitField0_ |= 0x00000001;
       onChanged();
       return this;
     }
@@ -1693,8 +1721,8 @@ public final class Subscription extends com.google.protobuf.GeneratedMessageV3
       if (value == null) {
         throw new NullPointerException();
       }
-
       topic_ = value;
+      bitField0_ |= 0x00000002;
       onChanged();
       return this;
     }
@@ -1712,8 +1740,8 @@ public final class Subscription extends com.google.protobuf.GeneratedMessageV3
      * @return This builder for chaining.
      */
     public Builder clearTopic() {
-
       topic_ = getDefaultInstance().getTopic();
+      bitField0_ = (bitField0_ & ~0x00000002);
       onChanged();
       return this;
     }
@@ -1736,8 +1764,8 @@ public final class Subscription extends com.google.protobuf.GeneratedMessageV3
         throw new NullPointerException();
       }
       checkByteStringIsUtf8(value);
-
       topic_ = value;
+      bitField0_ |= 0x00000002;
       onChanged();
       return this;
     }
@@ -1760,7 +1788,7 @@ public final class Subscription extends com.google.protobuf.GeneratedMessageV3
      * @return Whether the deliveryConfig field is set.
      */
     public boolean hasDeliveryConfig() {
-      return deliveryConfigBuilder_ != null || deliveryConfig_ != null;
+      return ((bitField0_ & 0x00000004) != 0);
     }
     /**
      *
@@ -1798,11 +1826,11 @@ public final class Subscription extends com.google.protobuf.GeneratedMessageV3
           throw new NullPointerException();
         }
         deliveryConfig_ = value;
-        onChanged();
       } else {
         deliveryConfigBuilder_.setMessage(value);
       }
-
+      bitField0_ |= 0x00000004;
+      onChanged();
       return this;
     }
     /**
@@ -1818,11 +1846,11 @@ public final class Subscription extends com.google.protobuf.GeneratedMessageV3
         com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig.Builder builderForValue) {
       if (deliveryConfigBuilder_ == null) {
         deliveryConfig_ = builderForValue.build();
-        onChanged();
       } else {
         deliveryConfigBuilder_.setMessage(builderForValue.build());
       }
-
+      bitField0_ |= 0x00000004;
+      onChanged();
       return this;
     }
     /**
@@ -1837,20 +1865,20 @@ public final class Subscription extends com.google.protobuf.GeneratedMessageV3
     public Builder mergeDeliveryConfig(
         com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig value) {
       if (deliveryConfigBuilder_ == null) {
-        if (deliveryConfig_ != null) {
-          deliveryConfig_ =
-              com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig.newBuilder(
-                      deliveryConfig_)
-                  .mergeFrom(value)
-                  .buildPartial();
+        if (((bitField0_ & 0x00000004) != 0)
+            && deliveryConfig_ != null
+            && deliveryConfig_
+                != com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig
+                    .getDefaultInstance()) {
+          getDeliveryConfigBuilder().mergeFrom(value);
         } else {
           deliveryConfig_ = value;
         }
-        onChanged();
       } else {
         deliveryConfigBuilder_.mergeFrom(value);
       }
-
+      bitField0_ |= 0x00000004;
+      onChanged();
       return this;
     }
     /**
@@ -1863,14 +1891,13 @@ public final class Subscription extends com.google.protobuf.GeneratedMessageV3
      * <code>.google.cloud.pubsublite.v1.Subscription.DeliveryConfig delivery_config = 3;</code>
      */
     public Builder clearDeliveryConfig() {
-      if (deliveryConfigBuilder_ == null) {
-        deliveryConfig_ = null;
-        onChanged();
-      } else {
-        deliveryConfig_ = null;
+      bitField0_ = (bitField0_ & ~0x00000004);
+      deliveryConfig_ = null;
+      if (deliveryConfigBuilder_ != null) {
+        deliveryConfigBuilder_.dispose();
         deliveryConfigBuilder_ = null;
       }
-
+      onChanged();
       return this;
     }
     /**
@@ -1884,7 +1911,7 @@ public final class Subscription extends com.google.protobuf.GeneratedMessageV3
      */
     public com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig.Builder
         getDeliveryConfigBuilder() {
-
+      bitField0_ |= 0x00000004;
       onChanged();
       return getDeliveryConfigFieldBuilder().getBuilder();
     }
@@ -1952,7 +1979,7 @@ public final class Subscription extends com.google.protobuf.GeneratedMessageV3
      * @return Whether the exportConfig field is set.
      */
     public boolean hasExportConfig() {
-      return exportConfigBuilder_ != null || exportConfig_ != null;
+      return ((bitField0_ & 0x00000008) != 0);
     }
     /**
      *
@@ -1991,11 +2018,11 @@ public final class Subscription extends com.google.protobuf.GeneratedMessageV3
           throw new NullPointerException();
         }
         exportConfig_ = value;
-        onChanged();
       } else {
         exportConfigBuilder_.setMessage(value);
       }
-
+      bitField0_ |= 0x00000008;
+      onChanged();
       return this;
     }
     /**
@@ -2012,11 +2039,11 @@ public final class Subscription extends com.google.protobuf.GeneratedMessageV3
         com.google.cloud.pubsublite.proto.ExportConfig.Builder builderForValue) {
       if (exportConfigBuilder_ == null) {
         exportConfig_ = builderForValue.build();
-        onChanged();
       } else {
         exportConfigBuilder_.setMessage(builderForValue.build());
       }
-
+      bitField0_ |= 0x00000008;
+      onChanged();
       return this;
     }
     /**
@@ -2031,19 +2058,19 @@ public final class Subscription extends com.google.protobuf.GeneratedMessageV3
      */
     public Builder mergeExportConfig(com.google.cloud.pubsublite.proto.ExportConfig value) {
       if (exportConfigBuilder_ == null) {
-        if (exportConfig_ != null) {
-          exportConfig_ =
-              com.google.cloud.pubsublite.proto.ExportConfig.newBuilder(exportConfig_)
-                  .mergeFrom(value)
-                  .buildPartial();
+        if (((bitField0_ & 0x00000008) != 0)
+            && exportConfig_ != null
+            && exportConfig_
+                != com.google.cloud.pubsublite.proto.ExportConfig.getDefaultInstance()) {
+          getExportConfigBuilder().mergeFrom(value);
         } else {
           exportConfig_ = value;
         }
-        onChanged();
       } else {
         exportConfigBuilder_.mergeFrom(value);
       }
-
+      bitField0_ |= 0x00000008;
+      onChanged();
       return this;
     }
     /**
@@ -2057,14 +2084,13 @@ public final class Subscription extends com.google.protobuf.GeneratedMessageV3
      * <code>.google.cloud.pubsublite.v1.ExportConfig export_config = 4;</code>
      */
     public Builder clearExportConfig() {
-      if (exportConfigBuilder_ == null) {
-        exportConfig_ = null;
-        onChanged();
-      } else {
-        exportConfig_ = null;
+      bitField0_ = (bitField0_ & ~0x00000008);
+      exportConfig_ = null;
+      if (exportConfigBuilder_ != null) {
+        exportConfigBuilder_.dispose();
         exportConfigBuilder_ = null;
       }
-
+      onChanged();
       return this;
     }
     /**
@@ -2078,7 +2104,7 @@ public final class Subscription extends com.google.protobuf.GeneratedMessageV3
      * <code>.google.cloud.pubsublite.v1.ExportConfig export_config = 4;</code>
      */
     public com.google.cloud.pubsublite.proto.ExportConfig.Builder getExportConfigBuilder() {
-
+      bitField0_ |= 0x00000008;
       onChanged();
       return getExportConfigFieldBuilder().getBuilder();
     }

@@ -70,6 +70,8 @@ public final class ListTopicSubscriptionsResponse extends com.google.protobuf.Ge
   }
 
   public static final int SUBSCRIPTIONS_FIELD_NUMBER = 1;
+
+  @SuppressWarnings("serial")
   private com.google.protobuf.LazyStringList subscriptions_;
   /**
    *
@@ -135,7 +137,9 @@ public final class ListTopicSubscriptionsResponse extends com.google.protobuf.Ge
   }
 
   public static final int NEXT_PAGE_TOKEN_FIELD_NUMBER = 2;
-  private volatile java.lang.Object nextPageToken_;
+
+  @SuppressWarnings("serial")
+  private volatile java.lang.Object nextPageToken_ = "";
   /**
    *
    *
@@ -399,10 +403,10 @@ public final class ListTopicSubscriptionsResponse extends com.google.protobuf.Ge
     @java.lang.Override
     public Builder clear() {
       super.clear();
+      bitField0_ = 0;
       subscriptions_ = com.google.protobuf.LazyStringArrayList.EMPTY;
       bitField0_ = (bitField0_ & ~0x00000001);
       nextPageToken_ = "";
-
       return this;
     }
 
@@ -431,15 +435,29 @@ public final class ListTopicSubscriptionsResponse extends com.google.protobuf.Ge
     public com.google.cloud.pubsublite.proto.ListTopicSubscriptionsResponse buildPartial() {
       com.google.cloud.pubsublite.proto.ListTopicSubscriptionsResponse result =
           new com.google.cloud.pubsublite.proto.ListTopicSubscriptionsResponse(this);
-      int from_bitField0_ = bitField0_;
+      buildPartialRepeatedFields(result);
+      if (bitField0_ != 0) {
+        buildPartial0(result);
+      }
+      onBuilt();
+      return result;
+    }
+
+    private void buildPartialRepeatedFields(
+        com.google.cloud.pubsublite.proto.ListTopicSubscriptionsResponse result) {
       if (((bitField0_ & 0x00000001) != 0)) {
         subscriptions_ = subscriptions_.getUnmodifiableView();
         bitField0_ = (bitField0_ & ~0x00000001);
       }
       result.subscriptions_ = subscriptions_;
-      result.nextPageToken_ = nextPageToken_;
-      onBuilt();
-      return result;
+    }
+
+    private void buildPartial0(
+        com.google.cloud.pubsublite.proto.ListTopicSubscriptionsResponse result) {
+      int from_bitField0_ = bitField0_;
+      if (((from_bitField0_ & 0x00000002) != 0)) {
+        result.nextPageToken_ = nextPageToken_;
+      }
     }
 
     @java.lang.Override
@@ -502,6 +520,7 @@ public final class ListTopicSubscriptionsResponse extends com.google.protobuf.Ge
       }
       if (!other.getNextPageToken().isEmpty()) {
         nextPageToken_ = other.nextPageToken_;
+        bitField0_ |= 0x00000002;
         onChanged();
       }
       this.mergeUnknownFields(other.getUnknownFields());
@@ -540,7 +559,7 @@ public final class ListTopicSubscriptionsResponse extends com.google.protobuf.Ge
             case 18:
               {
                 nextPageToken_ = input.readStringRequireUtf8();
-
+                bitField0_ |= 0x00000002;
                 break;
               } // case 18
             default:
@@ -803,8 +822,8 @@ public final class ListTopicSubscriptionsResponse extends com.google.protobuf.Ge
       if (value == null) {
         throw new NullPointerException();
       }
-
       nextPageToken_ = value;
+      bitField0_ |= 0x00000002;
       onChanged();
       return this;
     }
@@ -821,8 +840,8 @@ public final class ListTopicSubscriptionsResponse extends com.google.protobuf.Ge
      * @return This builder for chaining.
      */
     public Builder clearNextPageToken() {
-
       nextPageToken_ = getDefaultInstance().getNextPageToken();
+      bitField0_ = (bitField0_ & ~0x00000002);
       onChanged();
       return this;
     }
@@ -844,8 +863,8 @@ public final class ListTopicSubscriptionsResponse extends com.google.protobuf.Ge
         throw new NullPointerException();
       }
       checkByteStringIsUtf8(value);
-
       nextPageToken_ = value;
+      bitField0_ |= 0x00000002;
       onChanged();
       return this;
     }

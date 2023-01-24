@@ -68,7 +68,9 @@ public final class CommitCursorRequest extends com.google.protobuf.GeneratedMess
   }
 
   public static final int SUBSCRIPTION_FIELD_NUMBER = 1;
-  private volatile java.lang.Object subscription_;
+
+  @SuppressWarnings("serial")
+  private volatile java.lang.Object subscription_ = "";
   /**
    *
    *
@@ -117,7 +119,7 @@ public final class CommitCursorRequest extends com.google.protobuf.GeneratedMess
   }
 
   public static final int PARTITION_FIELD_NUMBER = 2;
-  private long partition_;
+  private long partition_ = 0L;
   /**
    *
    *
@@ -180,7 +182,9 @@ public final class CommitCursorRequest extends com.google.protobuf.GeneratedMess
    */
   @java.lang.Override
   public com.google.cloud.pubsublite.proto.CursorOrBuilder getCursorOrBuilder() {
-    return getCursor();
+    return cursor_ == null
+        ? com.google.cloud.pubsublite.proto.Cursor.getDefaultInstance()
+        : cursor_;
   }
 
   private byte memoizedIsInitialized = -1;
@@ -404,14 +408,12 @@ public final class CommitCursorRequest extends com.google.protobuf.GeneratedMess
     @java.lang.Override
     public Builder clear() {
       super.clear();
+      bitField0_ = 0;
       subscription_ = "";
-
       partition_ = 0L;
-
-      if (cursorBuilder_ == null) {
-        cursor_ = null;
-      } else {
-        cursor_ = null;
+      cursor_ = null;
+      if (cursorBuilder_ != null) {
+        cursorBuilder_.dispose();
         cursorBuilder_ = null;
       }
       return this;
@@ -441,15 +443,24 @@ public final class CommitCursorRequest extends com.google.protobuf.GeneratedMess
     public com.google.cloud.pubsublite.proto.CommitCursorRequest buildPartial() {
       com.google.cloud.pubsublite.proto.CommitCursorRequest result =
           new com.google.cloud.pubsublite.proto.CommitCursorRequest(this);
-      result.subscription_ = subscription_;
-      result.partition_ = partition_;
-      if (cursorBuilder_ == null) {
-        result.cursor_ = cursor_;
-      } else {
-        result.cursor_ = cursorBuilder_.build();
+      if (bitField0_ != 0) {
+        buildPartial0(result);
       }
       onBuilt();
       return result;
+    }
+
+    private void buildPartial0(com.google.cloud.pubsublite.proto.CommitCursorRequest result) {
+      int from_bitField0_ = bitField0_;
+      if (((from_bitField0_ & 0x00000001) != 0)) {
+        result.subscription_ = subscription_;
+      }
+      if (((from_bitField0_ & 0x00000002) != 0)) {
+        result.partition_ = partition_;
+      }
+      if (((from_bitField0_ & 0x00000004) != 0)) {
+        result.cursor_ = cursorBuilder_ == null ? cursor_ : cursorBuilder_.build();
+      }
     }
 
     @java.lang.Override
@@ -500,6 +511,7 @@ public final class CommitCursorRequest extends com.google.protobuf.GeneratedMess
         return this;
       if (!other.getSubscription().isEmpty()) {
         subscription_ = other.subscription_;
+        bitField0_ |= 0x00000001;
         onChanged();
       }
       if (other.getPartition() != 0L) {
@@ -537,19 +549,19 @@ public final class CommitCursorRequest extends com.google.protobuf.GeneratedMess
             case 10:
               {
                 subscription_ = input.readStringRequireUtf8();
-
+                bitField0_ |= 0x00000001;
                 break;
               } // case 10
             case 16:
               {
                 partition_ = input.readInt64();
-
+                bitField0_ |= 0x00000002;
                 break;
               } // case 16
             case 26:
               {
                 input.readMessage(getCursorFieldBuilder().getBuilder(), extensionRegistry);
-
+                bitField0_ |= 0x00000004;
                 break;
               } // case 26
             default:
@@ -568,6 +580,8 @@ public final class CommitCursorRequest extends com.google.protobuf.GeneratedMess
       } // finally
       return this;
     }
+
+    private int bitField0_;
 
     private java.lang.Object subscription_ = "";
     /**
@@ -630,8 +644,8 @@ public final class CommitCursorRequest extends com.google.protobuf.GeneratedMess
       if (value == null) {
         throw new NullPointerException();
       }
-
       subscription_ = value;
+      bitField0_ |= 0x00000001;
       onChanged();
       return this;
     }
@@ -647,8 +661,8 @@ public final class CommitCursorRequest extends com.google.protobuf.GeneratedMess
      * @return This builder for chaining.
      */
     public Builder clearSubscription() {
-
       subscription_ = getDefaultInstance().getSubscription();
+      bitField0_ = (bitField0_ & ~0x00000001);
       onChanged();
       return this;
     }
@@ -669,8 +683,8 @@ public final class CommitCursorRequest extends com.google.protobuf.GeneratedMess
         throw new NullPointerException();
       }
       checkByteStringIsUtf8(value);
-
       subscription_ = value;
+      bitField0_ |= 0x00000001;
       onChanged();
       return this;
     }
@@ -708,6 +722,7 @@ public final class CommitCursorRequest extends com.google.protobuf.GeneratedMess
     public Builder setPartition(long value) {
 
       partition_ = value;
+      bitField0_ |= 0x00000002;
       onChanged();
       return this;
     }
@@ -724,7 +739,7 @@ public final class CommitCursorRequest extends com.google.protobuf.GeneratedMess
      * @return This builder for chaining.
      */
     public Builder clearPartition() {
-
+      bitField0_ = (bitField0_ & ~0x00000002);
       partition_ = 0L;
       onChanged();
       return this;
@@ -748,7 +763,7 @@ public final class CommitCursorRequest extends com.google.protobuf.GeneratedMess
      * @return Whether the cursor field is set.
      */
     public boolean hasCursor() {
-      return cursorBuilder_ != null || cursor_ != null;
+      return ((bitField0_ & 0x00000004) != 0);
     }
     /**
      *
@@ -785,11 +800,11 @@ public final class CommitCursorRequest extends com.google.protobuf.GeneratedMess
           throw new NullPointerException();
         }
         cursor_ = value;
-        onChanged();
       } else {
         cursorBuilder_.setMessage(value);
       }
-
+      bitField0_ |= 0x00000004;
+      onChanged();
       return this;
     }
     /**
@@ -804,11 +819,11 @@ public final class CommitCursorRequest extends com.google.protobuf.GeneratedMess
     public Builder setCursor(com.google.cloud.pubsublite.proto.Cursor.Builder builderForValue) {
       if (cursorBuilder_ == null) {
         cursor_ = builderForValue.build();
-        onChanged();
       } else {
         cursorBuilder_.setMessage(builderForValue.build());
       }
-
+      bitField0_ |= 0x00000004;
+      onChanged();
       return this;
     }
     /**
@@ -822,19 +837,18 @@ public final class CommitCursorRequest extends com.google.protobuf.GeneratedMess
      */
     public Builder mergeCursor(com.google.cloud.pubsublite.proto.Cursor value) {
       if (cursorBuilder_ == null) {
-        if (cursor_ != null) {
-          cursor_ =
-              com.google.cloud.pubsublite.proto.Cursor.newBuilder(cursor_)
-                  .mergeFrom(value)
-                  .buildPartial();
+        if (((bitField0_ & 0x00000004) != 0)
+            && cursor_ != null
+            && cursor_ != com.google.cloud.pubsublite.proto.Cursor.getDefaultInstance()) {
+          getCursorBuilder().mergeFrom(value);
         } else {
           cursor_ = value;
         }
-        onChanged();
       } else {
         cursorBuilder_.mergeFrom(value);
       }
-
+      bitField0_ |= 0x00000004;
+      onChanged();
       return this;
     }
     /**
@@ -847,14 +861,13 @@ public final class CommitCursorRequest extends com.google.protobuf.GeneratedMess
      * <code>.google.cloud.pubsublite.v1.Cursor cursor = 3;</code>
      */
     public Builder clearCursor() {
-      if (cursorBuilder_ == null) {
-        cursor_ = null;
-        onChanged();
-      } else {
-        cursor_ = null;
+      bitField0_ = (bitField0_ & ~0x00000004);
+      cursor_ = null;
+      if (cursorBuilder_ != null) {
+        cursorBuilder_.dispose();
         cursorBuilder_ = null;
       }
-
+      onChanged();
       return this;
     }
     /**
@@ -867,7 +880,7 @@ public final class CommitCursorRequest extends com.google.protobuf.GeneratedMess
      * <code>.google.cloud.pubsublite.v1.Cursor cursor = 3;</code>
      */
     public com.google.cloud.pubsublite.proto.Cursor.Builder getCursorBuilder() {
-
+      bitField0_ |= 0x00000004;
       onChanged();
       return getCursorFieldBuilder().getBuilder();
     }

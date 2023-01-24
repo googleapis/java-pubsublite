@@ -68,7 +68,9 @@ public final class ComputeHeadCursorRequest extends com.google.protobuf.Generate
   }
 
   public static final int TOPIC_FIELD_NUMBER = 1;
-  private volatile java.lang.Object topic_;
+
+  @SuppressWarnings("serial")
+  private volatile java.lang.Object topic_ = "";
   /**
    *
    *
@@ -121,7 +123,7 @@ public final class ComputeHeadCursorRequest extends com.google.protobuf.Generate
   }
 
   public static final int PARTITION_FIELD_NUMBER = 2;
-  private long partition_;
+  private long partition_ = 0L;
   /**
    *
    *
@@ -345,10 +347,9 @@ public final class ComputeHeadCursorRequest extends com.google.protobuf.Generate
     @java.lang.Override
     public Builder clear() {
       super.clear();
+      bitField0_ = 0;
       topic_ = "";
-
       partition_ = 0L;
-
       return this;
     }
 
@@ -376,10 +377,21 @@ public final class ComputeHeadCursorRequest extends com.google.protobuf.Generate
     public com.google.cloud.pubsublite.proto.ComputeHeadCursorRequest buildPartial() {
       com.google.cloud.pubsublite.proto.ComputeHeadCursorRequest result =
           new com.google.cloud.pubsublite.proto.ComputeHeadCursorRequest(this);
-      result.topic_ = topic_;
-      result.partition_ = partition_;
+      if (bitField0_ != 0) {
+        buildPartial0(result);
+      }
       onBuilt();
       return result;
+    }
+
+    private void buildPartial0(com.google.cloud.pubsublite.proto.ComputeHeadCursorRequest result) {
+      int from_bitField0_ = bitField0_;
+      if (((from_bitField0_ & 0x00000001) != 0)) {
+        result.topic_ = topic_;
+      }
+      if (((from_bitField0_ & 0x00000002) != 0)) {
+        result.partition_ = partition_;
+      }
     }
 
     @java.lang.Override
@@ -430,6 +442,7 @@ public final class ComputeHeadCursorRequest extends com.google.protobuf.Generate
         return this;
       if (!other.getTopic().isEmpty()) {
         topic_ = other.topic_;
+        bitField0_ |= 0x00000001;
         onChanged();
       }
       if (other.getPartition() != 0L) {
@@ -464,13 +477,13 @@ public final class ComputeHeadCursorRequest extends com.google.protobuf.Generate
             case 10:
               {
                 topic_ = input.readStringRequireUtf8();
-
+                bitField0_ |= 0x00000001;
                 break;
               } // case 10
             case 16:
               {
                 partition_ = input.readInt64();
-
+                bitField0_ |= 0x00000002;
                 break;
               } // case 16
             default:
@@ -489,6 +502,8 @@ public final class ComputeHeadCursorRequest extends com.google.protobuf.Generate
       } // finally
       return this;
     }
+
+    private int bitField0_;
 
     private java.lang.Object topic_ = "";
     /**
@@ -557,8 +572,8 @@ public final class ComputeHeadCursorRequest extends com.google.protobuf.Generate
       if (value == null) {
         throw new NullPointerException();
       }
-
       topic_ = value;
+      bitField0_ |= 0x00000001;
       onChanged();
       return this;
     }
@@ -576,8 +591,8 @@ public final class ComputeHeadCursorRequest extends com.google.protobuf.Generate
      * @return This builder for chaining.
      */
     public Builder clearTopic() {
-
       topic_ = getDefaultInstance().getTopic();
+      bitField0_ = (bitField0_ & ~0x00000001);
       onChanged();
       return this;
     }
@@ -600,8 +615,8 @@ public final class ComputeHeadCursorRequest extends com.google.protobuf.Generate
         throw new NullPointerException();
       }
       checkByteStringIsUtf8(value);
-
       topic_ = value;
+      bitField0_ |= 0x00000001;
       onChanged();
       return this;
     }
@@ -637,6 +652,7 @@ public final class ComputeHeadCursorRequest extends com.google.protobuf.Generate
     public Builder setPartition(long value) {
 
       partition_ = value;
+      bitField0_ |= 0x00000002;
       onChanged();
       return this;
     }
@@ -652,7 +668,7 @@ public final class ComputeHeadCursorRequest extends com.google.protobuf.Generate
      * @return This builder for chaining.
      */
     public Builder clearPartition() {
-
+      bitField0_ = (bitField0_ & ~0x00000002);
       partition_ = 0L;
       onChanged();
       return this;

@@ -461,6 +461,7 @@ public final class TimeTarget extends com.google.protobuf.GeneratedMessageV3
     @java.lang.Override
     public Builder clear() {
       super.clear();
+      bitField0_ = 0;
       if (publishTimeBuilder_ != null) {
         publishTimeBuilder_.clear();
       }
@@ -496,23 +497,27 @@ public final class TimeTarget extends com.google.protobuf.GeneratedMessageV3
     public com.google.cloud.pubsublite.proto.TimeTarget buildPartial() {
       com.google.cloud.pubsublite.proto.TimeTarget result =
           new com.google.cloud.pubsublite.proto.TimeTarget(this);
-      if (timeCase_ == 1) {
-        if (publishTimeBuilder_ == null) {
-          result.time_ = time_;
-        } else {
-          result.time_ = publishTimeBuilder_.build();
-        }
+      if (bitField0_ != 0) {
+        buildPartial0(result);
       }
-      if (timeCase_ == 2) {
-        if (eventTimeBuilder_ == null) {
-          result.time_ = time_;
-        } else {
-          result.time_ = eventTimeBuilder_.build();
-        }
-      }
-      result.timeCase_ = timeCase_;
+      buildPartialOneofs(result);
       onBuilt();
       return result;
+    }
+
+    private void buildPartial0(com.google.cloud.pubsublite.proto.TimeTarget result) {
+      int from_bitField0_ = bitField0_;
+    }
+
+    private void buildPartialOneofs(com.google.cloud.pubsublite.proto.TimeTarget result) {
+      result.timeCase_ = timeCase_;
+      result.time_ = this.time_;
+      if (timeCase_ == 1 && publishTimeBuilder_ != null) {
+        result.time_ = publishTimeBuilder_.build();
+      }
+      if (timeCase_ == 2 && eventTimeBuilder_ != null) {
+        result.time_ = eventTimeBuilder_.build();
+      }
     }
 
     @java.lang.Override
@@ -644,6 +649,8 @@ public final class TimeTarget extends com.google.protobuf.GeneratedMessageV3
       onChanged();
       return this;
     }
+
+    private int bitField0_;
 
     private com.google.protobuf.SingleFieldBuilderV3<
             com.google.protobuf.Timestamp,
@@ -864,7 +871,6 @@ public final class TimeTarget extends com.google.protobuf.GeneratedMessageV3
       }
       timeCase_ = 1;
       onChanged();
-      ;
       return publishTimeBuilder_;
     }
 
@@ -1105,7 +1111,6 @@ public final class TimeTarget extends com.google.protobuf.GeneratedMessageV3
       }
       timeCase_ = 2;
       onChanged();
-      ;
       return eventTimeBuilder_;
     }
 

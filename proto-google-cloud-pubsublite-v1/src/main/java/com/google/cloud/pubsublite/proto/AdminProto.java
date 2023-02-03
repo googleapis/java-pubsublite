@@ -331,12 +331,12 @@ public final class AdminProto {
           + "locations/*/reservations/*}/topics\332A\004nam"
           + "e\032M\312A\031pubsublite.googleapis.com\322A.https:"
           + "//www.googleapis.com/auth/cloud-platform"
-          + "B\321\001\n!com.google.cloud.pubsublite.protoB\n"
-          + "AdminProtoP\001ZDgoogle.golang.org/genproto"
-          + "/googleapis/cloud/pubsublite/v1;pubsubli"
-          + "te\252\002\032Google.Cloud.PubSubLite.V1\312\002\032Google"
-          + "\\Cloud\\PubSubLite\\V1\352\002\035Google::Cloud::Pu"
-          + "bSubLite::V1b\006proto3"
+          + "B\313\001\n!com.google.cloud.pubsublite.protoB\n"
+          + "AdminProtoP\001Z>cloud.google.com/go/pubsub"
+          + "lite/apiv1/pubsublitepb;pubsublitepb\252\002\032G"
+          + "oogle.Cloud.PubSubLite.V1\312\002\032Google\\Cloud"
+          + "\\PubSubLite\\V1\352\002\035Google::Cloud::PubSubLi"
+          + "te::V1b\006proto3"
     };
     descriptor =
         com.google.protobuf.Descriptors.FileDescriptor.internalBuildGeneratedFileFrom(

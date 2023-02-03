@@ -85,13 +85,13 @@ public final class PublisherProto {
           + ".PublishRequest\032+.google.cloud.pubsublit"
           + "e.v1.PublishResponse\"\000(\0010\001\032M\312A\031pubsublit"
           + "e.googleapis.com\322A.https://www.googleapi"
-          + "s.com/auth/cloud-platformB\330\001\n!com.google"
+          + "s.com/auth/cloud-platformB\322\001\n!com.google"
           + ".cloud.pubsublite.protoB\016PublisherProtoP"
-          + "\001ZDgoogle.golang.org/genproto/googleapis"
-          + "/cloud/pubsublite/v1;pubsublite\370\001\001\252\002\032Goo"
-          + "gle.Cloud.PubSubLite.V1\312\002\032Google\\Cloud\\P"
-          + "ubSubLite\\V1\352\002\035Google::Cloud::PubSubLite"
-          + "::V1b\006proto3"
+          + "\001Z>cloud.google.com/go/pubsublite/apiv1/"
+          + "pubsublitepb;pubsublitepb\370\001\001\252\002\032Google.Cl"
+          + "oud.PubSubLite.V1\312\002\032Google\\Cloud\\PubSubL"
+          + "ite\\V1\352\002\035Google::Cloud::PubSubLite::V1b\006"
+          + "proto3"
     };
     descriptor =
         com.google.protobuf.Descriptors.FileDescriptor.internalBuildGeneratedFileFrom(

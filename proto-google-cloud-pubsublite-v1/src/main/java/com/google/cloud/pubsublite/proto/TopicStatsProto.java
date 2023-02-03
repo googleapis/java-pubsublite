@@ -107,12 +107,12 @@ public final class TopicStatsProto {
           + "/locations/*/topics/*}:computeTimeCursor"
           + ":\001*\032M\312A\031pubsublite.googleapis.com\322A.http"
           + "s://www.googleapis.com/auth/cloud-platfo"
-          + "rmB\326\001\n!com.google.cloud.pubsublite.proto"
-          + "B\017TopicStatsProtoP\001ZDgoogle.golang.org/g"
-          + "enproto/googleapis/cloud/pubsublite/v1;p"
-          + "ubsublite\252\002\032Google.Cloud.PubSubLite.V1\312\002"
-          + "\032Google\\Cloud\\PubSubLite\\V1\352\002\035Google::Cl"
-          + "oud::PubSubLite::V1b\006proto3"
+          + "rmB\320\001\n!com.google.cloud.pubsublite.proto"
+          + "B\017TopicStatsProtoP\001Z>cloud.google.com/go"
+          + "/pubsublite/apiv1/pubsublitepb;pubsublit"
+          + "epb\252\002\032Google.Cloud.PubSubLite.V1\312\002\032Googl"
+          + "e\\Cloud\\PubSubLite\\V1\352\002\035Google::Cloud::P"
+          + "ubSubLite::V1b\006proto3"
     };
     descriptor =
         com.google.protobuf.Descriptors.FileDescriptor.internalBuildGeneratedFileFrom(

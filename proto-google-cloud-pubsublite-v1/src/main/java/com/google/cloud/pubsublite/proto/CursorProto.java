@@ -130,13 +130,13 @@ public final class CursorProto {
           + "\002D\022B/v1/cursor/{parent=projects/*/locati"
           + "ons/*/subscriptions/*}/cursors\332A\006parent\032"
           + "M\312A\031pubsublite.googleapis.com\322A.https://"
-          + "www.googleapis.com/auth/cloud-platformB\325"
+          + "www.googleapis.com/auth/cloud-platformB\317"
           + "\001\n!com.google.cloud.pubsublite.protoB\013Cu"
-          + "rsorProtoP\001ZDgoogle.golang.org/genproto/"
-          + "googleapis/cloud/pubsublite/v1;pubsublit"
-          + "e\370\001\001\252\002\032Google.Cloud.PubSubLite.V1\312\002\032Goog"
-          + "le\\Cloud\\PubSubLite\\V1\352\002\035Google::Cloud::"
-          + "PubSubLite::V1b\006proto3"
+          + "rsorProtoP\001Z>cloud.google.com/go/pubsubl"
+          + "ite/apiv1/pubsublitepb;pubsublitepb\370\001\001\252\002"
+          + "\032Google.Cloud.PubSubLite.V1\312\002\032Google\\Clo"
+          + "ud\\PubSubLite\\V1\352\002\035Google::Cloud::PubSub"
+          + "Lite::V1b\006proto3"
     };
     descriptor =
         com.google.protobuf.Descriptors.FileDescriptor.internalBuildGeneratedFileFrom(

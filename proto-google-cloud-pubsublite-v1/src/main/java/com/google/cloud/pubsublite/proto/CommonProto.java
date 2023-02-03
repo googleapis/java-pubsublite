@@ -170,13 +170,12 @@ public final class CommonProto {
           + "B\r\n\013destination\"z\n\nTimeTarget\0222\n\014publish"
           + "_time\030\001 \001(\0132\032.google.protobuf.TimestampH"
           + "\000\0220\n\nevent_time\030\002 \001(\0132\032.google.protobuf."
-          + "TimestampH\000B\006\n\004timeB\325\001\n!com.google.cloud"
-          + ".pubsublite.protoB\013CommonProtoP\001ZDgoogle"
-          + ".golang.org/genproto/googleapis/cloud/pu"
-          + "bsublite/v1;pubsublite\370\001\001\252\002\032Google.Cloud"
-          + ".PubSubLite.V1\312\002\032Google\\Cloud\\PubSubLite"
-          + "\\V1\352\002\035Google::Cloud::PubSubLite::V1b\006pro"
-          + "to3"
+          + "TimestampH\000B\006\n\004timeB\317\001\n!com.google.cloud"
+          + ".pubsublite.protoB\013CommonProtoP\001Z>cloud."
+          + "google.com/go/pubsublite/apiv1/pubsublit"
+          + "epb;pubsublitepb\370\001\001\252\002\032Google.Cloud.PubSu"
+          + "bLite.V1\312\002\032Google\\Cloud\\PubSubLite\\V1\352\002\035"
+          + "Google::Cloud::PubSubLite::V1b\006proto3"
     };
     descriptor =
         com.google.protobuf.Descriptors.FileDescriptor.internalBuildGeneratedFileFrom(

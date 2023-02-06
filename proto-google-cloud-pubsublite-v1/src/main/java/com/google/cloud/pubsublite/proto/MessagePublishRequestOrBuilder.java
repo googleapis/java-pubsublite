@@ -74,4 +74,26 @@ public interface MessagePublishRequestOrBuilder
    * <code>repeated .google.cloud.pubsublite.v1.PubSubMessage messages = 1;</code>
    */
   com.google.cloud.pubsublite.proto.PubSubMessageOrBuilder getMessagesOrBuilder(int index);
+
+  /**
+   *
+   *
+   * <pre>
+   * The sequence number corresponding to the first message in `messages`.
+   * Messages within a batch are ordered and the sequence numbers of all
+   * subsequent messages in the batch are assumed to be incremental.
+   * Sequence numbers are assigned at the message level and the first message
+   * published in a publisher client session must have a sequence number of 0.
+   * All messages must have contiguous sequence numbers, which uniquely identify
+   * the messages accepted by the publisher client. Since messages are ordered,
+   * the client only needs to specify the sequence number of the first message
+   * in a published batch. The server deduplicates messages with the same
+   * sequence number from the same publisher `client_id`.
+   * </pre>
+   *
+   * <code>int64 first_sequence_number = 2;</code>
+   *
+   * @return The firstSequenceNumber.
+   */
+  long getFirstSequenceNumber();
 }

@@ -54,8 +54,8 @@ public interface ExportConfigOrBuilder
    *
    *
    * <pre>
-   * Output only. The current state of the export, which may be different to the desired
-   * state due to errors.
+   * Output only. The current state of the export, which may be different to the
+   * desired state due to errors. This field is output only.
    * </pre>
    *
    * <code>
@@ -69,8 +69,8 @@ public interface ExportConfigOrBuilder
    *
    *
    * <pre>
-   * Output only. The current state of the export, which may be different to the desired
-   * state due to errors.
+   * Output only. The current state of the export, which may be different to the
+   * desired state due to errors. This field is output only.
    * </pre>
    *
    * <code>
@@ -85,9 +85,9 @@ public interface ExportConfigOrBuilder
    *
    *
    * <pre>
-   * Optional. The name of an optional Pub/Sub Lite topic to publish messages that can not
-   * be exported to the destination. For example, the message can not be
-   * published to the Pub/Sub service because it does not satisfy the
+   * Optional. The name of an optional Pub/Sub Lite topic to publish messages
+   * that can not be exported to the destination. For example, the message can
+   * not be published to the Pub/Sub service because it does not satisfy the
    * constraints documented at https://cloud.google.com/pubsub/docs/publisher.
    * Structured like:
    * projects/{project_number}/locations/{location}/topics/{topic_id}.
@@ -106,9 +106,9 @@ public interface ExportConfigOrBuilder
    *
    *
    * <pre>
-   * Optional. The name of an optional Pub/Sub Lite topic to publish messages that can not
-   * be exported to the destination. For example, the message can not be
-   * published to the Pub/Sub service because it does not satisfy the
+   * Optional. The name of an optional Pub/Sub Lite topic to publish messages
+   * that can not be exported to the destination. For example, the message can
+   * not be published to the Pub/Sub service because it does not satisfy the
    * constraints documented at https://cloud.google.com/pubsub/docs/publisher.
    * Structured like:
    * projects/{project_number}/locations/{location}/topics/{topic_id}.

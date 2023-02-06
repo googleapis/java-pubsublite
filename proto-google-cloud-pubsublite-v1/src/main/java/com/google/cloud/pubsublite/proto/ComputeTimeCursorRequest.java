@@ -147,8 +147,8 @@ public final class ComputeTimeCursorRequest extends com.google.protobuf.Generate
    *
    *
    * <pre>
-   * Required. The target publish or event time. Specifying a future time will return an
-   * unset cursor.
+   * Required. The target publish or event time. Specifying a future time will
+   * return an unset cursor.
    * </pre>
    *
    * <code>
@@ -165,8 +165,8 @@ public final class ComputeTimeCursorRequest extends com.google.protobuf.Generate
    *
    *
    * <pre>
-   * Required. The target publish or event time. Specifying a future time will return an
-   * unset cursor.
+   * Required. The target publish or event time. Specifying a future time will
+   * return an unset cursor.
    * </pre>
    *
    * <code>
@@ -185,8 +185,8 @@ public final class ComputeTimeCursorRequest extends com.google.protobuf.Generate
    *
    *
    * <pre>
-   * Required. The target publish or event time. Specifying a future time will return an
-   * unset cursor.
+   * Required. The target publish or event time. Specifying a future time will
+   * return an unset cursor.
    * </pre>
    *
    * <code>
@@ -776,8 +776,8 @@ public final class ComputeTimeCursorRequest extends com.google.protobuf.Generate
      *
      *
      * <pre>
-     * Required. The target publish or event time. Specifying a future time will return an
-     * unset cursor.
+     * Required. The target publish or event time. Specifying a future time will
+     * return an unset cursor.
      * </pre>
      *
      * <code>
@@ -793,8 +793,8 @@ public final class ComputeTimeCursorRequest extends com.google.protobuf.Generate
      *
      *
      * <pre>
-     * Required. The target publish or event time. Specifying a future time will return an
-     * unset cursor.
+     * Required. The target publish or event time. Specifying a future time will
+     * return an unset cursor.
      * </pre>
      *
      * <code>
@@ -816,8 +816,8 @@ public final class ComputeTimeCursorRequest extends com.google.protobuf.Generate
      *
      *
      * <pre>
-     * Required. The target publish or event time. Specifying a future time will return an
-     * unset cursor.
+     * Required. The target publish or event time. Specifying a future time will
+     * return an unset cursor.
      * </pre>
      *
      * <code>
@@ -841,8 +841,8 @@ public final class ComputeTimeCursorRequest extends com.google.protobuf.Generate
      *
      *
      * <pre>
-     * Required. The target publish or event time. Specifying a future time will return an
-     * unset cursor.
+     * Required. The target publish or event time. Specifying a future time will
+     * return an unset cursor.
      * </pre>
      *
      * <code>
@@ -863,8 +863,8 @@ public final class ComputeTimeCursorRequest extends com.google.protobuf.Generate
      *
      *
      * <pre>
-     * Required. The target publish or event time. Specifying a future time will return an
-     * unset cursor.
+     * Required. The target publish or event time. Specifying a future time will
+     * return an unset cursor.
      * </pre>
      *
      * <code>
@@ -891,8 +891,8 @@ public final class ComputeTimeCursorRequest extends com.google.protobuf.Generate
      *
      *
      * <pre>
-     * Required. The target publish or event time. Specifying a future time will return an
-     * unset cursor.
+     * Required. The target publish or event time. Specifying a future time will
+     * return an unset cursor.
      * </pre>
      *
      * <code>
@@ -913,8 +913,8 @@ public final class ComputeTimeCursorRequest extends com.google.protobuf.Generate
      *
      *
      * <pre>
-     * Required. The target publish or event time. Specifying a future time will return an
-     * unset cursor.
+     * Required. The target publish or event time. Specifying a future time will
+     * return an unset cursor.
      * </pre>
      *
      * <code>
@@ -930,8 +930,8 @@ public final class ComputeTimeCursorRequest extends com.google.protobuf.Generate
      *
      *
      * <pre>
-     * Required. The target publish or event time. Specifying a future time will return an
-     * unset cursor.
+     * Required. The target publish or event time. Specifying a future time will
+     * return an unset cursor.
      * </pre>
      *
      * <code>
@@ -951,8 +951,8 @@ public final class ComputeTimeCursorRequest extends com.google.protobuf.Generate
      *
      *
      * <pre>
-     * Required. The target publish or event time. Specifying a future time will return an
-     * unset cursor.
+     * Required. The target publish or event time. Specifying a future time will
+     * return an unset cursor.
      * </pre>
      *
      * <code>

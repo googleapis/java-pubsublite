@@ -138,6 +138,33 @@ public final class MessagePublishRequest extends com.google.protobuf.GeneratedMe
     return messages_.get(index);
   }
 
+  public static final int FIRST_SEQUENCE_NUMBER_FIELD_NUMBER = 2;
+  private long firstSequenceNumber_ = 0L;
+  /**
+   *
+   *
+   * <pre>
+   * The sequence number corresponding to the first message in `messages`.
+   * Messages within a batch are ordered and the sequence numbers of all
+   * subsequent messages in the batch are assumed to be incremental.
+   * Sequence numbers are assigned at the message level and the first message
+   * published in a publisher client session must have a sequence number of 0.
+   * All messages must have contiguous sequence numbers, which uniquely identify
+   * the messages accepted by the publisher client. Since messages are ordered,
+   * the client only needs to specify the sequence number of the first message
+   * in a published batch. The server deduplicates messages with the same
+   * sequence number from the same publisher `client_id`.
+   * </pre>
+   *
+   * <code>int64 first_sequence_number = 2;</code>
+   *
+   * @return The firstSequenceNumber.
+   */
+  @java.lang.Override
+  public long getFirstSequenceNumber() {
+    return firstSequenceNumber_;
+  }
+
   private byte memoizedIsInitialized = -1;
 
   @java.lang.Override
@@ -155,6 +182,9 @@ public final class MessagePublishRequest extends com.google.protobuf.GeneratedMe
     for (int i = 0; i < messages_.size(); i++) {
       output.writeMessage(1, messages_.get(i));
     }
+    if (firstSequenceNumber_ != 0L) {
+      output.writeInt64(2, firstSequenceNumber_);
+    }
     getUnknownFields().writeTo(output);
   }
 
@@ -166,6 +196,9 @@ public final class MessagePublishRequest extends com.google.protobuf.GeneratedMe
     size = 0;
     for (int i = 0; i < messages_.size(); i++) {
       size += com.google.protobuf.CodedOutputStream.computeMessageSize(1, messages_.get(i));
+    }
+    if (firstSequenceNumber_ != 0L) {
+      size += com.google.protobuf.CodedOutputStream.computeInt64Size(2, firstSequenceNumber_);
     }
     size += getUnknownFields().getSerializedSize();
     memoizedSize = size;
@@ -184,6 +217,7 @@ public final class MessagePublishRequest extends com.google.protobuf.GeneratedMe
         (com.google.cloud.pubsublite.proto.MessagePublishRequest) obj;
 
     if (!getMessagesList().equals(other.getMessagesList())) return false;
+    if (getFirstSequenceNumber() != other.getFirstSequenceNumber()) return false;
     if (!getUnknownFields().equals(other.getUnknownFields())) return false;
     return true;
   }
@@ -199,6 +233,8 @@ public final class MessagePublishRequest extends com.google.protobuf.GeneratedMe
       hash = (37 * hash) + MESSAGES_FIELD_NUMBER;
       hash = (53 * hash) + getMessagesList().hashCode();
     }
+    hash = (37 * hash) + FIRST_SEQUENCE_NUMBER_FIELD_NUMBER;
+    hash = (53 * hash) + com.google.protobuf.Internal.hashLong(getFirstSequenceNumber());
     hash = (29 * hash) + getUnknownFields().hashCode();
     memoizedHashCode = hash;
     return hash;
@@ -346,6 +382,7 @@ public final class MessagePublishRequest extends com.google.protobuf.GeneratedMe
         messagesBuilder_.clear();
       }
       bitField0_ = (bitField0_ & ~0x00000001);
+      firstSequenceNumber_ = 0L;
       return this;
     }
 
@@ -396,6 +433,9 @@ public final class MessagePublishRequest extends com.google.protobuf.GeneratedMe
 
     private void buildPartial0(com.google.cloud.pubsublite.proto.MessagePublishRequest result) {
       int from_bitField0_ = bitField0_;
+      if (((from_bitField0_ & 0x00000002) != 0)) {
+        result.firstSequenceNumber_ = firstSequenceNumber_;
+      }
     }
 
     @java.lang.Override
@@ -471,6 +511,9 @@ public final class MessagePublishRequest extends com.google.protobuf.GeneratedMe
           }
         }
       }
+      if (other.getFirstSequenceNumber() != 0L) {
+        setFirstSequenceNumber(other.getFirstSequenceNumber());
+      }
       this.mergeUnknownFields(other.getUnknownFields());
       onChanged();
       return this;
@@ -511,6 +554,12 @@ public final class MessagePublishRequest extends com.google.protobuf.GeneratedMe
                 }
                 break;
               } // case 10
+            case 16:
+              {
+                firstSequenceNumber_ = input.readInt64();
+                bitField0_ |= 0x00000002;
+                break;
+              } // case 16
             default:
               {
                 if (!super.parseUnknownField(input, extensionRegistry, tag)) {
@@ -880,6 +929,86 @@ public final class MessagePublishRequest extends com.google.protobuf.GeneratedMe
         messages_ = null;
       }
       return messagesBuilder_;
+    }
+
+    private long firstSequenceNumber_;
+    /**
+     *
+     *
+     * <pre>
+     * The sequence number corresponding to the first message in `messages`.
+     * Messages within a batch are ordered and the sequence numbers of all
+     * subsequent messages in the batch are assumed to be incremental.
+     * Sequence numbers are assigned at the message level and the first message
+     * published in a publisher client session must have a sequence number of 0.
+     * All messages must have contiguous sequence numbers, which uniquely identify
+     * the messages accepted by the publisher client. Since messages are ordered,
+     * the client only needs to specify the sequence number of the first message
+     * in a published batch. The server deduplicates messages with the same
+     * sequence number from the same publisher `client_id`.
+     * </pre>
+     *
+     * <code>int64 first_sequence_number = 2;</code>
+     *
+     * @return The firstSequenceNumber.
+     */
+    @java.lang.Override
+    public long getFirstSequenceNumber() {
+      return firstSequenceNumber_;
+    }
+    /**
+     *
+     *
+     * <pre>
+     * The sequence number corresponding to the first message in `messages`.
+     * Messages within a batch are ordered and the sequence numbers of all
+     * subsequent messages in the batch are assumed to be incremental.
+     * Sequence numbers are assigned at the message level and the first message
+     * published in a publisher client session must have a sequence number of 0.
+     * All messages must have contiguous sequence numbers, which uniquely identify
+     * the messages accepted by the publisher client. Since messages are ordered,
+     * the client only needs to specify the sequence number of the first message
+     * in a published batch. The server deduplicates messages with the same
+     * sequence number from the same publisher `client_id`.
+     * </pre>
+     *
+     * <code>int64 first_sequence_number = 2;</code>
+     *
+     * @param value The firstSequenceNumber to set.
+     * @return This builder for chaining.
+     */
+    public Builder setFirstSequenceNumber(long value) {
+
+      firstSequenceNumber_ = value;
+      bitField0_ |= 0x00000002;
+      onChanged();
+      return this;
+    }
+    /**
+     *
+     *
+     * <pre>
+     * The sequence number corresponding to the first message in `messages`.
+     * Messages within a batch are ordered and the sequence numbers of all
+     * subsequent messages in the batch are assumed to be incremental.
+     * Sequence numbers are assigned at the message level and the first message
+     * published in a publisher client session must have a sequence number of 0.
+     * All messages must have contiguous sequence numbers, which uniquely identify
+     * the messages accepted by the publisher client. Since messages are ordered,
+     * the client only needs to specify the sequence number of the first message
+     * in a published batch. The server deduplicates messages with the same
+     * sequence number from the same publisher `client_id`.
+     * </pre>
+     *
+     * <code>int64 first_sequence_number = 2;</code>
+     *
+     * @return This builder for chaining.
+     */
+    public Builder clearFirstSequenceNumber() {
+      bitField0_ = (bitField0_ & ~0x00000002);
+      firstSequenceNumber_ = 0L;
+      onChanged();
+      return this;
     }
 
     @java.lang.Override

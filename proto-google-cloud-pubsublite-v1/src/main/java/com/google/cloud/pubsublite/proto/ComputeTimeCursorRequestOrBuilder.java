@@ -69,8 +69,8 @@ public interface ComputeTimeCursorRequestOrBuilder
    *
    *
    * <pre>
-   * Required. The target publish or event time. Specifying a future time will return an
-   * unset cursor.
+   * Required. The target publish or event time. Specifying a future time will
+   * return an unset cursor.
    * </pre>
    *
    * <code>
@@ -84,8 +84,8 @@ public interface ComputeTimeCursorRequestOrBuilder
    *
    *
    * <pre>
-   * Required. The target publish or event time. Specifying a future time will return an
-   * unset cursor.
+   * Required. The target publish or event time. Specifying a future time will
+   * return an unset cursor.
    * </pre>
    *
    * <code>
@@ -99,8 +99,8 @@ public interface ComputeTimeCursorRequestOrBuilder
    *
    *
    * <pre>
-   * Required. The target publish or event time. Specifying a future time will return an
-   * unset cursor.
+   * Required. The target publish or event time. Specifying a future time will
+   * return an unset cursor.
    * </pre>
    *
    * <code>

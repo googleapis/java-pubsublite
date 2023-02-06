@@ -131,7 +131,8 @@ public final class CreateReservationRequest extends com.google.protobuf.Generate
    *
    *
    * <pre>
-   * Required. Configuration of the reservation to create. Its `name` field is ignored.
+   * Required. Configuration of the reservation to create. Its `name` field is
+   * ignored.
    * </pre>
    *
    * <code>
@@ -148,7 +149,8 @@ public final class CreateReservationRequest extends com.google.protobuf.Generate
    *
    *
    * <pre>
-   * Required. Configuration of the reservation to create. Its `name` field is ignored.
+   * Required. Configuration of the reservation to create. Its `name` field is
+   * ignored.
    * </pre>
    *
    * <code>
@@ -167,7 +169,8 @@ public final class CreateReservationRequest extends com.google.protobuf.Generate
    *
    *
    * <pre>
-   * Required. Configuration of the reservation to create. Its `name` field is ignored.
+   * Required. Configuration of the reservation to create. Its `name` field is
+   * ignored.
    * </pre>
    *
    * <code>
@@ -189,8 +192,8 @@ public final class CreateReservationRequest extends com.google.protobuf.Generate
    *
    *
    * <pre>
-   * Required. The ID to use for the reservation, which will become the final component of
-   * the reservation's name.
+   * Required. The ID to use for the reservation, which will become the final
+   * component of the reservation's name.
    * This value is structured like: `my-reservation-name`.
    * </pre>
    *
@@ -214,8 +217,8 @@ public final class CreateReservationRequest extends com.google.protobuf.Generate
    *
    *
    * <pre>
-   * Required. The ID to use for the reservation, which will become the final component of
-   * the reservation's name.
+   * Required. The ID to use for the reservation, which will become the final
+   * component of the reservation's name.
    * This value is structured like: `my-reservation-name`.
    * </pre>
    *
@@ -766,7 +769,8 @@ public final class CreateReservationRequest extends com.google.protobuf.Generate
      *
      *
      * <pre>
-     * Required. Configuration of the reservation to create. Its `name` field is ignored.
+     * Required. Configuration of the reservation to create. Its `name` field is
+     * ignored.
      * </pre>
      *
      * <code>
@@ -782,7 +786,8 @@ public final class CreateReservationRequest extends com.google.protobuf.Generate
      *
      *
      * <pre>
-     * Required. Configuration of the reservation to create. Its `name` field is ignored.
+     * Required. Configuration of the reservation to create. Its `name` field is
+     * ignored.
      * </pre>
      *
      * <code>
@@ -804,7 +809,8 @@ public final class CreateReservationRequest extends com.google.protobuf.Generate
      *
      *
      * <pre>
-     * Required. Configuration of the reservation to create. Its `name` field is ignored.
+     * Required. Configuration of the reservation to create. Its `name` field is
+     * ignored.
      * </pre>
      *
      * <code>
@@ -828,7 +834,8 @@ public final class CreateReservationRequest extends com.google.protobuf.Generate
      *
      *
      * <pre>
-     * Required. Configuration of the reservation to create. Its `name` field is ignored.
+     * Required. Configuration of the reservation to create. Its `name` field is
+     * ignored.
      * </pre>
      *
      * <code>
@@ -850,7 +857,8 @@ public final class CreateReservationRequest extends com.google.protobuf.Generate
      *
      *
      * <pre>
-     * Required. Configuration of the reservation to create. Its `name` field is ignored.
+     * Required. Configuration of the reservation to create. Its `name` field is
+     * ignored.
      * </pre>
      *
      * <code>
@@ -877,7 +885,8 @@ public final class CreateReservationRequest extends com.google.protobuf.Generate
      *
      *
      * <pre>
-     * Required. Configuration of the reservation to create. Its `name` field is ignored.
+     * Required. Configuration of the reservation to create. Its `name` field is
+     * ignored.
      * </pre>
      *
      * <code>
@@ -898,7 +907,8 @@ public final class CreateReservationRequest extends com.google.protobuf.Generate
      *
      *
      * <pre>
-     * Required. Configuration of the reservation to create. Its `name` field is ignored.
+     * Required. Configuration of the reservation to create. Its `name` field is
+     * ignored.
      * </pre>
      *
      * <code>
@@ -914,7 +924,8 @@ public final class CreateReservationRequest extends com.google.protobuf.Generate
      *
      *
      * <pre>
-     * Required. Configuration of the reservation to create. Its `name` field is ignored.
+     * Required. Configuration of the reservation to create. Its `name` field is
+     * ignored.
      * </pre>
      *
      * <code>
@@ -934,7 +945,8 @@ public final class CreateReservationRequest extends com.google.protobuf.Generate
      *
      *
      * <pre>
-     * Required. Configuration of the reservation to create. Its `name` field is ignored.
+     * Required. Configuration of the reservation to create. Its `name` field is
+     * ignored.
      * </pre>
      *
      * <code>
@@ -963,8 +975,8 @@ public final class CreateReservationRequest extends com.google.protobuf.Generate
      *
      *
      * <pre>
-     * Required. The ID to use for the reservation, which will become the final component of
-     * the reservation's name.
+     * Required. The ID to use for the reservation, which will become the final
+     * component of the reservation's name.
      * This value is structured like: `my-reservation-name`.
      * </pre>
      *
@@ -987,8 +999,8 @@ public final class CreateReservationRequest extends com.google.protobuf.Generate
      *
      *
      * <pre>
-     * Required. The ID to use for the reservation, which will become the final component of
-     * the reservation's name.
+     * Required. The ID to use for the reservation, which will become the final
+     * component of the reservation's name.
      * This value is structured like: `my-reservation-name`.
      * </pre>
      *
@@ -1011,8 +1023,8 @@ public final class CreateReservationRequest extends com.google.protobuf.Generate
      *
      *
      * <pre>
-     * Required. The ID to use for the reservation, which will become the final component of
-     * the reservation's name.
+     * Required. The ID to use for the reservation, which will become the final
+     * component of the reservation's name.
      * This value is structured like: `my-reservation-name`.
      * </pre>
      *
@@ -1034,8 +1046,8 @@ public final class CreateReservationRequest extends com.google.protobuf.Generate
      *
      *
      * <pre>
-     * Required. The ID to use for the reservation, which will become the final component of
-     * the reservation's name.
+     * Required. The ID to use for the reservation, which will become the final
+     * component of the reservation's name.
      * This value is structured like: `my-reservation-name`.
      * </pre>
      *
@@ -1053,8 +1065,8 @@ public final class CreateReservationRequest extends com.google.protobuf.Generate
      *
      *
      * <pre>
-     * Required. The ID to use for the reservation, which will become the final component of
-     * the reservation's name.
+     * Required. The ID to use for the reservation, which will become the final
+     * component of the reservation's name.
      * This value is structured like: `my-reservation-name`.
      * </pre>
      *

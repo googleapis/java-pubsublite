@@ -144,9 +144,9 @@ public final class InitialSubscribeRequest extends com.google.protobuf.Generated
    *
    *
    * <pre>
-   * Optional. Initial target location within the message backlog. If not set, messages
-   * will be delivered from the commit cursor for the given subscription and
-   * partition.
+   * Optional. Initial target location within the message backlog. If not set,
+   * messages will be delivered from the commit cursor for the given
+   * subscription and partition.
    * </pre>
    *
    * <code>
@@ -163,9 +163,9 @@ public final class InitialSubscribeRequest extends com.google.protobuf.Generated
    *
    *
    * <pre>
-   * Optional. Initial target location within the message backlog. If not set, messages
-   * will be delivered from the commit cursor for the given subscription and
-   * partition.
+   * Optional. Initial target location within the message backlog. If not set,
+   * messages will be delivered from the commit cursor for the given
+   * subscription and partition.
    * </pre>
    *
    * <code>
@@ -184,9 +184,9 @@ public final class InitialSubscribeRequest extends com.google.protobuf.Generated
    *
    *
    * <pre>
-   * Optional. Initial target location within the message backlog. If not set, messages
-   * will be delivered from the commit cursor for the given subscription and
-   * partition.
+   * Optional. Initial target location within the message backlog. If not set,
+   * messages will be delivered from the commit cursor for the given
+   * subscription and partition.
    * </pre>
    *
    * <code>
@@ -770,9 +770,9 @@ public final class InitialSubscribeRequest extends com.google.protobuf.Generated
      *
      *
      * <pre>
-     * Optional. Initial target location within the message backlog. If not set, messages
-     * will be delivered from the commit cursor for the given subscription and
-     * partition.
+     * Optional. Initial target location within the message backlog. If not set,
+     * messages will be delivered from the commit cursor for the given
+     * subscription and partition.
      * </pre>
      *
      * <code>
@@ -788,9 +788,9 @@ public final class InitialSubscribeRequest extends com.google.protobuf.Generated
      *
      *
      * <pre>
-     * Optional. Initial target location within the message backlog. If not set, messages
-     * will be delivered from the commit cursor for the given subscription and
-     * partition.
+     * Optional. Initial target location within the message backlog. If not set,
+     * messages will be delivered from the commit cursor for the given
+     * subscription and partition.
      * </pre>
      *
      * <code>
@@ -812,9 +812,9 @@ public final class InitialSubscribeRequest extends com.google.protobuf.Generated
      *
      *
      * <pre>
-     * Optional. Initial target location within the message backlog. If not set, messages
-     * will be delivered from the commit cursor for the given subscription and
-     * partition.
+     * Optional. Initial target location within the message backlog. If not set,
+     * messages will be delivered from the commit cursor for the given
+     * subscription and partition.
      * </pre>
      *
      * <code>
@@ -838,9 +838,9 @@ public final class InitialSubscribeRequest extends com.google.protobuf.Generated
      *
      *
      * <pre>
-     * Optional. Initial target location within the message backlog. If not set, messages
-     * will be delivered from the commit cursor for the given subscription and
-     * partition.
+     * Optional. Initial target location within the message backlog. If not set,
+     * messages will be delivered from the commit cursor for the given
+     * subscription and partition.
      * </pre>
      *
      * <code>
@@ -862,9 +862,9 @@ public final class InitialSubscribeRequest extends com.google.protobuf.Generated
      *
      *
      * <pre>
-     * Optional. Initial target location within the message backlog. If not set, messages
-     * will be delivered from the commit cursor for the given subscription and
-     * partition.
+     * Optional. Initial target location within the message backlog. If not set,
+     * messages will be delivered from the commit cursor for the given
+     * subscription and partition.
      * </pre>
      *
      * <code>
@@ -892,9 +892,9 @@ public final class InitialSubscribeRequest extends com.google.protobuf.Generated
      *
      *
      * <pre>
-     * Optional. Initial target location within the message backlog. If not set, messages
-     * will be delivered from the commit cursor for the given subscription and
-     * partition.
+     * Optional. Initial target location within the message backlog. If not set,
+     * messages will be delivered from the commit cursor for the given
+     * subscription and partition.
      * </pre>
      *
      * <code>
@@ -915,9 +915,9 @@ public final class InitialSubscribeRequest extends com.google.protobuf.Generated
      *
      *
      * <pre>
-     * Optional. Initial target location within the message backlog. If not set, messages
-     * will be delivered from the commit cursor for the given subscription and
-     * partition.
+     * Optional. Initial target location within the message backlog. If not set,
+     * messages will be delivered from the commit cursor for the given
+     * subscription and partition.
      * </pre>
      *
      * <code>
@@ -933,9 +933,9 @@ public final class InitialSubscribeRequest extends com.google.protobuf.Generated
      *
      *
      * <pre>
-     * Optional. Initial target location within the message backlog. If not set, messages
-     * will be delivered from the commit cursor for the given subscription and
-     * partition.
+     * Optional. Initial target location within the message backlog. If not set,
+     * messages will be delivered from the commit cursor for the given
+     * subscription and partition.
      * </pre>
      *
      * <code>
@@ -955,9 +955,9 @@ public final class InitialSubscribeRequest extends com.google.protobuf.Generated
      *
      *
      * <pre>
-     * Optional. Initial target location within the message backlog. If not set, messages
-     * will be delivered from the commit cursor for the given subscription and
-     * partition.
+     * Optional. Initial target location within the message backlog. If not set,
+     * messages will be delivered from the commit cursor for the given
+     * subscription and partition.
      * </pre>
      *
      * <code>

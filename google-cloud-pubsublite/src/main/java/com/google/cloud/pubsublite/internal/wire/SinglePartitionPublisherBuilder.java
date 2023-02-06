@@ -22,12 +22,16 @@ import com.google.auto.value.AutoValue;
 import com.google.cloud.pubsublite.MessageMetadata;
 import com.google.cloud.pubsublite.Partition;
 import com.google.cloud.pubsublite.TopicPath;
+import com.google.cloud.pubsublite.internal.AlarmFactory;
 import com.google.cloud.pubsublite.internal.Publisher;
 import com.google.cloud.pubsublite.internal.wire.StreamFactories.PublishStreamFactory;
 import com.google.common.annotations.VisibleForTesting;
+import java.time.Duration;
 
 @AutoValue
 public abstract class SinglePartitionPublisherBuilder {
+  private static final Duration DEFAULT_UNLOAD_PERIOD = Duration.ofMinutes(5);
+
   // Required parameters.
   abstract TopicPath topic();
 
@@ -37,12 +41,16 @@ public abstract class SinglePartitionPublisherBuilder {
 
   abstract BatchingSettings batchingSettings();
 
+  // Optional parameters.
+  abstract Duration unloadPeriod();
+
   // For testing.
   abstract PublisherBuilder.Builder underlyingBuilder();
 
   public static Builder newBuilder() {
     return new AutoValue_SinglePartitionPublisherBuilder.Builder()
-        .setUnderlyingBuilder(PublisherBuilder.builder());
+        .setUnderlyingBuilder(PublisherBuilder.builder())
+        .setUnloadPeriod(DEFAULT_UNLOAD_PERIOD);
   }
 
   @AutoValue.Builder
@@ -56,6 +64,9 @@ public abstract class SinglePartitionPublisherBuilder {
     public abstract Builder setStreamFactory(PublishStreamFactory streamFactory);
 
     public abstract Builder setBatchingSettings(BatchingSettings batchingSettings);
+
+    // Optional parameters.
+    public abstract Builder setUnloadPeriod(Duration unloadPeriod);
 
     // For testing.
     @VisibleForTesting
@@ -72,7 +83,11 @@ public abstract class SinglePartitionPublisherBuilder {
               .setPartition(builder.partition())
               .setStreamFactory(builder.streamFactory())
               .setBatching(builder.batchingSettings());
-      return new SinglePartitionPublisher(publisherBuilder.build(), builder.partition());
+      Partition partition = builder.partition();
+      Duration unloadPeriod = builder.unloadPeriod();
+      return new UnloadingPublisher(
+          () -> new SinglePartitionPublisher(publisherBuilder.build(), partition),
+          AlarmFactory.create(unloadPeriod));
     }
   }
 }

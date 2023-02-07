@@ -42,11 +42,13 @@ import com.google.cloud.pubsublite.internal.wire.PubsubContext;
 import com.google.cloud.pubsublite.internal.wire.PubsubContext.Framework;
 import com.google.cloud.pubsublite.internal.wire.RoutingMetadata;
 import com.google.cloud.pubsublite.internal.wire.SinglePartitionPublisherBuilder;
+import com.google.cloud.pubsublite.internal.wire.UuidBuilder;
 import com.google.cloud.pubsublite.v1.AdminServiceClient;
 import com.google.cloud.pubsublite.v1.AdminServiceSettings;
 import com.google.cloud.pubsublite.v1.PublisherServiceClient;
 import com.google.cloud.pubsublite.v1.PublisherServiceSettings;
 import com.google.common.annotations.VisibleForTesting;
+import com.google.protobuf.ByteString;
 import com.google.pubsub.v1.PubsubMessage;
 import java.util.Optional;
 import org.threeten.bp.Duration;
@@ -79,6 +81,12 @@ public abstract class PublisherSettings {
   /** Batching settings for this publisher to use. Apply per-partition. */
   abstract BatchingSettings batchingSettings();
 
+  /**
+   * Whether to enable publish idempotence, where the server will ensure that unique messages within
+   * a single publisher session are stored only once. Default true.
+   */
+  abstract boolean enableIdempotence();
+
   /** A provider for credentials. */
   abstract CredentialsProvider credentialsProvider();
 
@@ -106,6 +114,7 @@ public abstract class PublisherSettings {
         .setCredentialsProvider(
             PublisherServiceSettings.defaultCredentialsProviderBuilder().build())
         .setBatchingSettings(DEFAULT_BATCHING_SETTINGS)
+        .setEnableIdempotence(true)
         .setUnderlyingBuilder(SinglePartitionPublisherBuilder.newBuilder());
   }
 
@@ -126,6 +135,12 @@ public abstract class PublisherSettings {
 
     /** Batching settings for this publisher to use. Apply per-partition. */
     public abstract Builder setBatchingSettings(BatchingSettings batchingSettings);
+
+    /**
+     * Whether to enable publish idempotence, where the server will ensure that unique messages
+     * within a single publisher session are stored only once. Default true.
+     */
+    public abstract Builder setEnableIdempotence(boolean enableIdempotence);
 
     /** A provider for credentials. */
     public abstract Builder setCredentialsProvider(CredentialsProvider credentialsProvider);
@@ -163,6 +178,7 @@ public abstract class PublisherSettings {
 
   private PartitionPublisherFactory getPartitionPublisherFactory() {
     PublisherServiceClient client = newServiceClient();
+    ByteString publisherClientId = UuidBuilder.toByteString(UuidBuilder.generate());
     return new PartitionPublisherFactory() {
       @Override
       public com.google.cloud.pubsublite.internal.Publisher<MessageMetadata> newPublisher(
@@ -180,6 +196,9 @@ public abstract class PublisherSettings {
                               RoutingMetadata.of(topicPath(), partition));
                       return client.publishCallable().splitCall(responseStream, context);
                     });
+        if (enableIdempotence()) {
+          singlePartitionBuilder.setClientId(publisherClientId);
+        }
         return singlePartitionBuilder.build();
       }
 

@@ -25,9 +25,12 @@ import com.google.cloud.pubsublite.Offset;
 import com.google.cloud.pubsublite.Partition;
 import com.google.cloud.pubsublite.TopicPath;
 import com.google.cloud.pubsublite.internal.Publisher;
+import com.google.cloud.pubsublite.internal.SequencedPublisher;
 import com.google.cloud.pubsublite.internal.wire.StreamFactories.PublishStreamFactory;
 import com.google.cloud.pubsublite.proto.InitialPublishRequest;
 import com.google.common.base.Preconditions;
+import com.google.protobuf.ByteString;
+import java.util.Optional;
 
 /**
  * A builder for a PubSub Lite Publisher. Basic usage:
@@ -65,6 +68,13 @@ public abstract class PublisherBuilder {
   abstract PublishStreamFactory streamFactory();
 
   // Optional parameters.
+
+  /**
+   * Set the publisher client id to enable publish idempotency. The same client id must be set for
+   * all partitions.
+   */
+  abstract Optional<ByteString> clientId();
+
   public static Builder builder() {
     return new AutoValue_PublisherBuilder.Builder();
   }
@@ -80,16 +90,31 @@ public abstract class PublisherBuilder {
 
     public abstract Builder setStreamFactory(PublishStreamFactory streamFactory);
 
+    // Optional parameters.
+    public abstract Builder setClientId(ByteString clientId);
+
     abstract PublisherBuilder autoBuild();
 
     public Publisher<Offset> build() throws ApiException {
+      return new SequenceAssigningPublisher(buildSequenced());
+    }
+
+    /**
+     * Builds the underlying publisher that can accept externally assigned sequence numbers for each
+     * message.
+     */
+    public SequencedPublisher<Offset> buildSequenced() throws ApiException {
       PublisherBuilder autoBuilt = autoBuild();
-      return new PublisherImpl(
-          autoBuilt.streamFactory(),
+      InitialPublishRequest.Builder requestBuilder =
           InitialPublishRequest.newBuilder()
               .setTopic(autoBuilt.topic().toString())
-              .setPartition(autoBuilt.partition().value())
-              .build(),
+              .setPartition(autoBuilt.partition().value());
+      if (autoBuilt.clientId().isPresent()) {
+        requestBuilder.setClientId(autoBuilt.clientId().get());
+      }
+      return new PublisherImpl(
+          autoBuilt.streamFactory(),
+          requestBuilder.build(),
           validateBatchingSettings(autoBuilt.batching()));
     }
 

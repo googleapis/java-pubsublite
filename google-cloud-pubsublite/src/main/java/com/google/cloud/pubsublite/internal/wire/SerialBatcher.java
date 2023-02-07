@@ -18,8 +18,11 @@ package com.google.cloud.pubsublite.internal.wire;
 
 import com.google.api.core.ApiFuture;
 import com.google.api.core.SettableApiFuture;
+import com.google.api.gax.rpc.StatusCode.Code;
 import com.google.auto.value.AutoValue;
 import com.google.cloud.pubsublite.Offset;
+import com.google.cloud.pubsublite.internal.CheckedApiException;
+import com.google.cloud.pubsublite.internal.PublishSequenceNumber;
 import com.google.cloud.pubsublite.proto.PubSubMessage;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
@@ -36,11 +39,24 @@ class SerialBatcher {
   public abstract static class UnbatchedMessage {
     public abstract PubSubMessage message();
 
+    public abstract PublishSequenceNumber sequenceNumber();
+
     public abstract SettableApiFuture<Offset> future();
 
-    public static UnbatchedMessage of(PubSubMessage message, SettableApiFuture<Offset> future) {
-      return new AutoValue_SerialBatcher_UnbatchedMessage(message, future);
+    public static UnbatchedMessage of(
+        PubSubMessage message,
+        PublishSequenceNumber sequenceNumber,
+        SettableApiFuture<Offset> future) {
+      return new AutoValue_SerialBatcher_UnbatchedMessage(message, sequenceNumber, future);
     }
+  }
+
+  // Returns whether there is a sequence number discontinuity between two consecutive messages,
+  // which is not expected. Only the sequence number of the first message in a batch can be
+  // specified, and the remaining messages must have contiguous sequence numbers.
+  private static boolean hasSequenceDiscontinuity(
+      PublishSequenceNumber previous, PublishSequenceNumber current) {
+    return previous.value() + 1 != current.value();
   }
 
   SerialBatcher(long byteLimit, long messageLimit) {
@@ -48,9 +64,18 @@ class SerialBatcher {
     this.messageLimit = messageLimit;
   }
 
-  ApiFuture<Offset> add(PubSubMessage message) {
+  ApiFuture<Offset> add(PubSubMessage message, PublishSequenceNumber sequenceNumber)
+      throws CheckedApiException {
+    if (!messages.isEmpty()
+        && hasSequenceDiscontinuity(messages.peekLast().sequenceNumber(), sequenceNumber)) {
+      throw new CheckedApiException(
+          String.format(
+              "Discontinuity in publish sequence numbers; previous: %s, next: %s",
+              messages.peekLast().sequenceNumber(), sequenceNumber),
+          Code.FAILED_PRECONDITION);
+    }
     SettableApiFuture<Offset> future = SettableApiFuture.create();
-    messages.add(UnbatchedMessage.of(message, future));
+    messages.add(UnbatchedMessage.of(message, sequenceNumber, future));
     return future;
   }
 

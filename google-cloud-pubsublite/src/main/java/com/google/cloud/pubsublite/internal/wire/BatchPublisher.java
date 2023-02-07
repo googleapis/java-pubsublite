@@ -16,10 +16,14 @@
 
 package com.google.cloud.pubsublite.internal.wire;
 
+import com.google.cloud.pubsublite.internal.PublishSequenceNumber;
 import com.google.cloud.pubsublite.proto.PubSubMessage;
 import java.util.Collection;
 
 interface BatchPublisher extends AutoCloseable {
-  /** Publish the batch of messages. Failures are communicated out of band. */
-  void publish(Collection<PubSubMessage> messages);
+  /**
+   * Publish the batch of messages, with the given sequence number of the first message in the
+   * batch. Failures are communicated out of band.
+   */
+  void publish(Collection<PubSubMessage> messages, PublishSequenceNumber firstSequenceNumber);
 }

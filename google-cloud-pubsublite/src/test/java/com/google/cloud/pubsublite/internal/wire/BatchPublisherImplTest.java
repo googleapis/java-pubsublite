@@ -36,12 +36,14 @@ import com.google.cloud.pubsublite.TopicName;
 import com.google.cloud.pubsublite.TopicPath;
 import com.google.cloud.pubsublite.internal.ApiExceptionMatcher;
 import com.google.cloud.pubsublite.internal.CheckedApiException;
+import com.google.cloud.pubsublite.internal.PublishSequenceNumber;
 import com.google.cloud.pubsublite.internal.wire.StreamFactories.PublishStreamFactory;
 import com.google.cloud.pubsublite.proto.Cursor;
 import com.google.cloud.pubsublite.proto.InitialPublishRequest;
 import com.google.cloud.pubsublite.proto.InitialPublishResponse;
 import com.google.cloud.pubsublite.proto.MessagePublishRequest;
 import com.google.cloud.pubsublite.proto.MessagePublishResponse;
+import com.google.cloud.pubsublite.proto.MessagePublishResponse.CursorRange;
 import com.google.cloud.pubsublite.proto.PubSubMessage;
 import com.google.cloud.pubsublite.proto.PublishRequest;
 import com.google.cloud.pubsublite.proto.PublishResponse;
@@ -63,7 +65,9 @@ import org.mockito.stubbing.Answer;
 
 @RunWith(JUnit4.class)
 public class BatchPublisherImplTest {
-  private static PublishRequest initialRequest() {
+  private static final ByteString CLIENT_ID = ByteString.copyFromUtf8("publisher");
+
+  private static PublishRequest initialRequest(ByteString clientId) {
     return PublishRequest.newBuilder()
         .setInitialRequest(
             InitialPublishRequest.newBuilder()
@@ -75,7 +79,34 @@ public class BatchPublisherImplTest {
                         .build()
                         .toString())
                 .setPartition(1024)
+                .setClientId(clientId)
                 .build())
+        .build();
+  }
+
+  private static PublishRequest messagePublishRequest(PubSubMessage... messages) {
+    return PublishRequest.newBuilder()
+        .setMessagePublishRequest(
+            MessagePublishRequest.newBuilder().addAllMessages(Arrays.asList(messages)))
+        .build();
+  }
+
+  private static PublishRequest messagePublishRequest(
+      PublishSequenceNumber firstSequence, PubSubMessage... messages) {
+    return PublishRequest.newBuilder()
+        .setMessagePublishRequest(
+            MessagePublishRequest.newBuilder()
+                .addAllMessages(Arrays.asList(messages))
+                .setFirstSequenceNumber(firstSequence.value()))
+        .build();
+  }
+
+  private static MessagePublishResponse messageResponse(Offset startOffset) {
+    Cursor startCursor = Cursor.newBuilder().setOffset(startOffset.value()).build();
+    return MessagePublishResponse.newBuilder()
+        .setStartCursor(startCursor)
+        .addCursorRanges(
+            CursorRange.newBuilder().setStartCursor(startCursor).setStartIndex(0).setEndIndex(5))
         .build();
   }
 
@@ -85,7 +116,7 @@ public class BatchPublisherImplTest {
 
   @Mock private ClientStream<PublishRequest> mockRequestStream;
 
-  @Mock private ResponseObserver<Offset> mockOutputStream;
+  @Mock private ResponseObserver<MessagePublishResponse> mockOutputStream;
 
   private Optional<ResponseObserver<PublishResponse>> leakedResponseStream = Optional.empty();
 
@@ -98,8 +129,8 @@ public class BatchPublisherImplTest {
             (Answer<ClientStream<PublishRequest>>)
                 args -> {
                   Preconditions.checkArgument(!leakedResponseStream.isPresent());
-                  ResponseObserver<PublishResponse> ResponseObserver = args.getArgument(0);
-                  leakedResponseStream = Optional.of(ResponseObserver);
+                  ResponseObserver<PublishResponse> responseObserver = args.getArgument(0);
+                  leakedResponseStream = Optional.of(responseObserver);
                   return mockRequestStream;
                 })
         .when(streamFactory)
@@ -113,11 +144,13 @@ public class BatchPublisherImplTest {
     }
   }
 
-  private class OffsetAnswer implements Answer<Void> {
-    private final Offset offset;
+  private class MessageResponseAnswer implements Answer<Void> {
+    private final MessagePublishResponse response;
+    private final ByteString clientId;
 
-    OffsetAnswer(Offset offset) {
-      this.offset = offset;
+    MessageResponseAnswer(ByteString clientId, MessagePublishResponse response) {
+      this.response = response;
+      this.clientId = clientId;
     }
 
     @Override
@@ -125,13 +158,8 @@ public class BatchPublisherImplTest {
       Preconditions.checkArgument(leakedResponseStream.isPresent());
       leakedResponseStream
           .get()
-          .onResponse(
-              PublishResponse.newBuilder()
-                  .setMessageResponse(
-                      MessagePublishResponse.newBuilder()
-                          .setStartCursor(Cursor.newBuilder().setOffset(offset.value())))
-                  .build());
-      verify(mockRequestStream).send(initialRequest());
+          .onResponse(PublishResponse.newBuilder().setMessageResponse(response).build());
+      verify(mockRequestStream).send(initialRequest(clientId));
       return null;
     }
   }
@@ -151,9 +179,9 @@ public class BatchPublisherImplTest {
                   return null;
                 })
         .when(mockRequestStream)
-        .send(initialRequest());
+        .send(initialRequest(ByteString.EMPTY));
     try (BatchPublisherImpl publisher =
-        FACTORY.New(streamFactory, mockOutputStream, initialRequest())) {}
+        FACTORY.New(streamFactory, mockOutputStream, initialRequest(ByteString.EMPTY))) {}
   }
 
   @Test
@@ -167,9 +195,9 @@ public class BatchPublisherImplTest {
                   return null;
                 })
         .when(mockRequestStream)
-        .send(initialRequest());
+        .send(initialRequest(ByteString.EMPTY));
     try (BatchPublisherImpl publisher =
-        FACTORY.New(streamFactory, mockOutputStream, initialRequest())) {
+        FACTORY.New(streamFactory, mockOutputStream, initialRequest(ByteString.EMPTY))) {
       verify(mockOutputStream).onError(argThat(new ApiExceptionMatcher(Code.INTERNAL)));
       verifyNoMoreInteractions(mockOutputStream);
     }
@@ -177,16 +205,18 @@ public class BatchPublisherImplTest {
 
   @Test
   public void construct_SendsMessagePublishResponseError() {
-    doAnswer(new OffsetAnswer(Offset.of(10))).when(mockRequestStream).send(initialRequest());
+    doAnswer(new MessageResponseAnswer(ByteString.EMPTY, messageResponse(Offset.of(10))))
+        .when(mockRequestStream)
+        .send(initialRequest(ByteString.EMPTY));
     try (BatchPublisherImpl publisher =
-        FACTORY.New(streamFactory, mockOutputStream, initialRequest())) {
+        FACTORY.New(streamFactory, mockOutputStream, initialRequest(ByteString.EMPTY))) {
       verify(mockOutputStream).onError(argThat(new ApiExceptionMatcher(Code.FAILED_PRECONDITION)));
       verifyNoMoreInteractions(mockOutputStream);
     }
     leakedResponseStream = Optional.empty();
   }
 
-  private BatchPublisherImpl initialize() {
+  private BatchPublisherImpl initialize(ByteString clientId) {
     doAnswer(
             (Answer<Void>)
                 args -> {
@@ -200,22 +230,23 @@ public class BatchPublisherImplTest {
                   return null;
                 })
         .when(mockRequestStream)
-        .send(initialRequest());
-    return FACTORY.New(streamFactory, mockOutputStream, initialRequest());
+        .send(initialRequest(clientId));
+    return FACTORY.New(streamFactory, mockOutputStream, initialRequest(clientId));
   }
 
   @Test
   public void responseAfterClose_Dropped() throws Exception {
-    BatchPublisher publisher = initialize();
+    BatchPublisher publisher = initialize(ByteString.EMPTY);
     publisher.close();
     verify(mockRequestStream).closeSend();
-    publisher.publish(ImmutableList.of(PubSubMessage.getDefaultInstance()));
+    publisher.publish(
+        ImmutableList.of(PubSubMessage.getDefaultInstance()), PublishSequenceNumber.FIRST);
     verify(mockOutputStream, never()).onResponse(any());
   }
 
   @Test
   public void duplicateInitial_Abort() {
-    BatchPublisher unusedPublisher = initialize();
+    BatchPublisher unusedPublisher = initialize(ByteString.EMPTY);
     PublishResponse.Builder builder = PublishResponse.newBuilder();
     builder.getInitialResponseBuilder();
     leakedResponseStream.get().onResponse(builder.build());
@@ -223,60 +254,63 @@ public class BatchPublisherImplTest {
     leakedResponseStream = Optional.empty();
   }
 
-  private static PublishRequest messagePublishRequest(PubSubMessage... messages) {
-    return PublishRequest.newBuilder()
-        .setMessagePublishRequest(
-            MessagePublishRequest.newBuilder().addAllMessages(Arrays.asList(messages)))
-        .build();
-  }
-
   @Test
-  public void offsetResponseInOrder_Ok() {
-    BatchPublisher publisher = initialize();
-    doAnswer(new OffsetAnswer(Offset.of(10)))
-        .when(mockRequestStream)
-        .send(messagePublishRequest(PubSubMessage.getDefaultInstance()));
-    doAnswer(new OffsetAnswer(Offset.of(20)))
+  public void setsSequenceNumbersWhenClientIdPresent() {
+    BatchPublisher publisher = initialize(CLIENT_ID);
+    doAnswer(new MessageResponseAnswer(CLIENT_ID, messageResponse(Offset.of(10))))
         .when(mockRequestStream)
         .send(
             messagePublishRequest(
+                PublishSequenceNumber.of(100), PubSubMessage.getDefaultInstance()));
+    doAnswer(new MessageResponseAnswer(CLIENT_ID, messageResponse(Offset.of(20))))
+        .when(mockRequestStream)
+        .send(
+            messagePublishRequest(
+                PublishSequenceNumber.of(200),
                 PubSubMessage.newBuilder().setData(ByteString.copyFromUtf8("abc")).build()));
-    publisher.publish(ImmutableList.of(PubSubMessage.getDefaultInstance()));
+    publisher.publish(
+        ImmutableList.of(PubSubMessage.getDefaultInstance()), PublishSequenceNumber.of(100));
     publisher.publish(
         ImmutableList.of(
-            PubSubMessage.newBuilder().setData(ByteString.copyFromUtf8("abc")).build()));
+            PubSubMessage.newBuilder().setData(ByteString.copyFromUtf8("abc")).build()),
+        PublishSequenceNumber.of(200));
 
     InOrder requests = inOrder(mockRequestStream);
     requests
         .verify(mockRequestStream)
-        .send(messagePublishRequest(PubSubMessage.getDefaultInstance()));
+        .send(
+            messagePublishRequest(
+                PublishSequenceNumber.of(100), PubSubMessage.getDefaultInstance()));
     requests
         .verify(mockRequestStream)
         .send(
             messagePublishRequest(
+                PublishSequenceNumber.of(200),
                 PubSubMessage.newBuilder().setData(ByteString.copyFromUtf8("abc")).build()));
     InOrder outputs = inOrder(mockOutputStream);
-    outputs.verify(mockOutputStream).onResponse(Offset.of(10));
-    outputs.verify(mockOutputStream).onResponse(Offset.of(20));
+    outputs.verify(mockOutputStream).onResponse(messageResponse(Offset.of(10)));
+    outputs.verify(mockOutputStream).onResponse(messageResponse(Offset.of(20)));
     verifyNoMoreInteractions(mockRequestStream);
     verifyNoMoreInteractions(mockOutputStream);
   }
 
   @Test
-  public void offsetResponseOutOfOrder_Exception() {
-    BatchPublisher publisher = initialize();
-    doAnswer(new OffsetAnswer(Offset.of(10)))
+  public void omitsSequenceNumbersWhenClientIdAbsent() {
+    BatchPublisher publisher = initialize(ByteString.EMPTY);
+    doAnswer(new MessageResponseAnswer(ByteString.EMPTY, messageResponse(Offset.of(10))))
         .when(mockRequestStream)
         .send(messagePublishRequest(PubSubMessage.getDefaultInstance()));
-    doAnswer(new OffsetAnswer(Offset.of(5)))
+    doAnswer(new MessageResponseAnswer(ByteString.EMPTY, messageResponse(Offset.of(20))))
         .when(mockRequestStream)
         .send(
             messagePublishRequest(
                 PubSubMessage.newBuilder().setData(ByteString.copyFromUtf8("abc")).build()));
-    publisher.publish(ImmutableList.of(PubSubMessage.getDefaultInstance()));
+    publisher.publish(
+        ImmutableList.of(PubSubMessage.getDefaultInstance()), PublishSequenceNumber.of(100));
     publisher.publish(
         ImmutableList.of(
-            PubSubMessage.newBuilder().setData(ByteString.copyFromUtf8("abc")).build()));
+            PubSubMessage.newBuilder().setData(ByteString.copyFromUtf8("abc")).build()),
+        PublishSequenceNumber.of(200));
 
     InOrder requests = inOrder(mockRequestStream);
     requests
@@ -287,14 +321,10 @@ public class BatchPublisherImplTest {
         .send(
             messagePublishRequest(
                 PubSubMessage.newBuilder().setData(ByteString.copyFromUtf8("abc")).build()));
-    requests.verify(mockRequestStream).closeSendWithError(argThat(new ApiExceptionMatcher()));
     InOrder outputs = inOrder(mockOutputStream);
-    outputs.verify(mockOutputStream).onResponse(Offset.of(10));
-    outputs
-        .verify(mockOutputStream)
-        .onError(argThat(new ApiExceptionMatcher(Code.FAILED_PRECONDITION)));
-    verifyNoMoreInteractions(mockRequestStream, mockOutputStream);
-
-    leakedResponseStream = Optional.empty();
+    outputs.verify(mockOutputStream).onResponse(messageResponse(Offset.of(10)));
+    outputs.verify(mockOutputStream).onResponse(messageResponse(Offset.of(20)));
+    verifyNoMoreInteractions(mockRequestStream);
+    verifyNoMoreInteractions(mockOutputStream);
   }
 }

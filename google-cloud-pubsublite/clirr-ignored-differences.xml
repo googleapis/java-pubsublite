@@ -8,9 +8,25 @@
     <method>*</method>
   </difference>
   <difference>
+    <differenceType>7013</differenceType>
+    <className>com/google/cloud/pubsublite/cloudpubsub/PublisherSettings$Builder</className>
+    <method>*</method>
+  </difference>
+  <difference>
+    <differenceType>4001</differenceType>
+    <className>com/google/cloud/pubsublite/internal/**</className>
+    <to>**</to>
+  </difference>
+  <difference>
     <differenceType>7004</differenceType>
     <className>com/google/cloud/pubsublite/internal/**</className>
     <method>*</method>
+  </difference>
+  <difference>
+    <differenceType>7005</differenceType>
+    <className>com/google/cloud/pubsublite/internal/**</className>
+    <method>*</method>
+    <to>**</to>
   </difference>
   <difference>
     <differenceType>7013</differenceType>

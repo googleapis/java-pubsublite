@@ -16,9 +16,10 @@
 
 package com.google.cloud.pubsublite.internal.wire;
 
-import com.google.cloud.pubsublite.Offset;
+import com.google.cloud.pubsublite.proto.MessagePublishResponse;
 import com.google.cloud.pubsublite.proto.PublishRequest;
 import com.google.cloud.pubsublite.proto.PublishResponse;
 
 interface BatchPublisherFactory
-    extends SingleConnectionFactory<PublishRequest, PublishResponse, Offset, BatchPublisher> {}
+    extends SingleConnectionFactory<
+        PublishRequest, PublishResponse, MessagePublishResponse, BatchPublisher> {}

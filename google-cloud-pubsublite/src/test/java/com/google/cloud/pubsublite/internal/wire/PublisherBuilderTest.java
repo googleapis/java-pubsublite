@@ -27,7 +27,9 @@ import com.google.cloud.pubsublite.TopicName;
 import com.google.cloud.pubsublite.TopicPath;
 import com.google.cloud.pubsublite.cloudpubsub.PublisherSettings;
 import com.google.cloud.pubsublite.internal.Publisher;
+import com.google.cloud.pubsublite.internal.SequencedPublisher;
 import com.google.cloud.pubsublite.internal.wire.StreamFactories.PublishStreamFactory;
+import com.google.protobuf.ByteString;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -36,7 +38,7 @@ import org.junit.runners.JUnit4;
 public class PublisherBuilderTest {
   @Test
   public void testBuilder() {
-    Publisher<Offset> unusedPublisher =
+    PublisherBuilder.Builder builder =
         PublisherBuilder.builder()
             .setBatching(PublisherSettings.DEFAULT_BATCHING_SETTINGS)
             .setTopic(
@@ -46,7 +48,13 @@ public class PublisherBuilderTest {
                     .setName(TopicName.of("abc"))
                     .build())
             .setPartition(Partition.of(85))
-            .setStreamFactory(mock(PublishStreamFactory.class))
-            .build();
+            .setStreamFactory(mock(PublishStreamFactory.class));
+    Publisher<Offset> unusedPublisher = builder.build();
+    SequencedPublisher<Offset> unusedSequencedPublisher = builder.buildSequenced();
+
+    // Optional parameters.
+    builder.setClientId(ByteString.copyFromUtf8("publisher"));
+    unusedPublisher = builder.build();
+    unusedSequencedPublisher = builder.buildSequenced();
   }
 }

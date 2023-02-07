@@ -19,48 +19,52 @@ package com.google.cloud.pubsublite.internal.wire;
 import static com.google.cloud.pubsublite.internal.CheckedApiPreconditions.checkState;
 
 import com.google.api.gax.rpc.ResponseObserver;
-import com.google.api.gax.rpc.StatusCode.Code;
-import com.google.cloud.pubsublite.Offset;
 import com.google.cloud.pubsublite.internal.CheckedApiException;
-import com.google.cloud.pubsublite.internal.CloseableMonitor;
+import com.google.cloud.pubsublite.internal.PublishSequenceNumber;
 import com.google.cloud.pubsublite.internal.wire.StreamFactories.PublishStreamFactory;
+import com.google.cloud.pubsublite.proto.MessagePublishRequest;
 import com.google.cloud.pubsublite.proto.MessagePublishResponse;
 import com.google.cloud.pubsublite.proto.PubSubMessage;
 import com.google.cloud.pubsublite.proto.PublishRequest;
 import com.google.cloud.pubsublite.proto.PublishResponse;
-import com.google.errorprone.annotations.concurrent.GuardedBy;
 import java.util.Collection;
-import java.util.Optional;
 
-class BatchPublisherImpl extends SingleConnection<PublishRequest, PublishResponse, Offset>
+class BatchPublisherImpl
+    extends SingleConnection<PublishRequest, PublishResponse, MessagePublishResponse>
     implements BatchPublisher {
-  private final CloseableMonitor monitor = new CloseableMonitor();
-
-  @GuardedBy("monitor.monitor")
-  private Optional<Offset> lastOffset = Optional.empty();
-
   static class Factory implements BatchPublisherFactory {
     @Override
     public BatchPublisherImpl New(
         StreamFactory<PublishRequest, PublishResponse> streamFactory,
-        ResponseObserver<Offset> clientStream,
+        ResponseObserver<MessagePublishResponse> clientStream,
         PublishRequest initialRequest) {
       return new BatchPublisherImpl(streamFactory::New, clientStream, initialRequest);
     }
   }
 
+  private final boolean sendSequenceNumbers;
+
   private BatchPublisherImpl(
       PublishStreamFactory streamFactory,
-      ResponseObserver<Offset> publishCompleteStream,
+      ResponseObserver<MessagePublishResponse> publishCompleteStream,
       PublishRequest initialRequest) {
     super(streamFactory, publishCompleteStream);
     initialize(initialRequest);
+
+    // Publish idempotency is enabled when a publisher client id is specified. Otherwise do not send
+    // sequence numbers to the stream.
+    this.sendSequenceNumbers = !initialRequest.getInitialRequest().getClientId().isEmpty();
   }
 
   @Override
-  public void publish(Collection<PubSubMessage> messages) {
+  public void publish(
+      Collection<PubSubMessage> messages, PublishSequenceNumber firstSequenceNumber) {
     PublishRequest.Builder builder = PublishRequest.newBuilder();
-    builder.getMessagePublishRequestBuilder().addAllMessages(messages);
+    MessagePublishRequest.Builder publishRequestBuilder = builder.getMessagePublishRequestBuilder();
+    publishRequestBuilder.addAllMessages(messages);
+    if (sendSequenceNumbers) {
+      publishRequestBuilder.setFirstSequenceNumber(firstSequenceNumber.value());
+    }
     sendToStream(builder.build());
   }
 
@@ -77,18 +81,6 @@ class BatchPublisherImpl extends SingleConnection<PublishRequest, PublishRespons
     checkState(
         response.hasMessageResponse(),
         "Received response on stream which was neither a message or initial response.");
-    onMessageResponse(response.getMessageResponse());
-  }
-
-  private void onMessageResponse(MessagePublishResponse response) throws CheckedApiException {
-    Offset offset = Offset.of(response.getStartCursor().getOffset());
-    try (CloseableMonitor.Hold h = monitor.enter()) {
-      if (lastOffset.isPresent() && offset.value() <= lastOffset.get().value()) {
-        throw new CheckedApiException(
-            "Received out of order offsets on stream.", Code.FAILED_PRECONDITION);
-      }
-      lastOffset = Optional.of(offset);
-    }
-    sendToClient(offset);
+    sendToClient(response.getMessageResponse());
   }
 }

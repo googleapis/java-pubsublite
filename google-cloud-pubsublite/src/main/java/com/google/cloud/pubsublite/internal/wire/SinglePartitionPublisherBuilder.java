@@ -25,6 +25,8 @@ import com.google.cloud.pubsublite.TopicPath;
 import com.google.cloud.pubsublite.internal.Publisher;
 import com.google.cloud.pubsublite.internal.wire.StreamFactories.PublishStreamFactory;
 import com.google.common.annotations.VisibleForTesting;
+import com.google.protobuf.ByteString;
+import java.util.Optional;
 
 @AutoValue
 public abstract class SinglePartitionPublisherBuilder {
@@ -36,6 +38,9 @@ public abstract class SinglePartitionPublisherBuilder {
   abstract PublishStreamFactory streamFactory();
 
   abstract BatchingSettings batchingSettings();
+
+  // Optional parameters.
+  abstract Optional<ByteString> clientId();
 
   // For testing.
   abstract PublisherBuilder.Builder underlyingBuilder();
@@ -57,6 +62,9 @@ public abstract class SinglePartitionPublisherBuilder {
 
     public abstract Builder setBatchingSettings(BatchingSettings batchingSettings);
 
+    // Optional parameters.
+    public abstract Builder setClientId(ByteString clientId);
+
     // For testing.
     @VisibleForTesting
     abstract Builder setUnderlyingBuilder(PublisherBuilder.Builder underlyingBuilder);
@@ -72,6 +80,9 @@ public abstract class SinglePartitionPublisherBuilder {
               .setPartition(builder.partition())
               .setStreamFactory(builder.streamFactory())
               .setBatching(builder.batchingSettings());
+      if (builder.clientId().isPresent()) {
+        publisherBuilder.setClientId(builder.clientId().get());
+      }
       return new SinglePartitionPublisher(publisherBuilder.build(), builder.partition());
     }
   }

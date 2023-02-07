@@ -21,8 +21,6 @@ import com.google.cloud.pubsublite.SubscriptionPath;
 import com.google.cloud.pubsublite.proto.InitialPartitionAssignmentRequest;
 import com.google.cloud.pubsublite.v1.PartitionAssignmentServiceClient;
 import com.google.common.flogger.GoogleLogger;
-import com.google.protobuf.ByteString;
-import java.nio.ByteBuffer;
 import java.util.UUID;
 
 @AutoValue
@@ -39,7 +37,7 @@ public abstract class AssignerSettings {
   abstract UUID uuid();
 
   public static Builder newBuilder() {
-    return new AutoValue_AssignerSettings.Builder().setUuid(UUID.randomUUID());
+    return new AutoValue_AssignerSettings.Builder().setUuid(UuidBuilder.generate());
   }
 
   @AutoValue.Builder
@@ -58,16 +56,13 @@ public abstract class AssignerSettings {
   }
 
   public Assigner instantiate() {
-    ByteBuffer uuidBuffer = ByteBuffer.allocate(16);
-    uuidBuffer.putLong(uuid().getMostSignificantBits());
-    uuidBuffer.putLong(uuid().getLeastSignificantBits());
     logger.atInfo().log(
         "Subscription %s using UUID %s for assignment.", subscriptionPath(), uuid());
 
     InitialPartitionAssignmentRequest initial =
         InitialPartitionAssignmentRequest.newBuilder()
             .setSubscription(subscriptionPath().toString())
-            .setClientId(ByteString.copyFrom(uuidBuffer.array()))
+            .setClientId(UuidBuilder.toByteString(uuid()))
             .build();
     return new AssignerImpl(serviceClient(), initial, receiver());
   }

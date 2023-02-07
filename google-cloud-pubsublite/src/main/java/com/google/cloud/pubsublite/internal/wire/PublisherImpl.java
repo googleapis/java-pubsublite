@@ -17,11 +17,13 @@
 package com.google.cloud.pubsublite.internal.wire;
 
 import static com.google.cloud.pubsublite.internal.CheckedApiPreconditions.checkState;
+import static com.google.common.collect.ImmutableList.toImmutableList;
+import static java.util.Comparator.comparing;
+import static java.util.stream.Collectors.toCollection;
 
 import com.google.api.core.ApiFuture;
 import com.google.api.core.ApiFutures;
 import com.google.api.core.ApiService;
-import com.google.api.core.SettableApiFuture;
 import com.google.api.gax.batching.BatchingSettings;
 import com.google.api.gax.rpc.ApiException;
 import com.google.api.gax.rpc.StatusCode.Code;
@@ -32,14 +34,18 @@ import com.google.cloud.pubsublite.internal.AlarmFactory;
 import com.google.cloud.pubsublite.internal.CheckedApiException;
 import com.google.cloud.pubsublite.internal.CloseableMonitor;
 import com.google.cloud.pubsublite.internal.ProxyService;
-import com.google.cloud.pubsublite.internal.Publisher;
+import com.google.cloud.pubsublite.internal.PublishSequenceNumber;
+import com.google.cloud.pubsublite.internal.SequencedPublisher;
 import com.google.cloud.pubsublite.internal.wire.SerialBatcher.UnbatchedMessage;
 import com.google.cloud.pubsublite.internal.wire.StreamFactories.PublishStreamFactory;
 import com.google.cloud.pubsublite.proto.InitialPublishRequest;
+import com.google.cloud.pubsublite.proto.MessagePublishResponse;
+import com.google.cloud.pubsublite.proto.MessagePublishResponse.CursorRange;
 import com.google.cloud.pubsublite.proto.PubSubMessage;
 import com.google.cloud.pubsublite.proto.PublishRequest;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Preconditions;
+import com.google.common.collect.ImmutableList;
 import com.google.common.flogger.GoogleLogger;
 import com.google.common.util.concurrent.Monitor;
 import java.time.Duration;
@@ -50,11 +56,10 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Queue;
 import java.util.concurrent.Future;
-import java.util.stream.Collectors;
 import javax.annotation.concurrent.GuardedBy;
 
 public final class PublisherImpl extends ProxyService
-    implements Publisher<Offset>, RetryingConnectionObserver<Offset> {
+    implements SequencedPublisher<Offset>, RetryingConnectionObserver<MessagePublishResponse> {
   private static final GoogleLogger logger = GoogleLogger.forEnclosingClass();
 
   private final AlarmFactory alarmFactory;
@@ -79,7 +84,7 @@ public final class PublisherImpl extends ProxyService
   private boolean shutdown = false;
 
   @GuardedBy("monitor.monitor")
-  private Optional<Offset> lastSentOffset = Optional.empty();
+  private Offset lastSentOffset = Offset.of(-1);
 
   // batcherMonitor is always acquired after monitor.monitor when both are held.
   private final CloseableMonitor batcherMonitor = new CloseableMonitor();
@@ -88,12 +93,24 @@ public final class PublisherImpl extends ProxyService
   private final SerialBatcher batcher;
 
   private static class InFlightBatch {
-    final List<PubSubMessage> messages;
-    final List<SettableApiFuture<Offset>> messageFutures;
+    final List<UnbatchedMessage> messages;
 
-    InFlightBatch(Collection<UnbatchedMessage> toBatch) {
-      messages = toBatch.stream().map(UnbatchedMessage::message).collect(Collectors.toList());
-      messageFutures = toBatch.stream().map(UnbatchedMessage::future).collect(Collectors.toList());
+    InFlightBatch(List<UnbatchedMessage> toBatch) {
+      this.messages = toBatch;
+    }
+
+    List<PubSubMessage> messagesToSend() {
+      return messages.stream().map(UnbatchedMessage::message).collect(toImmutableList());
+    }
+
+    PublishSequenceNumber firstSequenceNumber() {
+      return messages.get(0).sequenceNumber();
+    }
+
+    void failBatch(int startIdx, CheckedApiException e) {
+      for (int i = startIdx; i < messages.size(); i++) {
+        messages.get(i).future().setException(e);
+      }
     }
   }
 
@@ -139,12 +156,10 @@ public final class PublisherImpl extends ProxyService
 
   @GuardedBy("monitor.monitor")
   private void rebatchForRestart() {
-    Queue<UnbatchedMessage> messages = new ArrayDeque<>();
-    for (InFlightBatch batch : batchesInFlight) {
-      for (int i = 0; i < batch.messages.size(); ++i) {
-        messages.add(UnbatchedMessage.of(batch.messages.get(i), batch.messageFutures.get(i)));
-      }
-    }
+    Queue<UnbatchedMessage> messages =
+        batchesInFlight.stream()
+            .flatMap(b -> b.messages.stream())
+            .collect(toCollection(ArrayDeque::new));
     logger.atFiner().log(
         "Re-publishing %s messages after reconnection for partition %s",
         messages.size(), initialRequest.getInitialRequest().getPartition());
@@ -157,8 +172,8 @@ public final class PublisherImpl extends ProxyService
       if (size + messageSize > Constants.MAX_PUBLISH_BATCH_BYTES
           || count + 1 > Constants.MAX_PUBLISH_BATCH_COUNT) {
         if (!currentBatch.isEmpty()) {
-          batchesInFlight.add(new InFlightBatch(currentBatch));
-          currentBatch = new ArrayDeque<>();
+          batchesInFlight.add(new InFlightBatch(ImmutableList.copyOf(currentBatch)));
+          currentBatch.clear();
           count = 0;
           size = 0;
         }
@@ -168,7 +183,7 @@ public final class PublisherImpl extends ProxyService
       count += 1;
     }
     if (!currentBatch.isEmpty()) {
-      batchesInFlight.add(new InFlightBatch(currentBatch));
+      batchesInFlight.add(new InFlightBatch(ImmutableList.copyOf(currentBatch)));
     }
   }
 
@@ -181,7 +196,11 @@ public final class PublisherImpl extends ProxyService
       connection.modifyConnection(
           connectionOr -> {
             if (!connectionOr.isPresent()) return;
-            batches.forEach(batch -> connectionOr.get().publish(batch.messages));
+            batches.forEach(
+                batch ->
+                    connectionOr
+                        .get()
+                        .publish(batch.messagesToSend(), batch.firstSequenceNumber()));
           });
     } catch (CheckedApiException e) {
       onPermanentError(e);
@@ -219,7 +238,7 @@ public final class PublisherImpl extends ProxyService
   @GuardedBy("monitor.monitor")
   private void terminateOutstandingPublishes(CheckedApiException e) {
     batchesInFlight.forEach(
-        batch -> batch.messageFutures.forEach(future -> future.setException(e)));
+        batch -> batch.messages.forEach(message -> message.future().setException(e)));
     try (CloseableMonitor.Hold h = batcherMonitor.enter()) {
       batcher.flush().forEach(batch -> batch.forEach(m -> m.future().setException(e)));
     }
@@ -227,7 +246,7 @@ public final class PublisherImpl extends ProxyService
   }
 
   @Override
-  public ApiFuture<Offset> publish(Message message) {
+  public ApiFuture<Offset> publish(Message message, PublishSequenceNumber sequenceNumber) {
     PubSubMessage proto = message.toProto();
     try (CloseableMonitor.Hold h = batcherMonitor.enter()) {
       ApiService.State currentState = state();
@@ -239,7 +258,7 @@ public final class PublisherImpl extends ProxyService
               Code.FAILED_PRECONDITION);
         case STARTING:
         case RUNNING:
-          return batcher.add(proto);
+          return batcher.add(proto, sequenceNumber);
         default:
           throw new CheckedApiException(
               "Cannot publish when Publisher state is " + currentState.name(),
@@ -275,14 +294,16 @@ public final class PublisherImpl extends ProxyService
   }
 
   @GuardedBy("monitor.monitor")
-  private void processBatch(Collection<UnbatchedMessage> batch) throws CheckedApiException {
+  private void processBatch(List<UnbatchedMessage> batch) throws CheckedApiException {
     if (batch.isEmpty()) return;
     InFlightBatch inFlightBatch = new InFlightBatch(batch);
     batchesInFlight.add(inFlightBatch);
     connection.modifyConnection(
         connectionOr -> {
           checkState(connectionOr.isPresent(), "Published after the stream shut down.");
-          connectionOr.get().publish(inFlightBatch.messages);
+          connectionOr
+              .get()
+              .publish(inFlightBatch.messagesToSend(), inFlightBatch.firstSequenceNumber());
         });
   }
 
@@ -294,23 +315,55 @@ public final class PublisherImpl extends ProxyService
   }
 
   @Override
-  public void onClientResponse(Offset value) throws CheckedApiException {
+  public void onClientResponse(MessagePublishResponse publishResponse) throws CheckedApiException {
+    // Ensure cursor ranges are sorted by increasing message batch index.
+    ImmutableList<CursorRange> ranges =
+        ImmutableList.sortedCopyOf(
+            comparing(CursorRange::getStartIndex), publishResponse.getCursorRangesList());
     try (CloseableMonitor.Hold h = monitor.enter()) {
       checkState(
           !batchesInFlight.isEmpty(), "Received publish response with no batches in flight.");
-      if (lastSentOffset.isPresent() && lastSentOffset.get().value() >= value.value()) {
-        throw new CheckedApiException(
-            String.format(
-                "Received publish response with offset %s that is inconsistent with previous"
-                    + " responses max %s",
-                value, lastSentOffset.get()),
-            Code.FAILED_PRECONDITION);
-      }
       InFlightBatch batch = batchesInFlight.remove();
-      lastSentOffset = Optional.of(Offset.of(value.value() + batch.messages.size() - 1));
-      for (int i = 0; i < batch.messageFutures.size(); i++) {
-        Offset offset = Offset.of(value.value() + i);
-        batch.messageFutures.get(i).set(offset);
+      int rangeIndex = 0;
+      for (int messageIndex = 0; messageIndex < batch.messages.size(); messageIndex++) {
+        UnbatchedMessage message = batch.messages.get(messageIndex);
+        try {
+          if (rangeIndex < ranges.size() && ranges.get(rangeIndex).getEndIndex() <= messageIndex) {
+            rangeIndex++;
+            if (rangeIndex < ranges.size()
+                && ranges.get(rangeIndex).getStartIndex()
+                    < ranges.get(rangeIndex - 1).getEndIndex()) {
+              throw new CheckedApiException(
+                  String.format(
+                      "Server sent invalid cursor ranges in message publish response: %s",
+                      publishResponse),
+                  Code.FAILED_PRECONDITION);
+            }
+          }
+          if (rangeIndex < ranges.size()
+              && messageIndex >= ranges.get(rangeIndex).getStartIndex()
+              && messageIndex < ranges.get(rangeIndex).getEndIndex()) {
+            CursorRange range = ranges.get(rangeIndex);
+            Offset offset =
+                Offset.of(
+                    range.getStartCursor().getOffset() + messageIndex - range.getStartIndex());
+            if (lastSentOffset.value() >= offset.value()) {
+              throw new CheckedApiException(
+                  String.format(
+                      "Received publish response with offset %s that is inconsistent with"
+                          + " previous offset %s",
+                      offset, lastSentOffset),
+                  Code.FAILED_PRECONDITION);
+            }
+            message.future().set(offset);
+            lastSentOffset = offset;
+          } else {
+            message.future().set(Offset.of(-1));
+          }
+        } catch (CheckedApiException e) {
+          batch.failBatch(messageIndex, e);
+          throw e;
+        }
       }
     }
   }

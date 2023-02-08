@@ -1,5 +1,21 @@
 # Changelog
 
+## [1.10.0](https://github.com/googleapis/java-pubsublite/compare/v1.9.4...v1.10.0) (2023-02-08)
+
+
+### Features
+
+* API for publish idempotence ([#1320](https://github.com/googleapis/java-pubsublite/issues/1320)) ([4cadfba](https://github.com/googleapis/java-pubsublite/commit/4cadfba3682e6549a75628deb53617f695843791))
+* Publish idempotence ([#1323](https://github.com/googleapis/java-pubsublite/issues/1323)) ([3aabc74](https://github.com/googleapis/java-pubsublite/commit/3aabc74f9bbbdd8a582236f04e671c4c96d9fe9c))
+
+
+### Dependencies
+
+* Update dependency com.google.cloud:google-cloud-bom to v0.186.0 ([#1316](https://github.com/googleapis/java-pubsublite/issues/1316)) ([59c3a5f](https://github.com/googleapis/java-pubsublite/commit/59c3a5f1bc93fcb3240dcb036bfbe3de761a41a5))
+* Update dependency com.google.cloud:google-cloud-bom to v0.187.0 ([#1326](https://github.com/googleapis/java-pubsublite/issues/1326)) ([5c6de5a](https://github.com/googleapis/java-pubsublite/commit/5c6de5ac58eaf3404e8b799205d758102baac013))
+* Update dependency com.google.cloud:google-cloud-pubsub to v1.123.2 ([#1321](https://github.com/googleapis/java-pubsublite/issues/1321)) ([17a9c07](https://github.com/googleapis/java-pubsublite/commit/17a9c07e27e0674cbfb4bc82d6e6bf9556431c45))
+* Update dependency com.google.cloud:google-cloud-shared-dependencies to v3.2.0 ([#1319](https://github.com/googleapis/java-pubsublite/issues/1319)) ([84154dc](https://github.com/googleapis/java-pubsublite/commit/84154dc8d75229ed35dd14de27428bf61d8111fe))
+
 ## [1.9.4](https://github.com/googleapis/java-pubsublite/compare/v1.9.3...v1.9.4) (2023-01-24)
 
 

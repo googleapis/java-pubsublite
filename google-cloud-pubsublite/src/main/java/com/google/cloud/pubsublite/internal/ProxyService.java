@@ -40,7 +40,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 public abstract class ProxyService extends AbstractApiService {
   private static final GoogleLogger LOGGER = GoogleLogger.forEnclosingClass();
   private final List<ApiService> services = new ArrayList<>();
-  private final AtomicBoolean stoppedOrFailed = new AtomicBoolean(false);
+  private final AtomicBoolean failed = new AtomicBoolean(false);
 
   protected <T extends ApiService> ProxyService(Collection<T> services) {
     addServices(services);
@@ -57,6 +57,14 @@ public abstract class ProxyService extends AbstractApiService {
     checkState(state() == State.NEW);
     for (ApiService service : services) {
       checkArgument(service.state() == State.NEW, "All services must not be started.");
+      service.addListener(
+          new Listener() {
+            @Override
+            public void failed(State state, Throwable throwable) {
+              onPermanentError(toCanonical(throwable));
+            }
+          },
+          SystemExecutors.getFuturesExecutor());
       this.services.add(service);
     }
   }
@@ -76,7 +84,7 @@ public abstract class ProxyService extends AbstractApiService {
 
   // Tries to stop all dependent services and sets this service into the FAILED state.
   protected final void onPermanentError(CheckedApiException error) {
-    if (stoppedOrFailed.getAndSet(true)) return;
+    if (failed.getAndSet(true)) return;
     try {
       ApiServiceUtils.stopAsync(services);
     } catch (Throwable t) {
@@ -87,13 +95,21 @@ public abstract class ProxyService extends AbstractApiService {
     } catch (Throwable t) {
       LOGGER.atFine().withCause(t).log("Exception in handlePermanentError.");
     }
-    // Failures are sent to the client and should always be ApiExceptions.
-    notifyFailed(error.underlying);
+    try {
+      // Failures are sent to the client and should always be ApiExceptions.
+      notifyFailed(error.underlying);
+    } catch (IllegalStateException e) {
+      LOGGER.atFine().withCause(e).log("Exception in notifyFailed.");
+    }
   }
 
   // AbstractApiService implementation.
   @Override
   protected final void doStart() {
+    SystemExecutors.getFuturesExecutor().execute(this::startImpl);
+  }
+
+  private void startImpl() {
     Listener listener =
         new Listener() {
           private final AtomicInteger leftToStart = new AtomicInteger(services.size());
@@ -103,27 +119,29 @@ public abstract class ProxyService extends AbstractApiService {
             if (leftToStart.decrementAndGet() == 0) {
               try {
                 start();
+                notifyStarted();
               } catch (CheckedApiException e) {
                 onPermanentError(e);
-                return;
               }
-              notifyStarted();
             }
           }
-
-          @Override
-          public void failed(State state, Throwable throwable) {
-            onPermanentError(toCanonical(throwable));
-          }
         };
-    for (ApiService service : services) {
-      service.addListener(listener, SystemExecutors.getFuturesExecutor());
-      service.startAsync();
+    try {
+      for (ApiService service : services) {
+        service.addListener(listener, SystemExecutors.getFuturesExecutor());
+        service.startAsync();
+      }
+    } catch (Throwable t) {
+      onPermanentError(toCanonical(t));
     }
   }
 
   @Override
   protected final void doStop() {
+    SystemExecutors.getFuturesExecutor().execute(this::stopImpl);
+  }
+
+  private void stopImpl() {
     Listener listener =
         new Listener() {
           private final AtomicInteger leftToStop = new AtomicInteger(services.size());
@@ -131,15 +149,8 @@ public abstract class ProxyService extends AbstractApiService {
           @Override
           public void terminated(State state) {
             if (leftToStop.decrementAndGet() == 0) {
-              if (!stoppedOrFailed.getAndSet(true)) {
-                notifyStopped();
-              }
+              notifyStopped();
             }
-          }
-
-          @Override
-          public void failed(State state, Throwable throwable) {
-            onPermanentError(toCanonical(throwable));
           }
         };
     try {
@@ -148,9 +159,13 @@ public abstract class ProxyService extends AbstractApiService {
       onPermanentError(e);
       return;
     }
-    for (ApiService service : services) {
-      service.addListener(listener, SystemExecutors.getFuturesExecutor());
-      service.stopAsync();
+    try {
+      for (ApiService service : services) {
+        service.addListener(listener, SystemExecutors.getFuturesExecutor());
+        service.stopAsync();
+      }
+    } catch (Throwable t) {
+      onPermanentError(toCanonical(t));
     }
   }
 }

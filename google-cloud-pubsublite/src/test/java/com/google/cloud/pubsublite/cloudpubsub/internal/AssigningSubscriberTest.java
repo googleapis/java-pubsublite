@@ -196,7 +196,7 @@ public class AssigningSubscriberTest {
   public void stopStopsSubs() throws CheckedApiException {
     Subscriber sub1 = initSub1();
 
-    assigningSubscriber.stopAsync();
+    assigningSubscriber.stopAsync().awaitTerminated();
     verify(sub1).stopAsync();
     verify(sub1).awaitTerminated();
   }

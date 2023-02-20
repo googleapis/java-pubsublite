@@ -224,10 +224,18 @@ public class ConnectedCommitterImplTest {
 
   @Test
   public void receiveTimeout_closesConnection() throws Exception {
-    CountDownLatch connectionClosed = new CountDownLatch(1);
+    CountDownLatch requestClosed = new CountDownLatch(1);
     doAnswer(
             args -> {
-              connectionClosed.countDown();
+              requestClosed.countDown();
+              return null;
+            })
+        .when(mockRequestStream)
+        .closeSendWithError(any());
+    CountDownLatch outputClosed = new CountDownLatch(1);
+    doAnswer(
+            args -> {
+              outputClosed.countDown();
               return null;
             })
         .when(mockOutputStream)
@@ -245,7 +253,8 @@ public class ConnectedCommitterImplTest {
     verify(mockRequestStream).send(initialRequest());
 
     // No subsequent stream responses should close the stream.
-    assertThat(connectionClosed.await(30, SECONDS)).isTrue();
+    assertThat(requestClosed.await(30, SECONDS)).isTrue();
+    assertThat(outputClosed.await(30, SECONDS)).isTrue();
 
     verify(mockRequestStream).closeSendWithError(argThat(new ApiExceptionMatcher(Code.ABORTED)));
     verify(mockOutputStream).onError(argThat(new ApiExceptionMatcher(Code.ABORTED)));

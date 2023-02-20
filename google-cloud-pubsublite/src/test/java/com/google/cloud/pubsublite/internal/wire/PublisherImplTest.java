@@ -16,6 +16,7 @@
 
 package com.google.cloud.pubsublite.internal.wire;
 
+import static com.google.cloud.pubsublite.internal.ApiExceptionMatcher.assertFutureThrowsCode;
 import static com.google.cloud.pubsublite.internal.ApiExceptionMatcher.assertThrowableMatches;
 import static com.google.cloud.pubsublite.internal.testing.RetryingConnectionHelpers.whenFailed;
 import static com.google.common.truth.Truth.assertThat;
@@ -67,7 +68,9 @@ import java.util.concurrent.Future;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.Timeout;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 import org.mockito.InOrder;
@@ -98,6 +101,8 @@ public class PublisherImplTest {
                 .setEndIndex(messageCount))
         .build();
   }
+
+  @Rule public Timeout globalTimeout = Timeout.seconds(30);
 
   @Mock private PublishStreamFactory unusedStreamFactory;
   @Mock private BatchPublisher mockBatchPublisher;
@@ -203,11 +208,10 @@ public class PublisherImplTest {
   }
 
   @Test
-  public void publishBeforeStart_isPermanentError() throws Exception {
+  public void publishBeforeStart_FailsFuture() {
     Message message = Message.builder().build();
-    assertThrows(
-        IllegalStateException.class, () -> publisher.publish(message, PublishSequenceNumber.of(0)));
-    assertThrows(IllegalStateException.class, () -> publisher.startAsync().awaitRunning());
+    assertFutureThrowsCode(
+        publisher.publish(message, PublishSequenceNumber.of(0)), Code.FAILED_PRECONDITION);
     verifyNoInteractions(mockPublisherFactory);
     verifyNoInteractions(mockBatchPublisher);
   }

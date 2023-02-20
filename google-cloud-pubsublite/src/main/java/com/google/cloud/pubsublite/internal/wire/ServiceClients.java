@@ -19,6 +19,7 @@ package com.google.cloud.pubsublite.internal.wire;
 import static com.google.cloud.pubsublite.internal.ExtractStatus.toCanonical;
 
 import com.google.api.gax.core.FixedExecutorProvider;
+import com.google.api.gax.grpc.ChannelPoolSettings;
 import com.google.api.gax.grpc.GrpcCallContext;
 import com.google.api.gax.grpc.InstantiatingGrpcChannelProvider;
 import com.google.api.gax.rpc.ApiCallContext;
@@ -27,15 +28,15 @@ import com.google.api.gax.rpc.ClientSettings;
 import com.google.api.gax.rpc.TransportChannelProvider;
 import com.google.cloud.pubsublite.CloudRegion;
 import com.google.cloud.pubsublite.Endpoints;
+import com.google.cloud.pubsublite.internal.Lazy;
 import com.google.common.collect.ImmutableListMultimap;
 import com.google.common.collect.Multimaps;
+import java.util.concurrent.ScheduledExecutorService;
 import org.threeten.bp.Duration;
 
 public final class ServiceClients {
-  // Default to 10 channels per client to avoid server limitations on streams and requests
-  // per-channel.
-  private static final int CLIENT_POOL_SIZE =
-      Integer.parseInt(System.getProperty("PUBSUB_LITE_CHANNELS_PER_CLIENT", "10"));
+  private static final Lazy<ScheduledExecutorService> GRPC_EXECUTOR =
+      new Lazy<>(() -> SystemExecutors.newDaemonExecutor("pubsub-lite-grpc"));
 
   private ServiceClients() {}
 
@@ -45,7 +46,11 @@ public final class ServiceClients {
         .setKeepAliveTime(Duration.ofMinutes(1))
         .setKeepAliveWithoutCalls(true)
         .setKeepAliveTimeout(Duration.ofMinutes(1))
-        .setPoolSize(CLIENT_POOL_SIZE)
+        .setChannelPoolSettings(
+            ChannelPoolSettings.builder()
+                .setInitialChannelCount(25)
+                .setMaxRpcsPerChannel(50)
+                .build())
         .setExecutor(SystemExecutors.getFuturesExecutor())
         .build();
   }
@@ -57,8 +62,7 @@ public final class ServiceClients {
     try {
       return builder
           .setEndpoint(Endpoints.regionalEndpoint(target))
-          .setBackgroundExecutorProvider(
-              FixedExecutorProvider.create(SystemExecutors.getAlarmExecutor()))
+          .setBackgroundExecutorProvider(FixedExecutorProvider.create(GRPC_EXECUTOR.get()))
           .setTransportChannelProvider(getTransportChannelProvider())
           .build();
     } catch (Throwable t) {

@@ -25,7 +25,6 @@ import static org.mockito.MockitoAnnotations.initMocks;
 import com.google.api.core.ApiFuture;
 import com.google.api.core.ApiFutures;
 import com.google.api.gax.rpc.StatusCode.Code;
-import com.google.cloud.pubsublite.Message;
 import com.google.cloud.pubsublite.MessageMetadata;
 import com.google.cloud.pubsublite.Offset;
 import com.google.cloud.pubsublite.Partition;
@@ -34,6 +33,7 @@ import com.google.cloud.pubsublite.internal.CheckedApiException;
 import com.google.cloud.pubsublite.internal.Publisher;
 import com.google.cloud.pubsublite.internal.RoutingPolicy;
 import com.google.cloud.pubsublite.internal.testing.FakeApiService;
+import com.google.cloud.pubsublite.proto.PubSubMessage;
 import com.google.common.collect.ImmutableMap;
 import com.google.protobuf.ByteString;
 import org.junit.Before;
@@ -82,8 +82,9 @@ public class RoutingPublisherTest {
 
   @Test
   public void publishValidRoute() throws Exception {
-    Message message = Message.builder().setKey(ByteString.copyFromUtf8("abc")).build();
-    when(routingPolicy.route(message.key())).thenReturn(Partition.of(1));
+    PubSubMessage message =
+        PubSubMessage.newBuilder().setKey(ByteString.copyFromUtf8("abc")).build();
+    when(routingPolicy.route(message.getKey())).thenReturn(Partition.of(1));
     MessageMetadata meta = MessageMetadata.of(Partition.of(1), Offset.of(3));
     when(publisher1.publish(message)).thenReturn(ApiFutures.immediateFuture(meta));
     ApiFuture<MessageMetadata> fut = routing.publish(message);
@@ -94,8 +95,9 @@ public class RoutingPublisherTest {
 
   @Test
   public void publishInvalidRoute() throws Exception {
-    Message message = Message.builder().setKey(ByteString.copyFromUtf8("abc")).build();
-    when(routingPolicy.route(message.key())).thenReturn(Partition.of(77));
+    PubSubMessage message =
+        PubSubMessage.newBuilder().setKey(ByteString.copyFromUtf8("abc")).build();
+    when(routingPolicy.route(message.getKey())).thenReturn(Partition.of(77));
     ApiFuture<MessageMetadata> fut = routing.publish(message);
     ApiExceptionMatcher.assertFutureThrowsCode(fut, Code.FAILED_PRECONDITION);
   }

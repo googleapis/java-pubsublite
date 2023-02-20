@@ -16,28 +16,36 @@
 package com.google.cloud.pubsublite.internal.wire;
 
 import static com.google.cloud.pubsublite.internal.testing.RetryingConnectionHelpers.whenTerminated;
-import static com.google.cloud.pubsublite.internal.testing.UnitTestExamples.example;
 import static org.junit.Assert.assertThrows;
-import static org.mockito.Mockito.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
 import com.google.api.core.ApiFutures;
 import com.google.api.gax.rpc.StatusCode;
-import com.google.cloud.pubsublite.*;
+import com.google.cloud.pubsublite.MessageMetadata;
+import com.google.cloud.pubsublite.Offset;
+import com.google.cloud.pubsublite.Partition;
 import com.google.cloud.pubsublite.internal.ApiExceptionMatcher;
 import com.google.cloud.pubsublite.internal.CheckedApiException;
 import com.google.cloud.pubsublite.internal.Publisher;
 import com.google.cloud.pubsublite.internal.RoutingPolicy;
 import com.google.cloud.pubsublite.internal.testing.FakeApiService;
+import com.google.cloud.pubsublite.proto.PubSubMessage;
 import com.google.protobuf.ByteString;
-import java.time.Duration;
 import java.util.concurrent.Future;
 import java.util.function.Consumer;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
-import org.mockito.*;
+import org.mockito.Mock;
+import org.mockito.Spy;
 
 @RunWith(JUnit4.class)
 public class PartitionCountWatchingPublisherTest {
@@ -45,13 +53,6 @@ public class PartitionCountWatchingPublisherTest {
       implements Publisher<MessageMetadata> {}
 
   abstract static class FakeConfigWatcher extends FakeApiService implements PartitionCountWatcher {}
-
-  private static final Duration PERIOD = Duration.ofMinutes(1);
-  private static final CloudRegion REGION = example(CloudRegion.class);
-
-  private static TopicPath path() {
-    return example(TopicPath.class);
-  }
 
   @Mock PartitionPublisherFactory mockPublisherFactory;
   @Spy private FakePublisher publisher0;
@@ -106,10 +107,12 @@ public class PartitionCountWatchingPublisherTest {
 
   @Test
   public void testPublishWithKey() throws Exception {
-    Message message0 = Message.builder().setKey(ByteString.copyFromUtf8("0")).build();
-    Message message1 = Message.builder().setKey(ByteString.copyFromUtf8("1")).build();
-    when(mockRoutingPolicy.route(message0.key())).thenReturn(Partition.of(0));
-    when(mockRoutingPolicy.route(message1.key())).thenReturn(Partition.of(1));
+    PubSubMessage message0 =
+        PubSubMessage.newBuilder().setKey(ByteString.copyFromUtf8("0")).build();
+    PubSubMessage message1 =
+        PubSubMessage.newBuilder().setKey(ByteString.copyFromUtf8("1")).build();
+    when(mockRoutingPolicy.route(message0.getKey())).thenReturn(Partition.of(0));
+    when(mockRoutingPolicy.route(message1.getKey())).thenReturn(Partition.of(1));
 
     Future<?> unusedFuture0 = publisher.publish(message0);
     Future<?> unusedFuture1 = publisher.publish(message1);
@@ -120,8 +123,10 @@ public class PartitionCountWatchingPublisherTest {
 
   @Test
   public void testPublishWithoutKey() throws Exception {
-    Message messageA = Message.builder().setData(ByteString.copyFromUtf8("a")).build();
-    Message messageB = Message.builder().setData(ByteString.copyFromUtf8("b")).build();
+    PubSubMessage messageA =
+        PubSubMessage.newBuilder().setData(ByteString.copyFromUtf8("a")).build();
+    PubSubMessage messageB =
+        PubSubMessage.newBuilder().setData(ByteString.copyFromUtf8("b")).build();
 
     when(mockRoutingPolicy.routeWithoutKey())
         .thenReturn(Partition.of(0))
@@ -136,7 +141,7 @@ public class PartitionCountWatchingPublisherTest {
 
   @Test
   public void testPublishWithBadRouting() throws Exception {
-    Message message = Message.builder().build();
+    PubSubMessage message = PubSubMessage.newBuilder().build();
 
     when(mockRoutingPolicy.routeWithoutKey()).thenReturn(Partition.of(4));
     Future<?> unusedFuture = publisher.publish(message);
@@ -144,7 +149,8 @@ public class PartitionCountWatchingPublisherTest {
     ApiExceptionMatcher.assertThrowableMatches(
         publisher.failureCause(), StatusCode.Code.FAILED_PRECONDITION);
     assertThrows(IllegalStateException.class, publisher::flush);
-    assertThrows(IllegalStateException.class, () -> publisher.publish(Message.builder().build()));
+    assertThrows(
+        IllegalStateException.class, () -> publisher.publish(PubSubMessage.newBuilder().build()));
   }
 
   @Test
@@ -156,7 +162,8 @@ public class PartitionCountWatchingPublisherTest {
     ApiExceptionMatcher.assertThrowableMatches(
         publisher.failureCause(), StatusCode.Code.FAILED_PRECONDITION);
     assertThrows(IllegalStateException.class, publisher::flush);
-    assertThrows(IllegalStateException.class, () -> publisher.publish(Message.builder().build()));
+    assertThrows(
+        IllegalStateException.class, () -> publisher.publish(PubSubMessage.newBuilder().build()));
   }
 
   @Test
@@ -178,12 +185,15 @@ public class PartitionCountWatchingPublisherTest {
     leakedConsumer.accept(3L);
     verify(mockRoutingPolicyFactory).newPolicy(3L);
 
-    Message message0 = Message.builder().setKey(ByteString.copyFromUtf8("0")).build();
-    Message message1 = Message.builder().setKey(ByteString.copyFromUtf8("1")).build();
-    Message message2 = Message.builder().setKey(ByteString.copyFromUtf8("2")).build();
-    when(mockRoutingPolicy.route(message0.key())).thenReturn(Partition.of(0));
-    when(mockRoutingPolicy.route(message1.key())).thenReturn(Partition.of(1));
-    when(mockRoutingPolicy.route(message2.key())).thenReturn(Partition.of(2));
+    PubSubMessage message0 =
+        PubSubMessage.newBuilder().setKey(ByteString.copyFromUtf8("0")).build();
+    PubSubMessage message1 =
+        PubSubMessage.newBuilder().setKey(ByteString.copyFromUtf8("1")).build();
+    PubSubMessage message2 =
+        PubSubMessage.newBuilder().setKey(ByteString.copyFromUtf8("2")).build();
+    when(mockRoutingPolicy.route(message0.getKey())).thenReturn(Partition.of(0));
+    when(mockRoutingPolicy.route(message1.getKey())).thenReturn(Partition.of(1));
+    when(mockRoutingPolicy.route(message2.getKey())).thenReturn(Partition.of(2));
 
     Future<?> unusedFuture0 = publisher.publish(message0);
     Future<?> unusedFuture1 = publisher.publish(message1);
@@ -198,10 +208,12 @@ public class PartitionCountWatchingPublisherTest {
   public void testDecreaseIgnored() throws Exception {
     leakedConsumer.accept(1L);
 
-    Message message0 = Message.builder().setKey(ByteString.copyFromUtf8("0")).build();
-    Message message1 = Message.builder().setKey(ByteString.copyFromUtf8("1")).build();
-    when(mockRoutingPolicy.route(message0.key())).thenReturn(Partition.of(0));
-    when(mockRoutingPolicy.route(message1.key())).thenReturn(Partition.of(1));
+    PubSubMessage message0 =
+        PubSubMessage.newBuilder().setKey(ByteString.copyFromUtf8("0")).build();
+    PubSubMessage message1 =
+        PubSubMessage.newBuilder().setKey(ByteString.copyFromUtf8("1")).build();
+    when(mockRoutingPolicy.route(message0.getKey())).thenReturn(Partition.of(0));
+    when(mockRoutingPolicy.route(message1.getKey())).thenReturn(Partition.of(1));
 
     Future<?> unusedFuture0 = publisher.publish(message0);
     Future<?> unusedFuture1 = publisher.publish(message1);
@@ -215,10 +227,12 @@ public class PartitionCountWatchingPublisherTest {
     leakedConsumer.accept(2L);
     verifyNoMoreInteractions(mockRoutingPolicyFactory);
 
-    Message message0 = Message.builder().setKey(ByteString.copyFromUtf8("0")).build();
-    Message message1 = Message.builder().setKey(ByteString.copyFromUtf8("1")).build();
-    when(mockRoutingPolicy.route(message0.key())).thenReturn(Partition.of(0));
-    when(mockRoutingPolicy.route(message1.key())).thenReturn(Partition.of(1));
+    PubSubMessage message0 =
+        PubSubMessage.newBuilder().setKey(ByteString.copyFromUtf8("0")).build();
+    PubSubMessage message1 =
+        PubSubMessage.newBuilder().setKey(ByteString.copyFromUtf8("1")).build();
+    when(mockRoutingPolicy.route(message0.getKey())).thenReturn(Partition.of(0));
+    when(mockRoutingPolicy.route(message1.getKey())).thenReturn(Partition.of(1));
 
     Future<?> unusedFuture0 = publisher.publish(message0);
     Future<?> unusedFuture1 = publisher.publish(message1);
@@ -235,7 +249,8 @@ public class PartitionCountWatchingPublisherTest {
     leakedConsumer.accept(3L);
 
     assertThrows(IllegalStateException.class, publisher::flush);
-    assertThrows(IllegalStateException.class, () -> publisher.publish(Message.builder().build()));
+    assertThrows(
+        IllegalStateException.class, () -> publisher.publish(PubSubMessage.newBuilder().build()));
   }
 
   @Test
@@ -249,6 +264,7 @@ public class PartitionCountWatchingPublisherTest {
     leakedConsumer.accept(4L);
 
     assertThrows(IllegalStateException.class, publisher::flush);
-    assertThrows(IllegalStateException.class, () -> publisher.publish(Message.builder().build()));
+    assertThrows(
+        IllegalStateException.class, () -> publisher.publish(PubSubMessage.newBuilder().build()));
   }
 }

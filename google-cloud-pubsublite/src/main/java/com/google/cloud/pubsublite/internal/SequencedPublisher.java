@@ -18,7 +18,7 @@ package com.google.cloud.pubsublite.internal;
 
 import com.google.api.core.ApiFuture;
 import com.google.api.core.ApiService;
-import com.google.cloud.pubsublite.Message;
+import com.google.cloud.pubsublite.proto.PubSubMessage;
 import java.io.Flushable;
 
 /**
@@ -35,7 +35,7 @@ public interface SequencedPublisher<ResponseT> extends ApiService, Flushable {
    * <p>Guarantees that if a single publish future has an exception set, all publish calls made
    * after that will also have an exception set.
    */
-  ApiFuture<ResponseT> publish(Message message, PublishSequenceNumber sequenceNumber);
+  ApiFuture<ResponseT> publish(PubSubMessage message, PublishSequenceNumber sequenceNumber);
 
   /** Attempts to cancel all outstanding publishes. */
   void cancelOutstandingPublishes();

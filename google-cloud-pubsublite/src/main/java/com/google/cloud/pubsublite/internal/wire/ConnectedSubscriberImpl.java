@@ -20,16 +20,15 @@ import static com.google.cloud.pubsublite.internal.CheckedApiPreconditions.check
 
 import com.google.api.gax.rpc.ResponseObserver;
 import com.google.api.gax.rpc.StatusCode.Code;
-import com.google.cloud.pubsublite.SequencedMessage;
 import com.google.cloud.pubsublite.internal.CheckedApiException;
 import com.google.cloud.pubsublite.internal.wire.StreamFactories.SubscribeStreamFactory;
 import com.google.cloud.pubsublite.proto.FlowControlRequest;
 import com.google.cloud.pubsublite.proto.MessageResponse;
+import com.google.cloud.pubsublite.proto.SequencedMessage;
 import com.google.cloud.pubsublite.proto.SubscribeRequest;
 import com.google.cloud.pubsublite.proto.SubscribeResponse;
 import com.google.common.base.Preconditions;
 import java.util.List;
-import java.util.stream.Collectors;
 
 class ConnectedSubscriberImpl
     extends SingleConnection<SubscribeRequest, SubscribeResponse, List<SequencedMessage>>
@@ -103,14 +102,10 @@ class ConnectedSubscriberImpl
         response.getMessagesCount() > 0,
         "Received an empty MessageResponse on stream with initial request %s.",
         initialRequest);
-    List<SequencedMessage> messages =
-        response.getMessagesList().stream()
-            .map(SequencedMessage::fromProto)
-            .collect(Collectors.toList());
     checkState(
-        Predicates.isOrdered(messages),
+        Predicates.isOrdered(response.getMessagesList()),
         "Received out of order messages on the stream with initial request %s.",
         initialRequest);
-    sendToClient(messages);
+    sendToClient(response.getMessagesList());
   }
 }

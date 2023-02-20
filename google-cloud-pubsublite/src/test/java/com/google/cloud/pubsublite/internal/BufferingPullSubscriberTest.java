@@ -28,13 +28,13 @@ import static org.mockito.Mockito.when;
 
 import com.google.api.core.ApiService.Listener;
 import com.google.api.gax.rpc.StatusCode.Code;
-import com.google.cloud.pubsublite.Message;
 import com.google.cloud.pubsublite.Offset;
-import com.google.cloud.pubsublite.SequencedMessage;
 import com.google.cloud.pubsublite.cloudpubsub.FlowControlSettings;
 import com.google.cloud.pubsublite.internal.wire.Subscriber;
 import com.google.cloud.pubsublite.internal.wire.SubscriberFactory;
+import com.google.cloud.pubsublite.proto.Cursor;
 import com.google.cloud.pubsublite.proto.FlowControlRequest;
+import com.google.cloud.pubsublite.proto.SequencedMessage;
 import com.google.common.collect.ImmutableList;
 import com.google.protobuf.util.Timestamps;
 import java.util.function.Consumer;
@@ -110,9 +110,17 @@ public class BufferingPullSubscriberTest {
   @Test
   public void pullEmptiesForNext() throws CheckedApiException {
     SequencedMessage message1 =
-        SequencedMessage.of(Message.builder().build(), Timestamps.EPOCH, Offset.of(10), 10);
+        SequencedMessage.newBuilder()
+            .setPublishTime(Timestamps.EPOCH)
+            .setCursor(Cursor.newBuilder().setOffset(10))
+            .setSizeBytes(10)
+            .build();
     SequencedMessage message2 =
-        SequencedMessage.of(Message.builder().build(), Timestamps.EPOCH, Offset.of(11), 10);
+        SequencedMessage.newBuilder()
+            .setPublishTime(Timestamps.EPOCH)
+            .setCursor(Cursor.newBuilder().setOffset(11))
+            .setSizeBytes(10)
+            .build();
     messageConsumer.accept(ImmutableList.of(message1, message2));
     assertThat(subscriber.pull()).containsExactly(message1, message2);
     assertThat(subscriber.pull()).isEmpty();
@@ -121,11 +129,23 @@ public class BufferingPullSubscriberTest {
   @Test
   public void multipleBatchesAggregatedReturnsTokens() throws CheckedApiException {
     SequencedMessage message1 =
-        SequencedMessage.of(Message.builder().build(), Timestamps.EPOCH, Offset.of(10), 10);
+        SequencedMessage.newBuilder()
+            .setPublishTime(Timestamps.EPOCH)
+            .setCursor(Cursor.newBuilder().setOffset(10))
+            .setSizeBytes(10)
+            .build();
     SequencedMessage message2 =
-        SequencedMessage.of(Message.builder().build(), Timestamps.EPOCH, Offset.of(11), 20);
+        SequencedMessage.newBuilder()
+            .setPublishTime(Timestamps.EPOCH)
+            .setCursor(Cursor.newBuilder().setOffset(11))
+            .setSizeBytes(20)
+            .build();
     SequencedMessage message3 =
-        SequencedMessage.of(Message.builder().build(), Timestamps.EPOCH, Offset.of(12), 30);
+        SequencedMessage.newBuilder()
+            .setPublishTime(Timestamps.EPOCH)
+            .setCursor(Cursor.newBuilder().setOffset(12))
+            .setSizeBytes(30)
+            .build();
     assertThat(subscriber.nextOffset()).isEmpty();
     messageConsumer.accept(ImmutableList.of(message1, message2));
     messageConsumer.accept(ImmutableList.of(message3));

@@ -21,12 +21,12 @@ import static com.google.cloud.pubsublite.internal.wire.ApiServiceUtils.blocking
 import com.google.api.core.ApiService.Listener;
 import com.google.api.core.ApiService.State;
 import com.google.cloud.pubsublite.Offset;
-import com.google.cloud.pubsublite.SequencedMessage;
 import com.google.cloud.pubsublite.cloudpubsub.FlowControlSettings;
 import com.google.cloud.pubsublite.internal.wire.Subscriber;
 import com.google.cloud.pubsublite.internal.wire.SubscriberFactory;
 import com.google.cloud.pubsublite.internal.wire.SystemExecutors;
 import com.google.cloud.pubsublite.proto.FlowControlRequest;
+import com.google.cloud.pubsublite.proto.SequencedMessage;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 import com.google.errorprone.annotations.concurrent.GuardedBy;
@@ -85,13 +85,13 @@ public class BufferingPullSubscriber implements PullSubscriber<SequencedMessage>
     }
     Deque<SequencedMessage> collection = messages;
     messages = new ArrayDeque<>();
-    long bytes = collection.stream().mapToLong(SequencedMessage::byteSize).sum();
+    long bytes = collection.stream().mapToLong(SequencedMessage::getSizeBytes).sum();
     underlying.allowFlow(
         FlowControlRequest.newBuilder()
             .setAllowedBytes(bytes)
             .setAllowedMessages(collection.size())
             .build());
-    lastDelivered = Optional.of(Iterables.getLast(collection).offset());
+    lastDelivered = Optional.of(Offset.of(Iterables.getLast(collection).getCursor().getOffset()));
     return ImmutableList.copyOf(collection);
   }
 

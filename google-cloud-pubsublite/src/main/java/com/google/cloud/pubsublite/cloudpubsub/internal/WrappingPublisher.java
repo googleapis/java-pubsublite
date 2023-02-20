@@ -73,7 +73,7 @@ public class WrappingPublisher extends ProxyService implements Publisher {
       return ApiFutures.immediateFailedFuture(e.underlying);
     }
     return ApiFutures.transform(
-        wirePublisher.publish(wireMessage),
+        wirePublisher.publish(wireMessage.toProto()),
         MessageMetadata::encode,
         MoreExecutors.directExecutor());
   }

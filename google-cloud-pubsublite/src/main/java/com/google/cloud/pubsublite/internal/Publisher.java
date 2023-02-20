@@ -18,7 +18,7 @@ package com.google.cloud.pubsublite.internal;
 
 import com.google.api.core.ApiFuture;
 import com.google.api.core.ApiService;
-import com.google.cloud.pubsublite.Message;
+import com.google.cloud.pubsublite.proto.PubSubMessage;
 import java.io.Flushable;
 
 /** A generic PubSub Lite publisher. Errors are handled out of band. Thread safe. */
@@ -28,7 +28,7 @@ public interface Publisher<ResponseT> extends ApiService, Flushable {
   //
   // Guarantees that if a single publish future has an exception set, all publish calls made after
   // that will also have an exception set.
-  ApiFuture<ResponseT> publish(Message message);
+  ApiFuture<ResponseT> publish(PubSubMessage message);
 
   // Attempts to cancel all outstanding publishes.
   void cancelOutstandingPublishes();

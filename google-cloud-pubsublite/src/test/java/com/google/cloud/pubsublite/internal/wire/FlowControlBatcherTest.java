@@ -19,11 +19,10 @@ package com.google.cloud.pubsublite.internal.wire;
 import static com.google.common.truth.Truth.assertThat;
 import static com.google.common.truth.Truth8.assertThat;
 
-import com.google.cloud.pubsublite.Message;
-import com.google.cloud.pubsublite.Offset;
-import com.google.cloud.pubsublite.SequencedMessage;
 import com.google.cloud.pubsublite.internal.CheckedApiException;
+import com.google.cloud.pubsublite.proto.Cursor;
 import com.google.cloud.pubsublite.proto.FlowControlRequest;
+import com.google.cloud.pubsublite.proto.SequencedMessage;
 import com.google.common.collect.ImmutableList;
 import com.google.protobuf.util.Timestamps;
 import org.junit.Test;
@@ -54,8 +53,16 @@ public class FlowControlBatcherTest {
     batcher.onClientFlowRequest(clientFlowRequest);
     ImmutableList<SequencedMessage> messages =
         ImmutableList.of(
-            SequencedMessage.of(Message.builder().build(), Timestamps.EPOCH, Offset.of(0), 100),
-            SequencedMessage.of(Message.builder().build(), Timestamps.EPOCH, Offset.of(1), 150));
+            SequencedMessage.newBuilder()
+                .setPublishTime(Timestamps.EPOCH)
+                .setCursor(Cursor.newBuilder().setOffset(0))
+                .setSizeBytes(100)
+                .build(),
+            SequencedMessage.newBuilder()
+                .setPublishTime(Timestamps.EPOCH)
+                .setCursor(Cursor.newBuilder().setOffset(1))
+                .setSizeBytes(150)
+                .build());
     batcher.onMessages(messages);
 
     assertThat(batcher.releasePendingRequest().get()).isEqualTo(clientFlowRequest);

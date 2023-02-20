@@ -19,11 +19,11 @@ package com.google.cloud.pubsublite.internal.wire;
 import com.google.api.gax.rpc.ApiException;
 import com.google.auto.value.AutoValue;
 import com.google.cloud.pubsublite.Partition;
-import com.google.cloud.pubsublite.SequencedMessage;
 import com.google.cloud.pubsublite.SubscriptionPath;
 import com.google.cloud.pubsublite.internal.wire.StreamFactories.SubscribeStreamFactory;
 import com.google.cloud.pubsublite.proto.InitialSubscribeRequest;
 import com.google.cloud.pubsublite.proto.SeekRequest;
+import com.google.cloud.pubsublite.proto.SequencedMessage;
 import java.util.List;
 import java.util.function.Consumer;
 

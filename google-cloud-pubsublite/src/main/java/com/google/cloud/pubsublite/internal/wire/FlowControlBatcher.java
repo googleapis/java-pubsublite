@@ -16,9 +16,9 @@
 
 package com.google.cloud.pubsublite.internal.wire;
 
-import com.google.cloud.pubsublite.SequencedMessage;
 import com.google.cloud.pubsublite.internal.CheckedApiException;
 import com.google.cloud.pubsublite.proto.FlowControlRequest;
+import com.google.cloud.pubsublite.proto.SequencedMessage;
 import java.util.Collection;
 import java.util.Optional;
 
@@ -40,7 +40,7 @@ class FlowControlBatcher {
   }
 
   void onMessages(Collection<SequencedMessage> received) throws CheckedApiException {
-    long byteSize = received.stream().mapToLong(SequencedMessage::byteSize).sum();
+    long byteSize = received.stream().mapToLong(SequencedMessage::getSizeBytes).sum();
     clientTokens.sub(byteSize, received.size());
   }
 

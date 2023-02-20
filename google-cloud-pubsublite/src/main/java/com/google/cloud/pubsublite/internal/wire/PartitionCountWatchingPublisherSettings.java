@@ -17,7 +17,9 @@ package com.google.cloud.pubsublite.internal.wire;
 
 import com.google.api.gax.rpc.ApiException;
 import com.google.auto.value.AutoValue;
-import com.google.cloud.pubsublite.*;
+import com.google.cloud.pubsublite.AdminClient;
+import com.google.cloud.pubsublite.MessageMetadata;
+import com.google.cloud.pubsublite.TopicPath;
 import com.google.cloud.pubsublite.internal.AlarmFactory;
 import com.google.cloud.pubsublite.internal.DefaultRoutingPolicy;
 import com.google.cloud.pubsublite.internal.Publisher;

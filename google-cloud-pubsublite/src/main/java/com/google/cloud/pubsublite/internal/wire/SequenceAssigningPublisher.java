@@ -18,12 +18,12 @@ package com.google.cloud.pubsublite.internal.wire;
 
 import com.google.api.core.ApiFuture;
 import com.google.api.gax.rpc.ApiException;
-import com.google.cloud.pubsublite.Message;
 import com.google.cloud.pubsublite.Offset;
 import com.google.cloud.pubsublite.internal.ProxyService;
 import com.google.cloud.pubsublite.internal.PublishSequenceNumber;
 import com.google.cloud.pubsublite.internal.Publisher;
 import com.google.cloud.pubsublite.internal.SequencedPublisher;
+import com.google.cloud.pubsublite.proto.PubSubMessage;
 import java.io.IOException;
 import javax.annotation.concurrent.GuardedBy;
 
@@ -44,7 +44,7 @@ public class SequenceAssigningPublisher extends ProxyService implements Publishe
 
   // Publisher implementation.
   @Override
-  public synchronized ApiFuture<Offset> publish(Message message) {
+  public synchronized ApiFuture<Offset> publish(PubSubMessage message) {
     ApiFuture<Offset> future = publisher.publish(message, nextSequence);
     nextSequence = nextSequence.next();
     return future;

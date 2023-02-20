@@ -42,7 +42,6 @@ import com.google.api.gax.batching.BatchingSettings;
 import com.google.api.gax.rpc.ResponseObserver;
 import com.google.api.gax.rpc.StatusCode.Code;
 import com.google.cloud.pubsublite.Constants;
-import com.google.cloud.pubsublite.Message;
 import com.google.cloud.pubsublite.Offset;
 import com.google.cloud.pubsublite.internal.AlarmFactory;
 import com.google.cloud.pubsublite.internal.CheckedApiException;
@@ -157,7 +156,7 @@ public class PublisherImplTest {
   @Test
   public void construct_flushSendsBatched() throws Exception {
     startPublisher();
-    Message message = Message.builder().build();
+    PubSubMessage message = PubSubMessage.newBuilder().build();
     Future<Offset> future = publisher.publish(message, PublishSequenceNumber.of(0));
 
     doAnswer(
@@ -168,13 +167,13 @@ public class PublisherImplTest {
                 })
         .when(mockBatchPublisher)
         .publish(
-            (Collection<PubSubMessage>) argThat(hasItems(message.toProto())),
+            (Collection<PubSubMessage>) argThat(hasItems(message)),
             eq(PublishSequenceNumber.of(0)));
 
     publisher.flush();
     verify(mockBatchPublisher)
         .publish(
-            (Collection<PubSubMessage>) argThat(hasItems(message.toProto())),
+            (Collection<PubSubMessage>) argThat(hasItems(message)),
             eq(PublishSequenceNumber.of(0)));
     assertThat(future.get()).isEqualTo(Offset.of(10));
     verifyNoMoreInteractions(mockBatchPublisher);
@@ -183,7 +182,7 @@ public class PublisherImplTest {
   @Test
   public void construct_closeSendsBatched() throws Exception {
     startPublisher();
-    Message message = Message.builder().build();
+    PubSubMessage message = PubSubMessage.newBuilder().build();
     Future<Offset> future = publisher.publish(message, PublishSequenceNumber.of(0));
 
     doAnswer(
@@ -194,13 +193,13 @@ public class PublisherImplTest {
                 })
         .when(mockBatchPublisher)
         .publish(
-            (Collection<PubSubMessage>) argThat(hasItems(message.toProto())),
+            (Collection<PubSubMessage>) argThat(hasItems(message)),
             eq(PublishSequenceNumber.of(0)));
 
     publisher.stopAsync().awaitTerminated();
     verify(mockBatchPublisher)
         .publish(
-            (Collection<PubSubMessage>) argThat(hasItems(message.toProto())),
+            (Collection<PubSubMessage>) argThat(hasItems(message)),
             eq(PublishSequenceNumber.of(0)));
     assertThat(future.get()).isEqualTo(Offset.of(10));
     verify(mockBatchPublisher).close();
@@ -209,7 +208,7 @@ public class PublisherImplTest {
 
   @Test
   public void publishBeforeStart_FailsFuture() {
-    Message message = Message.builder().build();
+    PubSubMessage message = PubSubMessage.newBuilder().build();
     assertFutureThrowsCode(
         publisher.publish(message, PublishSequenceNumber.of(0)), Code.FAILED_PRECONDITION);
     verifyNoInteractions(mockPublisherFactory);
@@ -224,7 +223,7 @@ public class PublisherImplTest {
     assertThrows(IllegalStateException.class, publisher::awaitTerminated);
     errorOccurredFuture.get();
     assertThrowableMatches(publisher.failureCause(), Code.FAILED_PRECONDITION);
-    Message message = Message.builder().build();
+    PubSubMessage message = PubSubMessage.newBuilder().build();
     Future<Offset> future = publisher.publish(message, PublishSequenceNumber.of(0));
     ExecutionException e = assertThrows(ExecutionException.class, future::get);
     Optional<CheckedApiException> statusOr = ExtractStatus.extract(e.getCause());
@@ -237,21 +236,23 @@ public class PublisherImplTest {
   @Test
   public void multipleBatches_ok() throws Exception {
     startPublisher();
-    Message message1 = Message.builder().build();
-    Message message2 = Message.builder().setData(ByteString.copyFromUtf8("data")).build();
-    Message message3 = Message.builder().setData(ByteString.copyFromUtf8("other_data")).build();
+    PubSubMessage message1 = PubSubMessage.newBuilder().build();
+    PubSubMessage message2 =
+        PubSubMessage.newBuilder().setData(ByteString.copyFromUtf8("data")).build();
+    PubSubMessage message3 =
+        PubSubMessage.newBuilder().setData(ByteString.copyFromUtf8("other_data")).build();
     Future<Offset> future1 = publisher.publish(message1, PublishSequenceNumber.of(0));
     Future<Offset> future2 = publisher.publish(message2, PublishSequenceNumber.of(1));
     leakedBatchAlarm.run();
     verify(mockBatchPublisher)
         .publish(
-            (Collection<PubSubMessage>) argThat(hasItems(message1.toProto(), message2.toProto())),
+            (Collection<PubSubMessage>) argThat(hasItems(message1, message2)),
             eq(PublishSequenceNumber.of(0)));
     Future<Offset> future3 = publisher.publish(message3, PublishSequenceNumber.of(2));
     leakedBatchAlarm.run();
     verify(mockBatchPublisher)
         .publish(
-            (Collection<PubSubMessage>) argThat(hasItems(message3.toProto())),
+            (Collection<PubSubMessage>) argThat(hasItems(message3)),
             eq(PublishSequenceNumber.of(2)));
 
     assertThat(future1.isDone()).isFalse();
@@ -275,13 +276,20 @@ public class PublisherImplTest {
   @Test
   public void missingCursorRanges_ok() throws Exception {
     startPublisher();
-    Message message1 = Message.builder().setData(ByteString.copyFromUtf8("data1")).build();
-    Message message2 = Message.builder().setData(ByteString.copyFromUtf8("data2")).build();
-    Message message3 = Message.builder().setData(ByteString.copyFromUtf8("data3")).build();
-    Message message4 = Message.builder().setData(ByteString.copyFromUtf8("data4")).build();
-    Message message5 = Message.builder().setData(ByteString.copyFromUtf8("data5")).build();
-    Message message6 = Message.builder().setData(ByteString.copyFromUtf8("data6")).build();
-    Message message7 = Message.builder().setData(ByteString.copyFromUtf8("data7")).build();
+    PubSubMessage message1 =
+        PubSubMessage.newBuilder().setData(ByteString.copyFromUtf8("data1")).build();
+    PubSubMessage message2 =
+        PubSubMessage.newBuilder().setData(ByteString.copyFromUtf8("data2")).build();
+    PubSubMessage message3 =
+        PubSubMessage.newBuilder().setData(ByteString.copyFromUtf8("data3")).build();
+    PubSubMessage message4 =
+        PubSubMessage.newBuilder().setData(ByteString.copyFromUtf8("data4")).build();
+    PubSubMessage message5 =
+        PubSubMessage.newBuilder().setData(ByteString.copyFromUtf8("data5")).build();
+    PubSubMessage message6 =
+        PubSubMessage.newBuilder().setData(ByteString.copyFromUtf8("data6")).build();
+    PubSubMessage message7 =
+        PubSubMessage.newBuilder().setData(ByteString.copyFromUtf8("data7")).build();
     Future<Offset> future1 = publisher.publish(message1, PublishSequenceNumber.of(0));
     Future<Offset> future2 = publisher.publish(message2, PublishSequenceNumber.of(1));
     Future<Offset> future3 = publisher.publish(message3, PublishSequenceNumber.of(2));
@@ -294,14 +302,7 @@ public class PublisherImplTest {
         .publish(
             (Collection<PubSubMessage>)
                 argThat(
-                    hasItems(
-                        message1.toProto(),
-                        message2.toProto(),
-                        message3.toProto(),
-                        message4.toProto(),
-                        message5.toProto(),
-                        message6.toProto(),
-                        message7.toProto())),
+                    hasItems(message1, message2, message3, message4, message5, message6, message7)),
             eq(PublishSequenceNumber.of(0)));
 
     // The server should not respond with unsorted cursor ranges, but check that it is handled.
@@ -344,14 +345,16 @@ public class PublisherImplTest {
   @Test
   public void invalidCursorRanges_setsPermanentException() throws Exception {
     startPublisher();
-    Message message1 = Message.builder().setData(ByteString.copyFromUtf8("data1")).build();
-    Message message2 = Message.builder().setData(ByteString.copyFromUtf8("data2")).build();
+    PubSubMessage message1 =
+        PubSubMessage.newBuilder().setData(ByteString.copyFromUtf8("data1")).build();
+    PubSubMessage message2 =
+        PubSubMessage.newBuilder().setData(ByteString.copyFromUtf8("data2")).build();
     Future<Offset> future1 = publisher.publish(message1, PublishSequenceNumber.of(0));
     Future<Offset> future2 = publisher.publish(message2, PublishSequenceNumber.of(1));
     leakedBatchAlarm.run();
     verify(mockBatchPublisher)
         .publish(
-            (Collection<PubSubMessage>) argThat(hasItems(message1.toProto(), message2.toProto())),
+            (Collection<PubSubMessage>) argThat(hasItems(message1, message2)),
             eq(PublishSequenceNumber.of(0)));
 
     leakedMessageResponseStream.onResponse(
@@ -382,8 +385,10 @@ public class PublisherImplTest {
   @Test
   public void sequenceNumberDiscontinuity_setsPermanentException() throws Exception {
     startPublisher();
-    Message message1 = Message.builder().setData(ByteString.copyFromUtf8("data1")).build();
-    Message message2 = Message.builder().setData(ByteString.copyFromUtf8("data2")).build();
+    PubSubMessage message1 =
+        PubSubMessage.newBuilder().setData(ByteString.copyFromUtf8("data1")).build();
+    PubSubMessage message2 =
+        PubSubMessage.newBuilder().setData(ByteString.copyFromUtf8("data2")).build();
     Future<Offset> future1 = publisher.publish(message1, PublishSequenceNumber.of(10));
     Future<Offset> future2 = publisher.publish(message2, PublishSequenceNumber.of(10));
 
@@ -402,26 +407,26 @@ public class PublisherImplTest {
   @Test
   public void retryableError_recreatesAndRetriesAll() throws Exception {
     startPublisher();
-    Message message1 =
-        Message.builder()
+    PubSubMessage message1 =
+        PubSubMessage.newBuilder()
             .setData(ByteString.copyFrom(new byte[(int) Constants.MAX_PUBLISH_BATCH_BYTES - 20]))
             .build();
-    Message message2 =
-        Message.builder()
+    PubSubMessage message2 =
+        PubSubMessage.newBuilder()
             .setData(ByteString.copyFromUtf8(String.join("", Collections.nCopies(21, "a"))))
             .build();
     Future<Offset> future1 = publisher.publish(message1, PublishSequenceNumber.of(0));
     leakedBatchAlarm.run();
     verify(mockBatchPublisher)
         .publish(
-            (Collection<PubSubMessage>) argThat(hasItems(message1.toProto())),
+            (Collection<PubSubMessage>) argThat(hasItems(message1)),
             eq(PublishSequenceNumber.of(0)));
     leakedBatchAlarm.run();
     Future<Offset> future2 = publisher.publish(message2, PublishSequenceNumber.of(1));
     leakedBatchAlarm.run();
     verify(mockBatchPublisher)
         .publish(
-            (Collection<PubSubMessage>) argThat(hasItems(message2.toProto())),
+            (Collection<PubSubMessage>) argThat(hasItems(message2)),
             eq(PublishSequenceNumber.of(1)));
 
     assertThat(future1.isDone()).isFalse();
@@ -441,11 +446,11 @@ public class PublisherImplTest {
     verify(mockPublisherFactory, times(2)).New(any(), any(), eq(INITIAL_PUBLISH_REQUEST));
     verify(mockBatchPublisher2)
         .publish(
-            (Collection<PubSubMessage>) argThat(hasItems(message1.toProto())),
+            (Collection<PubSubMessage>) argThat(hasItems(message1)),
             eq(PublishSequenceNumber.of(0)));
     verify(mockBatchPublisher2)
         .publish(
-            (Collection<PubSubMessage>) argThat(hasItems(message2.toProto())),
+            (Collection<PubSubMessage>) argThat(hasItems(message2)),
             eq(PublishSequenceNumber.of(1)));
 
     assertThat(future1.isDone()).isFalse();
@@ -466,19 +471,25 @@ public class PublisherImplTest {
   @Test
   public void retryableError_rebatchesProperly() throws Exception {
     startPublisher();
-    Message message1 = Message.builder().setData(ByteString.copyFromUtf8("message1")).build();
-    Message message2 = Message.builder().setData(ByteString.copyFromUtf8("message2")).build();
-    Message message3 =
-        Message.builder()
+    PubSubMessage message1 =
+        PubSubMessage.newBuilder().setData(ByteString.copyFromUtf8("message1")).build();
+    PubSubMessage message2 =
+        PubSubMessage.newBuilder().setData(ByteString.copyFromUtf8("message2")).build();
+    PubSubMessage message3 =
+        PubSubMessage.newBuilder()
             .setData(ByteString.copyFrom(new byte[(int) Constants.MAX_PUBLISH_BATCH_BYTES - 20]))
             .build();
-    Message message4 =
-        Message.builder()
+    PubSubMessage message4 =
+        PubSubMessage.newBuilder()
             .setData(ByteString.copyFromUtf8(String.join("", Collections.nCopies(21, "a"))))
             .build();
-    List<Message> remaining =
+    List<PubSubMessage> remaining =
         IntStream.range(0, (int) Constants.MAX_PUBLISH_BATCH_COUNT)
-            .mapToObj(x -> Message.builder().setData(ByteString.copyFromUtf8("clone-" + x)).build())
+            .mapToObj(
+                x ->
+                    PubSubMessage.newBuilder()
+                        .setData(ByteString.copyFromUtf8("clone-" + x))
+                        .build())
             .collect(Collectors.toList());
 
     Future<Offset> future1 = publisher.publish(message1, PublishSequenceNumber.of(0));
@@ -486,20 +497,20 @@ public class PublisherImplTest {
     leakedBatchAlarm.run();
     verify(mockBatchPublisher)
         .publish(
-            (Collection<PubSubMessage>) argThat(hasItems(message1.toProto(), message2.toProto())),
+            (Collection<PubSubMessage>) argThat(hasItems(message1, message2)),
             eq(PublishSequenceNumber.of(0)));
     leakedBatchAlarm.run();
     Future<Offset> future3 = publisher.publish(message3, PublishSequenceNumber.of(2));
     leakedBatchAlarm.run();
     verify(mockBatchPublisher)
         .publish(
-            (Collection<PubSubMessage>) argThat(hasItems(message3.toProto())),
+            (Collection<PubSubMessage>) argThat(hasItems(message3)),
             eq(PublishSequenceNumber.of(2)));
     Future<Offset> future4 = publisher.publish(message4, PublishSequenceNumber.of(3));
     leakedBatchAlarm.run();
     verify(mockBatchPublisher)
         .publish(
-            (Collection<PubSubMessage>) argThat(hasItems(message4.toProto())),
+            (Collection<PubSubMessage>) argThat(hasItems(message4)),
             eq(PublishSequenceNumber.of(3)));
     List<Future<Offset>> remainingFutures = new ArrayList<>();
     for (int i = 0; i < remaining.size(); ++i) {
@@ -530,17 +541,17 @@ public class PublisherImplTest {
     order
         .verify(mockBatchPublisher2)
         .publish(
-            (Collection<PubSubMessage>) argThat(hasItems(message1.toProto(), message2.toProto())),
+            (Collection<PubSubMessage>) argThat(hasItems(message1, message2)),
             eq(PublishSequenceNumber.of(0)));
     order
         .verify(mockBatchPublisher2)
         .publish(
-            (Collection<PubSubMessage>) argThat(hasItems(message3.toProto())),
+            (Collection<PubSubMessage>) argThat(hasItems(message3)),
             eq(PublishSequenceNumber.of(2)));
     ImmutableList.Builder<PubSubMessage> expectedRebatch = ImmutableList.builder();
-    expectedRebatch.add(message4.toProto());
+    expectedRebatch.add(message4);
     for (int i = 0; i < (Constants.MAX_PUBLISH_BATCH_COUNT - 1); ++i) {
-      expectedRebatch.add(remaining.get(i).toProto());
+      expectedRebatch.add(remaining.get(i));
     }
     order
         .verify(mockBatchPublisher2)
@@ -550,7 +561,7 @@ public class PublisherImplTest {
     order
         .verify(mockBatchPublisher2)
         .publish(
-            (Collection<PubSubMessage>) argThat(hasItems(Iterables.getLast(remaining).toProto())),
+            (Collection<PubSubMessage>) argThat(hasItems(Iterables.getLast(remaining))),
             eq(PublishSequenceNumber.of(1003)));
 
     assertThat(future1.isDone()).isFalse();
@@ -593,21 +604,23 @@ public class PublisherImplTest {
   @Test
   public void invalidOffsetSequence_setsPermanentException() throws Exception {
     startPublisher();
-    Message message1 = Message.builder().build();
-    Message message2 = Message.builder().setData(ByteString.copyFromUtf8("data")).build();
-    Message message3 = Message.builder().setData(ByteString.copyFromUtf8("other_data")).build();
+    PubSubMessage message1 = PubSubMessage.newBuilder().build();
+    PubSubMessage message2 =
+        PubSubMessage.newBuilder().setData(ByteString.copyFromUtf8("data")).build();
+    PubSubMessage message3 =
+        PubSubMessage.newBuilder().setData(ByteString.copyFromUtf8("other_data")).build();
     Future<Offset> future1 = publisher.publish(message1, PublishSequenceNumber.of(0));
     Future<Offset> future2 = publisher.publish(message2, PublishSequenceNumber.of(1));
     leakedBatchAlarm.run();
     verify(mockBatchPublisher)
         .publish(
-            (Collection<PubSubMessage>) argThat(hasItems(message1.toProto(), message2.toProto())),
+            (Collection<PubSubMessage>) argThat(hasItems(message1, message2)),
             eq(PublishSequenceNumber.of(0)));
     Future<Offset> future3 = publisher.publish(message3, PublishSequenceNumber.of(2));
     leakedBatchAlarm.run();
     verify(mockBatchPublisher)
         .publish(
-            (Collection<PubSubMessage>) argThat(hasItems(message3.toProto())),
+            (Collection<PubSubMessage>) argThat(hasItems(message3)),
             eq(PublishSequenceNumber.of(2)));
 
     assertThat(future1.isDone()).isFalse();
@@ -636,16 +649,18 @@ public class PublisherImplTest {
     startPublisher();
 
     // Publish a message and flush to stream.
-    Message message1 = Message.builder().setData(ByteString.copyFromUtf8("data")).build();
+    PubSubMessage message1 =
+        PubSubMessage.newBuilder().setData(ByteString.copyFromUtf8("data")).build();
     Future<Offset> future1 = publisher.publish(message1, PublishSequenceNumber.of(0));
     leakedBatchAlarm.run();
     verify(mockBatchPublisher)
         .publish(
-            (Collection<PubSubMessage>) argThat(hasItems(message1.toProto())),
+            (Collection<PubSubMessage>) argThat(hasItems(message1)),
             eq(PublishSequenceNumber.of(0)));
 
     // Publish another message but do not flush to stream yet.
-    Message message2 = Message.builder().setData(ByteString.copyFromUtf8("other_data")).build();
+    PubSubMessage message2 =
+        PubSubMessage.newBuilder().setData(ByteString.copyFromUtf8("other_data")).build();
     Future<Offset> future2 = publisher.publish(message2, PublishSequenceNumber.of(1));
 
     // Cancel outstanding publishes and verify that both futures complete with a cancelled status.

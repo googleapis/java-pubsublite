@@ -20,9 +20,9 @@ import static com.google.cloud.pubsublite.internal.ExtractStatus.toClientFuture;
 
 import com.google.api.core.ApiFuture;
 import com.google.api.gax.rpc.ApiException;
-import com.google.cloud.pubsublite.Message;
 import com.google.cloud.pubsublite.internal.ProxyService;
 import com.google.cloud.pubsublite.internal.Publisher;
+import com.google.cloud.pubsublite.proto.PubSubMessage;
 import java.io.IOException;
 
 public class ApiExceptionPublisher<T> extends ProxyService implements Publisher<T> {
@@ -34,7 +34,7 @@ public class ApiExceptionPublisher<T> extends ProxyService implements Publisher<
   }
 
   @Override
-  public ApiFuture<T> publish(Message message) {
+  public ApiFuture<T> publish(PubSubMessage message) {
     return toClientFuture(publisher.publish(message));
   }
 

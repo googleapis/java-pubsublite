@@ -132,7 +132,7 @@ public class SinglePartitionSubscriberTest {
   public void singleMessageAck() throws CheckedApiException {
     Runnable ack = mock(Runnable.class);
     when(ackSetTracker.track(MESSAGE)).thenReturn(ack);
-    subscriber.onMessages(ImmutableList.of(MESSAGE));
+    subscriber.onMessages(ImmutableList.of(MESSAGE.toProto()));
     verify(ackSetTracker).track(MESSAGE);
     verify(receiver)
         .receiveMessage(eq(transformer.transform(MESSAGE)), ackConsumerCaptor.capture());
@@ -162,7 +162,7 @@ public class SinglePartitionSubscriberTest {
                 .build());
     when(ackSetTracker.track(MESSAGE)).thenReturn(ack1);
     when(ackSetTracker.track(message2)).thenReturn(ack2);
-    subscriber.onMessages(ImmutableList.of(MESSAGE, message2));
+    subscriber.onMessages(ImmutableList.of(MESSAGE.toProto(), message2.toProto()));
     verify(ackSetTracker).track(MESSAGE);
     verify(ackSetTracker).track(message2);
     verify(receiver)
@@ -192,7 +192,7 @@ public class SinglePartitionSubscriberTest {
     SettableApiFuture ackDone = SettableApiFuture.create();
     doAnswer(args -> ackDone.set(null)).when(ack).run();
     when(ackSetTracker.track(MESSAGE)).thenReturn(ack);
-    subscriber.onMessages(ImmutableList.of(MESSAGE));
+    subscriber.onMessages(ImmutableList.of(MESSAGE.toProto()));
     verify(ackSetTracker).track(MESSAGE);
     verify(receiver)
         .receiveMessage(eq(transformer.transform(MESSAGE)), ackConsumerCaptor.capture());
@@ -215,7 +215,7 @@ public class SinglePartitionSubscriberTest {
     Future<Void> trackerTerminated = whenTerminated(ackSetTracker);
     Future<Void> wireSubscriberTerminated = whenTerminated(wireSubscriber);
     when(ackSetTracker.track(MESSAGE)).thenReturn(ack);
-    subscriber.onMessages(ImmutableList.of(MESSAGE));
+    subscriber.onMessages(ImmutableList.of(MESSAGE.toProto()));
     verify(ackSetTracker).track(MESSAGE);
     verify(receiver)
         .receiveMessage(eq(transformer.transform(MESSAGE)), ackConsumerCaptor.capture());
@@ -234,7 +234,7 @@ public class SinglePartitionSubscriberTest {
   public void singleMessageNackAfterShutdownNoNackHandler() throws Exception {
     Runnable ack = mock(Runnable.class);
     when(ackSetTracker.track(MESSAGE)).thenReturn(ack);
-    subscriber.onMessages(ImmutableList.of(MESSAGE));
+    subscriber.onMessages(ImmutableList.of(MESSAGE.toProto()));
     verify(ackSetTracker).track(MESSAGE);
     verify(receiver)
         .receiveMessage(eq(transformer.transform(MESSAGE)), ackConsumerCaptor.capture());

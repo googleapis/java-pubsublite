@@ -29,7 +29,6 @@ import com.google.api.core.SettableApiFuture;
 import com.google.api.gax.batching.BatchingSettings;
 import com.google.cloud.pubsublite.CloudRegion;
 import com.google.cloud.pubsublite.CloudZone;
-import com.google.cloud.pubsublite.Message;
 import com.google.cloud.pubsublite.MessageMetadata;
 import com.google.cloud.pubsublite.Offset;
 import com.google.cloud.pubsublite.Partition;
@@ -39,6 +38,7 @@ import com.google.cloud.pubsublite.TopicPath;
 import com.google.cloud.pubsublite.internal.Publisher;
 import com.google.cloud.pubsublite.internal.testing.FakeApiService;
 import com.google.cloud.pubsublite.internal.wire.StreamFactories.PublishStreamFactory;
+import com.google.cloud.pubsublite.proto.PubSubMessage;
 import com.google.protobuf.ByteString;
 import org.junit.Before;
 import org.junit.Test;
@@ -86,7 +86,8 @@ public class SinglePartitionPublisherTest {
   @Test
   public void publishResultTransformed() throws Exception {
     SettableApiFuture<Offset> offsetFuture = SettableApiFuture.create();
-    Message message = Message.builder().setData(ByteString.copyFromUtf8("xyz")).build();
+    PubSubMessage message =
+        PubSubMessage.newBuilder().setData(ByteString.copyFromUtf8("xyz")).build();
     when(underlying.publish(message)).thenReturn(offsetFuture);
     ApiFuture<MessageMetadata> metadataFuture = pub.publish(message);
     assertThat(metadataFuture.isDone()).isFalse();

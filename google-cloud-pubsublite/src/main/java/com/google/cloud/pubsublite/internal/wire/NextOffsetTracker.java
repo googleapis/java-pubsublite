@@ -21,10 +21,10 @@ import static com.google.cloud.pubsublite.internal.CheckedApiPreconditions.check
 import static com.google.cloud.pubsublite.internal.wire.Predicates.isOrdered;
 
 import com.google.cloud.pubsublite.Offset;
-import com.google.cloud.pubsublite.SequencedMessage;
 import com.google.cloud.pubsublite.internal.CheckedApiException;
 import com.google.cloud.pubsublite.proto.Cursor;
 import com.google.cloud.pubsublite.proto.SeekRequest;
+import com.google.cloud.pubsublite.proto.SequencedMessage;
 import com.google.common.collect.Iterables;
 import java.util.Collection;
 import java.util.Optional;
@@ -37,13 +37,13 @@ public class NextOffsetTracker {
   void onMessages(Collection<SequencedMessage> messages) throws CheckedApiException {
     checkArgument(!messages.isEmpty());
     checkArgument(isOrdered(messages));
-    Offset firstMessageOffset = messages.iterator().next().offset();
+    long firstMessageOffset = messages.iterator().next().getCursor().getOffset();
     checkState(
-        !nextOffset.isPresent() || (nextOffset.get().value() <= firstMessageOffset.value()),
+        !nextOffset.isPresent() || (nextOffset.get().value() <= firstMessageOffset),
         String.format(
             "Received message with offset %s older than known cursor location %s.",
             firstMessageOffset, nextOffset));
-    nextOffset = Optional.of(Offset.of(Iterables.getLast(messages).offset().value() + 1));
+    nextOffset = Optional.of(Offset.of(Iterables.getLast(messages).getCursor().getOffset() + 1));
   }
 
   // Gives the SeekRequest that should be sent on restart, or empty if none should be sent because

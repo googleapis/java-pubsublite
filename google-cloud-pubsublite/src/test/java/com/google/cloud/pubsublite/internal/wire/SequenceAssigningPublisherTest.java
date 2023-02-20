@@ -23,11 +23,11 @@ import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
 import com.google.api.core.ApiFutures;
-import com.google.cloud.pubsublite.Message;
 import com.google.cloud.pubsublite.Offset;
 import com.google.cloud.pubsublite.internal.PublishSequenceNumber;
 import com.google.cloud.pubsublite.internal.SequencedPublisher;
 import com.google.cloud.pubsublite.internal.testing.FakeApiService;
+import com.google.cloud.pubsublite.proto.PubSubMessage;
 import com.google.protobuf.ByteString;
 import java.util.concurrent.Future;
 import org.junit.Before;
@@ -39,8 +39,8 @@ import org.mockito.Spy;
 @RunWith(JUnit4.class)
 public final class SequenceAssigningPublisherTest {
 
-  private static Message makeMessage(String data) {
-    return Message.builder().setData(ByteString.copyFromUtf8(data)).build();
+  private static PubSubMessage makeMessage(String data) {
+    return PubSubMessage.newBuilder().setData(ByteString.copyFromUtf8(data)).build();
   }
 
   abstract static class FakeSequencedPublisher extends FakeApiService
@@ -58,9 +58,9 @@ public final class SequenceAssigningPublisherTest {
 
   @Test
   public void publishAssignsSequenceNumbers() throws Exception {
-    Message message1 = makeMessage("msg1");
-    Message message2 = makeMessage("msg2");
-    Message message3 = makeMessage("msg3");
+    PubSubMessage message1 = makeMessage("msg1");
+    PubSubMessage message2 = makeMessage("msg2");
+    PubSubMessage message3 = makeMessage("msg3");
 
     when(underlyingPublisher.publish(eq(message1), eq(PublishSequenceNumber.of(0))))
         .thenReturn(ApiFutures.immediateFuture(Offset.of(100)));

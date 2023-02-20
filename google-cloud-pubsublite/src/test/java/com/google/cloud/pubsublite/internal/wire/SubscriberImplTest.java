@@ -36,10 +36,7 @@ import com.google.api.gax.rpc.ResponseObserver;
 import com.google.api.gax.rpc.StatusCode.Code;
 import com.google.cloud.pubsublite.CloudRegion;
 import com.google.cloud.pubsublite.CloudZone;
-import com.google.cloud.pubsublite.Message;
-import com.google.cloud.pubsublite.Offset;
 import com.google.cloud.pubsublite.ProjectNumber;
-import com.google.cloud.pubsublite.SequencedMessage;
 import com.google.cloud.pubsublite.SubscriptionName;
 import com.google.cloud.pubsublite.SubscriptionPath;
 import com.google.cloud.pubsublite.internal.AlarmFactory;
@@ -51,6 +48,7 @@ import com.google.cloud.pubsublite.proto.FlowControlRequest;
 import com.google.cloud.pubsublite.proto.InitialSubscribeRequest;
 import com.google.cloud.pubsublite.proto.SeekRequest;
 import com.google.cloud.pubsublite.proto.SeekRequest.NamedTarget;
+import com.google.cloud.pubsublite.proto.SequencedMessage;
 import com.google.cloud.pubsublite.proto.SubscribeRequest;
 import com.google.common.collect.ImmutableList;
 import com.google.protobuf.Any;
@@ -220,8 +218,16 @@ public class SubscriberImplTest {
     subscriber.allowFlow(bigFlowControlRequest());
     leakedResponseObserver.onResponse(
         ImmutableList.of(
-            SequencedMessage.of(Message.builder().build(), Timestamps.EPOCH, Offset.of(1), 10),
-            SequencedMessage.of(Message.builder().build(), Timestamps.EPOCH, Offset.of(0), 10)));
+            SequencedMessage.newBuilder()
+                .setPublishTime(Timestamps.EPOCH)
+                .setCursor(Cursor.newBuilder().setOffset(1))
+                .setSizeBytes(10)
+                .build(),
+            SequencedMessage.newBuilder()
+                .setPublishTime(Timestamps.EPOCH)
+                .setCursor(Cursor.newBuilder().setOffset(0))
+                .setSizeBytes(10)
+                .build()));
     assertThrows(IllegalStateException.class, subscriber::awaitTerminated);
     failed.get();
     assertThrowableMatches(subscriber.failureCause(), Code.INVALID_ARGUMENT);
@@ -234,7 +240,11 @@ public class SubscriberImplTest {
     subscriber.allowFlow(bigFlowControlRequest());
     ImmutableList<SequencedMessage> messages =
         ImmutableList.of(
-            SequencedMessage.of(Message.builder().build(), Timestamps.EPOCH, Offset.of(0), 0));
+            SequencedMessage.newBuilder()
+                .setPublishTime(Timestamps.EPOCH)
+                .setCursor(Cursor.newBuilder().setOffset(0))
+                .setSizeBytes(10)
+                .build());
     leakedResponseObserver.onResponse(messages);
     leakedResponseObserver.onResponse(messages);
     failed.get();
@@ -247,8 +257,16 @@ public class SubscriberImplTest {
     subscriber.allowFlow(bigFlowControlRequest());
     ImmutableList<SequencedMessage> messages =
         ImmutableList.of(
-            SequencedMessage.of(Message.builder().build(), Timestamps.EPOCH, Offset.of(0), 10),
-            SequencedMessage.of(Message.builder().build(), Timestamps.EPOCH, Offset.of(1), 10));
+            SequencedMessage.newBuilder()
+                .setPublishTime(Timestamps.EPOCH)
+                .setCursor(Cursor.newBuilder().setOffset(0))
+                .setSizeBytes(10)
+                .build(),
+            SequencedMessage.newBuilder()
+                .setPublishTime(Timestamps.EPOCH)
+                .setCursor(Cursor.newBuilder().setOffset(1))
+                .setSizeBytes(10)
+                .build());
     CountDownLatch messagesReceived = countdownMessageBatches(1);
     leakedResponseObserver.onResponse(messages);
     assertThat(messagesReceived.await(10, SECONDS)).isTrue();
@@ -267,11 +285,23 @@ public class SubscriberImplTest {
     verify(mockConnectedSubscriber1).allowFlow(request);
     ImmutableList<SequencedMessage> messages1 =
         ImmutableList.of(
-            SequencedMessage.of(Message.builder().build(), Timestamps.EPOCH, Offset.of(1), 98),
-            SequencedMessage.of(Message.builder().build(), Timestamps.EPOCH, Offset.of(2), 1));
+            SequencedMessage.newBuilder()
+                .setPublishTime(Timestamps.EPOCH)
+                .setCursor(Cursor.newBuilder().setOffset(1))
+                .setSizeBytes(98)
+                .build(),
+            SequencedMessage.newBuilder()
+                .setPublishTime(Timestamps.EPOCH)
+                .setCursor(Cursor.newBuilder().setOffset(2))
+                .setSizeBytes(1)
+                .build());
     ImmutableList<SequencedMessage> messages2 =
         ImmutableList.of(
-            SequencedMessage.of(Message.builder().build(), Timestamps.EPOCH, Offset.of(3), 2));
+            SequencedMessage.newBuilder()
+                .setPublishTime(Timestamps.EPOCH)
+                .setCursor(Cursor.newBuilder().setOffset(3))
+                .setSizeBytes(2)
+                .build());
     CountDownLatch messagesReceived = countdownMessageBatches(1);
     leakedResponseObserver.onResponse(messages1);
     assertThat(messagesReceived.await(10, SECONDS)).isTrue();
@@ -289,8 +319,16 @@ public class SubscriberImplTest {
         FlowControlRequest.newBuilder().setAllowedBytes(100).setAllowedMessages(100).build());
     ImmutableList<SequencedMessage> messages =
         ImmutableList.of(
-            SequencedMessage.of(Message.builder().build(), Timestamps.EPOCH, Offset.of(0), 10),
-            SequencedMessage.of(Message.builder().build(), Timestamps.EPOCH, Offset.of(1), 10));
+            SequencedMessage.newBuilder()
+                .setPublishTime(Timestamps.EPOCH)
+                .setCursor(Cursor.newBuilder().setOffset(0))
+                .setSizeBytes(10)
+                .build(),
+            SequencedMessage.newBuilder()
+                .setPublishTime(Timestamps.EPOCH)
+                .setCursor(Cursor.newBuilder().setOffset(1))
+                .setSizeBytes(10)
+                .build());
     CountDownLatch messagesReceived = countdownMessageBatches(1);
     leakedResponseObserver.onResponse(messages);
     assertThat(messagesReceived.await(10, SECONDS)).isTrue();
@@ -350,8 +388,16 @@ public class SubscriberImplTest {
         FlowControlRequest.newBuilder().setAllowedBytes(100).setAllowedMessages(100).build());
     ImmutableList<SequencedMessage> messages =
         ImmutableList.of(
-            SequencedMessage.of(Message.builder().build(), Timestamps.EPOCH, Offset.of(0), 10),
-            SequencedMessage.of(Message.builder().build(), Timestamps.EPOCH, Offset.of(1), 10));
+            SequencedMessage.newBuilder()
+                .setPublishTime(Timestamps.EPOCH)
+                .setCursor(Cursor.newBuilder().setOffset(0))
+                .setSizeBytes(10)
+                .build(),
+            SequencedMessage.newBuilder()
+                .setPublishTime(Timestamps.EPOCH)
+                .setCursor(Cursor.newBuilder().setOffset(1))
+                .setSizeBytes(10)
+                .build());
     CountDownLatch messagesReceived = countdownMessageBatches(1);
     leakedResponseObserver.onResponse(messages);
 
@@ -381,8 +427,16 @@ public class SubscriberImplTest {
         FlowControlRequest.newBuilder().setAllowedBytes(100).setAllowedMessages(100).build());
     ImmutableList<SequencedMessage> messages =
         ImmutableList.of(
-            SequencedMessage.of(Message.builder().build(), Timestamps.EPOCH, Offset.of(0), 10),
-            SequencedMessage.of(Message.builder().build(), Timestamps.EPOCH, Offset.of(1), 10));
+            SequencedMessage.newBuilder()
+                .setPublishTime(Timestamps.EPOCH)
+                .setCursor(Cursor.newBuilder().setOffset(0))
+                .setSizeBytes(10)
+                .build(),
+            SequencedMessage.newBuilder()
+                .setPublishTime(Timestamps.EPOCH)
+                .setCursor(Cursor.newBuilder().setOffset(1))
+                .setSizeBytes(10)
+                .build());
     CountDownLatch messagesReceived = countdownMessageBatches(1);
     leakedResponseObserver.onResponse(messages);
     assertThat(messagesReceived.await(10, SECONDS)).isTrue();

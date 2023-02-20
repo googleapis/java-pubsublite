@@ -83,9 +83,10 @@ public class SinglePartitionSubscriber extends ProxyService implements Subscribe
   }
 
   @VisibleForTesting
-  void onMessages(List<SequencedMessage> sequencedMessages) {
+  void onMessages(List<com.google.cloud.pubsublite.proto.SequencedMessage> sequencedMessages) {
     try {
-      for (SequencedMessage message : sequencedMessages) {
+      for (com.google.cloud.pubsublite.proto.SequencedMessage proto : sequencedMessages) {
+        SequencedMessage message = SequencedMessage.fromProto(proto);
         PubsubMessage userMessage = transformer.transform(message);
         long bytes = message.byteSize();
         Runnable trackerConsumer = ackSetTracker.track(message);

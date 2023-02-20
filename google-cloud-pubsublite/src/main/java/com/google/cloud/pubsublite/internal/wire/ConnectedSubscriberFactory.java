@@ -16,7 +16,7 @@
 
 package com.google.cloud.pubsublite.internal.wire;
 
-import com.google.cloud.pubsublite.SequencedMessage;
+import com.google.cloud.pubsublite.proto.SequencedMessage;
 import com.google.cloud.pubsublite.proto.SubscribeRequest;
 import com.google.cloud.pubsublite.proto.SubscribeResponse;
 import java.util.List;

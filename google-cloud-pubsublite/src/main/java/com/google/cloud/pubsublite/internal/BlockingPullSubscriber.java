@@ -17,7 +17,7 @@
 package com.google.cloud.pubsublite.internal;
 
 import com.google.api.core.ApiFuture;
-import com.google.cloud.pubsublite.SequencedMessage;
+import com.google.cloud.pubsublite.proto.SequencedMessage;
 import java.util.Optional;
 import javax.annotation.concurrent.ThreadSafe;
 

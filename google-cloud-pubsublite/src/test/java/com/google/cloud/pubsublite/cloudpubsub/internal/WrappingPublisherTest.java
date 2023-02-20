@@ -80,9 +80,9 @@ public class WrappingPublisherTest {
     PubsubMessage message = PubsubMessage.newBuilder().setOrderingKey("abc").build();
     Message wireMessage = Message.builder().setKey(ByteString.copyFromUtf8("abc")).build();
     SettableApiFuture<MessageMetadata> metadataFuture = SettableApiFuture.create();
-    when(underlying.publish(wireMessage)).thenReturn(metadataFuture);
+    when(underlying.publish(wireMessage.toProto())).thenReturn(metadataFuture);
     ApiFuture<String> published = publisher.publish(message);
-    verify(underlying).publish(wireMessage);
+    verify(underlying).publish(wireMessage.toProto());
     assertThat(published.isDone()).isFalse();
     MessageMetadata metadata = MessageMetadata.of(Partition.of(3), Offset.of(88));
     metadataFuture.set(metadata);

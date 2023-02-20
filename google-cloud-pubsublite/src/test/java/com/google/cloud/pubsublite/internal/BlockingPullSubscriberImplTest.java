@@ -27,19 +27,22 @@ import static org.mockito.Mockito.when;
 
 import com.google.api.core.ApiService;
 import com.google.api.gax.rpc.StatusCode;
-import com.google.cloud.pubsublite.Message;
-import com.google.cloud.pubsublite.Offset;
-import com.google.cloud.pubsublite.SequencedMessage;
 import com.google.cloud.pubsublite.cloudpubsub.FlowControlSettings;
 import com.google.cloud.pubsublite.internal.wire.Subscriber;
 import com.google.cloud.pubsublite.internal.wire.SubscriberFactory;
+import com.google.cloud.pubsublite.proto.Cursor;
 import com.google.cloud.pubsublite.proto.FlowControlRequest;
+import com.google.cloud.pubsublite.proto.SequencedMessage;
 import com.google.common.collect.ImmutableList;
 import com.google.protobuf.util.Timestamps;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.*;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 import org.junit.Before;
@@ -128,7 +131,11 @@ public class BlockingPullSubscriberImplTest {
   @Test
   public void onDataSuccess() throws Exception {
     SequencedMessage message =
-        SequencedMessage.of(Message.builder().build(), Timestamps.EPOCH, Offset.of(12), 30);
+        SequencedMessage.newBuilder()
+            .setPublishTime(Timestamps.EPOCH)
+            .setCursor(Cursor.newBuilder().setOffset(12))
+            .setSizeBytes(30)
+            .build();
     Future<?> future = executorService.submit(() -> subscriber.onData().get());
     messageConsumer.accept(ImmutableList.of(message));
     future.get();
@@ -138,7 +145,11 @@ public class BlockingPullSubscriberImplTest {
   public void pullMessage() throws Exception {
     int byteSize = 30;
     SequencedMessage message =
-        SequencedMessage.of(Message.builder().build(), Timestamps.EPOCH, Offset.of(12), byteSize);
+        SequencedMessage.newBuilder()
+            .setPublishTime(Timestamps.EPOCH)
+            .setCursor(Cursor.newBuilder().setOffset(12))
+            .setSizeBytes(byteSize)
+            .build();
     messageConsumer.accept(ImmutableList.of(message));
     assertThat(Optional.of(message)).isEqualTo(subscriber.messageIfAvailable());
     verify(underlying)
@@ -168,7 +179,11 @@ public class BlockingPullSubscriberImplTest {
     CheckedApiException expected = new CheckedApiException(StatusCode.Code.INTERNAL);
     errorListener.failed(null, expected);
     SequencedMessage message =
-        SequencedMessage.of(Message.builder().build(), Timestamps.EPOCH, Offset.of(12), 30);
+        SequencedMessage.newBuilder()
+            .setPublishTime(Timestamps.EPOCH)
+            .setCursor(Cursor.newBuilder().setOffset(12))
+            .setSizeBytes(30)
+            .build();
     messageConsumer.accept(ImmutableList.of(message));
 
     CheckedApiException e =
@@ -181,7 +196,11 @@ public class BlockingPullSubscriberImplTest {
   @Test
   public void onlyOneMessageDeliveredWhenMultiCalls() throws Exception {
     SequencedMessage message =
-        SequencedMessage.of(Message.builder().build(), Timestamps.EPOCH, Offset.of(12), 30);
+        SequencedMessage.newBuilder()
+            .setPublishTime(Timestamps.EPOCH)
+            .setCursor(Cursor.newBuilder().setOffset(12))
+            .setSizeBytes(30)
+            .build();
     messageConsumer.accept(ImmutableList.of(message));
 
     AtomicInteger count = new AtomicInteger(0);

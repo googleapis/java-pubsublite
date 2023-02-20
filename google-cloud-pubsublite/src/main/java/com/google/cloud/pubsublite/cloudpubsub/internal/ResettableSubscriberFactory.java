@@ -17,9 +17,9 @@
 package com.google.cloud.pubsublite.cloudpubsub.internal;
 
 import com.google.api.gax.rpc.ApiException;
-import com.google.cloud.pubsublite.SequencedMessage;
 import com.google.cloud.pubsublite.internal.wire.Subscriber;
 import com.google.cloud.pubsublite.internal.wire.SubscriberResetHandler;
+import com.google.cloud.pubsublite.proto.SequencedMessage;
 import java.io.Serializable;
 import java.util.List;
 import java.util.function.Consumer;

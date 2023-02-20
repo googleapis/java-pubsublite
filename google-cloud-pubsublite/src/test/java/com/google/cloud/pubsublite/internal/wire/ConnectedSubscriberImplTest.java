@@ -30,10 +30,8 @@ import com.google.api.gax.rpc.ResponseObserver;
 import com.google.api.gax.rpc.StatusCode.Code;
 import com.google.cloud.pubsublite.CloudRegion;
 import com.google.cloud.pubsublite.CloudZone;
-import com.google.cloud.pubsublite.Message;
 import com.google.cloud.pubsublite.Offset;
 import com.google.cloud.pubsublite.ProjectNumber;
-import com.google.cloud.pubsublite.SequencedMessage;
 import com.google.cloud.pubsublite.SubscriptionName;
 import com.google.cloud.pubsublite.SubscriptionPath;
 import com.google.cloud.pubsublite.internal.ApiExceptionMatcher;
@@ -44,7 +42,9 @@ import com.google.cloud.pubsublite.proto.FlowControlRequest;
 import com.google.cloud.pubsublite.proto.InitialSubscribeRequest;
 import com.google.cloud.pubsublite.proto.InitialSubscribeResponse;
 import com.google.cloud.pubsublite.proto.MessageResponse;
+import com.google.cloud.pubsublite.proto.PubSubMessage;
 import com.google.cloud.pubsublite.proto.SeekResponse;
+import com.google.cloud.pubsublite.proto.SequencedMessage;
 import com.google.cloud.pubsublite.proto.SubscribeRequest;
 import com.google.cloud.pubsublite.proto.SubscribeResponse;
 import com.google.common.base.Preconditions;
@@ -210,8 +210,7 @@ public class ConnectedSubscriberImplTest {
         .onResponse(
             SubscribeResponse.newBuilder()
                 .setMessages(
-                    MessageResponse.newBuilder()
-                        .addMessages(messageWithOffset(Offset.of(20)).toProto()))
+                    MessageResponse.newBuilder().addMessages(messageWithOffset(Offset.of(20))))
                 .build());
     verify(mockOutputStream, never()).onResponse(any());
   }
@@ -237,19 +236,20 @@ public class ConnectedSubscriberImplTest {
   }
 
   private SequencedMessage messageWithOffset(Offset offset) {
-    return SequencedMessage.of(
-        Message.builder().setData(ByteString.copyFromUtf8("abc")).build(),
-        Timestamps.EPOCH,
-        offset,
-        123L);
+    return SequencedMessage.newBuilder()
+        .setMessage(PubSubMessage.newBuilder().setData(ByteString.copyFromUtf8("abc")))
+        .setPublishTime(Timestamps.EPOCH)
+        .setCursor(Cursor.newBuilder().setOffset(offset.value()))
+        .setSizeBytes(123)
+        .build();
   }
 
   @Test
   public void outOfOrderMessagesResponse_Abort() {
     initialize();
     SubscribeResponse.Builder builder = SubscribeResponse.newBuilder();
-    builder.getMessagesBuilder().addMessages(messageWithOffset(Offset.of(10)).toProto());
-    builder.getMessagesBuilder().addMessages(messageWithOffset(Offset.of(10)).toProto());
+    builder.getMessagesBuilder().addMessages(messageWithOffset(Offset.of(10)));
+    builder.getMessagesBuilder().addMessages(messageWithOffset(Offset.of(10)));
     leakedResponseStream.get().onResponse(builder.build());
     verify(mockOutputStream).onError(argThat(new ApiExceptionMatcher(Code.FAILED_PRECONDITION)));
     leakedResponseStream = Optional.empty();
@@ -259,8 +259,8 @@ public class ConnectedSubscriberImplTest {
   public void validMessagesResponse() {
     initialize();
     SubscribeResponse.Builder builder = SubscribeResponse.newBuilder();
-    builder.getMessagesBuilder().addMessages(messageWithOffset(Offset.of(10)).toProto());
-    builder.getMessagesBuilder().addMessages(messageWithOffset(Offset.of(11)).toProto());
+    builder.getMessagesBuilder().addMessages(messageWithOffset(Offset.of(10)));
+    builder.getMessagesBuilder().addMessages(messageWithOffset(Offset.of(11)));
     leakedResponseStream.get().onResponse(builder.build());
     verify(mockOutputStream)
         .onResponse(

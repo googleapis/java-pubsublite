@@ -24,12 +24,12 @@ import com.google.api.core.ApiService.Listener;
 import com.google.api.core.ApiService.State;
 import com.google.api.core.SettableApiFuture;
 import com.google.api.gax.rpc.StatusCode;
-import com.google.cloud.pubsublite.SequencedMessage;
 import com.google.cloud.pubsublite.cloudpubsub.FlowControlSettings;
 import com.google.cloud.pubsublite.internal.wire.Subscriber;
 import com.google.cloud.pubsublite.internal.wire.SubscriberFactory;
 import com.google.cloud.pubsublite.internal.wire.SystemExecutors;
 import com.google.cloud.pubsublite.proto.FlowControlRequest;
+import com.google.cloud.pubsublite.proto.SequencedMessage;
 import com.google.errorprone.annotations.concurrent.GuardedBy;
 import java.util.ArrayDeque;
 import java.util.Collection;
@@ -110,7 +110,7 @@ public class BlockingPullSubscriberImpl implements BlockingPullSubscriber {
     underlying.allowFlow(
         FlowControlRequest.newBuilder()
             .setAllowedMessages(1)
-            .setAllowedBytes(msg.byteSize())
+            .setAllowedBytes(msg.getSizeBytes())
             .build());
     return Optional.of(msg);
   }

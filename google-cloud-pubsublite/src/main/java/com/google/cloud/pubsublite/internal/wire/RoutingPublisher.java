@@ -22,13 +22,13 @@ import static com.google.cloud.pubsublite.internal.ExtractStatus.toCanonical;
 import com.google.api.core.ApiFuture;
 import com.google.api.core.ApiFutures;
 import com.google.api.gax.rpc.ApiException;
-import com.google.cloud.pubsublite.Message;
 import com.google.cloud.pubsublite.MessageMetadata;
 import com.google.cloud.pubsublite.Partition;
 import com.google.cloud.pubsublite.internal.CheckedApiException;
 import com.google.cloud.pubsublite.internal.ProxyService;
 import com.google.cloud.pubsublite.internal.Publisher;
 import com.google.cloud.pubsublite.internal.RoutingPolicy;
+import com.google.cloud.pubsublite.proto.PubSubMessage;
 import java.io.IOException;
 import java.util.Map;
 
@@ -46,10 +46,10 @@ public class RoutingPublisher extends ProxyService implements Publisher<MessageM
 
   // Publisher implementation.
   @Override
-  public ApiFuture<MessageMetadata> publish(Message message) {
+  public ApiFuture<MessageMetadata> publish(PubSubMessage message) {
     try {
       Partition routedPartition =
-          message.key().isEmpty() ? policy.routeWithoutKey() : policy.route(message.key());
+          message.getKey().isEmpty() ? policy.routeWithoutKey() : policy.route(message.getKey());
       checkState(
           partitionPublishers.containsKey(routedPartition),
           "Routed to partition %s for which there is no publisher available.",

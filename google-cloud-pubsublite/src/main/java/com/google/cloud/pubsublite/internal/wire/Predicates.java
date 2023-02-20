@@ -16,13 +16,14 @@
 
 package com.google.cloud.pubsublite.internal.wire;
 
-import com.google.cloud.pubsublite.SequencedMessage;
+import com.google.cloud.pubsublite.proto.SequencedMessage;
 import com.google.common.collect.Ordering;
 import java.util.Comparator;
 
 public final class Predicates {
   public static boolean isOrdered(Iterable<SequencedMessage> messages) {
-    return Ordering.from(Comparator.comparingLong((SequencedMessage m) -> m.offset().value()))
+    return Ordering.from(
+            Comparator.comparingLong((SequencedMessage m) -> m.getCursor().getOffset()))
         .isStrictlyOrdered(messages);
   }
 

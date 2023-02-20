@@ -24,7 +24,6 @@ import static com.google.cloud.pubsublite.internal.wire.ApiServiceUtils.blocking
 import com.google.api.core.ApiFuture;
 import com.google.api.core.ApiFutures;
 import com.google.api.core.ApiService;
-import com.google.cloud.pubsublite.Message;
 import com.google.cloud.pubsublite.MessageMetadata;
 import com.google.cloud.pubsublite.Partition;
 import com.google.cloud.pubsublite.internal.CheckedApiException;
@@ -32,6 +31,7 @@ import com.google.cloud.pubsublite.internal.CloseableMonitor;
 import com.google.cloud.pubsublite.internal.ProxyService;
 import com.google.cloud.pubsublite.internal.Publisher;
 import com.google.cloud.pubsublite.internal.RoutingPolicy;
+import com.google.cloud.pubsublite.proto.PubSubMessage;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.flogger.GoogleLogger;
 import com.google.errorprone.annotations.concurrent.GuardedBy;
@@ -56,12 +56,12 @@ public class PartitionCountWatchingPublisher extends ProxyService
       this.routingPolicy = routingPolicy;
     }
 
-    public ApiFuture<MessageMetadata> publish(Message message) throws CheckedApiException {
+    public ApiFuture<MessageMetadata> publish(PubSubMessage message) throws CheckedApiException {
       try {
         Partition routedPartition =
-            message.key().isEmpty()
+            message.getKey().isEmpty()
                 ? routingPolicy.routeWithoutKey()
-                : routingPolicy.route(message.key());
+                : routingPolicy.route(message.getKey());
         checkState(
             publishers.containsKey(routedPartition),
             "Routed to partition %s for which there is no publisher available.",
@@ -108,7 +108,7 @@ public class PartitionCountWatchingPublisher extends ProxyService
   }
 
   @Override
-  public ApiFuture<MessageMetadata> publish(Message message) {
+  public ApiFuture<MessageMetadata> publish(PubSubMessage message) {
     Optional<PartitionsWithRouting> partitions;
     try (CloseableMonitor.Hold h = monitor.enter()) {
       partitions = partitionsWithRouting;

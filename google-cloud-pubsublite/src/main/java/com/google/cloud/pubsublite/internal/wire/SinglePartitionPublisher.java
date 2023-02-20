@@ -19,12 +19,12 @@ package com.google.cloud.pubsublite.internal.wire;
 import com.google.api.core.ApiFuture;
 import com.google.api.core.ApiFutures;
 import com.google.api.gax.rpc.ApiException;
-import com.google.cloud.pubsublite.Message;
 import com.google.cloud.pubsublite.MessageMetadata;
 import com.google.cloud.pubsublite.Offset;
 import com.google.cloud.pubsublite.Partition;
 import com.google.cloud.pubsublite.internal.ProxyService;
 import com.google.cloud.pubsublite.internal.Publisher;
+import com.google.cloud.pubsublite.proto.PubSubMessage;
 import com.google.common.util.concurrent.MoreExecutors;
 import java.io.IOException;
 
@@ -40,7 +40,7 @@ public class SinglePartitionPublisher extends ProxyService implements Publisher<
 
   // Publisher implementation.
   @Override
-  public ApiFuture<MessageMetadata> publish(Message message) {
+  public ApiFuture<MessageMetadata> publish(PubSubMessage message) {
     return ApiFutures.transform(
         publisher.publish(message),
         offset -> MessageMetadata.of(partition, offset),

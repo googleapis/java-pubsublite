@@ -1,5 +1,24 @@
 # Changelog
 
+## [1.11.0](https://github.com/googleapis/java-pubsublite/compare/v1.10.0...v1.11.0) (2023-02-20)
+
+
+### Features
+
+* Convert internal interfaces to use protos ([#1335](https://github.com/googleapis/java-pubsublite/issues/1335)) ([ebb5d3b](https://github.com/googleapis/java-pubsublite/commit/ebb5d3b824c89beff7ef51e11fe322c3e5ef3049))
+
+
+### Bug Fixes
+
+* Change proxy service to call child start methods on executors ([#1334](https://github.com/googleapis/java-pubsublite/issues/1334)) ([e08ea2f](https://github.com/googleapis/java-pubsublite/commit/e08ea2fa8570e96a22860596cc17f19f53706a68))
+
+
+### Dependencies
+
+* Update dependency com.google.cloud:google-cloud-bom to v0.188.0 ([#1330](https://github.com/googleapis/java-pubsublite/issues/1330)) ([9b758df](https://github.com/googleapis/java-pubsublite/commit/9b758df7c54610a9b0759b23dd3b1fad056e8ed3))
+* Update dependency com.google.cloud:google-cloud-bom to v0.189.0 ([#1337](https://github.com/googleapis/java-pubsublite/issues/1337)) ([e92e25c](https://github.com/googleapis/java-pubsublite/commit/e92e25c0864d5e3916045da4e29f7b52cee4450e))
+* Update dependency com.google.cloud:google-cloud-shared-dependencies to v3.3.0 ([#1333](https://github.com/googleapis/java-pubsublite/issues/1333)) ([ddc5eca](https://github.com/googleapis/java-pubsublite/commit/ddc5eca53a7cd6623e8de41aca60fc5d1c1b1422))
+
 ## [1.10.0](https://github.com/googleapis/java-pubsublite/compare/v1.9.4...v1.10.0) (2023-02-08)
 
 

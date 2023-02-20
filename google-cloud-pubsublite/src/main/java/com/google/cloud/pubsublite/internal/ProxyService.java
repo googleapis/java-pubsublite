@@ -55,16 +55,16 @@ public abstract class ProxyService extends AbstractApiService {
   protected final <T extends ApiService> void addServices(Collection<T> services)
       throws ApiException {
     checkState(state() == State.NEW);
+    Listener onServiceError =
+        new Listener() {
+          @Override
+          public void failed(State state, Throwable throwable) {
+            onPermanentError(toCanonical(throwable));
+          }
+        };
     for (ApiService service : services) {
       checkArgument(service.state() == State.NEW, "All services must not be started.");
-      service.addListener(
-          new Listener() {
-            @Override
-            public void failed(State state, Throwable throwable) {
-              onPermanentError(toCanonical(throwable));
-            }
-          },
-          SystemExecutors.getFuturesExecutor());
+      service.addListener(onServiceError, SystemExecutors.getFuturesExecutor());
       this.services.add(service);
     }
   }

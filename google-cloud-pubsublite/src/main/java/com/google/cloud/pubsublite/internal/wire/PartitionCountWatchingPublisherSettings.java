@@ -23,6 +23,7 @@ import com.google.cloud.pubsublite.TopicPath;
 import com.google.cloud.pubsublite.internal.AlarmFactory;
 import com.google.cloud.pubsublite.internal.DefaultRoutingPolicy;
 import com.google.cloud.pubsublite.internal.Publisher;
+import com.google.cloud.pubsublite.internal.RoutingPolicy;
 import java.time.Duration;
 
 @AutoValue
@@ -37,9 +38,12 @@ public abstract class PartitionCountWatchingPublisherSettings {
   // Optional parameters
   abstract Duration configPollPeriod();
 
+  abstract RoutingPolicy.Factory routingPolicyFactory();
+
   public static Builder newBuilder() {
     return new AutoValue_PartitionCountWatchingPublisherSettings.Builder()
-        .setConfigPollPeriod(Duration.ofMinutes(1));
+        .setConfigPollPeriod(Duration.ofMinutes(1))
+        .setRoutingPolicyFactory(DefaultRoutingPolicy::new);
   }
 
   @AutoValue.Builder
@@ -54,13 +58,15 @@ public abstract class PartitionCountWatchingPublisherSettings {
     // Optional parameters.
     public abstract Builder setConfigPollPeriod(Duration period);
 
+    public abstract Builder setRoutingPolicyFactory(RoutingPolicy.Factory factory);
+
     public abstract PartitionCountWatchingPublisherSettings build();
   }
 
   public Publisher<MessageMetadata> instantiate() throws ApiException {
     return new PartitionCountWatchingPublisher(
         publisherFactory(),
-        DefaultRoutingPolicy::new,
+        routingPolicyFactory(),
         new PartitionCountWatcherImpl.Factory(
             topic(), adminClient(), AlarmFactory.create(configPollPeriod())));
   }

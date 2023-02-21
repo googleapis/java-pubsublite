@@ -48,8 +48,7 @@ public class RoutingPublisher extends ProxyService implements Publisher<MessageM
   @Override
   public ApiFuture<MessageMetadata> publish(PubSubMessage message) {
     try {
-      Partition routedPartition =
-          message.getKey().isEmpty() ? policy.routeWithoutKey() : policy.route(message.getKey());
+      Partition routedPartition = policy.route(message);
       checkState(
           partitionPublishers.containsKey(routedPartition),
           "Routed to partition %s for which there is no publisher available.",

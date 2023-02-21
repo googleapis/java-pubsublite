@@ -58,10 +58,7 @@ public class PartitionCountWatchingPublisher extends ProxyService
 
     public ApiFuture<MessageMetadata> publish(PubSubMessage message) throws CheckedApiException {
       try {
-        Partition routedPartition =
-            message.getKey().isEmpty()
-                ? routingPolicy.routeWithoutKey()
-                : routingPolicy.route(message.getKey());
+        Partition routedPartition = routingPolicy.route(message);
         checkState(
             publishers.containsKey(routedPartition),
             "Routed to partition %s for which there is no publisher available.",

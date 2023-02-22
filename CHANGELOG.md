@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.11.1](https://github.com/googleapis/java-pubsublite/compare/v1.11.0...v1.11.1) (2023-02-22)
+
+
+### Bug Fixes
+
+* Allow overriding the publisher in PartitionCountWatchingPublisherSettings ([#1342](https://github.com/googleapis/java-pubsublite/issues/1342)) ([0c01d49](https://github.com/googleapis/java-pubsublite/commit/0c01d495861eb0acbf43ad57262bc56b00ca92ac))
+* Change RoutingPolicy to accept the whole message, not just the `key` field ([#1344](https://github.com/googleapis/java-pubsublite/issues/1344)) ([bf9c3b7](https://github.com/googleapis/java-pubsublite/commit/bf9c3b7b92f17f54301c278421ad58bc689bc6c4))
+
 ## [1.11.0](https://github.com/googleapis/java-pubsublite/compare/v1.10.0...v1.11.0) (2023-02-20)
 
 

@@ -111,8 +111,8 @@ public class PartitionCountWatchingPublisherTest {
         PubSubMessage.newBuilder().setKey(ByteString.copyFromUtf8("0")).build();
     PubSubMessage message1 =
         PubSubMessage.newBuilder().setKey(ByteString.copyFromUtf8("1")).build();
-    when(mockRoutingPolicy.route(message0.getKey())).thenReturn(Partition.of(0));
-    when(mockRoutingPolicy.route(message1.getKey())).thenReturn(Partition.of(1));
+    when(mockRoutingPolicy.route(message0)).thenReturn(Partition.of(0));
+    when(mockRoutingPolicy.route(message1)).thenReturn(Partition.of(1));
 
     Future<?> unusedFuture0 = publisher.publish(message0);
     Future<?> unusedFuture1 = publisher.publish(message1);
@@ -128,9 +128,8 @@ public class PartitionCountWatchingPublisherTest {
     PubSubMessage messageB =
         PubSubMessage.newBuilder().setData(ByteString.copyFromUtf8("b")).build();
 
-    when(mockRoutingPolicy.routeWithoutKey())
-        .thenReturn(Partition.of(0))
-        .thenReturn(Partition.of(1));
+    when(mockRoutingPolicy.route(messageA)).thenReturn(Partition.of(0));
+    when(mockRoutingPolicy.route(messageB)).thenReturn(Partition.of(1));
 
     Future<?> unusedFutureA = publisher.publish(messageA);
     Future<?> unusedFutureB = publisher.publish(messageB);
@@ -143,7 +142,7 @@ public class PartitionCountWatchingPublisherTest {
   public void testPublishWithBadRouting() throws Exception {
     PubSubMessage message = PubSubMessage.newBuilder().build();
 
-    when(mockRoutingPolicy.routeWithoutKey()).thenReturn(Partition.of(4));
+    when(mockRoutingPolicy.route(message)).thenReturn(Partition.of(4));
     Future<?> unusedFuture = publisher.publish(message);
 
     ApiExceptionMatcher.assertThrowableMatches(
@@ -191,9 +190,9 @@ public class PartitionCountWatchingPublisherTest {
         PubSubMessage.newBuilder().setKey(ByteString.copyFromUtf8("1")).build();
     PubSubMessage message2 =
         PubSubMessage.newBuilder().setKey(ByteString.copyFromUtf8("2")).build();
-    when(mockRoutingPolicy.route(message0.getKey())).thenReturn(Partition.of(0));
-    when(mockRoutingPolicy.route(message1.getKey())).thenReturn(Partition.of(1));
-    when(mockRoutingPolicy.route(message2.getKey())).thenReturn(Partition.of(2));
+    when(mockRoutingPolicy.route(message0)).thenReturn(Partition.of(0));
+    when(mockRoutingPolicy.route(message1)).thenReturn(Partition.of(1));
+    when(mockRoutingPolicy.route(message2)).thenReturn(Partition.of(2));
 
     Future<?> unusedFuture0 = publisher.publish(message0);
     Future<?> unusedFuture1 = publisher.publish(message1);
@@ -212,8 +211,8 @@ public class PartitionCountWatchingPublisherTest {
         PubSubMessage.newBuilder().setKey(ByteString.copyFromUtf8("0")).build();
     PubSubMessage message1 =
         PubSubMessage.newBuilder().setKey(ByteString.copyFromUtf8("1")).build();
-    when(mockRoutingPolicy.route(message0.getKey())).thenReturn(Partition.of(0));
-    when(mockRoutingPolicy.route(message1.getKey())).thenReturn(Partition.of(1));
+    when(mockRoutingPolicy.route(message0)).thenReturn(Partition.of(0));
+    when(mockRoutingPolicy.route(message1)).thenReturn(Partition.of(1));
 
     Future<?> unusedFuture0 = publisher.publish(message0);
     Future<?> unusedFuture1 = publisher.publish(message1);
@@ -231,8 +230,8 @@ public class PartitionCountWatchingPublisherTest {
         PubSubMessage.newBuilder().setKey(ByteString.copyFromUtf8("0")).build();
     PubSubMessage message1 =
         PubSubMessage.newBuilder().setKey(ByteString.copyFromUtf8("1")).build();
-    when(mockRoutingPolicy.route(message0.getKey())).thenReturn(Partition.of(0));
-    when(mockRoutingPolicy.route(message1.getKey())).thenReturn(Partition.of(1));
+    when(mockRoutingPolicy.route(message0)).thenReturn(Partition.of(0));
+    when(mockRoutingPolicy.route(message1)).thenReturn(Partition.of(1));
 
     Future<?> unusedFuture0 = publisher.publish(message0);
     Future<?> unusedFuture1 = publisher.publish(message1);

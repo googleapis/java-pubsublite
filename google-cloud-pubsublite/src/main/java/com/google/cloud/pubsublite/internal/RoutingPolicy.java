@@ -17,15 +17,13 @@
 package com.google.cloud.pubsublite.internal;
 
 import com.google.cloud.pubsublite.Partition;
-import com.google.protobuf.ByteString;
+import com.google.cloud.pubsublite.proto.PubSubMessage;
 
 // Route the user message key to a given partition.
 public interface RoutingPolicy {
   interface Factory {
     RoutingPolicy newPolicy(long numPartitions);
   }
-  // Route a message without a key to a partition.
-  Partition routeWithoutKey() throws CheckedApiException;
-  // Route a message with a key to a partition.
-  Partition route(ByteString messageKey) throws CheckedApiException;
+  // Route a message to a partition.
+  Partition route(PubSubMessage messageKey) throws CheckedApiException;
 }

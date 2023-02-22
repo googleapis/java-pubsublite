@@ -84,7 +84,7 @@ public class RoutingPublisherTest {
   public void publishValidRoute() throws Exception {
     PubSubMessage message =
         PubSubMessage.newBuilder().setKey(ByteString.copyFromUtf8("abc")).build();
-    when(routingPolicy.route(message.getKey())).thenReturn(Partition.of(1));
+    when(routingPolicy.route(message)).thenReturn(Partition.of(1));
     MessageMetadata meta = MessageMetadata.of(Partition.of(1), Offset.of(3));
     when(publisher1.publish(message)).thenReturn(ApiFutures.immediateFuture(meta));
     ApiFuture<MessageMetadata> fut = routing.publish(message);
@@ -97,7 +97,7 @@ public class RoutingPublisherTest {
   public void publishInvalidRoute() throws Exception {
     PubSubMessage message =
         PubSubMessage.newBuilder().setKey(ByteString.copyFromUtf8("abc")).build();
-    when(routingPolicy.route(message.getKey())).thenReturn(Partition.of(77));
+    when(routingPolicy.route(message)).thenReturn(Partition.of(77));
     ApiFuture<MessageMetadata> fut = routing.publish(message);
     ApiExceptionMatcher.assertFutureThrowsCode(fut, Code.FAILED_PRECONDITION);
   }

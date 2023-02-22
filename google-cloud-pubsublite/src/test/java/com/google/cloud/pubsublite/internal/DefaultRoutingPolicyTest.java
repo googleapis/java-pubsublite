@@ -19,6 +19,7 @@ package com.google.cloud.pubsublite.internal;
 import static com.google.common.truth.Truth.assertThat;
 
 import com.google.cloud.pubsublite.Partition;
+import com.google.cloud.pubsublite.proto.PubSubMessage;
 import com.google.common.collect.ImmutableMap;
 import com.google.gson.Gson;
 import com.google.protobuf.ByteString;
@@ -54,7 +55,7 @@ public class DefaultRoutingPolicyTest {
     Map<ByteString, Partition> map = loadTestCases();
     ImmutableMap.Builder<ByteString, Partition> results = ImmutableMap.builder();
     for (ByteString key : map.keySet()) {
-      results.put(key, policy.route(key));
+      results.put(key, policy.route(PubSubMessage.newBuilder().setKey(key).build()));
     }
     assertThat(results.build()).containsExactlyEntriesIn(map);
   }

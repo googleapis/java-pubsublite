@@ -20,6 +20,7 @@ import static com.google.cloud.pubsublite.internal.UncheckedApiPreconditions.che
 
 import com.google.api.gax.rpc.ApiException;
 import com.google.cloud.pubsublite.Partition;
+import com.google.cloud.pubsublite.proto.PubSubMessage;
 import com.google.common.hash.HashCode;
 import com.google.common.hash.Hashing;
 import com.google.protobuf.ByteString;
@@ -40,13 +41,16 @@ public class DefaultRoutingPolicy implements RoutingPolicy {
   }
 
   @Override
-  public Partition routeWithoutKey() throws ApiException {
+  public Partition route(PubSubMessage message) {
+    return message.getKey().isEmpty() ? routeWithoutKey() : routeWithKey(message.getKey());
+  }
+
+  private Partition routeWithoutKey() throws ApiException {
     long index = withoutKeyCounter.incrementAndGet();
     return Partition.of(index % numPartitions);
   }
 
-  @Override
-  public Partition route(ByteString messageKey) throws ApiException {
+  private Partition routeWithKey(ByteString messageKey) throws ApiException {
     HashCode code = Hashing.sha256().hashBytes(messageKey.asReadOnlyByteBuffer());
     checkArgument(code.bits() == 256); // sanity check.
     BigInteger bigEndianValue = new BigInteger(/*signum=*/ 1, code.asBytes());

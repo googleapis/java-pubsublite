@@ -103,13 +103,15 @@ public abstract class SingleConnection<StreamRequestT, StreamResponseT, ClientRe
   }
 
   protected void sendToClient(ClientResponseT response) {
-    if (isCompleted()) {
-      log.atFine().log("Sent response after stream completion: %s", response);
-      return;
+    synchronized (this) {
+      if (isCompleted()) {
+        log.atFine().log("Sent response after stream completion: %s", response);
+        return;
+      }
+      // This should be impossible to not have received the initial request, or be completed, and
+      // the caller has access to this object.
+      Preconditions.checkState(didReceiveInitial());
     }
-    // This should be impossible to not have received the initial request, or be completed, and
-    // the caller has access to this object.
-    Preconditions.checkState(didReceiveInitial());
     // The upcall may be reentrant, possibly on another thread while this thread is blocked.
     clientStream.onResponse(response);
   }

@@ -23,7 +23,6 @@ import com.google.api.core.ApiFutures;
 import com.google.api.gax.rpc.ApiException;
 import com.google.cloud.pubsublite.Offset;
 import com.google.cloud.pubsublite.internal.CheckedApiException;
-import com.google.cloud.pubsublite.internal.CloseableMonitor;
 import com.google.cloud.pubsublite.internal.ProxyService;
 import com.google.cloud.pubsublite.proto.InitialCommitCursorRequest;
 import com.google.cloud.pubsublite.proto.SequencedCommitCursorResponse;
@@ -31,6 +30,7 @@ import com.google.cloud.pubsublite.proto.StreamingCommitCursorRequest;
 import com.google.cloud.pubsublite.proto.StreamingCommitCursorResponse;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Preconditions;
+import com.google.common.util.concurrent.Monitor;
 import com.google.common.util.concurrent.Monitor.Guard;
 import com.google.errorprone.annotations.concurrent.GuardedBy;
 import java.util.Optional;
@@ -39,25 +39,25 @@ public class CommitterImpl extends ProxyService
     implements Committer, RetryingConnectionObserver<SequencedCommitCursorResponse> {
   private final StreamingCommitCursorRequest initialRequest;
 
-  private final CloseableMonitor monitor = new CloseableMonitor();
+  private final Monitor monitor = new Monitor();
   private final Guard isEmptyOrError =
-      new Guard(monitor.monitor) {
+      new Guard(monitor) {
         public boolean isSatisfied() {
           // Wait until the state is empty or a permanent error occurred.
           return state.isEmpty() || permanentError.isPresent();
         }
       };
 
-  @GuardedBy("monitor.monitor")
+  @GuardedBy("monitor")
   private final RetryingConnection<StreamingCommitCursorRequest, ConnectedCommitter> connection;
 
-  @GuardedBy("monitor.monitor")
+  @GuardedBy("monitor")
   private boolean shutdown = false;
 
-  @GuardedBy("monitor.monitor")
+  @GuardedBy("monitor")
   private Optional<CheckedApiException> permanentError = Optional.empty();
 
-  @GuardedBy("monitor.monitor")
+  @GuardedBy("monitor")
   private final CommitState state = new CommitState();
 
   @VisibleForTesting
@@ -83,25 +83,32 @@ public class CommitterImpl extends ProxyService
   // ProxyService implementation.
   @Override
   protected void handlePermanentError(CheckedApiException error) {
-    try (CloseableMonitor.Hold h = monitor.enter()) {
+    monitor.enter();
+    try {
       permanentError = Optional.of(error);
       shutdown = true;
       state.abort(error);
+    } finally {
+      monitor.leave();
     }
   }
 
   @Override
   protected void stop() {
-    try (CloseableMonitor.Hold h = monitor.enter()) {
+    monitor.enter();
+    try {
       shutdown = true;
+      monitor.waitForUninterruptibly(isEmptyOrError);
+    } finally {
+      monitor.leave();
     }
-    try (CloseableMonitor.Hold h = monitor.enterWhenUninterruptibly(isEmptyOrError)) {}
   }
 
   // RetryingConnectionObserver implementation.
   @Override
   public void triggerReinitialize(CheckedApiException streamError) {
-    try (CloseableMonitor.Hold h = monitor.enter()) {
+    monitor.enter();
+    try {
       connection.reinitialize(initialRequest);
       Optional<Offset> offsetOr = state.reinitializeAndReturnToSend();
       if (!offsetOr.isPresent()) return; // There are no outstanding commit requests.
@@ -112,21 +119,27 @@ public class CommitterImpl extends ProxyService
           });
     } catch (CheckedApiException e) {
       onPermanentError(e);
+    } finally {
+      monitor.leave();
     }
   }
 
   @Override
   public void onClientResponse(SequencedCommitCursorResponse value) throws CheckedApiException {
     Preconditions.checkArgument(value.getAcknowledgedCommits() > 0);
-    try (CloseableMonitor.Hold h = monitor.enter()) {
+    monitor.enter();
+    try {
       state.complete(value.getAcknowledgedCommits());
+    } finally {
+      monitor.leave();
     }
   }
 
   // Committer implementation.
   @Override
   public ApiFuture<Void> commitOffset(Offset offset) {
-    try (CloseableMonitor.Hold h = monitor.enter()) {
+    monitor.enter();
+    try {
       checkState(!shutdown, "Committed after the stream shut down.");
       connection.modifyConnection(
           connectedCommitter ->
@@ -135,15 +148,20 @@ public class CommitterImpl extends ProxyService
     } catch (CheckedApiException e) {
       onPermanentError(e);
       return ApiFutures.immediateFailedFuture(e);
+    } finally {
+      monitor.leave();
     }
   }
 
   @Override
   public void waitUntilEmpty() throws CheckedApiException {
-    try (CloseableMonitor.Hold h = monitor.enterWhenUninterruptibly(isEmptyOrError)) {
+    monitor.enterWhenUninterruptibly(isEmptyOrError);
+    try {
       if (permanentError.isPresent()) {
         throw permanentError.get();
       }
+    } finally {
+      monitor.leave();
     }
   }
 }

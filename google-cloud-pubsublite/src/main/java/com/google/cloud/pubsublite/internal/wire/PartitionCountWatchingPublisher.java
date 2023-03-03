@@ -27,7 +27,6 @@ import com.google.api.core.ApiService;
 import com.google.cloud.pubsublite.MessageMetadata;
 import com.google.cloud.pubsublite.Partition;
 import com.google.cloud.pubsublite.internal.CheckedApiException;
-import com.google.cloud.pubsublite.internal.CloseableMonitor;
 import com.google.cloud.pubsublite.internal.ProxyService;
 import com.google.cloud.pubsublite.internal.Publisher;
 import com.google.cloud.pubsublite.internal.RoutingPolicy;
@@ -89,12 +88,10 @@ public class PartitionCountWatchingPublisher extends ProxyService
     }
   }
 
-  private final CloseableMonitor monitor = new CloseableMonitor();
-
-  @GuardedBy("monitor.monitor")
+  @GuardedBy("this")
   private boolean shutdown = false;
 
-  @GuardedBy("monitor.monitor")
+  @GuardedBy("this")
   private Optional<PartitionsWithRouting> partitionsWithRouting = Optional.empty();
 
   PartitionCountWatchingPublisher(
@@ -107,12 +104,13 @@ public class PartitionCountWatchingPublisher extends ProxyService
     addServices(configWatcher, autoCloseableAsApiService(publisherFactory));
   }
 
+  private synchronized Optional<PartitionsWithRouting> getPartitions() {
+    return partitionsWithRouting;
+  }
+
   @Override
   public ApiFuture<MessageMetadata> publish(PubSubMessage message) {
-    Optional<PartitionsWithRouting> partitions;
-    try (CloseableMonitor.Hold h = monitor.enter()) {
-      partitions = partitionsWithRouting;
-    }
+    Optional<PartitionsWithRouting> partitions = getPartitions();
     if (!partitions.isPresent()) {
       throw new IllegalStateException("Publish called before start or after shutdown");
     }
@@ -126,10 +124,7 @@ public class PartitionCountWatchingPublisher extends ProxyService
 
   @Override
   public void cancelOutstandingPublishes() {
-    Optional<PartitionsWithRouting> partitions;
-    try (CloseableMonitor.Hold h = monitor.enter()) {
-      partitions = partitionsWithRouting;
-    }
+    Optional<PartitionsWithRouting> partitions = getPartitions();
     if (!partitions.isPresent()) {
       throw new IllegalStateException(
           "Cancel outstanding publishes called before start or after shutdown");
@@ -139,10 +134,7 @@ public class PartitionCountWatchingPublisher extends ProxyService
 
   @Override
   public void flush() throws IOException {
-    Optional<PartitionsWithRouting> partitions;
-    try (CloseableMonitor.Hold h = monitor.enter()) {
-      partitions = partitionsWithRouting;
-    }
+    Optional<PartitionsWithRouting> partitions = getPartitions();
     if (!partitions.isPresent()) {
       throw new IllegalStateException("Publish called before start or after shutdown");
     }
@@ -171,39 +163,35 @@ public class PartitionCountWatchingPublisher extends ProxyService
     return partitions;
   }
 
-  private void handleConfig(long partitionCount) {
-    try (CloseableMonitor.Hold h = monitor.enter()) {
-      if (shutdown) {
-        return;
-      }
-      Optional<PartitionsWithRouting> current = partitionsWithRouting;
-      long currentSize = current.map(withRouting -> withRouting.publishers.size()).orElse(0);
-      if (partitionCount == currentSize) {
-        return;
-      }
-      if (partitionCount < currentSize) {
-        log.atWarning().log(
-            "Received an unexpected decrease in partition count. Previous partition count %s, new count %s",
-            currentSize, partitionCount);
-        return;
-      }
-      ImmutableMap.Builder<Partition, Publisher<MessageMetadata>> mapBuilder =
-          ImmutableMap.builder();
-      current.ifPresent(p -> p.publishers.forEach(mapBuilder::put));
-      getNewPartitionPublishers(LongStream.range(currentSize, partitionCount))
-          .forEach(mapBuilder::put);
-
-      partitionsWithRouting =
-          Optional.of(
-              new PartitionsWithRouting(
-                  mapBuilder.build(), policyFactory.newPolicy(partitionCount)));
+  private synchronized void handleConfig(long partitionCount) {
+    if (shutdown) {
+      return;
     }
+    Optional<PartitionsWithRouting> current = partitionsWithRouting;
+    long currentSize = current.map(withRouting -> withRouting.publishers.size()).orElse(0);
+    if (partitionCount == currentSize) {
+      return;
+    }
+    if (partitionCount < currentSize) {
+      log.atWarning().log(
+          "Received an unexpected decrease in partition count. Previous partition count %s, new count %s",
+          currentSize, partitionCount);
+      return;
+    }
+    ImmutableMap.Builder<Partition, Publisher<MessageMetadata>> mapBuilder = ImmutableMap.builder();
+    current.ifPresent(p -> p.publishers.forEach(mapBuilder::put));
+    getNewPartitionPublishers(LongStream.range(currentSize, partitionCount))
+        .forEach(mapBuilder::put);
+
+    partitionsWithRouting =
+        Optional.of(
+            new PartitionsWithRouting(mapBuilder.build(), policyFactory.newPolicy(partitionCount)));
   }
 
   @Override
   protected void stop() {
     Optional<PartitionsWithRouting> current;
-    try (CloseableMonitor.Hold h = monitor.enter()) {
+    synchronized (this) {
       shutdown = true;
       current = partitionsWithRouting;
       partitionsWithRouting = Optional.empty();

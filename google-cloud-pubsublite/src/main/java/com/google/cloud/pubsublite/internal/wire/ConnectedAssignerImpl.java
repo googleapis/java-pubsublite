@@ -20,7 +20,6 @@ import static com.google.cloud.pubsublite.internal.CheckedApiPreconditions.check
 
 import com.google.api.gax.rpc.ResponseObserver;
 import com.google.cloud.pubsublite.internal.CheckedApiException;
-import com.google.cloud.pubsublite.internal.CloseableMonitor;
 import com.google.cloud.pubsublite.proto.PartitionAssignment;
 import com.google.cloud.pubsublite.proto.PartitionAssignmentAck;
 import com.google.cloud.pubsublite.proto.PartitionAssignmentRequest;
@@ -32,9 +31,7 @@ public class ConnectedAssignerImpl
     implements ConnectedAssigner {
   private static final Duration STREAM_IDLE_TIMEOUT = Duration.ofMinutes(10);
 
-  private final CloseableMonitor monitor = new CloseableMonitor();
-
-  @GuardedBy("monitor.monitor")
+  @GuardedBy("this")
   boolean outstanding = false;
 
   private ConnectedAssignerImpl(
@@ -65,7 +62,7 @@ public class ConnectedAssignerImpl
 
   @Override
   protected void handleStreamResponse(PartitionAssignment response) throws CheckedApiException {
-    try (CloseableMonitor.Hold h = monitor.enter()) {
+    synchronized (this) {
       checkState(
           !outstanding,
           "Received assignment from the server while there was an assignment outstanding.");
@@ -76,8 +73,8 @@ public class ConnectedAssignerImpl
 
   // ConnectedAssigner implementation.
   @Override
-  public void ack() {
-    try (CloseableMonitor.Hold h = monitor.enter()) {
+  public synchronized void ack() {
+    try {
       checkState(outstanding, "Client acknowledged when there was no request outstanding.");
       outstanding = false;
     } catch (CheckedApiException e) {

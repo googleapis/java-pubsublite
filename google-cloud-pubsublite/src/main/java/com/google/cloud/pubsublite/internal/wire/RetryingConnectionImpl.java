@@ -24,7 +24,6 @@ import com.google.api.gax.rpc.StatusCode.Code;
 import com.google.api.gax.rpc.StreamController;
 import com.google.cloud.pubsublite.ErrorCodes;
 import com.google.cloud.pubsublite.internal.CheckedApiException;
-import com.google.cloud.pubsublite.internal.CloseableMonitor;
 import com.google.cloud.pubsublite.internal.ExtractStatus;
 import com.google.common.flogger.GoogleLogger;
 import java.time.Duration;
@@ -55,19 +54,18 @@ class RetryingConnectionImpl<
       connectionFactory;
   private final RetryingConnectionObserver<ClientResponseT> observer;
 
-  // connectionMonitor will not be held in any upcalls.
-  private final CloseableMonitor connectionMonitor = new CloseableMonitor();
+  // "this" will not be held in any upcalls.
 
-  @GuardedBy("connectionMonitor.monitor")
+  @GuardedBy("this")
   private long nextRetryBackoffDuration = INITIAL_RECONNECT_BACKOFF_TIME.toMillis();
 
-  @GuardedBy("connectionMonitor.monitor")
+  @GuardedBy("this")
   private StreamRequestT lastInitialRequest;
 
-  @GuardedBy("connectionMonitor.monitor")
+  @GuardedBy("this")
   private ConnectionT currentConnection;
 
-  @GuardedBy("connectionMonitor.monitor")
+  @GuardedBy("this")
   private boolean completed = false;
 
   RetryingConnectionImpl(
@@ -83,11 +81,8 @@ class RetryingConnectionImpl<
   }
 
   @Override
-  protected void doStart() {
-    StreamRequestT initialInitialRequest;
-    try (CloseableMonitor.Hold h = connectionMonitor.enter()) {
-      initialInitialRequest = lastInitialRequest;
-    }
+  protected synchronized void doStart() {
+    StreamRequestT initialInitialRequest = lastInitialRequest;
     SystemExecutors.getFuturesExecutor()
         .execute(
             () -> {
@@ -98,19 +93,17 @@ class RetryingConnectionImpl<
 
   // Reinitialize the stream. Must be called in a downcall to prevent deadlock.
   @Override
-  public void reinitialize(StreamRequestT initialRequest) {
-    try (CloseableMonitor.Hold h = connectionMonitor.enter()) {
-      if (completed) return;
-      lastInitialRequest = initialRequest;
-      logger.atFiner().log("Start initializing connection for %s", streamDescription());
-      currentConnection = connectionFactory.New(streamFactory, this, lastInitialRequest);
-      logger.atFiner().log("Finished initializing connection for %s", streamDescription());
-    }
+  public synchronized void reinitialize(StreamRequestT initialRequest) {
+    if (completed) return;
+    lastInitialRequest = initialRequest;
+    logger.atFiner().log("Start initializing connection for %s", streamDescription());
+    currentConnection = connectionFactory.New(streamFactory, this, lastInitialRequest);
+    logger.atFiner().log("Finished initializing connection for %s", streamDescription());
   }
 
   @Override
-  protected void doStop() {
-    try (CloseableMonitor.Hold h = connectionMonitor.enter()) {
+  protected synchronized void doStop() {
+    try {
       if (completed) return;
       completed = true;
       logger.atFine().log("Terminating connection for %s", streamDescription());
@@ -128,21 +121,18 @@ class RetryingConnectionImpl<
 
   // Run modification on the current connection or empty if not connected.
   @Override
-  public void modifyConnection(Modifier<ConnectionT> modifier) throws CheckedApiException {
-    try (CloseableMonitor.Hold h = connectionMonitor.enter()) {
-      if (completed) {
-        modifier.modify(Optional.empty());
-      } else {
-        modifier.modify(Optional.of(currentConnection));
-      }
+  public synchronized void modifyConnection(Modifier<ConnectionT> modifier)
+      throws CheckedApiException {
+    if (completed) {
+      modifier.modify(Optional.empty());
+    } else {
+      modifier.modify(Optional.of(currentConnection));
     }
   }
 
-  void setPermanentError(Throwable error) {
-    try (CloseableMonitor.Hold h = connectionMonitor.enter()) {
-      if (completed) return;
-      completed = true;
-    }
+  synchronized void setPermanentError(Throwable error) {
+    if (completed) return;
+    completed = true;
     logger.atInfo().withCause(error).log("Permanent error occurred for %s", streamDescription());
     notifyFailed(error);
   }
@@ -156,7 +146,7 @@ class RetryingConnectionImpl<
   // ResponseObserver implementation
   @Override
   public final void onResponse(ClientResponseT value) {
-    try (CloseableMonitor.Hold h = connectionMonitor.enter()) {
+    synchronized (this) {
       if (completed) return;
       nextRetryBackoffDuration = INITIAL_RECONNECT_BACKOFF_TIME.toMillis();
     }
@@ -181,16 +171,15 @@ class RetryingConnectionImpl<
     }
     Optional<Throwable> throwable = Optional.empty();
     long backoffTime = 0;
-    try (CloseableMonitor.Hold h = connectionMonitor.enter()) {
-      if (currentConnection != null) {
-        currentConnection.close();
+    try {
+      synchronized (this) {
+        if (currentConnection != null) {
+          currentConnection.close();
+        }
+        backoffTime = nextRetryBackoffDuration;
+        nextRetryBackoffDuration = Math.min(backoffTime * 2, MAX_RECONNECT_BACKOFF_TIME.toMillis());
       }
-      backoffTime = nextRetryBackoffDuration;
-      nextRetryBackoffDuration = Math.min(backoffTime * 2, MAX_RECONNECT_BACKOFF_TIME.toMillis());
     } catch (Throwable t2) {
-      throwable = Optional.of(t2);
-    }
-    if (throwable.isPresent()) {
       setPermanentError(
           new CheckedApiException(
               "Failed to close preexisting stream after error.",
@@ -225,7 +214,7 @@ class RetryingConnectionImpl<
   public final void onComplete() {
     logger.atFine().log("Stream completed for %s", streamDescription());
     boolean expectedCompletion;
-    try (CloseableMonitor.Hold h = connectionMonitor.enter()) {
+    synchronized (this) {
       expectedCompletion = completed;
     }
     if (!expectedCompletion) {
@@ -234,9 +223,7 @@ class RetryingConnectionImpl<
     }
   }
 
-  private String streamDescription() {
-    try (CloseableMonitor.Hold h = connectionMonitor.enter()) {
-      return lastInitialRequest.getClass().getSimpleName() + ": " + lastInitialRequest.toString();
-    }
+  private synchronized String streamDescription() {
+    return lastInitialRequest.getClass().getSimpleName() + ": " + lastInitialRequest.toString();
   }
 }

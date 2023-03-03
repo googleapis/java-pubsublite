@@ -31,7 +31,6 @@ import com.google.cloud.pubsublite.Constants;
 import com.google.cloud.pubsublite.Offset;
 import com.google.cloud.pubsublite.internal.AlarmFactory;
 import com.google.cloud.pubsublite.internal.CheckedApiException;
-import com.google.cloud.pubsublite.internal.CloseableMonitor;
 import com.google.cloud.pubsublite.internal.ProxyService;
 import com.google.cloud.pubsublite.internal.PublishSequenceNumber;
 import com.google.cloud.pubsublite.internal.SequencedPublisher;
@@ -64,31 +63,27 @@ public final class PublisherImpl extends ProxyService
   private final AlarmFactory alarmFactory;
   private final PublishRequest initialRequest;
 
-  private final CloseableMonitor monitor = new CloseableMonitor();
+  private final Monitor monitor = new Monitor();
   private final Monitor.Guard noneInFlight =
-      new Monitor.Guard(monitor.monitor) {
+      new Monitor.Guard(monitor) {
         @Override
         public boolean isSatisfied() {
           return batchesInFlight.isEmpty() || shutdown;
         }
       };
 
-  @GuardedBy("monitor.monitor")
+  @GuardedBy("monitor")
   private Optional<Future<?>> alarmFuture = Optional.empty();
 
-  @GuardedBy("monitor.monitor")
+  @GuardedBy("monitor")
   private final RetryingConnection<PublishRequest, BatchPublisher> connection;
 
-  @GuardedBy("monitor.monitor")
+  @GuardedBy("monitor")
   private boolean shutdown = false;
 
-  @GuardedBy("monitor.monitor")
+  @GuardedBy("monitor")
   private Offset lastSentOffset = Offset.of(-1);
 
-  // batcherMonitor is always acquired after monitor.monitor when both are held.
-  private final CloseableMonitor batcherMonitor = new CloseableMonitor();
-
-  @GuardedBy("batcherMonitor.monitor")
   private final SerialBatcher batcher;
 
   private static class InFlightBatch {
@@ -114,7 +109,7 @@ public final class PublisherImpl extends ProxyService
   }
 
   // An ordered list of batches in flight.
-  @GuardedBy("monitor.monitor")
+  @GuardedBy("monitor")
   private final Queue<InFlightBatch> batchesInFlight = new ArrayDeque<>();
 
   @VisibleForTesting
@@ -153,7 +148,7 @@ public final class PublisherImpl extends ProxyService
         batchingSettings);
   }
 
-  @GuardedBy("monitor.monitor")
+  @GuardedBy("monitor")
   private void rebatchForRestart() {
     Queue<UnbatchedMessage> messages =
         batchesInFlight.stream()
@@ -188,7 +183,8 @@ public final class PublisherImpl extends ProxyService
 
   @Override
   public void triggerReinitialize(CheckedApiException streamError) {
-    try (CloseableMonitor.Hold h = monitor.enter()) {
+    monitor.enter();
+    try {
       connection.reinitialize(initialRequest);
       rebatchForRestart();
       Collection<InFlightBatch> batches = batchesInFlight;
@@ -203,50 +199,59 @@ public final class PublisherImpl extends ProxyService
           });
     } catch (CheckedApiException e) {
       onPermanentError(e);
+    } finally {
+      monitor.leave();
     }
   }
 
   @Override
   protected void handlePermanentError(CheckedApiException error) {
-    try (CloseableMonitor.Hold h = monitor.enter()) {
+    monitor.enter();
+    try {
       shutdown = true;
       this.alarmFuture.ifPresent(future -> future.cancel(false));
       this.alarmFuture = Optional.empty();
       terminateOutstandingPublishes(error);
+    } finally {
+      monitor.leave();
     }
   }
 
   @Override
   protected void start() {
-    try (CloseableMonitor.Hold h = monitor.enter()) {
+    monitor.enter();
+    try {
       this.alarmFuture = Optional.of(alarmFactory.newAlarm(this::flushToStream));
+    } finally {
+      monitor.leave();
     }
   }
 
   @Override
   protected void stop() {
     flush(); // Flush any outstanding messages that were batched.
-    try (CloseableMonitor.Hold h = monitor.enter()) {
+    monitor.enter();
+    try {
       shutdown = true;
       this.alarmFuture.ifPresent(future -> future.cancel(false));
       this.alarmFuture = Optional.empty();
+    } finally {
+      monitor.leave();
     }
     flush(); // Flush again in case messages were added since shutdown was set.
   }
 
-  @GuardedBy("monitor.monitor")
+  @GuardedBy("monitor")
   private void terminateOutstandingPublishes(CheckedApiException e) {
     batchesInFlight.forEach(
         batch -> batch.messages.forEach(message -> message.future().setException(e)));
-    try (CloseableMonitor.Hold h = batcherMonitor.enter()) {
-      batcher.flush().forEach(batch -> batch.forEach(m -> m.future().setException(e)));
-    }
+    batcher.flush().forEach(batch -> batch.forEach(m -> m.future().setException(e)));
     batchesInFlight.clear();
   }
 
   @Override
   public ApiFuture<Offset> publish(PubSubMessage message, PublishSequenceNumber sequenceNumber) {
-    try (CloseableMonitor.Hold h = batcherMonitor.enter()) {
+    try {
       ApiService.State currentState = state();
       switch (currentState) {
         case FAILED:
@@ -270,28 +275,30 @@ public final class PublisherImpl extends ProxyService
 
   @Override
   public void cancelOutstandingPublishes() {
-    try (CloseableMonitor.Hold h = monitor.enter()) {
+    monitor.enter();
+    try {
       terminateOutstandingPublishes(
           new CheckedApiException("Cancelled by client.", Code.CANCELLED));
+    } finally {
+      monitor.leave();
     }
   }
 
   private void flushToStream() {
-    try (CloseableMonitor.Hold h = monitor.enter()) {
+    monitor.enter();
+    try {
       if (shutdown) return;
-      List<List<UnbatchedMessage>> batches;
-      try (CloseableMonitor.Hold h2 = batcherMonitor.enter()) {
-        batches = batcher.flush();
-      }
-      for (List<UnbatchedMessage> batch : batches) {
+      for (List<UnbatchedMessage> batch : batcher.flush()) {
         processBatch(batch);
       }
     } catch (CheckedApiException e) {
       onPermanentError(e);
+    } finally {
+      monitor.leave();
     }
   }
 
-  @GuardedBy("monitor.monitor")
+  @GuardedBy("monitor")
   private void processBatch(List<UnbatchedMessage> batch) throws CheckedApiException {
     if (batch.isEmpty()) return;
     InFlightBatch inFlightBatch = new InFlightBatch(batch);
@@ -309,7 +316,8 @@ public final class PublisherImpl extends ProxyService
   @Override
   public void flush() {
     flushToStream();
-    try (CloseableMonitor.Hold h = monitor.enterWhenUninterruptibly(noneInFlight)) {}
+    monitor.enterWhenUninterruptibly(noneInFlight);
+    monitor.leave();
   }
 
   @Override
@@ -318,7 +326,8 @@ public final class PublisherImpl extends ProxyService
     ImmutableList<CursorRange> ranges =
         ImmutableList.sortedCopyOf(
             comparing(CursorRange::getStartIndex), publishResponse.getCursorRangesList());
-    try (CloseableMonitor.Hold h = monitor.enter()) {
+    monitor.enter();
+    try {
       checkState(
           !batchesInFlight.isEmpty(), "Received publish response with no batches in flight.");
       InFlightBatch batch = batchesInFlight.remove();
@@ -363,6 +372,8 @@ public final class PublisherImpl extends ProxyService
           throw e;
         }
       }
+    } finally {
+      monitor.leave();
     }
   }
 }

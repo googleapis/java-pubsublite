@@ -16,6 +16,7 @@
 
 package com.google.cloud.pubsublite.internal;
 
+import com.google.common.util.concurrent.Monitor;
 import com.google.common.util.concurrent.Monitor.Guard;
 import java.util.ArrayDeque;
 import java.util.Queue;
@@ -26,22 +27,22 @@ import javax.annotation.concurrent.GuardedBy;
 public final class SerialExecutor implements AutoCloseable, Executor {
   private final Executor executor;
 
-  private final CloseableMonitor monitor = new CloseableMonitor();
+  private final Monitor monitor = new Monitor();
   private final Guard isInactive =
-      new Guard(monitor.monitor) {
+      new Guard(monitor) {
         @Override
         public boolean isSatisfied() {
           return !isTaskActive;
         }
       };
 
-  @GuardedBy("monitor.monitor")
+  @GuardedBy("monitor")
   private final Queue<Runnable> tasks;
 
-  @GuardedBy("monitor.monitor")
+  @GuardedBy("monitor")
   private boolean isTaskActive;
 
-  @GuardedBy("monitor.monitor")
+  @GuardedBy("monitor")
   private boolean isShutdown;
 
   public SerialExecutor(Executor executor) {
@@ -53,7 +54,7 @@ public final class SerialExecutor implements AutoCloseable, Executor {
 
   /** Waits until there are no active tasks. */
   public void waitUntilInactive() {
-    try (CloseableMonitor.Hold h = monitor.enterWhenUninterruptibly(isInactive)) {}
+    monitor.enterWhenUninterruptibly(isInactive);
   }
 
   /**
@@ -62,14 +63,18 @@ public final class SerialExecutor implements AutoCloseable, Executor {
    */
   @Override
   public void close() {
-    try (CloseableMonitor.Hold h = monitor.enter()) {
+    monitor.enter();
+    try {
       isShutdown = true;
+    } finally {
+      monitor.leave();
     }
   }
 
   @Override
   public void execute(Runnable r) {
-    try (CloseableMonitor.Hold h = monitor.enter()) {
+    monitor.enter();
+    try {
       if (isShutdown) {
         return;
       }
@@ -86,21 +91,29 @@ public final class SerialExecutor implements AutoCloseable, Executor {
       if (!isTaskActive) {
         scheduleNextTask();
       }
+    } finally {
+      monitor.leave();
     }
   }
 
   private boolean shouldExecuteTask() {
-    try (CloseableMonitor.Hold h = monitor.enter()) {
+    monitor.enter();
+    try {
       return !isShutdown;
+    } finally {
+      monitor.leave();
     }
   }
 
   private void scheduleNextTask() {
-    try (CloseableMonitor.Hold h = monitor.enter()) {
+    monitor.enter();
+    try {
       isTaskActive = !tasks.isEmpty() && !isShutdown;
       if (isTaskActive) {
         executor.execute(tasks.poll());
       }
+    } finally {
+      monitor.leave();
     }
   }
 }

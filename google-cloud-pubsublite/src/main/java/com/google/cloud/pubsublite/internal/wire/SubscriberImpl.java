@@ -22,7 +22,6 @@ import static com.google.cloud.pubsublite.internal.ExtractStatus.toCanonical;
 import com.google.api.gax.rpc.ApiException;
 import com.google.cloud.pubsublite.internal.AlarmFactory;
 import com.google.cloud.pubsublite.internal.CheckedApiException;
-import com.google.cloud.pubsublite.internal.CloseableMonitor;
 import com.google.cloud.pubsublite.internal.ExtractStatus;
 import com.google.cloud.pubsublite.internal.ProxyService;
 import com.google.cloud.pubsublite.internal.SerialExecutor;
@@ -62,24 +61,22 @@ public class SubscriberImpl extends ProxyService
   // Used to ensure messages are delivered to consumers in order.
   private final SerialExecutor messageDeliveryExecutor;
 
-  private final CloseableMonitor monitor = new CloseableMonitor();
-
-  @GuardedBy("monitor.monitor")
+  @GuardedBy("this")
   private Optional<Future<?>> alarmFuture = Optional.empty();
 
-  @GuardedBy("monitor.monitor")
+  @GuardedBy("this")
   private final RetryingConnection<SubscribeRequest, ConnectedSubscriber> connection;
 
-  @GuardedBy("monitor.monitor")
+  @GuardedBy("this")
   private final NextOffsetTracker nextOffsetTracker = new NextOffsetTracker();
 
-  @GuardedBy("monitor.monitor")
+  @GuardedBy("this")
   private final FlowControlBatcher flowControlBatcher = new FlowControlBatcher();
 
-  @GuardedBy("monitor.monitor")
+  @GuardedBy("this")
   private SeekRequest initialLocation;
 
-  @GuardedBy("monitor.monitor")
+  @GuardedBy("this")
   private boolean shutdown = false;
 
   @VisibleForTesting
@@ -126,20 +123,16 @@ public class SubscriberImpl extends ProxyService
 
   // ProxyService implementation.
   @Override
-  protected void start() {
-    try (CloseableMonitor.Hold h = monitor.enter()) {
-      alarmFuture = Optional.of(alarmFactory.newAlarm(this::processBatchFlowRequest));
-    }
+  protected synchronized void start() {
+    alarmFuture = Optional.of(alarmFactory.newAlarm(this::processBatchFlowRequest));
   }
 
   @Override
-  protected void stop() {
-    try (CloseableMonitor.Hold h = monitor.enter()) {
-      shutdown = true;
-      this.alarmFuture.ifPresent(future -> future.cancel(false));
-      this.alarmFuture = Optional.empty();
-      messageDeliveryExecutor.close();
-    }
+  protected synchronized void stop() {
+    shutdown = true;
+    this.alarmFuture.ifPresent(future -> future.cancel(false));
+    this.alarmFuture = Optional.empty();
+    messageDeliveryExecutor.close();
   }
 
   @Override
@@ -148,36 +141,28 @@ public class SubscriberImpl extends ProxyService
   }
 
   @Override
-  public void allowFlow(FlowControlRequest clientRequest) throws CheckedApiException {
-    try (CloseableMonitor.Hold h = monitor.enter()) {
-      if (shutdown) return;
-      flowControlBatcher.onClientFlowRequest(clientRequest);
-      if (flowControlBatcher.shouldExpediteBatchRequest()) {
-        connection.modifyConnection(
-            connectedSubscriber -> connectedSubscriber.ifPresent(this::flushBatchFlowRequest));
-      }
+  public synchronized void allowFlow(FlowControlRequest clientRequest) throws CheckedApiException {
+    if (shutdown) return;
+    flowControlBatcher.onClientFlowRequest(clientRequest);
+    if (flowControlBatcher.shouldExpediteBatchRequest()) {
+      connection.modifyConnection(
+          connectedSubscriber -> connectedSubscriber.ifPresent(this::flushBatchFlowRequest));
     }
   }
 
-  private SubscribeRequest getInitialRequest() {
-    try (CloseableMonitor.Hold h = monitor.enter()) {
-      return SubscribeRequest.newBuilder()
-          .setInitial(
-              baseInitialRequest
-                  .toBuilder()
-                  .setInitialLocation(
-                      nextOffsetTracker.requestForRestart().orElse(initialLocation)))
-          .build();
-    }
+  private synchronized SubscribeRequest getInitialRequest() {
+    return SubscribeRequest.newBuilder()
+        .setInitial(
+            baseInitialRequest
+                .toBuilder()
+                .setInitialLocation(nextOffsetTracker.requestForRestart().orElse(initialLocation)))
+        .build();
   }
 
-  public void reset() {
-    try (CloseableMonitor.Hold h = monitor.enter()) {
-      if (shutdown) return;
-      nextOffsetTracker.reset();
-      initialLocation =
-          SeekRequest.newBuilder().setNamedTarget(NamedTarget.COMMITTED_CURSOR).build();
-    }
+  public synchronized void reset() {
+    if (shutdown) return;
+    nextOffsetTracker.reset();
+    initialLocation = SeekRequest.newBuilder().setNamedTarget(NamedTarget.COMMITTED_CURSOR).build();
   }
 
   @Override
@@ -203,43 +188,48 @@ public class SubscriberImpl extends ProxyService
       }
     }
 
-    try (CloseableMonitor.Hold h = monitor.enter()) {
-      if (shutdown) return;
-      connection.reinitialize(getInitialRequest());
-      connection.modifyConnection(
-          connectedSubscriber -> {
-            checkArgument(monitor.monitor.isOccupiedByCurrentThread());
-            checkArgument(connectedSubscriber.isPresent());
-            flowControlBatcher
-                .requestForRestart()
-                .ifPresent(request -> connectedSubscriber.get().allowFlow(request));
-          });
-    } catch (CheckedApiException e) {
-      onPermanentError(e);
+    try {
+      doReinitialize();
+    } catch (Throwable t) {
+      onPermanentError(toCanonical(t));
     }
+  }
+
+  /* GuardedBy can't handle this function. */
+  @SuppressWarnings("GuardedBy")
+  private synchronized void doReinitialize() throws CheckedApiException {
+    if (shutdown) return;
+    connection.reinitialize(getInitialRequest());
+    connection.modifyConnection(
+        connectedSubscriber -> {
+          checkArgument(Thread.holdsLock(this));
+          checkArgument(connectedSubscriber.isPresent());
+          flowControlBatcher
+              .requestForRestart()
+              .ifPresent(request -> connectedSubscriber.get().allowFlow(request));
+        });
   }
 
   @Override
-  public void onClientResponse(List<SequencedMessage> messages) throws CheckedApiException {
-    try (CloseableMonitor.Hold h = monitor.enter()) {
-      if (shutdown) return;
-      nextOffsetTracker.onMessages(messages);
-      flowControlBatcher.onMessages(messages);
-      messageDeliveryExecutor.execute(
-          () -> {
-            try {
-              messageConsumer.accept(messages);
-            } catch (Throwable t) {
-              logger.atWarning().withCause(t).log(
-                  "Consumer threw an exception- failing subscriber. %s", baseInitialRequest);
-              onPermanentError(toCanonical(t));
-            }
-          });
-    }
+  public synchronized void onClientResponse(List<SequencedMessage> messages)
+      throws CheckedApiException {
+    if (shutdown) return;
+    nextOffsetTracker.onMessages(messages);
+    flowControlBatcher.onMessages(messages);
+    messageDeliveryExecutor.execute(
+        () -> {
+          try {
+            messageConsumer.accept(messages);
+          } catch (Throwable t) {
+            logger.atWarning().withCause(t).log(
+                "Consumer threw an exception- failing subscriber. %s", baseInitialRequest);
+            onPermanentError(toCanonical(t));
+          }
+        });
   }
 
-  private void processBatchFlowRequest() {
-    try (CloseableMonitor.Hold h = monitor.enter()) {
+  private synchronized void processBatchFlowRequest() {
+    try {
       if (shutdown) return;
       connection.modifyConnection(
           connectedSubscriber -> connectedSubscriber.ifPresent(this::flushBatchFlowRequest));
@@ -248,9 +238,7 @@ public class SubscriberImpl extends ProxyService
     }
   }
 
-  private void flushBatchFlowRequest(ConnectedSubscriber subscriber) {
-    try (CloseableMonitor.Hold h = monitor.enter()) {
-      flowControlBatcher.releasePendingRequest().ifPresent(subscriber::allowFlow);
-    }
+  private synchronized void flushBatchFlowRequest(ConnectedSubscriber subscriber) {
+    flowControlBatcher.releasePendingRequest().ifPresent(subscriber::allowFlow);
   }
 }

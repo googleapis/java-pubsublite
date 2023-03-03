@@ -29,7 +29,7 @@ import java.util.ArrayList;
 import java.util.Deque;
 import java.util.List;
 
-// A thread compatible batcher which preserves message order.
+// A thread safe batcher which preserves message order.
 class SerialBatcher {
   private final long byteLimit;
   private final long messageLimit;
@@ -64,7 +64,7 @@ class SerialBatcher {
     this.messageLimit = messageLimit;
   }
 
-  ApiFuture<Offset> add(PubSubMessage message, PublishSequenceNumber sequenceNumber)
+  synchronized ApiFuture<Offset> add(PubSubMessage message, PublishSequenceNumber sequenceNumber)
       throws CheckedApiException {
     if (!messages.isEmpty()
         && hasSequenceDiscontinuity(messages.peekLast().sequenceNumber(), sequenceNumber)) {
@@ -79,7 +79,7 @@ class SerialBatcher {
     return future;
   }
 
-  List<List<UnbatchedMessage>> flush() {
+  synchronized List<List<UnbatchedMessage>> flush() {
     List<List<UnbatchedMessage>> toReturn = new ArrayList<>();
     List<UnbatchedMessage> currentBatch = new ArrayList<>();
     toReturn.add(currentBatch);

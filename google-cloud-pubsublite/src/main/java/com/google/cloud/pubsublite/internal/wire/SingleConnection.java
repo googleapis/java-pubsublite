@@ -16,17 +16,21 @@
 
 package com.google.cloud.pubsublite.internal.wire;
 
+import static com.google.cloud.pubsublite.internal.MoreApiFutures.whenFirstDone;
+import static javax.swing.UIManager.get;
+
+import com.google.api.core.SettableApiFuture;
 import com.google.api.gax.rpc.ClientStream;
 import com.google.api.gax.rpc.ResponseObserver;
 import com.google.api.gax.rpc.StatusCode.Code;
 import com.google.api.gax.rpc.StreamController;
 import com.google.cloud.pubsublite.internal.CheckedApiException;
-import com.google.cloud.pubsublite.internal.CloseableMonitor;
 import com.google.common.base.Preconditions;
+import com.google.common.collect.ImmutableList;
 import com.google.common.flogger.GoogleLogger;
-import com.google.common.util.concurrent.Monitor.Guard;
 import com.google.errorprone.annotations.concurrent.GuardedBy;
 import java.time.Duration;
+import java.util.concurrent.Future;
 
 /**
  * A SingleConnection handles the state for a stream with an initial connection request that may
@@ -47,13 +51,11 @@ public abstract class SingleConnection<StreamRequestT, StreamResponseT, ClientRe
   private final boolean expectInitial;
   private final StreamIdleTimer streamIdleTimer;
 
-  private final CloseableMonitor connectionMonitor = new CloseableMonitor();
+  @GuardedBy("this")
+  private final SettableApiFuture<Void> receivedInitial = SettableApiFuture.create();
 
-  @GuardedBy("connectionMonitor.monitor")
-  private boolean receivedInitial = false;
-
-  @GuardedBy("connectionMonitor.monitor")
-  private boolean completed = false;
+  @GuardedBy("this")
+  private final SettableApiFuture<Void> completed = SettableApiFuture.create();
 
   protected abstract void handleInitialResponse(StreamResponseT response)
       throws CheckedApiException;
@@ -82,38 +84,33 @@ public abstract class SingleConnection<StreamRequestT, StreamResponseT, ClientRe
     if (!expectInitial) {
       return;
     }
-    try (CloseableMonitor.Hold h =
-        connectionMonitor.enterWhenUninterruptibly(
-            new Guard(connectionMonitor.monitor) {
-              @Override
-              public boolean isSatisfied() {
-                return receivedInitial || completed;
-              }
-            })) {}
+    get(receivedInitialOrDone());
   }
 
-  protected void sendToStream(StreamRequestT request) {
-    try (CloseableMonitor.Hold h = connectionMonitor.enter()) {
-      if (completed) {
-        log.atFine().log("Sent request after stream completion: %s", request);
-        return;
-      }
-      // This should be impossible to not have received the initial request, or be completed, and
-      // the caller has access to this object.
-      Preconditions.checkState(receivedInitial);
-      requestStream.send(request);
+  private synchronized Future<Void> receivedInitialOrDone() {
+    return whenFirstDone(ImmutableList.of(receivedInitial, completed));
+  }
+
+  protected synchronized void sendToStream(StreamRequestT request) {
+    if (isCompleted()) {
+      log.atFine().log("Sent request after stream completion: %s", request);
+      return;
     }
+    // This should be impossible to not have received the initial request, or be completed, and
+    // the caller has access to this object.
+    Preconditions.checkState(didReceiveInitial());
+    requestStream.send(request);
   }
 
   protected void sendToClient(ClientResponseT response) {
-    try (CloseableMonitor.Hold h = connectionMonitor.enter()) {
-      if (completed) {
+    synchronized (this) {
+      if (isCompleted()) {
         log.atFine().log("Sent response after stream completion: %s", response);
         return;
       }
       // This should be impossible to not have received the initial request, or be completed, and
       // the caller has access to this object.
-      Preconditions.checkState(receivedInitial);
+      Preconditions.checkState(didReceiveInitial());
     }
     // The upcall may be reentrant, possibly on another thread while this thread is blocked.
     clientStream.onResponse(response);
@@ -123,20 +120,22 @@ public abstract class SingleConnection<StreamRequestT, StreamResponseT, ClientRe
     abort(error);
   }
 
-  protected boolean isCompleted() {
-    try (CloseableMonitor.Hold h = connectionMonitor.enter()) {
-      return completed;
-    }
+  protected synchronized boolean isCompleted() {
+    return completed.isDone();
+  }
+
+  private synchronized boolean didReceiveInitial() {
+    return receivedInitial.isDone();
   }
 
   // Records the connection as completed and performs tear down, if not already completed. Returns
   // whether the connection was already complete.
-  private boolean completeStream() {
-    try (CloseableMonitor.Hold h = connectionMonitor.enter()) {
-      if (completed) {
+  private synchronized boolean completeStream() {
+    try {
+      if (isCompleted()) {
         return true;
       }
-      completed = true;
+      completed.set(null);
       streamIdleTimer.close();
     } catch (Exception e) {
       log.atSevere().withCause(e).log("Error occurred while shutting down connection.");
@@ -168,14 +167,14 @@ public abstract class SingleConnection<StreamRequestT, StreamResponseT, ClientRe
   @Override
   public void onResponse(StreamResponseT response) {
     boolean isFirst;
-    try (CloseableMonitor.Hold h = connectionMonitor.enter()) {
+    synchronized (this) {
       streamIdleTimer.restart();
-      if (completed) {
+      if (isCompleted()) {
         log.atFine().log("Received response on stream after completion: %s", response);
         return;
       }
-      isFirst = !receivedInitial;
-      receivedInitial = true;
+      isFirst = !didReceiveInitial();
+      receivedInitial.set(null);
     }
     try {
       if (isFirst) {

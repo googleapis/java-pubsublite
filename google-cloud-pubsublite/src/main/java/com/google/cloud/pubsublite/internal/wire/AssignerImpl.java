@@ -21,7 +21,6 @@ import static com.google.cloud.pubsublite.internal.wire.ApiServiceUtils.autoClos
 import com.google.api.gax.rpc.ApiException;
 import com.google.cloud.pubsublite.Partition;
 import com.google.cloud.pubsublite.internal.CheckedApiException;
-import com.google.cloud.pubsublite.internal.CloseableMonitor;
 import com.google.cloud.pubsublite.internal.ProxyService;
 import com.google.cloud.pubsublite.proto.InitialPartitionAssignmentRequest;
 import com.google.cloud.pubsublite.proto.PartitionAssignment;
@@ -41,12 +40,10 @@ public class AssignerImpl extends ProxyService
   private final PartitionAssignmentRequest initialRequest;
   private final String uuidHex;
 
-  private final CloseableMonitor monitor = new CloseableMonitor();
-
-  @GuardedBy("monitor.monitor")
+  @GuardedBy("this")
   private final RetryingConnection<PartitionAssignmentRequest, ConnectedAssigner> connection;
 
-  @GuardedBy("monitor.monitor")
+  @GuardedBy("this")
   private final PartitionAssignmentReceiver receiver;
 
   @VisibleForTesting
@@ -80,10 +77,8 @@ public class AssignerImpl extends ProxyService
   }
 
   @Override
-  public void triggerReinitialize(CheckedApiException streamError) {
-    try (CloseableMonitor.Hold h = monitor.enter()) {
-      connection.reinitialize(initialRequest);
-    }
+  public synchronized void triggerReinitialize(CheckedApiException streamError) {
+    connection.reinitialize(initialRequest);
   }
 
   private static Set<Partition> toSet(PartitionAssignment assignment) throws ApiException {
@@ -95,13 +90,11 @@ public class AssignerImpl extends ProxyService
   }
 
   @Override
-  public void onClientResponse(PartitionAssignment value) throws CheckedApiException {
-    try (CloseableMonitor.Hold h = monitor.enter()) {
-      Set<Partition> partitions = toSet(value);
-      logger.atFine().log("Subscriber with uuid %s received assignment: %s", uuidHex, partitions);
-      receiver.handleAssignment(partitions);
-      logger.atInfo().log("Subscriber with uuid %s handled assignment: %s", uuidHex, partitions);
-      connection.modifyConnection(connectionOr -> connectionOr.ifPresent(ConnectedAssigner::ack));
-    }
+  public synchronized void onClientResponse(PartitionAssignment value) throws CheckedApiException {
+    Set<Partition> partitions = toSet(value);
+    logger.atFine().log("Subscriber with uuid %s received assignment: %s", uuidHex, partitions);
+    receiver.handleAssignment(partitions);
+    logger.atInfo().log("Subscriber with uuid %s handled assignment: %s", uuidHex, partitions);
+    connection.modifyConnection(connectionOr -> connectionOr.ifPresent(ConnectedAssigner::ack));
   }
 }

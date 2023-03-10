@@ -16,11 +16,16 @@
 
 package com.google.cloud.pubsublite.internal;
 
+import static com.google.cloud.pubsublite.internal.ExtractStatus.toCanonical;
+import static com.google.common.util.concurrent.MoreExecutors.directExecutor;
+
 import com.google.api.core.ApiFuture;
 import com.google.api.core.ApiFutureCallback;
 import com.google.api.core.ApiFutures;
 import com.google.api.core.SettableApiFuture;
 import com.google.cloud.pubsublite.internal.wire.SystemExecutors;
+import java.util.List;
+import java.util.concurrent.Future;
 
 public final class MoreApiFutures {
   private MoreApiFutures() {}
@@ -41,5 +46,19 @@ public final class MoreApiFutures {
           }
         },
         SystemExecutors.getFuturesExecutor());
+  }
+
+  public static ApiFuture<Void> whenFirstDone(List<ApiFuture<?>> futures) {
+    SettableApiFuture<Void> anyDone = SettableApiFuture.create();
+    futures.forEach(f -> f.addListener(() -> anyDone.set(null), directExecutor()));
+    return anyDone;
+  }
+
+  public static <T> T get(Future<T> f) {
+    try {
+      return f.get();
+    } catch (Throwable t) {
+      throw toCanonical(t).underlying;
+    }
   }
 }

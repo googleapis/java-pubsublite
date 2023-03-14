@@ -22,7 +22,7 @@ import static com.google.cloud.pubsublite.internal.wire.ServiceClients.getCallCo
 
 import com.google.api.gax.batching.BatchingSettings;
 import com.google.api.gax.core.CredentialsProvider;
-import com.google.api.gax.rpc.ApiCallContext;
+import com.google.api.gax.grpc.GrpcCallContext;
 import com.google.api.gax.rpc.ApiException;
 import com.google.api.gax.rpc.StatusCode.Code;
 import com.google.auto.value.AutoValue;
@@ -50,6 +50,7 @@ import com.google.cloud.pubsublite.v1.PublisherServiceSettings;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.protobuf.ByteString;
 import com.google.pubsub.v1.PubsubMessage;
+import io.grpc.CallOptions;
 import java.util.Optional;
 import org.threeten.bp.Duration;
 
@@ -87,6 +88,9 @@ public abstract class PublisherSettings {
    */
   abstract boolean enableIdempotence();
 
+  /** Whether to enable request compression. Default true. */
+  abstract boolean enableCompression();
+
   /** A provider for credentials. */
   abstract CredentialsProvider credentialsProvider();
 
@@ -115,6 +119,7 @@ public abstract class PublisherSettings {
             PublisherServiceSettings.defaultCredentialsProviderBuilder().build())
         .setBatchingSettings(DEFAULT_BATCHING_SETTINGS)
         .setEnableIdempotence(true)
+        .setEnableCompression(true)
         .setUnderlyingBuilder(SinglePartitionPublisherBuilder.newBuilder());
   }
 
@@ -141,6 +146,12 @@ public abstract class PublisherSettings {
      * within a single publisher session are stored only once. Default true.
      */
     public abstract Builder setEnableIdempotence(boolean enableIdempotence);
+
+    /**
+     * Whether to enable publish idempotence, where the server will ensure that unique messages
+     * within a single publisher session are stored only once. Default true.
+     */
+    public abstract Builder setEnableCompression(boolean enableCompression);
 
     /** A provider for credentials. */
     public abstract Builder setCredentialsProvider(CredentialsProvider credentialsProvider);
@@ -190,10 +201,14 @@ public abstract class PublisherSettings {
                 .setPartition(partition)
                 .setStreamFactory(
                     responseStream -> {
-                      ApiCallContext context =
+                      GrpcCallContext context =
                           getCallContext(
                               PubsubContext.of(framework()),
                               RoutingMetadata.of(topicPath(), partition));
+                      if (enableCompression()) {
+                        context =
+                            context.withCallOptions(CallOptions.DEFAULT.withCompression("gzip"));
+                      }
                       return client.publishCallable().splitCall(responseStream, context);
                     });
         if (enableIdempotence()) {

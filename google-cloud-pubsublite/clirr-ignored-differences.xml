@@ -29,6 +29,12 @@
     <to>**</to>
   </difference>
   <difference>
+    <differenceType>7006</differenceType>
+    <className>com/google/cloud/pubsublite/internal/**</className>
+    <method>*</method>
+    <to>**</to>
+  </difference>
+  <difference>
     <differenceType>7009</differenceType>
     <className>com/google/cloud/pubsublite/internal/**</className>
     <method>*</method>

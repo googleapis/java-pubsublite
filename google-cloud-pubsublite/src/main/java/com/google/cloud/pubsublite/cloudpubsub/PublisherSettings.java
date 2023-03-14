@@ -83,12 +83,12 @@ public abstract class PublisherSettings {
   abstract BatchingSettings batchingSettings();
 
   /**
-   * Whether to enable publish idempotence, where the server will ensure that unique messages within
-   * a single publisher session are stored only once. Default true.
+   * Whether idempotence is enabled, where the server will ensure that unique messages within a
+   * single publisher session are stored only once. Default true.
    */
   abstract boolean enableIdempotence();
 
-  /** Whether to enable request compression. Default true. */
+  /** Whether request compression is enabled. Default true. */
   abstract boolean enableCompression();
 
   /** A provider for credentials. */
@@ -142,15 +142,12 @@ public abstract class PublisherSettings {
     public abstract Builder setBatchingSettings(BatchingSettings batchingSettings);
 
     /**
-     * Whether to enable publish idempotence, where the server will ensure that unique messages
-     * within a single publisher session are stored only once. Default true.
+     * Whether idempotence is enabled, where the server will ensure that unique messages within a
+     * single publisher session are stored only once. Default true.
      */
     public abstract Builder setEnableIdempotence(boolean enableIdempotence);
 
-    /**
-     * Whether to enable publish idempotence, where the server will ensure that unique messages
-     * within a single publisher session are stored only once. Default true.
-     */
+    /** Whether request compression is enabled. Default true. */
     public abstract Builder setEnableCompression(boolean enableCompression);
 
     /** A provider for credentials. */

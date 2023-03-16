@@ -8,7 +8,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.google.cloud</groupId>
   <artifactId>google-cloud-pubsublite-parent</artifactId>
-  <version>1.11.2-SNAPSHOT</version><!-- {x-version-update:google-cloud-pubsublite:current} -->
+  <version>1.12.1-SNAPSHOT</version><!-- {x-version-update:google-cloud-pubsublite:current} -->
   <packaging>pom</packaging>
   <name>Google Cloud Pub/Sub Lite Parent</name>
   <url>https://github.com/googleapis/java-pubsublite</url>
@@ -18,29 +18,29 @@
       <dependency>
         <groupId>com.google.cloud</groupId>
         <artifactId>google-cloud-shared-dependencies</artifactId>
-        <version>3.3.0</version>
+        <version>3.4.0</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
       <dependency>
         <groupId>com.google.api.grpc</groupId>
         <artifactId>proto-google-cloud-pubsublite-v1</artifactId>
-        <version>1.11.2-SNAPSHOT</version><!-- {x-version-update:proto-google-cloud-pubsublite-v1:current} -->
+        <version>1.12.1-SNAPSHOT</version><!-- {x-version-update:proto-google-cloud-pubsublite-v1:current} -->
       </dependency>
       <dependency>
         <groupId>com.google.api.grpc</groupId>
         <artifactId>grpc-google-cloud-pubsublite-v1</artifactId>
-        <version>1.11.2-SNAPSHOT</version><!-- {x-version-update:grpc-google-cloud-pubsublite-v1:current} -->
+        <version>1.12.1-SNAPSHOT</version><!-- {x-version-update:grpc-google-cloud-pubsublite-v1:current} -->
       </dependency>
       <dependency>
         <groupId>com.google.cloud</groupId>
         <artifactId>google-cloud-pubsublite</artifactId>
-        <version>1.11.2-SNAPSHOT</version><!-- {x-version-update:google-cloud-pubsublite:current} -->
+        <version>1.12.1-SNAPSHOT</version><!-- {x-version-update:google-cloud-pubsublite:current} -->
       </dependency>
       <dependency>
         <groupId>com.google.cloud</groupId>
         <artifactId>google-cloud-bom</artifactId>
-        <version>0.189.0</version>
+        <version>0.191.0</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
@@ -97,7 +97,7 @@
       </plugin>
       <plugin>
         <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.10.1</version>
+        <version>3.11.0</version>
         <configuration>
           <source>1.8</source>
           <target>1.8</target>

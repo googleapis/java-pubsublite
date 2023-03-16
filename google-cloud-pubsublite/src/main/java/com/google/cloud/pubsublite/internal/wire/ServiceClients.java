@@ -22,7 +22,6 @@ import com.google.api.gax.core.FixedExecutorProvider;
 import com.google.api.gax.grpc.ChannelPoolSettings;
 import com.google.api.gax.grpc.GrpcCallContext;
 import com.google.api.gax.grpc.InstantiatingGrpcChannelProvider;
-import com.google.api.gax.rpc.ApiCallContext;
 import com.google.api.gax.rpc.ApiException;
 import com.google.api.gax.rpc.ClientSettings;
 import com.google.api.gax.rpc.TransportChannelProvider;
@@ -70,7 +69,7 @@ public final class ServiceClients {
     }
   }
 
-  public static ApiCallContext getCallContext(
+  public static GrpcCallContext getCallContext(
       PubsubContext context, RoutingMetadata routingMetadata) {
     return GrpcCallContext.createDefault()
         .withExtraHeaders(

@@ -1,5 +1,31 @@
 # Changelog
 
+## [1.12.0](https://github.com/googleapis/java-pubsublite/compare/v1.11.2...v1.12.0) (2023-03-14)
+
+
+### Features
+
+* Enable compression for publishing ([#1360](https://github.com/googleapis/java-pubsublite/issues/1360)) ([2519708](https://github.com/googleapis/java-pubsublite/commit/25197085e0b55563f9eb0822838366966af7d4fd))
+
+
+### Bug Fixes
+
+* Add service_yaml_parameters to `java_gapic_library` targets ([#1359](https://github.com/googleapis/java-pubsublite/issues/1359)) ([f4f9b67](https://github.com/googleapis/java-pubsublite/commit/f4f9b672837c298bd2f37288b063eeb3b28b4f3c))
+
+
+### Dependencies
+
+* Update dependency com.google.cloud:google-cloud-bom to v0.191.0 ([#1358](https://github.com/googleapis/java-pubsublite/issues/1358)) ([3fab84a](https://github.com/googleapis/java-pubsublite/commit/3fab84aacf1f7fcb5990f534df397a5b48d88509))
+
+## [1.11.2](https://github.com/googleapis/java-pubsublite/compare/v1.11.1...v1.11.2) (2023-03-04)
+
+
+### Dependencies
+
+* Update dependency com.google.cloud:google-cloud-bom to v0.190.0 ([#1348](https://github.com/googleapis/java-pubsublite/issues/1348)) ([81bb872](https://github.com/googleapis/java-pubsublite/commit/81bb8727f87de1c78f38e487b012cb9c25a44a87))
+* Update dependency com.google.cloud:google-cloud-pubsub to v1.123.5 ([#1347](https://github.com/googleapis/java-pubsublite/issues/1347)) ([310c413](https://github.com/googleapis/java-pubsublite/commit/310c4137ba0e1edbdb7d77df22fc18aa722c7605))
+* Update dependency com.google.cloud:google-cloud-shared-dependencies to v3.4.0 ([#1352](https://github.com/googleapis/java-pubsublite/issues/1352)) ([daff987](https://github.com/googleapis/java-pubsublite/commit/daff987e5c4992f2e29dda00fcfae581ed9692e3))
+
 ## [1.11.1](https://github.com/googleapis/java-pubsublite/compare/v1.11.0...v1.11.1) (2023-02-22)
 
 

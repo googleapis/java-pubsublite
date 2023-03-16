@@ -100,7 +100,7 @@ public class AssignerImpl extends ProxyService
       Set<Partition> partitions = toSet(value);
       logger.atFine().log("Subscriber with uuid %s received assignment: %s", uuidHex, partitions);
       receiver.handleAssignment(partitions);
-      logger.atInfo().log("Subscriber with uuid %s handled assignment: %s", uuidHex, partitions);
+      logger.atFine().log("Subscriber with uuid %s handled assignment: %s", uuidHex, partitions);
       connection.modifyConnection(connectionOr -> connectionOr.ifPresent(ConnectedAssigner::ack));
     }
   }

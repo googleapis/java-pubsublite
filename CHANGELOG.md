@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.12.2](https://github.com/googleapis/java-pubsublite/compare/v1.12.1...v1.12.2) (2023-04-04)
+
+
+### Dependencies
+
+* Update dependency com.google.cloud:google-cloud-shared-dependencies to v3.6.0 ([#1376](https://github.com/googleapis/java-pubsublite/issues/1376)) ([ed48599](https://github.com/googleapis/java-pubsublite/commit/ed485994ce134ebb3b369565be25cb5c4799b58c))
+
 ## [1.12.1](https://github.com/googleapis/java-pubsublite/compare/v1.12.0...v1.12.1) (2023-03-23)
 
 

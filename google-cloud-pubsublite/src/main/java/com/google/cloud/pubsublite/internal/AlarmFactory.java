@@ -47,4 +47,11 @@ public interface AlarmFactory {
                 duration.toNanos(),
                 NANOSECONDS);
   }
+
+  /** Runnable is executed by an unbounded pool, although the alarm pool is bounded. */
+  static AlarmFactory createUnbounded(Duration duration) {
+    AlarmFactory underlying = create(duration);
+    return runnable ->
+        underlying.newAlarm(() -> SystemExecutors.getFuturesExecutor().execute(runnable));
+  }
 }

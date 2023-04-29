@@ -48,6 +48,7 @@ public interface AlarmFactory {
                 NANOSECONDS);
   }
 
+  /** Runnable is executed by an unbounded pool, although the alarm pool is bounded. */
   static AlarmFactory createUnbounded(Duration duration) {
     AlarmFactory underlying = create(duration);
     return runnable ->

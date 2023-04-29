@@ -47,4 +47,10 @@ public interface AlarmFactory {
                 duration.toNanos(),
                 NANOSECONDS);
   }
+
+  static AlarmFactory createUnbounded(Duration duration) {
+    AlarmFactory underlying = create(duration);
+    return runnable ->
+        underlying.newAlarm(() -> SystemExecutors.getFuturesExecutor().execute(runnable));
+  }
 }

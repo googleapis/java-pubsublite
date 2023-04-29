@@ -146,7 +146,7 @@ public final class PublisherImpl extends ProxyService
     this(
         streamFactory,
         new BatchPublisherImpl.Factory(),
-        AlarmFactory.create(
+        AlarmFactory.createUnbounded(
             Duration.ofNanos(
                 Objects.requireNonNull(batchingSettings.getDelayThreshold()).toNanos())),
         initialRequest,

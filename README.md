@@ -14,6 +14,7 @@ Java idiomatic client for [Cloud Pub/Sub Lite][product-docs].
 
 If you are using Maven, add this to your pom.xml file:
 
+<!-- {x-version-update-start:google-cloud-pubsublite:released} -->
 
 ```xml
 <dependency>
@@ -40,6 +41,7 @@ If you are using SBT, add this to your dependencies:
 ```Scala
 libraryDependencies += "com.google.cloud" % "google-cloud-pubsublite" % "1.12.4"
 ```
+<!-- {x-version-update-end} -->
 
 ## Authentication
 
@@ -489,7 +491,7 @@ Java is a registered trademark of Oracle and/or its affiliates.
 [developer-console]: https://console.developers.google.com/
 [create-project]: https://cloud.google.com/resource-manager/docs/creating-managing-projects
 [cloud-cli]: https://cloud.google.com/cli
-[troubleshooting]: https://github.com/googleapis/google-cloud-common/blob/main/troubleshooting/readme.md#troubleshooting
+[troubleshooting]: https://github.com/googleapis/google-cloud-java/blob/main/TROUBLESHOOTING.md
 [contributing]: https://github.com/googleapis/java-pubsublite/blob/main/CONTRIBUTING.md
 [code-of-conduct]: https://github.com/googleapis/java-pubsublite/blob/main/CODE_OF_CONDUCT.md#contributor-code-of-conduct
 [license]: https://github.com/googleapis/java-pubsublite/blob/main/LICENSE

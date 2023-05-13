@@ -28,7 +28,6 @@ import com.google.api.gax.batching.BatchingSettings;
 import com.google.api.gax.rpc.ApiException;
 import com.google.api.gax.rpc.StatusCode.Code;
 import com.google.cloud.pubsublite.Constants;
-import com.google.cloud.pubsublite.Message;
 import com.google.cloud.pubsublite.Offset;
 import com.google.cloud.pubsublite.internal.AlarmFactory;
 import com.google.cloud.pubsublite.internal.CheckedApiException;
@@ -258,8 +257,7 @@ public final class PublisherImpl extends ProxyService
   }
 
   @Override
-  public ApiFuture<Offset> publish(Message message, PublishSequenceNumber sequenceNumber) {
-    PubSubMessage proto = message.toProto();
+  public ApiFuture<Offset> publish(PubSubMessage message, PublishSequenceNumber sequenceNumber) {
     try (CloseableMonitor.Hold h = batcherMonitor.enter()) {
       ApiService.State currentState = state();
       switch (currentState) {
@@ -270,7 +268,7 @@ public final class PublisherImpl extends ProxyService
               Code.FAILED_PRECONDITION);
         case STARTING:
         case RUNNING:
-          return batcher.add(proto, sequenceNumber);
+          return batcher.add(message, sequenceNumber);
         default:
           throw new CheckedApiException(
               "Cannot publish when Publisher state is " + currentState.name(),

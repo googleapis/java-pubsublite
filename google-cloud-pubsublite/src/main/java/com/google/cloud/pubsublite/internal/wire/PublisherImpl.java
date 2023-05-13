@@ -28,6 +28,7 @@ import com.google.api.gax.batching.BatchingSettings;
 import com.google.api.gax.rpc.ApiException;
 import com.google.api.gax.rpc.StatusCode.Code;
 import com.google.cloud.pubsublite.Constants;
+import com.google.cloud.pubsublite.Message;
 import com.google.cloud.pubsublite.Offset;
 import com.google.cloud.pubsublite.internal.AlarmFactory;
 import com.google.cloud.pubsublite.internal.CheckedApiException;
@@ -117,6 +118,12 @@ public final class PublisherImpl extends ProxyService
   @GuardedBy("monitor.monitor")
   private final Queue<InFlightBatch> batchesInFlight = new ArrayDeque<>();
 
+  // reconnectingMonitor is always acquired after monitor.monitor when both are held.
+  private final CloseableMonitor reconnectingMonitor = new CloseableMonitor();
+
+  @GuardedBy("reconnectingMonitor.monitor")
+  private boolean reconnecting = false;
+
   @VisibleForTesting
   PublisherImpl(
       PublishStreamFactory streamFactory,
@@ -146,7 +153,7 @@ public final class PublisherImpl extends ProxyService
     this(
         streamFactory,
         new BatchPublisherImpl.Factory(),
-        AlarmFactory.createUnbounded(
+        AlarmFactory.create(
             Duration.ofNanos(
                 Objects.requireNonNull(batchingSettings.getDelayThreshold()).toNanos())),
         initialRequest,
@@ -189,6 +196,9 @@ public final class PublisherImpl extends ProxyService
   @Override
   public void triggerReinitialize(CheckedApiException streamError) {
     try (CloseableMonitor.Hold h = monitor.enter()) {
+      try (CloseableMonitor.Hold rh = reconnectingMonitor.enter()) {
+        reconnecting = true;
+      }
       connection.reinitialize(initialRequest);
       rebatchForRestart();
       Collection<InFlightBatch> batches = batchesInFlight;
@@ -201,6 +211,9 @@ public final class PublisherImpl extends ProxyService
                         .get()
                         .publish(batch.messagesToSend(), batch.firstSequenceNumber()));
           });
+      try (CloseableMonitor.Hold rh = reconnectingMonitor.enter()) {
+        reconnecting = false;
+      }
     } catch (CheckedApiException e) {
       onPermanentError(e);
     }
@@ -219,7 +232,7 @@ public final class PublisherImpl extends ProxyService
   @Override
   protected void start() {
     try (CloseableMonitor.Hold h = monitor.enter()) {
-      this.alarmFuture = Optional.of(alarmFactory.newAlarm(this::flushToStream));
+      this.alarmFuture = Optional.of(alarmFactory.newAlarm(this::backgroundFlushToStream));
     }
   }
 
@@ -245,7 +258,8 @@ public final class PublisherImpl extends ProxyService
   }
 
   @Override
-  public ApiFuture<Offset> publish(PubSubMessage message, PublishSequenceNumber sequenceNumber) {
+  public ApiFuture<Offset> publish(Message message, PublishSequenceNumber sequenceNumber) {
+    PubSubMessage proto = message.toProto();
     try (CloseableMonitor.Hold h = batcherMonitor.enter()) {
       ApiService.State currentState = state();
       switch (currentState) {
@@ -256,7 +270,7 @@ public final class PublisherImpl extends ProxyService
               Code.FAILED_PRECONDITION);
         case STARTING:
         case RUNNING:
-          return batcher.add(message, sequenceNumber);
+          return batcher.add(proto, sequenceNumber);
         default:
           throw new CheckedApiException(
               "Cannot publish when Publisher state is " + currentState.name(),
@@ -274,6 +288,15 @@ public final class PublisherImpl extends ProxyService
       terminateOutstandingPublishes(
           new CheckedApiException("Cancelled by client.", Code.CANCELLED));
     }
+  }
+
+  private void backgroundFlushToStream() {
+    try (CloseableMonitor.Hold h = reconnectingMonitor.enter()) {
+      if (reconnecting) {
+        return;
+      }
+    }
+    flushToStream();
   }
 
   private void flushToStream() {

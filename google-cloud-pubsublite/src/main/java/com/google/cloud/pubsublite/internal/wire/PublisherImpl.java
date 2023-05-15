@@ -117,6 +117,12 @@ public final class PublisherImpl extends ProxyService
   @GuardedBy("monitor.monitor")
   private final Queue<InFlightBatch> batchesInFlight = new ArrayDeque<>();
 
+  // reconnectingMonitor is always acquired after monitor.monitor when both are held.
+  private final CloseableMonitor reconnectingMonitor = new CloseableMonitor();
+
+  @GuardedBy("reconnectingMonitor.monitor")
+  private boolean reconnecting = false;
+
   @VisibleForTesting
   PublisherImpl(
       PublishStreamFactory streamFactory,
@@ -146,7 +152,7 @@ public final class PublisherImpl extends ProxyService
     this(
         streamFactory,
         new BatchPublisherImpl.Factory(),
-        AlarmFactory.createUnbounded(
+        AlarmFactory.create(
             Duration.ofNanos(
                 Objects.requireNonNull(batchingSettings.getDelayThreshold()).toNanos())),
         initialRequest,
@@ -189,6 +195,9 @@ public final class PublisherImpl extends ProxyService
   @Override
   public void triggerReinitialize(CheckedApiException streamError) {
     try (CloseableMonitor.Hold h = monitor.enter()) {
+      try (CloseableMonitor.Hold rh = reconnectingMonitor.enter()) {
+        reconnecting = true;
+      }
       connection.reinitialize(initialRequest);
       rebatchForRestart();
       Collection<InFlightBatch> batches = batchesInFlight;
@@ -201,6 +210,9 @@ public final class PublisherImpl extends ProxyService
                         .get()
                         .publish(batch.messagesToSend(), batch.firstSequenceNumber()));
           });
+      try (CloseableMonitor.Hold rh = reconnectingMonitor.enter()) {
+        reconnecting = false;
+      }
     } catch (CheckedApiException e) {
       onPermanentError(e);
     }
@@ -219,7 +231,7 @@ public final class PublisherImpl extends ProxyService
   @Override
   protected void start() {
     try (CloseableMonitor.Hold h = monitor.enter()) {
-      this.alarmFuture = Optional.of(alarmFactory.newAlarm(this::flushToStream));
+      this.alarmFuture = Optional.of(alarmFactory.newAlarm(this::backgroundFlushToStream));
     }
   }
 
@@ -274,6 +286,15 @@ public final class PublisherImpl extends ProxyService
       terminateOutstandingPublishes(
           new CheckedApiException("Cancelled by client.", Code.CANCELLED));
     }
+  }
+
+  private void backgroundFlushToStream() {
+    try (CloseableMonitor.Hold h = reconnectingMonitor.enter()) {
+      if (reconnecting) {
+        return;
+      }
+    }
+    flushToStream();
   }
 
   private void flushToStream() {

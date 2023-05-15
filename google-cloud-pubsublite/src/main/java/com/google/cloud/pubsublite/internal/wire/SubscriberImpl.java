@@ -82,6 +82,12 @@ public class SubscriberImpl extends ProxyService
   @GuardedBy("monitor.monitor")
   private boolean shutdown = false;
 
+  // reconnectingMonitor is always acquired after monitor.monitor when both are held.
+  private final CloseableMonitor reconnectingMonitor = new CloseableMonitor();
+
+  @GuardedBy("reconnectingMonitor.monitor")
+  private boolean reconnecting = false;
+
   @VisibleForTesting
   SubscriberImpl(
       SubscribeStreamFactory streamFactory,
@@ -205,6 +211,9 @@ public class SubscriberImpl extends ProxyService
 
     try (CloseableMonitor.Hold h = monitor.enter()) {
       if (shutdown) return;
+      try (CloseableMonitor.Hold rh = reconnectingMonitor.enter()) {
+        reconnecting = true;
+      }
       connection.reinitialize(getInitialRequest());
       connection.modifyConnection(
           connectedSubscriber -> {
@@ -214,6 +223,9 @@ public class SubscriberImpl extends ProxyService
                 .requestForRestart()
                 .ifPresent(request -> connectedSubscriber.get().allowFlow(request));
           });
+      try (CloseableMonitor.Hold rh = reconnectingMonitor.enter()) {
+        reconnecting = false;
+      }
     } catch (CheckedApiException e) {
       onPermanentError(e);
     }
@@ -239,6 +251,11 @@ public class SubscriberImpl extends ProxyService
   }
 
   private void processBatchFlowRequest() {
+    try (CloseableMonitor.Hold h = reconnectingMonitor.enter()) {
+      if (reconnecting) {
+        return;
+      }
+    }
     try (CloseableMonitor.Hold h = monitor.enter()) {
       if (shutdown) return;
       connection.modifyConnection(

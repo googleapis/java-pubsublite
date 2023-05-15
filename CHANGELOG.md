@@ -1,5 +1,20 @@
 # Changelog
 
+## [1.12.5](https://github.com/googleapis/java-pubsublite/compare/v1.12.4...v1.12.5) (2023-05-15)
+
+
+### Bug Fixes
+
+* Avoid blocking alarm pool during stream reconnects ([#1400](https://github.com/googleapis/java-pubsublite/issues/1400)) ([3197cc0](https://github.com/googleapis/java-pubsublite/commit/3197cc0bc37726ce045344061fb3321ead84de66))
+* Change PublisherImpl::flush to run on an unbounded executor ([#1394](https://github.com/googleapis/java-pubsublite/issues/1394)) ([76ad662](https://github.com/googleapis/java-pubsublite/commit/76ad66234f5831245cd8c93c325dee523b7cfdbe))
+
+
+### Dependencies
+
+* Update dependency com.google.cloud:google-cloud-bom to v0.195.0 ([#1396](https://github.com/googleapis/java-pubsublite/issues/1396)) ([c2dd032](https://github.com/googleapis/java-pubsublite/commit/c2dd032252570d2f34220d52986fc22f1e980cb8))
+* Update dependency com.google.cloud:google-cloud-pubsub to v1.123.12 ([#1401](https://github.com/googleapis/java-pubsublite/issues/1401)) ([06eea03](https://github.com/googleapis/java-pubsublite/commit/06eea03c8561e1e23dca4b80ad41edd780809952))
+* Update dependency com.google.cloud:google-cloud-shared-dependencies to v3.9.0 ([#1398](https://github.com/googleapis/java-pubsublite/issues/1398)) ([dca41ba](https://github.com/googleapis/java-pubsublite/commit/dca41ba5e3ebe99c3804c0d0462f2d0e3aa9ca74))
+
 ## [1.12.4](https://github.com/googleapis/java-pubsublite/compare/v1.12.3...v1.12.4) (2023-04-27)
 
 

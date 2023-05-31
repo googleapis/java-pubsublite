@@ -1,5 +1,16 @@
 # Changelog
 
+## [1.12.6](https://github.com/googleapis/java-pubsublite/compare/v1.12.5...v1.12.6) (2023-05-31)
+
+
+### Dependencies
+
+* Update dependency com.google.auto.service:auto-service to v1.1.0 ([#1407](https://github.com/googleapis/java-pubsublite/issues/1407)) ([651d013](https://github.com/googleapis/java-pubsublite/commit/651d013969203aab7bdf1eebf819aeee49a339fe))
+* Update dependency com.google.auto.service:auto-service-annotations to v1.1.0 ([#1408](https://github.com/googleapis/java-pubsublite/issues/1408)) ([9b6caa5](https://github.com/googleapis/java-pubsublite/commit/9b6caa57e7be6cbbfe7022546d9753e388c31c5d))
+* Update dependency com.google.cloud:google-cloud-bom to v0.196.0 ([#1404](https://github.com/googleapis/java-pubsublite/issues/1404)) ([77c3426](https://github.com/googleapis/java-pubsublite/commit/77c3426e358cff5d2887198695598554be3f8850))
+* Update dependency com.google.cloud:google-cloud-pubsub to v1.123.13 ([#1413](https://github.com/googleapis/java-pubsublite/issues/1413)) ([9ec6e5a](https://github.com/googleapis/java-pubsublite/commit/9ec6e5a48c51e7a10d53f4de71bdf28fb24fd700))
+* Update dependency com.google.cloud:google-cloud-shared-dependencies to v3.10.1 ([#1409](https://github.com/googleapis/java-pubsublite/issues/1409)) ([05f2fdf](https://github.com/googleapis/java-pubsublite/commit/05f2fdf6363cd39cb1886db13acf78460f2ad16d))
+
 ## [1.12.5](https://github.com/googleapis/java-pubsublite/compare/v1.12.4...v1.12.5) (2023-05-15)
 
 

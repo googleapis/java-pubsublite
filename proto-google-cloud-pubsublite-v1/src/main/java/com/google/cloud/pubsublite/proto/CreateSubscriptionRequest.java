@@ -48,11 +48,6 @@ public final class CreateSubscriptionRequest extends com.google.protobuf.Generat
     return new CreateSubscriptionRequest();
   }
 
-  @java.lang.Override
-  public final com.google.protobuf.UnknownFieldSet getUnknownFields() {
-    return this.unknownFields;
-  }
-
   public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
     return com.google.cloud.pubsublite.proto.AdminProto
         .internal_static_google_cloud_pubsublite_v1_CreateSubscriptionRequest_descriptor;
@@ -194,6 +189,7 @@ public final class CreateSubscriptionRequest extends com.google.protobuf.Generat
    * <pre>
    * Required. The ID to use for the subscription, which will become the final
    * component of the subscription's name.
+   *
    * This value is structured like: `my-sub-name`.
    * </pre>
    *
@@ -219,6 +215,7 @@ public final class CreateSubscriptionRequest extends com.google.protobuf.Generat
    * <pre>
    * Required. The ID to use for the subscription, which will become the final
    * component of the subscription's name.
+   *
    * This value is structured like: `my-sub-name`.
    * </pre>
    *
@@ -1020,6 +1017,7 @@ public final class CreateSubscriptionRequest extends com.google.protobuf.Generat
      * <pre>
      * Required. The ID to use for the subscription, which will become the final
      * component of the subscription's name.
+     *
      * This value is structured like: `my-sub-name`.
      * </pre>
      *
@@ -1044,6 +1042,7 @@ public final class CreateSubscriptionRequest extends com.google.protobuf.Generat
      * <pre>
      * Required. The ID to use for the subscription, which will become the final
      * component of the subscription's name.
+     *
      * This value is structured like: `my-sub-name`.
      * </pre>
      *
@@ -1068,6 +1067,7 @@ public final class CreateSubscriptionRequest extends com.google.protobuf.Generat
      * <pre>
      * Required. The ID to use for the subscription, which will become the final
      * component of the subscription's name.
+     *
      * This value is structured like: `my-sub-name`.
      * </pre>
      *
@@ -1091,6 +1091,7 @@ public final class CreateSubscriptionRequest extends com.google.protobuf.Generat
      * <pre>
      * Required. The ID to use for the subscription, which will become the final
      * component of the subscription's name.
+     *
      * This value is structured like: `my-sub-name`.
      * </pre>
      *
@@ -1110,6 +1111,7 @@ public final class CreateSubscriptionRequest extends com.google.protobuf.Generat
      * <pre>
      * Required. The ID to use for the subscription, which will become the final
      * component of the subscription's name.
+     *
      * This value is structured like: `my-sub-name`.
      * </pre>
      *

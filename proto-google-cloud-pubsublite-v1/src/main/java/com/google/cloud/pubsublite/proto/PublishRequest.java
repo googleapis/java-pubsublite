@@ -45,11 +45,6 @@ public final class PublishRequest extends com.google.protobuf.GeneratedMessageV3
     return new PublishRequest();
   }
 
-  @java.lang.Override
-  public final com.google.protobuf.UnknownFieldSet getUnknownFields() {
-    return this.unknownFields;
-  }
-
   public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
     return com.google.cloud.pubsublite.proto.PublisherProto
         .internal_static_google_cloud_pubsublite_v1_PublishRequest_descriptor;
@@ -66,6 +61,8 @@ public final class PublishRequest extends com.google.protobuf.GeneratedMessageV3
   }
 
   private int requestTypeCase_ = 0;
+
+  @SuppressWarnings("serial")
   private java.lang.Object requestType_;
 
   public enum RequestTypeCase

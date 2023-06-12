@@ -104,6 +104,7 @@ public interface CreateSubscriptionRequestOrBuilder
    * <pre>
    * Required. The ID to use for the subscription, which will become the final
    * component of the subscription's name.
+   *
    * This value is structured like: `my-sub-name`.
    * </pre>
    *
@@ -118,6 +119,7 @@ public interface CreateSubscriptionRequestOrBuilder
    * <pre>
    * Required. The ID to use for the subscription, which will become the final
    * component of the subscription's name.
+   *
    * This value is structured like: `my-sub-name`.
    * </pre>
    *

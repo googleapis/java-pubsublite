@@ -135,7 +135,7 @@ public final class PublisherServiceGrpc {
    * to subscriber clients upon request (via the `SubscriberService`).
    * </pre>
    */
-  public abstract static class PublisherServiceImplBase implements io.grpc.BindableService {
+  public interface AsyncService {
 
     /**
      *
@@ -150,28 +150,35 @@ public final class PublisherServiceGrpc {
      * they are sent by the client on a given stream.
      * </pre>
      */
-    public io.grpc.stub.StreamObserver<com.google.cloud.pubsublite.proto.PublishRequest> publish(
+    default io.grpc.stub.StreamObserver<com.google.cloud.pubsublite.proto.PublishRequest> publish(
         io.grpc.stub.StreamObserver<com.google.cloud.pubsublite.proto.PublishResponse>
             responseObserver) {
       return io.grpc.stub.ServerCalls.asyncUnimplementedStreamingCall(
           getPublishMethod(), responseObserver);
     }
+  }
+
+  /**
+   * Base class for the server implementation of the service PublisherService.
+   *
+   * <pre>
+   * The service that a publisher client application uses to publish messages to
+   * topics. Published messages are retained by the service for the duration of
+   * the retention period configured for the respective topic, and are delivered
+   * to subscriber clients upon request (via the `SubscriberService`).
+   * </pre>
+   */
+  public abstract static class PublisherServiceImplBase
+      implements io.grpc.BindableService, AsyncService {
 
     @java.lang.Override
     public final io.grpc.ServerServiceDefinition bindService() {
-      return io.grpc.ServerServiceDefinition.builder(getServiceDescriptor())
-          .addMethod(
-              getPublishMethod(),
-              io.grpc.stub.ServerCalls.asyncBidiStreamingCall(
-                  new MethodHandlers<
-                      com.google.cloud.pubsublite.proto.PublishRequest,
-                      com.google.cloud.pubsublite.proto.PublishResponse>(this, METHODID_PUBLISH)))
-          .build();
+      return PublisherServiceGrpc.bindService(this);
     }
   }
 
   /**
-   *
+   * A stub to allow clients to do asynchronous rpc calls to service PublisherService.
    *
    * <pre>
    * The service that a publisher client application uses to publish messages to
@@ -213,7 +220,7 @@ public final class PublisherServiceGrpc {
   }
 
   /**
-   *
+   * A stub to allow clients to do synchronous rpc calls to service PublisherService.
    *
    * <pre>
    * The service that a publisher client application uses to publish messages to
@@ -236,7 +243,7 @@ public final class PublisherServiceGrpc {
   }
 
   /**
-   *
+   * A stub to allow clients to do ListenableFuture-style rpc calls to service PublisherService.
    *
    * <pre>
    * The service that a publisher client application uses to publish messages to
@@ -265,10 +272,10 @@ public final class PublisherServiceGrpc {
           io.grpc.stub.ServerCalls.ServerStreamingMethod<Req, Resp>,
           io.grpc.stub.ServerCalls.ClientStreamingMethod<Req, Resp>,
           io.grpc.stub.ServerCalls.BidiStreamingMethod<Req, Resp> {
-    private final PublisherServiceImplBase serviceImpl;
+    private final AsyncService serviceImpl;
     private final int methodId;
 
-    MethodHandlers(PublisherServiceImplBase serviceImpl, int methodId) {
+    MethodHandlers(AsyncService serviceImpl, int methodId) {
       this.serviceImpl = serviceImpl;
       this.methodId = methodId;
     }
@@ -296,6 +303,17 @@ public final class PublisherServiceGrpc {
           throw new AssertionError();
       }
     }
+  }
+
+  public static final io.grpc.ServerServiceDefinition bindService(AsyncService service) {
+    return io.grpc.ServerServiceDefinition.builder(getServiceDescriptor())
+        .addMethod(
+            getPublishMethod(),
+            io.grpc.stub.ServerCalls.asyncBidiStreamingCall(
+                new MethodHandlers<
+                    com.google.cloud.pubsublite.proto.PublishRequest,
+                    com.google.cloud.pubsublite.proto.PublishResponse>(service, METHODID_PUBLISH)))
+        .build();
   }
 
   private abstract static class PublisherServiceBaseDescriptorSupplier

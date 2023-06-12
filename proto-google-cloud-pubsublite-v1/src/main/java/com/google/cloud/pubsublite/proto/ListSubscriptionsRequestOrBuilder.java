@@ -75,6 +75,7 @@ public interface ListSubscriptionsRequestOrBuilder
    * <pre>
    * A page token, received from a previous `ListSubscriptions` call.
    * Provide this to retrieve the subsequent page.
+   *
    * When paginating, all other parameters provided to `ListSubscriptions` must
    * match the call that provided the page token.
    * </pre>
@@ -90,6 +91,7 @@ public interface ListSubscriptionsRequestOrBuilder
    * <pre>
    * A page token, received from a previous `ListSubscriptions` call.
    * Provide this to retrieve the subsequent page.
+   *
    * When paginating, all other parameters provided to `ListSubscriptions` must
    * match the call that provided the page token.
    * </pre>

@@ -25,6 +25,7 @@ package com.google.cloud.pubsublite.proto;
  * Request to update the stream's delivery cursor based on the given target.
  * Resets the server available tokens to 0. SeekRequests past head result in
  * stream breakage.
+ *
  * SeekRequests may not be sent while another SeekRequest is outstanding (i.e.,
  * has not received a SeekResponse) on the same stream.
  * </pre>
@@ -47,11 +48,6 @@ public final class SeekRequest extends com.google.protobuf.GeneratedMessageV3
   @SuppressWarnings({"unused"})
   protected java.lang.Object newInstance(UnusedPrivateParameter unused) {
     return new SeekRequest();
-  }
-
-  @java.lang.Override
-  public final com.google.protobuf.UnknownFieldSet getUnknownFields() {
-    return this.unknownFields;
   }
 
   public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
@@ -231,6 +227,8 @@ public final class SeekRequest extends com.google.protobuf.GeneratedMessageV3
   }
 
   private int targetCase_ = 0;
+
+  @SuppressWarnings("serial")
   private java.lang.Object target_;
 
   public enum TargetCase
@@ -581,6 +579,7 @@ public final class SeekRequest extends com.google.protobuf.GeneratedMessageV3
    * Request to update the stream's delivery cursor based on the given target.
    * Resets the server available tokens to 0. SeekRequests past head result in
    * stream breakage.
+   *
    * SeekRequests may not be sent while another SeekRequest is outstanding (i.e.,
    * has not received a SeekResponse) on the same stream.
    * </pre>

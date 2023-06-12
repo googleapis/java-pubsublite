@@ -48,11 +48,6 @@ public final class CreateTopicRequest extends com.google.protobuf.GeneratedMessa
     return new CreateTopicRequest();
   }
 
-  @java.lang.Override
-  public final com.google.protobuf.UnknownFieldSet getUnknownFields() {
-    return this.unknownFields;
-  }
-
   public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
     return com.google.cloud.pubsublite.proto.AdminProto
         .internal_static_google_cloud_pubsublite_v1_CreateTopicRequest_descriptor;
@@ -187,6 +182,7 @@ public final class CreateTopicRequest extends com.google.protobuf.GeneratedMessa
    * <pre>
    * Required. The ID to use for the topic, which will become the final
    * component of the topic's name.
+   *
    * This value is structured like: `my-topic-name`.
    * </pre>
    *
@@ -212,6 +208,7 @@ public final class CreateTopicRequest extends com.google.protobuf.GeneratedMessa
    * <pre>
    * Required. The ID to use for the topic, which will become the final
    * component of the topic's name.
+   *
    * This value is structured like: `my-topic-name`.
    * </pre>
    *
@@ -958,6 +955,7 @@ public final class CreateTopicRequest extends com.google.protobuf.GeneratedMessa
      * <pre>
      * Required. The ID to use for the topic, which will become the final
      * component of the topic's name.
+     *
      * This value is structured like: `my-topic-name`.
      * </pre>
      *
@@ -982,6 +980,7 @@ public final class CreateTopicRequest extends com.google.protobuf.GeneratedMessa
      * <pre>
      * Required. The ID to use for the topic, which will become the final
      * component of the topic's name.
+     *
      * This value is structured like: `my-topic-name`.
      * </pre>
      *
@@ -1006,6 +1005,7 @@ public final class CreateTopicRequest extends com.google.protobuf.GeneratedMessa
      * <pre>
      * Required. The ID to use for the topic, which will become the final
      * component of the topic's name.
+     *
      * This value is structured like: `my-topic-name`.
      * </pre>
      *
@@ -1029,6 +1029,7 @@ public final class CreateTopicRequest extends com.google.protobuf.GeneratedMessa
      * <pre>
      * Required. The ID to use for the topic, which will become the final
      * component of the topic's name.
+     *
      * This value is structured like: `my-topic-name`.
      * </pre>
      *
@@ -1048,6 +1049,7 @@ public final class CreateTopicRequest extends com.google.protobuf.GeneratedMessa
      * <pre>
      * Required. The ID to use for the topic, which will become the final
      * component of the topic's name.
+     *
      * This value is structured like: `my-topic-name`.
      * </pre>
      *

@@ -128,5 +128,5 @@ public interface SubscribeRequestOrBuilder
    */
   com.google.cloud.pubsublite.proto.FlowControlRequestOrBuilder getFlowControlOrBuilder();
 
-  public com.google.cloud.pubsublite.proto.SubscribeRequest.RequestCase getRequestCase();
+  com.google.cloud.pubsublite.proto.SubscribeRequest.RequestCase getRequestCase();
 }

@@ -47,11 +47,6 @@ public final class MessagePublishRequest extends com.google.protobuf.GeneratedMe
     return new MessagePublishRequest();
   }
 
-  @java.lang.Override
-  public final com.google.protobuf.UnknownFieldSet getUnknownFields() {
-    return this.unknownFields;
-  }
-
   public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
     return com.google.cloud.pubsublite.proto.PublisherProto
         .internal_static_google_cloud_pubsublite_v1_MessagePublishRequest_descriptor;
@@ -147,6 +142,7 @@ public final class MessagePublishRequest extends com.google.protobuf.GeneratedMe
    * The sequence number corresponding to the first message in `messages`.
    * Messages within a batch are ordered and the sequence numbers of all
    * subsequent messages in the batch are assumed to be incremental.
+   *
    * Sequence numbers are assigned at the message level and the first message
    * published in a publisher client session must have a sequence number of 0.
    * All messages must have contiguous sequence numbers, which uniquely identify
@@ -939,6 +935,7 @@ public final class MessagePublishRequest extends com.google.protobuf.GeneratedMe
      * The sequence number corresponding to the first message in `messages`.
      * Messages within a batch are ordered and the sequence numbers of all
      * subsequent messages in the batch are assumed to be incremental.
+     *
      * Sequence numbers are assigned at the message level and the first message
      * published in a publisher client session must have a sequence number of 0.
      * All messages must have contiguous sequence numbers, which uniquely identify
@@ -963,6 +960,7 @@ public final class MessagePublishRequest extends com.google.protobuf.GeneratedMe
      * The sequence number corresponding to the first message in `messages`.
      * Messages within a batch are ordered and the sequence numbers of all
      * subsequent messages in the batch are assumed to be incremental.
+     *
      * Sequence numbers are assigned at the message level and the first message
      * published in a publisher client session must have a sequence number of 0.
      * All messages must have contiguous sequence numbers, which uniquely identify
@@ -991,6 +989,7 @@ public final class MessagePublishRequest extends com.google.protobuf.GeneratedMe
      * The sequence number corresponding to the first message in `messages`.
      * Messages within a batch are ordered and the sequence numbers of all
      * subsequent messages in the batch are assumed to be incremental.
+     *
      * Sequence numbers are assigned at the message level and the first message
      * published in a publisher client session must have a sequence number of 0.
      * All messages must have contiguous sequence numbers, which uniquely identify

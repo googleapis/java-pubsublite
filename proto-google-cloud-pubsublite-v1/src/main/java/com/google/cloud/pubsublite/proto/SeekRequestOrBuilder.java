@@ -98,5 +98,5 @@ public interface SeekRequestOrBuilder
    */
   com.google.cloud.pubsublite.proto.CursorOrBuilder getCursorOrBuilder();
 
-  public com.google.cloud.pubsublite.proto.SeekRequest.TargetCase getTargetCase();
+  com.google.cloud.pubsublite.proto.SeekRequest.TargetCase getTargetCase();
 }

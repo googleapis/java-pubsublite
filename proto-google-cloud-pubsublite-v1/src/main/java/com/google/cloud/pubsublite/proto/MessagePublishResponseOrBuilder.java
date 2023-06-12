@@ -67,6 +67,7 @@ public interface MessagePublishResponseOrBuilder
    * <pre>
    * Cursors for messages published in the batch. There will exist multiple
    * ranges when cursors are not contiguous within the batch.
+   *
    * The cursor ranges may not account for all messages in the batch when
    * publish idempotency is enabled. A missing range indicates that cursors
    * could not be determined for messages within the range, as they were
@@ -86,6 +87,7 @@ public interface MessagePublishResponseOrBuilder
    * <pre>
    * Cursors for messages published in the batch. There will exist multiple
    * ranges when cursors are not contiguous within the batch.
+   *
    * The cursor ranges may not account for all messages in the batch when
    * publish idempotency is enabled. A missing range indicates that cursors
    * could not be determined for messages within the range, as they were
@@ -104,6 +106,7 @@ public interface MessagePublishResponseOrBuilder
    * <pre>
    * Cursors for messages published in the batch. There will exist multiple
    * ranges when cursors are not contiguous within the batch.
+   *
    * The cursor ranges may not account for all messages in the batch when
    * publish idempotency is enabled. A missing range indicates that cursors
    * could not be determined for messages within the range, as they were
@@ -122,6 +125,7 @@ public interface MessagePublishResponseOrBuilder
    * <pre>
    * Cursors for messages published in the batch. There will exist multiple
    * ranges when cursors are not contiguous within the batch.
+   *
    * The cursor ranges may not account for all messages in the batch when
    * publish idempotency is enabled. A missing range indicates that cursors
    * could not be determined for messages within the range, as they were
@@ -142,6 +146,7 @@ public interface MessagePublishResponseOrBuilder
    * <pre>
    * Cursors for messages published in the batch. There will exist multiple
    * ranges when cursors are not contiguous within the batch.
+   *
    * The cursor ranges may not account for all messages in the batch when
    * publish idempotency is enabled. A missing range indicates that cursors
    * could not be determined for messages within the range, as they were

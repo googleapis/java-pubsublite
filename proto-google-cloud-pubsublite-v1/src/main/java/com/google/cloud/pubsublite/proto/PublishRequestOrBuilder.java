@@ -94,5 +94,5 @@ public interface PublishRequestOrBuilder
   com.google.cloud.pubsublite.proto.MessagePublishRequestOrBuilder
       getMessagePublishRequestOrBuilder();
 
-  public com.google.cloud.pubsublite.proto.PublishRequest.RequestTypeCase getRequestTypeCase();
+  com.google.cloud.pubsublite.proto.PublishRequest.RequestTypeCase getRequestTypeCase();
 }

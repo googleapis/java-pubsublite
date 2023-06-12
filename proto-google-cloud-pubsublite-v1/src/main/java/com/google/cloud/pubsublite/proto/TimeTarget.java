@@ -46,11 +46,6 @@ public final class TimeTarget extends com.google.protobuf.GeneratedMessageV3
     return new TimeTarget();
   }
 
-  @java.lang.Override
-  public final com.google.protobuf.UnknownFieldSet getUnknownFields() {
-    return this.unknownFields;
-  }
-
   public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
     return com.google.cloud.pubsublite.proto.CommonProto
         .internal_static_google_cloud_pubsublite_v1_TimeTarget_descriptor;
@@ -67,6 +62,8 @@ public final class TimeTarget extends com.google.protobuf.GeneratedMessageV3
   }
 
   private int timeCase_ = 0;
+
+  @SuppressWarnings("serial")
   private java.lang.Object time_;
 
   public enum TimeCase

@@ -111,5 +111,5 @@ public interface TimeTargetOrBuilder
    */
   com.google.protobuf.TimestampOrBuilder getEventTimeOrBuilder();
 
-  public com.google.cloud.pubsublite.proto.TimeTarget.TimeCase getTimeCase();
+  com.google.cloud.pubsublite.proto.TimeTarget.TimeCase getTimeCase();
 }

@@ -132,7 +132,7 @@ public final class SubscriberServiceGrpc {
    * from subscriptions.
    * </pre>
    */
-  public abstract static class SubscriberServiceImplBase implements io.grpc.BindableService {
+  public interface AsyncService {
 
     /**
      *
@@ -141,30 +141,34 @@ public final class SubscriberServiceGrpc {
      * Establishes a stream with the server for receiving messages.
      * </pre>
      */
-    public io.grpc.stub.StreamObserver<com.google.cloud.pubsublite.proto.SubscribeRequest>
+    default io.grpc.stub.StreamObserver<com.google.cloud.pubsublite.proto.SubscribeRequest>
         subscribe(
             io.grpc.stub.StreamObserver<com.google.cloud.pubsublite.proto.SubscribeResponse>
                 responseObserver) {
       return io.grpc.stub.ServerCalls.asyncUnimplementedStreamingCall(
           getSubscribeMethod(), responseObserver);
     }
+  }
+
+  /**
+   * Base class for the server implementation of the service SubscriberService.
+   *
+   * <pre>
+   * The service that a subscriber client application uses to receive messages
+   * from subscriptions.
+   * </pre>
+   */
+  public abstract static class SubscriberServiceImplBase
+      implements io.grpc.BindableService, AsyncService {
 
     @java.lang.Override
     public final io.grpc.ServerServiceDefinition bindService() {
-      return io.grpc.ServerServiceDefinition.builder(getServiceDescriptor())
-          .addMethod(
-              getSubscribeMethod(),
-              io.grpc.stub.ServerCalls.asyncBidiStreamingCall(
-                  new MethodHandlers<
-                      com.google.cloud.pubsublite.proto.SubscribeRequest,
-                      com.google.cloud.pubsublite.proto.SubscribeResponse>(
-                      this, METHODID_SUBSCRIBE)))
-          .build();
+      return SubscriberServiceGrpc.bindService(this);
     }
   }
 
   /**
-   *
+   * A stub to allow clients to do asynchronous rpc calls to service SubscriberService.
    *
    * <pre>
    * The service that a subscriber client application uses to receive messages
@@ -200,7 +204,7 @@ public final class SubscriberServiceGrpc {
   }
 
   /**
-   *
+   * A stub to allow clients to do synchronous rpc calls to service SubscriberService.
    *
    * <pre>
    * The service that a subscriber client application uses to receive messages
@@ -222,7 +226,7 @@ public final class SubscriberServiceGrpc {
   }
 
   /**
-   *
+   * A stub to allow clients to do ListenableFuture-style rpc calls to service SubscriberService.
    *
    * <pre>
    * The service that a subscriber client application uses to receive messages
@@ -249,10 +253,10 @@ public final class SubscriberServiceGrpc {
           io.grpc.stub.ServerCalls.ServerStreamingMethod<Req, Resp>,
           io.grpc.stub.ServerCalls.ClientStreamingMethod<Req, Resp>,
           io.grpc.stub.ServerCalls.BidiStreamingMethod<Req, Resp> {
-    private final SubscriberServiceImplBase serviceImpl;
+    private final AsyncService serviceImpl;
     private final int methodId;
 
-    MethodHandlers(SubscriberServiceImplBase serviceImpl, int methodId) {
+    MethodHandlers(AsyncService serviceImpl, int methodId) {
       this.serviceImpl = serviceImpl;
       this.methodId = methodId;
     }
@@ -280,6 +284,18 @@ public final class SubscriberServiceGrpc {
           throw new AssertionError();
       }
     }
+  }
+
+  public static final io.grpc.ServerServiceDefinition bindService(AsyncService service) {
+    return io.grpc.ServerServiceDefinition.builder(getServiceDescriptor())
+        .addMethod(
+            getSubscribeMethod(),
+            io.grpc.stub.ServerCalls.asyncBidiStreamingCall(
+                new MethodHandlers<
+                    com.google.cloud.pubsublite.proto.SubscribeRequest,
+                    com.google.cloud.pubsublite.proto.SubscribeResponse>(
+                    service, METHODID_SUBSCRIBE)))
+        .build();
   }
 
   private abstract static class SubscriberServiceBaseDescriptorSupplier

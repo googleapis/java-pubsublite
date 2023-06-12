@@ -82,6 +82,7 @@ public interface MessagePublishRequestOrBuilder
    * The sequence number corresponding to the first message in `messages`.
    * Messages within a batch are ordered and the sequence numbers of all
    * subsequent messages in the batch are assumed to be incremental.
+   *
    * Sequence numbers are assigned at the message level and the first message
    * published in a publisher client session must have a sequence number of 0.
    * All messages must have contiguous sequence numbers, which uniquely identify

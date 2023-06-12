@@ -46,11 +46,6 @@ public final class ComputeTimeCursorResponse extends com.google.protobuf.Generat
     return new ComputeTimeCursorResponse();
   }
 
-  @java.lang.Override
-  public final com.google.protobuf.UnknownFieldSet getUnknownFields() {
-    return this.unknownFields;
-  }
-
   public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
     return com.google.cloud.pubsublite.proto.TopicStatsProto
         .internal_static_google_cloud_pubsublite_v1_ComputeTimeCursorResponse_descriptor;

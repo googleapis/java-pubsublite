@@ -45,11 +45,6 @@ public final class PartitionAssignmentRequest extends com.google.protobuf.Genera
     return new PartitionAssignmentRequest();
   }
 
-  @java.lang.Override
-  public final com.google.protobuf.UnknownFieldSet getUnknownFields() {
-    return this.unknownFields;
-  }
-
   public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
     return com.google.cloud.pubsublite.proto.SubscriberProto
         .internal_static_google_cloud_pubsublite_v1_PartitionAssignmentRequest_descriptor;
@@ -66,6 +61,8 @@ public final class PartitionAssignmentRequest extends com.google.protobuf.Genera
   }
 
   private int requestCase_ = 0;
+
+  @SuppressWarnings("serial")
   private java.lang.Object request_;
 
   public enum RequestCase

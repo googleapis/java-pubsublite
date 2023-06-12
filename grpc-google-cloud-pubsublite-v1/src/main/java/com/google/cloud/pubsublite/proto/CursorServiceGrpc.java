@@ -233,7 +233,7 @@ public final class CursorServiceGrpc {
    * progress within a topic partition for a given subscription.
    * </pre>
    */
-  public abstract static class CursorServiceImplBase implements io.grpc.BindableService {
+  public interface AsyncService {
 
     /**
      *
@@ -242,7 +242,7 @@ public final class CursorServiceGrpc {
      * Establishes a stream with the server for managing committed cursors.
      * </pre>
      */
-    public io.grpc.stub.StreamObserver<
+    default io.grpc.stub.StreamObserver<
             com.google.cloud.pubsublite.proto.StreamingCommitCursorRequest>
         streamingCommitCursor(
             io.grpc.stub.StreamObserver<
@@ -259,7 +259,7 @@ public final class CursorServiceGrpc {
      * Updates the committed cursor.
      * </pre>
      */
-    public void commitCursor(
+    default void commitCursor(
         com.google.cloud.pubsublite.proto.CommitCursorRequest request,
         io.grpc.stub.StreamObserver<com.google.cloud.pubsublite.proto.CommitCursorResponse>
             responseObserver) {
@@ -274,44 +274,35 @@ public final class CursorServiceGrpc {
      * Returns all committed cursor information for a subscription.
      * </pre>
      */
-    public void listPartitionCursors(
+    default void listPartitionCursors(
         com.google.cloud.pubsublite.proto.ListPartitionCursorsRequest request,
         io.grpc.stub.StreamObserver<com.google.cloud.pubsublite.proto.ListPartitionCursorsResponse>
             responseObserver) {
       io.grpc.stub.ServerCalls.asyncUnimplementedUnaryCall(
           getListPartitionCursorsMethod(), responseObserver);
     }
+  }
+
+  /**
+   * Base class for the server implementation of the service CursorService.
+   *
+   * <pre>
+   * The service that a subscriber client application uses to manage committed
+   * cursors while receiving messsages. A cursor represents a subscriber's
+   * progress within a topic partition for a given subscription.
+   * </pre>
+   */
+  public abstract static class CursorServiceImplBase
+      implements io.grpc.BindableService, AsyncService {
 
     @java.lang.Override
     public final io.grpc.ServerServiceDefinition bindService() {
-      return io.grpc.ServerServiceDefinition.builder(getServiceDescriptor())
-          .addMethod(
-              getStreamingCommitCursorMethod(),
-              io.grpc.stub.ServerCalls.asyncBidiStreamingCall(
-                  new MethodHandlers<
-                      com.google.cloud.pubsublite.proto.StreamingCommitCursorRequest,
-                      com.google.cloud.pubsublite.proto.StreamingCommitCursorResponse>(
-                      this, METHODID_STREAMING_COMMIT_CURSOR)))
-          .addMethod(
-              getCommitCursorMethod(),
-              io.grpc.stub.ServerCalls.asyncUnaryCall(
-                  new MethodHandlers<
-                      com.google.cloud.pubsublite.proto.CommitCursorRequest,
-                      com.google.cloud.pubsublite.proto.CommitCursorResponse>(
-                      this, METHODID_COMMIT_CURSOR)))
-          .addMethod(
-              getListPartitionCursorsMethod(),
-              io.grpc.stub.ServerCalls.asyncUnaryCall(
-                  new MethodHandlers<
-                      com.google.cloud.pubsublite.proto.ListPartitionCursorsRequest,
-                      com.google.cloud.pubsublite.proto.ListPartitionCursorsResponse>(
-                      this, METHODID_LIST_PARTITION_CURSORS)))
-          .build();
+      return CursorServiceGrpc.bindService(this);
     }
   }
 
   /**
-   *
+   * A stub to allow clients to do asynchronous rpc calls to service CursorService.
    *
    * <pre>
    * The service that a subscriber client application uses to manage committed
@@ -384,7 +375,7 @@ public final class CursorServiceGrpc {
   }
 
   /**
-   *
+   * A stub to allow clients to do synchronous rpc calls to service CursorService.
    *
    * <pre>
    * The service that a subscriber client application uses to manage committed
@@ -432,7 +423,7 @@ public final class CursorServiceGrpc {
   }
 
   /**
-   *
+   * A stub to allow clients to do ListenableFuture-style rpc calls to service CursorService.
    *
    * <pre>
    * The service that a subscriber client application uses to manage committed
@@ -491,10 +482,10 @@ public final class CursorServiceGrpc {
           io.grpc.stub.ServerCalls.ServerStreamingMethod<Req, Resp>,
           io.grpc.stub.ServerCalls.ClientStreamingMethod<Req, Resp>,
           io.grpc.stub.ServerCalls.BidiStreamingMethod<Req, Resp> {
-    private final CursorServiceImplBase serviceImpl;
+    private final AsyncService serviceImpl;
     private final int methodId;
 
-    MethodHandlers(CursorServiceImplBase serviceImpl, int methodId) {
+    MethodHandlers(AsyncService serviceImpl, int methodId) {
       this.serviceImpl = serviceImpl;
       this.methodId = methodId;
     }
@@ -536,6 +527,32 @@ public final class CursorServiceGrpc {
           throw new AssertionError();
       }
     }
+  }
+
+  public static final io.grpc.ServerServiceDefinition bindService(AsyncService service) {
+    return io.grpc.ServerServiceDefinition.builder(getServiceDescriptor())
+        .addMethod(
+            getStreamingCommitCursorMethod(),
+            io.grpc.stub.ServerCalls.asyncBidiStreamingCall(
+                new MethodHandlers<
+                    com.google.cloud.pubsublite.proto.StreamingCommitCursorRequest,
+                    com.google.cloud.pubsublite.proto.StreamingCommitCursorResponse>(
+                    service, METHODID_STREAMING_COMMIT_CURSOR)))
+        .addMethod(
+            getCommitCursorMethod(),
+            io.grpc.stub.ServerCalls.asyncUnaryCall(
+                new MethodHandlers<
+                    com.google.cloud.pubsublite.proto.CommitCursorRequest,
+                    com.google.cloud.pubsublite.proto.CommitCursorResponse>(
+                    service, METHODID_COMMIT_CURSOR)))
+        .addMethod(
+            getListPartitionCursorsMethod(),
+            io.grpc.stub.ServerCalls.asyncUnaryCall(
+                new MethodHandlers<
+                    com.google.cloud.pubsublite.proto.ListPartitionCursorsRequest,
+                    com.google.cloud.pubsublite.proto.ListPartitionCursorsResponse>(
+                    service, METHODID_LIST_PARTITION_CURSORS)))
+        .build();
   }
 
   private abstract static class CursorServiceBaseDescriptorSupplier

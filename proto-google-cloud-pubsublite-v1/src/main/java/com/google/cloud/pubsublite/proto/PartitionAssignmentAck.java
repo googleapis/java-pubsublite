@@ -49,11 +49,6 @@ public final class PartitionAssignmentAck extends com.google.protobuf.GeneratedM
     return new PartitionAssignmentAck();
   }
 
-  @java.lang.Override
-  public final com.google.protobuf.UnknownFieldSet getUnknownFields() {
-    return this.unknownFields;
-  }
-
   public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
     return com.google.cloud.pubsublite.proto.SubscriberProto
         .internal_static_google_cloud_pubsublite_v1_PartitionAssignmentAck_descriptor;

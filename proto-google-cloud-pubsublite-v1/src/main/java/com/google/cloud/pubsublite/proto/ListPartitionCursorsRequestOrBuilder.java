@@ -77,6 +77,7 @@ public interface ListPartitionCursorsRequestOrBuilder
    * <pre>
    * A page token, received from a previous `ListPartitionCursors` call.
    * Provide this to retrieve the subsequent page.
+   *
    * When paginating, all other parameters provided to `ListPartitionCursors`
    * must match the call that provided the page token.
    * </pre>
@@ -92,6 +93,7 @@ public interface ListPartitionCursorsRequestOrBuilder
    * <pre>
    * A page token, received from a previous `ListPartitionCursors` call.
    * Provide this to retrieve the subsequent page.
+   *
    * When paginating, all other parameters provided to `ListPartitionCursors`
    * must match the call that provided the page token.
    * </pre>

@@ -47,11 +47,6 @@ public final class DeleteTopicRequest extends com.google.protobuf.GeneratedMessa
     return new DeleteTopicRequest();
   }
 
-  @java.lang.Override
-  public final com.google.protobuf.UnknownFieldSet getUnknownFields() {
-    return this.unknownFields;
-  }
-
   public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
     return com.google.cloud.pubsublite.proto.AdminProto
         .internal_static_google_cloud_pubsublite_v1_DeleteTopicRequest_descriptor;

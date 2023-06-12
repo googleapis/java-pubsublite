@@ -229,7 +229,7 @@ public final class TopicStatsServiceGrpc {
    * This service allows users to get stats about messages in their topic.
    * </pre>
    */
-  public abstract static class TopicStatsServiceImplBase implements io.grpc.BindableService {
+  public interface AsyncService {
 
     /**
      *
@@ -239,7 +239,7 @@ public final class TopicStatsServiceGrpc {
      * partition.
      * </pre>
      */
-    public void computeMessageStats(
+    default void computeMessageStats(
         com.google.cloud.pubsublite.proto.ComputeMessageStatsRequest request,
         io.grpc.stub.StreamObserver<com.google.cloud.pubsublite.proto.ComputeMessageStatsResponse>
             responseObserver) {
@@ -259,7 +259,7 @@ public final class TopicStatsServiceGrpc {
      * partition.
      * </pre>
      */
-    public void computeHeadCursor(
+    default void computeHeadCursor(
         com.google.cloud.pubsublite.proto.ComputeHeadCursorRequest request,
         io.grpc.stub.StreamObserver<com.google.cloud.pubsublite.proto.ComputeHeadCursorResponse>
             responseObserver) {
@@ -275,44 +275,33 @@ public final class TopicStatsServiceGrpc {
      * partition.
      * </pre>
      */
-    public void computeTimeCursor(
+    default void computeTimeCursor(
         com.google.cloud.pubsublite.proto.ComputeTimeCursorRequest request,
         io.grpc.stub.StreamObserver<com.google.cloud.pubsublite.proto.ComputeTimeCursorResponse>
             responseObserver) {
       io.grpc.stub.ServerCalls.asyncUnimplementedUnaryCall(
           getComputeTimeCursorMethod(), responseObserver);
     }
+  }
+
+  /**
+   * Base class for the server implementation of the service TopicStatsService.
+   *
+   * <pre>
+   * This service allows users to get stats about messages in their topic.
+   * </pre>
+   */
+  public abstract static class TopicStatsServiceImplBase
+      implements io.grpc.BindableService, AsyncService {
 
     @java.lang.Override
     public final io.grpc.ServerServiceDefinition bindService() {
-      return io.grpc.ServerServiceDefinition.builder(getServiceDescriptor())
-          .addMethod(
-              getComputeMessageStatsMethod(),
-              io.grpc.stub.ServerCalls.asyncUnaryCall(
-                  new MethodHandlers<
-                      com.google.cloud.pubsublite.proto.ComputeMessageStatsRequest,
-                      com.google.cloud.pubsublite.proto.ComputeMessageStatsResponse>(
-                      this, METHODID_COMPUTE_MESSAGE_STATS)))
-          .addMethod(
-              getComputeHeadCursorMethod(),
-              io.grpc.stub.ServerCalls.asyncUnaryCall(
-                  new MethodHandlers<
-                      com.google.cloud.pubsublite.proto.ComputeHeadCursorRequest,
-                      com.google.cloud.pubsublite.proto.ComputeHeadCursorResponse>(
-                      this, METHODID_COMPUTE_HEAD_CURSOR)))
-          .addMethod(
-              getComputeTimeCursorMethod(),
-              io.grpc.stub.ServerCalls.asyncUnaryCall(
-                  new MethodHandlers<
-                      com.google.cloud.pubsublite.proto.ComputeTimeCursorRequest,
-                      com.google.cloud.pubsublite.proto.ComputeTimeCursorResponse>(
-                      this, METHODID_COMPUTE_TIME_CURSOR)))
-          .build();
+      return TopicStatsServiceGrpc.bindService(this);
     }
   }
 
   /**
-   *
+   * A stub to allow clients to do asynchronous rpc calls to service TopicStatsService.
    *
    * <pre>
    * This service allows users to get stats about messages in their topic.
@@ -390,7 +379,7 @@ public final class TopicStatsServiceGrpc {
   }
 
   /**
-   *
+   * A stub to allow clients to do synchronous rpc calls to service TopicStatsService.
    *
    * <pre>
    * This service allows users to get stats about messages in their topic.
@@ -457,7 +446,7 @@ public final class TopicStatsServiceGrpc {
   }
 
   /**
-   *
+   * A stub to allow clients to do ListenableFuture-style rpc calls to service TopicStatsService.
    *
    * <pre>
    * This service allows users to get stats about messages in their topic.
@@ -534,10 +523,10 @@ public final class TopicStatsServiceGrpc {
           io.grpc.stub.ServerCalls.ServerStreamingMethod<Req, Resp>,
           io.grpc.stub.ServerCalls.ClientStreamingMethod<Req, Resp>,
           io.grpc.stub.ServerCalls.BidiStreamingMethod<Req, Resp> {
-    private final TopicStatsServiceImplBase serviceImpl;
+    private final AsyncService serviceImpl;
     private final int methodId;
 
-    MethodHandlers(TopicStatsServiceImplBase serviceImpl, int methodId) {
+    MethodHandlers(AsyncService serviceImpl, int methodId) {
       this.serviceImpl = serviceImpl;
       this.methodId = methodId;
     }
@@ -581,6 +570,32 @@ public final class TopicStatsServiceGrpc {
           throw new AssertionError();
       }
     }
+  }
+
+  public static final io.grpc.ServerServiceDefinition bindService(AsyncService service) {
+    return io.grpc.ServerServiceDefinition.builder(getServiceDescriptor())
+        .addMethod(
+            getComputeMessageStatsMethod(),
+            io.grpc.stub.ServerCalls.asyncUnaryCall(
+                new MethodHandlers<
+                    com.google.cloud.pubsublite.proto.ComputeMessageStatsRequest,
+                    com.google.cloud.pubsublite.proto.ComputeMessageStatsResponse>(
+                    service, METHODID_COMPUTE_MESSAGE_STATS)))
+        .addMethod(
+            getComputeHeadCursorMethod(),
+            io.grpc.stub.ServerCalls.asyncUnaryCall(
+                new MethodHandlers<
+                    com.google.cloud.pubsublite.proto.ComputeHeadCursorRequest,
+                    com.google.cloud.pubsublite.proto.ComputeHeadCursorResponse>(
+                    service, METHODID_COMPUTE_HEAD_CURSOR)))
+        .addMethod(
+            getComputeTimeCursorMethod(),
+            io.grpc.stub.ServerCalls.asyncUnaryCall(
+                new MethodHandlers<
+                    com.google.cloud.pubsublite.proto.ComputeTimeCursorRequest,
+                    com.google.cloud.pubsublite.proto.ComputeTimeCursorResponse>(
+                    service, METHODID_COMPUTE_TIME_CURSOR)))
+        .build();
   }
 
   private abstract static class TopicStatsServiceBaseDescriptorSupplier

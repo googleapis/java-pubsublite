@@ -135,8 +135,7 @@ public final class PartitionAssignmentServiceGrpc {
    * partitions it should connect to.
    * </pre>
    */
-  public abstract static class PartitionAssignmentServiceImplBase
-      implements io.grpc.BindableService {
+  public interface AsyncService {
 
     /**
      *
@@ -150,30 +149,35 @@ public final class PartitionAssignmentServiceGrpc {
      * partitions it is connected to to reflect the new assignment.
      * </pre>
      */
-    public io.grpc.stub.StreamObserver<com.google.cloud.pubsublite.proto.PartitionAssignmentRequest>
+    default io.grpc.stub.StreamObserver<
+            com.google.cloud.pubsublite.proto.PartitionAssignmentRequest>
         assignPartitions(
             io.grpc.stub.StreamObserver<com.google.cloud.pubsublite.proto.PartitionAssignment>
                 responseObserver) {
       return io.grpc.stub.ServerCalls.asyncUnimplementedStreamingCall(
           getAssignPartitionsMethod(), responseObserver);
     }
+  }
+
+  /**
+   * Base class for the server implementation of the service PartitionAssignmentService.
+   *
+   * <pre>
+   * The service that a subscriber client application uses to determine which
+   * partitions it should connect to.
+   * </pre>
+   */
+  public abstract static class PartitionAssignmentServiceImplBase
+      implements io.grpc.BindableService, AsyncService {
 
     @java.lang.Override
     public final io.grpc.ServerServiceDefinition bindService() {
-      return io.grpc.ServerServiceDefinition.builder(getServiceDescriptor())
-          .addMethod(
-              getAssignPartitionsMethod(),
-              io.grpc.stub.ServerCalls.asyncBidiStreamingCall(
-                  new MethodHandlers<
-                      com.google.cloud.pubsublite.proto.PartitionAssignmentRequest,
-                      com.google.cloud.pubsublite.proto.PartitionAssignment>(
-                      this, METHODID_ASSIGN_PARTITIONS)))
-          .build();
+      return PartitionAssignmentServiceGrpc.bindService(this);
     }
   }
 
   /**
-   *
+   * A stub to allow clients to do asynchronous rpc calls to service PartitionAssignmentService.
    *
    * <pre>
    * The service that a subscriber client application uses to determine which
@@ -215,7 +219,7 @@ public final class PartitionAssignmentServiceGrpc {
   }
 
   /**
-   *
+   * A stub to allow clients to do synchronous rpc calls to service PartitionAssignmentService.
    *
    * <pre>
    * The service that a subscriber client application uses to determine which
@@ -237,7 +241,8 @@ public final class PartitionAssignmentServiceGrpc {
   }
 
   /**
-   *
+   * A stub to allow clients to do ListenableFuture-style rpc calls to service
+   * PartitionAssignmentService.
    *
    * <pre>
    * The service that a subscriber client application uses to determine which
@@ -265,10 +270,10 @@ public final class PartitionAssignmentServiceGrpc {
           io.grpc.stub.ServerCalls.ServerStreamingMethod<Req, Resp>,
           io.grpc.stub.ServerCalls.ClientStreamingMethod<Req, Resp>,
           io.grpc.stub.ServerCalls.BidiStreamingMethod<Req, Resp> {
-    private final PartitionAssignmentServiceImplBase serviceImpl;
+    private final AsyncService serviceImpl;
     private final int methodId;
 
-    MethodHandlers(PartitionAssignmentServiceImplBase serviceImpl, int methodId) {
+    MethodHandlers(AsyncService serviceImpl, int methodId) {
       this.serviceImpl = serviceImpl;
       this.methodId = methodId;
     }
@@ -297,6 +302,18 @@ public final class PartitionAssignmentServiceGrpc {
           throw new AssertionError();
       }
     }
+  }
+
+  public static final io.grpc.ServerServiceDefinition bindService(AsyncService service) {
+    return io.grpc.ServerServiceDefinition.builder(getServiceDescriptor())
+        .addMethod(
+            getAssignPartitionsMethod(),
+            io.grpc.stub.ServerCalls.asyncBidiStreamingCall(
+                new MethodHandlers<
+                    com.google.cloud.pubsublite.proto.PartitionAssignmentRequest,
+                    com.google.cloud.pubsublite.proto.PartitionAssignment>(
+                    service, METHODID_ASSIGN_PARTITIONS)))
+        .build();
   }
 
   private abstract static class PartitionAssignmentServiceBaseDescriptorSupplier

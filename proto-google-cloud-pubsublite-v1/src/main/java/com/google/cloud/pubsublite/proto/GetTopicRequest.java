@@ -47,11 +47,6 @@ public final class GetTopicRequest extends com.google.protobuf.GeneratedMessageV
     return new GetTopicRequest();
   }
 
-  @java.lang.Override
-  public final com.google.protobuf.UnknownFieldSet getUnknownFields() {
-    return this.unknownFields;
-  }
-
   public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
     return com.google.cloud.pubsublite.proto.AdminProto
         .internal_static_google_cloud_pubsublite_v1_GetTopicRequest_descriptor;

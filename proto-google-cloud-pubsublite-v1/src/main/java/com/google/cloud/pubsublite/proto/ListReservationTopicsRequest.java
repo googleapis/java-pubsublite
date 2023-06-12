@@ -48,11 +48,6 @@ public final class ListReservationTopicsRequest extends com.google.protobuf.Gene
     return new ListReservationTopicsRequest();
   }
 
-  @java.lang.Override
-  public final com.google.protobuf.UnknownFieldSet getUnknownFields() {
-    return this.unknownFields;
-  }
-
   public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
     return com.google.cloud.pubsublite.proto.AdminProto
         .internal_static_google_cloud_pubsublite_v1_ListReservationTopicsRequest_descriptor;
@@ -157,6 +152,7 @@ public final class ListReservationTopicsRequest extends com.google.protobuf.Gene
    * <pre>
    * A page token, received from a previous `ListReservationTopics` call.
    * Provide this to retrieve the subsequent page.
+   *
    * When paginating, all other parameters provided to `ListReservationTopics`
    * must match the call that provided the page token.
    * </pre>
@@ -183,6 +179,7 @@ public final class ListReservationTopicsRequest extends com.google.protobuf.Gene
    * <pre>
    * A page token, received from a previous `ListReservationTopics` call.
    * Provide this to retrieve the subsequent page.
+   *
    * When paginating, all other parameters provided to `ListReservationTopics`
    * must match the call that provided the page token.
    * </pre>
@@ -788,6 +785,7 @@ public final class ListReservationTopicsRequest extends com.google.protobuf.Gene
      * <pre>
      * A page token, received from a previous `ListReservationTopics` call.
      * Provide this to retrieve the subsequent page.
+     *
      * When paginating, all other parameters provided to `ListReservationTopics`
      * must match the call that provided the page token.
      * </pre>
@@ -813,6 +811,7 @@ public final class ListReservationTopicsRequest extends com.google.protobuf.Gene
      * <pre>
      * A page token, received from a previous `ListReservationTopics` call.
      * Provide this to retrieve the subsequent page.
+     *
      * When paginating, all other parameters provided to `ListReservationTopics`
      * must match the call that provided the page token.
      * </pre>
@@ -838,6 +837,7 @@ public final class ListReservationTopicsRequest extends com.google.protobuf.Gene
      * <pre>
      * A page token, received from a previous `ListReservationTopics` call.
      * Provide this to retrieve the subsequent page.
+     *
      * When paginating, all other parameters provided to `ListReservationTopics`
      * must match the call that provided the page token.
      * </pre>
@@ -862,6 +862,7 @@ public final class ListReservationTopicsRequest extends com.google.protobuf.Gene
      * <pre>
      * A page token, received from a previous `ListReservationTopics` call.
      * Provide this to retrieve the subsequent page.
+     *
      * When paginating, all other parameters provided to `ListReservationTopics`
      * must match the call that provided the page token.
      * </pre>
@@ -882,6 +883,7 @@ public final class ListReservationTopicsRequest extends com.google.protobuf.Gene
      * <pre>
      * A page token, received from a previous `ListReservationTopics` call.
      * Provide this to retrieve the subsequent page.
+     *
      * When paginating, all other parameters provided to `ListReservationTopics`
      * must match the call that provided the page token.
      * </pre>

@@ -45,11 +45,6 @@ public final class SeekSubscriptionResponse extends com.google.protobuf.Generate
     return new SeekSubscriptionResponse();
   }
 
-  @java.lang.Override
-  public final com.google.protobuf.UnknownFieldSet getUnknownFields() {
-    return this.unknownFields;
-  }
-
   public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
     return com.google.cloud.pubsublite.proto.AdminProto
         .internal_static_google_cloud_pubsublite_v1_SeekSubscriptionResponse_descriptor;

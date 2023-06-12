@@ -75,6 +75,7 @@ public interface ListTopicsRequestOrBuilder
    * <pre>
    * A page token, received from a previous `ListTopics` call.
    * Provide this to retrieve the subsequent page.
+   *
    * When paginating, all other parameters provided to `ListTopics` must match
    * the call that provided the page token.
    * </pre>
@@ -90,6 +91,7 @@ public interface ListTopicsRequestOrBuilder
    * <pre>
    * A page token, received from a previous `ListTopics` call.
    * Provide this to retrieve the subsequent page.
+   *
    * When paginating, all other parameters provided to `ListTopics` must match
    * the call that provided the page token.
    * </pre>

@@ -47,11 +47,6 @@ public final class Reservation extends com.google.protobuf.GeneratedMessageV3
     return new Reservation();
   }
 
-  @java.lang.Override
-  public final com.google.protobuf.UnknownFieldSet getUnknownFields() {
-    return this.unknownFields;
-  }
-
   public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
     return com.google.cloud.pubsublite.proto.CommonProto
         .internal_static_google_cloud_pubsublite_v1_Reservation_descriptor;
@@ -131,6 +126,7 @@ public final class Reservation extends com.google.protobuf.GeneratedMessageV3
    * The reserved throughput capacity. Every unit of throughput capacity is
    * equivalent to 1 MiB/s of published messages or 2 MiB/s of subscribed
    * messages.
+   *
    * Any topics which are declared as using capacity from a Reservation will
    * consume resources from this reservation instead of being charged
    * individually.
@@ -632,6 +628,7 @@ public final class Reservation extends com.google.protobuf.GeneratedMessageV3
      * The reserved throughput capacity. Every unit of throughput capacity is
      * equivalent to 1 MiB/s of published messages or 2 MiB/s of subscribed
      * messages.
+     *
      * Any topics which are declared as using capacity from a Reservation will
      * consume resources from this reservation instead of being charged
      * individually.
@@ -652,6 +649,7 @@ public final class Reservation extends com.google.protobuf.GeneratedMessageV3
      * The reserved throughput capacity. Every unit of throughput capacity is
      * equivalent to 1 MiB/s of published messages or 2 MiB/s of subscribed
      * messages.
+     *
      * Any topics which are declared as using capacity from a Reservation will
      * consume resources from this reservation instead of being charged
      * individually.
@@ -676,6 +674,7 @@ public final class Reservation extends com.google.protobuf.GeneratedMessageV3
      * The reserved throughput capacity. Every unit of throughput capacity is
      * equivalent to 1 MiB/s of published messages or 2 MiB/s of subscribed
      * messages.
+     *
      * Any topics which are declared as using capacity from a Reservation will
      * consume resources from this reservation instead of being charged
      * individually.

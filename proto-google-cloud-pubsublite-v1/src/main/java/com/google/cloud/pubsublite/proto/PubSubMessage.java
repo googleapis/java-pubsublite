@@ -48,11 +48,6 @@ public final class PubSubMessage extends com.google.protobuf.GeneratedMessageV3
     return new PubSubMessage();
   }
 
-  @java.lang.Override
-  public final com.google.protobuf.UnknownFieldSet getUnknownFields() {
-    return this.unknownFields;
-  }
-
   public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
     return com.google.cloud.pubsublite.proto.CommonProto
         .internal_static_google_cloud_pubsublite_v1_PubSubMessage_descriptor;

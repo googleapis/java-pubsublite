@@ -45,11 +45,6 @@ public final class SubscribeResponse extends com.google.protobuf.GeneratedMessag
     return new SubscribeResponse();
   }
 
-  @java.lang.Override
-  public final com.google.protobuf.UnknownFieldSet getUnknownFields() {
-    return this.unknownFields;
-  }
-
   public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
     return com.google.cloud.pubsublite.proto.SubscriberProto
         .internal_static_google_cloud_pubsublite_v1_SubscribeResponse_descriptor;
@@ -66,6 +61,8 @@ public final class SubscribeResponse extends com.google.protobuf.GeneratedMessag
   }
 
   private int responseCase_ = 0;
+
+  @SuppressWarnings("serial")
   private java.lang.Object response_;
 
   public enum ResponseCase

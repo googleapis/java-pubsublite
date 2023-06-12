@@ -50,11 +50,6 @@ public final class InitialPartitionAssignmentRequest extends com.google.protobuf
     return new InitialPartitionAssignmentRequest();
   }
 
-  @java.lang.Override
-  public final com.google.protobuf.UnknownFieldSet getUnknownFields() {
-    return this.unknownFields;
-  }
-
   public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
     return com.google.cloud.pubsublite.proto.SubscriberProto
         .internal_static_google_cloud_pubsublite_v1_InitialPartitionAssignmentRequest_descriptor;
@@ -134,6 +129,7 @@ public final class InitialPartitionAssignmentRequest extends com.google.protobuf
    * An opaque, unique client identifier. This field must be exactly 16 bytes
    * long and is interpreted as an unsigned 128 bit integer. Other size values
    * will be rejected and the stream will be failed with a non-retryable error.
+   *
    * This field is large enough to fit a uuid from standard uuid algorithms like
    * uuid1 or uuid4, which should be used to generate this number. The same
    * identifier should be reused following disconnections with retryable stream
@@ -647,6 +643,7 @@ public final class InitialPartitionAssignmentRequest extends com.google.protobuf
      * An opaque, unique client identifier. This field must be exactly 16 bytes
      * long and is interpreted as an unsigned 128 bit integer. Other size values
      * will be rejected and the stream will be failed with a non-retryable error.
+     *
      * This field is large enough to fit a uuid from standard uuid algorithms like
      * uuid1 or uuid4, which should be used to generate this number. The same
      * identifier should be reused following disconnections with retryable stream
@@ -668,6 +665,7 @@ public final class InitialPartitionAssignmentRequest extends com.google.protobuf
      * An opaque, unique client identifier. This field must be exactly 16 bytes
      * long and is interpreted as an unsigned 128 bit integer. Other size values
      * will be rejected and the stream will be failed with a non-retryable error.
+     *
      * This field is large enough to fit a uuid from standard uuid algorithms like
      * uuid1 or uuid4, which should be used to generate this number. The same
      * identifier should be reused following disconnections with retryable stream
@@ -695,6 +693,7 @@ public final class InitialPartitionAssignmentRequest extends com.google.protobuf
      * An opaque, unique client identifier. This field must be exactly 16 bytes
      * long and is interpreted as an unsigned 128 bit integer. Other size values
      * will be rejected and the stream will be failed with a non-retryable error.
+     *
      * This field is large enough to fit a uuid from standard uuid algorithms like
      * uuid1 or uuid4, which should be used to generate this number. The same
      * identifier should be reused following disconnections with retryable stream

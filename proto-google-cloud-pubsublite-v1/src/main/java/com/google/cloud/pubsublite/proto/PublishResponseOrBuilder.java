@@ -93,5 +93,5 @@ public interface PublishResponseOrBuilder
    */
   com.google.cloud.pubsublite.proto.MessagePublishResponseOrBuilder getMessageResponseOrBuilder();
 
-  public com.google.cloud.pubsublite.proto.PublishResponse.ResponseTypeCase getResponseTypeCase();
+  com.google.cloud.pubsublite.proto.PublishResponse.ResponseTypeCase getResponseTypeCase();
 }

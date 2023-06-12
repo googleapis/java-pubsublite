@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 Google LLC
+ * Copyright 2023 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,6 +24,7 @@ import com.google.api.gax.grpc.GrpcCallSettings;
 import com.google.api.gax.grpc.GrpcStubCallableFactory;
 import com.google.api.gax.rpc.BidiStreamingCallable;
 import com.google.api.gax.rpc.ClientContext;
+import com.google.api.gax.rpc.RequestParamsBuilder;
 import com.google.api.gax.rpc.UnaryCallable;
 import com.google.cloud.pubsublite.proto.CommitCursorRequest;
 import com.google.cloud.pubsublite.proto.CommitCursorResponse;
@@ -31,7 +32,6 @@ import com.google.cloud.pubsublite.proto.ListPartitionCursorsRequest;
 import com.google.cloud.pubsublite.proto.ListPartitionCursorsResponse;
 import com.google.cloud.pubsublite.proto.StreamingCommitCursorRequest;
 import com.google.cloud.pubsublite.proto.StreamingCommitCursorResponse;
-import com.google.common.collect.ImmutableMap;
 import com.google.longrunning.stub.GrpcOperationsStub;
 import io.grpc.MethodDescriptor;
 import io.grpc.protobuf.ProtoUtils;
@@ -140,9 +140,9 @@ public class GrpcCursorServiceStub extends CursorServiceStub {
             .setMethodDescriptor(commitCursorMethodDescriptor)
             .setParamsExtractor(
                 request -> {
-                  ImmutableMap.Builder<String, String> params = ImmutableMap.builder();
-                  params.put("subscription", String.valueOf(request.getSubscription()));
-                  return params.build();
+                  RequestParamsBuilder builder = RequestParamsBuilder.create();
+                  builder.add("subscription", String.valueOf(request.getSubscription()));
+                  return builder.build();
                 })
             .build();
     GrpcCallSettings<ListPartitionCursorsRequest, ListPartitionCursorsResponse>
@@ -151,9 +151,9 @@ public class GrpcCursorServiceStub extends CursorServiceStub {
                 .setMethodDescriptor(listPartitionCursorsMethodDescriptor)
                 .setParamsExtractor(
                     request -> {
-                      ImmutableMap.Builder<String, String> params = ImmutableMap.builder();
-                      params.put("parent", String.valueOf(request.getParent()));
-                      return params.build();
+                      RequestParamsBuilder builder = RequestParamsBuilder.create();
+                      builder.add("parent", String.valueOf(request.getParent()));
+                      return builder.build();
                     })
                 .build();
 

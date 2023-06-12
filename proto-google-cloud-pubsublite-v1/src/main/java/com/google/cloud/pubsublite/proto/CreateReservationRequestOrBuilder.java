@@ -104,6 +104,7 @@ public interface CreateReservationRequestOrBuilder
    * <pre>
    * Required. The ID to use for the reservation, which will become the final
    * component of the reservation's name.
+   *
    * This value is structured like: `my-reservation-name`.
    * </pre>
    *
@@ -118,6 +119,7 @@ public interface CreateReservationRequestOrBuilder
    * <pre>
    * Required. The ID to use for the reservation, which will become the final
    * component of the reservation's name.
+   *
    * This value is structured like: `my-reservation-name`.
    * </pre>
    *

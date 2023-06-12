@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 Google LLC
+ * Copyright 2023 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,6 +21,7 @@ import com.google.api.gax.core.BackgroundResourceAggregation;
 import com.google.api.gax.grpc.GrpcCallSettings;
 import com.google.api.gax.grpc.GrpcStubCallableFactory;
 import com.google.api.gax.rpc.ClientContext;
+import com.google.api.gax.rpc.RequestParamsBuilder;
 import com.google.api.gax.rpc.UnaryCallable;
 import com.google.cloud.pubsublite.proto.ComputeHeadCursorRequest;
 import com.google.cloud.pubsublite.proto.ComputeHeadCursorResponse;
@@ -28,7 +29,6 @@ import com.google.cloud.pubsublite.proto.ComputeMessageStatsRequest;
 import com.google.cloud.pubsublite.proto.ComputeMessageStatsResponse;
 import com.google.cloud.pubsublite.proto.ComputeTimeCursorRequest;
 import com.google.cloud.pubsublite.proto.ComputeTimeCursorResponse;
-import com.google.common.collect.ImmutableMap;
 import com.google.longrunning.stub.GrpcOperationsStub;
 import io.grpc.MethodDescriptor;
 import io.grpc.protobuf.ProtoUtils;
@@ -134,9 +134,9 @@ public class GrpcTopicStatsServiceStub extends TopicStatsServiceStub {
                 .setMethodDescriptor(computeMessageStatsMethodDescriptor)
                 .setParamsExtractor(
                     request -> {
-                      ImmutableMap.Builder<String, String> params = ImmutableMap.builder();
-                      params.put("topic", String.valueOf(request.getTopic()));
-                      return params.build();
+                      RequestParamsBuilder builder = RequestParamsBuilder.create();
+                      builder.add("topic", String.valueOf(request.getTopic()));
+                      return builder.build();
                     })
                 .build();
     GrpcCallSettings<ComputeHeadCursorRequest, ComputeHeadCursorResponse>
@@ -145,9 +145,9 @@ public class GrpcTopicStatsServiceStub extends TopicStatsServiceStub {
                 .setMethodDescriptor(computeHeadCursorMethodDescriptor)
                 .setParamsExtractor(
                     request -> {
-                      ImmutableMap.Builder<String, String> params = ImmutableMap.builder();
-                      params.put("topic", String.valueOf(request.getTopic()));
-                      return params.build();
+                      RequestParamsBuilder builder = RequestParamsBuilder.create();
+                      builder.add("topic", String.valueOf(request.getTopic()));
+                      return builder.build();
                     })
                 .build();
     GrpcCallSettings<ComputeTimeCursorRequest, ComputeTimeCursorResponse>
@@ -156,9 +156,9 @@ public class GrpcTopicStatsServiceStub extends TopicStatsServiceStub {
                 .setMethodDescriptor(computeTimeCursorMethodDescriptor)
                 .setParamsExtractor(
                     request -> {
-                      ImmutableMap.Builder<String, String> params = ImmutableMap.builder();
-                      params.put("topic", String.valueOf(request.getTopic()));
-                      return params.build();
+                      RequestParamsBuilder builder = RequestParamsBuilder.create();
+                      builder.add("topic", String.valueOf(request.getTopic()));
+                      return builder.build();
                     })
                 .build();
 

@@ -73,6 +73,7 @@ public interface ListTopicSubscriptionsRequestOrBuilder
    * <pre>
    * A page token, received from a previous `ListTopicSubscriptions` call.
    * Provide this to retrieve the subsequent page.
+   *
    * When paginating, all other parameters provided to `ListTopicSubscriptions`
    * must match the call that provided the page token.
    * </pre>
@@ -88,6 +89,7 @@ public interface ListTopicSubscriptionsRequestOrBuilder
    * <pre>
    * A page token, received from a previous `ListTopicSubscriptions` call.
    * Provide this to retrieve the subsequent page.
+   *
    * When paginating, all other parameters provided to `ListTopicSubscriptions`
    * must match the call that provided the page token.
    * </pre>

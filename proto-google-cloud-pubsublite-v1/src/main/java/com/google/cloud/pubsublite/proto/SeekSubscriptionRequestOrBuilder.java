@@ -130,5 +130,5 @@ public interface SeekSubscriptionRequestOrBuilder
    */
   com.google.cloud.pubsublite.proto.TimeTargetOrBuilder getTimeTargetOrBuilder();
 
-  public com.google.cloud.pubsublite.proto.SeekSubscriptionRequest.TargetCase getTargetCase();
+  com.google.cloud.pubsublite.proto.SeekSubscriptionRequest.TargetCase getTargetCase();
 }

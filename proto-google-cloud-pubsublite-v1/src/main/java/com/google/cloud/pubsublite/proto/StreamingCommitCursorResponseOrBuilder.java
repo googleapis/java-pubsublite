@@ -93,6 +93,5 @@ public interface StreamingCommitCursorResponseOrBuilder
    */
   com.google.cloud.pubsublite.proto.SequencedCommitCursorResponseOrBuilder getCommitOrBuilder();
 
-  public com.google.cloud.pubsublite.proto.StreamingCommitCursorResponse.RequestCase
-      getRequestCase();
+  com.google.cloud.pubsublite.proto.StreamingCommitCursorResponse.RequestCase getRequestCase();
 }

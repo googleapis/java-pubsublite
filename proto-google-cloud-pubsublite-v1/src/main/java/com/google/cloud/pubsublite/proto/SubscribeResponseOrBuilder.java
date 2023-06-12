@@ -128,5 +128,5 @@ public interface SubscribeResponseOrBuilder
    */
   com.google.cloud.pubsublite.proto.MessageResponseOrBuilder getMessagesOrBuilder();
 
-  public com.google.cloud.pubsublite.proto.SubscribeResponse.ResponseCase getResponseCase();
+  com.google.cloud.pubsublite.proto.SubscribeResponse.ResponseCase getResponseCase();
 }

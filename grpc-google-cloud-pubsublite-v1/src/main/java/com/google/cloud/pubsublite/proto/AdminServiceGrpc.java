@@ -957,7 +957,7 @@ public final class AdminServiceGrpc {
    * subscriptions, such creating, listing, and deleting topics and subscriptions.
    * </pre>
    */
-  public abstract static class AdminServiceImplBase implements io.grpc.BindableService {
+  public interface AsyncService {
 
     /**
      *
@@ -966,7 +966,7 @@ public final class AdminServiceGrpc {
      * Creates a new topic.
      * </pre>
      */
-    public void createTopic(
+    default void createTopic(
         com.google.cloud.pubsublite.proto.CreateTopicRequest request,
         io.grpc.stub.StreamObserver<com.google.cloud.pubsublite.proto.Topic> responseObserver) {
       io.grpc.stub.ServerCalls.asyncUnimplementedUnaryCall(
@@ -980,7 +980,7 @@ public final class AdminServiceGrpc {
      * Returns the topic configuration.
      * </pre>
      */
-    public void getTopic(
+    default void getTopic(
         com.google.cloud.pubsublite.proto.GetTopicRequest request,
         io.grpc.stub.StreamObserver<com.google.cloud.pubsublite.proto.Topic> responseObserver) {
       io.grpc.stub.ServerCalls.asyncUnimplementedUnaryCall(getGetTopicMethod(), responseObserver);
@@ -993,7 +993,7 @@ public final class AdminServiceGrpc {
      * Returns the partition information for the requested topic.
      * </pre>
      */
-    public void getTopicPartitions(
+    default void getTopicPartitions(
         com.google.cloud.pubsublite.proto.GetTopicPartitionsRequest request,
         io.grpc.stub.StreamObserver<com.google.cloud.pubsublite.proto.TopicPartitions>
             responseObserver) {
@@ -1008,7 +1008,7 @@ public final class AdminServiceGrpc {
      * Returns the list of topics for the given project.
      * </pre>
      */
-    public void listTopics(
+    default void listTopics(
         com.google.cloud.pubsublite.proto.ListTopicsRequest request,
         io.grpc.stub.StreamObserver<com.google.cloud.pubsublite.proto.ListTopicsResponse>
             responseObserver) {
@@ -1022,7 +1022,7 @@ public final class AdminServiceGrpc {
      * Updates properties of the specified topic.
      * </pre>
      */
-    public void updateTopic(
+    default void updateTopic(
         com.google.cloud.pubsublite.proto.UpdateTopicRequest request,
         io.grpc.stub.StreamObserver<com.google.cloud.pubsublite.proto.Topic> responseObserver) {
       io.grpc.stub.ServerCalls.asyncUnimplementedUnaryCall(
@@ -1036,7 +1036,7 @@ public final class AdminServiceGrpc {
      * Deletes the specified topic.
      * </pre>
      */
-    public void deleteTopic(
+    default void deleteTopic(
         com.google.cloud.pubsublite.proto.DeleteTopicRequest request,
         io.grpc.stub.StreamObserver<com.google.protobuf.Empty> responseObserver) {
       io.grpc.stub.ServerCalls.asyncUnimplementedUnaryCall(
@@ -1050,7 +1050,7 @@ public final class AdminServiceGrpc {
      * Lists the subscriptions attached to the specified topic.
      * </pre>
      */
-    public void listTopicSubscriptions(
+    default void listTopicSubscriptions(
         com.google.cloud.pubsublite.proto.ListTopicSubscriptionsRequest request,
         io.grpc.stub.StreamObserver<
                 com.google.cloud.pubsublite.proto.ListTopicSubscriptionsResponse>
@@ -1066,7 +1066,7 @@ public final class AdminServiceGrpc {
      * Creates a new subscription.
      * </pre>
      */
-    public void createSubscription(
+    default void createSubscription(
         com.google.cloud.pubsublite.proto.CreateSubscriptionRequest request,
         io.grpc.stub.StreamObserver<com.google.cloud.pubsublite.proto.Subscription>
             responseObserver) {
@@ -1081,7 +1081,7 @@ public final class AdminServiceGrpc {
      * Returns the subscription configuration.
      * </pre>
      */
-    public void getSubscription(
+    default void getSubscription(
         com.google.cloud.pubsublite.proto.GetSubscriptionRequest request,
         io.grpc.stub.StreamObserver<com.google.cloud.pubsublite.proto.Subscription>
             responseObserver) {
@@ -1096,7 +1096,7 @@ public final class AdminServiceGrpc {
      * Returns the list of subscriptions for the given project.
      * </pre>
      */
-    public void listSubscriptions(
+    default void listSubscriptions(
         com.google.cloud.pubsublite.proto.ListSubscriptionsRequest request,
         io.grpc.stub.StreamObserver<com.google.cloud.pubsublite.proto.ListSubscriptionsResponse>
             responseObserver) {
@@ -1111,7 +1111,7 @@ public final class AdminServiceGrpc {
      * Updates properties of the specified subscription.
      * </pre>
      */
-    public void updateSubscription(
+    default void updateSubscription(
         com.google.cloud.pubsublite.proto.UpdateSubscriptionRequest request,
         io.grpc.stub.StreamObserver<com.google.cloud.pubsublite.proto.Subscription>
             responseObserver) {
@@ -1126,7 +1126,7 @@ public final class AdminServiceGrpc {
      * Deletes the specified subscription.
      * </pre>
      */
-    public void deleteSubscription(
+    default void deleteSubscription(
         com.google.cloud.pubsublite.proto.DeleteSubscriptionRequest request,
         io.grpc.stub.StreamObserver<com.google.protobuf.Empty> responseObserver) {
       io.grpc.stub.ServerCalls.asyncUnimplementedUnaryCall(
@@ -1157,7 +1157,7 @@ public final class AdminServiceGrpc {
      * and the new invocation of seek will supersede it.
      * </pre>
      */
-    public void seekSubscription(
+    default void seekSubscription(
         com.google.cloud.pubsublite.proto.SeekSubscriptionRequest request,
         io.grpc.stub.StreamObserver<com.google.longrunning.Operation> responseObserver) {
       io.grpc.stub.ServerCalls.asyncUnimplementedUnaryCall(
@@ -1171,7 +1171,7 @@ public final class AdminServiceGrpc {
      * Creates a new reservation.
      * </pre>
      */
-    public void createReservation(
+    default void createReservation(
         com.google.cloud.pubsublite.proto.CreateReservationRequest request,
         io.grpc.stub.StreamObserver<com.google.cloud.pubsublite.proto.Reservation>
             responseObserver) {
@@ -1186,7 +1186,7 @@ public final class AdminServiceGrpc {
      * Returns the reservation configuration.
      * </pre>
      */
-    public void getReservation(
+    default void getReservation(
         com.google.cloud.pubsublite.proto.GetReservationRequest request,
         io.grpc.stub.StreamObserver<com.google.cloud.pubsublite.proto.Reservation>
             responseObserver) {
@@ -1201,7 +1201,7 @@ public final class AdminServiceGrpc {
      * Returns the list of reservations for the given project.
      * </pre>
      */
-    public void listReservations(
+    default void listReservations(
         com.google.cloud.pubsublite.proto.ListReservationsRequest request,
         io.grpc.stub.StreamObserver<com.google.cloud.pubsublite.proto.ListReservationsResponse>
             responseObserver) {
@@ -1216,7 +1216,7 @@ public final class AdminServiceGrpc {
      * Updates properties of the specified reservation.
      * </pre>
      */
-    public void updateReservation(
+    default void updateReservation(
         com.google.cloud.pubsublite.proto.UpdateReservationRequest request,
         io.grpc.stub.StreamObserver<com.google.cloud.pubsublite.proto.Reservation>
             responseObserver) {
@@ -1231,7 +1231,7 @@ public final class AdminServiceGrpc {
      * Deletes the specified reservation.
      * </pre>
      */
-    public void deleteReservation(
+    default void deleteReservation(
         com.google.cloud.pubsublite.proto.DeleteReservationRequest request,
         io.grpc.stub.StreamObserver<com.google.protobuf.Empty> responseObserver) {
       io.grpc.stub.ServerCalls.asyncUnimplementedUnaryCall(
@@ -1245,149 +1245,34 @@ public final class AdminServiceGrpc {
      * Lists the topics attached to the specified reservation.
      * </pre>
      */
-    public void listReservationTopics(
+    default void listReservationTopics(
         com.google.cloud.pubsublite.proto.ListReservationTopicsRequest request,
         io.grpc.stub.StreamObserver<com.google.cloud.pubsublite.proto.ListReservationTopicsResponse>
             responseObserver) {
       io.grpc.stub.ServerCalls.asyncUnimplementedUnaryCall(
           getListReservationTopicsMethod(), responseObserver);
     }
+  }
+
+  /**
+   * Base class for the server implementation of the service AdminService.
+   *
+   * <pre>
+   * The service that a client application uses to manage topics and
+   * subscriptions, such creating, listing, and deleting topics and subscriptions.
+   * </pre>
+   */
+  public abstract static class AdminServiceImplBase
+      implements io.grpc.BindableService, AsyncService {
 
     @java.lang.Override
     public final io.grpc.ServerServiceDefinition bindService() {
-      return io.grpc.ServerServiceDefinition.builder(getServiceDescriptor())
-          .addMethod(
-              getCreateTopicMethod(),
-              io.grpc.stub.ServerCalls.asyncUnaryCall(
-                  new MethodHandlers<
-                      com.google.cloud.pubsublite.proto.CreateTopicRequest,
-                      com.google.cloud.pubsublite.proto.Topic>(this, METHODID_CREATE_TOPIC)))
-          .addMethod(
-              getGetTopicMethod(),
-              io.grpc.stub.ServerCalls.asyncUnaryCall(
-                  new MethodHandlers<
-                      com.google.cloud.pubsublite.proto.GetTopicRequest,
-                      com.google.cloud.pubsublite.proto.Topic>(this, METHODID_GET_TOPIC)))
-          .addMethod(
-              getGetTopicPartitionsMethod(),
-              io.grpc.stub.ServerCalls.asyncUnaryCall(
-                  new MethodHandlers<
-                      com.google.cloud.pubsublite.proto.GetTopicPartitionsRequest,
-                      com.google.cloud.pubsublite.proto.TopicPartitions>(
-                      this, METHODID_GET_TOPIC_PARTITIONS)))
-          .addMethod(
-              getListTopicsMethod(),
-              io.grpc.stub.ServerCalls.asyncUnaryCall(
-                  new MethodHandlers<
-                      com.google.cloud.pubsublite.proto.ListTopicsRequest,
-                      com.google.cloud.pubsublite.proto.ListTopicsResponse>(
-                      this, METHODID_LIST_TOPICS)))
-          .addMethod(
-              getUpdateTopicMethod(),
-              io.grpc.stub.ServerCalls.asyncUnaryCall(
-                  new MethodHandlers<
-                      com.google.cloud.pubsublite.proto.UpdateTopicRequest,
-                      com.google.cloud.pubsublite.proto.Topic>(this, METHODID_UPDATE_TOPIC)))
-          .addMethod(
-              getDeleteTopicMethod(),
-              io.grpc.stub.ServerCalls.asyncUnaryCall(
-                  new MethodHandlers<
-                      com.google.cloud.pubsublite.proto.DeleteTopicRequest,
-                      com.google.protobuf.Empty>(this, METHODID_DELETE_TOPIC)))
-          .addMethod(
-              getListTopicSubscriptionsMethod(),
-              io.grpc.stub.ServerCalls.asyncUnaryCall(
-                  new MethodHandlers<
-                      com.google.cloud.pubsublite.proto.ListTopicSubscriptionsRequest,
-                      com.google.cloud.pubsublite.proto.ListTopicSubscriptionsResponse>(
-                      this, METHODID_LIST_TOPIC_SUBSCRIPTIONS)))
-          .addMethod(
-              getCreateSubscriptionMethod(),
-              io.grpc.stub.ServerCalls.asyncUnaryCall(
-                  new MethodHandlers<
-                      com.google.cloud.pubsublite.proto.CreateSubscriptionRequest,
-                      com.google.cloud.pubsublite.proto.Subscription>(
-                      this, METHODID_CREATE_SUBSCRIPTION)))
-          .addMethod(
-              getGetSubscriptionMethod(),
-              io.grpc.stub.ServerCalls.asyncUnaryCall(
-                  new MethodHandlers<
-                      com.google.cloud.pubsublite.proto.GetSubscriptionRequest,
-                      com.google.cloud.pubsublite.proto.Subscription>(
-                      this, METHODID_GET_SUBSCRIPTION)))
-          .addMethod(
-              getListSubscriptionsMethod(),
-              io.grpc.stub.ServerCalls.asyncUnaryCall(
-                  new MethodHandlers<
-                      com.google.cloud.pubsublite.proto.ListSubscriptionsRequest,
-                      com.google.cloud.pubsublite.proto.ListSubscriptionsResponse>(
-                      this, METHODID_LIST_SUBSCRIPTIONS)))
-          .addMethod(
-              getUpdateSubscriptionMethod(),
-              io.grpc.stub.ServerCalls.asyncUnaryCall(
-                  new MethodHandlers<
-                      com.google.cloud.pubsublite.proto.UpdateSubscriptionRequest,
-                      com.google.cloud.pubsublite.proto.Subscription>(
-                      this, METHODID_UPDATE_SUBSCRIPTION)))
-          .addMethod(
-              getDeleteSubscriptionMethod(),
-              io.grpc.stub.ServerCalls.asyncUnaryCall(
-                  new MethodHandlers<
-                      com.google.cloud.pubsublite.proto.DeleteSubscriptionRequest,
-                      com.google.protobuf.Empty>(this, METHODID_DELETE_SUBSCRIPTION)))
-          .addMethod(
-              getSeekSubscriptionMethod(),
-              io.grpc.stub.ServerCalls.asyncUnaryCall(
-                  new MethodHandlers<
-                      com.google.cloud.pubsublite.proto.SeekSubscriptionRequest,
-                      com.google.longrunning.Operation>(this, METHODID_SEEK_SUBSCRIPTION)))
-          .addMethod(
-              getCreateReservationMethod(),
-              io.grpc.stub.ServerCalls.asyncUnaryCall(
-                  new MethodHandlers<
-                      com.google.cloud.pubsublite.proto.CreateReservationRequest,
-                      com.google.cloud.pubsublite.proto.Reservation>(
-                      this, METHODID_CREATE_RESERVATION)))
-          .addMethod(
-              getGetReservationMethod(),
-              io.grpc.stub.ServerCalls.asyncUnaryCall(
-                  new MethodHandlers<
-                      com.google.cloud.pubsublite.proto.GetReservationRequest,
-                      com.google.cloud.pubsublite.proto.Reservation>(
-                      this, METHODID_GET_RESERVATION)))
-          .addMethod(
-              getListReservationsMethod(),
-              io.grpc.stub.ServerCalls.asyncUnaryCall(
-                  new MethodHandlers<
-                      com.google.cloud.pubsublite.proto.ListReservationsRequest,
-                      com.google.cloud.pubsublite.proto.ListReservationsResponse>(
-                      this, METHODID_LIST_RESERVATIONS)))
-          .addMethod(
-              getUpdateReservationMethod(),
-              io.grpc.stub.ServerCalls.asyncUnaryCall(
-                  new MethodHandlers<
-                      com.google.cloud.pubsublite.proto.UpdateReservationRequest,
-                      com.google.cloud.pubsublite.proto.Reservation>(
-                      this, METHODID_UPDATE_RESERVATION)))
-          .addMethod(
-              getDeleteReservationMethod(),
-              io.grpc.stub.ServerCalls.asyncUnaryCall(
-                  new MethodHandlers<
-                      com.google.cloud.pubsublite.proto.DeleteReservationRequest,
-                      com.google.protobuf.Empty>(this, METHODID_DELETE_RESERVATION)))
-          .addMethod(
-              getListReservationTopicsMethod(),
-              io.grpc.stub.ServerCalls.asyncUnaryCall(
-                  new MethodHandlers<
-                      com.google.cloud.pubsublite.proto.ListReservationTopicsRequest,
-                      com.google.cloud.pubsublite.proto.ListReservationTopicsResponse>(
-                      this, METHODID_LIST_RESERVATION_TOPICS)))
-          .build();
+      return AdminServiceGrpc.bindService(this);
     }
   }
 
   /**
-   *
+   * A stub to allow clients to do asynchronous rpc calls to service AdminService.
    *
    * <pre>
    * The service that a client application uses to manage topics and
@@ -1737,7 +1622,7 @@ public final class AdminServiceGrpc {
   }
 
   /**
-   *
+   * A stub to allow clients to do synchronous rpc calls to service AdminService.
    *
    * <pre>
    * The service that a client application uses to manage topics and
@@ -2022,7 +1907,7 @@ public final class AdminServiceGrpc {
   }
 
   /**
-   *
+   * A stub to allow clients to do ListenableFuture-style rpc calls to service AdminService.
    *
    * <pre>
    * The service that a client application uses to manage topics and
@@ -2348,10 +2233,10 @@ public final class AdminServiceGrpc {
           io.grpc.stub.ServerCalls.ServerStreamingMethod<Req, Resp>,
           io.grpc.stub.ServerCalls.ClientStreamingMethod<Req, Resp>,
           io.grpc.stub.ServerCalls.BidiStreamingMethod<Req, Resp> {
-    private final AdminServiceImplBase serviceImpl;
+    private final AsyncService serviceImpl;
     private final int methodId;
 
-    MethodHandlers(AdminServiceImplBase serviceImpl, int methodId) {
+    MethodHandlers(AsyncService serviceImpl, int methodId) {
       this.serviceImpl = serviceImpl;
       this.methodId = methodId;
     }
@@ -2488,6 +2373,137 @@ public final class AdminServiceGrpc {
           throw new AssertionError();
       }
     }
+  }
+
+  public static final io.grpc.ServerServiceDefinition bindService(AsyncService service) {
+    return io.grpc.ServerServiceDefinition.builder(getServiceDescriptor())
+        .addMethod(
+            getCreateTopicMethod(),
+            io.grpc.stub.ServerCalls.asyncUnaryCall(
+                new MethodHandlers<
+                    com.google.cloud.pubsublite.proto.CreateTopicRequest,
+                    com.google.cloud.pubsublite.proto.Topic>(service, METHODID_CREATE_TOPIC)))
+        .addMethod(
+            getGetTopicMethod(),
+            io.grpc.stub.ServerCalls.asyncUnaryCall(
+                new MethodHandlers<
+                    com.google.cloud.pubsublite.proto.GetTopicRequest,
+                    com.google.cloud.pubsublite.proto.Topic>(service, METHODID_GET_TOPIC)))
+        .addMethod(
+            getGetTopicPartitionsMethod(),
+            io.grpc.stub.ServerCalls.asyncUnaryCall(
+                new MethodHandlers<
+                    com.google.cloud.pubsublite.proto.GetTopicPartitionsRequest,
+                    com.google.cloud.pubsublite.proto.TopicPartitions>(
+                    service, METHODID_GET_TOPIC_PARTITIONS)))
+        .addMethod(
+            getListTopicsMethod(),
+            io.grpc.stub.ServerCalls.asyncUnaryCall(
+                new MethodHandlers<
+                    com.google.cloud.pubsublite.proto.ListTopicsRequest,
+                    com.google.cloud.pubsublite.proto.ListTopicsResponse>(
+                    service, METHODID_LIST_TOPICS)))
+        .addMethod(
+            getUpdateTopicMethod(),
+            io.grpc.stub.ServerCalls.asyncUnaryCall(
+                new MethodHandlers<
+                    com.google.cloud.pubsublite.proto.UpdateTopicRequest,
+                    com.google.cloud.pubsublite.proto.Topic>(service, METHODID_UPDATE_TOPIC)))
+        .addMethod(
+            getDeleteTopicMethod(),
+            io.grpc.stub.ServerCalls.asyncUnaryCall(
+                new MethodHandlers<
+                    com.google.cloud.pubsublite.proto.DeleteTopicRequest,
+                    com.google.protobuf.Empty>(service, METHODID_DELETE_TOPIC)))
+        .addMethod(
+            getListTopicSubscriptionsMethod(),
+            io.grpc.stub.ServerCalls.asyncUnaryCall(
+                new MethodHandlers<
+                    com.google.cloud.pubsublite.proto.ListTopicSubscriptionsRequest,
+                    com.google.cloud.pubsublite.proto.ListTopicSubscriptionsResponse>(
+                    service, METHODID_LIST_TOPIC_SUBSCRIPTIONS)))
+        .addMethod(
+            getCreateSubscriptionMethod(),
+            io.grpc.stub.ServerCalls.asyncUnaryCall(
+                new MethodHandlers<
+                    com.google.cloud.pubsublite.proto.CreateSubscriptionRequest,
+                    com.google.cloud.pubsublite.proto.Subscription>(
+                    service, METHODID_CREATE_SUBSCRIPTION)))
+        .addMethod(
+            getGetSubscriptionMethod(),
+            io.grpc.stub.ServerCalls.asyncUnaryCall(
+                new MethodHandlers<
+                    com.google.cloud.pubsublite.proto.GetSubscriptionRequest,
+                    com.google.cloud.pubsublite.proto.Subscription>(
+                    service, METHODID_GET_SUBSCRIPTION)))
+        .addMethod(
+            getListSubscriptionsMethod(),
+            io.grpc.stub.ServerCalls.asyncUnaryCall(
+                new MethodHandlers<
+                    com.google.cloud.pubsublite.proto.ListSubscriptionsRequest,
+                    com.google.cloud.pubsublite.proto.ListSubscriptionsResponse>(
+                    service, METHODID_LIST_SUBSCRIPTIONS)))
+        .addMethod(
+            getUpdateSubscriptionMethod(),
+            io.grpc.stub.ServerCalls.asyncUnaryCall(
+                new MethodHandlers<
+                    com.google.cloud.pubsublite.proto.UpdateSubscriptionRequest,
+                    com.google.cloud.pubsublite.proto.Subscription>(
+                    service, METHODID_UPDATE_SUBSCRIPTION)))
+        .addMethod(
+            getDeleteSubscriptionMethod(),
+            io.grpc.stub.ServerCalls.asyncUnaryCall(
+                new MethodHandlers<
+                    com.google.cloud.pubsublite.proto.DeleteSubscriptionRequest,
+                    com.google.protobuf.Empty>(service, METHODID_DELETE_SUBSCRIPTION)))
+        .addMethod(
+            getSeekSubscriptionMethod(),
+            io.grpc.stub.ServerCalls.asyncUnaryCall(
+                new MethodHandlers<
+                    com.google.cloud.pubsublite.proto.SeekSubscriptionRequest,
+                    com.google.longrunning.Operation>(service, METHODID_SEEK_SUBSCRIPTION)))
+        .addMethod(
+            getCreateReservationMethod(),
+            io.grpc.stub.ServerCalls.asyncUnaryCall(
+                new MethodHandlers<
+                    com.google.cloud.pubsublite.proto.CreateReservationRequest,
+                    com.google.cloud.pubsublite.proto.Reservation>(
+                    service, METHODID_CREATE_RESERVATION)))
+        .addMethod(
+            getGetReservationMethod(),
+            io.grpc.stub.ServerCalls.asyncUnaryCall(
+                new MethodHandlers<
+                    com.google.cloud.pubsublite.proto.GetReservationRequest,
+                    com.google.cloud.pubsublite.proto.Reservation>(
+                    service, METHODID_GET_RESERVATION)))
+        .addMethod(
+            getListReservationsMethod(),
+            io.grpc.stub.ServerCalls.asyncUnaryCall(
+                new MethodHandlers<
+                    com.google.cloud.pubsublite.proto.ListReservationsRequest,
+                    com.google.cloud.pubsublite.proto.ListReservationsResponse>(
+                    service, METHODID_LIST_RESERVATIONS)))
+        .addMethod(
+            getUpdateReservationMethod(),
+            io.grpc.stub.ServerCalls.asyncUnaryCall(
+                new MethodHandlers<
+                    com.google.cloud.pubsublite.proto.UpdateReservationRequest,
+                    com.google.cloud.pubsublite.proto.Reservation>(
+                    service, METHODID_UPDATE_RESERVATION)))
+        .addMethod(
+            getDeleteReservationMethod(),
+            io.grpc.stub.ServerCalls.asyncUnaryCall(
+                new MethodHandlers<
+                    com.google.cloud.pubsublite.proto.DeleteReservationRequest,
+                    com.google.protobuf.Empty>(service, METHODID_DELETE_RESERVATION)))
+        .addMethod(
+            getListReservationTopicsMethod(),
+            io.grpc.stub.ServerCalls.asyncUnaryCall(
+                new MethodHandlers<
+                    com.google.cloud.pubsublite.proto.ListReservationTopicsRequest,
+                    com.google.cloud.pubsublite.proto.ListReservationTopicsResponse>(
+                    service, METHODID_LIST_RESERVATION_TOPICS)))
+        .build();
   }
 
   private abstract static class AdminServiceBaseDescriptorSupplier

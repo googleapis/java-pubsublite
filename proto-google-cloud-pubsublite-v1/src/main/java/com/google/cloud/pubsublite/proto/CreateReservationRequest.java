@@ -48,11 +48,6 @@ public final class CreateReservationRequest extends com.google.protobuf.Generate
     return new CreateReservationRequest();
   }
 
-  @java.lang.Override
-  public final com.google.protobuf.UnknownFieldSet getUnknownFields() {
-    return this.unknownFields;
-  }
-
   public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
     return com.google.cloud.pubsublite.proto.AdminProto
         .internal_static_google_cloud_pubsublite_v1_CreateReservationRequest_descriptor;
@@ -194,6 +189,7 @@ public final class CreateReservationRequest extends com.google.protobuf.Generate
    * <pre>
    * Required. The ID to use for the reservation, which will become the final
    * component of the reservation's name.
+   *
    * This value is structured like: `my-reservation-name`.
    * </pre>
    *
@@ -219,6 +215,7 @@ public final class CreateReservationRequest extends com.google.protobuf.Generate
    * <pre>
    * Required. The ID to use for the reservation, which will become the final
    * component of the reservation's name.
+   *
    * This value is structured like: `my-reservation-name`.
    * </pre>
    *
@@ -977,6 +974,7 @@ public final class CreateReservationRequest extends com.google.protobuf.Generate
      * <pre>
      * Required. The ID to use for the reservation, which will become the final
      * component of the reservation's name.
+     *
      * This value is structured like: `my-reservation-name`.
      * </pre>
      *
@@ -1001,6 +999,7 @@ public final class CreateReservationRequest extends com.google.protobuf.Generate
      * <pre>
      * Required. The ID to use for the reservation, which will become the final
      * component of the reservation's name.
+     *
      * This value is structured like: `my-reservation-name`.
      * </pre>
      *
@@ -1025,6 +1024,7 @@ public final class CreateReservationRequest extends com.google.protobuf.Generate
      * <pre>
      * Required. The ID to use for the reservation, which will become the final
      * component of the reservation's name.
+     *
      * This value is structured like: `my-reservation-name`.
      * </pre>
      *
@@ -1048,6 +1048,7 @@ public final class CreateReservationRequest extends com.google.protobuf.Generate
      * <pre>
      * Required. The ID to use for the reservation, which will become the final
      * component of the reservation's name.
+     *
      * This value is structured like: `my-reservation-name`.
      * </pre>
      *
@@ -1067,6 +1068,7 @@ public final class CreateReservationRequest extends com.google.protobuf.Generate
      * <pre>
      * Required. The ID to use for the reservation, which will become the final
      * component of the reservation's name.
+     *
      * This value is structured like: `my-reservation-name`.
      * </pre>
      *

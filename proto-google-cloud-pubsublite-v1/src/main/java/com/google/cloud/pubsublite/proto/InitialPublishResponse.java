@@ -45,11 +45,6 @@ public final class InitialPublishResponse extends com.google.protobuf.GeneratedM
     return new InitialPublishResponse();
   }
 
-  @java.lang.Override
-  public final com.google.protobuf.UnknownFieldSet getUnknownFields() {
-    return this.unknownFields;
-  }
-
   public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
     return com.google.cloud.pubsublite.proto.PublisherProto
         .internal_static_google_cloud_pubsublite_v1_InitialPublishResponse_descriptor;

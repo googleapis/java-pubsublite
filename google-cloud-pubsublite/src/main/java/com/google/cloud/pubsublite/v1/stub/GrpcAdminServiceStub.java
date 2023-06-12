@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 Google LLC
+ * Copyright 2023 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,6 +28,7 @@ import com.google.api.gax.grpc.GrpcCallSettings;
 import com.google.api.gax.grpc.GrpcStubCallableFactory;
 import com.google.api.gax.rpc.ClientContext;
 import com.google.api.gax.rpc.OperationCallable;
+import com.google.api.gax.rpc.RequestParamsBuilder;
 import com.google.api.gax.rpc.UnaryCallable;
 import com.google.cloud.pubsublite.proto.CreateReservationRequest;
 import com.google.cloud.pubsublite.proto.CreateSubscriptionRequest;
@@ -59,7 +60,6 @@ import com.google.cloud.pubsublite.proto.TopicPartitions;
 import com.google.cloud.pubsublite.proto.UpdateReservationRequest;
 import com.google.cloud.pubsublite.proto.UpdateSubscriptionRequest;
 import com.google.cloud.pubsublite.proto.UpdateTopicRequest;
-import com.google.common.collect.ImmutableMap;
 import com.google.longrunning.Operation;
 import com.google.longrunning.stub.GrpcOperationsStub;
 import com.google.protobuf.Empty;
@@ -348,9 +348,9 @@ public class GrpcAdminServiceStub extends AdminServiceStub {
             .setMethodDescriptor(createTopicMethodDescriptor)
             .setParamsExtractor(
                 request -> {
-                  ImmutableMap.Builder<String, String> params = ImmutableMap.builder();
-                  params.put("parent", String.valueOf(request.getParent()));
-                  return params.build();
+                  RequestParamsBuilder builder = RequestParamsBuilder.create();
+                  builder.add("parent", String.valueOf(request.getParent()));
+                  return builder.build();
                 })
             .build();
     GrpcCallSettings<GetTopicRequest, Topic> getTopicTransportSettings =
@@ -358,9 +358,9 @@ public class GrpcAdminServiceStub extends AdminServiceStub {
             .setMethodDescriptor(getTopicMethodDescriptor)
             .setParamsExtractor(
                 request -> {
-                  ImmutableMap.Builder<String, String> params = ImmutableMap.builder();
-                  params.put("name", String.valueOf(request.getName()));
-                  return params.build();
+                  RequestParamsBuilder builder = RequestParamsBuilder.create();
+                  builder.add("name", String.valueOf(request.getName()));
+                  return builder.build();
                 })
             .build();
     GrpcCallSettings<GetTopicPartitionsRequest, TopicPartitions>
@@ -369,9 +369,9 @@ public class GrpcAdminServiceStub extends AdminServiceStub {
                 .setMethodDescriptor(getTopicPartitionsMethodDescriptor)
                 .setParamsExtractor(
                     request -> {
-                      ImmutableMap.Builder<String, String> params = ImmutableMap.builder();
-                      params.put("name", String.valueOf(request.getName()));
-                      return params.build();
+                      RequestParamsBuilder builder = RequestParamsBuilder.create();
+                      builder.add("name", String.valueOf(request.getName()));
+                      return builder.build();
                     })
                 .build();
     GrpcCallSettings<ListTopicsRequest, ListTopicsResponse> listTopicsTransportSettings =
@@ -379,9 +379,9 @@ public class GrpcAdminServiceStub extends AdminServiceStub {
             .setMethodDescriptor(listTopicsMethodDescriptor)
             .setParamsExtractor(
                 request -> {
-                  ImmutableMap.Builder<String, String> params = ImmutableMap.builder();
-                  params.put("parent", String.valueOf(request.getParent()));
-                  return params.build();
+                  RequestParamsBuilder builder = RequestParamsBuilder.create();
+                  builder.add("parent", String.valueOf(request.getParent()));
+                  return builder.build();
                 })
             .build();
     GrpcCallSettings<UpdateTopicRequest, Topic> updateTopicTransportSettings =
@@ -389,9 +389,9 @@ public class GrpcAdminServiceStub extends AdminServiceStub {
             .setMethodDescriptor(updateTopicMethodDescriptor)
             .setParamsExtractor(
                 request -> {
-                  ImmutableMap.Builder<String, String> params = ImmutableMap.builder();
-                  params.put("topic.name", String.valueOf(request.getTopic().getName()));
-                  return params.build();
+                  RequestParamsBuilder builder = RequestParamsBuilder.create();
+                  builder.add("topic.name", String.valueOf(request.getTopic().getName()));
+                  return builder.build();
                 })
             .build();
     GrpcCallSettings<DeleteTopicRequest, Empty> deleteTopicTransportSettings =
@@ -399,9 +399,9 @@ public class GrpcAdminServiceStub extends AdminServiceStub {
             .setMethodDescriptor(deleteTopicMethodDescriptor)
             .setParamsExtractor(
                 request -> {
-                  ImmutableMap.Builder<String, String> params = ImmutableMap.builder();
-                  params.put("name", String.valueOf(request.getName()));
-                  return params.build();
+                  RequestParamsBuilder builder = RequestParamsBuilder.create();
+                  builder.add("name", String.valueOf(request.getName()));
+                  return builder.build();
                 })
             .build();
     GrpcCallSettings<ListTopicSubscriptionsRequest, ListTopicSubscriptionsResponse>
@@ -411,9 +411,9 @@ public class GrpcAdminServiceStub extends AdminServiceStub {
                 .setMethodDescriptor(listTopicSubscriptionsMethodDescriptor)
                 .setParamsExtractor(
                     request -> {
-                      ImmutableMap.Builder<String, String> params = ImmutableMap.builder();
-                      params.put("name", String.valueOf(request.getName()));
-                      return params.build();
+                      RequestParamsBuilder builder = RequestParamsBuilder.create();
+                      builder.add("name", String.valueOf(request.getName()));
+                      return builder.build();
                     })
                 .build();
     GrpcCallSettings<CreateSubscriptionRequest, Subscription> createSubscriptionTransportSettings =
@@ -421,9 +421,9 @@ public class GrpcAdminServiceStub extends AdminServiceStub {
             .setMethodDescriptor(createSubscriptionMethodDescriptor)
             .setParamsExtractor(
                 request -> {
-                  ImmutableMap.Builder<String, String> params = ImmutableMap.builder();
-                  params.put("parent", String.valueOf(request.getParent()));
-                  return params.build();
+                  RequestParamsBuilder builder = RequestParamsBuilder.create();
+                  builder.add("parent", String.valueOf(request.getParent()));
+                  return builder.build();
                 })
             .build();
     GrpcCallSettings<GetSubscriptionRequest, Subscription> getSubscriptionTransportSettings =
@@ -431,9 +431,9 @@ public class GrpcAdminServiceStub extends AdminServiceStub {
             .setMethodDescriptor(getSubscriptionMethodDescriptor)
             .setParamsExtractor(
                 request -> {
-                  ImmutableMap.Builder<String, String> params = ImmutableMap.builder();
-                  params.put("name", String.valueOf(request.getName()));
-                  return params.build();
+                  RequestParamsBuilder builder = RequestParamsBuilder.create();
+                  builder.add("name", String.valueOf(request.getName()));
+                  return builder.build();
                 })
             .build();
     GrpcCallSettings<ListSubscriptionsRequest, ListSubscriptionsResponse>
@@ -442,9 +442,9 @@ public class GrpcAdminServiceStub extends AdminServiceStub {
                 .setMethodDescriptor(listSubscriptionsMethodDescriptor)
                 .setParamsExtractor(
                     request -> {
-                      ImmutableMap.Builder<String, String> params = ImmutableMap.builder();
-                      params.put("parent", String.valueOf(request.getParent()));
-                      return params.build();
+                      RequestParamsBuilder builder = RequestParamsBuilder.create();
+                      builder.add("parent", String.valueOf(request.getParent()));
+                      return builder.build();
                     })
                 .build();
     GrpcCallSettings<UpdateSubscriptionRequest, Subscription> updateSubscriptionTransportSettings =
@@ -452,10 +452,10 @@ public class GrpcAdminServiceStub extends AdminServiceStub {
             .setMethodDescriptor(updateSubscriptionMethodDescriptor)
             .setParamsExtractor(
                 request -> {
-                  ImmutableMap.Builder<String, String> params = ImmutableMap.builder();
-                  params.put(
+                  RequestParamsBuilder builder = RequestParamsBuilder.create();
+                  builder.add(
                       "subscription.name", String.valueOf(request.getSubscription().getName()));
-                  return params.build();
+                  return builder.build();
                 })
             .build();
     GrpcCallSettings<DeleteSubscriptionRequest, Empty> deleteSubscriptionTransportSettings =
@@ -463,9 +463,9 @@ public class GrpcAdminServiceStub extends AdminServiceStub {
             .setMethodDescriptor(deleteSubscriptionMethodDescriptor)
             .setParamsExtractor(
                 request -> {
-                  ImmutableMap.Builder<String, String> params = ImmutableMap.builder();
-                  params.put("name", String.valueOf(request.getName()));
-                  return params.build();
+                  RequestParamsBuilder builder = RequestParamsBuilder.create();
+                  builder.add("name", String.valueOf(request.getName()));
+                  return builder.build();
                 })
             .build();
     GrpcCallSettings<SeekSubscriptionRequest, Operation> seekSubscriptionTransportSettings =
@@ -473,9 +473,9 @@ public class GrpcAdminServiceStub extends AdminServiceStub {
             .setMethodDescriptor(seekSubscriptionMethodDescriptor)
             .setParamsExtractor(
                 request -> {
-                  ImmutableMap.Builder<String, String> params = ImmutableMap.builder();
-                  params.put("name", String.valueOf(request.getName()));
-                  return params.build();
+                  RequestParamsBuilder builder = RequestParamsBuilder.create();
+                  builder.add("name", String.valueOf(request.getName()));
+                  return builder.build();
                 })
             .build();
     GrpcCallSettings<CreateReservationRequest, Reservation> createReservationTransportSettings =
@@ -483,9 +483,9 @@ public class GrpcAdminServiceStub extends AdminServiceStub {
             .setMethodDescriptor(createReservationMethodDescriptor)
             .setParamsExtractor(
                 request -> {
-                  ImmutableMap.Builder<String, String> params = ImmutableMap.builder();
-                  params.put("parent", String.valueOf(request.getParent()));
-                  return params.build();
+                  RequestParamsBuilder builder = RequestParamsBuilder.create();
+                  builder.add("parent", String.valueOf(request.getParent()));
+                  return builder.build();
                 })
             .build();
     GrpcCallSettings<GetReservationRequest, Reservation> getReservationTransportSettings =
@@ -493,9 +493,9 @@ public class GrpcAdminServiceStub extends AdminServiceStub {
             .setMethodDescriptor(getReservationMethodDescriptor)
             .setParamsExtractor(
                 request -> {
-                  ImmutableMap.Builder<String, String> params = ImmutableMap.builder();
-                  params.put("name", String.valueOf(request.getName()));
-                  return params.build();
+                  RequestParamsBuilder builder = RequestParamsBuilder.create();
+                  builder.add("name", String.valueOf(request.getName()));
+                  return builder.build();
                 })
             .build();
     GrpcCallSettings<ListReservationsRequest, ListReservationsResponse>
@@ -504,9 +504,9 @@ public class GrpcAdminServiceStub extends AdminServiceStub {
                 .setMethodDescriptor(listReservationsMethodDescriptor)
                 .setParamsExtractor(
                     request -> {
-                      ImmutableMap.Builder<String, String> params = ImmutableMap.builder();
-                      params.put("parent", String.valueOf(request.getParent()));
-                      return params.build();
+                      RequestParamsBuilder builder = RequestParamsBuilder.create();
+                      builder.add("parent", String.valueOf(request.getParent()));
+                      return builder.build();
                     })
                 .build();
     GrpcCallSettings<UpdateReservationRequest, Reservation> updateReservationTransportSettings =
@@ -514,10 +514,10 @@ public class GrpcAdminServiceStub extends AdminServiceStub {
             .setMethodDescriptor(updateReservationMethodDescriptor)
             .setParamsExtractor(
                 request -> {
-                  ImmutableMap.Builder<String, String> params = ImmutableMap.builder();
-                  params.put(
+                  RequestParamsBuilder builder = RequestParamsBuilder.create();
+                  builder.add(
                       "reservation.name", String.valueOf(request.getReservation().getName()));
-                  return params.build();
+                  return builder.build();
                 })
             .build();
     GrpcCallSettings<DeleteReservationRequest, Empty> deleteReservationTransportSettings =
@@ -525,9 +525,9 @@ public class GrpcAdminServiceStub extends AdminServiceStub {
             .setMethodDescriptor(deleteReservationMethodDescriptor)
             .setParamsExtractor(
                 request -> {
-                  ImmutableMap.Builder<String, String> params = ImmutableMap.builder();
-                  params.put("name", String.valueOf(request.getName()));
-                  return params.build();
+                  RequestParamsBuilder builder = RequestParamsBuilder.create();
+                  builder.add("name", String.valueOf(request.getName()));
+                  return builder.build();
                 })
             .build();
     GrpcCallSettings<ListReservationTopicsRequest, ListReservationTopicsResponse>
@@ -537,9 +537,9 @@ public class GrpcAdminServiceStub extends AdminServiceStub {
                 .setMethodDescriptor(listReservationTopicsMethodDescriptor)
                 .setParamsExtractor(
                     request -> {
-                      ImmutableMap.Builder<String, String> params = ImmutableMap.builder();
-                      params.put("name", String.valueOf(request.getName()));
-                      return params.build();
+                      RequestParamsBuilder builder = RequestParamsBuilder.create();
+                      builder.add("name", String.valueOf(request.getName()));
+                      return builder.build();
                     })
                 .build();
 

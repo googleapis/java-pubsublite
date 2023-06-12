@@ -59,6 +59,7 @@ public interface InitialPartitionAssignmentRequestOrBuilder
    * An opaque, unique client identifier. This field must be exactly 16 bytes
    * long and is interpreted as an unsigned 128 bit integer. Other size values
    * will be rejected and the stream will be failed with a non-retryable error.
+   *
    * This field is large enough to fit a uuid from standard uuid algorithms like
    * uuid1 or uuid4, which should be used to generate this number. The same
    * identifier should be reused following disconnections with retryable stream

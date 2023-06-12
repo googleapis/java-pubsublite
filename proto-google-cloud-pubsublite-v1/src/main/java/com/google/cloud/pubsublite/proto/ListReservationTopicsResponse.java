@@ -38,7 +38,7 @@ public final class ListReservationTopicsResponse extends com.google.protobuf.Gen
   }
 
   private ListReservationTopicsResponse() {
-    topics_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+    topics_ = com.google.protobuf.LazyStringArrayList.emptyList();
     nextPageToken_ = "";
   }
 
@@ -46,11 +46,6 @@ public final class ListReservationTopicsResponse extends com.google.protobuf.Gen
   @SuppressWarnings({"unused"})
   protected java.lang.Object newInstance(UnusedPrivateParameter unused) {
     return new ListReservationTopicsResponse();
-  }
-
-  @java.lang.Override
-  public final com.google.protobuf.UnknownFieldSet getUnknownFields() {
-    return this.unknownFields;
   }
 
   public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
@@ -71,7 +66,8 @@ public final class ListReservationTopicsResponse extends com.google.protobuf.Gen
   public static final int TOPICS_FIELD_NUMBER = 1;
 
   @SuppressWarnings("serial")
-  private com.google.protobuf.LazyStringList topics_;
+  private com.google.protobuf.LazyStringArrayList topics_ =
+      com.google.protobuf.LazyStringArrayList.emptyList();
   /**
    *
    *
@@ -403,8 +399,7 @@ public final class ListReservationTopicsResponse extends com.google.protobuf.Gen
     public Builder clear() {
       super.clear();
       bitField0_ = 0;
-      topics_ = com.google.protobuf.LazyStringArrayList.EMPTY;
-      bitField0_ = (bitField0_ & ~0x00000001);
+      topics_ = com.google.protobuf.LazyStringArrayList.emptyList();
       nextPageToken_ = "";
       return this;
     }
@@ -434,7 +429,6 @@ public final class ListReservationTopicsResponse extends com.google.protobuf.Gen
     public com.google.cloud.pubsublite.proto.ListReservationTopicsResponse buildPartial() {
       com.google.cloud.pubsublite.proto.ListReservationTopicsResponse result =
           new com.google.cloud.pubsublite.proto.ListReservationTopicsResponse(this);
-      buildPartialRepeatedFields(result);
       if (bitField0_ != 0) {
         buildPartial0(result);
       }
@@ -442,18 +436,13 @@ public final class ListReservationTopicsResponse extends com.google.protobuf.Gen
       return result;
     }
 
-    private void buildPartialRepeatedFields(
-        com.google.cloud.pubsublite.proto.ListReservationTopicsResponse result) {
-      if (((bitField0_ & 0x00000001) != 0)) {
-        topics_ = topics_.getUnmodifiableView();
-        bitField0_ = (bitField0_ & ~0x00000001);
-      }
-      result.topics_ = topics_;
-    }
-
     private void buildPartial0(
         com.google.cloud.pubsublite.proto.ListReservationTopicsResponse result) {
       int from_bitField0_ = bitField0_;
+      if (((from_bitField0_ & 0x00000001) != 0)) {
+        topics_.makeImmutable();
+        result.topics_ = topics_;
+      }
       if (((from_bitField0_ & 0x00000002) != 0)) {
         result.nextPageToken_ = nextPageToken_;
       }
@@ -510,7 +499,7 @@ public final class ListReservationTopicsResponse extends com.google.protobuf.Gen
       if (!other.topics_.isEmpty()) {
         if (topics_.isEmpty()) {
           topics_ = other.topics_;
-          bitField0_ = (bitField0_ & ~0x00000001);
+          bitField0_ |= 0x00000001;
         } else {
           ensureTopicsIsMutable();
           topics_.addAll(other.topics_);
@@ -580,14 +569,14 @@ public final class ListReservationTopicsResponse extends com.google.protobuf.Gen
 
     private int bitField0_;
 
-    private com.google.protobuf.LazyStringList topics_ =
-        com.google.protobuf.LazyStringArrayList.EMPTY;
+    private com.google.protobuf.LazyStringArrayList topics_ =
+        com.google.protobuf.LazyStringArrayList.emptyList();
 
     private void ensureTopicsIsMutable() {
-      if (!((bitField0_ & 0x00000001) != 0)) {
+      if (!topics_.isModifiable()) {
         topics_ = new com.google.protobuf.LazyStringArrayList(topics_);
-        bitField0_ |= 0x00000001;
       }
+      bitField0_ |= 0x00000001;
     }
     /**
      *
@@ -602,7 +591,8 @@ public final class ListReservationTopicsResponse extends com.google.protobuf.Gen
      * @return A list containing the topics.
      */
     public com.google.protobuf.ProtocolStringList getTopicsList() {
-      return topics_.getUnmodifiableView();
+      topics_.makeImmutable();
+      return topics_;
     }
     /**
      *
@@ -671,6 +661,7 @@ public final class ListReservationTopicsResponse extends com.google.protobuf.Gen
       }
       ensureTopicsIsMutable();
       topics_.set(index, value);
+      bitField0_ |= 0x00000001;
       onChanged();
       return this;
     }
@@ -693,6 +684,7 @@ public final class ListReservationTopicsResponse extends com.google.protobuf.Gen
       }
       ensureTopicsIsMutable();
       topics_.add(value);
+      bitField0_ |= 0x00000001;
       onChanged();
       return this;
     }
@@ -712,6 +704,7 @@ public final class ListReservationTopicsResponse extends com.google.protobuf.Gen
     public Builder addAllTopics(java.lang.Iterable<java.lang.String> values) {
       ensureTopicsIsMutable();
       com.google.protobuf.AbstractMessageLite.Builder.addAll(values, topics_);
+      bitField0_ |= 0x00000001;
       onChanged();
       return this;
     }
@@ -728,8 +721,9 @@ public final class ListReservationTopicsResponse extends com.google.protobuf.Gen
      * @return This builder for chaining.
      */
     public Builder clearTopics() {
-      topics_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+      topics_ = com.google.protobuf.LazyStringArrayList.emptyList();
       bitField0_ = (bitField0_ & ~0x00000001);
+      ;
       onChanged();
       return this;
     }
@@ -753,6 +747,7 @@ public final class ListReservationTopicsResponse extends com.google.protobuf.Gen
       checkByteStringIsUtf8(value);
       ensureTopicsIsMutable();
       topics_.add(value);
+      bitField0_ |= 0x00000001;
       onChanged();
       return this;
     }

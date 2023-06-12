@@ -47,11 +47,6 @@ public final class Topic extends com.google.protobuf.GeneratedMessageV3
     return new Topic();
   }
 
-  @java.lang.Override
-  public final com.google.protobuf.UnknownFieldSet getUnknownFields() {
-    return this.unknownFields;
-  }
-
   public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
     return com.google.cloud.pubsublite.proto.CommonProto
         .internal_static_google_cloud_pubsublite_v1_Topic_descriptor;
@@ -77,6 +72,7 @@ public final class Topic extends com.google.protobuf.GeneratedMessageV3
      *
      * <pre>
      * The number of partitions in the topic. Must be at least 1.
+     *
      * Once a topic has been created the number of partitions can be increased
      * but not decreased. Message ordering is not guaranteed across a topic
      * resize. For more information see
@@ -95,6 +91,7 @@ public final class Topic extends com.google.protobuf.GeneratedMessageV3
      * <pre>
      * DEPRECATED: Use capacity instead which can express a superset of
      * configurations.
+     *
      * Every partition in the topic is allocated throughput equivalent to
      * `scale` times the standard partition throughput (4 MiB/s). This is also
      * reflected in the cost of this topic; a topic with `scale` of 2 and
@@ -116,6 +113,7 @@ public final class Topic extends com.google.protobuf.GeneratedMessageV3
      * <pre>
      * DEPRECATED: Use capacity instead which can express a superset of
      * configurations.
+     *
      * Every partition in the topic is allocated throughput equivalent to
      * `scale` times the standard partition throughput (4 MiB/s). This is also
      * reflected in the cost of this topic; a topic with `scale` of 2 and
@@ -168,7 +166,7 @@ public final class Topic extends com.google.protobuf.GeneratedMessageV3
     com.google.cloud.pubsublite.proto.Topic.PartitionConfig.CapacityOrBuilder
         getCapacityOrBuilder();
 
-    public com.google.cloud.pubsublite.proto.Topic.PartitionConfig.DimensionCase getDimensionCase();
+    com.google.cloud.pubsublite.proto.Topic.PartitionConfig.DimensionCase getDimensionCase();
   }
   /**
    *
@@ -195,11 +193,6 @@ public final class Topic extends com.google.protobuf.GeneratedMessageV3
     @SuppressWarnings({"unused"})
     protected java.lang.Object newInstance(UnusedPrivateParameter unused) {
       return new PartitionConfig();
-    }
-
-    @java.lang.Override
-    public final com.google.protobuf.UnknownFieldSet getUnknownFields() {
-      return this.unknownFields;
     }
 
     public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
@@ -275,11 +268,6 @@ public final class Topic extends com.google.protobuf.GeneratedMessageV3
       @SuppressWarnings({"unused"})
       protected java.lang.Object newInstance(UnusedPrivateParameter unused) {
         return new Capacity();
-      }
-
-      @java.lang.Override
-      public final com.google.protobuf.UnknownFieldSet getUnknownFields() {
-        return this.unknownFields;
       }
 
       public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
@@ -891,6 +879,8 @@ public final class Topic extends com.google.protobuf.GeneratedMessageV3
     }
 
     private int dimensionCase_ = 0;
+
+    @SuppressWarnings("serial")
     private java.lang.Object dimension_;
 
     public enum DimensionCase
@@ -945,6 +935,7 @@ public final class Topic extends com.google.protobuf.GeneratedMessageV3
      *
      * <pre>
      * The number of partitions in the topic. Must be at least 1.
+     *
      * Once a topic has been created the number of partitions can be increased
      * but not decreased. Message ordering is not guaranteed across a topic
      * resize. For more information see
@@ -967,6 +958,7 @@ public final class Topic extends com.google.protobuf.GeneratedMessageV3
      * <pre>
      * DEPRECATED: Use capacity instead which can express a superset of
      * configurations.
+     *
      * Every partition in the topic is allocated throughput equivalent to
      * `scale` times the standard partition throughput (4 MiB/s). This is also
      * reflected in the cost of this topic; a topic with `scale` of 2 and
@@ -991,6 +983,7 @@ public final class Topic extends com.google.protobuf.GeneratedMessageV3
      * <pre>
      * DEPRECATED: Use capacity instead which can express a superset of
      * configurations.
+     *
      * Every partition in the topic is allocated throughput equivalent to
      * `scale` times the standard partition throughput (4 MiB/s). This is also
      * reflected in the cost of this topic; a topic with `scale` of 2 and
@@ -1513,6 +1506,7 @@ public final class Topic extends com.google.protobuf.GeneratedMessageV3
        *
        * <pre>
        * The number of partitions in the topic. Must be at least 1.
+       *
        * Once a topic has been created the number of partitions can be increased
        * but not decreased. Message ordering is not guaranteed across a topic
        * resize. For more information see
@@ -1532,6 +1526,7 @@ public final class Topic extends com.google.protobuf.GeneratedMessageV3
        *
        * <pre>
        * The number of partitions in the topic. Must be at least 1.
+       *
        * Once a topic has been created the number of partitions can be increased
        * but not decreased. Message ordering is not guaranteed across a topic
        * resize. For more information see
@@ -1555,6 +1550,7 @@ public final class Topic extends com.google.protobuf.GeneratedMessageV3
        *
        * <pre>
        * The number of partitions in the topic. Must be at least 1.
+       *
        * Once a topic has been created the number of partitions can be increased
        * but not decreased. Message ordering is not guaranteed across a topic
        * resize. For more information see
@@ -1578,6 +1574,7 @@ public final class Topic extends com.google.protobuf.GeneratedMessageV3
        * <pre>
        * DEPRECATED: Use capacity instead which can express a superset of
        * configurations.
+       *
        * Every partition in the topic is allocated throughput equivalent to
        * `scale` times the standard partition throughput (4 MiB/s). This is also
        * reflected in the cost of this topic; a topic with `scale` of 2 and
@@ -1601,6 +1598,7 @@ public final class Topic extends com.google.protobuf.GeneratedMessageV3
        * <pre>
        * DEPRECATED: Use capacity instead which can express a superset of
        * configurations.
+       *
        * Every partition in the topic is allocated throughput equivalent to
        * `scale` times the standard partition throughput (4 MiB/s). This is also
        * reflected in the cost of this topic; a topic with `scale` of 2 and
@@ -1627,6 +1625,7 @@ public final class Topic extends com.google.protobuf.GeneratedMessageV3
        * <pre>
        * DEPRECATED: Use capacity instead which can express a superset of
        * configurations.
+       *
        * Every partition in the topic is allocated throughput equivalent to
        * `scale` times the standard partition throughput (4 MiB/s). This is also
        * reflected in the cost of this topic; a topic with `scale` of 2 and
@@ -1655,6 +1654,7 @@ public final class Topic extends com.google.protobuf.GeneratedMessageV3
        * <pre>
        * DEPRECATED: Use capacity instead which can express a superset of
        * configurations.
+       *
        * Every partition in the topic is allocated throughput equivalent to
        * `scale` times the standard partition throughput (4 MiB/s). This is also
        * reflected in the cost of this topic; a topic with `scale` of 2 and
@@ -2051,11 +2051,6 @@ public final class Topic extends com.google.protobuf.GeneratedMessageV3
     @SuppressWarnings({"unused"})
     protected java.lang.Object newInstance(UnusedPrivateParameter unused) {
       return new RetentionConfig();
-    }
-
-    @java.lang.Override
-    public final com.google.protobuf.UnknownFieldSet getUnknownFields() {
-      return this.unknownFields;
     }
 
     public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
@@ -2906,11 +2901,6 @@ public final class Topic extends com.google.protobuf.GeneratedMessageV3
     @SuppressWarnings({"unused"})
     protected java.lang.Object newInstance(UnusedPrivateParameter unused) {
       return new ReservationConfig();
-    }
-
-    @java.lang.Override
-    public final com.google.protobuf.UnknownFieldSet getUnknownFields() {
-      return this.unknownFields;
     }
 
     public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {

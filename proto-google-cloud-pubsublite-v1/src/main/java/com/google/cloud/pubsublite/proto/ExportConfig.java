@@ -50,11 +50,6 @@ public final class ExportConfig extends com.google.protobuf.GeneratedMessageV3
     return new ExportConfig();
   }
 
-  @java.lang.Override
-  public final com.google.protobuf.UnknownFieldSet getUnknownFields() {
-    return this.unknownFields;
-  }
-
   public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
     return com.google.cloud.pubsublite.proto.CommonProto
         .internal_static_google_cloud_pubsublite_v1_ExportConfig_descriptor;
@@ -332,11 +327,6 @@ public final class ExportConfig extends com.google.protobuf.GeneratedMessageV3
     @SuppressWarnings({"unused"})
     protected java.lang.Object newInstance(UnusedPrivateParameter unused) {
       return new PubSubConfig();
-    }
-
-    @java.lang.Override
-    public final com.google.protobuf.UnknownFieldSet getUnknownFields() {
-      return this.unknownFields;
     }
 
     public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
@@ -941,6 +931,8 @@ public final class ExportConfig extends com.google.protobuf.GeneratedMessageV3
   }
 
   private int destinationCase_ = 0;
+
+  @SuppressWarnings("serial")
   private java.lang.Object destination_;
 
   public enum DestinationCase
@@ -1078,6 +1070,7 @@ public final class ExportConfig extends com.google.protobuf.GeneratedMessageV3
    * that can not be exported to the destination. For example, the message can
    * not be published to the Pub/Sub service because it does not satisfy the
    * constraints documented at https://cloud.google.com/pubsub/docs/publisher.
+   *
    * Structured like:
    * projects/{project_number}/locations/{location}/topics/{topic_id}.
    * Must be within the same project and location as the subscription. The topic
@@ -1110,6 +1103,7 @@ public final class ExportConfig extends com.google.protobuf.GeneratedMessageV3
    * that can not be exported to the destination. For example, the message can
    * not be published to the Pub/Sub service because it does not satisfy the
    * constraints documented at https://cloud.google.com/pubsub/docs/publisher.
+   *
    * Structured like:
    * projects/{project_number}/locations/{location}/topics/{topic_id}.
    * Must be within the same project and location as the subscription. The topic
@@ -1863,6 +1857,7 @@ public final class ExportConfig extends com.google.protobuf.GeneratedMessageV3
      * that can not be exported to the destination. For example, the message can
      * not be published to the Pub/Sub service because it does not satisfy the
      * constraints documented at https://cloud.google.com/pubsub/docs/publisher.
+     *
      * Structured like:
      * projects/{project_number}/locations/{location}/topics/{topic_id}.
      * Must be within the same project and location as the subscription. The topic
@@ -1894,6 +1889,7 @@ public final class ExportConfig extends com.google.protobuf.GeneratedMessageV3
      * that can not be exported to the destination. For example, the message can
      * not be published to the Pub/Sub service because it does not satisfy the
      * constraints documented at https://cloud.google.com/pubsub/docs/publisher.
+     *
      * Structured like:
      * projects/{project_number}/locations/{location}/topics/{topic_id}.
      * Must be within the same project and location as the subscription. The topic
@@ -1925,6 +1921,7 @@ public final class ExportConfig extends com.google.protobuf.GeneratedMessageV3
      * that can not be exported to the destination. For example, the message can
      * not be published to the Pub/Sub service because it does not satisfy the
      * constraints documented at https://cloud.google.com/pubsub/docs/publisher.
+     *
      * Structured like:
      * projects/{project_number}/locations/{location}/topics/{topic_id}.
      * Must be within the same project and location as the subscription. The topic
@@ -1955,6 +1952,7 @@ public final class ExportConfig extends com.google.protobuf.GeneratedMessageV3
      * that can not be exported to the destination. For example, the message can
      * not be published to the Pub/Sub service because it does not satisfy the
      * constraints documented at https://cloud.google.com/pubsub/docs/publisher.
+     *
      * Structured like:
      * projects/{project_number}/locations/{location}/topics/{topic_id}.
      * Must be within the same project and location as the subscription. The topic
@@ -1981,6 +1979,7 @@ public final class ExportConfig extends com.google.protobuf.GeneratedMessageV3
      * that can not be exported to the destination. For example, the message can
      * not be published to the Pub/Sub service because it does not satisfy the
      * constraints documented at https://cloud.google.com/pubsub/docs/publisher.
+     *
      * Structured like:
      * projects/{project_number}/locations/{location}/topics/{topic_id}.
      * Must be within the same project and location as the subscription. The topic

@@ -94,5 +94,5 @@ public interface PartitionAssignmentRequestOrBuilder
    */
   com.google.cloud.pubsublite.proto.PartitionAssignmentAckOrBuilder getAckOrBuilder();
 
-  public com.google.cloud.pubsublite.proto.PartitionAssignmentRequest.RequestCase getRequestCase();
+  com.google.cloud.pubsublite.proto.PartitionAssignmentRequest.RequestCase getRequestCase();
 }

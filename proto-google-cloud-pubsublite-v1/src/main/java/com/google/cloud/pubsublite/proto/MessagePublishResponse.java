@@ -47,11 +47,6 @@ public final class MessagePublishResponse extends com.google.protobuf.GeneratedM
     return new MessagePublishResponse();
   }
 
-  @java.lang.Override
-  public final com.google.protobuf.UnknownFieldSet getUnknownFields() {
-    return this.unknownFields;
-  }
-
   public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
     return com.google.cloud.pubsublite.proto.PublisherProto
         .internal_static_google_cloud_pubsublite_v1_MessagePublishResponse_descriptor;
@@ -162,11 +157,6 @@ public final class MessagePublishResponse extends com.google.protobuf.GeneratedM
     @SuppressWarnings({"unused"})
     protected java.lang.Object newInstance(UnusedPrivateParameter unused) {
       return new CursorRange();
-    }
-
-    @java.lang.Override
-    public final com.google.protobuf.UnknownFieldSet getUnknownFields() {
-      return this.unknownFields;
     }
 
     public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
@@ -1115,6 +1105,7 @@ public final class MessagePublishResponse extends com.google.protobuf.GeneratedM
    * <pre>
    * Cursors for messages published in the batch. There will exist multiple
    * ranges when cursors are not contiguous within the batch.
+   *
    * The cursor ranges may not account for all messages in the batch when
    * publish idempotency is enabled. A missing range indicates that cursors
    * could not be determined for messages within the range, as they were
@@ -1137,6 +1128,7 @@ public final class MessagePublishResponse extends com.google.protobuf.GeneratedM
    * <pre>
    * Cursors for messages published in the batch. There will exist multiple
    * ranges when cursors are not contiguous within the batch.
+   *
    * The cursor ranges may not account for all messages in the batch when
    * publish idempotency is enabled. A missing range indicates that cursors
    * could not be determined for messages within the range, as they were
@@ -1160,6 +1152,7 @@ public final class MessagePublishResponse extends com.google.protobuf.GeneratedM
    * <pre>
    * Cursors for messages published in the batch. There will exist multiple
    * ranges when cursors are not contiguous within the batch.
+   *
    * The cursor ranges may not account for all messages in the batch when
    * publish idempotency is enabled. A missing range indicates that cursors
    * could not be determined for messages within the range, as they were
@@ -1181,6 +1174,7 @@ public final class MessagePublishResponse extends com.google.protobuf.GeneratedM
    * <pre>
    * Cursors for messages published in the batch. There will exist multiple
    * ranges when cursors are not contiguous within the batch.
+   *
    * The cursor ranges may not account for all messages in the batch when
    * publish idempotency is enabled. A missing range indicates that cursors
    * could not be determined for messages within the range, as they were
@@ -1203,6 +1197,7 @@ public final class MessagePublishResponse extends com.google.protobuf.GeneratedM
    * <pre>
    * Cursors for messages published in the batch. There will exist multiple
    * ranges when cursors are not contiguous within the batch.
+   *
    * The cursor ranges may not account for all messages in the batch when
    * publish idempotency is enabled. A missing range indicates that cursors
    * could not be determined for messages within the range, as they were
@@ -1863,6 +1858,7 @@ public final class MessagePublishResponse extends com.google.protobuf.GeneratedM
      * <pre>
      * Cursors for messages published in the batch. There will exist multiple
      * ranges when cursors are not contiguous within the batch.
+     *
      * The cursor ranges may not account for all messages in the batch when
      * publish idempotency is enabled. A missing range indicates that cursors
      * could not be determined for messages within the range, as they were
@@ -1888,6 +1884,7 @@ public final class MessagePublishResponse extends com.google.protobuf.GeneratedM
      * <pre>
      * Cursors for messages published in the batch. There will exist multiple
      * ranges when cursors are not contiguous within the batch.
+     *
      * The cursor ranges may not account for all messages in the batch when
      * publish idempotency is enabled. A missing range indicates that cursors
      * could not be determined for messages within the range, as they were
@@ -1912,6 +1909,7 @@ public final class MessagePublishResponse extends com.google.protobuf.GeneratedM
      * <pre>
      * Cursors for messages published in the batch. There will exist multiple
      * ranges when cursors are not contiguous within the batch.
+     *
      * The cursor ranges may not account for all messages in the batch when
      * publish idempotency is enabled. A missing range indicates that cursors
      * could not be determined for messages within the range, as they were
@@ -1937,6 +1935,7 @@ public final class MessagePublishResponse extends com.google.protobuf.GeneratedM
      * <pre>
      * Cursors for messages published in the batch. There will exist multiple
      * ranges when cursors are not contiguous within the batch.
+     *
      * The cursor ranges may not account for all messages in the batch when
      * publish idempotency is enabled. A missing range indicates that cursors
      * could not be determined for messages within the range, as they were
@@ -1968,6 +1967,7 @@ public final class MessagePublishResponse extends com.google.protobuf.GeneratedM
      * <pre>
      * Cursors for messages published in the batch. There will exist multiple
      * ranges when cursors are not contiguous within the batch.
+     *
      * The cursor ranges may not account for all messages in the batch when
      * publish idempotency is enabled. A missing range indicates that cursors
      * could not be determined for messages within the range, as they were
@@ -1998,6 +1998,7 @@ public final class MessagePublishResponse extends com.google.protobuf.GeneratedM
      * <pre>
      * Cursors for messages published in the batch. There will exist multiple
      * ranges when cursors are not contiguous within the batch.
+     *
      * The cursor ranges may not account for all messages in the batch when
      * publish idempotency is enabled. A missing range indicates that cursors
      * could not be determined for messages within the range, as they were
@@ -2029,6 +2030,7 @@ public final class MessagePublishResponse extends com.google.protobuf.GeneratedM
      * <pre>
      * Cursors for messages published in the batch. There will exist multiple
      * ranges when cursors are not contiguous within the batch.
+     *
      * The cursor ranges may not account for all messages in the batch when
      * publish idempotency is enabled. A missing range indicates that cursors
      * could not be determined for messages within the range, as they were
@@ -2060,6 +2062,7 @@ public final class MessagePublishResponse extends com.google.protobuf.GeneratedM
      * <pre>
      * Cursors for messages published in the batch. There will exist multiple
      * ranges when cursors are not contiguous within the batch.
+     *
      * The cursor ranges may not account for all messages in the batch when
      * publish idempotency is enabled. A missing range indicates that cursors
      * could not be determined for messages within the range, as they were
@@ -2089,6 +2092,7 @@ public final class MessagePublishResponse extends com.google.protobuf.GeneratedM
      * <pre>
      * Cursors for messages published in the batch. There will exist multiple
      * ranges when cursors are not contiguous within the batch.
+     *
      * The cursor ranges may not account for all messages in the batch when
      * publish idempotency is enabled. A missing range indicates that cursors
      * could not be determined for messages within the range, as they were
@@ -2119,6 +2123,7 @@ public final class MessagePublishResponse extends com.google.protobuf.GeneratedM
      * <pre>
      * Cursors for messages published in the batch. There will exist multiple
      * ranges when cursors are not contiguous within the batch.
+     *
      * The cursor ranges may not account for all messages in the batch when
      * publish idempotency is enabled. A missing range indicates that cursors
      * could not be determined for messages within the range, as they were
@@ -2149,6 +2154,7 @@ public final class MessagePublishResponse extends com.google.protobuf.GeneratedM
      * <pre>
      * Cursors for messages published in the batch. There will exist multiple
      * ranges when cursors are not contiguous within the batch.
+     *
      * The cursor ranges may not account for all messages in the batch when
      * publish idempotency is enabled. A missing range indicates that cursors
      * could not be determined for messages within the range, as they were
@@ -2176,6 +2182,7 @@ public final class MessagePublishResponse extends com.google.protobuf.GeneratedM
      * <pre>
      * Cursors for messages published in the batch. There will exist multiple
      * ranges when cursors are not contiguous within the batch.
+     *
      * The cursor ranges may not account for all messages in the batch when
      * publish idempotency is enabled. A missing range indicates that cursors
      * could not be determined for messages within the range, as they were
@@ -2203,6 +2210,7 @@ public final class MessagePublishResponse extends com.google.protobuf.GeneratedM
      * <pre>
      * Cursors for messages published in the batch. There will exist multiple
      * ranges when cursors are not contiguous within the batch.
+     *
      * The cursor ranges may not account for all messages in the batch when
      * publish idempotency is enabled. A missing range indicates that cursors
      * could not be determined for messages within the range, as they were
@@ -2224,6 +2232,7 @@ public final class MessagePublishResponse extends com.google.protobuf.GeneratedM
      * <pre>
      * Cursors for messages published in the batch. There will exist multiple
      * ranges when cursors are not contiguous within the batch.
+     *
      * The cursor ranges may not account for all messages in the batch when
      * publish idempotency is enabled. A missing range indicates that cursors
      * could not be determined for messages within the range, as they were
@@ -2249,6 +2258,7 @@ public final class MessagePublishResponse extends com.google.protobuf.GeneratedM
      * <pre>
      * Cursors for messages published in the batch. There will exist multiple
      * ranges when cursors are not contiguous within the batch.
+     *
      * The cursor ranges may not account for all messages in the batch when
      * publish idempotency is enabled. A missing range indicates that cursors
      * could not be determined for messages within the range, as they were
@@ -2275,6 +2285,7 @@ public final class MessagePublishResponse extends com.google.protobuf.GeneratedM
      * <pre>
      * Cursors for messages published in the batch. There will exist multiple
      * ranges when cursors are not contiguous within the batch.
+     *
      * The cursor ranges may not account for all messages in the batch when
      * publish idempotency is enabled. A missing range indicates that cursors
      * could not be determined for messages within the range, as they were
@@ -2299,6 +2310,7 @@ public final class MessagePublishResponse extends com.google.protobuf.GeneratedM
      * <pre>
      * Cursors for messages published in the batch. There will exist multiple
      * ranges when cursors are not contiguous within the batch.
+     *
      * The cursor ranges may not account for all messages in the batch when
      * publish idempotency is enabled. A missing range indicates that cursors
      * could not be determined for messages within the range, as they were
@@ -2324,6 +2336,7 @@ public final class MessagePublishResponse extends com.google.protobuf.GeneratedM
      * <pre>
      * Cursors for messages published in the batch. There will exist multiple
      * ranges when cursors are not contiguous within the batch.
+     *
      * The cursor ranges may not account for all messages in the batch when
      * publish idempotency is enabled. A missing range indicates that cursors
      * could not be determined for messages within the range, as they were

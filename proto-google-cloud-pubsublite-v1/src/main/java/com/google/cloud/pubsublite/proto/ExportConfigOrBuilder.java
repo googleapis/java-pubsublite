@@ -89,6 +89,7 @@ public interface ExportConfigOrBuilder
    * that can not be exported to the destination. For example, the message can
    * not be published to the Pub/Sub service because it does not satisfy the
    * constraints documented at https://cloud.google.com/pubsub/docs/publisher.
+   *
    * Structured like:
    * projects/{project_number}/locations/{location}/topics/{topic_id}.
    * Must be within the same project and location as the subscription. The topic
@@ -110,6 +111,7 @@ public interface ExportConfigOrBuilder
    * that can not be exported to the destination. For example, the message can
    * not be published to the Pub/Sub service because it does not satisfy the
    * constraints documented at https://cloud.google.com/pubsub/docs/publisher.
+   *
    * Structured like:
    * projects/{project_number}/locations/{location}/topics/{topic_id}.
    * Must be within the same project and location as the subscription. The topic
@@ -162,5 +164,5 @@ public interface ExportConfigOrBuilder
    */
   com.google.cloud.pubsublite.proto.ExportConfig.PubSubConfigOrBuilder getPubsubConfigOrBuilder();
 
-  public com.google.cloud.pubsublite.proto.ExportConfig.DestinationCase getDestinationCase();
+  com.google.cloud.pubsublite.proto.ExportConfig.DestinationCase getDestinationCase();
 }

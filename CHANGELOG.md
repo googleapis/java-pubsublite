@@ -1,5 +1,21 @@
 # Changelog
 
+## [1.12.7](https://github.com/googleapis/java-pubsublite/compare/v1.12.6...v1.12.7) (2023-06-12)
+
+
+### Bug Fixes
+
+* Update copyright year in Java license header replacement template ([#1810](https://github.com/googleapis/java-pubsublite/issues/1810)) ([#1421](https://github.com/googleapis/java-pubsublite/issues/1421)) ([64a846d](https://github.com/googleapis/java-pubsublite/commit/64a846d7061a6520a418283bc8d016724c6920a1))
+
+
+### Dependencies
+
+* Update dependency com.google.auto.service:auto-service to v1.1.1 ([#1422](https://github.com/googleapis/java-pubsublite/issues/1422)) ([4b5c65b](https://github.com/googleapis/java-pubsublite/commit/4b5c65b0de7b2431c0327887c738417f750b24f7))
+* Update dependency com.google.auto.service:auto-service-annotations to v1.1.1 ([#1423](https://github.com/googleapis/java-pubsublite/issues/1423)) ([36c6e2c](https://github.com/googleapis/java-pubsublite/commit/36c6e2cfbe95b1918a33f2d78f51e677f69f5214))
+* Update dependency com.google.cloud:google-cloud-bom to v0.197.0 ([#1417](https://github.com/googleapis/java-pubsublite/issues/1417)) ([d3d6405](https://github.com/googleapis/java-pubsublite/commit/d3d640508ab8214e54307c1df963faa7fa98649d))
+* Update dependency com.google.cloud:google-cloud-shared-dependencies to v3.11.0 ([#1420](https://github.com/googleapis/java-pubsublite/issues/1420)) ([b1ac2bd](https://github.com/googleapis/java-pubsublite/commit/b1ac2bd21cbf377d8bcdc0088312ee9d03708739))
+* Update dependency com.google.truth.extensions:truth-java8-extension to v1.1.4 ([#1411](https://github.com/googleapis/java-pubsublite/issues/1411)) ([022a9f2](https://github.com/googleapis/java-pubsublite/commit/022a9f206bc9ee07078fa1fcbfcb9df528eb6e40))
+
 ## [1.12.6](https://github.com/googleapis/java-pubsublite/compare/v1.12.5...v1.12.6) (2023-05-31)
 
 

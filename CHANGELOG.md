@@ -1,5 +1,15 @@
 # Changelog
 
+## [1.12.9](https://github.com/googleapis/java-pubsublite/compare/v1.12.8...v1.12.9) (2023-06-23)
+
+
+### Dependencies
+
+* Update dependency com.google.cloud:google-cloud-bom to v0.198.0 ([#1431](https://github.com/googleapis/java-pubsublite/issues/1431)) ([1fdeacb](https://github.com/googleapis/java-pubsublite/commit/1fdeacbbe0f289bec24783e160f51f016208f62a))
+* Update dependency com.google.cloud:google-cloud-pubsub to v1.123.15 ([#1439](https://github.com/googleapis/java-pubsublite/issues/1439)) ([1fe20e0](https://github.com/googleapis/java-pubsublite/commit/1fe20e085b79be3e26d4485bcba11cb42b90f577))
+* Update dependency com.google.cloud:google-cloud-shared-dependencies to v3.12.0 ([#1436](https://github.com/googleapis/java-pubsublite/issues/1436)) ([a1a9665](https://github.com/googleapis/java-pubsublite/commit/a1a96652fbde710d64546032bb9bf68da62408fd))
+* Update dependency com.google.truth.extensions:truth-java8-extension to v1.1.5 ([#1433](https://github.com/googleapis/java-pubsublite/issues/1433)) ([afe7232](https://github.com/googleapis/java-pubsublite/commit/afe7232c2abf976ae736b791dc580963c21fe3ea))
+
 ## [1.12.8](https://github.com/googleapis/java-pubsublite/compare/v1.12.7...v1.12.8) (2023-06-13)
 
 

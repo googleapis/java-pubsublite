@@ -9,6 +9,7 @@ branchProtectionRules:
     requiresStrictStatusChecks: false
     requiredStatusCheckContexts:
       - dependencies (17)
+      - javadoc
       - lint
       - clirr
       - units (8)

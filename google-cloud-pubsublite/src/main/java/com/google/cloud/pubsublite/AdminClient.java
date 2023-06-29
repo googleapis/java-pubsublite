@@ -183,7 +183,7 @@ public interface AdminClient extends ApiBackgroundResource {
    * @return A {@link com.google.api.gax.longrunning.OperationFuture} that returns an operation name
    *     if the seek was successfully initiated, or otherwise throw an {@link
    *     com.google.api.gax.rpc.ApiException}. {@link
-   *     com.google.api.gax.longrunning.OperationFuture.get()} will return a response if the seek
+   *     com.google.api.gax.longrunning.OperationFuture#get()} will return a response if the seek
    *     operation completes successfully, or otherwise throw an {@link
    *     com.google.api.gax.rpc.ApiException}.
    */

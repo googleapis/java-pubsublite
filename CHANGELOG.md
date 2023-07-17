@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.12.11](https://github.com/googleapis/java-pubsublite/compare/v1.12.10...v1.12.11) (2023-07-17)
+
+
+### Dependencies
+
+* Update dependency com.google.auto.value:auto-value to v1.10.2 ([#1449](https://github.com/googleapis/java-pubsublite/issues/1449)) ([551b65a](https://github.com/googleapis/java-pubsublite/commit/551b65aa0dfb81691e51afa9c964e86e0dd3397e))
+* Update dependency com.google.cloud:google-cloud-bom to v0.199.0 ([#1450](https://github.com/googleapis/java-pubsublite/issues/1450)) ([6ea34c6](https://github.com/googleapis/java-pubsublite/commit/6ea34c670fb5f405534492f5f2df3da9760e4889))
+* Update dependency com.google.cloud:google-cloud-shared-dependencies to v3.13.0 ([#1452](https://github.com/googleapis/java-pubsublite/issues/1452)) ([92c93a5](https://github.com/googleapis/java-pubsublite/commit/92c93a55bf25ddf5d17a424fd1a9dd15b971ecfe))
+
 ## [1.12.10](https://github.com/googleapis/java-pubsublite/compare/v1.12.9...v1.12.10) (2023-06-28)
 
 

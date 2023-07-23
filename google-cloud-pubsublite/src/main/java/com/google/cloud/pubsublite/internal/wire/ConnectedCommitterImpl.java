@@ -41,7 +41,7 @@ public class ConnectedCommitterImpl
       ResponseObserver<SequencedCommitCursorResponse> clientStream,
       StreamingCommitCursorRequest initialRequest,
       Duration streamIdleTimeout) {
-    super(streamFactory, clientStream, streamIdleTimeout, /*expectInitialResponse=*/ true);
+    super(streamFactory, clientStream, streamIdleTimeout);
     this.initialRequest = initialRequest;
     initialize(initialRequest);
   }
@@ -57,20 +57,12 @@ public class ConnectedCommitterImpl
     }
   }
 
-  // SingleConnection implementation.
-  @Override
-  protected void handleInitialResponse(StreamingCommitCursorResponse response)
-      throws CheckedApiException {
-    checkState(
-        response.hasInitial(),
-        String.format(
-            "Received non-initial first response %s on stream with initial request %s.",
-            response, initialRequest));
-  }
-
   @Override
   protected void handleStreamResponse(StreamingCommitCursorResponse response)
       throws CheckedApiException {
+    if (response.hasInitial()) {
+      return;
+    }
     checkState(
         response.hasCommit(),
         String.format(

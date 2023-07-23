@@ -41,7 +41,7 @@ public class ConnectedAssignerImpl
       StreamFactory<PartitionAssignmentRequest, PartitionAssignment> streamFactory,
       ResponseObserver<PartitionAssignment> clientStream,
       PartitionAssignmentRequest initialRequest) {
-    super(streamFactory, clientStream, STREAM_IDLE_TIMEOUT, /*expectInitialResponse=*/ false);
+    super(streamFactory, clientStream, STREAM_IDLE_TIMEOUT);
     initialize(initialRequest);
   }
 
@@ -56,13 +56,6 @@ public class ConnectedAssignerImpl
   }
 
   // SingleConnection implementation.
-  @Override
-  protected void handleInitialResponse(PartitionAssignment response) throws CheckedApiException {
-    // The assignment stream is server-initiated by sending a PartitionAssignment. The
-    // initial response from the server is handled identically to other responses.
-    handleStreamResponse(response);
-  }
-
   @Override
   protected void handleStreamResponse(PartitionAssignment response) throws CheckedApiException {
     try (CloseableMonitor.Hold h = monitor.enter()) {

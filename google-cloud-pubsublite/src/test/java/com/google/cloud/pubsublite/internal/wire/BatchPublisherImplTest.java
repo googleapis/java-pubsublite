@@ -245,16 +245,6 @@ public class BatchPublisherImplTest {
   }
 
   @Test
-  public void duplicateInitial_Abort() {
-    BatchPublisher unusedPublisher = initialize(ByteString.EMPTY);
-    PublishResponse.Builder builder = PublishResponse.newBuilder();
-    builder.getInitialResponseBuilder();
-    leakedResponseStream.get().onResponse(builder.build());
-    verify(mockOutputStream).onError(argThat(new ApiExceptionMatcher(Code.FAILED_PRECONDITION)));
-    leakedResponseStream = Optional.empty();
-  }
-
-  @Test
   public void setsSequenceNumbersWhenClientIdPresent() {
     BatchPublisher publisher = initialize(CLIENT_ID);
     doAnswer(new MessageResponseAnswer(CLIENT_ID, messageResponse(Offset.of(10))))

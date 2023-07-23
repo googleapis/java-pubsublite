@@ -16,10 +16,8 @@
 
 package com.google.cloud.pubsublite.internal.wire;
 
-import static com.google.cloud.pubsublite.internal.CheckedApiPreconditions.checkState;
 
 import com.google.api.gax.rpc.ResponseObserver;
-import com.google.cloud.pubsublite.internal.CheckedApiException;
 import com.google.cloud.pubsublite.internal.PublishSequenceNumber;
 import com.google.cloud.pubsublite.internal.wire.StreamFactories.PublishStreamFactory;
 import com.google.cloud.pubsublite.proto.MessagePublishRequest;

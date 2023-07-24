@@ -16,7 +16,6 @@
 
 package com.google.cloud.pubsublite.internal.wire;
 
-
 import com.google.api.gax.rpc.ResponseObserver;
 import com.google.cloud.pubsublite.internal.PublishSequenceNumber;
 import com.google.cloud.pubsublite.internal.wire.StreamFactories.PublishStreamFactory;

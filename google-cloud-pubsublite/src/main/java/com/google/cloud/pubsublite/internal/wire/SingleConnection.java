@@ -21,12 +21,13 @@ import com.google.api.gax.rpc.ResponseObserver;
 import com.google.api.gax.rpc.StatusCode.Code;
 import com.google.api.gax.rpc.StreamController;
 import com.google.cloud.pubsublite.internal.CheckedApiException;
-import com.google.cloud.pubsublite.internal.CloseableMonitor;
 import com.google.common.base.Preconditions;
 import com.google.common.flogger.GoogleLogger;
-import com.google.common.util.concurrent.Monitor.Guard;
 import com.google.errorprone.annotations.concurrent.GuardedBy;
 import java.time.Duration;
+import java.util.ArrayDeque;
+import java.util.Queue;
+import javax.annotation.Nullable;
 
 /**
  * A SingleConnection handles the state for a stream with an initial connection request that may
@@ -44,29 +45,24 @@ public abstract class SingleConnection<StreamRequestT, StreamResponseT, ClientRe
 
   private final ClientStream<StreamRequestT> requestStream;
   private final ResponseObserver<ClientResponseT> clientStream;
-  private final boolean expectInitial;
   private final StreamIdleTimer streamIdleTimer;
 
-  private final CloseableMonitor connectionMonitor = new CloseableMonitor();
-
-  @GuardedBy("connectionMonitor.monitor")
+  @GuardedBy("this")
   private boolean receivedInitial = false;
 
-  @GuardedBy("connectionMonitor.monitor")
-  private boolean completed = false;
+  @GuardedBy("this")
+  private final Queue<StreamRequestT> bufferedBeforeInitial = new ArrayDeque<>();
 
-  protected abstract void handleInitialResponse(StreamResponseT response)
-      throws CheckedApiException;
+  @GuardedBy("this")
+  private boolean completed = false;
 
   protected abstract void handleStreamResponse(StreamResponseT response) throws CheckedApiException;
 
   protected SingleConnection(
       StreamFactory<StreamRequestT, StreamResponseT> streamFactory,
       ResponseObserver<ClientResponseT> clientStream,
-      Duration streamIdleTimeout,
-      boolean expectInitialResponse) {
+      Duration streamIdleTimeout) {
     this.clientStream = clientStream;
-    this.expectInitial = expectInitialResponse;
     this.streamIdleTimer = new StreamIdleTimer(streamIdleTimeout, this::onStreamIdle);
     this.requestStream = streamFactory.New(this);
   }
@@ -74,45 +70,32 @@ public abstract class SingleConnection<StreamRequestT, StreamResponseT, ClientRe
   protected SingleConnection(
       StreamFactory<StreamRequestT, StreamResponseT> streamFactory,
       ResponseObserver<ClientResponseT> clientStream) {
-    this(streamFactory, clientStream, DEFAULT_STREAM_IDLE_TIMEOUT, /*expectInitialResponse=*/ true);
+    this(streamFactory, clientStream, DEFAULT_STREAM_IDLE_TIMEOUT);
   }
 
   protected void initialize(StreamRequestT initialRequest) {
     this.requestStream.send(initialRequest);
-    if (!expectInitial) {
-      return;
-    }
-    try (CloseableMonitor.Hold h =
-        connectionMonitor.enterWhenUninterruptibly(
-            new Guard(connectionMonitor.monitor) {
-              @Override
-              public boolean isSatisfied() {
-                return receivedInitial || completed;
-              }
-            })) {}
   }
 
-  protected void sendToStream(StreamRequestT request) {
-    try (CloseableMonitor.Hold h = connectionMonitor.enter()) {
-      if (completed) {
-        log.atFine().log("Sent request after stream completion: %s", request);
-        return;
-      }
-      // This should be impossible to not have received the initial request, or be completed, and
-      // the caller has access to this object.
-      Preconditions.checkState(receivedInitial);
-      requestStream.send(request);
+  protected synchronized void sendToStream(StreamRequestT request) {
+    if (completed) {
+      log.atFine().log("Sent request after stream completion: %s", request);
+      return;
     }
+    if (!receivedInitial) {
+      bufferedBeforeInitial.add(request);
+      return;
+    }
+    requestStream.send(request);
   }
 
   protected void sendToClient(ClientResponseT response) {
-    try (CloseableMonitor.Hold h = connectionMonitor.enter()) {
+    synchronized (this) {
       if (completed) {
         log.atFine().log("Sent response after stream completion: %s", response);
         return;
       }
-      // This should be impossible to not have received the initial request, or be completed, and
-      // the caller has access to this object.
+      // We should not send data to the client before receiving the initial value.
       Preconditions.checkState(receivedInitial);
     }
     // The upcall may be reentrant, possibly on another thread while this thread is blocked.
@@ -123,16 +106,10 @@ public abstract class SingleConnection<StreamRequestT, StreamResponseT, ClientRe
     abort(error);
   }
 
-  protected boolean isCompleted() {
-    try (CloseableMonitor.Hold h = connectionMonitor.enter()) {
-      return completed;
-    }
-  }
-
   // Records the connection as completed and performs tear down, if not already completed. Returns
   // whether the connection was already complete.
-  private boolean completeStream() {
-    try (CloseableMonitor.Hold h = connectionMonitor.enter()) {
+  private synchronized boolean completeStream() {
+    try {
       if (completed) {
         return true;
       }
@@ -167,25 +144,31 @@ public abstract class SingleConnection<StreamRequestT, StreamResponseT, ClientRe
 
   @Override
   public void onResponse(StreamResponseT response) {
-    boolean isFirst;
-    try (CloseableMonitor.Hold h = connectionMonitor.enter()) {
+    synchronized (this) {
       streamIdleTimer.restart();
       if (completed) {
         log.atFine().log("Received response on stream after completion: %s", response);
         return;
       }
-      isFirst = !receivedInitial;
-      receivedInitial = true;
+      if (!receivedInitial) {
+        handleInitial();
+      }
     }
     try {
-      if (isFirst) {
-        handleInitialResponse(response);
-      } else {
-        handleStreamResponse(response);
-      }
+      handleStreamResponse(response);
     } catch (CheckedApiException e) {
       abort(e);
     }
+  }
+
+  @GuardedBy("this")
+  private void handleInitial() {
+    for (@Nullable StreamRequestT req = bufferedBeforeInitial.poll();
+        req != null;
+        req = bufferedBeforeInitial.poll()) {
+      requestStream.send(req);
+    }
+    receivedInitial = true;
   }
 
   @Override

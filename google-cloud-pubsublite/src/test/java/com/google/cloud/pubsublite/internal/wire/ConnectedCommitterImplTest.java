@@ -191,16 +191,6 @@ public class ConnectedCommitterImplTest {
   }
 
   @Test
-  public void duplicateInitial_Abort() {
-    initialize();
-    StreamingCommitCursorResponse.Builder builder = StreamingCommitCursorResponse.newBuilder();
-    builder.getInitialBuilder();
-    leakedResponseStream.get().onResponse(builder.build());
-    verify(mockOutputStream).onError(argThat(new ApiExceptionMatcher(Code.FAILED_PRECONDITION)));
-    leakedResponseStream = Optional.empty();
-  }
-
-  @Test
   public void commitRequestProxied() {
     initialize();
     StreamingCommitCursorRequest.Builder builder = StreamingCommitCursorRequest.newBuilder();

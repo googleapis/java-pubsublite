@@ -216,16 +216,6 @@ public class ConnectedSubscriberImplTest {
   }
 
   @Test
-  public void duplicateInitial_Abort() {
-    initialize();
-    SubscribeResponse.Builder builder =
-        SubscribeResponse.newBuilder().setInitial(InitialSubscribeResponse.getDefaultInstance());
-    leakedResponseStream.get().onResponse(builder.build());
-    verify(mockOutputStream).onError(argThat(new ApiExceptionMatcher(Code.FAILED_PRECONDITION)));
-    leakedResponseStream = Optional.empty();
-  }
-
-  @Test
   public void emptyMessagesResponse_Abort() {
     initialize();
     SubscribeResponse.Builder builder =

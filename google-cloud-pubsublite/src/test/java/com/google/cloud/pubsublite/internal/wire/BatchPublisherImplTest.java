@@ -203,19 +203,6 @@ public class BatchPublisherImplTest {
     }
   }
 
-  @Test
-  public void construct_SendsMessagePublishResponseError() {
-    doAnswer(new MessageResponseAnswer(ByteString.EMPTY, messageResponse(Offset.of(10))))
-        .when(mockRequestStream)
-        .send(initialRequest(ByteString.EMPTY));
-    try (BatchPublisherImpl publisher =
-        FACTORY.New(streamFactory, mockOutputStream, initialRequest(ByteString.EMPTY))) {
-      verify(mockOutputStream).onError(argThat(new ApiExceptionMatcher(Code.FAILED_PRECONDITION)));
-      verifyNoMoreInteractions(mockOutputStream);
-    }
-    leakedResponseStream = Optional.empty();
-  }
-
   private BatchPublisherImpl initialize(ByteString clientId) {
     doAnswer(
             (Answer<Void>)
@@ -242,16 +229,6 @@ public class BatchPublisherImplTest {
     publisher.publish(
         ImmutableList.of(PubSubMessage.getDefaultInstance()), PublishSequenceNumber.FIRST);
     verify(mockOutputStream, never()).onResponse(any());
-  }
-
-  @Test
-  public void duplicateInitial_Abort() {
-    BatchPublisher unusedPublisher = initialize(ByteString.EMPTY);
-    PublishResponse.Builder builder = PublishResponse.newBuilder();
-    builder.getInitialResponseBuilder();
-    leakedResponseStream.get().onResponse(builder.build());
-    verify(mockOutputStream).onError(argThat(new ApiExceptionMatcher(Code.FAILED_PRECONDITION)));
-    leakedResponseStream = Optional.empty();
   }
 
   @Test

@@ -65,23 +65,10 @@ class ConnectedSubscriberImpl
   }
 
   @Override
-  protected void handleInitialResponse(SubscribeResponse response) throws CheckedApiException {
-    checkState(
-        response.hasInitial(),
-        String.format(
-            "Received non-initial first response %s on stream with initial request %s.",
-            response, initialRequest));
-  }
-
-  @Override
   protected void handleStreamResponse(SubscribeResponse response) throws CheckedApiException {
     switch (response.getResponseCase()) {
       case INITIAL:
-        throw new CheckedApiException(
-            String.format(
-                "Received duplicate initial response on stream with initial request %s.",
-                initialRequest),
-            Code.FAILED_PRECONDITION);
+        return;
       case MESSAGES:
         onMessages(response.getMessages());
         return;

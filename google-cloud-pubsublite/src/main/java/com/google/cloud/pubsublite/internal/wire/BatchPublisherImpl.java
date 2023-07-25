@@ -16,10 +16,7 @@
 
 package com.google.cloud.pubsublite.internal.wire;
 
-import static com.google.cloud.pubsublite.internal.CheckedApiPreconditions.checkState;
-
 import com.google.api.gax.rpc.ResponseObserver;
-import com.google.cloud.pubsublite.internal.CheckedApiException;
 import com.google.cloud.pubsublite.internal.PublishSequenceNumber;
 import com.google.cloud.pubsublite.internal.wire.StreamFactories.PublishStreamFactory;
 import com.google.cloud.pubsublite.proto.MessagePublishRequest;
@@ -69,18 +66,10 @@ class BatchPublisherImpl
   }
 
   @Override
-  protected void handleInitialResponse(PublishResponse response) throws CheckedApiException {
-    checkState(
-        response.hasInitialResponse(),
-        "First stream response is not an initial response: " + response);
-  }
-
-  @Override
-  protected void handleStreamResponse(PublishResponse response) throws CheckedApiException {
-    checkState(!response.hasInitialResponse(), "Received duplicate initial response.");
-    checkState(
-        response.hasMessageResponse(),
-        "Received response on stream which was neither a message or initial response.");
+  protected void handleStreamResponse(PublishResponse response) {
+    if (!response.hasMessageResponse()) {
+      return;
+    }
     sendToClient(response.getMessageResponse());
   }
 }

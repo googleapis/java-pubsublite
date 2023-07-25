@@ -1,5 +1,20 @@
 # Changelog
 
+## [1.12.12](https://github.com/googleapis/java-pubsublite/compare/v1.12.11...v1.12.12) (2023-07-25)
+
+
+### Bug Fixes
+
+* Change SingleConnection to batch before initial response instead of blocking ([#1462](https://github.com/googleapis/java-pubsublite/issues/1462)) ([2ac44af](https://github.com/googleapis/java-pubsublite/commit/2ac44afb7e6d15dadcb5fe507b83ce2f773542eb))
+
+
+### Dependencies
+
+* Update dependency com.google.cloud:google-cloud-bom to v0.200.0 ([#1458](https://github.com/googleapis/java-pubsublite/issues/1458)) ([6c8b50b](https://github.com/googleapis/java-pubsublite/commit/6c8b50b3659cd0631b8aa1fc64d56b2a0ec80b80))
+* Update dependency com.google.cloud:google-cloud-pubsub to v1.123.18 ([#1457](https://github.com/googleapis/java-pubsublite/issues/1457)) ([9ea0b1f](https://github.com/googleapis/java-pubsublite/commit/9ea0b1f490b996637518d9c8fd8f107fdd993250))
+* Update dependency com.google.cloud:google-cloud-pubsub to v1.123.19 ([#1465](https://github.com/googleapis/java-pubsublite/issues/1465)) ([10a5268](https://github.com/googleapis/java-pubsublite/commit/10a52688beaf6397607b0b6998e00ec53443ee50))
+* Update dependency com.google.cloud:google-cloud-shared-dependencies to v3.13.1 ([#1460](https://github.com/googleapis/java-pubsublite/issues/1460)) ([32eb01b](https://github.com/googleapis/java-pubsublite/commit/32eb01bd9883b7f6f3ce02ad2010129763853e87))
+
 ## [1.12.11](https://github.com/googleapis/java-pubsublite/compare/v1.12.10...v1.12.11) (2023-07-17)
 
 

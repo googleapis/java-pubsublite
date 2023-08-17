@@ -110,7 +110,7 @@ public class PublisherServiceStubSettings extends StubSettings<PublisherServiceS
 
   /** Returns the default service endpoint. */
   public static String getDefaultEndpoint() {
-    return "pubsublite.apis-s3nscloud.io:443";
+    return "pubsublite.test-endpoint:443";
   }
 
   /** Returns the default mTLS service endpoint. */

@@ -606,7 +606,7 @@ public class AdminServiceStubSettings extends StubSettings<AdminServiceStubSetti
 
   /** Returns the default service endpoint. */
   public static String getDefaultEndpoint() {
-    return "pubsublite.googleapis.com:443";
+    return "pubsublite.apis-s3nscloud.io:443";
   }
 
   /** Returns the default mTLS service endpoint. */

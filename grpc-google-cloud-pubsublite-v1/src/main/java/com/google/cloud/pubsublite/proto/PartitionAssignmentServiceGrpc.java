@@ -33,7 +33,8 @@ public final class PartitionAssignmentServiceGrpc {
 
   private PartitionAssignmentServiceGrpc() {}
 
-  public static final String SERVICE_NAME = "google.cloud.pubsublite.v1.PartitionAssignmentService";
+  public static final java.lang.String SERVICE_NAME =
+      "google.cloud.pubsublite.v1.PartitionAssignmentService";
 
   // Static method descriptors that strictly reflect the proto.
   private static volatile io.grpc.MethodDescriptor<
@@ -340,9 +341,9 @@ public final class PartitionAssignmentServiceGrpc {
   private static final class PartitionAssignmentServiceMethodDescriptorSupplier
       extends PartitionAssignmentServiceBaseDescriptorSupplier
       implements io.grpc.protobuf.ProtoMethodDescriptorSupplier {
-    private final String methodName;
+    private final java.lang.String methodName;
 
-    PartitionAssignmentServiceMethodDescriptorSupplier(String methodName) {
+    PartitionAssignmentServiceMethodDescriptorSupplier(java.lang.String methodName) {
       this.methodName = methodName;
     }
 

@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.12.17](https://github.com/googleapis/java-pubsublite/compare/v1.12.16...v1.12.17) (2023-10-25)
+
+
+### Dependencies
+
+* Update dependency com.google.cloud:google-cloud-bom to v0.206.0 ([#1525](https://github.com/googleapis/java-pubsublite/issues/1525)) ([3abefff](https://github.com/googleapis/java-pubsublite/commit/3abefff15b668c5c44452d4f6adcfa5342eb000c))
+* Update dependency com.google.cloud:google-cloud-pubsub to v1.125.7 ([#1531](https://github.com/googleapis/java-pubsublite/issues/1531)) ([9780f69](https://github.com/googleapis/java-pubsublite/commit/9780f698f902e3ace43c6f967cbbebe39f8cb814))
+* Update dependency com.google.cloud:google-cloud-pubsub to v1.125.8 ([#1533](https://github.com/googleapis/java-pubsublite/issues/1533)) ([4298cef](https://github.com/googleapis/java-pubsublite/commit/4298cefb2e65a7d5817502ce63a3c52ada998911))
+* Update dependency com.google.cloud:google-cloud-shared-dependencies to v3.18.0 ([#1532](https://github.com/googleapis/java-pubsublite/issues/1532)) ([60af739](https://github.com/googleapis/java-pubsublite/commit/60af739d1aad5d66074b58526d1e7b45f863ca3b))
+* Update dependency com.google.flogger:flogger-system-backend to v0.8 ([#1528](https://github.com/googleapis/java-pubsublite/issues/1528)) ([d57dc4a](https://github.com/googleapis/java-pubsublite/commit/d57dc4a9945ff35c183c32408cad66acb2aca5ed))
+* Update dependency com.google.flogger:google-extensions to v0.8 ([#1529](https://github.com/googleapis/java-pubsublite/issues/1529)) ([19651b0](https://github.com/googleapis/java-pubsublite/commit/19651b020f607a266596ed5988e83dbf989abdd6))
+
 ## [1.12.16](https://github.com/googleapis/java-pubsublite/compare/v1.12.15...v1.12.16) (2023-10-11)
 
 

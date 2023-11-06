@@ -1,5 +1,16 @@
 # Changelog
 
+## [1.12.18](https://github.com/googleapis/java-pubsublite/compare/v1.12.17...v1.12.18) (2023-11-06)
+
+
+### Dependencies
+
+* Update dependency com.google.cloud:google-cloud-bom to v0.207.0 ([#1537](https://github.com/googleapis/java-pubsublite/issues/1537)) ([0643aa2](https://github.com/googleapis/java-pubsublite/commit/0643aa26f674cfd86d489a1c1476922501b82cb0))
+* Update dependency com.google.cloud:google-cloud-pubsub to v1.125.10 ([#1542](https://github.com/googleapis/java-pubsublite/issues/1542)) ([4e3cc47](https://github.com/googleapis/java-pubsublite/commit/4e3cc4737fc911dae1c57a105b2e0dae828a0e92))
+* Update dependency com.google.cloud:google-cloud-pubsub to v1.125.11 ([#1544](https://github.com/googleapis/java-pubsublite/issues/1544)) ([3ffd24e](https://github.com/googleapis/java-pubsublite/commit/3ffd24e05343686872136661dc5f68377eb289b9))
+* Update dependency com.google.cloud:google-cloud-pubsub to v1.125.9 ([#1539](https://github.com/googleapis/java-pubsublite/issues/1539)) ([f320a71](https://github.com/googleapis/java-pubsublite/commit/f320a712c81e387ba6b7c9620c103e79a13f8ad5))
+* Update dependency com.google.cloud:google-cloud-shared-dependencies to v3.19.0 ([#1543](https://github.com/googleapis/java-pubsublite/issues/1543)) ([e49c9a2](https://github.com/googleapis/java-pubsublite/commit/e49c9a2b01c6cc97fdda398842cd1393e32f52d8))
+
 ## [1.12.17](https://github.com/googleapis/java-pubsublite/compare/v1.12.16...v1.12.17) (2023-10-25)
 
 

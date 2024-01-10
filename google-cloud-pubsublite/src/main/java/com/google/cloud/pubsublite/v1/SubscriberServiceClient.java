@@ -56,10 +56,12 @@ import javax.annotation.Generated;
  * close().
  *
  * <table>
+ *   <caption>Methods</caption>
  *    <tr>
  *      <th>Method</th>
  *      <th>Description</th>
  *      <th>Method Variants</th>
+ *    </tr>
  *    <tr>
  *      <td>Subscribe</td>
  *      <td><p> Establishes a stream with the server for receiving messages.</td>
@@ -69,7 +71,6 @@ import javax.annotation.Generated;
  *           <li>subscribeCallable()
  *      </ul>
  *       </td>
- *    </tr>
  *    </tr>
  *  </table>
  *

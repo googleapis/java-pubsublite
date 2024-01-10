@@ -58,10 +58,12 @@ import javax.annotation.Generated;
  * close().
  *
  * <table>
+ *   <caption>Methods</caption>
  *    <tr>
  *      <th>Method</th>
  *      <th>Description</th>
  *      <th>Method Variants</th>
+ *    </tr>
  *    <tr>
  *      <td>Publish</td>
  *      <td><p> Establishes a stream with the server for publishing messages. Once the stream is initialized, the client publishes messages by sending publish requests on the stream. The server responds with a PublishResponse for each PublishRequest sent by the client, in the same order that the requests were sent. Note that multiple PublishRequests can be in flight simultaneously, but they will be processed by the server in the order that they are sent by the client on a given stream.</td>
@@ -71,7 +73,6 @@ import javax.annotation.Generated;
  *           <li>publishCallable()
  *      </ul>
  *       </td>
- *    </tr>
  *    </tr>
  *  </table>
  *

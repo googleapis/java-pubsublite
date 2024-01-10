@@ -57,10 +57,12 @@ import javax.annotation.Generated;
  * calls close().
  *
  * <table>
+ *   <caption>Methods</caption>
  *    <tr>
  *      <th>Method</th>
  *      <th>Description</th>
  *      <th>Method Variants</th>
+ *    </tr>
  *    <tr>
  *      <td>AssignPartitions</td>
  *      <td><p> Assign partitions for this client to handle for the specified subscription.
@@ -71,7 +73,6 @@ import javax.annotation.Generated;
  *           <li>assignPartitionsCallable()
  *      </ul>
  *       </td>
- *    </tr>
  *    </tr>
  *  </table>
  *

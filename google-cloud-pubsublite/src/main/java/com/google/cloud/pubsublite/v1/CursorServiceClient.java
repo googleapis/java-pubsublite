@@ -71,10 +71,12 @@ import javax.annotation.Generated;
  * as threads. In the example above, try-with-resources is used, which automatically calls close().
  *
  * <table>
+ *   <caption>Methods</caption>
  *    <tr>
  *      <th>Method</th>
  *      <th>Description</th>
  *      <th>Method Variants</th>
+ *    </tr>
  *    <tr>
  *      <td>StreamingCommitCursor</td>
  *      <td><p> Establishes a stream with the server for managing committed cursors.</td>
@@ -118,7 +120,6 @@ import javax.annotation.Generated;
  *           <li>listPartitionCursorsCallable()
  *      </ul>
  *       </td>
- *    </tr>
  *    </tr>
  *  </table>
  *

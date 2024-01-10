@@ -60,10 +60,12 @@ import javax.annotation.Generated;
  * close().
  *
  * <table>
+ *   <caption>Methods</caption>
  *    <tr>
  *      <th>Method</th>
  *      <th>Description</th>
  *      <th>Method Variants</th>
+ *    </tr>
  *    <tr>
  *      <td>ComputeMessageStats</td>
  *      <td><p> Compute statistics about a range of messages in a given topic and partition.</td>
@@ -105,7 +107,6 @@ import javax.annotation.Generated;
  *           <li>computeTimeCursorCallable()
  *      </ul>
  *       </td>
- *    </tr>
  *    </tr>
  *  </table>
  *

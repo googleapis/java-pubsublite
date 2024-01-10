@@ -65,7 +65,7 @@ import javax.annotation.Generated;
  *           .build();
  *   CommitCursorResponse response = cursorServiceClient.commitCursor(request);
  * }
- * }</pre> 
+ * }</pre>
  *
  * <p>Note: close() needs to be called on the CursorServiceClient object to clean up resources such
  * as threads. In the example above, try-with-resources is used, which automatically calls close().

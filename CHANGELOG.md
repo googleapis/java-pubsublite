@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.12.20](https://github.com/googleapis/java-pubsublite/compare/v1.12.19...v1.12.20) (2024-01-11)
+
+
+### Bug Fixes
+
+* **deps:** Update the Java code generator (gapic-generator-java) to 2.31.0 ([#1566](https://github.com/googleapis/java-pubsublite/issues/1566)) ([565e18f](https://github.com/googleapis/java-pubsublite/commit/565e18f66542c970d9abcab2132da079f128ceeb))
+
+
+### Dependencies
+
+* Update dependency com.google.cloud:google-cloud-shared-dependencies to v3.21.0 ([#1565](https://github.com/googleapis/java-pubsublite/issues/1565)) ([d3a6a0b](https://github.com/googleapis/java-pubsublite/commit/d3a6a0b7cad46d868a86d14f41c0e5b6ba36403d))
+
 ## [1.12.19](https://github.com/googleapis/java-pubsublite/compare/v1.12.18...v1.12.19) (2023-12-01)
 
 

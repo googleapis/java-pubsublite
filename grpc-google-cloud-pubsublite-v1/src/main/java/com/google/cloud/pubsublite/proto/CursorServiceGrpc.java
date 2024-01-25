@@ -34,7 +34,7 @@ public final class CursorServiceGrpc {
 
   private CursorServiceGrpc() {}
 
-  public static final String SERVICE_NAME = "google.cloud.pubsublite.v1.CursorService";
+  public static final java.lang.String SERVICE_NAME = "google.cloud.pubsublite.v1.CursorService";
 
   // Static method descriptors that strictly reflect the proto.
   private static volatile io.grpc.MethodDescriptor<
@@ -579,9 +579,9 @@ public final class CursorServiceGrpc {
   private static final class CursorServiceMethodDescriptorSupplier
       extends CursorServiceBaseDescriptorSupplier
       implements io.grpc.protobuf.ProtoMethodDescriptorSupplier {
-    private final String methodName;
+    private final java.lang.String methodName;
 
-    CursorServiceMethodDescriptorSupplier(String methodName) {
+    CursorServiceMethodDescriptorSupplier(java.lang.String methodName) {
       this.methodName = methodName;
     }
 

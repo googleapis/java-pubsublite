@@ -3,13 +3,13 @@
   <parent>
     <groupId>com.google.cloud</groupId>
     <artifactId>google-cloud-pubsublite-parent</artifactId>
-    <version>1.12.13-SNAPSHOT</version><!-- {x-version-update:google-cloud-pubsublite:current} -->
+    <version>1.12.21-SNAPSHOT</version><!-- {x-version-update:google-cloud-pubsublite:current} -->
     <relativePath>../pom.xml</relativePath>
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.google.cloud</groupId>
   <artifactId>google-cloud-pubsublite</artifactId>
-  <version>1.12.13-SNAPSHOT</version><!-- {x-version-update:google-cloud-pubsublite:current} -->
+  <version>1.12.21-SNAPSHOT</version><!-- {x-version-update:google-cloud-pubsublite:current} -->
   <packaging>jar</packaging>
   <name>Google Cloud Pub/Sub Lite</name>
   <url>https://github.com/googleapis/java-pubsublite</url>
@@ -18,14 +18,6 @@
     <dependency>
       <groupId>com.google.protobuf</groupId>
       <artifactId>protobuf-java-util</artifactId>
-      <!--   Temp exclusion. Remove next protobuf upgrade (to 3.23.3 or higher)
-   context: https://github.com/googleapis/sdk-platform-java/pull/1791#issuecomment-1601587713-->
-      <exclusions>
-        <exclusion>
-          <groupId>com.google.j2objc</groupId>
-          <artifactId>j2objc-annotations</artifactId>
-        </exclusion>
-      </exclusions>
     </dependency>
     <dependency>
       <groupId>io.grpc</groupId>
@@ -46,7 +38,7 @@
     <dependency>
       <groupId>com.google.cloud</groupId>
       <artifactId>google-cloud-pubsub</artifactId>
-      <version>1.124.0</version>
+      <version>1.126.0</version>
     </dependency>
     <dependency>
       <groupId>com.google.api.grpc</groupId>
@@ -55,12 +47,12 @@
     <dependency>
       <groupId>com.google.api.grpc</groupId>
       <artifactId>proto-google-cloud-pubsublite-v1</artifactId>
-      <version>1.12.13-SNAPSHOT</version><!-- {x-version-update:google-cloud-pubsublite:current} -->
+      <version>1.12.21-SNAPSHOT</version><!-- {x-version-update:google-cloud-pubsublite:current} -->
     </dependency>
     <dependency>
       <groupId>com.google.api.grpc</groupId>
       <artifactId>grpc-google-cloud-pubsublite-v1</artifactId>
-      <version>1.12.13-SNAPSHOT</version><!-- {x-version-update:google-cloud-pubsublite:current} -->
+      <version>1.12.21-SNAPSHOT</version><!-- {x-version-update:google-cloud-pubsublite:current} -->
     </dependency>
     <dependency>
       <groupId>com.google.flogger</groupId>
@@ -118,7 +110,7 @@
     <dependency>
       <groupId>com.google.flogger</groupId>
       <artifactId>flogger-system-backend</artifactId>
-      <version>0.7.4</version>
+      <version>0.8</version>
       <scope>runtime</scope>
     </dependency>
 
@@ -183,7 +175,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-enforcer-plugin</artifactId>
-        <version>3.3.0</version>
+        <version>3.4.1</version>
         <executions>
           <execution>
             <id>enforce</id>

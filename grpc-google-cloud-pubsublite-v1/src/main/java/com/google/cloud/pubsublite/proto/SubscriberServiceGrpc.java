@@ -33,7 +33,8 @@ public final class SubscriberServiceGrpc {
 
   private SubscriberServiceGrpc() {}
 
-  public static final String SERVICE_NAME = "google.cloud.pubsublite.v1.SubscriberService";
+  public static final java.lang.String SERVICE_NAME =
+      "google.cloud.pubsublite.v1.SubscriberService";
 
   // Static method descriptors that strictly reflect the proto.
   private static volatile io.grpc.MethodDescriptor<
@@ -322,9 +323,9 @@ public final class SubscriberServiceGrpc {
   private static final class SubscriberServiceMethodDescriptorSupplier
       extends SubscriberServiceBaseDescriptorSupplier
       implements io.grpc.protobuf.ProtoMethodDescriptorSupplier {
-    private final String methodName;
+    private final java.lang.String methodName;
 
-    SubscriberServiceMethodDescriptorSupplier(String methodName) {
+    SubscriberServiceMethodDescriptorSupplier(java.lang.String methodName) {
       this.methodName = methodName;
     }
 

@@ -3,12 +3,12 @@
   <parent>
     <groupId>com.google.cloud</groupId>
     <artifactId>google-cloud-shared-config</artifactId>
-    <version>1.5.7</version>
+    <version>1.7.1</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.google.cloud</groupId>
   <artifactId>google-cloud-pubsublite-parent</artifactId>
-  <version>1.12.13-SNAPSHOT</version><!-- {x-version-update:google-cloud-pubsublite:current} -->
+  <version>1.12.21-SNAPSHOT</version><!-- {x-version-update:google-cloud-pubsublite:current} -->
   <packaging>pom</packaging>
   <name>Google Cloud Pub/Sub Lite Parent</name>
   <url>https://github.com/googleapis/java-pubsublite</url>
@@ -18,36 +18,36 @@
       <dependency>
         <groupId>com.google.cloud</groupId>
         <artifactId>google-cloud-shared-dependencies</artifactId>
-        <version>3.13.1</version>
+        <version>3.23.0</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
       <dependency>
         <groupId>com.google.api.grpc</groupId>
         <artifactId>proto-google-cloud-pubsublite-v1</artifactId>
-        <version>1.12.13-SNAPSHOT</version><!-- {x-version-update:proto-google-cloud-pubsublite-v1:current} -->
+        <version>1.12.21-SNAPSHOT</version><!-- {x-version-update:proto-google-cloud-pubsublite-v1:current} -->
       </dependency>
       <dependency>
         <groupId>com.google.api.grpc</groupId>
         <artifactId>grpc-google-cloud-pubsublite-v1</artifactId>
-        <version>1.12.13-SNAPSHOT</version><!-- {x-version-update:grpc-google-cloud-pubsublite-v1:current} -->
+        <version>1.12.21-SNAPSHOT</version><!-- {x-version-update:grpc-google-cloud-pubsublite-v1:current} -->
       </dependency>
       <dependency>
         <groupId>com.google.cloud</groupId>
         <artifactId>google-cloud-pubsublite</artifactId>
-        <version>1.12.13-SNAPSHOT</version><!-- {x-version-update:google-cloud-pubsublite:current} -->
+        <version>1.12.21-SNAPSHOT</version><!-- {x-version-update:google-cloud-pubsublite:current} -->
       </dependency>
       <dependency>
         <groupId>com.google.cloud</groupId>
         <artifactId>google-cloud-bom</artifactId>
-        <version>0.200.0</version>
+        <version>0.208.0</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
       <dependency>
         <groupId>com.google.flogger</groupId>
         <artifactId>google-extensions</artifactId>
-        <version>0.7.4</version>
+        <version>0.8</version>
       </dependency>
       <dependency>
         <groupId>com.google.auto.service</groupId>
@@ -97,7 +97,7 @@
       </plugin>
       <plugin>
         <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.11.0</version>
+        <version>3.12.1</version>
         <configuration>
           <source>1.8</source>
           <target>1.8</target>
@@ -109,7 +109,7 @@
             <path>
               <groupId>com.google.auto.value</groupId>
               <artifactId>auto-value</artifactId>
-              <version>1.10.2</version>
+              <version>1.10.4</version>
             </path>
             <path>
               <groupId>com.google.auto.service</groupId>
@@ -127,7 +127,6 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-javadoc-plugin</artifactId>
-        <version>3.5.0</version>
         <configuration>
           <source>8</source>
           <links combine.self="override">
@@ -208,7 +207,6 @@
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-javadoc-plugin</artifactId>
-            <version>3.5.0</version>
             <configuration>
               <excludePackageNames>com.google.cloud.pubsublite.cloudpubsub.internal:com.google.cloud.pubsublite.internal:com.google.cloud.pubsublite.internal.testing:com.google.cloud.pubsublite.internal.wire</excludePackageNames>
             </configuration>

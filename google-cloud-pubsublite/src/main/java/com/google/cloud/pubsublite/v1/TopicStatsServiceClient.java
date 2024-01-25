@@ -60,51 +60,51 @@ import javax.annotation.Generated;
  * close().
  *
  * <table>
- *   <caption>Methods</caption>
+ *    <caption>Methods</caption>
  *    <tr>
  *      <th>Method</th>
  *      <th>Description</th>
  *      <th>Method Variants</th>
  *    </tr>
  *    <tr>
- *      <td>ComputeMessageStats</td>
+ *      <td><p> ComputeMessageStats</td>
  *      <td><p> Compute statistics about a range of messages in a given topic and partition.</td>
  *      <td>
  *      <p>Request object method variants only take one parameter, a request object, which must be constructed before the call.</p>
  *      <ul>
- *           <li>computeMessageStats(ComputeMessageStatsRequest request)
+ *           <li><p> computeMessageStats(ComputeMessageStatsRequest request)
  *      </ul>
  *      <p>Callable method variants take no parameters and return an immutable API callable object, which can be used to initiate calls to the service.</p>
  *      <ul>
- *           <li>computeMessageStatsCallable()
+ *           <li><p> computeMessageStatsCallable()
  *      </ul>
  *       </td>
  *    </tr>
  *    <tr>
- *      <td>ComputeHeadCursor</td>
+ *      <td><p> ComputeHeadCursor</td>
  *      <td><p> Compute the head cursor for the partition. The head cursor's offset is guaranteed to be less than or equal to all messages which have not yet been acknowledged as published, and greater than the offset of any message whose publish has already been acknowledged. It is zero if there have never been messages in the partition.</td>
  *      <td>
  *      <p>Request object method variants only take one parameter, a request object, which must be constructed before the call.</p>
  *      <ul>
- *           <li>computeHeadCursor(ComputeHeadCursorRequest request)
+ *           <li><p> computeHeadCursor(ComputeHeadCursorRequest request)
  *      </ul>
  *      <p>Callable method variants take no parameters and return an immutable API callable object, which can be used to initiate calls to the service.</p>
  *      <ul>
- *           <li>computeHeadCursorCallable()
+ *           <li><p> computeHeadCursorCallable()
  *      </ul>
  *       </td>
  *    </tr>
  *    <tr>
- *      <td>ComputeTimeCursor</td>
+ *      <td><p> ComputeTimeCursor</td>
  *      <td><p> Compute the corresponding cursor for a publish or event time in a topic partition.</td>
  *      <td>
  *      <p>Request object method variants only take one parameter, a request object, which must be constructed before the call.</p>
  *      <ul>
- *           <li>computeTimeCursor(ComputeTimeCursorRequest request)
+ *           <li><p> computeTimeCursor(ComputeTimeCursorRequest request)
  *      </ul>
  *      <p>Callable method variants take no parameters and return an immutable API callable object, which can be used to initiate calls to the service.</p>
  *      <ul>
- *           <li>computeTimeCursorCallable()
+ *           <li><p> computeTimeCursorCallable()
  *      </ul>
  *       </td>
  *    </tr>

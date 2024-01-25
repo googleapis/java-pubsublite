@@ -57,20 +57,20 @@ import javax.annotation.Generated;
  * calls close().
  *
  * <table>
- *   <caption>Methods</caption>
+ *    <caption>Methods</caption>
  *    <tr>
  *      <th>Method</th>
  *      <th>Description</th>
  *      <th>Method Variants</th>
  *    </tr>
  *    <tr>
- *      <td>AssignPartitions</td>
+ *      <td><p> AssignPartitions</td>
  *      <td><p> Assign partitions for this client to handle for the specified subscription.
  * <p>  The client must send an InitialPartitionAssignmentRequest first. The server will then send at most one unacknowledged PartitionAssignment outstanding on the stream at a time. The client should send a PartitionAssignmentAck after updating the partitions it is connected to to reflect the new assignment.</td>
  *      <td>
  *      <p>Callable method variants take no parameters and return an immutable API callable object, which can be used to initiate calls to the service.</p>
  *      <ul>
- *           <li>assignPartitionsCallable()
+ *           <li><p> assignPartitionsCallable()
  *      </ul>
  *       </td>
  *    </tr>

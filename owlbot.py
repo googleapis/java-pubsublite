@@ -26,5 +26,6 @@ java.common_templates(
         ".kokoro/*/samples.cfg",
         "samples/install-without-bom/*",
         ".github/workflows/samples.yaml",
+        ".github/CODEOWNERS"
     ]
 )

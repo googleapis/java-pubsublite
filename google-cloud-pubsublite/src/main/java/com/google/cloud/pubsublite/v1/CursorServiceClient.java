@@ -71,53 +71,53 @@ import javax.annotation.Generated;
  * as threads. In the example above, try-with-resources is used, which automatically calls close().
  *
  * <table>
- *   <caption>Methods</caption>
+ *    <caption>Methods</caption>
  *    <tr>
  *      <th>Method</th>
  *      <th>Description</th>
  *      <th>Method Variants</th>
  *    </tr>
  *    <tr>
- *      <td>StreamingCommitCursor</td>
+ *      <td><p> StreamingCommitCursor</td>
  *      <td><p> Establishes a stream with the server for managing committed cursors.</td>
  *      <td>
  *      <p>Callable method variants take no parameters and return an immutable API callable object, which can be used to initiate calls to the service.</p>
  *      <ul>
- *           <li>streamingCommitCursorCallable()
+ *           <li><p> streamingCommitCursorCallable()
  *      </ul>
  *       </td>
  *    </tr>
  *    <tr>
- *      <td>CommitCursor</td>
+ *      <td><p> CommitCursor</td>
  *      <td><p> Updates the committed cursor.</td>
  *      <td>
  *      <p>Request object method variants only take one parameter, a request object, which must be constructed before the call.</p>
  *      <ul>
- *           <li>commitCursor(CommitCursorRequest request)
+ *           <li><p> commitCursor(CommitCursorRequest request)
  *      </ul>
  *      <p>Callable method variants take no parameters and return an immutable API callable object, which can be used to initiate calls to the service.</p>
  *      <ul>
- *           <li>commitCursorCallable()
+ *           <li><p> commitCursorCallable()
  *      </ul>
  *       </td>
  *    </tr>
  *    <tr>
- *      <td>ListPartitionCursors</td>
+ *      <td><p> ListPartitionCursors</td>
  *      <td><p> Returns all committed cursor information for a subscription.</td>
  *      <td>
  *      <p>Request object method variants only take one parameter, a request object, which must be constructed before the call.</p>
  *      <ul>
- *           <li>listPartitionCursors(ListPartitionCursorsRequest request)
+ *           <li><p> listPartitionCursors(ListPartitionCursorsRequest request)
  *      </ul>
  *      <p>"Flattened" method variants have converted the fields of the request object into function parameters to enable multiple ways to call the same method.</p>
  *      <ul>
- *           <li>listPartitionCursors(SubscriptionName parent)
- *           <li>listPartitionCursors(String parent)
+ *           <li><p> listPartitionCursors(SubscriptionName parent)
+ *           <li><p> listPartitionCursors(String parent)
  *      </ul>
  *      <p>Callable method variants take no parameters and return an immutable API callable object, which can be used to initiate calls to the service.</p>
  *      <ul>
- *           <li>listPartitionCursorsPagedCallable()
- *           <li>listPartitionCursorsCallable()
+ *           <li><p> listPartitionCursorsPagedCallable()
+ *           <li><p> listPartitionCursorsCallable()
  *      </ul>
  *       </td>
  *    </tr>

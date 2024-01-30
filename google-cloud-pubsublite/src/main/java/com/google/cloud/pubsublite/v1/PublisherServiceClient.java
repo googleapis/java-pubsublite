@@ -58,19 +58,19 @@ import javax.annotation.Generated;
  * close().
  *
  * <table>
- *   <caption>Methods</caption>
+ *    <caption>Methods</caption>
  *    <tr>
  *      <th>Method</th>
  *      <th>Description</th>
  *      <th>Method Variants</th>
  *    </tr>
  *    <tr>
- *      <td>Publish</td>
+ *      <td><p> Publish</td>
  *      <td><p> Establishes a stream with the server for publishing messages. Once the stream is initialized, the client publishes messages by sending publish requests on the stream. The server responds with a PublishResponse for each PublishRequest sent by the client, in the same order that the requests were sent. Note that multiple PublishRequests can be in flight simultaneously, but they will be processed by the server in the order that they are sent by the client on a given stream.</td>
  *      <td>
  *      <p>Callable method variants take no parameters and return an immutable API callable object, which can be used to initiate calls to the service.</p>
  *      <ul>
- *           <li>publishCallable()
+ *           <li><p> publishCallable()
  *      </ul>
  *       </td>
  *    </tr>

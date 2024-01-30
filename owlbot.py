@@ -28,5 +28,6 @@ java.common_templates(
         ".github/workflows/samples.yaml",
         '.kokoro/requirements.in',
         '.kokoro/requirements.txt'
+        ".github/CODEOWNERS"
     ]
 )

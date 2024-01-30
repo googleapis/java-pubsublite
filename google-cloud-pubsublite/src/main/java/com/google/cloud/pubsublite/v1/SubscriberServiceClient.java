@@ -56,19 +56,19 @@ import javax.annotation.Generated;
  * close().
  *
  * <table>
- *   <caption>Methods</caption>
+ *    <caption>Methods</caption>
  *    <tr>
  *      <th>Method</th>
  *      <th>Description</th>
  *      <th>Method Variants</th>
  *    </tr>
  *    <tr>
- *      <td>Subscribe</td>
+ *      <td><p> Subscribe</td>
  *      <td><p> Establishes a stream with the server for receiving messages.</td>
  *      <td>
  *      <p>Callable method variants take no parameters and return an immutable API callable object, which can be used to initiate calls to the service.</p>
  *      <ul>
- *           <li>subscribeCallable()
+ *           <li><p> subscribeCallable()
  *      </ul>
  *       </td>
  *    </tr>

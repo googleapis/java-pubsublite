@@ -29,5 +29,8 @@ java.common_templates(
         '.kokoro/requirements.in',
         '.kokoro/requirements.txt'
         ".github/CODEOWNERS"
+        ".github/CODEOWNERS",
+        ".kokoro/presubmit/graalvm-native.cfg",
+        ".kokoro/presubmit/graalvm-native-17.cfg"
     ]
 )

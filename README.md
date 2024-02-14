@@ -20,26 +20,25 @@ If you are using Maven, add this to your pom.xml file:
 <dependency>
   <groupId>com.google.cloud</groupId>
   <artifactId>google-cloud-pubsublite</artifactId>
-  <version>1.12.20</version>
+  <version>1.12.21</version>
 </dependency>
 <dependency>
   <groupId>com.google.cloud</groupId>
   <artifactId>google-cloud-pubsub</artifactId>
-  <version>1.126.2</version>
+  <version>1.126.3</version>
 </dependency>
 
 ```
 
 If you are using Gradle without BOM, add this to your dependencies:
 
-```Groovy
-implementation 'com.google.cloud:google-cloud-pubsublite:1.12.21'
+implementation 'com.google.cloud:google-cloud-pubsublite:1.12.22'
 ```
 
 If you are using SBT, add this to your dependencies:
 
 ```Scala
-libraryDependencies += "com.google.cloud" % "google-cloud-pubsublite" % "1.12.21"
+libraryDependencies += "com.google.cloud" % "google-cloud-pubsublite" % "1.12.22"
 ```
 <!-- {x-version-update-end} -->
 
@@ -483,7 +482,7 @@ Java is a registered trademark of Oracle and/or its affiliates.
 [kokoro-badge-link-5]: http://storage.googleapis.com/cloud-devrel-public/java/badges/java-pubsublite/java11.html
 [stability-image]: https://img.shields.io/badge/stability-stable-green
 [maven-version-image]: https://img.shields.io/maven-central/v/com.google.cloud/google-cloud-pubsublite.svg
-[maven-version-link]: https://central.sonatype.com/artifact/com.google.cloud/google-cloud-pubsublite/1.12.21
+[maven-version-link]: https://central.sonatype.com/artifact/com.google.cloud/google-cloud-pubsublite/1.12.22
 [authentication]: https://github.com/googleapis/google-cloud-java#authentication
 [auth-scopes]: https://developers.google.com/identity/protocols/oauth2/scopes
 [predefined-iam-roles]: https://cloud.google.com/iam/docs/understanding-roles#predefined_roles

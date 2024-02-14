@@ -32,6 +32,7 @@ If you are using Maven, add this to your pom.xml file:
 
 If you are using Gradle without BOM, add this to your dependencies:
 
+```Groovy
 implementation 'com.google.cloud:google-cloud-pubsublite:1.12.22'
 ```
 

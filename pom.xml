@@ -2,13 +2,13 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <parent>
     <groupId>com.google.cloud</groupId>
-    <artifactId>google-cloud-shared-config</artifactId>
-    <version>1.7.1</version>
+    <artifactId>sdk-platform-java-config</artifactId>
+    <version>3.25.0</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.google.cloud</groupId>
   <artifactId>google-cloud-pubsublite-parent</artifactId>
-  <version>1.12.22-SNAPSHOT</version><!-- {x-version-update:google-cloud-pubsublite:current} -->
+  <version>1.12.23-SNAPSHOT</version><!-- {x-version-update:google-cloud-pubsublite:current} -->
   <packaging>pom</packaging>
   <name>Google Cloud Pub/Sub Lite Parent</name>
   <url>https://github.com/googleapis/java-pubsublite</url>
@@ -18,29 +18,29 @@
       <dependency>
         <groupId>com.google.cloud</groupId>
         <artifactId>google-cloud-shared-dependencies</artifactId>
-        <version>3.23.0</version>
+        <version>${google-cloud-shared-dependencies.version}</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
       <dependency>
         <groupId>com.google.api.grpc</groupId>
         <artifactId>proto-google-cloud-pubsublite-v1</artifactId>
-        <version>1.12.22-SNAPSHOT</version><!-- {x-version-update:proto-google-cloud-pubsublite-v1:current} -->
+        <version>1.12.23-SNAPSHOT</version><!-- {x-version-update:proto-google-cloud-pubsublite-v1:current} -->
       </dependency>
       <dependency>
         <groupId>com.google.api.grpc</groupId>
         <artifactId>grpc-google-cloud-pubsublite-v1</artifactId>
-        <version>1.12.22-SNAPSHOT</version><!-- {x-version-update:grpc-google-cloud-pubsublite-v1:current} -->
+        <version>1.12.23-SNAPSHOT</version><!-- {x-version-update:grpc-google-cloud-pubsublite-v1:current} -->
       </dependency>
       <dependency>
         <groupId>com.google.cloud</groupId>
         <artifactId>google-cloud-pubsublite</artifactId>
-        <version>1.12.22-SNAPSHOT</version><!-- {x-version-update:google-cloud-pubsublite:current} -->
+        <version>1.12.23-SNAPSHOT</version><!-- {x-version-update:google-cloud-pubsublite:current} -->
       </dependency>
       <dependency>
         <groupId>com.google.cloud</groupId>
         <artifactId>google-cloud-bom</artifactId>
-        <version>0.211.0</version>
+        <version>0.212.0</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>

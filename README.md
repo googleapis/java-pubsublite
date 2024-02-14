@@ -413,7 +413,7 @@ library is changed, it is accompanied by a [semver][semver] major release.
 Java 11 and (in September 2021) Java 17 are the best choices for new
 development.
 
-### Keeping production systems current>>>>>>> main
+### Keeping production systems current
 
 Google tests its client libraries with all current LTS versions covered by
 Oracle's Extended Support (which typically lasts 8 years from initial

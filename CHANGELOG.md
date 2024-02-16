@@ -1,5 +1,21 @@
 # Changelog
 
+## [1.13.0](https://github.com/googleapis/java-pubsublite/compare/v1.12.22...v1.13.0) (2024-02-16)
+
+
+### Features
+
+* Add an API method for reordering firewall policies ([#1587](https://github.com/googleapis/java-pubsublite/issues/1587)) ([f920e08](https://github.com/googleapis/java-pubsublite/commit/f920e088db0f14186f66faf4a5021480b2945272))
+
+
+### Dependencies
+
+* Update dependency com.google.cloud:google-cloud-bom to v0.212.0 ([#1584](https://github.com/googleapis/java-pubsublite/issues/1584)) ([fb430aa](https://github.com/googleapis/java-pubsublite/commit/fb430aad1871b644a682699811392f6522b9d432))
+* Update dependency com.google.cloud:google-cloud-bom to v0.213.0 ([#1599](https://github.com/googleapis/java-pubsublite/issues/1599)) ([caa2d65](https://github.com/googleapis/java-pubsublite/commit/caa2d653a67076a17d3dcec9ed9c29ac6818b522))
+* Update dependency com.google.cloud:google-cloud-pubsub to v1.126.4 ([#1594](https://github.com/googleapis/java-pubsublite/issues/1594)) ([7909116](https://github.com/googleapis/java-pubsublite/commit/79091165e5159e27cdf29036ff594246d0723ea7))
+* Update dependency com.google.cloud:google-cloud-pubsub to v1.126.6 ([#1597](https://github.com/googleapis/java-pubsublite/issues/1597)) ([cdb956d](https://github.com/googleapis/java-pubsublite/commit/cdb956d1f83c69697ed2f8ce10222c5931d40d8b))
+* Update dependency com.google.cloud:sdk-platform-java-config to v3.25.0 ([#1595](https://github.com/googleapis/java-pubsublite/issues/1595)) ([5eff0a8](https://github.com/googleapis/java-pubsublite/commit/5eff0a8222e33067b0586adbc47358579c9b457a))
+
 ## [1.12.22](https://github.com/googleapis/java-pubsublite/compare/v1.12.21...v1.12.22) (2024-02-09)
 
 

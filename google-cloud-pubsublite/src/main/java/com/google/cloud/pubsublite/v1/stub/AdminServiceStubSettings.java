@@ -24,7 +24,6 @@ import static com.google.cloud.pubsublite.v1.AdminServiceClient.ListTopicsPagedR
 
 import com.google.api.core.ApiFunction;
 import com.google.api.core.ApiFuture;
-import com.google.api.core.BetaApi;
 import com.google.api.gax.core.GaxProperties;
 import com.google.api.gax.core.GoogleCredentialsProvider;
 import com.google.api.gax.core.InstantiatingExecutorProvider;
@@ -1115,8 +1114,6 @@ public class AdminServiceStubSettings extends StubSettings<AdminServiceStubSetti
     }
 
     /** Returns the builder for the settings used for calls to seekSubscription. */
-    @BetaApi(
-        "The surface for use by generated code is not stable yet and may change in the future.")
     public OperationCallSettings.Builder<
             SeekSubscriptionRequest, SeekSubscriptionResponse, OperationMetadata>
         seekSubscriptionOperationSettings() {

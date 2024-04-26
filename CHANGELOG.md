@@ -1,5 +1,23 @@
 # Changelog
 
+## [1.13.3](https://github.com/googleapis/java-pubsublite/compare/v1.13.2...v1.13.3) (2024-04-26)
+
+
+### Bug Fixes
+
+* **deps:** Update the Java code generator (gapic-generator-java) to 2.39.0 ([#1631](https://github.com/googleapis/java-pubsublite/issues/1631)) ([c318792](https://github.com/googleapis/java-pubsublite/commit/c318792c4229273ceb5059b306dca371d224933a))
+
+
+### Dependencies
+
+* Update actions/checkout action to v4 ([#1626](https://github.com/googleapis/java-pubsublite/issues/1626)) ([768f184](https://github.com/googleapis/java-pubsublite/commit/768f184a696b68d41b7aa1c2bfdec246615009d2))
+* Update actions/github-script action to v7 ([#1627](https://github.com/googleapis/java-pubsublite/issues/1627)) ([bf8e44b](https://github.com/googleapis/java-pubsublite/commit/bf8e44b05ec806c6bbbac29528ce399074434e0d))
+* Update dependency com.google.cloud:google-cloud-bom to v0.216.0 ([#1623](https://github.com/googleapis/java-pubsublite/issues/1623)) ([7593b2b](https://github.com/googleapis/java-pubsublite/commit/7593b2b3800cd410642996c70715725e2189a1df))
+* Update dependency com.google.cloud:google-cloud-bom to v0.218.0 ([#1636](https://github.com/googleapis/java-pubsublite/issues/1636)) ([40b61d5](https://github.com/googleapis/java-pubsublite/commit/40b61d5d9940e042d8e477c9c53a6949197c2738))
+* Update dependency com.google.cloud:google-cloud-pubsub to v1.128.0 ([#1624](https://github.com/googleapis/java-pubsublite/issues/1624)) ([3dc8fb4](https://github.com/googleapis/java-pubsublite/commit/3dc8fb473642d7f2e9ab386fda0a97ddec83c4ad))
+* Update dependency com.google.cloud:google-cloud-pubsub to v1.129.1 ([#1637](https://github.com/googleapis/java-pubsublite/issues/1637)) ([b24aa43](https://github.com/googleapis/java-pubsublite/commit/b24aa4376c689134d636d9e94e7a16324bd42e4e))
+* Update dependency com.google.cloud:sdk-platform-java-config to v3.29.0 ([#1633](https://github.com/googleapis/java-pubsublite/issues/1633)) ([4d64b97](https://github.com/googleapis/java-pubsublite/commit/4d64b97004b274990186a69768a25c333f883103))
+
 ## [1.13.2](https://github.com/googleapis/java-pubsublite/compare/v1.13.1...v1.13.2) (2024-03-21)
 
 

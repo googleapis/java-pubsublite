@@ -14,5 +14,6 @@
   "distribution_name": "com.google.cloud:google-cloud-pubsublite",
   "codeowner_team": "@googleapis/api-pubsublite",
   "library_type": "GAPIC_COMBO",
-  "api_id": "pubsublite.googleapis.com"
+  "api_id": "pubsublite.googleapis.com",
+  "recommended_package": "com.google.cloud.pubsublite.cloudpubsub"
 }

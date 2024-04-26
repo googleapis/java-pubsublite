@@ -8,7 +8,7 @@
 *                       @googleapis/yoshi-java @googleapis/api-pubsublite
 
 # for handwritten libraries, keep codeowner_team in .repo-metadata.json as owner
-**/*.java               @googleapis/api-pubsublite
+**/*.java               @googleapis/yoshi-java @googleapis/api-pubsublite
 
 
 # The java-samples-reviewers team is the default owner for samples changes

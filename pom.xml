@@ -3,12 +3,12 @@
   <parent>
     <groupId>com.google.cloud</groupId>
     <artifactId>sdk-platform-java-config</artifactId>
-    <version>3.30.0</version>
+    <version>3.30.1</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.google.cloud</groupId>
   <artifactId>google-cloud-pubsublite-parent</artifactId>
-  <version>1.13.6-SNAPSHOT</version><!-- {x-version-update:google-cloud-pubsublite:current} -->
+  <version>1.13.7-SNAPSHOT</version><!-- {x-version-update:google-cloud-pubsublite:current} -->
   <packaging>pom</packaging>
   <name>Google Cloud Pub/Sub Lite Parent</name>
   <url>https://github.com/googleapis/java-pubsublite</url>
@@ -25,22 +25,22 @@
       <dependency>
         <groupId>com.google.api.grpc</groupId>
         <artifactId>proto-google-cloud-pubsublite-v1</artifactId>
-        <version>1.13.6-SNAPSHOT</version><!-- {x-version-update:proto-google-cloud-pubsublite-v1:current} -->
+        <version>1.13.7-SNAPSHOT</version><!-- {x-version-update:proto-google-cloud-pubsublite-v1:current} -->
       </dependency>
       <dependency>
         <groupId>com.google.api.grpc</groupId>
         <artifactId>grpc-google-cloud-pubsublite-v1</artifactId>
-        <version>1.13.6-SNAPSHOT</version><!-- {x-version-update:grpc-google-cloud-pubsublite-v1:current} -->
+        <version>1.13.7-SNAPSHOT</version><!-- {x-version-update:grpc-google-cloud-pubsublite-v1:current} -->
       </dependency>
       <dependency>
         <groupId>com.google.cloud</groupId>
         <artifactId>google-cloud-pubsublite</artifactId>
-        <version>1.13.6-SNAPSHOT</version><!-- {x-version-update:google-cloud-pubsublite:current} -->
+        <version>1.13.7-SNAPSHOT</version><!-- {x-version-update:google-cloud-pubsublite:current} -->
       </dependency>
       <dependency>
         <groupId>com.google.cloud</groupId>
         <artifactId>google-cloud-bom</artifactId>
-        <version>0.219.0</version>
+        <version>0.221.0</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>

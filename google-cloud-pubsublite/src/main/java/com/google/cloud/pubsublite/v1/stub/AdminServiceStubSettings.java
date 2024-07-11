@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Google LLC
+ * Copyright 2024 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,7 +24,6 @@ import static com.google.cloud.pubsublite.v1.AdminServiceClient.ListTopicsPagedR
 
 import com.google.api.core.ApiFunction;
 import com.google.api.core.ApiFuture;
-import com.google.api.core.BetaApi;
 import com.google.api.gax.core.GaxProperties;
 import com.google.api.gax.core.GoogleCredentialsProvider;
 import com.google.api.gax.core.InstantiatingExecutorProvider;
@@ -599,15 +598,6 @@ public class AdminServiceStubSettings extends StubSettings<AdminServiceStubSetti
             "Transport not supported: %s", getTransportChannelProvider().getTransportName()));
   }
 
-  /** Returns the endpoint set by the user or the the service's default endpoint. */
-  @Override
-  public String getEndpoint() {
-    if (super.getEndpoint() != null) {
-      return super.getEndpoint();
-    }
-    return getDefaultEndpoint();
-  }
-
   /** Returns the default service name. */
   @Override
   public String getServiceName() {
@@ -651,7 +641,6 @@ public class AdminServiceStubSettings extends StubSettings<AdminServiceStubSetti
     return defaultGrpcTransportProviderBuilder().build();
   }
 
-  @BetaApi("The surface for customizing headers is not stable yet and may change in the future.")
   public static ApiClientHeaderProvider.Builder defaultApiClientHeaderProviderBuilder() {
     return ApiClientHeaderProvider.newBuilder()
         .setGeneratedLibToken(
@@ -1116,8 +1105,6 @@ public class AdminServiceStubSettings extends StubSettings<AdminServiceStubSetti
     }
 
     /** Returns the builder for the settings used for calls to seekSubscription. */
-    @BetaApi(
-        "The surface for use by generated code is not stable yet and may change in the future.")
     public OperationCallSettings.Builder<
             SeekSubscriptionRequest, SeekSubscriptionResponse, OperationMetadata>
         seekSubscriptionOperationSettings() {
@@ -1160,15 +1147,6 @@ public class AdminServiceStubSettings extends StubSettings<AdminServiceStubSetti
             ListReservationTopicsPagedResponse>
         listReservationTopicsSettings() {
       return listReservationTopicsSettings;
-    }
-
-    /** Returns the endpoint set by the user or the the service's default endpoint. */
-    @Override
-    public String getEndpoint() {
-      if (super.getEndpoint() != null) {
-        return super.getEndpoint();
-      }
-      return getDefaultEndpoint();
     }
 
     @Override

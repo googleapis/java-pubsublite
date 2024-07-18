@@ -27,8 +27,7 @@ java.common_templates(
         "samples/install-without-bom/*",
         ".github/workflows/samples.yaml",
         '.kokoro/requirements.in',
-        '.kokoro/requirements.txt'
-        ".github/CODEOWNERS"
+        '.kokoro/requirements.txt',
         ".github/CODEOWNERS",
         ".kokoro/presubmit/graalvm-native.cfg",
         ".kokoro/presubmit/graalvm-native-17.cfg"

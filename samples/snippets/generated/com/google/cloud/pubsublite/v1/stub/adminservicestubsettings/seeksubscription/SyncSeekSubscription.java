@@ -16,17 +16,20 @@
 
 package com.google.cloud.pubsublite.v1.stub.samples;
 
-// [START pubsublite_v1_generated_AdminServiceStubSettings_CreateTopic_sync]
+// [START pubsublite_v1_generated_AdminServiceStubSettings_SeekSubscription_sync]
+import com.google.api.gax.longrunning.OperationalTimedPollAlgorithm;
+import com.google.api.gax.retrying.RetrySettings;
+import com.google.api.gax.retrying.TimedRetryAlgorithm;
 import com.google.cloud.pubsublite.v1.stub.AdminServiceStubSettings;
 import java.time.Duration;
 
-public class SyncCreateTopic {
+public class SyncSeekSubscription {
 
   public static void main(String[] args) throws Exception {
-    syncCreateTopic();
+    syncSeekSubscription();
   }
 
-  public static void syncCreateTopic() throws Exception {
+  public static void syncSeekSubscription() throws Exception {
     // This snippet has been automatically generated and should be regarded as a code template only.
     // It will require modifications to work:
     // - It may require correct/in-range values for request initialization.
@@ -34,23 +37,18 @@ public class SyncCreateTopic {
     // https://cloud.google.com/java/docs/setup#configure_endpoints_for_the_client_library
     AdminServiceStubSettings.Builder adminServiceSettingsBuilder =
         AdminServiceStubSettings.newBuilder();
-    adminServiceSettingsBuilder
-        .createTopicSettings()
-        .setRetrySettings(
-            adminServiceSettingsBuilder
-                .createTopicSettings()
-                .getRetrySettings()
-                .toBuilder()
-                .setInitialRetryDelayDuration(Duration.ofSeconds(1))
-                .setInitialRpcTimeoutDuration(Duration.ofSeconds(5))
-                .setMaxAttempts(5)
-                .setMaxRetryDelayDuration(Duration.ofSeconds(30))
-                .setMaxRpcTimeoutDuration(Duration.ofSeconds(60))
-                .setRetryDelayMultiplier(1.3)
-                .setRpcTimeoutMultiplier(1.5)
-                .setTotalTimeoutDuration(Duration.ofSeconds(300))
+    TimedRetryAlgorithm timedRetryAlgorithm =
+        OperationalTimedPollAlgorithm.create(
+            RetrySettings.newBuilder()
+                .setInitialRetryDelayDuration(Duration.ofMillis(500))
+                .setRetryDelayMultiplier(1.5)
+                .setMaxRetryDelay(Duration.ofMillis(5000))
+                .setTotalTimeoutDuration(Duration.ofHours(24))
                 .build());
-    AdminServiceStubSettings adminServiceSettings = adminServiceSettingsBuilder.build();
+    adminServiceSettingsBuilder
+        .createClusterOperationSettings()
+        .setPollingAlgorithm(timedRetryAlgorithm)
+        .build();
   }
 }
-// [END pubsublite_v1_generated_AdminServiceStubSettings_CreateTopic_sync]
+// [END pubsublite_v1_generated_AdminServiceStubSettings_SeekSubscription_sync]

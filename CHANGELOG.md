@@ -1,5 +1,46 @@
 # Changelog
 
+## [1.14.2](https://github.com/googleapis/java-pubsublite/compare/v1.14.1...v1.14.2) (2024-09-12)
+
+
+### Dependencies
+
+* Update dependency com.google.cloud:google-cloud-bom to v0.225.0 ([#1699](https://github.com/googleapis/java-pubsublite/issues/1699)) ([1c7e58f](https://github.com/googleapis/java-pubsublite/commit/1c7e58f33367a0ae2576079e934bd14ac9cae410))
+* Update dependency com.google.cloud:google-cloud-bom to v0.226.0 ([#1714](https://github.com/googleapis/java-pubsublite/issues/1714)) ([2581679](https://github.com/googleapis/java-pubsublite/commit/2581679387dacfe7900d10e7d66649b8cfef947e))
+* Update dependency com.google.cloud:google-cloud-pubsub to v1.132.2 ([#1715](https://github.com/googleapis/java-pubsublite/issues/1715)) ([d3ff5ca](https://github.com/googleapis/java-pubsublite/commit/d3ff5ca93f03865e4e4ba1de8beef6e0ff9bc525))
+* Update dependency com.google.cloud:sdk-platform-java-config to v3.35.0 ([#1709](https://github.com/googleapis/java-pubsublite/issues/1709)) ([4129eaf](https://github.com/googleapis/java-pubsublite/commit/4129eaf55dccf83155190cb982c7e9e9f74a2e27))
+* Update dependency org.hamcrest:hamcrest to v3 ([#1693](https://github.com/googleapis/java-pubsublite/issues/1693)) ([e37a3f0](https://github.com/googleapis/java-pubsublite/commit/e37a3f0aea664dec5169a72925525825340a9468))
+
+## [1.14.1](https://github.com/googleapis/java-pubsublite/compare/v1.14.0...v1.14.1) (2024-08-21)
+
+
+### Dependencies
+
+* Update dependency com.google.cloud:google-cloud-pubsub to v1.132.1 ([#1703](https://github.com/googleapis/java-pubsublite/issues/1703)) ([983d131](https://github.com/googleapis/java-pubsublite/commit/983d13197da05cd31b7f0db4c25ae131c183c550))
+* Update dependency com.google.cloud:sdk-platform-java-config to v3.34.0 ([#1701](https://github.com/googleapis/java-pubsublite/issues/1701)) ([8b258db](https://github.com/googleapis/java-pubsublite/commit/8b258db72c41b38e8639d03ab82b104b75df02e5))
+
+## [1.14.0](https://github.com/googleapis/java-pubsublite/compare/v1.13.8...v1.14.0) (2024-08-02)
+
+
+### Features
+
+* Enable hermetic library generation ([#1667](https://github.com/googleapis/java-pubsublite/issues/1667)) ([732ad63](https://github.com/googleapis/java-pubsublite/commit/732ad63fdaff21fee3125004fd6a487c11ce7e5b))
+
+
+### Dependencies
+
+* Update dependency com.google.cloud:google-cloud-bom to v0.224.0 ([#1678](https://github.com/googleapis/java-pubsublite/issues/1678)) ([edaf955](https://github.com/googleapis/java-pubsublite/commit/edaf955c70639a40c81b2351199cedd928a17b38))
+* Update dependency com.google.cloud:google-cloud-pubsub to v1.132.0 ([#1694](https://github.com/googleapis/java-pubsublite/issues/1694)) ([f6695b8](https://github.com/googleapis/java-pubsublite/commit/f6695b8221db46c840cad130230b41da8d107f53))
+* Update dependency com.google.cloud:sdk-platform-java-config to v3.33.0 ([#1691](https://github.com/googleapis/java-pubsublite/issues/1691)) ([aeea3eb](https://github.com/googleapis/java-pubsublite/commit/aeea3eb6accfaf274876e98f432225d11ec84e1b))
+
+## [1.13.8](https://github.com/googleapis/java-pubsublite/compare/v1.13.7...v1.13.8) (2024-06-25)
+
+
+### Dependencies
+
+* Update dependency com.google.cloud:google-cloud-pubsub to v1.131.0 ([#1681](https://github.com/googleapis/java-pubsublite/issues/1681)) ([b3d5e7d](https://github.com/googleapis/java-pubsublite/commit/b3d5e7d1594c7577ac1abcb06138c5cceca19a83))
+* Update dependency com.google.cloud:sdk-platform-java-config to v3.32.0 ([#1680](https://github.com/googleapis/java-pubsublite/issues/1680)) ([04e1ab7](https://github.com/googleapis/java-pubsublite/commit/04e1ab7ac1c65864f9a0e90d605139ddd072ce95))
+
 ## [1.13.7](https://github.com/googleapis/java-pubsublite/compare/v1.13.6...v1.13.7) (2024-06-11)
 
 

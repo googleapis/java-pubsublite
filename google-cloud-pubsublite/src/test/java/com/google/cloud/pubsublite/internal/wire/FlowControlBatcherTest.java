@@ -17,7 +17,6 @@
 package com.google.cloud.pubsublite.internal.wire;
 
 import static com.google.common.truth.Truth.assertThat;
-import static com.google.common.truth.Truth8.assertThat;
 
 import com.google.cloud.pubsublite.internal.CheckedApiException;
 import com.google.cloud.pubsublite.proto.Cursor;

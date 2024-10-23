@@ -4,13 +4,13 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.google.api.grpc</groupId>
   <artifactId>proto-google-cloud-pubsublite-v1</artifactId>
-  <version>1.14.3</version><!-- {x-version-update:google-cloud-pubsublite:current} -->
+  <version>1.14.4</version><!-- {x-version-update:google-cloud-pubsublite:current} -->
   <name>proto-google-cloud-pubsublite-v1</name>
   <description>PROTO library for proto-google-cloud-pubsublite-v1</description>
   <parent>
     <groupId>com.google.cloud</groupId>
     <artifactId>google-cloud-pubsublite-parent</artifactId>
-    <version>1.14.3</version><!-- {x-version-update:google-cloud-pubsublite:current} -->
+    <version>1.14.4</version><!-- {x-version-update:google-cloud-pubsublite:current} -->
     <relativePath>../pom.xml</relativePath>
   </parent>
   <dependencies>
@@ -31,6 +31,21 @@
       <artifactId>api-common</artifactId>
     </dependency>
   </dependencies>
+  <build>
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-dependency-plugin</artifactId>
+          <configuration>
+            <ignoredUnusedDeclaredDependencies>
+              <ignoredUnusedDeclaredDependency>com.google.flogger:google-extensions</ignoredUnusedDeclaredDependency>
+            </ignoredUnusedDeclaredDependencies>
+          </configuration>
+        </plugin>
+      </plugins>
+    </pluginManagement>
+  </build>
   <properties>
     <checkstyle.skip>true</checkstyle.skip>
   </properties>

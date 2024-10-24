@@ -38,7 +38,6 @@
     <dependency>
       <groupId>com.google.cloud</groupId>
       <artifactId>google-cloud-pubsub</artifactId>
-      <version>1.133.1</version>
     </dependency>
     <dependency>
       <groupId>com.google.api.grpc</groupId>
@@ -108,7 +107,6 @@
     <dependency>
       <groupId>com.google.flogger</groupId>
       <artifactId>flogger-system-backend</artifactId>
-      <version>0.8</version>
       <scope>runtime</scope>
     </dependency>
 
@@ -131,7 +129,6 @@
     <dependency>
       <groupId>org.hamcrest</groupId>
       <artifactId>hamcrest</artifactId>
-      <version>3.0</version>
       <scope>test</scope>
     </dependency>
     <dependency>

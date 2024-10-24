@@ -150,8 +150,7 @@
             <link>https://grpc.io/grpc-java/javadoc/</link>
             <link>https://docs.oracle.com/javase/8/docs/api/</link>
           </links>
-          <excludePackageNames>
-            com.google.cloud.pubsublite.cloudpubsub.internal:com.google.cloud.pubsublite.internal:com.google.cloud.pubsublite.internal.testing:com.google.cloud.pubsublite.internal.wire</excludePackageNames>
+          <excludePackageNames>com.google.cloud.pubsublite.cloudpubsub.internal:com.google.cloud.pubsublite.internal:com.google.cloud.pubsublite.internal.testing:com.google.cloud.pubsublite.internal.wire</excludePackageNames>
         </configuration>
       </plugin>
     </plugins>
@@ -222,8 +221,7 @@
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-javadoc-plugin</artifactId>
             <configuration>
-              <excludePackageNames>
-                com.google.cloud.pubsublite.cloudpubsub.internal:com.google.cloud.pubsublite.internal:com.google.cloud.pubsublite.internal.testing:com.google.cloud.pubsublite.internal.wire</excludePackageNames>
+              <excludePackageNames>com.google.cloud.pubsublite.cloudpubsub.internal:com.google.cloud.pubsublite.internal:com.google.cloud.pubsublite.internal.testing:com.google.cloud.pubsublite.internal.wire</excludePackageNames>
             </configuration>
           </plugin>
         </plugins>

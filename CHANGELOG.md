@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.14.5](https://github.com/googleapis/java-pubsublite/compare/v1.14.4...v1.14.5) (2024-10-24)
+
+
+### Dependencies
+
+* Push explicit dependency versioning into the parent pom. Remove explicit versioning to rely on parent or imported BOMs. Remove old lib versions and update explicit lib versions ([#1748](https://github.com/googleapis/java-pubsublite/issues/1748)) ([fc8cbb0](https://github.com/googleapis/java-pubsublite/commit/fc8cbb09495e82adc6d7a855efbad231f69219fd))
+* Update dependency com.google.cloud:google-cloud-pubsub to v1.133.1 ([#1736](https://github.com/googleapis/java-pubsublite/issues/1736)) ([fc8cbb0](https://github.com/googleapis/java-pubsublite/commit/fc8cbb09495e82adc6d7a855efbad231f69219fd))
+* Update dependency com.google.cloud:sdk-platform-java-config to v3.37.0 ([#1740](https://github.com/googleapis/java-pubsublite/issues/1740)) ([fc8cbb0](https://github.com/googleapis/java-pubsublite/commit/fc8cbb09495e82adc6d7a855efbad231f69219fd))
+* Update googleapis/sdk-platform-java action to v2.47.0 ([#1738](https://github.com/googleapis/java-pubsublite/issues/1738)) ([fc8cbb0](https://github.com/googleapis/java-pubsublite/commit/fc8cbb09495e82adc6d7a855efbad231f69219fd))
+* Update googleapis/sdk-platform-java action to v2.48.0 ([#1746](https://github.com/googleapis/java-pubsublite/issues/1746)) ([af114f5](https://github.com/googleapis/java-pubsublite/commit/af114f50b33ead80c270a81bc743177bdb6fe365))
+* Update sdk platform java dependencies ([#1747](https://github.com/googleapis/java-pubsublite/issues/1747)) ([dd849d6](https://github.com/googleapis/java-pubsublite/commit/dd849d6a246b01d3d2b1f2bd90a146620fbd6cb6))
+
 ## [1.14.4](https://github.com/googleapis/java-pubsublite/compare/v1.14.3...v1.14.4) (2024-10-08)
 
 

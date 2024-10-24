@@ -14,7 +14,6 @@ Java idiomatic client for [Cloud Pub/Sub Lite][product-docs].
 
 If you are using Maven, add this to your pom.xml file:
 
-<!-- {x-version-update-start:google-cloud-pubsublite:released} -->
 
 ```xml
 <dependency>
@@ -41,7 +40,6 @@ If you are using SBT, add this to your dependencies:
 ```Scala
 libraryDependencies += "com.google.cloud" % "google-cloud-pubsublite" % "1.14.4"
 ```
-<!-- {x-version-update-end} -->
 
 ## Authentication
 

@@ -1,5 +1,24 @@
 # Changelog
 
+## [1.14.6](https://github.com/googleapis/java-pubsublite/compare/v1.14.5...v1.14.6) (2024-10-28)
+
+
+### Bug Fixes
+
+* **deps:** Update the Java code generator (gapic-generator-java) to 2.49.0 ([8935ea0](https://github.com/googleapis/java-pubsublite/commit/8935ea0b2caf2364f8fb755523901c00d0329f54))
+
+
+### Dependencies
+
+* Dont depend on google-cloud-bom. causes a circular dependency. ([#1760](https://github.com/googleapis/java-pubsublite/issues/1760)) ([dcc9295](https://github.com/googleapis/java-pubsublite/commit/dcc929544c904592e61a8986fd1c8cbd8246278d))
+* Update dependency com.google.api.grpc:proto-google-cloud-pubsub-v1 to v1.116.0 ([#1761](https://github.com/googleapis/java-pubsublite/issues/1761)) ([81d7b4d](https://github.com/googleapis/java-pubsublite/commit/81d7b4d9ed080ed71fcafcc7e2c797aa37ddef3d))
+* Update dependency com.google.api.grpc:proto-google-cloud-pubsub-v1 to v1.116.1 ([#1767](https://github.com/googleapis/java-pubsublite/issues/1767)) ([303e9c2](https://github.com/googleapis/java-pubsublite/commit/303e9c2d457b0424d0b5e2bc86377734fc700e65))
+* Update dependency com.google.cloud:google-cloud-pubsub to v1.134.0 ([#1749](https://github.com/googleapis/java-pubsublite/issues/1749)) ([f13b5d4](https://github.com/googleapis/java-pubsublite/commit/f13b5d408a17b39e88f21fd690c651abe974de25))
+* Update dependency com.google.cloud:google-cloud-pubsub to v1.134.0 ([#1762](https://github.com/googleapis/java-pubsublite/issues/1762)) ([e7e68ff](https://github.com/googleapis/java-pubsublite/commit/e7e68ff8266c60081e82a745277cc5e863cfeb18))
+* Update dependency com.google.cloud:google-cloud-pubsub to v1.134.1 ([#1768](https://github.com/googleapis/java-pubsublite/issues/1768)) ([7b47f42](https://github.com/googleapis/java-pubsublite/commit/7b47f426cb18dd7099d780d9b15005de0e36c56d))
+* Update dependency com.google.cloud:sdk-platform-java-config to v3.39.0 ([#1763](https://github.com/googleapis/java-pubsublite/issues/1763)) ([252434f](https://github.com/googleapis/java-pubsublite/commit/252434f1d029d7ed1424ff4810ae3f47853b347e))
+* Update googleapis/sdk-platform-java action to v2.49.0 ([#1759](https://github.com/googleapis/java-pubsublite/issues/1759)) ([92e4a51](https://github.com/googleapis/java-pubsublite/commit/92e4a511b507fc462722950ec98e0c115f43124f))
+
 ## [1.14.5](https://github.com/googleapis/java-pubsublite/compare/v1.14.4...v1.14.5) (2024-10-24)
 
 

@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.14.7](https://github.com/googleapis/java-pubsublite/compare/v1.14.6...v1.14.7) (2024-10-31)
+
+
+### Bug Fixes
+
+* Restore google-cloud-pubsublite-bom package ([d147df5](https://github.com/googleapis/java-pubsublite/commit/d147df5ace85708f236fcdbb9b31785f93d10f3d))
+
 ## [1.14.6](https://github.com/googleapis/java-pubsublite/compare/v1.14.5...v1.14.6) (2024-10-28)
 
 

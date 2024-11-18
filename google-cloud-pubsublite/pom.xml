@@ -113,6 +113,11 @@
       <artifactId>flogger-system-backend</artifactId>
       <scope>runtime</scope>
     </dependency>
+    <dependency>
+      <groupId>com.google.flogger</groupId>
+      <artifactId>flogger</artifactId>
+      <version>0.8</version>
+    </dependency>
 
     <!--test dependencies-->
     <dependency>

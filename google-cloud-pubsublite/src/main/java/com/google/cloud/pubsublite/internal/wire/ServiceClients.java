@@ -30,8 +30,8 @@ import com.google.cloud.pubsublite.Endpoints;
 import com.google.cloud.pubsublite.internal.Lazy;
 import com.google.common.collect.ImmutableListMultimap;
 import com.google.common.collect.Multimaps;
+import java.time.Duration;
 import java.util.concurrent.ScheduledExecutorService;
-import org.threeten.bp.Duration;
 
 public final class ServiceClients {
   private static final Lazy<ScheduledExecutorService> GRPC_EXECUTOR =
@@ -42,9 +42,9 @@ public final class ServiceClients {
   private static TransportChannelProvider getTransportChannelProvider() {
     return InstantiatingGrpcChannelProvider.newBuilder()
         .setMaxInboundMessageSize(Integer.MAX_VALUE)
-        .setKeepAliveTime(Duration.ofMinutes(1))
+        .setKeepAliveTimeDuration(Duration.ofMinutes(1))
         .setKeepAliveWithoutCalls(true)
-        .setKeepAliveTimeout(Duration.ofMinutes(1))
+        .setKeepAliveTimeoutDuration(Duration.ofMinutes(1))
         .setChannelPoolSettings(
             ChannelPoolSettings.builder()
                 .setInitialChannelCount(25)

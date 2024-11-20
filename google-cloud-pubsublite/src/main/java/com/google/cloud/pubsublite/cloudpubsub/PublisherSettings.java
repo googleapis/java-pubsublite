@@ -51,8 +51,8 @@ import com.google.common.annotations.VisibleForTesting;
 import com.google.protobuf.ByteString;
 import com.google.pubsub.v1.PubsubMessage;
 import io.grpc.CallOptions;
+import java.time.Duration;
 import java.util.Optional;
-import org.threeten.bp.Duration;
 
 /**
  * Settings for instantiating a Pub/Sub Lite publisher emulating the Cloud Pub/Sub Publisher API.
@@ -64,7 +64,7 @@ public abstract class PublisherSettings {
           .setIsEnabled(true)
           .setElementCountThreshold(1000L)
           .setRequestByteThreshold(Constants.MAX_PUBLISH_BATCH_BYTES)
-          .setDelayThreshold(Duration.ofMillis(50))
+          .setDelayThresholdDuration(Duration.ofMillis(50))
           .build();
 
   // Required parameters.

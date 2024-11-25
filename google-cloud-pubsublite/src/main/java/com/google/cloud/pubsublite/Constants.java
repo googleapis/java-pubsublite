@@ -17,17 +17,17 @@
 package com.google.cloud.pubsublite;
 
 import com.google.api.gax.retrying.RetrySettings;
-import org.threeten.bp.Duration;
+import java.time.Duration;
 
 /** Useful general constants for Pub/Sub Lite. */
 public class Constants {
   public static final RetrySettings DEFAULT_RETRY_SETTINGS =
       RetrySettings.newBuilder()
-          .setInitialRetryDelay(Duration.ofMillis(100))
+          .setInitialRetryDelayDuration(Duration.ofMillis(100))
           .setRetryDelayMultiplier(1.3)
-          .setMaxRetryDelay(Duration.ofSeconds(60))
+          .setMaxRetryDelayDuration(Duration.ofSeconds(60))
           .setJittered(true)
-          .setTotalTimeout(Duration.ofMinutes(10))
+          .setTotalTimeoutDuration(Duration.ofMinutes(10))
           .build();
 
   public static final long MAX_PUBLISH_BATCH_COUNT = 1_000;

@@ -57,6 +57,7 @@ import com.google.cloud.pubsublite.proto.PublishRequest;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 import com.google.protobuf.ByteString;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -75,7 +76,6 @@ import org.junit.runners.JUnit4;
 import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.stubbing.Answer;
-import org.threeten.bp.Duration;
 
 @RunWith(JUnit4.class)
 public class PublisherImplTest {
@@ -86,7 +86,7 @@ public class PublisherImplTest {
   private static final BatchingSettings BATCHING_SETTINGS_THAT_NEVER_FIRE =
       BatchingSettings.newBuilder()
           .setIsEnabled(true)
-          .setDelayThreshold(Duration.ofDays(10))
+          .setDelayThresholdDuration(Duration.ofDays(10))
           .setRequestByteThreshold(1000000L)
           .setElementCountThreshold(1000000L)
           .build();

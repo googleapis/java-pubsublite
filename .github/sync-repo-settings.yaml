@@ -18,6 +18,7 @@ branchProtectionRules:
       - cla/google
       - 'Kokoro - Test: Java GraalVM Native Image'
       - 'Kokoro - Test: Java 17 GraalVM Native Image'
+      - library_generation
   - pattern: java7
     isAdminEnforced: true
     requiredApprovingReviewCount: 1

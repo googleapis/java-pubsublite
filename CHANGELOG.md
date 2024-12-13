@@ -1,5 +1,24 @@
 # Changelog
 
+## [1.15.0](https://github.com/googleapis/java-pubsublite/compare/v1.14.8...v1.15.0) (2024-12-13)
+
+
+### Features
+
+* Introduce `java.time` variables and methods ([#1784](https://github.com/googleapis/java-pubsublite/issues/1784)) ([2239c08](https://github.com/googleapis/java-pubsublite/commit/2239c083a63294dc1559f69a94b9f7da4fda51b8))
+
+
+### Bug Fixes
+
+* **deps:** Update the Java code generator (gapic-generator-java) to 2.51.0 ([5c127bd](https://github.com/googleapis/java-pubsublite/commit/5c127bd59005a0f3700d8599d18891c020c8ea4a))
+
+
+### Dependencies
+
+* Update dependency com.google.api.grpc:proto-google-cloud-pubsub-v1 to v1.117.0 ([#1789](https://github.com/googleapis/java-pubsublite/issues/1789)) ([11cf2d7](https://github.com/googleapis/java-pubsublite/commit/11cf2d7c7eed773725fad7784c84efc00a703ee9))
+* Update dependency com.google.cloud:google-cloud-pubsub to v1.135.0 ([#1790](https://github.com/googleapis/java-pubsublite/issues/1790)) ([9a5162c](https://github.com/googleapis/java-pubsublite/commit/9a5162c0d6c08defb7a19813cc3e37019a926199))
+* Update sdk platform java dependencies ([#1788](https://github.com/googleapis/java-pubsublite/issues/1788)) ([42085cc](https://github.com/googleapis/java-pubsublite/commit/42085ccdbe4e89529d1d1134e92c0034e2e14c84))
+
 ## [1.14.8](https://github.com/googleapis/java-pubsublite/compare/v1.14.7...v1.14.8) (2024-11-19)
 
 

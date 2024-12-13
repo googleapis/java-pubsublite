@@ -1,6 +1,6 @@
-gapic_generator_version: 2.50.0
-googleapis_commitish: c6eb517e76204c0cd71ab298c165eebbf12682eb
-libraries_bom_version: 26.50.0
+gapic_generator_version: 2.51.0
+googleapis_commitish: 7d0c6bee2517d77635beb2a1dd6d6e7d4d943512
+libraries_bom_version: 26.51.0
 libraries:
   - api_shortname: pubsublite
     name_pretty: Cloud Pub/Sub Lite

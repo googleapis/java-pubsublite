@@ -36,6 +36,7 @@ public interface PublishRequestOrBuilder
    * @return Whether the initialRequest field is set.
    */
   boolean hasInitialRequest();
+
   /**
    *
    *
@@ -48,6 +49,7 @@ public interface PublishRequestOrBuilder
    * @return The initialRequest.
    */
   com.google.cloud.pubsublite.proto.InitialPublishRequest getInitialRequest();
+
   /**
    *
    *
@@ -71,6 +73,7 @@ public interface PublishRequestOrBuilder
    * @return Whether the messagePublishRequest field is set.
    */
   boolean hasMessagePublishRequest();
+
   /**
    *
    *
@@ -83,6 +86,7 @@ public interface PublishRequestOrBuilder
    * @return The messagePublishRequest.
    */
   com.google.cloud.pubsublite.proto.MessagePublishRequest getMessagePublishRequest();
+
   /**
    *
    *

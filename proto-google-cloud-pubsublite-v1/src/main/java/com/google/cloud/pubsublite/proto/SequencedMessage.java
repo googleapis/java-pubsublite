@@ -33,6 +33,7 @@ public final class SequencedMessage extends com.google.protobuf.GeneratedMessage
     // @@protoc_insertion_point(message_implements:google.cloud.pubsublite.v1.SequencedMessage)
     SequencedMessageOrBuilder {
   private static final long serialVersionUID = 0L;
+
   // Use SequencedMessage.newBuilder() to construct.
   private SequencedMessage(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
     super(builder);
@@ -64,6 +65,7 @@ public final class SequencedMessage extends com.google.protobuf.GeneratedMessage
   private int bitField0_;
   public static final int CURSOR_FIELD_NUMBER = 1;
   private com.google.cloud.pubsublite.proto.Cursor cursor_;
+
   /**
    *
    *
@@ -79,6 +81,7 @@ public final class SequencedMessage extends com.google.protobuf.GeneratedMessage
   public boolean hasCursor() {
     return ((bitField0_ & 0x00000001) != 0);
   }
+
   /**
    *
    *
@@ -96,6 +99,7 @@ public final class SequencedMessage extends com.google.protobuf.GeneratedMessage
         ? com.google.cloud.pubsublite.proto.Cursor.getDefaultInstance()
         : cursor_;
   }
+
   /**
    *
    *
@@ -114,6 +118,7 @@ public final class SequencedMessage extends com.google.protobuf.GeneratedMessage
 
   public static final int PUBLISH_TIME_FIELD_NUMBER = 2;
   private com.google.protobuf.Timestamp publishTime_;
+
   /**
    *
    *
@@ -130,6 +135,7 @@ public final class SequencedMessage extends com.google.protobuf.GeneratedMessage
   public boolean hasPublishTime() {
     return ((bitField0_ & 0x00000002) != 0);
   }
+
   /**
    *
    *
@@ -146,6 +152,7 @@ public final class SequencedMessage extends com.google.protobuf.GeneratedMessage
   public com.google.protobuf.Timestamp getPublishTime() {
     return publishTime_ == null ? com.google.protobuf.Timestamp.getDefaultInstance() : publishTime_;
   }
+
   /**
    *
    *
@@ -163,6 +170,7 @@ public final class SequencedMessage extends com.google.protobuf.GeneratedMessage
 
   public static final int MESSAGE_FIELD_NUMBER = 3;
   private com.google.cloud.pubsublite.proto.PubSubMessage message_;
+
   /**
    *
    *
@@ -178,6 +186,7 @@ public final class SequencedMessage extends com.google.protobuf.GeneratedMessage
   public boolean hasMessage() {
     return ((bitField0_ & 0x00000004) != 0);
   }
+
   /**
    *
    *
@@ -195,6 +204,7 @@ public final class SequencedMessage extends com.google.protobuf.GeneratedMessage
         ? com.google.cloud.pubsublite.proto.PubSubMessage.getDefaultInstance()
         : message_;
   }
+
   /**
    *
    *
@@ -213,6 +223,7 @@ public final class SequencedMessage extends com.google.protobuf.GeneratedMessage
 
   public static final int SIZE_BYTES_FIELD_NUMBER = 4;
   private long sizeBytes_ = 0L;
+
   /**
    *
    *
@@ -430,6 +441,7 @@ public final class SequencedMessage extends com.google.protobuf.GeneratedMessage
     Builder builder = new Builder(parent);
     return builder;
   }
+
   /**
    *
    *
@@ -685,6 +697,7 @@ public final class SequencedMessage extends com.google.protobuf.GeneratedMessage
             com.google.cloud.pubsublite.proto.Cursor.Builder,
             com.google.cloud.pubsublite.proto.CursorOrBuilder>
         cursorBuilder_;
+
     /**
      *
      *
@@ -699,6 +712,7 @@ public final class SequencedMessage extends com.google.protobuf.GeneratedMessage
     public boolean hasCursor() {
       return ((bitField0_ & 0x00000001) != 0);
     }
+
     /**
      *
      *
@@ -719,6 +733,7 @@ public final class SequencedMessage extends com.google.protobuf.GeneratedMessage
         return cursorBuilder_.getMessage();
       }
     }
+
     /**
      *
      *
@@ -741,6 +756,7 @@ public final class SequencedMessage extends com.google.protobuf.GeneratedMessage
       onChanged();
       return this;
     }
+
     /**
      *
      *
@@ -760,6 +776,7 @@ public final class SequencedMessage extends com.google.protobuf.GeneratedMessage
       onChanged();
       return this;
     }
+
     /**
      *
      *
@@ -787,6 +804,7 @@ public final class SequencedMessage extends com.google.protobuf.GeneratedMessage
       }
       return this;
     }
+
     /**
      *
      *
@@ -806,6 +824,7 @@ public final class SequencedMessage extends com.google.protobuf.GeneratedMessage
       onChanged();
       return this;
     }
+
     /**
      *
      *
@@ -820,6 +839,7 @@ public final class SequencedMessage extends com.google.protobuf.GeneratedMessage
       onChanged();
       return getCursorFieldBuilder().getBuilder();
     }
+
     /**
      *
      *
@@ -838,6 +858,7 @@ public final class SequencedMessage extends com.google.protobuf.GeneratedMessage
             : cursor_;
       }
     }
+
     /**
      *
      *
@@ -870,6 +891,7 @@ public final class SequencedMessage extends com.google.protobuf.GeneratedMessage
             com.google.protobuf.Timestamp.Builder,
             com.google.protobuf.TimestampOrBuilder>
         publishTimeBuilder_;
+
     /**
      *
      *
@@ -885,6 +907,7 @@ public final class SequencedMessage extends com.google.protobuf.GeneratedMessage
     public boolean hasPublishTime() {
       return ((bitField0_ & 0x00000002) != 0);
     }
+
     /**
      *
      *
@@ -906,6 +929,7 @@ public final class SequencedMessage extends com.google.protobuf.GeneratedMessage
         return publishTimeBuilder_.getMessage();
       }
     }
+
     /**
      *
      *
@@ -929,6 +953,7 @@ public final class SequencedMessage extends com.google.protobuf.GeneratedMessage
       onChanged();
       return this;
     }
+
     /**
      *
      *
@@ -949,6 +974,7 @@ public final class SequencedMessage extends com.google.protobuf.GeneratedMessage
       onChanged();
       return this;
     }
+
     /**
      *
      *
@@ -977,6 +1003,7 @@ public final class SequencedMessage extends com.google.protobuf.GeneratedMessage
       }
       return this;
     }
+
     /**
      *
      *
@@ -997,6 +1024,7 @@ public final class SequencedMessage extends com.google.protobuf.GeneratedMessage
       onChanged();
       return this;
     }
+
     /**
      *
      *
@@ -1012,6 +1040,7 @@ public final class SequencedMessage extends com.google.protobuf.GeneratedMessage
       onChanged();
       return getPublishTimeFieldBuilder().getBuilder();
     }
+
     /**
      *
      *
@@ -1031,6 +1060,7 @@ public final class SequencedMessage extends com.google.protobuf.GeneratedMessage
             : publishTime_;
       }
     }
+
     /**
      *
      *
@@ -1064,6 +1094,7 @@ public final class SequencedMessage extends com.google.protobuf.GeneratedMessage
             com.google.cloud.pubsublite.proto.PubSubMessage.Builder,
             com.google.cloud.pubsublite.proto.PubSubMessageOrBuilder>
         messageBuilder_;
+
     /**
      *
      *
@@ -1078,6 +1109,7 @@ public final class SequencedMessage extends com.google.protobuf.GeneratedMessage
     public boolean hasMessage() {
       return ((bitField0_ & 0x00000004) != 0);
     }
+
     /**
      *
      *
@@ -1098,6 +1130,7 @@ public final class SequencedMessage extends com.google.protobuf.GeneratedMessage
         return messageBuilder_.getMessage();
       }
     }
+
     /**
      *
      *
@@ -1120,6 +1153,7 @@ public final class SequencedMessage extends com.google.protobuf.GeneratedMessage
       onChanged();
       return this;
     }
+
     /**
      *
      *
@@ -1140,6 +1174,7 @@ public final class SequencedMessage extends com.google.protobuf.GeneratedMessage
       onChanged();
       return this;
     }
+
     /**
      *
      *
@@ -1167,6 +1202,7 @@ public final class SequencedMessage extends com.google.protobuf.GeneratedMessage
       }
       return this;
     }
+
     /**
      *
      *
@@ -1186,6 +1222,7 @@ public final class SequencedMessage extends com.google.protobuf.GeneratedMessage
       onChanged();
       return this;
     }
+
     /**
      *
      *
@@ -1200,6 +1237,7 @@ public final class SequencedMessage extends com.google.protobuf.GeneratedMessage
       onChanged();
       return getMessageFieldBuilder().getBuilder();
     }
+
     /**
      *
      *
@@ -1218,6 +1256,7 @@ public final class SequencedMessage extends com.google.protobuf.GeneratedMessage
             : message_;
       }
     }
+
     /**
      *
      *
@@ -1245,6 +1284,7 @@ public final class SequencedMessage extends com.google.protobuf.GeneratedMessage
     }
 
     private long sizeBytes_;
+
     /**
      *
      *
@@ -1260,6 +1300,7 @@ public final class SequencedMessage extends com.google.protobuf.GeneratedMessage
     public long getSizeBytes() {
       return sizeBytes_;
     }
+
     /**
      *
      *
@@ -1279,6 +1320,7 @@ public final class SequencedMessage extends com.google.protobuf.GeneratedMessage
       onChanged();
       return this;
     }
+
     /**
      *
      *

@@ -41,6 +41,7 @@ public class SystemExecutors {
 
   private static final Lazy<ScheduledExecutorService> ALARM_EXECUTOR =
       new Lazy<>(() -> newDaemonExecutor("pubsub-lite-alarms"));
+
   // An executor for alarms.
   public static ScheduledExecutorService getAlarmExecutor() {
     return ALARM_EXECUTOR.get();
@@ -52,6 +53,7 @@ public class SystemExecutors {
 
   private static final Lazy<Executor> FUTURES_EXECUTOR =
       new Lazy<>(() -> newDaemonThreadPool("pubsub-lite-futures"));
+
   // An executor for future handling.
   public static Executor getFuturesExecutor() {
     return FUTURES_EXECUTOR.get();

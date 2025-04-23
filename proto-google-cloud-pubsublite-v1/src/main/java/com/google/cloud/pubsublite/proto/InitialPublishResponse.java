@@ -33,6 +33,7 @@ public final class InitialPublishResponse extends com.google.protobuf.GeneratedM
     // @@protoc_insertion_point(message_implements:google.cloud.pubsublite.v1.InitialPublishResponse)
     InitialPublishResponseOrBuilder {
   private static final long serialVersionUID = 0L;
+
   // Use InitialPublishResponse.newBuilder() to construct.
   private InitialPublishResponse(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
     super(builder);
@@ -212,6 +213,7 @@ public final class InitialPublishResponse extends com.google.protobuf.GeneratedM
     Builder builder = new Builder(parent);
     return builder;
   }
+
   /**
    *
    *

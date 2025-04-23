@@ -53,7 +53,7 @@ public class DefaultRoutingPolicy implements RoutingPolicy {
   private Partition routeWithKey(ByteString messageKey) throws ApiException {
     HashCode code = Hashing.sha256().hashBytes(messageKey.asReadOnlyByteBuffer());
     checkArgument(code.bits() == 256); // sanity check.
-    BigInteger bigEndianValue = new BigInteger(/*signum=*/ 1, code.asBytes());
+    BigInteger bigEndianValue = new BigInteger(/* signum= */ 1, code.asBytes());
     return Partition.of(bigEndianValue.mod(BigInteger.valueOf(numPartitions)).longValueExact());
   }
 }

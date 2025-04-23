@@ -37,6 +37,7 @@ public final class PartitionAssignmentAck extends com.google.protobuf.GeneratedM
     // @@protoc_insertion_point(message_implements:google.cloud.pubsublite.v1.PartitionAssignmentAck)
     PartitionAssignmentAckOrBuilder {
   private static final long serialVersionUID = 0L;
+
   // Use PartitionAssignmentAck.newBuilder() to construct.
   private PartitionAssignmentAck(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
     super(builder);
@@ -216,6 +217,7 @@ public final class PartitionAssignmentAck extends com.google.protobuf.GeneratedM
     Builder builder = new Builder(parent);
     return builder;
   }
+
   /**
    *
    *

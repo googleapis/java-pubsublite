@@ -26,6 +26,7 @@ import java.util.UUID;
 @AutoValue
 public abstract class AssignerSettings {
   private static final GoogleLogger logger = GoogleLogger.forEnclosingClass();
+
   // Required parameters.
   abstract SubscriptionPath subscriptionPath();
 

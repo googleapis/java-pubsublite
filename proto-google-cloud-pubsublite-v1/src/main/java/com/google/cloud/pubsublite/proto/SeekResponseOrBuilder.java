@@ -36,6 +36,7 @@ public interface SeekResponseOrBuilder
    * @return Whether the cursor field is set.
    */
   boolean hasCursor();
+
   /**
    *
    *
@@ -48,6 +49,7 @@ public interface SeekResponseOrBuilder
    * @return The cursor.
    */
   com.google.cloud.pubsublite.proto.Cursor getCursor();
+
   /**
    *
    *

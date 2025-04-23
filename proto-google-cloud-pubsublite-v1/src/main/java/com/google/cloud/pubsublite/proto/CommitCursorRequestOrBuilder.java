@@ -36,6 +36,7 @@ public interface CommitCursorRequestOrBuilder
    * @return The subscription.
    */
   java.lang.String getSubscription();
+
   /**
    *
    *
@@ -75,6 +76,7 @@ public interface CommitCursorRequestOrBuilder
    * @return Whether the cursor field is set.
    */
   boolean hasCursor();
+
   /**
    *
    *
@@ -87,6 +89,7 @@ public interface CommitCursorRequestOrBuilder
    * @return The cursor.
    */
   com.google.cloud.pubsublite.proto.Cursor getCursor();
+
   /**
    *
    *

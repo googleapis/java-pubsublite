@@ -36,6 +36,7 @@ public interface SeekRequestOrBuilder
    * @return Whether the namedTarget field is set.
    */
   boolean hasNamedTarget();
+
   /**
    *
    *
@@ -48,6 +49,7 @@ public interface SeekRequestOrBuilder
    * @return The enum numeric value on the wire for namedTarget.
    */
   int getNamedTargetValue();
+
   /**
    *
    *
@@ -74,6 +76,7 @@ public interface SeekRequestOrBuilder
    * @return Whether the cursor field is set.
    */
   boolean hasCursor();
+
   /**
    *
    *
@@ -87,6 +90,7 @@ public interface SeekRequestOrBuilder
    * @return The cursor.
    */
   com.google.cloud.pubsublite.proto.Cursor getCursor();
+
   /**
    *
    *

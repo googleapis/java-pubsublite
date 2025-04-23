@@ -38,6 +38,7 @@ public interface GetSubscriptionRequestOrBuilder
    * @return The name.
    */
   java.lang.String getName();
+
   /**
    *
    *

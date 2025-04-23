@@ -33,6 +33,7 @@ public final class InitialCommitCursorResponse extends com.google.protobuf.Gener
     // @@protoc_insertion_point(message_implements:google.cloud.pubsublite.v1.InitialCommitCursorResponse)
     InitialCommitCursorResponseOrBuilder {
   private static final long serialVersionUID = 0L;
+
   // Use InitialCommitCursorResponse.newBuilder() to construct.
   private InitialCommitCursorResponse(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
     super(builder);
@@ -212,6 +213,7 @@ public final class InitialCommitCursorResponse extends com.google.protobuf.Gener
     Builder builder = new Builder(parent);
     return builder;
   }
+
   /**
    *
    *

@@ -33,6 +33,7 @@ public final class Topic extends com.google.protobuf.GeneratedMessageV3
     // @@protoc_insertion_point(message_implements:google.cloud.pubsublite.v1.Topic)
     TopicOrBuilder {
   private static final long serialVersionUID = 0L;
+
   // Use Topic.newBuilder() to construct.
   private Topic(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
     super(builder);
@@ -108,6 +109,7 @@ public final class Topic extends com.google.protobuf.GeneratedMessageV3
      */
     @java.lang.Deprecated
     boolean hasScale();
+
     /**
      *
      *
@@ -143,6 +145,7 @@ public final class Topic extends com.google.protobuf.GeneratedMessageV3
      * @return Whether the capacity field is set.
      */
     boolean hasCapacity();
+
     /**
      *
      *
@@ -155,6 +158,7 @@ public final class Topic extends com.google.protobuf.GeneratedMessageV3
      * @return The capacity.
      */
     com.google.cloud.pubsublite.proto.Topic.PartitionConfig.Capacity getCapacity();
+
     /**
      *
      *
@@ -169,6 +173,7 @@ public final class Topic extends com.google.protobuf.GeneratedMessageV3
 
     com.google.cloud.pubsublite.proto.Topic.PartitionConfig.DimensionCase getDimensionCase();
   }
+
   /**
    *
    *
@@ -183,6 +188,7 @@ public final class Topic extends com.google.protobuf.GeneratedMessageV3
       // @@protoc_insertion_point(message_implements:google.cloud.pubsublite.v1.Topic.PartitionConfig)
       PartitionConfigOrBuilder {
     private static final long serialVersionUID = 0L;
+
     // Use PartitionConfig.newBuilder() to construct.
     private PartitionConfig(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
       super(builder);
@@ -244,6 +250,7 @@ public final class Topic extends com.google.protobuf.GeneratedMessageV3
        */
       int getSubscribeMibPerSec();
     }
+
     /**
      *
      *
@@ -258,6 +265,7 @@ public final class Topic extends com.google.protobuf.GeneratedMessageV3
         // @@protoc_insertion_point(message_implements:google.cloud.pubsublite.v1.Topic.PartitionConfig.Capacity)
         CapacityOrBuilder {
       private static final long serialVersionUID = 0L;
+
       // Use Capacity.newBuilder() to construct.
       private Capacity(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
         super(builder);
@@ -288,6 +296,7 @@ public final class Topic extends com.google.protobuf.GeneratedMessageV3
 
       public static final int PUBLISH_MIB_PER_SEC_FIELD_NUMBER = 1;
       private int publishMibPerSec_ = 0;
+
       /**
        *
        *
@@ -307,6 +316,7 @@ public final class Topic extends com.google.protobuf.GeneratedMessageV3
 
       public static final int SUBSCRIBE_MIB_PER_SEC_FIELD_NUMBER = 2;
       private int subscribeMibPerSec_ = 0;
+
       /**
        *
        *
@@ -496,6 +506,7 @@ public final class Topic extends com.google.protobuf.GeneratedMessageV3
         Builder builder = new Builder(parent);
         return builder;
       }
+
       /**
        *
        *
@@ -701,6 +712,7 @@ public final class Topic extends com.google.protobuf.GeneratedMessageV3
         private int bitField0_;
 
         private int publishMibPerSec_;
+
         /**
          *
          *
@@ -717,6 +729,7 @@ public final class Topic extends com.google.protobuf.GeneratedMessageV3
         public int getPublishMibPerSec() {
           return publishMibPerSec_;
         }
+
         /**
          *
          *
@@ -737,6 +750,7 @@ public final class Topic extends com.google.protobuf.GeneratedMessageV3
           onChanged();
           return this;
         }
+
         /**
          *
          *
@@ -757,6 +771,7 @@ public final class Topic extends com.google.protobuf.GeneratedMessageV3
         }
 
         private int subscribeMibPerSec_;
+
         /**
          *
          *
@@ -773,6 +788,7 @@ public final class Topic extends com.google.protobuf.GeneratedMessageV3
         public int getSubscribeMibPerSec() {
           return subscribeMibPerSec_;
         }
+
         /**
          *
          *
@@ -793,6 +809,7 @@ public final class Topic extends com.google.protobuf.GeneratedMessageV3
           onChanged();
           return this;
         }
+
         /**
          *
          *
@@ -897,6 +914,7 @@ public final class Topic extends com.google.protobuf.GeneratedMessageV3
       private DimensionCase(int value) {
         this.value = value;
       }
+
       /**
        * @param value The number of the enum to look for.
        * @return The enum associated with the given number.
@@ -931,6 +949,7 @@ public final class Topic extends com.google.protobuf.GeneratedMessageV3
 
     public static final int COUNT_FIELD_NUMBER = 1;
     private long count_ = 0L;
+
     /**
      *
      *
@@ -953,6 +972,7 @@ public final class Topic extends com.google.protobuf.GeneratedMessageV3
     }
 
     public static final int SCALE_FIELD_NUMBER = 2;
+
     /**
      *
      *
@@ -978,6 +998,7 @@ public final class Topic extends com.google.protobuf.GeneratedMessageV3
     public boolean hasScale() {
       return dimensionCase_ == 2;
     }
+
     /**
      *
      *
@@ -1008,6 +1029,7 @@ public final class Topic extends com.google.protobuf.GeneratedMessageV3
     }
 
     public static final int CAPACITY_FIELD_NUMBER = 3;
+
     /**
      *
      *
@@ -1023,6 +1045,7 @@ public final class Topic extends com.google.protobuf.GeneratedMessageV3
     public boolean hasCapacity() {
       return dimensionCase_ == 3;
     }
+
     /**
      *
      *
@@ -1041,6 +1064,7 @@ public final class Topic extends com.google.protobuf.GeneratedMessageV3
       }
       return com.google.cloud.pubsublite.proto.Topic.PartitionConfig.Capacity.getDefaultInstance();
     }
+
     /**
      *
      *
@@ -1260,6 +1284,7 @@ public final class Topic extends com.google.protobuf.GeneratedMessageV3
       Builder builder = new Builder(parent);
       return builder;
     }
+
     /**
      *
      *
@@ -1502,6 +1527,7 @@ public final class Topic extends com.google.protobuf.GeneratedMessageV3
       private int bitField0_;
 
       private long count_;
+
       /**
        *
        *
@@ -1522,6 +1548,7 @@ public final class Topic extends com.google.protobuf.GeneratedMessageV3
       public long getCount() {
         return count_;
       }
+
       /**
        *
        *
@@ -1546,6 +1573,7 @@ public final class Topic extends com.google.protobuf.GeneratedMessageV3
         onChanged();
         return this;
       }
+
       /**
        *
        *
@@ -1593,6 +1621,7 @@ public final class Topic extends com.google.protobuf.GeneratedMessageV3
       public boolean hasScale() {
         return dimensionCase_ == 2;
       }
+
       /**
        *
        *
@@ -1620,6 +1649,7 @@ public final class Topic extends com.google.protobuf.GeneratedMessageV3
         }
         return 0;
       }
+
       /**
        *
        *
@@ -1649,6 +1679,7 @@ public final class Topic extends com.google.protobuf.GeneratedMessageV3
         onChanged();
         return this;
       }
+
       /**
        *
        *
@@ -1684,6 +1715,7 @@ public final class Topic extends com.google.protobuf.GeneratedMessageV3
               com.google.cloud.pubsublite.proto.Topic.PartitionConfig.Capacity.Builder,
               com.google.cloud.pubsublite.proto.Topic.PartitionConfig.CapacityOrBuilder>
           capacityBuilder_;
+
       /**
        *
        *
@@ -1699,6 +1731,7 @@ public final class Topic extends com.google.protobuf.GeneratedMessageV3
       public boolean hasCapacity() {
         return dimensionCase_ == 3;
       }
+
       /**
        *
        *
@@ -1726,6 +1759,7 @@ public final class Topic extends com.google.protobuf.GeneratedMessageV3
               .getDefaultInstance();
         }
       }
+
       /**
        *
        *
@@ -1749,6 +1783,7 @@ public final class Topic extends com.google.protobuf.GeneratedMessageV3
         dimensionCase_ = 3;
         return this;
       }
+
       /**
        *
        *
@@ -1770,6 +1805,7 @@ public final class Topic extends com.google.protobuf.GeneratedMessageV3
         dimensionCase_ = 3;
         return this;
       }
+
       /**
        *
        *
@@ -1806,6 +1842,7 @@ public final class Topic extends com.google.protobuf.GeneratedMessageV3
         dimensionCase_ = 3;
         return this;
       }
+
       /**
        *
        *
@@ -1831,6 +1868,7 @@ public final class Topic extends com.google.protobuf.GeneratedMessageV3
         }
         return this;
       }
+
       /**
        *
        *
@@ -1844,6 +1882,7 @@ public final class Topic extends com.google.protobuf.GeneratedMessageV3
           getCapacityBuilder() {
         return getCapacityFieldBuilder().getBuilder();
       }
+
       /**
        *
        *
@@ -1866,6 +1905,7 @@ public final class Topic extends com.google.protobuf.GeneratedMessageV3
               .getDefaultInstance();
         }
       }
+
       /**
        *
        *
@@ -2000,6 +2040,7 @@ public final class Topic extends com.google.protobuf.GeneratedMessageV3
      * @return Whether the period field is set.
      */
     boolean hasPeriod();
+
     /**
      *
      *
@@ -2014,6 +2055,7 @@ public final class Topic extends com.google.protobuf.GeneratedMessageV3
      * @return The period.
      */
     com.google.protobuf.Duration getPeriod();
+
     /**
      *
      *
@@ -2027,6 +2069,7 @@ public final class Topic extends com.google.protobuf.GeneratedMessageV3
      */
     com.google.protobuf.DurationOrBuilder getPeriodOrBuilder();
   }
+
   /**
    *
    *
@@ -2041,6 +2084,7 @@ public final class Topic extends com.google.protobuf.GeneratedMessageV3
       // @@protoc_insertion_point(message_implements:google.cloud.pubsublite.v1.Topic.RetentionConfig)
       RetentionConfigOrBuilder {
     private static final long serialVersionUID = 0L;
+
     // Use RetentionConfig.newBuilder() to construct.
     private RetentionConfig(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
       super(builder);
@@ -2072,6 +2116,7 @@ public final class Topic extends com.google.protobuf.GeneratedMessageV3
     private int bitField0_;
     public static final int PER_PARTITION_BYTES_FIELD_NUMBER = 1;
     private long perPartitionBytes_ = 0L;
+
     /**
      *
      *
@@ -2093,6 +2138,7 @@ public final class Topic extends com.google.protobuf.GeneratedMessageV3
 
     public static final int PERIOD_FIELD_NUMBER = 2;
     private com.google.protobuf.Duration period_;
+
     /**
      *
      *
@@ -2110,6 +2156,7 @@ public final class Topic extends com.google.protobuf.GeneratedMessageV3
     public boolean hasPeriod() {
       return ((bitField0_ & 0x00000001) != 0);
     }
+
     /**
      *
      *
@@ -2127,6 +2174,7 @@ public final class Topic extends com.google.protobuf.GeneratedMessageV3
     public com.google.protobuf.Duration getPeriod() {
       return period_ == null ? com.google.protobuf.Duration.getDefaultInstance() : period_;
     }
+
     /**
      *
      *
@@ -2318,6 +2366,7 @@ public final class Topic extends com.google.protobuf.GeneratedMessageV3
       Builder builder = new Builder(parent);
       return builder;
     }
+
     /**
      *
      *
@@ -2532,6 +2581,7 @@ public final class Topic extends com.google.protobuf.GeneratedMessageV3
       private int bitField0_;
 
       private long perPartitionBytes_;
+
       /**
        *
        *
@@ -2550,6 +2600,7 @@ public final class Topic extends com.google.protobuf.GeneratedMessageV3
       public long getPerPartitionBytes() {
         return perPartitionBytes_;
       }
+
       /**
        *
        *
@@ -2572,6 +2623,7 @@ public final class Topic extends com.google.protobuf.GeneratedMessageV3
         onChanged();
         return this;
       }
+
       /**
        *
        *
@@ -2599,6 +2651,7 @@ public final class Topic extends com.google.protobuf.GeneratedMessageV3
               com.google.protobuf.Duration.Builder,
               com.google.protobuf.DurationOrBuilder>
           periodBuilder_;
+
       /**
        *
        *
@@ -2615,6 +2668,7 @@ public final class Topic extends com.google.protobuf.GeneratedMessageV3
       public boolean hasPeriod() {
         return ((bitField0_ & 0x00000002) != 0);
       }
+
       /**
        *
        *
@@ -2635,6 +2689,7 @@ public final class Topic extends com.google.protobuf.GeneratedMessageV3
           return periodBuilder_.getMessage();
         }
       }
+
       /**
        *
        *
@@ -2659,6 +2714,7 @@ public final class Topic extends com.google.protobuf.GeneratedMessageV3
         onChanged();
         return this;
       }
+
       /**
        *
        *
@@ -2680,6 +2736,7 @@ public final class Topic extends com.google.protobuf.GeneratedMessageV3
         onChanged();
         return this;
       }
+
       /**
        *
        *
@@ -2709,6 +2766,7 @@ public final class Topic extends com.google.protobuf.GeneratedMessageV3
         }
         return this;
       }
+
       /**
        *
        *
@@ -2730,6 +2788,7 @@ public final class Topic extends com.google.protobuf.GeneratedMessageV3
         onChanged();
         return this;
       }
+
       /**
        *
        *
@@ -2746,6 +2805,7 @@ public final class Topic extends com.google.protobuf.GeneratedMessageV3
         onChanged();
         return getPeriodFieldBuilder().getBuilder();
       }
+
       /**
        *
        *
@@ -2764,6 +2824,7 @@ public final class Topic extends com.google.protobuf.GeneratedMessageV3
           return period_ == null ? com.google.protobuf.Duration.getDefaultInstance() : period_;
         }
       }
+
       /**
        *
        *
@@ -2875,6 +2936,7 @@ public final class Topic extends com.google.protobuf.GeneratedMessageV3
      * @return The throughputReservation.
      */
     java.lang.String getThroughputReservation();
+
     /**
      *
      *
@@ -2890,6 +2952,7 @@ public final class Topic extends com.google.protobuf.GeneratedMessageV3
      */
     com.google.protobuf.ByteString getThroughputReservationBytes();
   }
+
   /**
    *
    *
@@ -2904,6 +2967,7 @@ public final class Topic extends com.google.protobuf.GeneratedMessageV3
       // @@protoc_insertion_point(message_implements:google.cloud.pubsublite.v1.Topic.ReservationConfig)
       ReservationConfigOrBuilder {
     private static final long serialVersionUID = 0L;
+
     // Use ReservationConfig.newBuilder() to construct.
     private ReservationConfig(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
       super(builder);
@@ -2938,6 +3002,7 @@ public final class Topic extends com.google.protobuf.GeneratedMessageV3
 
     @SuppressWarnings("serial")
     private volatile java.lang.Object throughputReservation_ = "";
+
     /**
      *
      *
@@ -2963,6 +3028,7 @@ public final class Topic extends com.google.protobuf.GeneratedMessageV3
         return s;
       }
     }
+
     /**
      *
      *
@@ -3150,6 +3216,7 @@ public final class Topic extends com.google.protobuf.GeneratedMessageV3
       Builder builder = new Builder(parent);
       return builder;
     }
+
     /**
      *
      *
@@ -3337,6 +3404,7 @@ public final class Topic extends com.google.protobuf.GeneratedMessageV3
       private int bitField0_;
 
       private java.lang.Object throughputReservation_ = "";
+
       /**
        *
        *
@@ -3361,6 +3429,7 @@ public final class Topic extends com.google.protobuf.GeneratedMessageV3
           return (java.lang.String) ref;
         }
       }
+
       /**
        *
        *
@@ -3385,6 +3454,7 @@ public final class Topic extends com.google.protobuf.GeneratedMessageV3
           return (com.google.protobuf.ByteString) ref;
         }
       }
+
       /**
        *
        *
@@ -3408,6 +3478,7 @@ public final class Topic extends com.google.protobuf.GeneratedMessageV3
         onChanged();
         return this;
       }
+
       /**
        *
        *
@@ -3427,6 +3498,7 @@ public final class Topic extends com.google.protobuf.GeneratedMessageV3
         onChanged();
         return this;
       }
+
       /**
        *
        *
@@ -3521,6 +3593,7 @@ public final class Topic extends com.google.protobuf.GeneratedMessageV3
 
   @SuppressWarnings("serial")
   private volatile java.lang.Object name_ = "";
+
   /**
    *
    *
@@ -3546,6 +3619,7 @@ public final class Topic extends com.google.protobuf.GeneratedMessageV3
       return s;
     }
   }
+
   /**
    *
    *
@@ -3574,6 +3648,7 @@ public final class Topic extends com.google.protobuf.GeneratedMessageV3
 
   public static final int PARTITION_CONFIG_FIELD_NUMBER = 2;
   private com.google.cloud.pubsublite.proto.Topic.PartitionConfig partitionConfig_;
+
   /**
    *
    *
@@ -3589,6 +3664,7 @@ public final class Topic extends com.google.protobuf.GeneratedMessageV3
   public boolean hasPartitionConfig() {
     return ((bitField0_ & 0x00000001) != 0);
   }
+
   /**
    *
    *
@@ -3606,6 +3682,7 @@ public final class Topic extends com.google.protobuf.GeneratedMessageV3
         ? com.google.cloud.pubsublite.proto.Topic.PartitionConfig.getDefaultInstance()
         : partitionConfig_;
   }
+
   /**
    *
    *
@@ -3625,6 +3702,7 @@ public final class Topic extends com.google.protobuf.GeneratedMessageV3
 
   public static final int RETENTION_CONFIG_FIELD_NUMBER = 3;
   private com.google.cloud.pubsublite.proto.Topic.RetentionConfig retentionConfig_;
+
   /**
    *
    *
@@ -3640,6 +3718,7 @@ public final class Topic extends com.google.protobuf.GeneratedMessageV3
   public boolean hasRetentionConfig() {
     return ((bitField0_ & 0x00000002) != 0);
   }
+
   /**
    *
    *
@@ -3657,6 +3736,7 @@ public final class Topic extends com.google.protobuf.GeneratedMessageV3
         ? com.google.cloud.pubsublite.proto.Topic.RetentionConfig.getDefaultInstance()
         : retentionConfig_;
   }
+
   /**
    *
    *
@@ -3676,6 +3756,7 @@ public final class Topic extends com.google.protobuf.GeneratedMessageV3
 
   public static final int RESERVATION_CONFIG_FIELD_NUMBER = 4;
   private com.google.cloud.pubsublite.proto.Topic.ReservationConfig reservationConfig_;
+
   /**
    *
    *
@@ -3691,6 +3772,7 @@ public final class Topic extends com.google.protobuf.GeneratedMessageV3
   public boolean hasReservationConfig() {
     return ((bitField0_ & 0x00000004) != 0);
   }
+
   /**
    *
    *
@@ -3708,6 +3790,7 @@ public final class Topic extends com.google.protobuf.GeneratedMessageV3
         ? com.google.cloud.pubsublite.proto.Topic.ReservationConfig.getDefaultInstance()
         : reservationConfig_;
   }
+
   /**
    *
    *
@@ -3925,6 +4008,7 @@ public final class Topic extends com.google.protobuf.GeneratedMessageV3
     Builder builder = new Builder(parent);
     return builder;
   }
+
   /**
    *
    *
@@ -4181,6 +4265,7 @@ public final class Topic extends com.google.protobuf.GeneratedMessageV3
     private int bitField0_;
 
     private java.lang.Object name_ = "";
+
     /**
      *
      *
@@ -4205,6 +4290,7 @@ public final class Topic extends com.google.protobuf.GeneratedMessageV3
         return (java.lang.String) ref;
       }
     }
+
     /**
      *
      *
@@ -4229,6 +4315,7 @@ public final class Topic extends com.google.protobuf.GeneratedMessageV3
         return (com.google.protobuf.ByteString) ref;
       }
     }
+
     /**
      *
      *
@@ -4252,6 +4339,7 @@ public final class Topic extends com.google.protobuf.GeneratedMessageV3
       onChanged();
       return this;
     }
+
     /**
      *
      *
@@ -4271,6 +4359,7 @@ public final class Topic extends com.google.protobuf.GeneratedMessageV3
       onChanged();
       return this;
     }
+
     /**
      *
      *
@@ -4302,6 +4391,7 @@ public final class Topic extends com.google.protobuf.GeneratedMessageV3
             com.google.cloud.pubsublite.proto.Topic.PartitionConfig.Builder,
             com.google.cloud.pubsublite.proto.Topic.PartitionConfigOrBuilder>
         partitionConfigBuilder_;
+
     /**
      *
      *
@@ -4316,6 +4406,7 @@ public final class Topic extends com.google.protobuf.GeneratedMessageV3
     public boolean hasPartitionConfig() {
       return ((bitField0_ & 0x00000002) != 0);
     }
+
     /**
      *
      *
@@ -4336,6 +4427,7 @@ public final class Topic extends com.google.protobuf.GeneratedMessageV3
         return partitionConfigBuilder_.getMessage();
       }
     }
+
     /**
      *
      *
@@ -4359,6 +4451,7 @@ public final class Topic extends com.google.protobuf.GeneratedMessageV3
       onChanged();
       return this;
     }
+
     /**
      *
      *
@@ -4379,6 +4472,7 @@ public final class Topic extends com.google.protobuf.GeneratedMessageV3
       onChanged();
       return this;
     }
+
     /**
      *
      *
@@ -4408,6 +4502,7 @@ public final class Topic extends com.google.protobuf.GeneratedMessageV3
       }
       return this;
     }
+
     /**
      *
      *
@@ -4427,6 +4522,7 @@ public final class Topic extends com.google.protobuf.GeneratedMessageV3
       onChanged();
       return this;
     }
+
     /**
      *
      *
@@ -4442,6 +4538,7 @@ public final class Topic extends com.google.protobuf.GeneratedMessageV3
       onChanged();
       return getPartitionConfigFieldBuilder().getBuilder();
     }
+
     /**
      *
      *
@@ -4461,6 +4558,7 @@ public final class Topic extends com.google.protobuf.GeneratedMessageV3
             : partitionConfig_;
       }
     }
+
     /**
      *
      *
@@ -4493,6 +4591,7 @@ public final class Topic extends com.google.protobuf.GeneratedMessageV3
             com.google.cloud.pubsublite.proto.Topic.RetentionConfig.Builder,
             com.google.cloud.pubsublite.proto.Topic.RetentionConfigOrBuilder>
         retentionConfigBuilder_;
+
     /**
      *
      *
@@ -4507,6 +4606,7 @@ public final class Topic extends com.google.protobuf.GeneratedMessageV3
     public boolean hasRetentionConfig() {
       return ((bitField0_ & 0x00000004) != 0);
     }
+
     /**
      *
      *
@@ -4527,6 +4627,7 @@ public final class Topic extends com.google.protobuf.GeneratedMessageV3
         return retentionConfigBuilder_.getMessage();
       }
     }
+
     /**
      *
      *
@@ -4550,6 +4651,7 @@ public final class Topic extends com.google.protobuf.GeneratedMessageV3
       onChanged();
       return this;
     }
+
     /**
      *
      *
@@ -4570,6 +4672,7 @@ public final class Topic extends com.google.protobuf.GeneratedMessageV3
       onChanged();
       return this;
     }
+
     /**
      *
      *
@@ -4599,6 +4702,7 @@ public final class Topic extends com.google.protobuf.GeneratedMessageV3
       }
       return this;
     }
+
     /**
      *
      *
@@ -4618,6 +4722,7 @@ public final class Topic extends com.google.protobuf.GeneratedMessageV3
       onChanged();
       return this;
     }
+
     /**
      *
      *
@@ -4633,6 +4738,7 @@ public final class Topic extends com.google.protobuf.GeneratedMessageV3
       onChanged();
       return getRetentionConfigFieldBuilder().getBuilder();
     }
+
     /**
      *
      *
@@ -4652,6 +4758,7 @@ public final class Topic extends com.google.protobuf.GeneratedMessageV3
             : retentionConfig_;
       }
     }
+
     /**
      *
      *
@@ -4684,6 +4791,7 @@ public final class Topic extends com.google.protobuf.GeneratedMessageV3
             com.google.cloud.pubsublite.proto.Topic.ReservationConfig.Builder,
             com.google.cloud.pubsublite.proto.Topic.ReservationConfigOrBuilder>
         reservationConfigBuilder_;
+
     /**
      *
      *
@@ -4698,6 +4806,7 @@ public final class Topic extends com.google.protobuf.GeneratedMessageV3
     public boolean hasReservationConfig() {
       return ((bitField0_ & 0x00000008) != 0);
     }
+
     /**
      *
      *
@@ -4718,6 +4827,7 @@ public final class Topic extends com.google.protobuf.GeneratedMessageV3
         return reservationConfigBuilder_.getMessage();
       }
     }
+
     /**
      *
      *
@@ -4741,6 +4851,7 @@ public final class Topic extends com.google.protobuf.GeneratedMessageV3
       onChanged();
       return this;
     }
+
     /**
      *
      *
@@ -4761,6 +4872,7 @@ public final class Topic extends com.google.protobuf.GeneratedMessageV3
       onChanged();
       return this;
     }
+
     /**
      *
      *
@@ -4790,6 +4902,7 @@ public final class Topic extends com.google.protobuf.GeneratedMessageV3
       }
       return this;
     }
+
     /**
      *
      *
@@ -4809,6 +4922,7 @@ public final class Topic extends com.google.protobuf.GeneratedMessageV3
       onChanged();
       return this;
     }
+
     /**
      *
      *
@@ -4824,6 +4938,7 @@ public final class Topic extends com.google.protobuf.GeneratedMessageV3
       onChanged();
       return getReservationConfigFieldBuilder().getBuilder();
     }
+
     /**
      *
      *
@@ -4843,6 +4958,7 @@ public final class Topic extends com.google.protobuf.GeneratedMessageV3
             : reservationConfig_;
       }
     }
+
     /**
      *
      *

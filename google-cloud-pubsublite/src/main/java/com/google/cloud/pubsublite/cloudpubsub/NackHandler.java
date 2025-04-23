@@ -34,7 +34,8 @@ public interface NackHandler {
   default ApiFuture<Void> nack(PubsubMessage message) {
     return ApiFutures.immediateFailedFuture(
         new CheckedApiException(
-                "You may not nack messages by default when using a PubSub Lite client. See NackHandler for how to customize this.",
+                "You may not nack messages by default when using a PubSub Lite client. See"
+                    + " NackHandler for how to customize this.",
                 Code.UNIMPLEMENTED)
             .underlying);
   }

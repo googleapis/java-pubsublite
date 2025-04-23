@@ -34,6 +34,7 @@ public interface MessagePublishRequestOrBuilder
    * <code>repeated .google.cloud.pubsublite.v1.PubSubMessage messages = 1;</code>
    */
   java.util.List<com.google.cloud.pubsublite.proto.PubSubMessage> getMessagesList();
+
   /**
    *
    *
@@ -44,6 +45,7 @@ public interface MessagePublishRequestOrBuilder
    * <code>repeated .google.cloud.pubsublite.v1.PubSubMessage messages = 1;</code>
    */
   com.google.cloud.pubsublite.proto.PubSubMessage getMessages(int index);
+
   /**
    *
    *
@@ -54,6 +56,7 @@ public interface MessagePublishRequestOrBuilder
    * <code>repeated .google.cloud.pubsublite.v1.PubSubMessage messages = 1;</code>
    */
   int getMessagesCount();
+
   /**
    *
    *
@@ -65,6 +68,7 @@ public interface MessagePublishRequestOrBuilder
    */
   java.util.List<? extends com.google.cloud.pubsublite.proto.PubSubMessageOrBuilder>
       getMessagesOrBuilderList();
+
   /**
    *
    *

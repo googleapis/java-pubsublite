@@ -33,6 +33,7 @@ public final class Subscription extends com.google.protobuf.GeneratedMessageV3
     // @@protoc_insertion_point(message_implements:google.cloud.pubsublite.v1.Subscription)
     SubscriptionOrBuilder {
   private static final long serialVersionUID = 0L;
+
   // Use Subscription.newBuilder() to construct.
   private Subscription(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
     super(builder);
@@ -83,6 +84,7 @@ public final class Subscription extends com.google.protobuf.GeneratedMessageV3
      * @return The enum numeric value on the wire for deliveryRequirement.
      */
     int getDeliveryRequirementValue();
+
     /**
      *
      *
@@ -99,6 +101,7 @@ public final class Subscription extends com.google.protobuf.GeneratedMessageV3
     com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig.DeliveryRequirement
         getDeliveryRequirement();
   }
+
   /**
    *
    *
@@ -113,6 +116,7 @@ public final class Subscription extends com.google.protobuf.GeneratedMessageV3
       // @@protoc_insertion_point(message_implements:google.cloud.pubsublite.v1.Subscription.DeliveryConfig)
       DeliveryConfigOrBuilder {
     private static final long serialVersionUID = 0L;
+
     // Use DeliveryConfig.newBuilder() to construct.
     private DeliveryConfig(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
       super(builder);
@@ -202,6 +206,7 @@ public final class Subscription extends com.google.protobuf.GeneratedMessageV3
        * <code>DELIVERY_REQUIREMENT_UNSPECIFIED = 0;</code>
        */
       public static final int DELIVERY_REQUIREMENT_UNSPECIFIED_VALUE = 0;
+
       /**
        *
        *
@@ -213,6 +218,7 @@ public final class Subscription extends com.google.protobuf.GeneratedMessageV3
        * <code>DELIVER_IMMEDIATELY = 1;</code>
        */
       public static final int DELIVER_IMMEDIATELY_VALUE = 1;
+
       /**
        *
        *
@@ -316,6 +322,7 @@ public final class Subscription extends com.google.protobuf.GeneratedMessageV3
 
     public static final int DELIVERY_REQUIREMENT_FIELD_NUMBER = 3;
     private int deliveryRequirement_ = 0;
+
     /**
      *
      *
@@ -333,6 +340,7 @@ public final class Subscription extends com.google.protobuf.GeneratedMessageV3
     public int getDeliveryRequirementValue() {
       return deliveryRequirement_;
     }
+
     /**
      *
      *
@@ -525,6 +533,7 @@ public final class Subscription extends com.google.protobuf.GeneratedMessageV3
       Builder builder = new Builder(parent);
       return builder;
     }
+
     /**
      *
      *
@@ -714,6 +723,7 @@ public final class Subscription extends com.google.protobuf.GeneratedMessageV3
       private int bitField0_;
 
       private int deliveryRequirement_ = 0;
+
       /**
        *
        *
@@ -731,6 +741,7 @@ public final class Subscription extends com.google.protobuf.GeneratedMessageV3
       public int getDeliveryRequirementValue() {
         return deliveryRequirement_;
       }
+
       /**
        *
        *
@@ -751,6 +762,7 @@ public final class Subscription extends com.google.protobuf.GeneratedMessageV3
         onChanged();
         return this;
       }
+
       /**
        *
        *
@@ -775,6 +787,7 @@ public final class Subscription extends com.google.protobuf.GeneratedMessageV3
                 .UNRECOGNIZED
             : result;
       }
+
       /**
        *
        *
@@ -799,6 +812,7 @@ public final class Subscription extends com.google.protobuf.GeneratedMessageV3
         onChanged();
         return this;
       }
+
       /**
        *
        *
@@ -891,6 +905,7 @@ public final class Subscription extends com.google.protobuf.GeneratedMessageV3
 
   @SuppressWarnings("serial")
   private volatile java.lang.Object name_ = "";
+
   /**
    *
    *
@@ -916,6 +931,7 @@ public final class Subscription extends com.google.protobuf.GeneratedMessageV3
       return s;
     }
   }
+
   /**
    *
    *
@@ -946,6 +962,7 @@ public final class Subscription extends com.google.protobuf.GeneratedMessageV3
 
   @SuppressWarnings("serial")
   private volatile java.lang.Object topic_ = "";
+
   /**
    *
    *
@@ -971,6 +988,7 @@ public final class Subscription extends com.google.protobuf.GeneratedMessageV3
       return s;
     }
   }
+
   /**
    *
    *
@@ -999,6 +1017,7 @@ public final class Subscription extends com.google.protobuf.GeneratedMessageV3
 
   public static final int DELIVERY_CONFIG_FIELD_NUMBER = 3;
   private com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig deliveryConfig_;
+
   /**
    *
    *
@@ -1014,6 +1033,7 @@ public final class Subscription extends com.google.protobuf.GeneratedMessageV3
   public boolean hasDeliveryConfig() {
     return ((bitField0_ & 0x00000001) != 0);
   }
+
   /**
    *
    *
@@ -1031,6 +1051,7 @@ public final class Subscription extends com.google.protobuf.GeneratedMessageV3
         ? com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig.getDefaultInstance()
         : deliveryConfig_;
   }
+
   /**
    *
    *
@@ -1050,6 +1071,7 @@ public final class Subscription extends com.google.protobuf.GeneratedMessageV3
 
   public static final int EXPORT_CONFIG_FIELD_NUMBER = 4;
   private com.google.cloud.pubsublite.proto.ExportConfig exportConfig_;
+
   /**
    *
    *
@@ -1066,6 +1088,7 @@ public final class Subscription extends com.google.protobuf.GeneratedMessageV3
   public boolean hasExportConfig() {
     return ((bitField0_ & 0x00000002) != 0);
   }
+
   /**
    *
    *
@@ -1084,6 +1107,7 @@ public final class Subscription extends com.google.protobuf.GeneratedMessageV3
         ? com.google.cloud.pubsublite.proto.ExportConfig.getDefaultInstance()
         : exportConfig_;
   }
+
   /**
    *
    *
@@ -1297,6 +1321,7 @@ public final class Subscription extends com.google.protobuf.GeneratedMessageV3
     Builder builder = new Builder(parent);
     return builder;
   }
+
   /**
    *
    *
@@ -1545,6 +1570,7 @@ public final class Subscription extends com.google.protobuf.GeneratedMessageV3
     private int bitField0_;
 
     private java.lang.Object name_ = "";
+
     /**
      *
      *
@@ -1569,6 +1595,7 @@ public final class Subscription extends com.google.protobuf.GeneratedMessageV3
         return (java.lang.String) ref;
       }
     }
+
     /**
      *
      *
@@ -1593,6 +1620,7 @@ public final class Subscription extends com.google.protobuf.GeneratedMessageV3
         return (com.google.protobuf.ByteString) ref;
       }
     }
+
     /**
      *
      *
@@ -1616,6 +1644,7 @@ public final class Subscription extends com.google.protobuf.GeneratedMessageV3
       onChanged();
       return this;
     }
+
     /**
      *
      *
@@ -1635,6 +1664,7 @@ public final class Subscription extends com.google.protobuf.GeneratedMessageV3
       onChanged();
       return this;
     }
+
     /**
      *
      *
@@ -1661,6 +1691,7 @@ public final class Subscription extends com.google.protobuf.GeneratedMessageV3
     }
 
     private java.lang.Object topic_ = "";
+
     /**
      *
      *
@@ -1685,6 +1716,7 @@ public final class Subscription extends com.google.protobuf.GeneratedMessageV3
         return (java.lang.String) ref;
       }
     }
+
     /**
      *
      *
@@ -1709,6 +1741,7 @@ public final class Subscription extends com.google.protobuf.GeneratedMessageV3
         return (com.google.protobuf.ByteString) ref;
       }
     }
+
     /**
      *
      *
@@ -1732,6 +1765,7 @@ public final class Subscription extends com.google.protobuf.GeneratedMessageV3
       onChanged();
       return this;
     }
+
     /**
      *
      *
@@ -1751,6 +1785,7 @@ public final class Subscription extends com.google.protobuf.GeneratedMessageV3
       onChanged();
       return this;
     }
+
     /**
      *
      *
@@ -1782,6 +1817,7 @@ public final class Subscription extends com.google.protobuf.GeneratedMessageV3
             com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig.Builder,
             com.google.cloud.pubsublite.proto.Subscription.DeliveryConfigOrBuilder>
         deliveryConfigBuilder_;
+
     /**
      *
      *
@@ -1796,6 +1832,7 @@ public final class Subscription extends com.google.protobuf.GeneratedMessageV3
     public boolean hasDeliveryConfig() {
       return ((bitField0_ & 0x00000004) != 0);
     }
+
     /**
      *
      *
@@ -1816,6 +1853,7 @@ public final class Subscription extends com.google.protobuf.GeneratedMessageV3
         return deliveryConfigBuilder_.getMessage();
       }
     }
+
     /**
      *
      *
@@ -1839,6 +1877,7 @@ public final class Subscription extends com.google.protobuf.GeneratedMessageV3
       onChanged();
       return this;
     }
+
     /**
      *
      *
@@ -1859,6 +1898,7 @@ public final class Subscription extends com.google.protobuf.GeneratedMessageV3
       onChanged();
       return this;
     }
+
     /**
      *
      *
@@ -1889,6 +1929,7 @@ public final class Subscription extends com.google.protobuf.GeneratedMessageV3
       }
       return this;
     }
+
     /**
      *
      *
@@ -1908,6 +1949,7 @@ public final class Subscription extends com.google.protobuf.GeneratedMessageV3
       onChanged();
       return this;
     }
+
     /**
      *
      *
@@ -1923,6 +1965,7 @@ public final class Subscription extends com.google.protobuf.GeneratedMessageV3
       onChanged();
       return getDeliveryConfigFieldBuilder().getBuilder();
     }
+
     /**
      *
      *
@@ -1942,6 +1985,7 @@ public final class Subscription extends com.google.protobuf.GeneratedMessageV3
             : deliveryConfig_;
       }
     }
+
     /**
      *
      *
@@ -1974,6 +2018,7 @@ public final class Subscription extends com.google.protobuf.GeneratedMessageV3
             com.google.cloud.pubsublite.proto.ExportConfig.Builder,
             com.google.cloud.pubsublite.proto.ExportConfigOrBuilder>
         exportConfigBuilder_;
+
     /**
      *
      *
@@ -1989,6 +2034,7 @@ public final class Subscription extends com.google.protobuf.GeneratedMessageV3
     public boolean hasExportConfig() {
       return ((bitField0_ & 0x00000008) != 0);
     }
+
     /**
      *
      *
@@ -2010,6 +2056,7 @@ public final class Subscription extends com.google.protobuf.GeneratedMessageV3
         return exportConfigBuilder_.getMessage();
       }
     }
+
     /**
      *
      *
@@ -2033,6 +2080,7 @@ public final class Subscription extends com.google.protobuf.GeneratedMessageV3
       onChanged();
       return this;
     }
+
     /**
      *
      *
@@ -2054,6 +2102,7 @@ public final class Subscription extends com.google.protobuf.GeneratedMessageV3
       onChanged();
       return this;
     }
+
     /**
      *
      *
@@ -2083,6 +2132,7 @@ public final class Subscription extends com.google.protobuf.GeneratedMessageV3
       }
       return this;
     }
+
     /**
      *
      *
@@ -2103,6 +2153,7 @@ public final class Subscription extends com.google.protobuf.GeneratedMessageV3
       onChanged();
       return this;
     }
+
     /**
      *
      *
@@ -2118,6 +2169,7 @@ public final class Subscription extends com.google.protobuf.GeneratedMessageV3
       onChanged();
       return getExportConfigFieldBuilder().getBuilder();
     }
+
     /**
      *
      *
@@ -2137,6 +2189,7 @@ public final class Subscription extends com.google.protobuf.GeneratedMessageV3
             : exportConfig_;
       }
     }
+
     /**
      *
      *

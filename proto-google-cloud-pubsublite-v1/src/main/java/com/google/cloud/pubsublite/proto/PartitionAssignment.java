@@ -35,6 +35,7 @@ public final class PartitionAssignment extends com.google.protobuf.GeneratedMess
     // @@protoc_insertion_point(message_implements:google.cloud.pubsublite.v1.PartitionAssignment)
     PartitionAssignmentOrBuilder {
   private static final long serialVersionUID = 0L;
+
   // Use PartitionAssignment.newBuilder() to construct.
   private PartitionAssignment(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
     super(builder);
@@ -69,6 +70,7 @@ public final class PartitionAssignment extends com.google.protobuf.GeneratedMess
 
   @SuppressWarnings("serial")
   private com.google.protobuf.Internal.LongList partitions_ = emptyLongList();
+
   /**
    *
    *
@@ -84,6 +86,7 @@ public final class PartitionAssignment extends com.google.protobuf.GeneratedMess
   public java.util.List<java.lang.Long> getPartitionsList() {
     return partitions_;
   }
+
   /**
    *
    *
@@ -98,6 +101,7 @@ public final class PartitionAssignment extends com.google.protobuf.GeneratedMess
   public int getPartitionsCount() {
     return partitions_.size();
   }
+
   /**
    *
    *
@@ -293,6 +297,7 @@ public final class PartitionAssignment extends com.google.protobuf.GeneratedMess
     Builder builder = new Builder(parent);
     return builder;
   }
+
   /**
    *
    *
@@ -505,6 +510,7 @@ public final class PartitionAssignment extends com.google.protobuf.GeneratedMess
       }
       bitField0_ |= 0x00000001;
     }
+
     /**
      *
      *
@@ -520,6 +526,7 @@ public final class PartitionAssignment extends com.google.protobuf.GeneratedMess
       partitions_.makeImmutable();
       return partitions_;
     }
+
     /**
      *
      *
@@ -534,6 +541,7 @@ public final class PartitionAssignment extends com.google.protobuf.GeneratedMess
     public int getPartitionsCount() {
       return partitions_.size();
     }
+
     /**
      *
      *
@@ -549,6 +557,7 @@ public final class PartitionAssignment extends com.google.protobuf.GeneratedMess
     public long getPartitions(int index) {
       return partitions_.getLong(index);
     }
+
     /**
      *
      *
@@ -570,6 +579,7 @@ public final class PartitionAssignment extends com.google.protobuf.GeneratedMess
       onChanged();
       return this;
     }
+
     /**
      *
      *
@@ -590,6 +600,7 @@ public final class PartitionAssignment extends com.google.protobuf.GeneratedMess
       onChanged();
       return this;
     }
+
     /**
      *
      *
@@ -609,6 +620,7 @@ public final class PartitionAssignment extends com.google.protobuf.GeneratedMess
       onChanged();
       return this;
     }
+
     /**
      *
      *

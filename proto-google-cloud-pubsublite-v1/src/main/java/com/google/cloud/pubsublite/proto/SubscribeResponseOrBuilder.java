@@ -36,6 +36,7 @@ public interface SubscribeResponseOrBuilder
    * @return Whether the initial field is set.
    */
   boolean hasInitial();
+
   /**
    *
    *
@@ -48,6 +49,7 @@ public interface SubscribeResponseOrBuilder
    * @return The initial.
    */
   com.google.cloud.pubsublite.proto.InitialSubscribeResponse getInitial();
+
   /**
    *
    *
@@ -71,6 +73,7 @@ public interface SubscribeResponseOrBuilder
    * @return Whether the seek field is set.
    */
   boolean hasSeek();
+
   /**
    *
    *
@@ -83,6 +86,7 @@ public interface SubscribeResponseOrBuilder
    * @return The seek.
    */
   com.google.cloud.pubsublite.proto.SeekResponse getSeek();
+
   /**
    *
    *
@@ -106,6 +110,7 @@ public interface SubscribeResponseOrBuilder
    * @return Whether the messages field is set.
    */
   boolean hasMessages();
+
   /**
    *
    *
@@ -118,6 +123,7 @@ public interface SubscribeResponseOrBuilder
    * @return The messages.
    */
   com.google.cloud.pubsublite.proto.MessageResponse getMessages();
+
   /**
    *
    *

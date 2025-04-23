@@ -33,6 +33,7 @@ public final class ComputeMessageStatsResponse extends com.google.protobuf.Gener
     // @@protoc_insertion_point(message_implements:google.cloud.pubsublite.v1.ComputeMessageStatsResponse)
     ComputeMessageStatsResponseOrBuilder {
   private static final long serialVersionUID = 0L;
+
   // Use ComputeMessageStatsResponse.newBuilder() to construct.
   private ComputeMessageStatsResponse(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
     super(builder);
@@ -64,6 +65,7 @@ public final class ComputeMessageStatsResponse extends com.google.protobuf.Gener
   private int bitField0_;
   public static final int MESSAGE_COUNT_FIELD_NUMBER = 1;
   private long messageCount_ = 0L;
+
   /**
    *
    *
@@ -82,6 +84,7 @@ public final class ComputeMessageStatsResponse extends com.google.protobuf.Gener
 
   public static final int MESSAGE_BYTES_FIELD_NUMBER = 2;
   private long messageBytes_ = 0L;
+
   /**
    *
    *
@@ -100,6 +103,7 @@ public final class ComputeMessageStatsResponse extends com.google.protobuf.Gener
 
   public static final int MINIMUM_PUBLISH_TIME_FIELD_NUMBER = 3;
   private com.google.protobuf.Timestamp minimumPublishTime_;
+
   /**
    *
    *
@@ -117,6 +121,7 @@ public final class ComputeMessageStatsResponse extends com.google.protobuf.Gener
   public boolean hasMinimumPublishTime() {
     return ((bitField0_ & 0x00000001) != 0);
   }
+
   /**
    *
    *
@@ -136,6 +141,7 @@ public final class ComputeMessageStatsResponse extends com.google.protobuf.Gener
         ? com.google.protobuf.Timestamp.getDefaultInstance()
         : minimumPublishTime_;
   }
+
   /**
    *
    *
@@ -156,6 +162,7 @@ public final class ComputeMessageStatsResponse extends com.google.protobuf.Gener
 
   public static final int MINIMUM_EVENT_TIME_FIELD_NUMBER = 4;
   private com.google.protobuf.Timestamp minimumEventTime_;
+
   /**
    *
    *
@@ -173,6 +180,7 @@ public final class ComputeMessageStatsResponse extends com.google.protobuf.Gener
   public boolean hasMinimumEventTime() {
     return ((bitField0_ & 0x00000002) != 0);
   }
+
   /**
    *
    *
@@ -192,6 +200,7 @@ public final class ComputeMessageStatsResponse extends com.google.protobuf.Gener
         ? com.google.protobuf.Timestamp.getDefaultInstance()
         : minimumEventTime_;
   }
+
   /**
    *
    *
@@ -407,6 +416,7 @@ public final class ComputeMessageStatsResponse extends com.google.protobuf.Gener
     Builder builder = new Builder(parent);
     return builder;
   }
+
   /**
    *
    *
@@ -659,6 +669,7 @@ public final class ComputeMessageStatsResponse extends com.google.protobuf.Gener
     private int bitField0_;
 
     private long messageCount_;
+
     /**
      *
      *
@@ -674,6 +685,7 @@ public final class ComputeMessageStatsResponse extends com.google.protobuf.Gener
     public long getMessageCount() {
       return messageCount_;
     }
+
     /**
      *
      *
@@ -693,6 +705,7 @@ public final class ComputeMessageStatsResponse extends com.google.protobuf.Gener
       onChanged();
       return this;
     }
+
     /**
      *
      *
@@ -712,6 +725,7 @@ public final class ComputeMessageStatsResponse extends com.google.protobuf.Gener
     }
 
     private long messageBytes_;
+
     /**
      *
      *
@@ -727,6 +741,7 @@ public final class ComputeMessageStatsResponse extends com.google.protobuf.Gener
     public long getMessageBytes() {
       return messageBytes_;
     }
+
     /**
      *
      *
@@ -746,6 +761,7 @@ public final class ComputeMessageStatsResponse extends com.google.protobuf.Gener
       onChanged();
       return this;
     }
+
     /**
      *
      *
@@ -770,6 +786,7 @@ public final class ComputeMessageStatsResponse extends com.google.protobuf.Gener
             com.google.protobuf.Timestamp.Builder,
             com.google.protobuf.TimestampOrBuilder>
         minimumPublishTimeBuilder_;
+
     /**
      *
      *
@@ -786,6 +803,7 @@ public final class ComputeMessageStatsResponse extends com.google.protobuf.Gener
     public boolean hasMinimumPublishTime() {
       return ((bitField0_ & 0x00000004) != 0);
     }
+
     /**
      *
      *
@@ -808,6 +826,7 @@ public final class ComputeMessageStatsResponse extends com.google.protobuf.Gener
         return minimumPublishTimeBuilder_.getMessage();
       }
     }
+
     /**
      *
      *
@@ -832,6 +851,7 @@ public final class ComputeMessageStatsResponse extends com.google.protobuf.Gener
       onChanged();
       return this;
     }
+
     /**
      *
      *
@@ -853,6 +873,7 @@ public final class ComputeMessageStatsResponse extends com.google.protobuf.Gener
       onChanged();
       return this;
     }
+
     /**
      *
      *
@@ -882,6 +903,7 @@ public final class ComputeMessageStatsResponse extends com.google.protobuf.Gener
       }
       return this;
     }
+
     /**
      *
      *
@@ -903,6 +925,7 @@ public final class ComputeMessageStatsResponse extends com.google.protobuf.Gener
       onChanged();
       return this;
     }
+
     /**
      *
      *
@@ -919,6 +942,7 @@ public final class ComputeMessageStatsResponse extends com.google.protobuf.Gener
       onChanged();
       return getMinimumPublishTimeFieldBuilder().getBuilder();
     }
+
     /**
      *
      *
@@ -939,6 +963,7 @@ public final class ComputeMessageStatsResponse extends com.google.protobuf.Gener
             : minimumPublishTime_;
       }
     }
+
     /**
      *
      *
@@ -973,6 +998,7 @@ public final class ComputeMessageStatsResponse extends com.google.protobuf.Gener
             com.google.protobuf.Timestamp.Builder,
             com.google.protobuf.TimestampOrBuilder>
         minimumEventTimeBuilder_;
+
     /**
      *
      *
@@ -989,6 +1015,7 @@ public final class ComputeMessageStatsResponse extends com.google.protobuf.Gener
     public boolean hasMinimumEventTime() {
       return ((bitField0_ & 0x00000008) != 0);
     }
+
     /**
      *
      *
@@ -1011,6 +1038,7 @@ public final class ComputeMessageStatsResponse extends com.google.protobuf.Gener
         return minimumEventTimeBuilder_.getMessage();
       }
     }
+
     /**
      *
      *
@@ -1035,6 +1063,7 @@ public final class ComputeMessageStatsResponse extends com.google.protobuf.Gener
       onChanged();
       return this;
     }
+
     /**
      *
      *
@@ -1056,6 +1085,7 @@ public final class ComputeMessageStatsResponse extends com.google.protobuf.Gener
       onChanged();
       return this;
     }
+
     /**
      *
      *
@@ -1085,6 +1115,7 @@ public final class ComputeMessageStatsResponse extends com.google.protobuf.Gener
       }
       return this;
     }
+
     /**
      *
      *
@@ -1106,6 +1137,7 @@ public final class ComputeMessageStatsResponse extends com.google.protobuf.Gener
       onChanged();
       return this;
     }
+
     /**
      *
      *
@@ -1122,6 +1154,7 @@ public final class ComputeMessageStatsResponse extends com.google.protobuf.Gener
       onChanged();
       return getMinimumEventTimeFieldBuilder().getBuilder();
     }
+
     /**
      *
      *
@@ -1142,6 +1175,7 @@ public final class ComputeMessageStatsResponse extends com.google.protobuf.Gener
             : minimumEventTime_;
       }
     }
+
     /**
      *
      *

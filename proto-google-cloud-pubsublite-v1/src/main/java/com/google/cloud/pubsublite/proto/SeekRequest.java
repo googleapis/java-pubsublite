@@ -38,6 +38,7 @@ public final class SeekRequest extends com.google.protobuf.GeneratedMessageV3
     // @@protoc_insertion_point(message_implements:google.cloud.pubsublite.v1.SeekRequest)
     SeekRequestOrBuilder {
   private static final long serialVersionUID = 0L;
+
   // Use SeekRequest.newBuilder() to construct.
   private SeekRequest(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
     super(builder);
@@ -121,6 +122,7 @@ public final class SeekRequest extends com.google.protobuf.GeneratedMessageV3
      * <code>NAMED_TARGET_UNSPECIFIED = 0;</code>
      */
     public static final int NAMED_TARGET_UNSPECIFIED_VALUE = 0;
+
     /**
      *
      *
@@ -132,6 +134,7 @@ public final class SeekRequest extends com.google.protobuf.GeneratedMessageV3
      * <code>HEAD = 1;</code>
      */
     public static final int HEAD_VALUE = 1;
+
     /**
      *
      *
@@ -244,6 +247,7 @@ public final class SeekRequest extends com.google.protobuf.GeneratedMessageV3
     private TargetCase(int value) {
       this.value = value;
     }
+
     /**
      * @param value The number of the enum to look for.
      * @return The enum associated with the given number.
@@ -277,6 +281,7 @@ public final class SeekRequest extends com.google.protobuf.GeneratedMessageV3
   }
 
   public static final int NAMED_TARGET_FIELD_NUMBER = 1;
+
   /**
    *
    *
@@ -291,6 +296,7 @@ public final class SeekRequest extends com.google.protobuf.GeneratedMessageV3
   public boolean hasNamedTarget() {
     return targetCase_ == 1;
   }
+
   /**
    *
    *
@@ -308,6 +314,7 @@ public final class SeekRequest extends com.google.protobuf.GeneratedMessageV3
     }
     return 0;
   }
+
   /**
    *
    *
@@ -332,6 +339,7 @@ public final class SeekRequest extends com.google.protobuf.GeneratedMessageV3
   }
 
   public static final int CURSOR_FIELD_NUMBER = 2;
+
   /**
    *
    *
@@ -348,6 +356,7 @@ public final class SeekRequest extends com.google.protobuf.GeneratedMessageV3
   public boolean hasCursor() {
     return targetCase_ == 2;
   }
+
   /**
    *
    *
@@ -367,6 +376,7 @@ public final class SeekRequest extends com.google.protobuf.GeneratedMessageV3
     }
     return com.google.cloud.pubsublite.proto.Cursor.getDefaultInstance();
   }
+
   /**
    *
    *
@@ -573,6 +583,7 @@ public final class SeekRequest extends com.google.protobuf.GeneratedMessageV3
     Builder builder = new Builder(parent);
     return builder;
   }
+
   /**
    *
    *
@@ -817,6 +828,7 @@ public final class SeekRequest extends com.google.protobuf.GeneratedMessageV3
     public boolean hasNamedTarget() {
       return targetCase_ == 1;
     }
+
     /**
      *
      *
@@ -835,6 +847,7 @@ public final class SeekRequest extends com.google.protobuf.GeneratedMessageV3
       }
       return 0;
     }
+
     /**
      *
      *
@@ -853,6 +866,7 @@ public final class SeekRequest extends com.google.protobuf.GeneratedMessageV3
       onChanged();
       return this;
     }
+
     /**
      *
      *
@@ -876,6 +890,7 @@ public final class SeekRequest extends com.google.protobuf.GeneratedMessageV3
       }
       return com.google.cloud.pubsublite.proto.SeekRequest.NamedTarget.NAMED_TARGET_UNSPECIFIED;
     }
+
     /**
      *
      *
@@ -897,6 +912,7 @@ public final class SeekRequest extends com.google.protobuf.GeneratedMessageV3
       onChanged();
       return this;
     }
+
     /**
      *
      *
@@ -922,6 +938,7 @@ public final class SeekRequest extends com.google.protobuf.GeneratedMessageV3
             com.google.cloud.pubsublite.proto.Cursor.Builder,
             com.google.cloud.pubsublite.proto.CursorOrBuilder>
         cursorBuilder_;
+
     /**
      *
      *
@@ -938,6 +955,7 @@ public final class SeekRequest extends com.google.protobuf.GeneratedMessageV3
     public boolean hasCursor() {
       return targetCase_ == 2;
     }
+
     /**
      *
      *
@@ -964,6 +982,7 @@ public final class SeekRequest extends com.google.protobuf.GeneratedMessageV3
         return com.google.cloud.pubsublite.proto.Cursor.getDefaultInstance();
       }
     }
+
     /**
      *
      *
@@ -987,6 +1006,7 @@ public final class SeekRequest extends com.google.protobuf.GeneratedMessageV3
       targetCase_ = 2;
       return this;
     }
+
     /**
      *
      *
@@ -1007,6 +1027,7 @@ public final class SeekRequest extends com.google.protobuf.GeneratedMessageV3
       targetCase_ = 2;
       return this;
     }
+
     /**
      *
      *
@@ -1040,6 +1061,7 @@ public final class SeekRequest extends com.google.protobuf.GeneratedMessageV3
       targetCase_ = 2;
       return this;
     }
+
     /**
      *
      *
@@ -1066,6 +1088,7 @@ public final class SeekRequest extends com.google.protobuf.GeneratedMessageV3
       }
       return this;
     }
+
     /**
      *
      *
@@ -1079,6 +1102,7 @@ public final class SeekRequest extends com.google.protobuf.GeneratedMessageV3
     public com.google.cloud.pubsublite.proto.Cursor.Builder getCursorBuilder() {
       return getCursorFieldBuilder().getBuilder();
     }
+
     /**
      *
      *
@@ -1100,6 +1124,7 @@ public final class SeekRequest extends com.google.protobuf.GeneratedMessageV3
         return com.google.cloud.pubsublite.proto.Cursor.getDefaultInstance();
       }
     }
+
     /**
      *
      *

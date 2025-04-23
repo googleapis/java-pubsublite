@@ -37,6 +37,7 @@ public interface MessagePublishResponseOrBuilder
    * @return Whether the startCursor field is set.
    */
   boolean hasStartCursor();
+
   /**
    *
    *
@@ -50,6 +51,7 @@ public interface MessagePublishResponseOrBuilder
    * @return The startCursor.
    */
   com.google.cloud.pubsublite.proto.Cursor getStartCursor();
+
   /**
    *
    *
@@ -82,6 +84,7 @@ public interface MessagePublishResponseOrBuilder
    */
   java.util.List<com.google.cloud.pubsublite.proto.MessagePublishResponse.CursorRange>
       getCursorRangesList();
+
   /**
    *
    *
@@ -101,6 +104,7 @@ public interface MessagePublishResponseOrBuilder
    * </code>
    */
   com.google.cloud.pubsublite.proto.MessagePublishResponse.CursorRange getCursorRanges(int index);
+
   /**
    *
    *
@@ -120,6 +124,7 @@ public interface MessagePublishResponseOrBuilder
    * </code>
    */
   int getCursorRangesCount();
+
   /**
    *
    *
@@ -141,6 +146,7 @@ public interface MessagePublishResponseOrBuilder
   java.util.List<
           ? extends com.google.cloud.pubsublite.proto.MessagePublishResponse.CursorRangeOrBuilder>
       getCursorRangesOrBuilderList();
+
   /**
    *
    *

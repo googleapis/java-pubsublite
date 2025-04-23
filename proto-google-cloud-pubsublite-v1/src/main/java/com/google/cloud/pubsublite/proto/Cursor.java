@@ -33,6 +33,7 @@ public final class Cursor extends com.google.protobuf.GeneratedMessageV3
     // @@protoc_insertion_point(message_implements:google.cloud.pubsublite.v1.Cursor)
     CursorOrBuilder {
   private static final long serialVersionUID = 0L;
+
   // Use Cursor.newBuilder() to construct.
   private Cursor(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
     super(builder);
@@ -63,6 +64,7 @@ public final class Cursor extends com.google.protobuf.GeneratedMessageV3
 
   public static final int OFFSET_FIELD_NUMBER = 1;
   private long offset_ = 0L;
+
   /**
    *
    *
@@ -238,6 +240,7 @@ public final class Cursor extends com.google.protobuf.GeneratedMessageV3
     Builder builder = new Builder(parent);
     return builder;
   }
+
   /**
    *
    *
@@ -419,6 +422,7 @@ public final class Cursor extends com.google.protobuf.GeneratedMessageV3
     private int bitField0_;
 
     private long offset_;
+
     /**
      *
      *
@@ -435,6 +439,7 @@ public final class Cursor extends com.google.protobuf.GeneratedMessageV3
     public long getOffset() {
       return offset_;
     }
+
     /**
      *
      *
@@ -455,6 +460,7 @@ public final class Cursor extends com.google.protobuf.GeneratedMessageV3
       onChanged();
       return this;
     }
+
     /**
      *
      *

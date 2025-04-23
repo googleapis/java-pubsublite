@@ -49,6 +49,7 @@ public interface PartitionCursorOrBuilder
    * @return Whether the cursor field is set.
    */
   boolean hasCursor();
+
   /**
    *
    *
@@ -61,6 +62,7 @@ public interface PartitionCursorOrBuilder
    * @return The cursor.
    */
   com.google.cloud.pubsublite.proto.Cursor getCursor();
+
   /**
    *
    *

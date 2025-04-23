@@ -33,6 +33,7 @@ public final class SeekResponse extends com.google.protobuf.GeneratedMessageV3
     // @@protoc_insertion_point(message_implements:google.cloud.pubsublite.v1.SeekResponse)
     SeekResponseOrBuilder {
   private static final long serialVersionUID = 0L;
+
   // Use SeekResponse.newBuilder() to construct.
   private SeekResponse(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
     super(builder);
@@ -64,6 +65,7 @@ public final class SeekResponse extends com.google.protobuf.GeneratedMessageV3
   private int bitField0_;
   public static final int CURSOR_FIELD_NUMBER = 1;
   private com.google.cloud.pubsublite.proto.Cursor cursor_;
+
   /**
    *
    *
@@ -79,6 +81,7 @@ public final class SeekResponse extends com.google.protobuf.GeneratedMessageV3
   public boolean hasCursor() {
     return ((bitField0_ & 0x00000001) != 0);
   }
+
   /**
    *
    *
@@ -96,6 +99,7 @@ public final class SeekResponse extends com.google.protobuf.GeneratedMessageV3
         ? com.google.cloud.pubsublite.proto.Cursor.getDefaultInstance()
         : cursor_;
   }
+
   /**
    *
    *
@@ -276,6 +280,7 @@ public final class SeekResponse extends com.google.protobuf.GeneratedMessageV3
     Builder builder = new Builder(parent);
     return builder;
   }
+
   /**
    *
    *
@@ -478,6 +483,7 @@ public final class SeekResponse extends com.google.protobuf.GeneratedMessageV3
             com.google.cloud.pubsublite.proto.Cursor.Builder,
             com.google.cloud.pubsublite.proto.CursorOrBuilder>
         cursorBuilder_;
+
     /**
      *
      *
@@ -492,6 +498,7 @@ public final class SeekResponse extends com.google.protobuf.GeneratedMessageV3
     public boolean hasCursor() {
       return ((bitField0_ & 0x00000001) != 0);
     }
+
     /**
      *
      *
@@ -512,6 +519,7 @@ public final class SeekResponse extends com.google.protobuf.GeneratedMessageV3
         return cursorBuilder_.getMessage();
       }
     }
+
     /**
      *
      *
@@ -534,6 +542,7 @@ public final class SeekResponse extends com.google.protobuf.GeneratedMessageV3
       onChanged();
       return this;
     }
+
     /**
      *
      *
@@ -553,6 +562,7 @@ public final class SeekResponse extends com.google.protobuf.GeneratedMessageV3
       onChanged();
       return this;
     }
+
     /**
      *
      *
@@ -580,6 +590,7 @@ public final class SeekResponse extends com.google.protobuf.GeneratedMessageV3
       }
       return this;
     }
+
     /**
      *
      *
@@ -599,6 +610,7 @@ public final class SeekResponse extends com.google.protobuf.GeneratedMessageV3
       onChanged();
       return this;
     }
+
     /**
      *
      *
@@ -613,6 +625,7 @@ public final class SeekResponse extends com.google.protobuf.GeneratedMessageV3
       onChanged();
       return getCursorFieldBuilder().getBuilder();
     }
+
     /**
      *
      *
@@ -631,6 +644,7 @@ public final class SeekResponse extends com.google.protobuf.GeneratedMessageV3
             : cursor_;
       }
     }
+
     /**
      *
      *

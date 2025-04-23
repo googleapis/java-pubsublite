@@ -180,7 +180,8 @@ public class PartitionCountWatchingPublisher extends ProxyService
       }
       if (partitionCount < currentSize) {
         log.atWarning().log(
-            "Received an unexpected decrease in partition count. Previous partition count %s, new count %s",
+            "Received an unexpected decrease in partition count. Previous partition count %s, new"
+                + " count %s",
             currentSize, partitionCount);
         return;
       }

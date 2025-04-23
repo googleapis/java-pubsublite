@@ -36,6 +36,7 @@ public interface SequencedCommitCursorRequestOrBuilder
    * @return Whether the cursor field is set.
    */
   boolean hasCursor();
+
   /**
    *
    *
@@ -48,6 +49,7 @@ public interface SequencedCommitCursorRequestOrBuilder
    * @return The cursor.
    */
   com.google.cloud.pubsublite.proto.Cursor getCursor();
+
   /**
    *
    *

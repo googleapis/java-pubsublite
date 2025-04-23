@@ -64,6 +64,7 @@ public interface ComputeMessageStatsResponseOrBuilder
    * @return Whether the minimumPublishTime field is set.
    */
   boolean hasMinimumPublishTime();
+
   /**
    *
    *
@@ -78,6 +79,7 @@ public interface ComputeMessageStatsResponseOrBuilder
    * @return The minimumPublishTime.
    */
   com.google.protobuf.Timestamp getMinimumPublishTime();
+
   /**
    *
    *
@@ -105,6 +107,7 @@ public interface ComputeMessageStatsResponseOrBuilder
    * @return Whether the minimumEventTime field is set.
    */
   boolean hasMinimumEventTime();
+
   /**
    *
    *
@@ -119,6 +122,7 @@ public interface ComputeMessageStatsResponseOrBuilder
    * @return The minimumEventTime.
    */
   com.google.protobuf.Timestamp getMinimumEventTime();
+
   /**
    *
    *

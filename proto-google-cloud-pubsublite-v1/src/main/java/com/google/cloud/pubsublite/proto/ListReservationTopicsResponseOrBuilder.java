@@ -37,6 +37,7 @@ public interface ListReservationTopicsResponseOrBuilder
    * @return A list containing the topics.
    */
   java.util.List<java.lang.String> getTopicsList();
+
   /**
    *
    *
@@ -50,6 +51,7 @@ public interface ListReservationTopicsResponseOrBuilder
    * @return The count of topics.
    */
   int getTopicsCount();
+
   /**
    *
    *
@@ -64,6 +66,7 @@ public interface ListReservationTopicsResponseOrBuilder
    * @return The topics at the given index.
    */
   java.lang.String getTopics(int index);
+
   /**
    *
    *
@@ -92,6 +95,7 @@ public interface ListReservationTopicsResponseOrBuilder
    * @return The nextPageToken.
    */
   java.lang.String getNextPageToken();
+
   /**
    *
    *

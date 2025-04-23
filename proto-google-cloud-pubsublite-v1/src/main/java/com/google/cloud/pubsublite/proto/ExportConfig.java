@@ -34,6 +34,7 @@ public final class ExportConfig extends com.google.protobuf.GeneratedMessageV3
     // @@protoc_insertion_point(message_implements:google.cloud.pubsublite.v1.ExportConfig)
     ExportConfigOrBuilder {
   private static final long serialVersionUID = 0L;
+
   // Use ExportConfig.newBuilder() to construct.
   private ExportConfig(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
     super(builder);
@@ -139,6 +140,7 @@ public final class ExportConfig extends com.google.protobuf.GeneratedMessageV3
      * <code>STATE_UNSPECIFIED = 0;</code>
      */
     public static final int STATE_UNSPECIFIED_VALUE = 0;
+
     /**
      *
      *
@@ -149,6 +151,7 @@ public final class ExportConfig extends com.google.protobuf.GeneratedMessageV3
      * <code>ACTIVE = 1;</code>
      */
     public static final int ACTIVE_VALUE = 1;
+
     /**
      *
      *
@@ -159,6 +162,7 @@ public final class ExportConfig extends com.google.protobuf.GeneratedMessageV3
      * <code>PAUSED = 2;</code>
      */
     public static final int PAUSED_VALUE = 2;
+
     /**
      *
      *
@@ -169,6 +173,7 @@ public final class ExportConfig extends com.google.protobuf.GeneratedMessageV3
      * <code>PERMISSION_DENIED = 3;</code>
      */
     public static final int PERMISSION_DENIED_VALUE = 3;
+
     /**
      *
      *
@@ -286,6 +291,7 @@ public final class ExportConfig extends com.google.protobuf.GeneratedMessageV3
      * @return The topic.
      */
     java.lang.String getTopic();
+
     /**
      *
      *
@@ -301,6 +307,7 @@ public final class ExportConfig extends com.google.protobuf.GeneratedMessageV3
      */
     com.google.protobuf.ByteString getTopicBytes();
   }
+
   /**
    *
    *
@@ -315,6 +322,7 @@ public final class ExportConfig extends com.google.protobuf.GeneratedMessageV3
       // @@protoc_insertion_point(message_implements:google.cloud.pubsublite.v1.ExportConfig.PubSubConfig)
       PubSubConfigOrBuilder {
     private static final long serialVersionUID = 0L;
+
     // Use PubSubConfig.newBuilder() to construct.
     private PubSubConfig(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
       super(builder);
@@ -349,6 +357,7 @@ public final class ExportConfig extends com.google.protobuf.GeneratedMessageV3
 
     @SuppressWarnings("serial")
     private volatile java.lang.Object topic_ = "";
+
     /**
      *
      *
@@ -374,6 +383,7 @@ public final class ExportConfig extends com.google.protobuf.GeneratedMessageV3
         return s;
       }
     }
+
     /**
      *
      *
@@ -561,6 +571,7 @@ public final class ExportConfig extends com.google.protobuf.GeneratedMessageV3
       Builder builder = new Builder(parent);
       return builder;
     }
+
     /**
      *
      *
@@ -751,6 +762,7 @@ public final class ExportConfig extends com.google.protobuf.GeneratedMessageV3
       private int bitField0_;
 
       private java.lang.Object topic_ = "";
+
       /**
        *
        *
@@ -775,6 +787,7 @@ public final class ExportConfig extends com.google.protobuf.GeneratedMessageV3
           return (java.lang.String) ref;
         }
       }
+
       /**
        *
        *
@@ -799,6 +812,7 @@ public final class ExportConfig extends com.google.protobuf.GeneratedMessageV3
           return (com.google.protobuf.ByteString) ref;
         }
       }
+
       /**
        *
        *
@@ -822,6 +836,7 @@ public final class ExportConfig extends com.google.protobuf.GeneratedMessageV3
         onChanged();
         return this;
       }
+
       /**
        *
        *
@@ -841,6 +856,7 @@ public final class ExportConfig extends com.google.protobuf.GeneratedMessageV3
         onChanged();
         return this;
       }
+
       /**
        *
        *
@@ -947,6 +963,7 @@ public final class ExportConfig extends com.google.protobuf.GeneratedMessageV3
     private DestinationCase(int value) {
       this.value = value;
     }
+
     /**
      * @param value The number of the enum to look for.
      * @return The enum associated with the given number.
@@ -979,6 +996,7 @@ public final class ExportConfig extends com.google.protobuf.GeneratedMessageV3
 
   public static final int DESIRED_STATE_FIELD_NUMBER = 1;
   private int desiredState_ = 0;
+
   /**
    *
    *
@@ -995,6 +1013,7 @@ public final class ExportConfig extends com.google.protobuf.GeneratedMessageV3
   public int getDesiredStateValue() {
     return desiredState_;
   }
+
   /**
    *
    *
@@ -1018,6 +1037,7 @@ public final class ExportConfig extends com.google.protobuf.GeneratedMessageV3
 
   public static final int CURRENT_STATE_FIELD_NUMBER = 6;
   private int currentState_ = 0;
+
   /**
    *
    *
@@ -1036,6 +1056,7 @@ public final class ExportConfig extends com.google.protobuf.GeneratedMessageV3
   public int getCurrentStateValue() {
     return currentState_;
   }
+
   /**
    *
    *
@@ -1063,6 +1084,7 @@ public final class ExportConfig extends com.google.protobuf.GeneratedMessageV3
 
   @SuppressWarnings("serial")
   private volatile java.lang.Object deadLetterTopic_ = "";
+
   /**
    *
    *
@@ -1096,6 +1118,7 @@ public final class ExportConfig extends com.google.protobuf.GeneratedMessageV3
       return s;
     }
   }
+
   /**
    *
    *
@@ -1131,6 +1154,7 @@ public final class ExportConfig extends com.google.protobuf.GeneratedMessageV3
   }
 
   public static final int PUBSUB_CONFIG_FIELD_NUMBER = 3;
+
   /**
    *
    *
@@ -1147,6 +1171,7 @@ public final class ExportConfig extends com.google.protobuf.GeneratedMessageV3
   public boolean hasPubsubConfig() {
     return destinationCase_ == 3;
   }
+
   /**
    *
    *
@@ -1166,6 +1191,7 @@ public final class ExportConfig extends com.google.protobuf.GeneratedMessageV3
     }
     return com.google.cloud.pubsublite.proto.ExportConfig.PubSubConfig.getDefaultInstance();
   }
+
   /**
    *
    *
@@ -1391,6 +1417,7 @@ public final class ExportConfig extends com.google.protobuf.GeneratedMessageV3
     Builder builder = new Builder(parent);
     return builder;
   }
+
   /**
    *
    *
@@ -1646,6 +1673,7 @@ public final class ExportConfig extends com.google.protobuf.GeneratedMessageV3
     private int bitField0_;
 
     private int desiredState_ = 0;
+
     /**
      *
      *
@@ -1662,6 +1690,7 @@ public final class ExportConfig extends com.google.protobuf.GeneratedMessageV3
     public int getDesiredStateValue() {
       return desiredState_;
     }
+
     /**
      *
      *
@@ -1681,6 +1710,7 @@ public final class ExportConfig extends com.google.protobuf.GeneratedMessageV3
       onChanged();
       return this;
     }
+
     /**
      *
      *
@@ -1701,6 +1731,7 @@ public final class ExportConfig extends com.google.protobuf.GeneratedMessageV3
           ? com.google.cloud.pubsublite.proto.ExportConfig.State.UNRECOGNIZED
           : result;
     }
+
     /**
      *
      *
@@ -1723,6 +1754,7 @@ public final class ExportConfig extends com.google.protobuf.GeneratedMessageV3
       onChanged();
       return this;
     }
+
     /**
      *
      *
@@ -1743,6 +1775,7 @@ public final class ExportConfig extends com.google.protobuf.GeneratedMessageV3
     }
 
     private int currentState_ = 0;
+
     /**
      *
      *
@@ -1761,6 +1794,7 @@ public final class ExportConfig extends com.google.protobuf.GeneratedMessageV3
     public int getCurrentStateValue() {
       return currentState_;
     }
+
     /**
      *
      *
@@ -1782,6 +1816,7 @@ public final class ExportConfig extends com.google.protobuf.GeneratedMessageV3
       onChanged();
       return this;
     }
+
     /**
      *
      *
@@ -1804,6 +1839,7 @@ public final class ExportConfig extends com.google.protobuf.GeneratedMessageV3
           ? com.google.cloud.pubsublite.proto.ExportConfig.State.UNRECOGNIZED
           : result;
     }
+
     /**
      *
      *
@@ -1828,6 +1864,7 @@ public final class ExportConfig extends com.google.protobuf.GeneratedMessageV3
       onChanged();
       return this;
     }
+
     /**
      *
      *
@@ -1850,6 +1887,7 @@ public final class ExportConfig extends com.google.protobuf.GeneratedMessageV3
     }
 
     private java.lang.Object deadLetterTopic_ = "";
+
     /**
      *
      *
@@ -1882,6 +1920,7 @@ public final class ExportConfig extends com.google.protobuf.GeneratedMessageV3
         return (java.lang.String) ref;
       }
     }
+
     /**
      *
      *
@@ -1914,6 +1953,7 @@ public final class ExportConfig extends com.google.protobuf.GeneratedMessageV3
         return (com.google.protobuf.ByteString) ref;
       }
     }
+
     /**
      *
      *
@@ -1945,6 +1985,7 @@ public final class ExportConfig extends com.google.protobuf.GeneratedMessageV3
       onChanged();
       return this;
     }
+
     /**
      *
      *
@@ -1972,6 +2013,7 @@ public final class ExportConfig extends com.google.protobuf.GeneratedMessageV3
       onChanged();
       return this;
     }
+
     /**
      *
      *
@@ -2010,6 +2052,7 @@ public final class ExportConfig extends com.google.protobuf.GeneratedMessageV3
             com.google.cloud.pubsublite.proto.ExportConfig.PubSubConfig.Builder,
             com.google.cloud.pubsublite.proto.ExportConfig.PubSubConfigOrBuilder>
         pubsubConfigBuilder_;
+
     /**
      *
      *
@@ -2026,6 +2069,7 @@ public final class ExportConfig extends com.google.protobuf.GeneratedMessageV3
     public boolean hasPubsubConfig() {
       return destinationCase_ == 3;
     }
+
     /**
      *
      *
@@ -2052,6 +2096,7 @@ public final class ExportConfig extends com.google.protobuf.GeneratedMessageV3
         return com.google.cloud.pubsublite.proto.ExportConfig.PubSubConfig.getDefaultInstance();
       }
     }
+
     /**
      *
      *
@@ -2076,6 +2121,7 @@ public final class ExportConfig extends com.google.protobuf.GeneratedMessageV3
       destinationCase_ = 3;
       return this;
     }
+
     /**
      *
      *
@@ -2097,6 +2143,7 @@ public final class ExportConfig extends com.google.protobuf.GeneratedMessageV3
       destinationCase_ = 3;
       return this;
     }
+
     /**
      *
      *
@@ -2133,6 +2180,7 @@ public final class ExportConfig extends com.google.protobuf.GeneratedMessageV3
       destinationCase_ = 3;
       return this;
     }
+
     /**
      *
      *
@@ -2159,6 +2207,7 @@ public final class ExportConfig extends com.google.protobuf.GeneratedMessageV3
       }
       return this;
     }
+
     /**
      *
      *
@@ -2173,6 +2222,7 @@ public final class ExportConfig extends com.google.protobuf.GeneratedMessageV3
         getPubsubConfigBuilder() {
       return getPubsubConfigFieldBuilder().getBuilder();
     }
+
     /**
      *
      *
@@ -2195,6 +2245,7 @@ public final class ExportConfig extends com.google.protobuf.GeneratedMessageV3
         return com.google.cloud.pubsublite.proto.ExportConfig.PubSubConfig.getDefaultInstance();
       }
     }
+
     /**
      *
      *

@@ -26,6 +26,7 @@ import java.io.Serializable;
 @AutoValue
 public abstract class CloudZone implements Serializable {
   private static final long serialVersionUID = 867184651465L;
+
   /** A google cloud zone. */
   public static CloudZone of(CloudRegion region, char zoneId) {
     return new AutoValue_CloudZone(region, zoneId);

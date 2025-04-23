@@ -36,6 +36,7 @@ public interface PartitionAssignmentOrBuilder
    * @return A list containing the partitions.
    */
   java.util.List<java.lang.Long> getPartitionsList();
+
   /**
    *
    *
@@ -48,6 +49,7 @@ public interface PartitionAssignmentOrBuilder
    * @return The count of partitions.
    */
   int getPartitionsCount();
+
   /**
    *
    *

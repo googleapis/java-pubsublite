@@ -38,6 +38,7 @@ public interface UpdateReservationRequestOrBuilder
    * @return Whether the reservation field is set.
    */
   boolean hasReservation();
+
   /**
    *
    *
@@ -52,6 +53,7 @@ public interface UpdateReservationRequestOrBuilder
    * @return The reservation.
    */
   com.google.cloud.pubsublite.proto.Reservation getReservation();
+
   /**
    *
    *
@@ -78,6 +80,7 @@ public interface UpdateReservationRequestOrBuilder
    * @return Whether the updateMask field is set.
    */
   boolean hasUpdateMask();
+
   /**
    *
    *
@@ -91,6 +94,7 @@ public interface UpdateReservationRequestOrBuilder
    * @return The updateMask.
    */
   com.google.protobuf.FieldMask getUpdateMask();
+
   /**
    *
    *

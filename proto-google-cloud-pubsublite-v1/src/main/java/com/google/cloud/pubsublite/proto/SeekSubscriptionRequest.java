@@ -33,6 +33,7 @@ public final class SeekSubscriptionRequest extends com.google.protobuf.Generated
     // @@protoc_insertion_point(message_implements:google.cloud.pubsublite.v1.SeekSubscriptionRequest)
     SeekSubscriptionRequestOrBuilder {
   private static final long serialVersionUID = 0L;
+
   // Use SeekSubscriptionRequest.newBuilder() to construct.
   private SeekSubscriptionRequest(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
     super(builder);
@@ -117,6 +118,7 @@ public final class SeekSubscriptionRequest extends com.google.protobuf.Generated
      * <code>NAMED_TARGET_UNSPECIFIED = 0;</code>
      */
     public static final int NAMED_TARGET_UNSPECIFIED_VALUE = 0;
+
     /**
      *
      *
@@ -127,6 +129,7 @@ public final class SeekSubscriptionRequest extends com.google.protobuf.Generated
      * <code>TAIL = 1;</code>
      */
     public static final int TAIL_VALUE = 1;
+
     /**
      *
      *
@@ -241,6 +244,7 @@ public final class SeekSubscriptionRequest extends com.google.protobuf.Generated
     private TargetCase(int value) {
       this.value = value;
     }
+
     /**
      * @param value The number of the enum to look for.
      * @return The enum associated with the given number.
@@ -277,6 +281,7 @@ public final class SeekSubscriptionRequest extends com.google.protobuf.Generated
 
   @SuppressWarnings("serial")
   private volatile java.lang.Object name_ = "";
+
   /**
    *
    *
@@ -302,6 +307,7 @@ public final class SeekSubscriptionRequest extends com.google.protobuf.Generated
       return s;
     }
   }
+
   /**
    *
    *
@@ -329,6 +335,7 @@ public final class SeekSubscriptionRequest extends com.google.protobuf.Generated
   }
 
   public static final int NAMED_TARGET_FIELD_NUMBER = 2;
+
   /**
    *
    *
@@ -343,6 +350,7 @@ public final class SeekSubscriptionRequest extends com.google.protobuf.Generated
   public boolean hasNamedTarget() {
     return targetCase_ == 2;
   }
+
   /**
    *
    *
@@ -360,6 +368,7 @@ public final class SeekSubscriptionRequest extends com.google.protobuf.Generated
     }
     return 0;
   }
+
   /**
    *
    *
@@ -385,6 +394,7 @@ public final class SeekSubscriptionRequest extends com.google.protobuf.Generated
   }
 
   public static final int TIME_TARGET_FIELD_NUMBER = 3;
+
   /**
    *
    *
@@ -402,6 +412,7 @@ public final class SeekSubscriptionRequest extends com.google.protobuf.Generated
   public boolean hasTimeTarget() {
     return targetCase_ == 3;
   }
+
   /**
    *
    *
@@ -422,6 +433,7 @@ public final class SeekSubscriptionRequest extends com.google.protobuf.Generated
     }
     return com.google.cloud.pubsublite.proto.TimeTarget.getDefaultInstance();
   }
+
   /**
    *
    *
@@ -639,6 +651,7 @@ public final class SeekSubscriptionRequest extends com.google.protobuf.Generated
     Builder builder = new Builder(parent);
     return builder;
   }
+
   /**
    *
    *
@@ -881,6 +894,7 @@ public final class SeekSubscriptionRequest extends com.google.protobuf.Generated
     private int bitField0_;
 
     private java.lang.Object name_ = "";
+
     /**
      *
      *
@@ -905,6 +919,7 @@ public final class SeekSubscriptionRequest extends com.google.protobuf.Generated
         return (java.lang.String) ref;
       }
     }
+
     /**
      *
      *
@@ -929,6 +944,7 @@ public final class SeekSubscriptionRequest extends com.google.protobuf.Generated
         return (com.google.protobuf.ByteString) ref;
       }
     }
+
     /**
      *
      *
@@ -952,6 +968,7 @@ public final class SeekSubscriptionRequest extends com.google.protobuf.Generated
       onChanged();
       return this;
     }
+
     /**
      *
      *
@@ -971,6 +988,7 @@ public final class SeekSubscriptionRequest extends com.google.protobuf.Generated
       onChanged();
       return this;
     }
+
     /**
      *
      *
@@ -1012,6 +1030,7 @@ public final class SeekSubscriptionRequest extends com.google.protobuf.Generated
     public boolean hasNamedTarget() {
       return targetCase_ == 2;
     }
+
     /**
      *
      *
@@ -1031,6 +1050,7 @@ public final class SeekSubscriptionRequest extends com.google.protobuf.Generated
       }
       return 0;
     }
+
     /**
      *
      *
@@ -1050,6 +1070,7 @@ public final class SeekSubscriptionRequest extends com.google.protobuf.Generated
       onChanged();
       return this;
     }
+
     /**
      *
      *
@@ -1075,6 +1096,7 @@ public final class SeekSubscriptionRequest extends com.google.protobuf.Generated
       return com.google.cloud.pubsublite.proto.SeekSubscriptionRequest.NamedTarget
           .NAMED_TARGET_UNSPECIFIED;
     }
+
     /**
      *
      *
@@ -1098,6 +1120,7 @@ public final class SeekSubscriptionRequest extends com.google.protobuf.Generated
       onChanged();
       return this;
     }
+
     /**
      *
      *
@@ -1124,6 +1147,7 @@ public final class SeekSubscriptionRequest extends com.google.protobuf.Generated
             com.google.cloud.pubsublite.proto.TimeTarget.Builder,
             com.google.cloud.pubsublite.proto.TimeTargetOrBuilder>
         timeTargetBuilder_;
+
     /**
      *
      *
@@ -1141,6 +1165,7 @@ public final class SeekSubscriptionRequest extends com.google.protobuf.Generated
     public boolean hasTimeTarget() {
       return targetCase_ == 3;
     }
+
     /**
      *
      *
@@ -1168,6 +1193,7 @@ public final class SeekSubscriptionRequest extends com.google.protobuf.Generated
         return com.google.cloud.pubsublite.proto.TimeTarget.getDefaultInstance();
       }
     }
+
     /**
      *
      *
@@ -1192,6 +1218,7 @@ public final class SeekSubscriptionRequest extends com.google.protobuf.Generated
       targetCase_ = 3;
       return this;
     }
+
     /**
      *
      *
@@ -1214,6 +1241,7 @@ public final class SeekSubscriptionRequest extends com.google.protobuf.Generated
       targetCase_ = 3;
       return this;
     }
+
     /**
      *
      *
@@ -1248,6 +1276,7 @@ public final class SeekSubscriptionRequest extends com.google.protobuf.Generated
       targetCase_ = 3;
       return this;
     }
+
     /**
      *
      *
@@ -1275,6 +1304,7 @@ public final class SeekSubscriptionRequest extends com.google.protobuf.Generated
       }
       return this;
     }
+
     /**
      *
      *
@@ -1289,6 +1319,7 @@ public final class SeekSubscriptionRequest extends com.google.protobuf.Generated
     public com.google.cloud.pubsublite.proto.TimeTarget.Builder getTimeTargetBuilder() {
       return getTimeTargetFieldBuilder().getBuilder();
     }
+
     /**
      *
      *
@@ -1311,6 +1342,7 @@ public final class SeekSubscriptionRequest extends com.google.protobuf.Generated
         return com.google.cloud.pubsublite.proto.TimeTarget.getDefaultInstance();
       }
     }
+
     /**
      *
      *

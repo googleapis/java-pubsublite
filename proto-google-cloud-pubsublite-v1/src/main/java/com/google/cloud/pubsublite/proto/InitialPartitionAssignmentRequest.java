@@ -34,6 +34,7 @@ public final class InitialPartitionAssignmentRequest extends com.google.protobuf
     // @@protoc_insertion_point(message_implements:google.cloud.pubsublite.v1.InitialPartitionAssignmentRequest)
     InitialPartitionAssignmentRequestOrBuilder {
   private static final long serialVersionUID = 0L;
+
   // Use InitialPartitionAssignmentRequest.newBuilder() to construct.
   private InitialPartitionAssignmentRequest(
       com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
@@ -70,6 +71,7 @@ public final class InitialPartitionAssignmentRequest extends com.google.protobuf
 
   @SuppressWarnings("serial")
   private volatile java.lang.Object subscription_ = "";
+
   /**
    *
    *
@@ -95,6 +97,7 @@ public final class InitialPartitionAssignmentRequest extends com.google.protobuf
       return s;
     }
   }
+
   /**
    *
    *
@@ -123,6 +126,7 @@ public final class InitialPartitionAssignmentRequest extends com.google.protobuf
 
   public static final int CLIENT_ID_FIELD_NUMBER = 2;
   private com.google.protobuf.ByteString clientId_ = com.google.protobuf.ByteString.EMPTY;
+
   /**
    *
    *
@@ -316,6 +320,7 @@ public final class InitialPartitionAssignmentRequest extends com.google.protobuf
     Builder builder = new Builder(parent);
     return builder;
   }
+
   /**
    *
    *
@@ -521,6 +526,7 @@ public final class InitialPartitionAssignmentRequest extends com.google.protobuf
     private int bitField0_;
 
     private java.lang.Object subscription_ = "";
+
     /**
      *
      *
@@ -545,6 +551,7 @@ public final class InitialPartitionAssignmentRequest extends com.google.protobuf
         return (java.lang.String) ref;
       }
     }
+
     /**
      *
      *
@@ -569,6 +576,7 @@ public final class InitialPartitionAssignmentRequest extends com.google.protobuf
         return (com.google.protobuf.ByteString) ref;
       }
     }
+
     /**
      *
      *
@@ -592,6 +600,7 @@ public final class InitialPartitionAssignmentRequest extends com.google.protobuf
       onChanged();
       return this;
     }
+
     /**
      *
      *
@@ -611,6 +620,7 @@ public final class InitialPartitionAssignmentRequest extends com.google.protobuf
       onChanged();
       return this;
     }
+
     /**
      *
      *
@@ -637,6 +647,7 @@ public final class InitialPartitionAssignmentRequest extends com.google.protobuf
     }
 
     private com.google.protobuf.ByteString clientId_ = com.google.protobuf.ByteString.EMPTY;
+
     /**
      *
      *
@@ -659,6 +670,7 @@ public final class InitialPartitionAssignmentRequest extends com.google.protobuf
     public com.google.protobuf.ByteString getClientId() {
       return clientId_;
     }
+
     /**
      *
      *
@@ -687,6 +699,7 @@ public final class InitialPartitionAssignmentRequest extends com.google.protobuf
       onChanged();
       return this;
     }
+
     /**
      *
      *

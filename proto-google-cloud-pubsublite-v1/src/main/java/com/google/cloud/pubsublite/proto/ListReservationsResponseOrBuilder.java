@@ -35,6 +35,7 @@ public interface ListReservationsResponseOrBuilder
    * <code>repeated .google.cloud.pubsublite.v1.Reservation reservations = 1;</code>
    */
   java.util.List<com.google.cloud.pubsublite.proto.Reservation> getReservationsList();
+
   /**
    *
    *
@@ -46,6 +47,7 @@ public interface ListReservationsResponseOrBuilder
    * <code>repeated .google.cloud.pubsublite.v1.Reservation reservations = 1;</code>
    */
   com.google.cloud.pubsublite.proto.Reservation getReservations(int index);
+
   /**
    *
    *
@@ -57,6 +59,7 @@ public interface ListReservationsResponseOrBuilder
    * <code>repeated .google.cloud.pubsublite.v1.Reservation reservations = 1;</code>
    */
   int getReservationsCount();
+
   /**
    *
    *
@@ -69,6 +72,7 @@ public interface ListReservationsResponseOrBuilder
    */
   java.util.List<? extends com.google.cloud.pubsublite.proto.ReservationOrBuilder>
       getReservationsOrBuilderList();
+
   /**
    *
    *
@@ -94,6 +98,7 @@ public interface ListReservationsResponseOrBuilder
    * @return The nextPageToken.
    */
   java.lang.String getNextPageToken();
+
   /**
    *
    *

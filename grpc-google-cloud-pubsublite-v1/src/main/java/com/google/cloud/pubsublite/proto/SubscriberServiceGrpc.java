@@ -97,6 +97,19 @@ public final class SubscriberServiceGrpc {
     return SubscriberServiceStub.newStub(factory, channel);
   }
 
+  /** Creates a new blocking-style stub that supports all types of calls on the service */
+  public static SubscriberServiceBlockingV2Stub newBlockingV2Stub(io.grpc.Channel channel) {
+    io.grpc.stub.AbstractStub.StubFactory<SubscriberServiceBlockingV2Stub> factory =
+        new io.grpc.stub.AbstractStub.StubFactory<SubscriberServiceBlockingV2Stub>() {
+          @java.lang.Override
+          public SubscriberServiceBlockingV2Stub newStub(
+              io.grpc.Channel channel, io.grpc.CallOptions callOptions) {
+            return new SubscriberServiceBlockingV2Stub(channel, callOptions);
+          }
+        };
+    return SubscriberServiceBlockingV2Stub.newStub(factory, channel);
+  }
+
   /**
    * Creates a new blocking-style stub that supports unary and streaming output calls on the service
    */
@@ -206,6 +219,44 @@ public final class SubscriberServiceGrpc {
 
   /**
    * A stub to allow clients to do synchronous rpc calls to service SubscriberService.
+   *
+   * <pre>
+   * The service that a subscriber client application uses to receive messages
+   * from subscriptions.
+   * </pre>
+   */
+  public static final class SubscriberServiceBlockingV2Stub
+      extends io.grpc.stub.AbstractBlockingStub<SubscriberServiceBlockingV2Stub> {
+    private SubscriberServiceBlockingV2Stub(
+        io.grpc.Channel channel, io.grpc.CallOptions callOptions) {
+      super(channel, callOptions);
+    }
+
+    @java.lang.Override
+    protected SubscriberServiceBlockingV2Stub build(
+        io.grpc.Channel channel, io.grpc.CallOptions callOptions) {
+      return new SubscriberServiceBlockingV2Stub(channel, callOptions);
+    }
+
+    /**
+     *
+     *
+     * <pre>
+     * Establishes a stream with the server for receiving messages.
+     * </pre>
+     */
+    @io.grpc.ExperimentalApi("https://github.com/grpc/grpc-java/issues/10918")
+    public io.grpc.stub.BlockingClientCall<
+            com.google.cloud.pubsublite.proto.SubscribeRequest,
+            com.google.cloud.pubsublite.proto.SubscribeResponse>
+        subscribe() {
+      return io.grpc.stub.ClientCalls.blockingBidiStreamingCall(
+          getChannel(), getSubscribeMethod(), getCallOptions());
+    }
+  }
+
+  /**
+   * A stub to allow clients to do limited synchronous rpc calls to service SubscriberService.
    *
    * <pre>
    * The service that a subscriber client application uses to receive messages

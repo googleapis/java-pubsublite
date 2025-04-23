@@ -35,6 +35,7 @@ public final class InitialCommitCursorRequest extends com.google.protobuf.Genera
     // @@protoc_insertion_point(message_implements:google.cloud.pubsublite.v1.InitialCommitCursorRequest)
     InitialCommitCursorRequestOrBuilder {
   private static final long serialVersionUID = 0L;
+
   // Use InitialCommitCursorRequest.newBuilder() to construct.
   private InitialCommitCursorRequest(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
     super(builder);
@@ -69,6 +70,7 @@ public final class InitialCommitCursorRequest extends com.google.protobuf.Genera
 
   @SuppressWarnings("serial")
   private volatile java.lang.Object subscription_ = "";
+
   /**
    *
    *
@@ -92,6 +94,7 @@ public final class InitialCommitCursorRequest extends com.google.protobuf.Genera
       return s;
     }
   }
+
   /**
    *
    *
@@ -118,6 +121,7 @@ public final class InitialCommitCursorRequest extends com.google.protobuf.Genera
 
   public static final int PARTITION_FIELD_NUMBER = 2;
   private long partition_ = 0L;
+
   /**
    *
    *
@@ -304,6 +308,7 @@ public final class InitialCommitCursorRequest extends com.google.protobuf.Genera
     Builder builder = new Builder(parent);
     return builder;
   }
+
   /**
    *
    *
@@ -506,6 +511,7 @@ public final class InitialCommitCursorRequest extends com.google.protobuf.Genera
     private int bitField0_;
 
     private java.lang.Object subscription_ = "";
+
     /**
      *
      *
@@ -528,6 +534,7 @@ public final class InitialCommitCursorRequest extends com.google.protobuf.Genera
         return (java.lang.String) ref;
       }
     }
+
     /**
      *
      *
@@ -550,6 +557,7 @@ public final class InitialCommitCursorRequest extends com.google.protobuf.Genera
         return (com.google.protobuf.ByteString) ref;
       }
     }
+
     /**
      *
      *
@@ -571,6 +579,7 @@ public final class InitialCommitCursorRequest extends com.google.protobuf.Genera
       onChanged();
       return this;
     }
+
     /**
      *
      *
@@ -588,6 +597,7 @@ public final class InitialCommitCursorRequest extends com.google.protobuf.Genera
       onChanged();
       return this;
     }
+
     /**
      *
      *
@@ -612,6 +622,7 @@ public final class InitialCommitCursorRequest extends com.google.protobuf.Genera
     }
 
     private long partition_;
+
     /**
      *
      *
@@ -628,6 +639,7 @@ public final class InitialCommitCursorRequest extends com.google.protobuf.Genera
     public long getPartition() {
       return partition_;
     }
+
     /**
      *
      *
@@ -648,6 +660,7 @@ public final class InitialCommitCursorRequest extends com.google.protobuf.Genera
       onChanged();
       return this;
     }
+
     /**
      *
      *

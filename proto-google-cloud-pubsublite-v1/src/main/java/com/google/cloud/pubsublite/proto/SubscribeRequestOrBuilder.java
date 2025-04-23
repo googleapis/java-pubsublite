@@ -36,6 +36,7 @@ public interface SubscribeRequestOrBuilder
    * @return Whether the initial field is set.
    */
   boolean hasInitial();
+
   /**
    *
    *
@@ -48,6 +49,7 @@ public interface SubscribeRequestOrBuilder
    * @return The initial.
    */
   com.google.cloud.pubsublite.proto.InitialSubscribeRequest getInitial();
+
   /**
    *
    *
@@ -71,6 +73,7 @@ public interface SubscribeRequestOrBuilder
    * @return Whether the seek field is set.
    */
   boolean hasSeek();
+
   /**
    *
    *
@@ -83,6 +86,7 @@ public interface SubscribeRequestOrBuilder
    * @return The seek.
    */
   com.google.cloud.pubsublite.proto.SeekRequest getSeek();
+
   /**
    *
    *
@@ -106,6 +110,7 @@ public interface SubscribeRequestOrBuilder
    * @return Whether the flowControl field is set.
    */
   boolean hasFlowControl();
+
   /**
    *
    *
@@ -118,6 +123,7 @@ public interface SubscribeRequestOrBuilder
    * @return The flowControl.
    */
   com.google.cloud.pubsublite.proto.FlowControlRequest getFlowControl();
+
   /**
    *
    *

@@ -36,6 +36,7 @@ public interface PartitionAssignmentRequestOrBuilder
    * @return Whether the initial field is set.
    */
   boolean hasInitial();
+
   /**
    *
    *
@@ -48,6 +49,7 @@ public interface PartitionAssignmentRequestOrBuilder
    * @return The initial.
    */
   com.google.cloud.pubsublite.proto.InitialPartitionAssignmentRequest getInitial();
+
   /**
    *
    *
@@ -72,6 +74,7 @@ public interface PartitionAssignmentRequestOrBuilder
    * @return Whether the ack field is set.
    */
   boolean hasAck();
+
   /**
    *
    *
@@ -84,6 +87,7 @@ public interface PartitionAssignmentRequestOrBuilder
    * @return The ack.
    */
   com.google.cloud.pubsublite.proto.PartitionAssignmentAck getAck();
+
   /**
    *
    *

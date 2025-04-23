@@ -38,6 +38,7 @@ public interface TopicOrBuilder
    * @return The name.
    */
   java.lang.String getName();
+
   /**
    *
    *
@@ -65,6 +66,7 @@ public interface TopicOrBuilder
    * @return Whether the partitionConfig field is set.
    */
   boolean hasPartitionConfig();
+
   /**
    *
    *
@@ -77,6 +79,7 @@ public interface TopicOrBuilder
    * @return The partitionConfig.
    */
   com.google.cloud.pubsublite.proto.Topic.PartitionConfig getPartitionConfig();
+
   /**
    *
    *
@@ -100,6 +103,7 @@ public interface TopicOrBuilder
    * @return Whether the retentionConfig field is set.
    */
   boolean hasRetentionConfig();
+
   /**
    *
    *
@@ -112,6 +116,7 @@ public interface TopicOrBuilder
    * @return The retentionConfig.
    */
   com.google.cloud.pubsublite.proto.Topic.RetentionConfig getRetentionConfig();
+
   /**
    *
    *
@@ -135,6 +140,7 @@ public interface TopicOrBuilder
    * @return Whether the reservationConfig field is set.
    */
   boolean hasReservationConfig();
+
   /**
    *
    *
@@ -147,6 +153,7 @@ public interface TopicOrBuilder
    * @return The reservationConfig.
    */
   com.google.cloud.pubsublite.proto.Topic.ReservationConfig getReservationConfig();
+
   /**
    *
    *

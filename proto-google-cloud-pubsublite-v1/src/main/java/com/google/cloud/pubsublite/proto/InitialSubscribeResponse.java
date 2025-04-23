@@ -33,6 +33,7 @@ public final class InitialSubscribeResponse extends com.google.protobuf.Generate
     // @@protoc_insertion_point(message_implements:google.cloud.pubsublite.v1.InitialSubscribeResponse)
     InitialSubscribeResponseOrBuilder {
   private static final long serialVersionUID = 0L;
+
   // Use InitialSubscribeResponse.newBuilder() to construct.
   private InitialSubscribeResponse(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
     super(builder);
@@ -64,6 +65,7 @@ public final class InitialSubscribeResponse extends com.google.protobuf.Generate
   private int bitField0_;
   public static final int CURSOR_FIELD_NUMBER = 1;
   private com.google.cloud.pubsublite.proto.Cursor cursor_;
+
   /**
    *
    *
@@ -80,6 +82,7 @@ public final class InitialSubscribeResponse extends com.google.protobuf.Generate
   public boolean hasCursor() {
     return ((bitField0_ & 0x00000001) != 0);
   }
+
   /**
    *
    *
@@ -98,6 +101,7 @@ public final class InitialSubscribeResponse extends com.google.protobuf.Generate
         ? com.google.cloud.pubsublite.proto.Cursor.getDefaultInstance()
         : cursor_;
   }
+
   /**
    *
    *
@@ -280,6 +284,7 @@ public final class InitialSubscribeResponse extends com.google.protobuf.Generate
     Builder builder = new Builder(parent);
     return builder;
   }
+
   /**
    *
    *
@@ -483,6 +488,7 @@ public final class InitialSubscribeResponse extends com.google.protobuf.Generate
             com.google.cloud.pubsublite.proto.Cursor.Builder,
             com.google.cloud.pubsublite.proto.CursorOrBuilder>
         cursorBuilder_;
+
     /**
      *
      *
@@ -498,6 +504,7 @@ public final class InitialSubscribeResponse extends com.google.protobuf.Generate
     public boolean hasCursor() {
       return ((bitField0_ & 0x00000001) != 0);
     }
+
     /**
      *
      *
@@ -519,6 +526,7 @@ public final class InitialSubscribeResponse extends com.google.protobuf.Generate
         return cursorBuilder_.getMessage();
       }
     }
+
     /**
      *
      *
@@ -542,6 +550,7 @@ public final class InitialSubscribeResponse extends com.google.protobuf.Generate
       onChanged();
       return this;
     }
+
     /**
      *
      *
@@ -562,6 +571,7 @@ public final class InitialSubscribeResponse extends com.google.protobuf.Generate
       onChanged();
       return this;
     }
+
     /**
      *
      *
@@ -590,6 +600,7 @@ public final class InitialSubscribeResponse extends com.google.protobuf.Generate
       }
       return this;
     }
+
     /**
      *
      *
@@ -610,6 +621,7 @@ public final class InitialSubscribeResponse extends com.google.protobuf.Generate
       onChanged();
       return this;
     }
+
     /**
      *
      *
@@ -625,6 +637,7 @@ public final class InitialSubscribeResponse extends com.google.protobuf.Generate
       onChanged();
       return getCursorFieldBuilder().getBuilder();
     }
+
     /**
      *
      *
@@ -644,6 +657,7 @@ public final class InitialSubscribeResponse extends com.google.protobuf.Generate
             : cursor_;
       }
     }
+
     /**
      *
      *

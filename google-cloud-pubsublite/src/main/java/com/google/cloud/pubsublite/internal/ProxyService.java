@@ -75,6 +75,7 @@ public abstract class ProxyService extends AbstractApiService {
 
   // Method to be called on service start after dependent services start.
   protected void start() throws CheckedApiException {}
+
   // Method to be called on service stop before dependent services stop.
   protected void stop() throws CheckedApiException {}
 

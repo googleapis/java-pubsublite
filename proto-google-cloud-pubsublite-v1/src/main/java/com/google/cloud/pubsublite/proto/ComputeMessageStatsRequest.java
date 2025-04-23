@@ -33,6 +33,7 @@ public final class ComputeMessageStatsRequest extends com.google.protobuf.Genera
     // @@protoc_insertion_point(message_implements:google.cloud.pubsublite.v1.ComputeMessageStatsRequest)
     ComputeMessageStatsRequestOrBuilder {
   private static final long serialVersionUID = 0L;
+
   // Use ComputeMessageStatsRequest.newBuilder() to construct.
   private ComputeMessageStatsRequest(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
     super(builder);
@@ -68,6 +69,7 @@ public final class ComputeMessageStatsRequest extends com.google.protobuf.Genera
 
   @SuppressWarnings("serial")
   private volatile java.lang.Object topic_ = "";
+
   /**
    *
    *
@@ -93,6 +95,7 @@ public final class ComputeMessageStatsRequest extends com.google.protobuf.Genera
       return s;
     }
   }
+
   /**
    *
    *
@@ -121,6 +124,7 @@ public final class ComputeMessageStatsRequest extends com.google.protobuf.Genera
 
   public static final int PARTITION_FIELD_NUMBER = 2;
   private long partition_ = 0L;
+
   /**
    *
    *
@@ -139,6 +143,7 @@ public final class ComputeMessageStatsRequest extends com.google.protobuf.Genera
 
   public static final int START_CURSOR_FIELD_NUMBER = 3;
   private com.google.cloud.pubsublite.proto.Cursor startCursor_;
+
   /**
    *
    *
@@ -154,6 +159,7 @@ public final class ComputeMessageStatsRequest extends com.google.protobuf.Genera
   public boolean hasStartCursor() {
     return ((bitField0_ & 0x00000001) != 0);
   }
+
   /**
    *
    *
@@ -171,6 +177,7 @@ public final class ComputeMessageStatsRequest extends com.google.protobuf.Genera
         ? com.google.cloud.pubsublite.proto.Cursor.getDefaultInstance()
         : startCursor_;
   }
+
   /**
    *
    *
@@ -189,6 +196,7 @@ public final class ComputeMessageStatsRequest extends com.google.protobuf.Genera
 
   public static final int END_CURSOR_FIELD_NUMBER = 4;
   private com.google.cloud.pubsublite.proto.Cursor endCursor_;
+
   /**
    *
    *
@@ -206,6 +214,7 @@ public final class ComputeMessageStatsRequest extends com.google.protobuf.Genera
   public boolean hasEndCursor() {
     return ((bitField0_ & 0x00000002) != 0);
   }
+
   /**
    *
    *
@@ -225,6 +234,7 @@ public final class ComputeMessageStatsRequest extends com.google.protobuf.Genera
         ? com.google.cloud.pubsublite.proto.Cursor.getDefaultInstance()
         : endCursor_;
   }
+
   /**
    *
    *
@@ -440,6 +450,7 @@ public final class ComputeMessageStatsRequest extends com.google.protobuf.Genera
     Builder builder = new Builder(parent);
     return builder;
   }
+
   /**
    *
    *
@@ -689,6 +700,7 @@ public final class ComputeMessageStatsRequest extends com.google.protobuf.Genera
     private int bitField0_;
 
     private java.lang.Object topic_ = "";
+
     /**
      *
      *
@@ -713,6 +725,7 @@ public final class ComputeMessageStatsRequest extends com.google.protobuf.Genera
         return (java.lang.String) ref;
       }
     }
+
     /**
      *
      *
@@ -737,6 +750,7 @@ public final class ComputeMessageStatsRequest extends com.google.protobuf.Genera
         return (com.google.protobuf.ByteString) ref;
       }
     }
+
     /**
      *
      *
@@ -760,6 +774,7 @@ public final class ComputeMessageStatsRequest extends com.google.protobuf.Genera
       onChanged();
       return this;
     }
+
     /**
      *
      *
@@ -779,6 +794,7 @@ public final class ComputeMessageStatsRequest extends com.google.protobuf.Genera
       onChanged();
       return this;
     }
+
     /**
      *
      *
@@ -805,6 +821,7 @@ public final class ComputeMessageStatsRequest extends com.google.protobuf.Genera
     }
 
     private long partition_;
+
     /**
      *
      *
@@ -820,6 +837,7 @@ public final class ComputeMessageStatsRequest extends com.google.protobuf.Genera
     public long getPartition() {
       return partition_;
     }
+
     /**
      *
      *
@@ -839,6 +857,7 @@ public final class ComputeMessageStatsRequest extends com.google.protobuf.Genera
       onChanged();
       return this;
     }
+
     /**
      *
      *
@@ -863,6 +882,7 @@ public final class ComputeMessageStatsRequest extends com.google.protobuf.Genera
             com.google.cloud.pubsublite.proto.Cursor.Builder,
             com.google.cloud.pubsublite.proto.CursorOrBuilder>
         startCursorBuilder_;
+
     /**
      *
      *
@@ -877,6 +897,7 @@ public final class ComputeMessageStatsRequest extends com.google.protobuf.Genera
     public boolean hasStartCursor() {
       return ((bitField0_ & 0x00000004) != 0);
     }
+
     /**
      *
      *
@@ -897,6 +918,7 @@ public final class ComputeMessageStatsRequest extends com.google.protobuf.Genera
         return startCursorBuilder_.getMessage();
       }
     }
+
     /**
      *
      *
@@ -919,6 +941,7 @@ public final class ComputeMessageStatsRequest extends com.google.protobuf.Genera
       onChanged();
       return this;
     }
+
     /**
      *
      *
@@ -939,6 +962,7 @@ public final class ComputeMessageStatsRequest extends com.google.protobuf.Genera
       onChanged();
       return this;
     }
+
     /**
      *
      *
@@ -966,6 +990,7 @@ public final class ComputeMessageStatsRequest extends com.google.protobuf.Genera
       }
       return this;
     }
+
     /**
      *
      *
@@ -985,6 +1010,7 @@ public final class ComputeMessageStatsRequest extends com.google.protobuf.Genera
       onChanged();
       return this;
     }
+
     /**
      *
      *
@@ -999,6 +1025,7 @@ public final class ComputeMessageStatsRequest extends com.google.protobuf.Genera
       onChanged();
       return getStartCursorFieldBuilder().getBuilder();
     }
+
     /**
      *
      *
@@ -1017,6 +1044,7 @@ public final class ComputeMessageStatsRequest extends com.google.protobuf.Genera
             : startCursor_;
       }
     }
+
     /**
      *
      *
@@ -1049,6 +1077,7 @@ public final class ComputeMessageStatsRequest extends com.google.protobuf.Genera
             com.google.cloud.pubsublite.proto.Cursor.Builder,
             com.google.cloud.pubsublite.proto.CursorOrBuilder>
         endCursorBuilder_;
+
     /**
      *
      *
@@ -1065,6 +1094,7 @@ public final class ComputeMessageStatsRequest extends com.google.protobuf.Genera
     public boolean hasEndCursor() {
       return ((bitField0_ & 0x00000008) != 0);
     }
+
     /**
      *
      *
@@ -1087,6 +1117,7 @@ public final class ComputeMessageStatsRequest extends com.google.protobuf.Genera
         return endCursorBuilder_.getMessage();
       }
     }
+
     /**
      *
      *
@@ -1111,6 +1142,7 @@ public final class ComputeMessageStatsRequest extends com.google.protobuf.Genera
       onChanged();
       return this;
     }
+
     /**
      *
      *
@@ -1132,6 +1164,7 @@ public final class ComputeMessageStatsRequest extends com.google.protobuf.Genera
       onChanged();
       return this;
     }
+
     /**
      *
      *
@@ -1161,6 +1194,7 @@ public final class ComputeMessageStatsRequest extends com.google.protobuf.Genera
       }
       return this;
     }
+
     /**
      *
      *
@@ -1182,6 +1216,7 @@ public final class ComputeMessageStatsRequest extends com.google.protobuf.Genera
       onChanged();
       return this;
     }
+
     /**
      *
      *
@@ -1198,6 +1233,7 @@ public final class ComputeMessageStatsRequest extends com.google.protobuf.Genera
       onChanged();
       return getEndCursorFieldBuilder().getBuilder();
     }
+
     /**
      *
      *
@@ -1218,6 +1254,7 @@ public final class ComputeMessageStatsRequest extends com.google.protobuf.Genera
             : endCursor_;
       }
     }
+
     /**
      *
      *

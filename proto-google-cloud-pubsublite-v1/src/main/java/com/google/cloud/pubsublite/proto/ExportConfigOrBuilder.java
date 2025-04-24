@@ -37,6 +37,7 @@ public interface ExportConfigOrBuilder
    * @return The enum numeric value on the wire for desiredState.
    */
   int getDesiredStateValue();
+
   /**
    *
    *
@@ -66,6 +67,7 @@ public interface ExportConfigOrBuilder
    * @return The enum numeric value on the wire for currentState.
    */
   int getCurrentStateValue();
+
   /**
    *
    *
@@ -104,6 +106,7 @@ public interface ExportConfigOrBuilder
    * @return The deadLetterTopic.
    */
   java.lang.String getDeadLetterTopic();
+
   /**
    *
    *
@@ -140,6 +143,7 @@ public interface ExportConfigOrBuilder
    * @return Whether the pubsubConfig field is set.
    */
   boolean hasPubsubConfig();
+
   /**
    *
    *
@@ -153,6 +157,7 @@ public interface ExportConfigOrBuilder
    * @return The pubsubConfig.
    */
   com.google.cloud.pubsublite.proto.ExportConfig.PubSubConfig getPubsubConfig();
+
   /**
    *
    *

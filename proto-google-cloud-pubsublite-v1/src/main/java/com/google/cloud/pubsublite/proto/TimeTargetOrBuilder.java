@@ -38,6 +38,7 @@ public interface TimeTargetOrBuilder
    * @return Whether the publishTime field is set.
    */
   boolean hasPublishTime();
+
   /**
    *
    *
@@ -52,6 +53,7 @@ public interface TimeTargetOrBuilder
    * @return The publishTime.
    */
   com.google.protobuf.Timestamp getPublishTime();
+
   /**
    *
    *
@@ -81,6 +83,7 @@ public interface TimeTargetOrBuilder
    * @return Whether the eventTime field is set.
    */
   boolean hasEventTime();
+
   /**
    *
    *
@@ -97,6 +100,7 @@ public interface TimeTargetOrBuilder
    * @return The eventTime.
    */
   com.google.protobuf.Timestamp getEventTime();
+
   /**
    *
    *

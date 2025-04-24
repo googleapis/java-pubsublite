@@ -34,6 +34,7 @@ public interface MessageResponseOrBuilder
    * <code>repeated .google.cloud.pubsublite.v1.SequencedMessage messages = 1;</code>
    */
   java.util.List<com.google.cloud.pubsublite.proto.SequencedMessage> getMessagesList();
+
   /**
    *
    *
@@ -44,6 +45,7 @@ public interface MessageResponseOrBuilder
    * <code>repeated .google.cloud.pubsublite.v1.SequencedMessage messages = 1;</code>
    */
   com.google.cloud.pubsublite.proto.SequencedMessage getMessages(int index);
+
   /**
    *
    *
@@ -54,6 +56,7 @@ public interface MessageResponseOrBuilder
    * <code>repeated .google.cloud.pubsublite.v1.SequencedMessage messages = 1;</code>
    */
   int getMessagesCount();
+
   /**
    *
    *
@@ -65,6 +68,7 @@ public interface MessageResponseOrBuilder
    */
   java.util.List<? extends com.google.cloud.pubsublite.proto.SequencedMessageOrBuilder>
       getMessagesOrBuilderList();
+
   /**
    *
    *

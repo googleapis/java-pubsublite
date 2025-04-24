@@ -38,6 +38,7 @@ public interface ComputeTimeCursorResponseOrBuilder
    * @return Whether the cursor field is set.
    */
   boolean hasCursor();
+
   /**
    *
    *
@@ -52,6 +53,7 @@ public interface ComputeTimeCursorResponseOrBuilder
    * @return The cursor.
    */
   com.google.cloud.pubsublite.proto.Cursor getCursor();
+
   /**
    *
    *

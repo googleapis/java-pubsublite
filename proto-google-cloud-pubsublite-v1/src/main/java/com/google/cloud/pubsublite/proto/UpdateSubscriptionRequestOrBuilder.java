@@ -39,6 +39,7 @@ public interface UpdateSubscriptionRequestOrBuilder
    * @return Whether the subscription field is set.
    */
   boolean hasSubscription();
+
   /**
    *
    *
@@ -54,6 +55,7 @@ public interface UpdateSubscriptionRequestOrBuilder
    * @return The subscription.
    */
   com.google.cloud.pubsublite.proto.Subscription getSubscription();
+
   /**
    *
    *
@@ -81,6 +83,7 @@ public interface UpdateSubscriptionRequestOrBuilder
    * @return Whether the updateMask field is set.
    */
   boolean hasUpdateMask();
+
   /**
    *
    *
@@ -94,6 +97,7 @@ public interface UpdateSubscriptionRequestOrBuilder
    * @return The updateMask.
    */
   com.google.protobuf.FieldMask getUpdateMask();
+
   /**
    *
    *

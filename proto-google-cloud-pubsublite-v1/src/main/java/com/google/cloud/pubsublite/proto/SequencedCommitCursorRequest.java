@@ -34,6 +34,7 @@ public final class SequencedCommitCursorRequest extends com.google.protobuf.Gene
     // @@protoc_insertion_point(message_implements:google.cloud.pubsublite.v1.SequencedCommitCursorRequest)
     SequencedCommitCursorRequestOrBuilder {
   private static final long serialVersionUID = 0L;
+
   // Use SequencedCommitCursorRequest.newBuilder() to construct.
   private SequencedCommitCursorRequest(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
     super(builder);
@@ -65,6 +66,7 @@ public final class SequencedCommitCursorRequest extends com.google.protobuf.Gene
   private int bitField0_;
   public static final int CURSOR_FIELD_NUMBER = 1;
   private com.google.cloud.pubsublite.proto.Cursor cursor_;
+
   /**
    *
    *
@@ -80,6 +82,7 @@ public final class SequencedCommitCursorRequest extends com.google.protobuf.Gene
   public boolean hasCursor() {
     return ((bitField0_ & 0x00000001) != 0);
   }
+
   /**
    *
    *
@@ -97,6 +100,7 @@ public final class SequencedCommitCursorRequest extends com.google.protobuf.Gene
         ? com.google.cloud.pubsublite.proto.Cursor.getDefaultInstance()
         : cursor_;
   }
+
   /**
    *
    *
@@ -278,6 +282,7 @@ public final class SequencedCommitCursorRequest extends com.google.protobuf.Gene
     Builder builder = new Builder(parent);
     return builder;
   }
+
   /**
    *
    *
@@ -485,6 +490,7 @@ public final class SequencedCommitCursorRequest extends com.google.protobuf.Gene
             com.google.cloud.pubsublite.proto.Cursor.Builder,
             com.google.cloud.pubsublite.proto.CursorOrBuilder>
         cursorBuilder_;
+
     /**
      *
      *
@@ -499,6 +505,7 @@ public final class SequencedCommitCursorRequest extends com.google.protobuf.Gene
     public boolean hasCursor() {
       return ((bitField0_ & 0x00000001) != 0);
     }
+
     /**
      *
      *
@@ -519,6 +526,7 @@ public final class SequencedCommitCursorRequest extends com.google.protobuf.Gene
         return cursorBuilder_.getMessage();
       }
     }
+
     /**
      *
      *
@@ -541,6 +549,7 @@ public final class SequencedCommitCursorRequest extends com.google.protobuf.Gene
       onChanged();
       return this;
     }
+
     /**
      *
      *
@@ -560,6 +569,7 @@ public final class SequencedCommitCursorRequest extends com.google.protobuf.Gene
       onChanged();
       return this;
     }
+
     /**
      *
      *
@@ -587,6 +597,7 @@ public final class SequencedCommitCursorRequest extends com.google.protobuf.Gene
       }
       return this;
     }
+
     /**
      *
      *
@@ -606,6 +617,7 @@ public final class SequencedCommitCursorRequest extends com.google.protobuf.Gene
       onChanged();
       return this;
     }
+
     /**
      *
      *
@@ -620,6 +632,7 @@ public final class SequencedCommitCursorRequest extends com.google.protobuf.Gene
       onChanged();
       return getCursorFieldBuilder().getBuilder();
     }
+
     /**
      *
      *
@@ -638,6 +651,7 @@ public final class SequencedCommitCursorRequest extends com.google.protobuf.Gene
             : cursor_;
       }
     }
+
     /**
      *
      *

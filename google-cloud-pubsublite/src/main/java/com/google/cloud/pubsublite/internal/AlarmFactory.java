@@ -30,7 +30,8 @@ public interface AlarmFactory {
   // Get around lack of interface support for private static members in java 8
   final class Internal {
     private static final GoogleLogger LOGGER = GoogleLogger.forEnclosingClass();
-  };
+  }
+  ;
 
   static AlarmFactory create(Duration duration) {
     return runnable ->

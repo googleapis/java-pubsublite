@@ -36,6 +36,7 @@ public interface PublishResponseOrBuilder
    * @return Whether the initialResponse field is set.
    */
   boolean hasInitialResponse();
+
   /**
    *
    *
@@ -48,6 +49,7 @@ public interface PublishResponseOrBuilder
    * @return The initialResponse.
    */
   com.google.cloud.pubsublite.proto.InitialPublishResponse getInitialResponse();
+
   /**
    *
    *
@@ -71,6 +73,7 @@ public interface PublishResponseOrBuilder
    * @return Whether the messageResponse field is set.
    */
   boolean hasMessageResponse();
+
   /**
    *
    *
@@ -83,6 +86,7 @@ public interface PublishResponseOrBuilder
    * @return The messageResponse.
    */
   com.google.cloud.pubsublite.proto.MessagePublishResponse getMessageResponse();
+
   /**
    *
    *

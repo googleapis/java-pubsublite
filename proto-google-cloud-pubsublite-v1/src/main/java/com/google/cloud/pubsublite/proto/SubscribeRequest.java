@@ -33,6 +33,7 @@ public final class SubscribeRequest extends com.google.protobuf.GeneratedMessage
     // @@protoc_insertion_point(message_implements:google.cloud.pubsublite.v1.SubscribeRequest)
     SubscribeRequestOrBuilder {
   private static final long serialVersionUID = 0L;
+
   // Use SubscribeRequest.newBuilder() to construct.
   private SubscribeRequest(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
     super(builder);
@@ -79,6 +80,7 @@ public final class SubscribeRequest extends com.google.protobuf.GeneratedMessage
     private RequestCase(int value) {
       this.value = value;
     }
+
     /**
      * @param value The number of the enum to look for.
      * @return The enum associated with the given number.
@@ -114,6 +116,7 @@ public final class SubscribeRequest extends com.google.protobuf.GeneratedMessage
   }
 
   public static final int INITIAL_FIELD_NUMBER = 1;
+
   /**
    *
    *
@@ -129,6 +132,7 @@ public final class SubscribeRequest extends com.google.protobuf.GeneratedMessage
   public boolean hasInitial() {
     return requestCase_ == 1;
   }
+
   /**
    *
    *
@@ -147,6 +151,7 @@ public final class SubscribeRequest extends com.google.protobuf.GeneratedMessage
     }
     return com.google.cloud.pubsublite.proto.InitialSubscribeRequest.getDefaultInstance();
   }
+
   /**
    *
    *
@@ -165,6 +170,7 @@ public final class SubscribeRequest extends com.google.protobuf.GeneratedMessage
   }
 
   public static final int SEEK_FIELD_NUMBER = 2;
+
   /**
    *
    *
@@ -180,6 +186,7 @@ public final class SubscribeRequest extends com.google.protobuf.GeneratedMessage
   public boolean hasSeek() {
     return requestCase_ == 2;
   }
+
   /**
    *
    *
@@ -198,6 +205,7 @@ public final class SubscribeRequest extends com.google.protobuf.GeneratedMessage
     }
     return com.google.cloud.pubsublite.proto.SeekRequest.getDefaultInstance();
   }
+
   /**
    *
    *
@@ -216,6 +224,7 @@ public final class SubscribeRequest extends com.google.protobuf.GeneratedMessage
   }
 
   public static final int FLOW_CONTROL_FIELD_NUMBER = 3;
+
   /**
    *
    *
@@ -231,6 +240,7 @@ public final class SubscribeRequest extends com.google.protobuf.GeneratedMessage
   public boolean hasFlowControl() {
     return requestCase_ == 3;
   }
+
   /**
    *
    *
@@ -249,6 +259,7 @@ public final class SubscribeRequest extends com.google.protobuf.GeneratedMessage
     }
     return com.google.cloud.pubsublite.proto.FlowControlRequest.getDefaultInstance();
   }
+
   /**
    *
    *
@@ -470,6 +481,7 @@ public final class SubscribeRequest extends com.google.protobuf.GeneratedMessage
     Builder builder = new Builder(parent);
     return builder;
   }
+
   /**
    *
    *
@@ -722,6 +734,7 @@ public final class SubscribeRequest extends com.google.protobuf.GeneratedMessage
             com.google.cloud.pubsublite.proto.InitialSubscribeRequest.Builder,
             com.google.cloud.pubsublite.proto.InitialSubscribeRequestOrBuilder>
         initialBuilder_;
+
     /**
      *
      *
@@ -737,6 +750,7 @@ public final class SubscribeRequest extends com.google.protobuf.GeneratedMessage
     public boolean hasInitial() {
       return requestCase_ == 1;
     }
+
     /**
      *
      *
@@ -762,6 +776,7 @@ public final class SubscribeRequest extends com.google.protobuf.GeneratedMessage
         return com.google.cloud.pubsublite.proto.InitialSubscribeRequest.getDefaultInstance();
       }
     }
+
     /**
      *
      *
@@ -784,6 +799,7 @@ public final class SubscribeRequest extends com.google.protobuf.GeneratedMessage
       requestCase_ = 1;
       return this;
     }
+
     /**
      *
      *
@@ -804,6 +820,7 @@ public final class SubscribeRequest extends com.google.protobuf.GeneratedMessage
       requestCase_ = 1;
       return this;
     }
+
     /**
      *
      *
@@ -837,6 +854,7 @@ public final class SubscribeRequest extends com.google.protobuf.GeneratedMessage
       requestCase_ = 1;
       return this;
     }
+
     /**
      *
      *
@@ -862,6 +880,7 @@ public final class SubscribeRequest extends com.google.protobuf.GeneratedMessage
       }
       return this;
     }
+
     /**
      *
      *
@@ -874,6 +893,7 @@ public final class SubscribeRequest extends com.google.protobuf.GeneratedMessage
     public com.google.cloud.pubsublite.proto.InitialSubscribeRequest.Builder getInitialBuilder() {
       return getInitialFieldBuilder().getBuilder();
     }
+
     /**
      *
      *
@@ -895,6 +915,7 @@ public final class SubscribeRequest extends com.google.protobuf.GeneratedMessage
         return com.google.cloud.pubsublite.proto.InitialSubscribeRequest.getDefaultInstance();
       }
     }
+
     /**
      *
      *
@@ -933,6 +954,7 @@ public final class SubscribeRequest extends com.google.protobuf.GeneratedMessage
             com.google.cloud.pubsublite.proto.SeekRequest.Builder,
             com.google.cloud.pubsublite.proto.SeekRequestOrBuilder>
         seekBuilder_;
+
     /**
      *
      *
@@ -948,6 +970,7 @@ public final class SubscribeRequest extends com.google.protobuf.GeneratedMessage
     public boolean hasSeek() {
       return requestCase_ == 2;
     }
+
     /**
      *
      *
@@ -973,6 +996,7 @@ public final class SubscribeRequest extends com.google.protobuf.GeneratedMessage
         return com.google.cloud.pubsublite.proto.SeekRequest.getDefaultInstance();
       }
     }
+
     /**
      *
      *
@@ -995,6 +1019,7 @@ public final class SubscribeRequest extends com.google.protobuf.GeneratedMessage
       requestCase_ = 2;
       return this;
     }
+
     /**
      *
      *
@@ -1014,6 +1039,7 @@ public final class SubscribeRequest extends com.google.protobuf.GeneratedMessage
       requestCase_ = 2;
       return this;
     }
+
     /**
      *
      *
@@ -1046,6 +1072,7 @@ public final class SubscribeRequest extends com.google.protobuf.GeneratedMessage
       requestCase_ = 2;
       return this;
     }
+
     /**
      *
      *
@@ -1071,6 +1098,7 @@ public final class SubscribeRequest extends com.google.protobuf.GeneratedMessage
       }
       return this;
     }
+
     /**
      *
      *
@@ -1083,6 +1111,7 @@ public final class SubscribeRequest extends com.google.protobuf.GeneratedMessage
     public com.google.cloud.pubsublite.proto.SeekRequest.Builder getSeekBuilder() {
       return getSeekFieldBuilder().getBuilder();
     }
+
     /**
      *
      *
@@ -1103,6 +1132,7 @@ public final class SubscribeRequest extends com.google.protobuf.GeneratedMessage
         return com.google.cloud.pubsublite.proto.SeekRequest.getDefaultInstance();
       }
     }
+
     /**
      *
      *
@@ -1141,6 +1171,7 @@ public final class SubscribeRequest extends com.google.protobuf.GeneratedMessage
             com.google.cloud.pubsublite.proto.FlowControlRequest.Builder,
             com.google.cloud.pubsublite.proto.FlowControlRequestOrBuilder>
         flowControlBuilder_;
+
     /**
      *
      *
@@ -1156,6 +1187,7 @@ public final class SubscribeRequest extends com.google.protobuf.GeneratedMessage
     public boolean hasFlowControl() {
       return requestCase_ == 3;
     }
+
     /**
      *
      *
@@ -1181,6 +1213,7 @@ public final class SubscribeRequest extends com.google.protobuf.GeneratedMessage
         return com.google.cloud.pubsublite.proto.FlowControlRequest.getDefaultInstance();
       }
     }
+
     /**
      *
      *
@@ -1203,6 +1236,7 @@ public final class SubscribeRequest extends com.google.protobuf.GeneratedMessage
       requestCase_ = 3;
       return this;
     }
+
     /**
      *
      *
@@ -1223,6 +1257,7 @@ public final class SubscribeRequest extends com.google.protobuf.GeneratedMessage
       requestCase_ = 3;
       return this;
     }
+
     /**
      *
      *
@@ -1256,6 +1291,7 @@ public final class SubscribeRequest extends com.google.protobuf.GeneratedMessage
       requestCase_ = 3;
       return this;
     }
+
     /**
      *
      *
@@ -1281,6 +1317,7 @@ public final class SubscribeRequest extends com.google.protobuf.GeneratedMessage
       }
       return this;
     }
+
     /**
      *
      *
@@ -1293,6 +1330,7 @@ public final class SubscribeRequest extends com.google.protobuf.GeneratedMessage
     public com.google.cloud.pubsublite.proto.FlowControlRequest.Builder getFlowControlBuilder() {
       return getFlowControlFieldBuilder().getBuilder();
     }
+
     /**
      *
      *
@@ -1313,6 +1351,7 @@ public final class SubscribeRequest extends com.google.protobuf.GeneratedMessage
         return com.google.cloud.pubsublite.proto.FlowControlRequest.getDefaultInstance();
       }
     }
+
     /**
      *
      *

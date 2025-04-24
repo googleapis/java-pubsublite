@@ -153,9 +153,7 @@ public class SinglePartitionSubscriberTest {
     long bytes2 = 111;
     SequencedMessage message2 =
         SequencedMessage.fromProto(
-            MESSAGE
-                .toProto()
-                .toBuilder()
+            MESSAGE.toProto().toBuilder()
                 .setSizeBytes(bytes2)
                 .setPublishTime(Timestamps.fromMillis(System.currentTimeMillis()))
                 .setCursor(Cursor.newBuilder().setOffset(OFFSET.value() + 1))

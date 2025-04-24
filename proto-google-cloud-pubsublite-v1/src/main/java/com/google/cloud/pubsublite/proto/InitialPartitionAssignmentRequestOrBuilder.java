@@ -38,6 +38,7 @@ public interface InitialPartitionAssignmentRequestOrBuilder
    * @return The subscription.
    */
   java.lang.String getSubscription();
+
   /**
    *
    *

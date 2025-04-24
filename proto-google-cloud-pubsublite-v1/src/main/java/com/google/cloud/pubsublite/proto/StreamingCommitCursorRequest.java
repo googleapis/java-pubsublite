@@ -33,6 +33,7 @@ public final class StreamingCommitCursorRequest extends com.google.protobuf.Gene
     // @@protoc_insertion_point(message_implements:google.cloud.pubsublite.v1.StreamingCommitCursorRequest)
     StreamingCommitCursorRequestOrBuilder {
   private static final long serialVersionUID = 0L;
+
   // Use StreamingCommitCursorRequest.newBuilder() to construct.
   private StreamingCommitCursorRequest(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
     super(builder);
@@ -78,6 +79,7 @@ public final class StreamingCommitCursorRequest extends com.google.protobuf.Gene
     private RequestCase(int value) {
       this.value = value;
     }
+
     /**
      * @param value The number of the enum to look for.
      * @return The enum associated with the given number.
@@ -111,6 +113,7 @@ public final class StreamingCommitCursorRequest extends com.google.protobuf.Gene
   }
 
   public static final int INITIAL_FIELD_NUMBER = 1;
+
   /**
    *
    *
@@ -126,6 +129,7 @@ public final class StreamingCommitCursorRequest extends com.google.protobuf.Gene
   public boolean hasInitial() {
     return requestCase_ == 1;
   }
+
   /**
    *
    *
@@ -144,6 +148,7 @@ public final class StreamingCommitCursorRequest extends com.google.protobuf.Gene
     }
     return com.google.cloud.pubsublite.proto.InitialCommitCursorRequest.getDefaultInstance();
   }
+
   /**
    *
    *
@@ -163,6 +168,7 @@ public final class StreamingCommitCursorRequest extends com.google.protobuf.Gene
   }
 
   public static final int COMMIT_FIELD_NUMBER = 2;
+
   /**
    *
    *
@@ -178,6 +184,7 @@ public final class StreamingCommitCursorRequest extends com.google.protobuf.Gene
   public boolean hasCommit() {
     return requestCase_ == 2;
   }
+
   /**
    *
    *
@@ -196,6 +203,7 @@ public final class StreamingCommitCursorRequest extends com.google.protobuf.Gene
     }
     return com.google.cloud.pubsublite.proto.SequencedCommitCursorRequest.getDefaultInstance();
   }
+
   /**
    *
    *
@@ -406,6 +414,7 @@ public final class StreamingCommitCursorRequest extends com.google.protobuf.Gene
     Builder builder = new Builder(parent);
     return builder;
   }
+
   /**
    *
    *
@@ -645,6 +654,7 @@ public final class StreamingCommitCursorRequest extends com.google.protobuf.Gene
             com.google.cloud.pubsublite.proto.InitialCommitCursorRequest.Builder,
             com.google.cloud.pubsublite.proto.InitialCommitCursorRequestOrBuilder>
         initialBuilder_;
+
     /**
      *
      *
@@ -660,6 +670,7 @@ public final class StreamingCommitCursorRequest extends com.google.protobuf.Gene
     public boolean hasInitial() {
       return requestCase_ == 1;
     }
+
     /**
      *
      *
@@ -685,6 +696,7 @@ public final class StreamingCommitCursorRequest extends com.google.protobuf.Gene
         return com.google.cloud.pubsublite.proto.InitialCommitCursorRequest.getDefaultInstance();
       }
     }
+
     /**
      *
      *
@@ -707,6 +719,7 @@ public final class StreamingCommitCursorRequest extends com.google.protobuf.Gene
       requestCase_ = 1;
       return this;
     }
+
     /**
      *
      *
@@ -727,6 +740,7 @@ public final class StreamingCommitCursorRequest extends com.google.protobuf.Gene
       requestCase_ = 1;
       return this;
     }
+
     /**
      *
      *
@@ -762,6 +776,7 @@ public final class StreamingCommitCursorRequest extends com.google.protobuf.Gene
       requestCase_ = 1;
       return this;
     }
+
     /**
      *
      *
@@ -787,6 +802,7 @@ public final class StreamingCommitCursorRequest extends com.google.protobuf.Gene
       }
       return this;
     }
+
     /**
      *
      *
@@ -800,6 +816,7 @@ public final class StreamingCommitCursorRequest extends com.google.protobuf.Gene
         getInitialBuilder() {
       return getInitialFieldBuilder().getBuilder();
     }
+
     /**
      *
      *
@@ -821,6 +838,7 @@ public final class StreamingCommitCursorRequest extends com.google.protobuf.Gene
         return com.google.cloud.pubsublite.proto.InitialCommitCursorRequest.getDefaultInstance();
       }
     }
+
     /**
      *
      *
@@ -860,6 +878,7 @@ public final class StreamingCommitCursorRequest extends com.google.protobuf.Gene
             com.google.cloud.pubsublite.proto.SequencedCommitCursorRequest.Builder,
             com.google.cloud.pubsublite.proto.SequencedCommitCursorRequestOrBuilder>
         commitBuilder_;
+
     /**
      *
      *
@@ -875,6 +894,7 @@ public final class StreamingCommitCursorRequest extends com.google.protobuf.Gene
     public boolean hasCommit() {
       return requestCase_ == 2;
     }
+
     /**
      *
      *
@@ -900,6 +920,7 @@ public final class StreamingCommitCursorRequest extends com.google.protobuf.Gene
         return com.google.cloud.pubsublite.proto.SequencedCommitCursorRequest.getDefaultInstance();
       }
     }
+
     /**
      *
      *
@@ -922,6 +943,7 @@ public final class StreamingCommitCursorRequest extends com.google.protobuf.Gene
       requestCase_ = 2;
       return this;
     }
+
     /**
      *
      *
@@ -942,6 +964,7 @@ public final class StreamingCommitCursorRequest extends com.google.protobuf.Gene
       requestCase_ = 2;
       return this;
     }
+
     /**
      *
      *
@@ -977,6 +1000,7 @@ public final class StreamingCommitCursorRequest extends com.google.protobuf.Gene
       requestCase_ = 2;
       return this;
     }
+
     /**
      *
      *
@@ -1002,6 +1026,7 @@ public final class StreamingCommitCursorRequest extends com.google.protobuf.Gene
       }
       return this;
     }
+
     /**
      *
      *
@@ -1015,6 +1040,7 @@ public final class StreamingCommitCursorRequest extends com.google.protobuf.Gene
         getCommitBuilder() {
       return getCommitFieldBuilder().getBuilder();
     }
+
     /**
      *
      *
@@ -1036,6 +1062,7 @@ public final class StreamingCommitCursorRequest extends com.google.protobuf.Gene
         return com.google.cloud.pubsublite.proto.SequencedCommitCursorRequest.getDefaultInstance();
       }
     }
+
     /**
      *
      *

@@ -33,6 +33,7 @@ public final class InitialPublishRequest extends com.google.protobuf.GeneratedMe
     // @@protoc_insertion_point(message_implements:google.cloud.pubsublite.v1.InitialPublishRequest)
     InitialPublishRequestOrBuilder {
   private static final long serialVersionUID = 0L;
+
   // Use InitialPublishRequest.newBuilder() to construct.
   private InitialPublishRequest(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
     super(builder);
@@ -68,6 +69,7 @@ public final class InitialPublishRequest extends com.google.protobuf.GeneratedMe
 
   @SuppressWarnings("serial")
   private volatile java.lang.Object topic_ = "";
+
   /**
    *
    *
@@ -91,6 +93,7 @@ public final class InitialPublishRequest extends com.google.protobuf.GeneratedMe
       return s;
     }
   }
+
   /**
    *
    *
@@ -117,6 +120,7 @@ public final class InitialPublishRequest extends com.google.protobuf.GeneratedMe
 
   public static final int PARTITION_FIELD_NUMBER = 2;
   private long partition_ = 0L;
+
   /**
    *
    *
@@ -137,6 +141,7 @@ public final class InitialPublishRequest extends com.google.protobuf.GeneratedMe
 
   public static final int CLIENT_ID_FIELD_NUMBER = 3;
   private com.google.protobuf.ByteString clientId_ = com.google.protobuf.ByteString.EMPTY;
+
   /**
    *
    *
@@ -337,6 +342,7 @@ public final class InitialPublishRequest extends com.google.protobuf.GeneratedMe
     Builder builder = new Builder(parent);
     return builder;
   }
+
   /**
    *
    *
@@ -547,6 +553,7 @@ public final class InitialPublishRequest extends com.google.protobuf.GeneratedMe
     private int bitField0_;
 
     private java.lang.Object topic_ = "";
+
     /**
      *
      *
@@ -569,6 +576,7 @@ public final class InitialPublishRequest extends com.google.protobuf.GeneratedMe
         return (java.lang.String) ref;
       }
     }
+
     /**
      *
      *
@@ -591,6 +599,7 @@ public final class InitialPublishRequest extends com.google.protobuf.GeneratedMe
         return (com.google.protobuf.ByteString) ref;
       }
     }
+
     /**
      *
      *
@@ -612,6 +621,7 @@ public final class InitialPublishRequest extends com.google.protobuf.GeneratedMe
       onChanged();
       return this;
     }
+
     /**
      *
      *
@@ -629,6 +639,7 @@ public final class InitialPublishRequest extends com.google.protobuf.GeneratedMe
       onChanged();
       return this;
     }
+
     /**
      *
      *
@@ -653,6 +664,7 @@ public final class InitialPublishRequest extends com.google.protobuf.GeneratedMe
     }
 
     private long partition_;
+
     /**
      *
      *
@@ -670,6 +682,7 @@ public final class InitialPublishRequest extends com.google.protobuf.GeneratedMe
     public long getPartition() {
       return partition_;
     }
+
     /**
      *
      *
@@ -691,6 +704,7 @@ public final class InitialPublishRequest extends com.google.protobuf.GeneratedMe
       onChanged();
       return this;
     }
+
     /**
      *
      *
@@ -712,6 +726,7 @@ public final class InitialPublishRequest extends com.google.protobuf.GeneratedMe
     }
 
     private com.google.protobuf.ByteString clientId_ = com.google.protobuf.ByteString.EMPTY;
+
     /**
      *
      *
@@ -733,6 +748,7 @@ public final class InitialPublishRequest extends com.google.protobuf.GeneratedMe
     public com.google.protobuf.ByteString getClientId() {
       return clientId_;
     }
+
     /**
      *
      *
@@ -760,6 +776,7 @@ public final class InitialPublishRequest extends com.google.protobuf.GeneratedMe
       onChanged();
       return this;
     }
+
     /**
      *
      *

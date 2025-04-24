@@ -34,6 +34,7 @@ public final class ComputeTimeCursorRequest extends com.google.protobuf.Generate
     // @@protoc_insertion_point(message_implements:google.cloud.pubsublite.v1.ComputeTimeCursorRequest)
     ComputeTimeCursorRequestOrBuilder {
   private static final long serialVersionUID = 0L;
+
   // Use ComputeTimeCursorRequest.newBuilder() to construct.
   private ComputeTimeCursorRequest(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
     super(builder);
@@ -69,6 +70,7 @@ public final class ComputeTimeCursorRequest extends com.google.protobuf.Generate
 
   @SuppressWarnings("serial")
   private volatile java.lang.Object topic_ = "";
+
   /**
    *
    *
@@ -94,6 +96,7 @@ public final class ComputeTimeCursorRequest extends com.google.protobuf.Generate
       return s;
     }
   }
+
   /**
    *
    *
@@ -122,6 +125,7 @@ public final class ComputeTimeCursorRequest extends com.google.protobuf.Generate
 
   public static final int PARTITION_FIELD_NUMBER = 2;
   private long partition_ = 0L;
+
   /**
    *
    *
@@ -140,6 +144,7 @@ public final class ComputeTimeCursorRequest extends com.google.protobuf.Generate
 
   public static final int TARGET_FIELD_NUMBER = 3;
   private com.google.cloud.pubsublite.proto.TimeTarget target_;
+
   /**
    *
    *
@@ -158,6 +163,7 @@ public final class ComputeTimeCursorRequest extends com.google.protobuf.Generate
   public boolean hasTarget() {
     return ((bitField0_ & 0x00000001) != 0);
   }
+
   /**
    *
    *
@@ -178,6 +184,7 @@ public final class ComputeTimeCursorRequest extends com.google.protobuf.Generate
         ? com.google.cloud.pubsublite.proto.TimeTarget.getDefaultInstance()
         : target_;
   }
+
   /**
    *
    *
@@ -380,6 +387,7 @@ public final class ComputeTimeCursorRequest extends com.google.protobuf.Generate
     Builder builder = new Builder(parent);
     return builder;
   }
+
   /**
    *
    *
@@ -607,6 +615,7 @@ public final class ComputeTimeCursorRequest extends com.google.protobuf.Generate
     private int bitField0_;
 
     private java.lang.Object topic_ = "";
+
     /**
      *
      *
@@ -631,6 +640,7 @@ public final class ComputeTimeCursorRequest extends com.google.protobuf.Generate
         return (java.lang.String) ref;
       }
     }
+
     /**
      *
      *
@@ -655,6 +665,7 @@ public final class ComputeTimeCursorRequest extends com.google.protobuf.Generate
         return (com.google.protobuf.ByteString) ref;
       }
     }
+
     /**
      *
      *
@@ -678,6 +689,7 @@ public final class ComputeTimeCursorRequest extends com.google.protobuf.Generate
       onChanged();
       return this;
     }
+
     /**
      *
      *
@@ -697,6 +709,7 @@ public final class ComputeTimeCursorRequest extends com.google.protobuf.Generate
       onChanged();
       return this;
     }
+
     /**
      *
      *
@@ -723,6 +736,7 @@ public final class ComputeTimeCursorRequest extends com.google.protobuf.Generate
     }
 
     private long partition_;
+
     /**
      *
      *
@@ -738,6 +752,7 @@ public final class ComputeTimeCursorRequest extends com.google.protobuf.Generate
     public long getPartition() {
       return partition_;
     }
+
     /**
      *
      *
@@ -757,6 +772,7 @@ public final class ComputeTimeCursorRequest extends com.google.protobuf.Generate
       onChanged();
       return this;
     }
+
     /**
      *
      *
@@ -781,6 +797,7 @@ public final class ComputeTimeCursorRequest extends com.google.protobuf.Generate
             com.google.cloud.pubsublite.proto.TimeTarget.Builder,
             com.google.cloud.pubsublite.proto.TimeTargetOrBuilder>
         targetBuilder_;
+
     /**
      *
      *
@@ -798,6 +815,7 @@ public final class ComputeTimeCursorRequest extends com.google.protobuf.Generate
     public boolean hasTarget() {
       return ((bitField0_ & 0x00000004) != 0);
     }
+
     /**
      *
      *
@@ -821,6 +839,7 @@ public final class ComputeTimeCursorRequest extends com.google.protobuf.Generate
         return targetBuilder_.getMessage();
       }
     }
+
     /**
      *
      *
@@ -846,6 +865,7 @@ public final class ComputeTimeCursorRequest extends com.google.protobuf.Generate
       onChanged();
       return this;
     }
+
     /**
      *
      *
@@ -868,6 +888,7 @@ public final class ComputeTimeCursorRequest extends com.google.protobuf.Generate
       onChanged();
       return this;
     }
+
     /**
      *
      *
@@ -898,6 +919,7 @@ public final class ComputeTimeCursorRequest extends com.google.protobuf.Generate
       }
       return this;
     }
+
     /**
      *
      *
@@ -920,6 +942,7 @@ public final class ComputeTimeCursorRequest extends com.google.protobuf.Generate
       onChanged();
       return this;
     }
+
     /**
      *
      *
@@ -937,6 +960,7 @@ public final class ComputeTimeCursorRequest extends com.google.protobuf.Generate
       onChanged();
       return getTargetFieldBuilder().getBuilder();
     }
+
     /**
      *
      *
@@ -958,6 +982,7 @@ public final class ComputeTimeCursorRequest extends com.google.protobuf.Generate
             : target_;
       }
     }
+
     /**
      *
      *

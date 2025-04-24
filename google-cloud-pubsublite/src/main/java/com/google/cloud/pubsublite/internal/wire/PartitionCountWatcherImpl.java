@@ -86,7 +86,8 @@ public class PartitionCountWatcherImpl extends AbstractApiService implements Par
       partitionCountReceiver.accept(partitionCount);
     } catch (TimeoutException e) {
       log.atWarning().withCause(e).log(
-          "Timed out polling for partition count- see https://github.com/googleapis/gax-java/issues/1577");
+          "Timed out polling for partition count- see"
+              + " https://github.com/googleapis/gax-java/issues/1577");
       throw toCanonical(e).underlying;
     } catch (Throwable t) {
       throw toCanonical(t).underlying;

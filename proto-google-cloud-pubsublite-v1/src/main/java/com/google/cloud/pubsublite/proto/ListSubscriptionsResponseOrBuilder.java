@@ -35,6 +35,7 @@ public interface ListSubscriptionsResponseOrBuilder
    * <code>repeated .google.cloud.pubsublite.v1.Subscription subscriptions = 1;</code>
    */
   java.util.List<com.google.cloud.pubsublite.proto.Subscription> getSubscriptionsList();
+
   /**
    *
    *
@@ -46,6 +47,7 @@ public interface ListSubscriptionsResponseOrBuilder
    * <code>repeated .google.cloud.pubsublite.v1.Subscription subscriptions = 1;</code>
    */
   com.google.cloud.pubsublite.proto.Subscription getSubscriptions(int index);
+
   /**
    *
    *
@@ -57,6 +59,7 @@ public interface ListSubscriptionsResponseOrBuilder
    * <code>repeated .google.cloud.pubsublite.v1.Subscription subscriptions = 1;</code>
    */
   int getSubscriptionsCount();
+
   /**
    *
    *
@@ -69,6 +72,7 @@ public interface ListSubscriptionsResponseOrBuilder
    */
   java.util.List<? extends com.google.cloud.pubsublite.proto.SubscriptionOrBuilder>
       getSubscriptionsOrBuilderList();
+
   /**
    *
    *
@@ -94,6 +98,7 @@ public interface ListSubscriptionsResponseOrBuilder
    * @return The nextPageToken.
    */
   java.lang.String getNextPageToken();
+
   /**
    *
    *

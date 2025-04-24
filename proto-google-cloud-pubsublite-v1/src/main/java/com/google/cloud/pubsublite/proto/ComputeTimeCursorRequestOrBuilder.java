@@ -38,6 +38,7 @@ public interface ComputeTimeCursorRequestOrBuilder
    * @return The topic.
    */
   java.lang.String getTopic();
+
   /**
    *
    *
@@ -81,6 +82,7 @@ public interface ComputeTimeCursorRequestOrBuilder
    * @return Whether the target field is set.
    */
   boolean hasTarget();
+
   /**
    *
    *
@@ -96,6 +98,7 @@ public interface ComputeTimeCursorRequestOrBuilder
    * @return The target.
    */
   com.google.cloud.pubsublite.proto.TimeTarget getTarget();
+
   /**
    *
    *

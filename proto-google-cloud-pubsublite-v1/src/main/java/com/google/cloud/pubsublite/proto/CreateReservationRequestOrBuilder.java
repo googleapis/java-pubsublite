@@ -39,6 +39,7 @@ public interface CreateReservationRequestOrBuilder
    * @return The parent.
    */
   java.lang.String getParent();
+
   /**
    *
    *
@@ -70,6 +71,7 @@ public interface CreateReservationRequestOrBuilder
    * @return Whether the reservation field is set.
    */
   boolean hasReservation();
+
   /**
    *
    *
@@ -85,6 +87,7 @@ public interface CreateReservationRequestOrBuilder
    * @return The reservation.
    */
   com.google.cloud.pubsublite.proto.Reservation getReservation();
+
   /**
    *
    *
@@ -114,6 +117,7 @@ public interface CreateReservationRequestOrBuilder
    * @return The reservationId.
    */
   java.lang.String getReservationId();
+
   /**
    *
    *

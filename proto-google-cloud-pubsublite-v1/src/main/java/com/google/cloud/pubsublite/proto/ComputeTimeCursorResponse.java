@@ -34,6 +34,7 @@ public final class ComputeTimeCursorResponse extends com.google.protobuf.Generat
     // @@protoc_insertion_point(message_implements:google.cloud.pubsublite.v1.ComputeTimeCursorResponse)
     ComputeTimeCursorResponseOrBuilder {
   private static final long serialVersionUID = 0L;
+
   // Use ComputeTimeCursorResponse.newBuilder() to construct.
   private ComputeTimeCursorResponse(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
     super(builder);
@@ -65,6 +66,7 @@ public final class ComputeTimeCursorResponse extends com.google.protobuf.Generat
   private int bitField0_;
   public static final int CURSOR_FIELD_NUMBER = 1;
   private com.google.cloud.pubsublite.proto.Cursor cursor_;
+
   /**
    *
    *
@@ -82,6 +84,7 @@ public final class ComputeTimeCursorResponse extends com.google.protobuf.Generat
   public boolean hasCursor() {
     return ((bitField0_ & 0x00000001) != 0);
   }
+
   /**
    *
    *
@@ -101,6 +104,7 @@ public final class ComputeTimeCursorResponse extends com.google.protobuf.Generat
         ? com.google.cloud.pubsublite.proto.Cursor.getDefaultInstance()
         : cursor_;
   }
+
   /**
    *
    *
@@ -284,6 +288,7 @@ public final class ComputeTimeCursorResponse extends com.google.protobuf.Generat
     Builder builder = new Builder(parent);
     return builder;
   }
+
   /**
    *
    *
@@ -488,6 +493,7 @@ public final class ComputeTimeCursorResponse extends com.google.protobuf.Generat
             com.google.cloud.pubsublite.proto.Cursor.Builder,
             com.google.cloud.pubsublite.proto.CursorOrBuilder>
         cursorBuilder_;
+
     /**
      *
      *
@@ -504,6 +510,7 @@ public final class ComputeTimeCursorResponse extends com.google.protobuf.Generat
     public boolean hasCursor() {
       return ((bitField0_ & 0x00000001) != 0);
     }
+
     /**
      *
      *
@@ -526,6 +533,7 @@ public final class ComputeTimeCursorResponse extends com.google.protobuf.Generat
         return cursorBuilder_.getMessage();
       }
     }
+
     /**
      *
      *
@@ -550,6 +558,7 @@ public final class ComputeTimeCursorResponse extends com.google.protobuf.Generat
       onChanged();
       return this;
     }
+
     /**
      *
      *
@@ -571,6 +580,7 @@ public final class ComputeTimeCursorResponse extends com.google.protobuf.Generat
       onChanged();
       return this;
     }
+
     /**
      *
      *
@@ -600,6 +610,7 @@ public final class ComputeTimeCursorResponse extends com.google.protobuf.Generat
       }
       return this;
     }
+
     /**
      *
      *
@@ -621,6 +632,7 @@ public final class ComputeTimeCursorResponse extends com.google.protobuf.Generat
       onChanged();
       return this;
     }
+
     /**
      *
      *
@@ -637,6 +649,7 @@ public final class ComputeTimeCursorResponse extends com.google.protobuf.Generat
       onChanged();
       return getCursorFieldBuilder().getBuilder();
     }
+
     /**
      *
      *
@@ -657,6 +670,7 @@ public final class ComputeTimeCursorResponse extends com.google.protobuf.Generat
             : cursor_;
       }
     }
+
     /**
      *
      *

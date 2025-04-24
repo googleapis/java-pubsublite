@@ -921,6 +921,19 @@ public final class AdminServiceGrpc {
     return AdminServiceStub.newStub(factory, channel);
   }
 
+  /** Creates a new blocking-style stub that supports all types of calls on the service */
+  public static AdminServiceBlockingV2Stub newBlockingV2Stub(io.grpc.Channel channel) {
+    io.grpc.stub.AbstractStub.StubFactory<AdminServiceBlockingV2Stub> factory =
+        new io.grpc.stub.AbstractStub.StubFactory<AdminServiceBlockingV2Stub>() {
+          @java.lang.Override
+          public AdminServiceBlockingV2Stub newStub(
+              io.grpc.Channel channel, io.grpc.CallOptions callOptions) {
+            return new AdminServiceBlockingV2Stub(channel, callOptions);
+          }
+        };
+    return AdminServiceBlockingV2Stub.newStub(factory, channel);
+  }
+
   /**
    * Creates a new blocking-style stub that supports unary and streaming output calls on the service
    */
@@ -1623,6 +1636,291 @@ public final class AdminServiceGrpc {
 
   /**
    * A stub to allow clients to do synchronous rpc calls to service AdminService.
+   *
+   * <pre>
+   * The service that a client application uses to manage topics and
+   * subscriptions, such creating, listing, and deleting topics and subscriptions.
+   * </pre>
+   */
+  public static final class AdminServiceBlockingV2Stub
+      extends io.grpc.stub.AbstractBlockingStub<AdminServiceBlockingV2Stub> {
+    private AdminServiceBlockingV2Stub(io.grpc.Channel channel, io.grpc.CallOptions callOptions) {
+      super(channel, callOptions);
+    }
+
+    @java.lang.Override
+    protected AdminServiceBlockingV2Stub build(
+        io.grpc.Channel channel, io.grpc.CallOptions callOptions) {
+      return new AdminServiceBlockingV2Stub(channel, callOptions);
+    }
+
+    /**
+     *
+     *
+     * <pre>
+     * Creates a new topic.
+     * </pre>
+     */
+    public com.google.cloud.pubsublite.proto.Topic createTopic(
+        com.google.cloud.pubsublite.proto.CreateTopicRequest request) {
+      return io.grpc.stub.ClientCalls.blockingUnaryCall(
+          getChannel(), getCreateTopicMethod(), getCallOptions(), request);
+    }
+
+    /**
+     *
+     *
+     * <pre>
+     * Returns the topic configuration.
+     * </pre>
+     */
+    public com.google.cloud.pubsublite.proto.Topic getTopic(
+        com.google.cloud.pubsublite.proto.GetTopicRequest request) {
+      return io.grpc.stub.ClientCalls.blockingUnaryCall(
+          getChannel(), getGetTopicMethod(), getCallOptions(), request);
+    }
+
+    /**
+     *
+     *
+     * <pre>
+     * Returns the partition information for the requested topic.
+     * </pre>
+     */
+    public com.google.cloud.pubsublite.proto.TopicPartitions getTopicPartitions(
+        com.google.cloud.pubsublite.proto.GetTopicPartitionsRequest request) {
+      return io.grpc.stub.ClientCalls.blockingUnaryCall(
+          getChannel(), getGetTopicPartitionsMethod(), getCallOptions(), request);
+    }
+
+    /**
+     *
+     *
+     * <pre>
+     * Returns the list of topics for the given project.
+     * </pre>
+     */
+    public com.google.cloud.pubsublite.proto.ListTopicsResponse listTopics(
+        com.google.cloud.pubsublite.proto.ListTopicsRequest request) {
+      return io.grpc.stub.ClientCalls.blockingUnaryCall(
+          getChannel(), getListTopicsMethod(), getCallOptions(), request);
+    }
+
+    /**
+     *
+     *
+     * <pre>
+     * Updates properties of the specified topic.
+     * </pre>
+     */
+    public com.google.cloud.pubsublite.proto.Topic updateTopic(
+        com.google.cloud.pubsublite.proto.UpdateTopicRequest request) {
+      return io.grpc.stub.ClientCalls.blockingUnaryCall(
+          getChannel(), getUpdateTopicMethod(), getCallOptions(), request);
+    }
+
+    /**
+     *
+     *
+     * <pre>
+     * Deletes the specified topic.
+     * </pre>
+     */
+    public com.google.protobuf.Empty deleteTopic(
+        com.google.cloud.pubsublite.proto.DeleteTopicRequest request) {
+      return io.grpc.stub.ClientCalls.blockingUnaryCall(
+          getChannel(), getDeleteTopicMethod(), getCallOptions(), request);
+    }
+
+    /**
+     *
+     *
+     * <pre>
+     * Lists the subscriptions attached to the specified topic.
+     * </pre>
+     */
+    public com.google.cloud.pubsublite.proto.ListTopicSubscriptionsResponse listTopicSubscriptions(
+        com.google.cloud.pubsublite.proto.ListTopicSubscriptionsRequest request) {
+      return io.grpc.stub.ClientCalls.blockingUnaryCall(
+          getChannel(), getListTopicSubscriptionsMethod(), getCallOptions(), request);
+    }
+
+    /**
+     *
+     *
+     * <pre>
+     * Creates a new subscription.
+     * </pre>
+     */
+    public com.google.cloud.pubsublite.proto.Subscription createSubscription(
+        com.google.cloud.pubsublite.proto.CreateSubscriptionRequest request) {
+      return io.grpc.stub.ClientCalls.blockingUnaryCall(
+          getChannel(), getCreateSubscriptionMethod(), getCallOptions(), request);
+    }
+
+    /**
+     *
+     *
+     * <pre>
+     * Returns the subscription configuration.
+     * </pre>
+     */
+    public com.google.cloud.pubsublite.proto.Subscription getSubscription(
+        com.google.cloud.pubsublite.proto.GetSubscriptionRequest request) {
+      return io.grpc.stub.ClientCalls.blockingUnaryCall(
+          getChannel(), getGetSubscriptionMethod(), getCallOptions(), request);
+    }
+
+    /**
+     *
+     *
+     * <pre>
+     * Returns the list of subscriptions for the given project.
+     * </pre>
+     */
+    public com.google.cloud.pubsublite.proto.ListSubscriptionsResponse listSubscriptions(
+        com.google.cloud.pubsublite.proto.ListSubscriptionsRequest request) {
+      return io.grpc.stub.ClientCalls.blockingUnaryCall(
+          getChannel(), getListSubscriptionsMethod(), getCallOptions(), request);
+    }
+
+    /**
+     *
+     *
+     * <pre>
+     * Updates properties of the specified subscription.
+     * </pre>
+     */
+    public com.google.cloud.pubsublite.proto.Subscription updateSubscription(
+        com.google.cloud.pubsublite.proto.UpdateSubscriptionRequest request) {
+      return io.grpc.stub.ClientCalls.blockingUnaryCall(
+          getChannel(), getUpdateSubscriptionMethod(), getCallOptions(), request);
+    }
+
+    /**
+     *
+     *
+     * <pre>
+     * Deletes the specified subscription.
+     * </pre>
+     */
+    public com.google.protobuf.Empty deleteSubscription(
+        com.google.cloud.pubsublite.proto.DeleteSubscriptionRequest request) {
+      return io.grpc.stub.ClientCalls.blockingUnaryCall(
+          getChannel(), getDeleteSubscriptionMethod(), getCallOptions(), request);
+    }
+
+    /**
+     *
+     *
+     * <pre>
+     * Performs an out-of-band seek for a subscription to a specified target,
+     * which may be timestamps or named positions within the message backlog.
+     * Seek translates these targets to cursors for each partition and
+     * orchestrates subscribers to start consuming messages from these seek
+     * cursors.
+     * If an operation is returned, the seek has been registered and subscribers
+     * will eventually receive messages from the seek cursors (i.e. eventual
+     * consistency), as long as they are using a minimum supported client library
+     * version and not a system that tracks cursors independently of Pub/Sub Lite
+     * (e.g. Apache Beam, Dataflow, Spark). The seek operation will fail for
+     * unsupported clients.
+     * If clients would like to know when subscribers react to the seek (or not),
+     * they can poll the operation. The seek operation will succeed and complete
+     * once subscribers are ready to receive messages from the seek cursors for
+     * all partitions of the topic. This means that the seek operation will not
+     * complete until all subscribers come online.
+     * If the previous seek operation has not yet completed, it will be aborted
+     * and the new invocation of seek will supersede it.
+     * </pre>
+     */
+    public com.google.longrunning.Operation seekSubscription(
+        com.google.cloud.pubsublite.proto.SeekSubscriptionRequest request) {
+      return io.grpc.stub.ClientCalls.blockingUnaryCall(
+          getChannel(), getSeekSubscriptionMethod(), getCallOptions(), request);
+    }
+
+    /**
+     *
+     *
+     * <pre>
+     * Creates a new reservation.
+     * </pre>
+     */
+    public com.google.cloud.pubsublite.proto.Reservation createReservation(
+        com.google.cloud.pubsublite.proto.CreateReservationRequest request) {
+      return io.grpc.stub.ClientCalls.blockingUnaryCall(
+          getChannel(), getCreateReservationMethod(), getCallOptions(), request);
+    }
+
+    /**
+     *
+     *
+     * <pre>
+     * Returns the reservation configuration.
+     * </pre>
+     */
+    public com.google.cloud.pubsublite.proto.Reservation getReservation(
+        com.google.cloud.pubsublite.proto.GetReservationRequest request) {
+      return io.grpc.stub.ClientCalls.blockingUnaryCall(
+          getChannel(), getGetReservationMethod(), getCallOptions(), request);
+    }
+
+    /**
+     *
+     *
+     * <pre>
+     * Returns the list of reservations for the given project.
+     * </pre>
+     */
+    public com.google.cloud.pubsublite.proto.ListReservationsResponse listReservations(
+        com.google.cloud.pubsublite.proto.ListReservationsRequest request) {
+      return io.grpc.stub.ClientCalls.blockingUnaryCall(
+          getChannel(), getListReservationsMethod(), getCallOptions(), request);
+    }
+
+    /**
+     *
+     *
+     * <pre>
+     * Updates properties of the specified reservation.
+     * </pre>
+     */
+    public com.google.cloud.pubsublite.proto.Reservation updateReservation(
+        com.google.cloud.pubsublite.proto.UpdateReservationRequest request) {
+      return io.grpc.stub.ClientCalls.blockingUnaryCall(
+          getChannel(), getUpdateReservationMethod(), getCallOptions(), request);
+    }
+
+    /**
+     *
+     *
+     * <pre>
+     * Deletes the specified reservation.
+     * </pre>
+     */
+    public com.google.protobuf.Empty deleteReservation(
+        com.google.cloud.pubsublite.proto.DeleteReservationRequest request) {
+      return io.grpc.stub.ClientCalls.blockingUnaryCall(
+          getChannel(), getDeleteReservationMethod(), getCallOptions(), request);
+    }
+
+    /**
+     *
+     *
+     * <pre>
+     * Lists the topics attached to the specified reservation.
+     * </pre>
+     */
+    public com.google.cloud.pubsublite.proto.ListReservationTopicsResponse listReservationTopics(
+        com.google.cloud.pubsublite.proto.ListReservationTopicsRequest request) {
+      return io.grpc.stub.ClientCalls.blockingUnaryCall(
+          getChannel(), getListReservationTopicsMethod(), getCallOptions(), request);
+    }
+  }
+
+  /**
+   * A stub to allow clients to do limited synchronous rpc calls to service AdminService.
    *
    * <pre>
    * The service that a client application uses to manage topics and

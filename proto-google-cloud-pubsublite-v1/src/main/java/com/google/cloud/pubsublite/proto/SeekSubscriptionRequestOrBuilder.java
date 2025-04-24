@@ -38,6 +38,7 @@ public interface SeekSubscriptionRequestOrBuilder
    * @return The name.
    */
   java.lang.String getName();
+
   /**
    *
    *
@@ -65,6 +66,7 @@ public interface SeekSubscriptionRequestOrBuilder
    * @return Whether the namedTarget field is set.
    */
   boolean hasNamedTarget();
+
   /**
    *
    *
@@ -77,6 +79,7 @@ public interface SeekSubscriptionRequestOrBuilder
    * @return The enum numeric value on the wire for namedTarget.
    */
   int getNamedTargetValue();
+
   /**
    *
    *
@@ -104,6 +107,7 @@ public interface SeekSubscriptionRequestOrBuilder
    * @return Whether the timeTarget field is set.
    */
   boolean hasTimeTarget();
+
   /**
    *
    *
@@ -118,6 +122,7 @@ public interface SeekSubscriptionRequestOrBuilder
    * @return The timeTarget.
    */
   com.google.cloud.pubsublite.proto.TimeTarget getTimeTarget();
+
   /**
    *
    *

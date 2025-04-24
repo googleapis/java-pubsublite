@@ -81,7 +81,8 @@ public class MockCursorServiceImpl extends CursorServiceImplBase {
               responseObserver.onError(
                   new IllegalArgumentException(
                       String.format(
-                          "Unrecognized response type %s for method StreamingCommitCursor, expected %s or %s",
+                          "Unrecognized response type %s for method StreamingCommitCursor, expected"
+                              + " %s or %s",
                           response == null ? "null" : response.getClass().getName(),
                           StreamingCommitCursorResponse.class.getName(),
                           Exception.class.getName())));
@@ -137,7 +138,8 @@ public class MockCursorServiceImpl extends CursorServiceImplBase {
       responseObserver.onError(
           new IllegalArgumentException(
               String.format(
-                  "Unrecognized response type %s for method ListPartitionCursors, expected %s or %s",
+                  "Unrecognized response type %s for method ListPartitionCursors, expected %s or"
+                      + " %s",
                   response == null ? "null" : response.getClass().getName(),
                   ListPartitionCursorsResponse.class.getName(),
                   Exception.class.getName())));

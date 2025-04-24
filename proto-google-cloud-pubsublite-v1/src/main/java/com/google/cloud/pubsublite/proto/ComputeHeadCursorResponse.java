@@ -33,6 +33,7 @@ public final class ComputeHeadCursorResponse extends com.google.protobuf.Generat
     // @@protoc_insertion_point(message_implements:google.cloud.pubsublite.v1.ComputeHeadCursorResponse)
     ComputeHeadCursorResponseOrBuilder {
   private static final long serialVersionUID = 0L;
+
   // Use ComputeHeadCursorResponse.newBuilder() to construct.
   private ComputeHeadCursorResponse(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
     super(builder);
@@ -64,6 +65,7 @@ public final class ComputeHeadCursorResponse extends com.google.protobuf.Generat
   private int bitField0_;
   public static final int HEAD_CURSOR_FIELD_NUMBER = 1;
   private com.google.cloud.pubsublite.proto.Cursor headCursor_;
+
   /**
    *
    *
@@ -79,6 +81,7 @@ public final class ComputeHeadCursorResponse extends com.google.protobuf.Generat
   public boolean hasHeadCursor() {
     return ((bitField0_ & 0x00000001) != 0);
   }
+
   /**
    *
    *
@@ -96,6 +99,7 @@ public final class ComputeHeadCursorResponse extends com.google.protobuf.Generat
         ? com.google.cloud.pubsublite.proto.Cursor.getDefaultInstance()
         : headCursor_;
   }
+
   /**
    *
    *
@@ -277,6 +281,7 @@ public final class ComputeHeadCursorResponse extends com.google.protobuf.Generat
     Builder builder = new Builder(parent);
     return builder;
   }
+
   /**
    *
    *
@@ -480,6 +485,7 @@ public final class ComputeHeadCursorResponse extends com.google.protobuf.Generat
             com.google.cloud.pubsublite.proto.Cursor.Builder,
             com.google.cloud.pubsublite.proto.CursorOrBuilder>
         headCursorBuilder_;
+
     /**
      *
      *
@@ -494,6 +500,7 @@ public final class ComputeHeadCursorResponse extends com.google.protobuf.Generat
     public boolean hasHeadCursor() {
       return ((bitField0_ & 0x00000001) != 0);
     }
+
     /**
      *
      *
@@ -514,6 +521,7 @@ public final class ComputeHeadCursorResponse extends com.google.protobuf.Generat
         return headCursorBuilder_.getMessage();
       }
     }
+
     /**
      *
      *
@@ -536,6 +544,7 @@ public final class ComputeHeadCursorResponse extends com.google.protobuf.Generat
       onChanged();
       return this;
     }
+
     /**
      *
      *
@@ -555,6 +564,7 @@ public final class ComputeHeadCursorResponse extends com.google.protobuf.Generat
       onChanged();
       return this;
     }
+
     /**
      *
      *
@@ -582,6 +592,7 @@ public final class ComputeHeadCursorResponse extends com.google.protobuf.Generat
       }
       return this;
     }
+
     /**
      *
      *
@@ -601,6 +612,7 @@ public final class ComputeHeadCursorResponse extends com.google.protobuf.Generat
       onChanged();
       return this;
     }
+
     /**
      *
      *
@@ -615,6 +627,7 @@ public final class ComputeHeadCursorResponse extends com.google.protobuf.Generat
       onChanged();
       return getHeadCursorFieldBuilder().getBuilder();
     }
+
     /**
      *
      *
@@ -633,6 +646,7 @@ public final class ComputeHeadCursorResponse extends com.google.protobuf.Generat
             : headCursor_;
       }
     }
+
     /**
      *
      *

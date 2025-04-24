@@ -33,6 +33,7 @@ public final class AttributeValues extends com.google.protobuf.GeneratedMessageV
     // @@protoc_insertion_point(message_implements:google.cloud.pubsublite.v1.AttributeValues)
     AttributeValuesOrBuilder {
   private static final long serialVersionUID = 0L;
+
   // Use AttributeValues.newBuilder() to construct.
   private AttributeValues(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
     super(builder);
@@ -68,6 +69,7 @@ public final class AttributeValues extends com.google.protobuf.GeneratedMessageV
   @SuppressWarnings("serial")
   private com.google.protobuf.Internal.ProtobufList<com.google.protobuf.ByteString> values_ =
       emptyList(com.google.protobuf.ByteString.class);
+
   /**
    *
    *
@@ -83,6 +85,7 @@ public final class AttributeValues extends com.google.protobuf.GeneratedMessageV
   public java.util.List<com.google.protobuf.ByteString> getValuesList() {
     return values_;
   }
+
   /**
    *
    *
@@ -97,6 +100,7 @@ public final class AttributeValues extends com.google.protobuf.GeneratedMessageV
   public int getValuesCount() {
     return values_.size();
   }
+
   /**
    *
    *
@@ -279,6 +283,7 @@ public final class AttributeValues extends com.google.protobuf.GeneratedMessageV
     Builder builder = new Builder(parent);
     return builder;
   }
+
   /**
    *
    *
@@ -479,6 +484,7 @@ public final class AttributeValues extends com.google.protobuf.GeneratedMessageV
       }
       bitField0_ |= 0x00000001;
     }
+
     /**
      *
      *
@@ -494,6 +500,7 @@ public final class AttributeValues extends com.google.protobuf.GeneratedMessageV
       values_.makeImmutable();
       return values_;
     }
+
     /**
      *
      *
@@ -508,6 +515,7 @@ public final class AttributeValues extends com.google.protobuf.GeneratedMessageV
     public int getValuesCount() {
       return values_.size();
     }
+
     /**
      *
      *
@@ -523,6 +531,7 @@ public final class AttributeValues extends com.google.protobuf.GeneratedMessageV
     public com.google.protobuf.ByteString getValues(int index) {
       return values_.get(index);
     }
+
     /**
      *
      *
@@ -546,6 +555,7 @@ public final class AttributeValues extends com.google.protobuf.GeneratedMessageV
       onChanged();
       return this;
     }
+
     /**
      *
      *
@@ -568,6 +578,7 @@ public final class AttributeValues extends com.google.protobuf.GeneratedMessageV
       onChanged();
       return this;
     }
+
     /**
      *
      *
@@ -588,6 +599,7 @@ public final class AttributeValues extends com.google.protobuf.GeneratedMessageV
       onChanged();
       return this;
     }
+
     /**
      *
      *

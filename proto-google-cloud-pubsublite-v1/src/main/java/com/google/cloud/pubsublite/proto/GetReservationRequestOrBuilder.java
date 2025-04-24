@@ -40,6 +40,7 @@ public interface GetReservationRequestOrBuilder
    * @return The name.
    */
   java.lang.String getName();
+
   /**
    *
    *

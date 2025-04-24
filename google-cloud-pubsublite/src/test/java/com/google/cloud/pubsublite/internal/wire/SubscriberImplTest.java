@@ -337,8 +337,7 @@ public class SubscriberImplTest {
     final SubscribeRequest nextOffsetRequest =
         SubscribeRequest.newBuilder()
             .setInitial(
-                BASE_INITIAL_SUBSCRIBE_REQUEST
-                    .toBuilder()
+                BASE_INITIAL_SUBSCRIBE_REQUEST.toBuilder()
                     .setInitialLocation(
                         SeekRequest.newBuilder().setCursor(Cursor.newBuilder().setOffset(2))))
             .build();
@@ -445,8 +444,7 @@ public class SubscriberImplTest {
     final SubscribeRequest nextOffsetRequest =
         SubscribeRequest.newBuilder()
             .setInitial(
-                BASE_INITIAL_SUBSCRIBE_REQUEST
-                    .toBuilder()
+                BASE_INITIAL_SUBSCRIBE_REQUEST.toBuilder()
                     .setInitialLocation(
                         SeekRequest.newBuilder().setCursor(Cursor.newBuilder().setOffset(2))))
             .build();

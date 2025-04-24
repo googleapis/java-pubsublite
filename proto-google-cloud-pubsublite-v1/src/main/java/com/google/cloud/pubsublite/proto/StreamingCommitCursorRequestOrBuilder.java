@@ -36,6 +36,7 @@ public interface StreamingCommitCursorRequestOrBuilder
    * @return Whether the initial field is set.
    */
   boolean hasInitial();
+
   /**
    *
    *
@@ -48,6 +49,7 @@ public interface StreamingCommitCursorRequestOrBuilder
    * @return The initial.
    */
   com.google.cloud.pubsublite.proto.InitialCommitCursorRequest getInitial();
+
   /**
    *
    *
@@ -71,6 +73,7 @@ public interface StreamingCommitCursorRequestOrBuilder
    * @return Whether the commit field is set.
    */
   boolean hasCommit();
+
   /**
    *
    *
@@ -83,6 +86,7 @@ public interface StreamingCommitCursorRequestOrBuilder
    * @return The commit.
    */
   com.google.cloud.pubsublite.proto.SequencedCommitCursorRequest getCommit();
+
   /**
    *
    *

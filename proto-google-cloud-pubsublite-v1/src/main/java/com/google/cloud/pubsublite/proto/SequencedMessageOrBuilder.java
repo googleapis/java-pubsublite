@@ -36,6 +36,7 @@ public interface SequencedMessageOrBuilder
    * @return Whether the cursor field is set.
    */
   boolean hasCursor();
+
   /**
    *
    *
@@ -48,6 +49,7 @@ public interface SequencedMessageOrBuilder
    * @return The cursor.
    */
   com.google.cloud.pubsublite.proto.Cursor getCursor();
+
   /**
    *
    *
@@ -72,6 +74,7 @@ public interface SequencedMessageOrBuilder
    * @return Whether the publishTime field is set.
    */
   boolean hasPublishTime();
+
   /**
    *
    *
@@ -85,6 +88,7 @@ public interface SequencedMessageOrBuilder
    * @return The publishTime.
    */
   com.google.protobuf.Timestamp getPublishTime();
+
   /**
    *
    *
@@ -109,6 +113,7 @@ public interface SequencedMessageOrBuilder
    * @return Whether the message field is set.
    */
   boolean hasMessage();
+
   /**
    *
    *
@@ -121,6 +126,7 @@ public interface SequencedMessageOrBuilder
    * @return The message.
    */
   com.google.cloud.pubsublite.proto.PubSubMessage getMessage();
+
   /**
    *
    *

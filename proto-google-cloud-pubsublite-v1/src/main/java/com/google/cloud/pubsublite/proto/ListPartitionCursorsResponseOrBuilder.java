@@ -34,6 +34,7 @@ public interface ListPartitionCursorsResponseOrBuilder
    * <code>repeated .google.cloud.pubsublite.v1.PartitionCursor partition_cursors = 1;</code>
    */
   java.util.List<com.google.cloud.pubsublite.proto.PartitionCursor> getPartitionCursorsList();
+
   /**
    *
    *
@@ -44,6 +45,7 @@ public interface ListPartitionCursorsResponseOrBuilder
    * <code>repeated .google.cloud.pubsublite.v1.PartitionCursor partition_cursors = 1;</code>
    */
   com.google.cloud.pubsublite.proto.PartitionCursor getPartitionCursors(int index);
+
   /**
    *
    *
@@ -54,6 +56,7 @@ public interface ListPartitionCursorsResponseOrBuilder
    * <code>repeated .google.cloud.pubsublite.v1.PartitionCursor partition_cursors = 1;</code>
    */
   int getPartitionCursorsCount();
+
   /**
    *
    *
@@ -65,6 +68,7 @@ public interface ListPartitionCursorsResponseOrBuilder
    */
   java.util.List<? extends com.google.cloud.pubsublite.proto.PartitionCursorOrBuilder>
       getPartitionCursorsOrBuilderList();
+
   /**
    *
    *
@@ -90,6 +94,7 @@ public interface ListPartitionCursorsResponseOrBuilder
    * @return The nextPageToken.
    */
   java.lang.String getNextPageToken();
+
   /**
    *
    *

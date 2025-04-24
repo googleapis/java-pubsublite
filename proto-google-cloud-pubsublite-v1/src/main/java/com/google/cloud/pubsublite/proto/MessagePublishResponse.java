@@ -33,6 +33,7 @@ public final class MessagePublishResponse extends com.google.protobuf.GeneratedM
     // @@protoc_insertion_point(message_implements:google.cloud.pubsublite.v1.MessagePublishResponse)
     MessagePublishResponseOrBuilder {
   private static final long serialVersionUID = 0L;
+
   // Use MessagePublishResponse.newBuilder() to construct.
   private MessagePublishResponse(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
     super(builder);
@@ -81,6 +82,7 @@ public final class MessagePublishResponse extends com.google.protobuf.GeneratedM
      * @return Whether the startCursor field is set.
      */
     boolean hasStartCursor();
+
     /**
      *
      *
@@ -94,6 +96,7 @@ public final class MessagePublishResponse extends com.google.protobuf.GeneratedM
      * @return The startCursor.
      */
     com.google.cloud.pubsublite.proto.Cursor getStartCursor();
+
     /**
      *
      *
@@ -133,6 +136,7 @@ public final class MessagePublishResponse extends com.google.protobuf.GeneratedM
      */
     int getEndIndex();
   }
+
   /**
    *
    *
@@ -147,6 +151,7 @@ public final class MessagePublishResponse extends com.google.protobuf.GeneratedM
       // @@protoc_insertion_point(message_implements:google.cloud.pubsublite.v1.MessagePublishResponse.CursorRange)
       CursorRangeOrBuilder {
     private static final long serialVersionUID = 0L;
+
     // Use CursorRange.newBuilder() to construct.
     private CursorRange(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
       super(builder);
@@ -178,6 +183,7 @@ public final class MessagePublishResponse extends com.google.protobuf.GeneratedM
     private int bitField0_;
     public static final int START_CURSOR_FIELD_NUMBER = 1;
     private com.google.cloud.pubsublite.proto.Cursor startCursor_;
+
     /**
      *
      *
@@ -194,6 +200,7 @@ public final class MessagePublishResponse extends com.google.protobuf.GeneratedM
     public boolean hasStartCursor() {
       return ((bitField0_ & 0x00000001) != 0);
     }
+
     /**
      *
      *
@@ -212,6 +219,7 @@ public final class MessagePublishResponse extends com.google.protobuf.GeneratedM
           ? com.google.cloud.pubsublite.proto.Cursor.getDefaultInstance()
           : startCursor_;
     }
+
     /**
      *
      *
@@ -231,6 +239,7 @@ public final class MessagePublishResponse extends com.google.protobuf.GeneratedM
 
     public static final int START_INDEX_FIELD_NUMBER = 2;
     private int startIndex_ = 0;
+
     /**
      *
      *
@@ -250,6 +259,7 @@ public final class MessagePublishResponse extends com.google.protobuf.GeneratedM
 
     public static final int END_INDEX_FIELD_NUMBER = 3;
     private int endIndex_ = 0;
+
     /**
      *
      *
@@ -451,6 +461,7 @@ public final class MessagePublishResponse extends com.google.protobuf.GeneratedM
       Builder builder = new Builder(parent);
       return builder;
     }
+
     /**
      *
      *
@@ -692,6 +703,7 @@ public final class MessagePublishResponse extends com.google.protobuf.GeneratedM
               com.google.cloud.pubsublite.proto.Cursor.Builder,
               com.google.cloud.pubsublite.proto.CursorOrBuilder>
           startCursorBuilder_;
+
       /**
        *
        *
@@ -707,6 +719,7 @@ public final class MessagePublishResponse extends com.google.protobuf.GeneratedM
       public boolean hasStartCursor() {
         return ((bitField0_ & 0x00000001) != 0);
       }
+
       /**
        *
        *
@@ -728,6 +741,7 @@ public final class MessagePublishResponse extends com.google.protobuf.GeneratedM
           return startCursorBuilder_.getMessage();
         }
       }
+
       /**
        *
        *
@@ -751,6 +765,7 @@ public final class MessagePublishResponse extends com.google.protobuf.GeneratedM
         onChanged();
         return this;
       }
+
       /**
        *
        *
@@ -772,6 +787,7 @@ public final class MessagePublishResponse extends com.google.protobuf.GeneratedM
         onChanged();
         return this;
       }
+
       /**
        *
        *
@@ -800,6 +816,7 @@ public final class MessagePublishResponse extends com.google.protobuf.GeneratedM
         }
         return this;
       }
+
       /**
        *
        *
@@ -820,6 +837,7 @@ public final class MessagePublishResponse extends com.google.protobuf.GeneratedM
         onChanged();
         return this;
       }
+
       /**
        *
        *
@@ -835,6 +853,7 @@ public final class MessagePublishResponse extends com.google.protobuf.GeneratedM
         onChanged();
         return getStartCursorFieldBuilder().getBuilder();
       }
+
       /**
        *
        *
@@ -854,6 +873,7 @@ public final class MessagePublishResponse extends com.google.protobuf.GeneratedM
               : startCursor_;
         }
       }
+
       /**
        *
        *
@@ -882,6 +902,7 @@ public final class MessagePublishResponse extends com.google.protobuf.GeneratedM
       }
 
       private int startIndex_;
+
       /**
        *
        *
@@ -898,6 +919,7 @@ public final class MessagePublishResponse extends com.google.protobuf.GeneratedM
       public int getStartIndex() {
         return startIndex_;
       }
+
       /**
        *
        *
@@ -918,6 +940,7 @@ public final class MessagePublishResponse extends com.google.protobuf.GeneratedM
         onChanged();
         return this;
       }
+
       /**
        *
        *
@@ -938,6 +961,7 @@ public final class MessagePublishResponse extends com.google.protobuf.GeneratedM
       }
 
       private int endIndex_;
+
       /**
        *
        *
@@ -953,6 +977,7 @@ public final class MessagePublishResponse extends com.google.protobuf.GeneratedM
       public int getEndIndex() {
         return endIndex_;
       }
+
       /**
        *
        *
@@ -972,6 +997,7 @@ public final class MessagePublishResponse extends com.google.protobuf.GeneratedM
         onChanged();
         return this;
       }
+
       /**
        *
        *
@@ -1060,6 +1086,7 @@ public final class MessagePublishResponse extends com.google.protobuf.GeneratedM
   private int bitField0_;
   public static final int START_CURSOR_FIELD_NUMBER = 1;
   private com.google.cloud.pubsublite.proto.Cursor startCursor_;
+
   /**
    *
    *
@@ -1076,6 +1103,7 @@ public final class MessagePublishResponse extends com.google.protobuf.GeneratedM
   public boolean hasStartCursor() {
     return ((bitField0_ & 0x00000001) != 0);
   }
+
   /**
    *
    *
@@ -1094,6 +1122,7 @@ public final class MessagePublishResponse extends com.google.protobuf.GeneratedM
         ? com.google.cloud.pubsublite.proto.Cursor.getDefaultInstance()
         : startCursor_;
   }
+
   /**
    *
    *
@@ -1116,6 +1145,7 @@ public final class MessagePublishResponse extends com.google.protobuf.GeneratedM
   @SuppressWarnings("serial")
   private java.util.List<com.google.cloud.pubsublite.proto.MessagePublishResponse.CursorRange>
       cursorRanges_;
+
   /**
    *
    *
@@ -1139,6 +1169,7 @@ public final class MessagePublishResponse extends com.google.protobuf.GeneratedM
       getCursorRangesList() {
     return cursorRanges_;
   }
+
   /**
    *
    *
@@ -1163,6 +1194,7 @@ public final class MessagePublishResponse extends com.google.protobuf.GeneratedM
       getCursorRangesOrBuilderList() {
     return cursorRanges_;
   }
+
   /**
    *
    *
@@ -1185,6 +1217,7 @@ public final class MessagePublishResponse extends com.google.protobuf.GeneratedM
   public int getCursorRangesCount() {
     return cursorRanges_.size();
   }
+
   /**
    *
    *
@@ -1208,6 +1241,7 @@ public final class MessagePublishResponse extends com.google.protobuf.GeneratedM
       int index) {
     return cursorRanges_.get(index);
   }
+
   /**
    *
    *
@@ -1408,6 +1442,7 @@ public final class MessagePublishResponse extends com.google.protobuf.GeneratedM
     Builder builder = new Builder(parent);
     return builder;
   }
+
   /**
    *
    *
@@ -1676,6 +1711,7 @@ public final class MessagePublishResponse extends com.google.protobuf.GeneratedM
             com.google.cloud.pubsublite.proto.Cursor.Builder,
             com.google.cloud.pubsublite.proto.CursorOrBuilder>
         startCursorBuilder_;
+
     /**
      *
      *
@@ -1691,6 +1727,7 @@ public final class MessagePublishResponse extends com.google.protobuf.GeneratedM
     public boolean hasStartCursor() {
       return ((bitField0_ & 0x00000001) != 0);
     }
+
     /**
      *
      *
@@ -1712,6 +1749,7 @@ public final class MessagePublishResponse extends com.google.protobuf.GeneratedM
         return startCursorBuilder_.getMessage();
       }
     }
+
     /**
      *
      *
@@ -1735,6 +1773,7 @@ public final class MessagePublishResponse extends com.google.protobuf.GeneratedM
       onChanged();
       return this;
     }
+
     /**
      *
      *
@@ -1756,6 +1795,7 @@ public final class MessagePublishResponse extends com.google.protobuf.GeneratedM
       onChanged();
       return this;
     }
+
     /**
      *
      *
@@ -1784,6 +1824,7 @@ public final class MessagePublishResponse extends com.google.protobuf.GeneratedM
       }
       return this;
     }
+
     /**
      *
      *
@@ -1804,6 +1845,7 @@ public final class MessagePublishResponse extends com.google.protobuf.GeneratedM
       onChanged();
       return this;
     }
+
     /**
      *
      *
@@ -1819,6 +1861,7 @@ public final class MessagePublishResponse extends com.google.protobuf.GeneratedM
       onChanged();
       return getStartCursorFieldBuilder().getBuilder();
     }
+
     /**
      *
      *
@@ -1838,6 +1881,7 @@ public final class MessagePublishResponse extends com.google.protobuf.GeneratedM
             : startCursor_;
       }
     }
+
     /**
      *
      *
@@ -1910,6 +1954,7 @@ public final class MessagePublishResponse extends com.google.protobuf.GeneratedM
         return cursorRangesBuilder_.getMessageList();
       }
     }
+
     /**
      *
      *
@@ -1935,6 +1980,7 @@ public final class MessagePublishResponse extends com.google.protobuf.GeneratedM
         return cursorRangesBuilder_.getCount();
       }
     }
+
     /**
      *
      *
@@ -1961,6 +2007,7 @@ public final class MessagePublishResponse extends com.google.protobuf.GeneratedM
         return cursorRangesBuilder_.getMessage(index);
       }
     }
+
     /**
      *
      *
@@ -1993,6 +2040,7 @@ public final class MessagePublishResponse extends com.google.protobuf.GeneratedM
       }
       return this;
     }
+
     /**
      *
      *
@@ -2024,6 +2072,7 @@ public final class MessagePublishResponse extends com.google.protobuf.GeneratedM
       }
       return this;
     }
+
     /**
      *
      *
@@ -2056,6 +2105,7 @@ public final class MessagePublishResponse extends com.google.protobuf.GeneratedM
       }
       return this;
     }
+
     /**
      *
      *
@@ -2088,6 +2138,7 @@ public final class MessagePublishResponse extends com.google.protobuf.GeneratedM
       }
       return this;
     }
+
     /**
      *
      *
@@ -2118,6 +2169,7 @@ public final class MessagePublishResponse extends com.google.protobuf.GeneratedM
       }
       return this;
     }
+
     /**
      *
      *
@@ -2149,6 +2201,7 @@ public final class MessagePublishResponse extends com.google.protobuf.GeneratedM
       }
       return this;
     }
+
     /**
      *
      *
@@ -2180,6 +2233,7 @@ public final class MessagePublishResponse extends com.google.protobuf.GeneratedM
       }
       return this;
     }
+
     /**
      *
      *
@@ -2208,6 +2262,7 @@ public final class MessagePublishResponse extends com.google.protobuf.GeneratedM
       }
       return this;
     }
+
     /**
      *
      *
@@ -2236,6 +2291,7 @@ public final class MessagePublishResponse extends com.google.protobuf.GeneratedM
       }
       return this;
     }
+
     /**
      *
      *
@@ -2258,6 +2314,7 @@ public final class MessagePublishResponse extends com.google.protobuf.GeneratedM
         getCursorRangesBuilder(int index) {
       return getCursorRangesFieldBuilder().getBuilder(index);
     }
+
     /**
      *
      *
@@ -2284,6 +2341,7 @@ public final class MessagePublishResponse extends com.google.protobuf.GeneratedM
         return cursorRangesBuilder_.getMessageOrBuilder(index);
       }
     }
+
     /**
      *
      *
@@ -2311,6 +2369,7 @@ public final class MessagePublishResponse extends com.google.protobuf.GeneratedM
         return java.util.Collections.unmodifiableList(cursorRanges_);
       }
     }
+
     /**
      *
      *
@@ -2336,6 +2395,7 @@ public final class MessagePublishResponse extends com.google.protobuf.GeneratedM
               com.google.cloud.pubsublite.proto.MessagePublishResponse.CursorRange
                   .getDefaultInstance());
     }
+
     /**
      *
      *
@@ -2362,6 +2422,7 @@ public final class MessagePublishResponse extends com.google.protobuf.GeneratedM
               com.google.cloud.pubsublite.proto.MessagePublishResponse.CursorRange
                   .getDefaultInstance());
     }
+
     /**
      *
      *

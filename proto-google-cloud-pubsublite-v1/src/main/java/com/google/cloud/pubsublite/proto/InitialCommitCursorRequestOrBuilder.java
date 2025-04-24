@@ -36,6 +36,7 @@ public interface InitialCommitCursorRequestOrBuilder
    * @return The subscription.
    */
   java.lang.String getSubscription();
+
   /**
    *
    *

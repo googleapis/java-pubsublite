@@ -100,35 +100,29 @@ public class AdminClientImplTest {
   private static final FieldMask MASK = FieldMask.newBuilder().addPaths("config").build();
 
   private static final Topic TOPIC_2 =
-      example(Topic.class)
-          .toBuilder()
+      example(Topic.class).toBuilder()
           .setPartitionConfig(PartitionConfig.newBuilder().setCount(88))
           .build();
   private static final Subscription SUBSCRIPTION_2 =
-      example(Subscription.class)
-          .toBuilder()
+      example(Subscription.class).toBuilder()
           .setDeliveryConfig(
               DeliveryConfig.newBuilder()
                   .setDeliveryRequirement(DeliveryConfig.DeliveryRequirement.DELIVER_IMMEDIATELY))
           .build();
   private static final Reservation RESERVATION_2 =
-      example(Reservation.class)
-          .toBuilder()
+      example(Reservation.class).toBuilder()
           .setThroughputCapacity(example(Reservation.class).getThroughputCapacity() + 1)
           .build();
   private static final Subscription ACTIVE_EXPORT_SUBSCRIPTION =
-      example(Subscription.class)
-          .toBuilder()
+      example(Subscription.class).toBuilder()
           .setExportConfig(example(ExportConfig.class).toBuilder().setDesiredState(State.ACTIVE))
           .build();
   private static final Subscription PAUSED_EXPORT_SUBSCRIPTION =
-      example(Subscription.class)
-          .toBuilder()
+      example(Subscription.class).toBuilder()
           .setExportConfig(example(ExportConfig.class).toBuilder().setDesiredState(State.PAUSED))
           .build();
   private static final Subscription EXPORT_SUBSCRIPTION_RESPONSE =
-      example(Subscription.class)
-          .toBuilder()
+      example(Subscription.class).toBuilder()
           .setDeliveryConfig(
               DeliveryConfig.newBuilder()
                   .setDeliveryRequirement(DeliveryConfig.DeliveryRequirement.DELIVER_IMMEDIATELY))

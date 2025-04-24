@@ -169,8 +169,7 @@ public class SubscriberImpl extends ProxyService
     try (CloseableMonitor.Hold h = monitor.enter()) {
       return SubscribeRequest.newBuilder()
           .setInitial(
-              baseInitialRequest
-                  .toBuilder()
+              baseInitialRequest.toBuilder()
                   .setInitialLocation(
                       nextOffsetTracker.requestForRestart().orElse(initialLocation)))
           .build();

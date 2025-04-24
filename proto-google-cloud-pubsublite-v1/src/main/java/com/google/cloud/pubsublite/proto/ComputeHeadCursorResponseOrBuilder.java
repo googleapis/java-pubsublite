@@ -36,6 +36,7 @@ public interface ComputeHeadCursorResponseOrBuilder
    * @return Whether the headCursor field is set.
    */
   boolean hasHeadCursor();
+
   /**
    *
    *
@@ -48,6 +49,7 @@ public interface ComputeHeadCursorResponseOrBuilder
    * @return The headCursor.
    */
   com.google.cloud.pubsublite.proto.Cursor getHeadCursor();
+
   /**
    *
    *

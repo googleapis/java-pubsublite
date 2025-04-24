@@ -97,6 +97,19 @@ public final class PublisherServiceGrpc {
     return PublisherServiceStub.newStub(factory, channel);
   }
 
+  /** Creates a new blocking-style stub that supports all types of calls on the service */
+  public static PublisherServiceBlockingV2Stub newBlockingV2Stub(io.grpc.Channel channel) {
+    io.grpc.stub.AbstractStub.StubFactory<PublisherServiceBlockingV2Stub> factory =
+        new io.grpc.stub.AbstractStub.StubFactory<PublisherServiceBlockingV2Stub>() {
+          @java.lang.Override
+          public PublisherServiceBlockingV2Stub newStub(
+              io.grpc.Channel channel, io.grpc.CallOptions callOptions) {
+            return new PublisherServiceBlockingV2Stub(channel, callOptions);
+          }
+        };
+    return PublisherServiceBlockingV2Stub.newStub(factory, channel);
+  }
+
   /**
    * Creates a new blocking-style stub that supports unary and streaming output calls on the service
    */
@@ -221,6 +234,52 @@ public final class PublisherServiceGrpc {
 
   /**
    * A stub to allow clients to do synchronous rpc calls to service PublisherService.
+   *
+   * <pre>
+   * The service that a publisher client application uses to publish messages to
+   * topics. Published messages are retained by the service for the duration of
+   * the retention period configured for the respective topic, and are delivered
+   * to subscriber clients upon request (via the `SubscriberService`).
+   * </pre>
+   */
+  public static final class PublisherServiceBlockingV2Stub
+      extends io.grpc.stub.AbstractBlockingStub<PublisherServiceBlockingV2Stub> {
+    private PublisherServiceBlockingV2Stub(
+        io.grpc.Channel channel, io.grpc.CallOptions callOptions) {
+      super(channel, callOptions);
+    }
+
+    @java.lang.Override
+    protected PublisherServiceBlockingV2Stub build(
+        io.grpc.Channel channel, io.grpc.CallOptions callOptions) {
+      return new PublisherServiceBlockingV2Stub(channel, callOptions);
+    }
+
+    /**
+     *
+     *
+     * <pre>
+     * Establishes a stream with the server for publishing messages. Once the
+     * stream is initialized, the client publishes messages by sending publish
+     * requests on the stream. The server responds with a PublishResponse for each
+     * PublishRequest sent by the client, in the same order that the requests
+     * were sent. Note that multiple PublishRequests can be in flight
+     * simultaneously, but they will be processed by the server in the order that
+     * they are sent by the client on a given stream.
+     * </pre>
+     */
+    @io.grpc.ExperimentalApi("https://github.com/grpc/grpc-java/issues/10918")
+    public io.grpc.stub.BlockingClientCall<
+            com.google.cloud.pubsublite.proto.PublishRequest,
+            com.google.cloud.pubsublite.proto.PublishResponse>
+        publish() {
+      return io.grpc.stub.ClientCalls.blockingBidiStreamingCall(
+          getChannel(), getPublishMethod(), getCallOptions());
+    }
+  }
+
+  /**
+   * A stub to allow clients to do limited synchronous rpc calls to service PublisherService.
    *
    * <pre>
    * The service that a publisher client application uses to publish messages to

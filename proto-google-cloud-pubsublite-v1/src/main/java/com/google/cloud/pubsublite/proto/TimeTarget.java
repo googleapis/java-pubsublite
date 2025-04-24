@@ -34,6 +34,7 @@ public final class TimeTarget extends com.google.protobuf.GeneratedMessageV3
     // @@protoc_insertion_point(message_implements:google.cloud.pubsublite.v1.TimeTarget)
     TimeTargetOrBuilder {
   private static final long serialVersionUID = 0L;
+
   // Use TimeTarget.newBuilder() to construct.
   private TimeTarget(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
     super(builder);
@@ -79,6 +80,7 @@ public final class TimeTarget extends com.google.protobuf.GeneratedMessageV3
     private TimeCase(int value) {
       this.value = value;
     }
+
     /**
      * @param value The number of the enum to look for.
      * @return The enum associated with the given number.
@@ -112,6 +114,7 @@ public final class TimeTarget extends com.google.protobuf.GeneratedMessageV3
   }
 
   public static final int PUBLISH_TIME_FIELD_NUMBER = 1;
+
   /**
    *
    *
@@ -129,6 +132,7 @@ public final class TimeTarget extends com.google.protobuf.GeneratedMessageV3
   public boolean hasPublishTime() {
     return timeCase_ == 1;
   }
+
   /**
    *
    *
@@ -149,6 +153,7 @@ public final class TimeTarget extends com.google.protobuf.GeneratedMessageV3
     }
     return com.google.protobuf.Timestamp.getDefaultInstance();
   }
+
   /**
    *
    *
@@ -169,6 +174,7 @@ public final class TimeTarget extends com.google.protobuf.GeneratedMessageV3
   }
 
   public static final int EVENT_TIME_FIELD_NUMBER = 2;
+
   /**
    *
    *
@@ -188,6 +194,7 @@ public final class TimeTarget extends com.google.protobuf.GeneratedMessageV3
   public boolean hasEventTime() {
     return timeCase_ == 2;
   }
+
   /**
    *
    *
@@ -210,6 +217,7 @@ public final class TimeTarget extends com.google.protobuf.GeneratedMessageV3
     }
     return com.google.protobuf.Timestamp.getDefaultInstance();
   }
+
   /**
    *
    *
@@ -420,6 +428,7 @@ public final class TimeTarget extends com.google.protobuf.GeneratedMessageV3
     Builder builder = new Builder(parent);
     return builder;
   }
+
   /**
    *
    *
@@ -655,6 +664,7 @@ public final class TimeTarget extends com.google.protobuf.GeneratedMessageV3
             com.google.protobuf.Timestamp.Builder,
             com.google.protobuf.TimestampOrBuilder>
         publishTimeBuilder_;
+
     /**
      *
      *
@@ -672,6 +682,7 @@ public final class TimeTarget extends com.google.protobuf.GeneratedMessageV3
     public boolean hasPublishTime() {
       return timeCase_ == 1;
     }
+
     /**
      *
      *
@@ -699,6 +710,7 @@ public final class TimeTarget extends com.google.protobuf.GeneratedMessageV3
         return com.google.protobuf.Timestamp.getDefaultInstance();
       }
     }
+
     /**
      *
      *
@@ -723,6 +735,7 @@ public final class TimeTarget extends com.google.protobuf.GeneratedMessageV3
       timeCase_ = 1;
       return this;
     }
+
     /**
      *
      *
@@ -744,6 +757,7 @@ public final class TimeTarget extends com.google.protobuf.GeneratedMessageV3
       timeCase_ = 1;
       return this;
     }
+
     /**
      *
      *
@@ -776,6 +790,7 @@ public final class TimeTarget extends com.google.protobuf.GeneratedMessageV3
       timeCase_ = 1;
       return this;
     }
+
     /**
      *
      *
@@ -803,6 +818,7 @@ public final class TimeTarget extends com.google.protobuf.GeneratedMessageV3
       }
       return this;
     }
+
     /**
      *
      *
@@ -817,6 +833,7 @@ public final class TimeTarget extends com.google.protobuf.GeneratedMessageV3
     public com.google.protobuf.Timestamp.Builder getPublishTimeBuilder() {
       return getPublishTimeFieldBuilder().getBuilder();
     }
+
     /**
      *
      *
@@ -839,6 +856,7 @@ public final class TimeTarget extends com.google.protobuf.GeneratedMessageV3
         return com.google.protobuf.Timestamp.getDefaultInstance();
       }
     }
+
     /**
      *
      *
@@ -877,6 +895,7 @@ public final class TimeTarget extends com.google.protobuf.GeneratedMessageV3
             com.google.protobuf.Timestamp.Builder,
             com.google.protobuf.TimestampOrBuilder>
         eventTimeBuilder_;
+
     /**
      *
      *
@@ -896,6 +915,7 @@ public final class TimeTarget extends com.google.protobuf.GeneratedMessageV3
     public boolean hasEventTime() {
       return timeCase_ == 2;
     }
+
     /**
      *
      *
@@ -925,6 +945,7 @@ public final class TimeTarget extends com.google.protobuf.GeneratedMessageV3
         return com.google.protobuf.Timestamp.getDefaultInstance();
       }
     }
+
     /**
      *
      *
@@ -951,6 +972,7 @@ public final class TimeTarget extends com.google.protobuf.GeneratedMessageV3
       timeCase_ = 2;
       return this;
     }
+
     /**
      *
      *
@@ -974,6 +996,7 @@ public final class TimeTarget extends com.google.protobuf.GeneratedMessageV3
       timeCase_ = 2;
       return this;
     }
+
     /**
      *
      *
@@ -1008,6 +1031,7 @@ public final class TimeTarget extends com.google.protobuf.GeneratedMessageV3
       timeCase_ = 2;
       return this;
     }
+
     /**
      *
      *
@@ -1037,6 +1061,7 @@ public final class TimeTarget extends com.google.protobuf.GeneratedMessageV3
       }
       return this;
     }
+
     /**
      *
      *
@@ -1053,6 +1078,7 @@ public final class TimeTarget extends com.google.protobuf.GeneratedMessageV3
     public com.google.protobuf.Timestamp.Builder getEventTimeBuilder() {
       return getEventTimeFieldBuilder().getBuilder();
     }
+
     /**
      *
      *
@@ -1077,6 +1103,7 @@ public final class TimeTarget extends com.google.protobuf.GeneratedMessageV3
         return com.google.protobuf.Timestamp.getDefaultInstance();
       }
     }
+
     /**
      *
      *

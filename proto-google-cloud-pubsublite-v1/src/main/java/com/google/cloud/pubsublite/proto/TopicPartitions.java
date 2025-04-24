@@ -33,6 +33,7 @@ public final class TopicPartitions extends com.google.protobuf.GeneratedMessageV
     // @@protoc_insertion_point(message_implements:google.cloud.pubsublite.v1.TopicPartitions)
     TopicPartitionsOrBuilder {
   private static final long serialVersionUID = 0L;
+
   // Use TopicPartitions.newBuilder() to construct.
   private TopicPartitions(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
     super(builder);
@@ -63,6 +64,7 @@ public final class TopicPartitions extends com.google.protobuf.GeneratedMessageV
 
   public static final int PARTITION_COUNT_FIELD_NUMBER = 1;
   private long partitionCount_ = 0L;
+
   /**
    *
    *
@@ -238,6 +240,7 @@ public final class TopicPartitions extends com.google.protobuf.GeneratedMessageV
     Builder builder = new Builder(parent);
     return builder;
   }
+
   /**
    *
    *
@@ -420,6 +423,7 @@ public final class TopicPartitions extends com.google.protobuf.GeneratedMessageV
     private int bitField0_;
 
     private long partitionCount_;
+
     /**
      *
      *
@@ -435,6 +439,7 @@ public final class TopicPartitions extends com.google.protobuf.GeneratedMessageV
     public long getPartitionCount() {
       return partitionCount_;
     }
+
     /**
      *
      *
@@ -454,6 +459,7 @@ public final class TopicPartitions extends com.google.protobuf.GeneratedMessageV
       onChanged();
       return this;
     }
+
     /**
      *
      *

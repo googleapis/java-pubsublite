@@ -36,6 +36,7 @@ public interface InitialPublishRequestOrBuilder
    * @return The topic.
    */
   java.lang.String getTopic();
+
   /**
    *
    *

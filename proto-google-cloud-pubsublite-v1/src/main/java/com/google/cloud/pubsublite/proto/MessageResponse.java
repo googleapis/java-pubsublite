@@ -38,6 +38,7 @@ public final class MessageResponse extends com.google.protobuf.GeneratedMessageV
     // @@protoc_insertion_point(message_implements:google.cloud.pubsublite.v1.MessageResponse)
     MessageResponseOrBuilder {
   private static final long serialVersionUID = 0L;
+
   // Use MessageResponse.newBuilder() to construct.
   private MessageResponse(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
     super(builder);
@@ -72,6 +73,7 @@ public final class MessageResponse extends com.google.protobuf.GeneratedMessageV
 
   @SuppressWarnings("serial")
   private java.util.List<com.google.cloud.pubsublite.proto.SequencedMessage> messages_;
+
   /**
    *
    *
@@ -85,6 +87,7 @@ public final class MessageResponse extends com.google.protobuf.GeneratedMessageV
   public java.util.List<com.google.cloud.pubsublite.proto.SequencedMessage> getMessagesList() {
     return messages_;
   }
+
   /**
    *
    *
@@ -99,6 +102,7 @@ public final class MessageResponse extends com.google.protobuf.GeneratedMessageV
       getMessagesOrBuilderList() {
     return messages_;
   }
+
   /**
    *
    *
@@ -112,6 +116,7 @@ public final class MessageResponse extends com.google.protobuf.GeneratedMessageV
   public int getMessagesCount() {
     return messages_.size();
   }
+
   /**
    *
    *
@@ -125,6 +130,7 @@ public final class MessageResponse extends com.google.protobuf.GeneratedMessageV
   public com.google.cloud.pubsublite.proto.SequencedMessage getMessages(int index) {
     return messages_.get(index);
   }
+
   /**
    *
    *
@@ -301,6 +307,7 @@ public final class MessageResponse extends com.google.protobuf.GeneratedMessageV
     Builder builder = new Builder(parent);
     return builder;
   }
+
   /**
    *
    *
@@ -569,6 +576,7 @@ public final class MessageResponse extends com.google.protobuf.GeneratedMessageV
         return messagesBuilder_.getMessageList();
       }
     }
+
     /**
      *
      *
@@ -585,6 +593,7 @@ public final class MessageResponse extends com.google.protobuf.GeneratedMessageV
         return messagesBuilder_.getCount();
       }
     }
+
     /**
      *
      *
@@ -601,6 +610,7 @@ public final class MessageResponse extends com.google.protobuf.GeneratedMessageV
         return messagesBuilder_.getMessage(index);
       }
     }
+
     /**
      *
      *
@@ -624,6 +634,7 @@ public final class MessageResponse extends com.google.protobuf.GeneratedMessageV
       }
       return this;
     }
+
     /**
      *
      *
@@ -644,6 +655,7 @@ public final class MessageResponse extends com.google.protobuf.GeneratedMessageV
       }
       return this;
     }
+
     /**
      *
      *
@@ -666,6 +678,7 @@ public final class MessageResponse extends com.google.protobuf.GeneratedMessageV
       }
       return this;
     }
+
     /**
      *
      *
@@ -689,6 +702,7 @@ public final class MessageResponse extends com.google.protobuf.GeneratedMessageV
       }
       return this;
     }
+
     /**
      *
      *
@@ -709,6 +723,7 @@ public final class MessageResponse extends com.google.protobuf.GeneratedMessageV
       }
       return this;
     }
+
     /**
      *
      *
@@ -729,6 +744,7 @@ public final class MessageResponse extends com.google.protobuf.GeneratedMessageV
       }
       return this;
     }
+
     /**
      *
      *
@@ -749,6 +765,7 @@ public final class MessageResponse extends com.google.protobuf.GeneratedMessageV
       }
       return this;
     }
+
     /**
      *
      *
@@ -768,6 +785,7 @@ public final class MessageResponse extends com.google.protobuf.GeneratedMessageV
       }
       return this;
     }
+
     /**
      *
      *
@@ -787,6 +805,7 @@ public final class MessageResponse extends com.google.protobuf.GeneratedMessageV
       }
       return this;
     }
+
     /**
      *
      *
@@ -800,6 +819,7 @@ public final class MessageResponse extends com.google.protobuf.GeneratedMessageV
         int index) {
       return getMessagesFieldBuilder().getBuilder(index);
     }
+
     /**
      *
      *
@@ -817,6 +837,7 @@ public final class MessageResponse extends com.google.protobuf.GeneratedMessageV
         return messagesBuilder_.getMessageOrBuilder(index);
       }
     }
+
     /**
      *
      *
@@ -834,6 +855,7 @@ public final class MessageResponse extends com.google.protobuf.GeneratedMessageV
         return java.util.Collections.unmodifiableList(messages_);
       }
     }
+
     /**
      *
      *
@@ -847,6 +869,7 @@ public final class MessageResponse extends com.google.protobuf.GeneratedMessageV
       return getMessagesFieldBuilder()
           .addBuilder(com.google.cloud.pubsublite.proto.SequencedMessage.getDefaultInstance());
     }
+
     /**
      *
      *
@@ -862,6 +885,7 @@ public final class MessageResponse extends com.google.protobuf.GeneratedMessageV
           .addBuilder(
               index, com.google.cloud.pubsublite.proto.SequencedMessage.getDefaultInstance());
     }
+
     /**
      *
      *

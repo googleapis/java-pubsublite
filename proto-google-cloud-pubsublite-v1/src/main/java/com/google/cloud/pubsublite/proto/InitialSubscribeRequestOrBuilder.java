@@ -36,6 +36,7 @@ public interface InitialSubscribeRequestOrBuilder
    * @return The subscription.
    */
   java.lang.String getSubscription();
+
   /**
    *
    *
@@ -79,6 +80,7 @@ public interface InitialSubscribeRequestOrBuilder
    * @return Whether the initialLocation field is set.
    */
   boolean hasInitialLocation();
+
   /**
    *
    *
@@ -95,6 +97,7 @@ public interface InitialSubscribeRequestOrBuilder
    * @return The initialLocation.
    */
   com.google.cloud.pubsublite.proto.SeekRequest getInitialLocation();
+
   /**
    *
    *

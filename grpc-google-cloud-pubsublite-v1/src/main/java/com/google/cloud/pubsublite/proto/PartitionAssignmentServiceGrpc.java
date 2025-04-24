@@ -100,6 +100,20 @@ public final class PartitionAssignmentServiceGrpc {
     return PartitionAssignmentServiceStub.newStub(factory, channel);
   }
 
+  /** Creates a new blocking-style stub that supports all types of calls on the service */
+  public static PartitionAssignmentServiceBlockingV2Stub newBlockingV2Stub(
+      io.grpc.Channel channel) {
+    io.grpc.stub.AbstractStub.StubFactory<PartitionAssignmentServiceBlockingV2Stub> factory =
+        new io.grpc.stub.AbstractStub.StubFactory<PartitionAssignmentServiceBlockingV2Stub>() {
+          @java.lang.Override
+          public PartitionAssignmentServiceBlockingV2Stub newStub(
+              io.grpc.Channel channel, io.grpc.CallOptions callOptions) {
+            return new PartitionAssignmentServiceBlockingV2Stub(channel, callOptions);
+          }
+        };
+    return PartitionAssignmentServiceBlockingV2Stub.newStub(factory, channel);
+  }
+
   /**
    * Creates a new blocking-style stub that supports unary and streaming output calls on the service
    */
@@ -221,6 +235,50 @@ public final class PartitionAssignmentServiceGrpc {
 
   /**
    * A stub to allow clients to do synchronous rpc calls to service PartitionAssignmentService.
+   *
+   * <pre>
+   * The service that a subscriber client application uses to determine which
+   * partitions it should connect to.
+   * </pre>
+   */
+  public static final class PartitionAssignmentServiceBlockingV2Stub
+      extends io.grpc.stub.AbstractBlockingStub<PartitionAssignmentServiceBlockingV2Stub> {
+    private PartitionAssignmentServiceBlockingV2Stub(
+        io.grpc.Channel channel, io.grpc.CallOptions callOptions) {
+      super(channel, callOptions);
+    }
+
+    @java.lang.Override
+    protected PartitionAssignmentServiceBlockingV2Stub build(
+        io.grpc.Channel channel, io.grpc.CallOptions callOptions) {
+      return new PartitionAssignmentServiceBlockingV2Stub(channel, callOptions);
+    }
+
+    /**
+     *
+     *
+     * <pre>
+     * Assign partitions for this client to handle for the specified subscription.
+     * The client must send an InitialPartitionAssignmentRequest first.
+     * The server will then send at most one unacknowledged PartitionAssignment
+     * outstanding on the stream at a time.
+     * The client should send a PartitionAssignmentAck after updating the
+     * partitions it is connected to to reflect the new assignment.
+     * </pre>
+     */
+    @io.grpc.ExperimentalApi("https://github.com/grpc/grpc-java/issues/10918")
+    public io.grpc.stub.BlockingClientCall<
+            com.google.cloud.pubsublite.proto.PartitionAssignmentRequest,
+            com.google.cloud.pubsublite.proto.PartitionAssignment>
+        assignPartitions() {
+      return io.grpc.stub.ClientCalls.blockingBidiStreamingCall(
+          getChannel(), getAssignPartitionsMethod(), getCallOptions());
+    }
+  }
+
+  /**
+   * A stub to allow clients to do limited synchronous rpc calls to service
+   * PartitionAssignmentService.
    *
    * <pre>
    * The service that a subscriber client application uses to determine which

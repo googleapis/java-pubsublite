@@ -33,6 +33,7 @@ public final class SeekSubscriptionResponse extends com.google.protobuf.Generate
     // @@protoc_insertion_point(message_implements:google.cloud.pubsublite.v1.SeekSubscriptionResponse)
     SeekSubscriptionResponseOrBuilder {
   private static final long serialVersionUID = 0L;
+
   // Use SeekSubscriptionResponse.newBuilder() to construct.
   private SeekSubscriptionResponse(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
     super(builder);
@@ -212,6 +213,7 @@ public final class SeekSubscriptionResponse extends com.google.protobuf.Generate
     Builder builder = new Builder(parent);
     return builder;
   }
+
   /**
    *
    *

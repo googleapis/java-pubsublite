@@ -34,6 +34,7 @@ public final class FlowControlRequest extends com.google.protobuf.GeneratedMessa
     // @@protoc_insertion_point(message_implements:google.cloud.pubsublite.v1.FlowControlRequest)
     FlowControlRequestOrBuilder {
   private static final long serialVersionUID = 0L;
+
   // Use FlowControlRequest.newBuilder() to construct.
   private FlowControlRequest(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
     super(builder);
@@ -64,6 +65,7 @@ public final class FlowControlRequest extends com.google.protobuf.GeneratedMessa
 
   public static final int ALLOWED_MESSAGES_FIELD_NUMBER = 1;
   private long allowedMessages_ = 0L;
+
   /**
    *
    *
@@ -82,6 +84,7 @@ public final class FlowControlRequest extends com.google.protobuf.GeneratedMessa
 
   public static final int ALLOWED_BYTES_FIELD_NUMBER = 2;
   private long allowedBytes_ = 0L;
+
   /**
    *
    *
@@ -266,6 +269,7 @@ public final class FlowControlRequest extends com.google.protobuf.GeneratedMessa
     Builder builder = new Builder(parent);
     return builder;
   }
+
   /**
    *
    *
@@ -462,6 +466,7 @@ public final class FlowControlRequest extends com.google.protobuf.GeneratedMessa
     private int bitField0_;
 
     private long allowedMessages_;
+
     /**
      *
      *
@@ -477,6 +482,7 @@ public final class FlowControlRequest extends com.google.protobuf.GeneratedMessa
     public long getAllowedMessages() {
       return allowedMessages_;
     }
+
     /**
      *
      *
@@ -496,6 +502,7 @@ public final class FlowControlRequest extends com.google.protobuf.GeneratedMessa
       onChanged();
       return this;
     }
+
     /**
      *
      *
@@ -515,6 +522,7 @@ public final class FlowControlRequest extends com.google.protobuf.GeneratedMessa
     }
 
     private long allowedBytes_;
+
     /**
      *
      *
@@ -530,6 +538,7 @@ public final class FlowControlRequest extends com.google.protobuf.GeneratedMessa
     public long getAllowedBytes() {
       return allowedBytes_;
     }
+
     /**
      *
      *
@@ -549,6 +558,7 @@ public final class FlowControlRequest extends com.google.protobuf.GeneratedMessa
       onChanged();
       return this;
     }
+
     /**
      *
      *

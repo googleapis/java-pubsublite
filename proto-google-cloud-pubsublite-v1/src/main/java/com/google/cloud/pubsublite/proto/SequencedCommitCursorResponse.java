@@ -33,6 +33,7 @@ public final class SequencedCommitCursorResponse extends com.google.protobuf.Gen
     // @@protoc_insertion_point(message_implements:google.cloud.pubsublite.v1.SequencedCommitCursorResponse)
     SequencedCommitCursorResponseOrBuilder {
   private static final long serialVersionUID = 0L;
+
   // Use SequencedCommitCursorResponse.newBuilder() to construct.
   private SequencedCommitCursorResponse(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
     super(builder);
@@ -63,6 +64,7 @@ public final class SequencedCommitCursorResponse extends com.google.protobuf.Gen
 
   public static final int ACKNOWLEDGED_COMMITS_FIELD_NUMBER = 1;
   private long acknowledgedCommits_ = 0L;
+
   /**
    *
    *
@@ -241,6 +243,7 @@ public final class SequencedCommitCursorResponse extends com.google.protobuf.Gen
     Builder builder = new Builder(parent);
     return builder;
   }
+
   /**
    *
    *
@@ -427,6 +430,7 @@ public final class SequencedCommitCursorResponse extends com.google.protobuf.Gen
     private int bitField0_;
 
     private long acknowledgedCommits_;
+
     /**
      *
      *
@@ -444,6 +448,7 @@ public final class SequencedCommitCursorResponse extends com.google.protobuf.Gen
     public long getAcknowledgedCommits() {
       return acknowledgedCommits_;
     }
+
     /**
      *
      *
@@ -465,6 +470,7 @@ public final class SequencedCommitCursorResponse extends com.google.protobuf.Gen
       onChanged();
       return this;
     }
+
     /**
      *
      *

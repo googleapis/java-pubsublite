@@ -33,6 +33,7 @@ public final class PartitionAssignmentRequest extends com.google.protobuf.Genera
     // @@protoc_insertion_point(message_implements:google.cloud.pubsublite.v1.PartitionAssignmentRequest)
     PartitionAssignmentRequestOrBuilder {
   private static final long serialVersionUID = 0L;
+
   // Use PartitionAssignmentRequest.newBuilder() to construct.
   private PartitionAssignmentRequest(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
     super(builder);
@@ -78,6 +79,7 @@ public final class PartitionAssignmentRequest extends com.google.protobuf.Genera
     private RequestCase(int value) {
       this.value = value;
     }
+
     /**
      * @param value The number of the enum to look for.
      * @return The enum associated with the given number.
@@ -111,6 +113,7 @@ public final class PartitionAssignmentRequest extends com.google.protobuf.Genera
   }
 
   public static final int INITIAL_FIELD_NUMBER = 1;
+
   /**
    *
    *
@@ -126,6 +129,7 @@ public final class PartitionAssignmentRequest extends com.google.protobuf.Genera
   public boolean hasInitial() {
     return requestCase_ == 1;
   }
+
   /**
    *
    *
@@ -144,6 +148,7 @@ public final class PartitionAssignmentRequest extends com.google.protobuf.Genera
     }
     return com.google.cloud.pubsublite.proto.InitialPartitionAssignmentRequest.getDefaultInstance();
   }
+
   /**
    *
    *
@@ -163,6 +168,7 @@ public final class PartitionAssignmentRequest extends com.google.protobuf.Genera
   }
 
   public static final int ACK_FIELD_NUMBER = 2;
+
   /**
    *
    *
@@ -178,6 +184,7 @@ public final class PartitionAssignmentRequest extends com.google.protobuf.Genera
   public boolean hasAck() {
     return requestCase_ == 2;
   }
+
   /**
    *
    *
@@ -196,6 +203,7 @@ public final class PartitionAssignmentRequest extends com.google.protobuf.Genera
     }
     return com.google.cloud.pubsublite.proto.PartitionAssignmentAck.getDefaultInstance();
   }
+
   /**
    *
    *
@@ -404,6 +412,7 @@ public final class PartitionAssignmentRequest extends com.google.protobuf.Genera
     Builder builder = new Builder(parent);
     return builder;
   }
+
   /**
    *
    *
@@ -643,6 +652,7 @@ public final class PartitionAssignmentRequest extends com.google.protobuf.Genera
             com.google.cloud.pubsublite.proto.InitialPartitionAssignmentRequest.Builder,
             com.google.cloud.pubsublite.proto.InitialPartitionAssignmentRequestOrBuilder>
         initialBuilder_;
+
     /**
      *
      *
@@ -658,6 +668,7 @@ public final class PartitionAssignmentRequest extends com.google.protobuf.Genera
     public boolean hasInitial() {
       return requestCase_ == 1;
     }
+
     /**
      *
      *
@@ -685,6 +696,7 @@ public final class PartitionAssignmentRequest extends com.google.protobuf.Genera
             .getDefaultInstance();
       }
     }
+
     /**
      *
      *
@@ -708,6 +720,7 @@ public final class PartitionAssignmentRequest extends com.google.protobuf.Genera
       requestCase_ = 1;
       return this;
     }
+
     /**
      *
      *
@@ -729,6 +742,7 @@ public final class PartitionAssignmentRequest extends com.google.protobuf.Genera
       requestCase_ = 1;
       return this;
     }
+
     /**
      *
      *
@@ -765,6 +779,7 @@ public final class PartitionAssignmentRequest extends com.google.protobuf.Genera
       requestCase_ = 1;
       return this;
     }
+
     /**
      *
      *
@@ -790,6 +805,7 @@ public final class PartitionAssignmentRequest extends com.google.protobuf.Genera
       }
       return this;
     }
+
     /**
      *
      *
@@ -803,6 +819,7 @@ public final class PartitionAssignmentRequest extends com.google.protobuf.Genera
         getInitialBuilder() {
       return getInitialFieldBuilder().getBuilder();
     }
+
     /**
      *
      *
@@ -825,6 +842,7 @@ public final class PartitionAssignmentRequest extends com.google.protobuf.Genera
             .getDefaultInstance();
       }
     }
+
     /**
      *
      *
@@ -865,6 +883,7 @@ public final class PartitionAssignmentRequest extends com.google.protobuf.Genera
             com.google.cloud.pubsublite.proto.PartitionAssignmentAck.Builder,
             com.google.cloud.pubsublite.proto.PartitionAssignmentAckOrBuilder>
         ackBuilder_;
+
     /**
      *
      *
@@ -880,6 +899,7 @@ public final class PartitionAssignmentRequest extends com.google.protobuf.Genera
     public boolean hasAck() {
       return requestCase_ == 2;
     }
+
     /**
      *
      *
@@ -905,6 +925,7 @@ public final class PartitionAssignmentRequest extends com.google.protobuf.Genera
         return com.google.cloud.pubsublite.proto.PartitionAssignmentAck.getDefaultInstance();
       }
     }
+
     /**
      *
      *
@@ -927,6 +948,7 @@ public final class PartitionAssignmentRequest extends com.google.protobuf.Genera
       requestCase_ = 2;
       return this;
     }
+
     /**
      *
      *
@@ -947,6 +969,7 @@ public final class PartitionAssignmentRequest extends com.google.protobuf.Genera
       requestCase_ = 2;
       return this;
     }
+
     /**
      *
      *
@@ -980,6 +1003,7 @@ public final class PartitionAssignmentRequest extends com.google.protobuf.Genera
       requestCase_ = 2;
       return this;
     }
+
     /**
      *
      *
@@ -1005,6 +1029,7 @@ public final class PartitionAssignmentRequest extends com.google.protobuf.Genera
       }
       return this;
     }
+
     /**
      *
      *
@@ -1017,6 +1042,7 @@ public final class PartitionAssignmentRequest extends com.google.protobuf.Genera
     public com.google.cloud.pubsublite.proto.PartitionAssignmentAck.Builder getAckBuilder() {
       return getAckFieldBuilder().getBuilder();
     }
+
     /**
      *
      *
@@ -1037,6 +1063,7 @@ public final class PartitionAssignmentRequest extends com.google.protobuf.Genera
         return com.google.cloud.pubsublite.proto.PartitionAssignmentAck.getDefaultInstance();
       }
     }
+
     /**
      *
      *

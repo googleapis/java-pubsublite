@@ -37,6 +37,7 @@ public interface InitialSubscribeResponseOrBuilder
    * @return Whether the cursor field is set.
    */
   boolean hasCursor();
+
   /**
    *
    *
@@ -50,6 +51,7 @@ public interface InitialSubscribeResponseOrBuilder
    * @return The cursor.
    */
   com.google.cloud.pubsublite.proto.Cursor getCursor();
+
   /**
    *
    *

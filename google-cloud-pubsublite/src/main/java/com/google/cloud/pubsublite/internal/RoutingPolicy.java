@@ -24,6 +24,7 @@ public interface RoutingPolicy {
   interface Factory {
     RoutingPolicy newPolicy(long numPartitions);
   }
+
   // Route a message to a partition.
   Partition route(PubSubMessage messageKey) throws CheckedApiException;
 }

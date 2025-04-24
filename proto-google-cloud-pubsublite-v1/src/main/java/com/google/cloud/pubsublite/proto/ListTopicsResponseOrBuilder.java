@@ -35,6 +35,7 @@ public interface ListTopicsResponseOrBuilder
    * <code>repeated .google.cloud.pubsublite.v1.Topic topics = 1;</code>
    */
   java.util.List<com.google.cloud.pubsublite.proto.Topic> getTopicsList();
+
   /**
    *
    *
@@ -46,6 +47,7 @@ public interface ListTopicsResponseOrBuilder
    * <code>repeated .google.cloud.pubsublite.v1.Topic topics = 1;</code>
    */
   com.google.cloud.pubsublite.proto.Topic getTopics(int index);
+
   /**
    *
    *
@@ -57,6 +59,7 @@ public interface ListTopicsResponseOrBuilder
    * <code>repeated .google.cloud.pubsublite.v1.Topic topics = 1;</code>
    */
   int getTopicsCount();
+
   /**
    *
    *
@@ -69,6 +72,7 @@ public interface ListTopicsResponseOrBuilder
    */
   java.util.List<? extends com.google.cloud.pubsublite.proto.TopicOrBuilder>
       getTopicsOrBuilderList();
+
   /**
    *
    *
@@ -94,6 +98,7 @@ public interface ListTopicsResponseOrBuilder
    * @return The nextPageToken.
    */
   java.lang.String getNextPageToken();
+
   /**
    *
    *

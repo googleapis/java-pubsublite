@@ -38,6 +38,7 @@ public interface ComputeHeadCursorRequestOrBuilder
    * @return The topic.
    */
   java.lang.String getTopic();
+
   /**
    *
    *

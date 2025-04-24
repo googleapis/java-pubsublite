@@ -33,6 +33,7 @@ public final class MessagePublishRequest extends com.google.protobuf.GeneratedMe
     // @@protoc_insertion_point(message_implements:google.cloud.pubsublite.v1.MessagePublishRequest)
     MessagePublishRequestOrBuilder {
   private static final long serialVersionUID = 0L;
+
   // Use MessagePublishRequest.newBuilder() to construct.
   private MessagePublishRequest(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
     super(builder);
@@ -67,6 +68,7 @@ public final class MessagePublishRequest extends com.google.protobuf.GeneratedMe
 
   @SuppressWarnings("serial")
   private java.util.List<com.google.cloud.pubsublite.proto.PubSubMessage> messages_;
+
   /**
    *
    *
@@ -80,6 +82,7 @@ public final class MessagePublishRequest extends com.google.protobuf.GeneratedMe
   public java.util.List<com.google.cloud.pubsublite.proto.PubSubMessage> getMessagesList() {
     return messages_;
   }
+
   /**
    *
    *
@@ -94,6 +97,7 @@ public final class MessagePublishRequest extends com.google.protobuf.GeneratedMe
       getMessagesOrBuilderList() {
     return messages_;
   }
+
   /**
    *
    *
@@ -107,6 +111,7 @@ public final class MessagePublishRequest extends com.google.protobuf.GeneratedMe
   public int getMessagesCount() {
     return messages_.size();
   }
+
   /**
    *
    *
@@ -120,6 +125,7 @@ public final class MessagePublishRequest extends com.google.protobuf.GeneratedMe
   public com.google.cloud.pubsublite.proto.PubSubMessage getMessages(int index) {
     return messages_.get(index);
   }
+
   /**
    *
    *
@@ -136,6 +142,7 @@ public final class MessagePublishRequest extends com.google.protobuf.GeneratedMe
 
   public static final int FIRST_SEQUENCE_NUMBER_FIELD_NUMBER = 2;
   private long firstSequenceNumber_ = 0L;
+
   /**
    *
    *
@@ -333,6 +340,7 @@ public final class MessagePublishRequest extends com.google.protobuf.GeneratedMe
     Builder builder = new Builder(parent);
     return builder;
   }
+
   /**
    *
    *
@@ -609,6 +617,7 @@ public final class MessagePublishRequest extends com.google.protobuf.GeneratedMe
         return messagesBuilder_.getMessageList();
       }
     }
+
     /**
      *
      *
@@ -625,6 +634,7 @@ public final class MessagePublishRequest extends com.google.protobuf.GeneratedMe
         return messagesBuilder_.getCount();
       }
     }
+
     /**
      *
      *
@@ -641,6 +651,7 @@ public final class MessagePublishRequest extends com.google.protobuf.GeneratedMe
         return messagesBuilder_.getMessage(index);
       }
     }
+
     /**
      *
      *
@@ -663,6 +674,7 @@ public final class MessagePublishRequest extends com.google.protobuf.GeneratedMe
       }
       return this;
     }
+
     /**
      *
      *
@@ -683,6 +695,7 @@ public final class MessagePublishRequest extends com.google.protobuf.GeneratedMe
       }
       return this;
     }
+
     /**
      *
      *
@@ -705,6 +718,7 @@ public final class MessagePublishRequest extends com.google.protobuf.GeneratedMe
       }
       return this;
     }
+
     /**
      *
      *
@@ -727,6 +741,7 @@ public final class MessagePublishRequest extends com.google.protobuf.GeneratedMe
       }
       return this;
     }
+
     /**
      *
      *
@@ -747,6 +762,7 @@ public final class MessagePublishRequest extends com.google.protobuf.GeneratedMe
       }
       return this;
     }
+
     /**
      *
      *
@@ -767,6 +783,7 @@ public final class MessagePublishRequest extends com.google.protobuf.GeneratedMe
       }
       return this;
     }
+
     /**
      *
      *
@@ -787,6 +804,7 @@ public final class MessagePublishRequest extends com.google.protobuf.GeneratedMe
       }
       return this;
     }
+
     /**
      *
      *
@@ -806,6 +824,7 @@ public final class MessagePublishRequest extends com.google.protobuf.GeneratedMe
       }
       return this;
     }
+
     /**
      *
      *
@@ -825,6 +844,7 @@ public final class MessagePublishRequest extends com.google.protobuf.GeneratedMe
       }
       return this;
     }
+
     /**
      *
      *
@@ -837,6 +857,7 @@ public final class MessagePublishRequest extends com.google.protobuf.GeneratedMe
     public com.google.cloud.pubsublite.proto.PubSubMessage.Builder getMessagesBuilder(int index) {
       return getMessagesFieldBuilder().getBuilder(index);
     }
+
     /**
      *
      *
@@ -854,6 +875,7 @@ public final class MessagePublishRequest extends com.google.protobuf.GeneratedMe
         return messagesBuilder_.getMessageOrBuilder(index);
       }
     }
+
     /**
      *
      *
@@ -871,6 +893,7 @@ public final class MessagePublishRequest extends com.google.protobuf.GeneratedMe
         return java.util.Collections.unmodifiableList(messages_);
       }
     }
+
     /**
      *
      *
@@ -884,6 +907,7 @@ public final class MessagePublishRequest extends com.google.protobuf.GeneratedMe
       return getMessagesFieldBuilder()
           .addBuilder(com.google.cloud.pubsublite.proto.PubSubMessage.getDefaultInstance());
     }
+
     /**
      *
      *
@@ -897,6 +921,7 @@ public final class MessagePublishRequest extends com.google.protobuf.GeneratedMe
       return getMessagesFieldBuilder()
           .addBuilder(index, com.google.cloud.pubsublite.proto.PubSubMessage.getDefaultInstance());
     }
+
     /**
      *
      *
@@ -929,6 +954,7 @@ public final class MessagePublishRequest extends com.google.protobuf.GeneratedMe
     }
 
     private long firstSequenceNumber_;
+
     /**
      *
      *
@@ -954,6 +980,7 @@ public final class MessagePublishRequest extends com.google.protobuf.GeneratedMe
     public long getFirstSequenceNumber() {
       return firstSequenceNumber_;
     }
+
     /**
      *
      *
@@ -983,6 +1010,7 @@ public final class MessagePublishRequest extends com.google.protobuf.GeneratedMe
       onChanged();
       return this;
     }
+
     /**
      *
      *

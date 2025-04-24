@@ -37,6 +37,7 @@ public interface UpdateTopicRequestOrBuilder
    * @return Whether the topic field is set.
    */
   boolean hasTopic();
+
   /**
    *
    *
@@ -50,6 +51,7 @@ public interface UpdateTopicRequestOrBuilder
    * @return The topic.
    */
   com.google.cloud.pubsublite.proto.Topic getTopic();
+
   /**
    *
    *
@@ -75,6 +77,7 @@ public interface UpdateTopicRequestOrBuilder
    * @return Whether the updateMask field is set.
    */
   boolean hasUpdateMask();
+
   /**
    *
    *
@@ -88,6 +91,7 @@ public interface UpdateTopicRequestOrBuilder
    * @return The updateMask.
    */
   com.google.protobuf.FieldMask getUpdateMask();
+
   /**
    *
    *

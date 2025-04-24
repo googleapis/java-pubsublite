@@ -196,6 +196,19 @@ public final class CursorServiceGrpc {
     return CursorServiceStub.newStub(factory, channel);
   }
 
+  /** Creates a new blocking-style stub that supports all types of calls on the service */
+  public static CursorServiceBlockingV2Stub newBlockingV2Stub(io.grpc.Channel channel) {
+    io.grpc.stub.AbstractStub.StubFactory<CursorServiceBlockingV2Stub> factory =
+        new io.grpc.stub.AbstractStub.StubFactory<CursorServiceBlockingV2Stub>() {
+          @java.lang.Override
+          public CursorServiceBlockingV2Stub newStub(
+              io.grpc.Channel channel, io.grpc.CallOptions callOptions) {
+            return new CursorServiceBlockingV2Stub(channel, callOptions);
+          }
+        };
+    return CursorServiceBlockingV2Stub.newStub(factory, channel);
+  }
+
   /**
    * Creates a new blocking-style stub that supports unary and streaming output calls on the service
    */
@@ -376,6 +389,70 @@ public final class CursorServiceGrpc {
 
   /**
    * A stub to allow clients to do synchronous rpc calls to service CursorService.
+   *
+   * <pre>
+   * The service that a subscriber client application uses to manage committed
+   * cursors while receiving messsages. A cursor represents a subscriber's
+   * progress within a topic partition for a given subscription.
+   * </pre>
+   */
+  public static final class CursorServiceBlockingV2Stub
+      extends io.grpc.stub.AbstractBlockingStub<CursorServiceBlockingV2Stub> {
+    private CursorServiceBlockingV2Stub(io.grpc.Channel channel, io.grpc.CallOptions callOptions) {
+      super(channel, callOptions);
+    }
+
+    @java.lang.Override
+    protected CursorServiceBlockingV2Stub build(
+        io.grpc.Channel channel, io.grpc.CallOptions callOptions) {
+      return new CursorServiceBlockingV2Stub(channel, callOptions);
+    }
+
+    /**
+     *
+     *
+     * <pre>
+     * Establishes a stream with the server for managing committed cursors.
+     * </pre>
+     */
+    @io.grpc.ExperimentalApi("https://github.com/grpc/grpc-java/issues/10918")
+    public io.grpc.stub.BlockingClientCall<
+            com.google.cloud.pubsublite.proto.StreamingCommitCursorRequest,
+            com.google.cloud.pubsublite.proto.StreamingCommitCursorResponse>
+        streamingCommitCursor() {
+      return io.grpc.stub.ClientCalls.blockingBidiStreamingCall(
+          getChannel(), getStreamingCommitCursorMethod(), getCallOptions());
+    }
+
+    /**
+     *
+     *
+     * <pre>
+     * Updates the committed cursor.
+     * </pre>
+     */
+    public com.google.cloud.pubsublite.proto.CommitCursorResponse commitCursor(
+        com.google.cloud.pubsublite.proto.CommitCursorRequest request) {
+      return io.grpc.stub.ClientCalls.blockingUnaryCall(
+          getChannel(), getCommitCursorMethod(), getCallOptions(), request);
+    }
+
+    /**
+     *
+     *
+     * <pre>
+     * Returns all committed cursor information for a subscription.
+     * </pre>
+     */
+    public com.google.cloud.pubsublite.proto.ListPartitionCursorsResponse listPartitionCursors(
+        com.google.cloud.pubsublite.proto.ListPartitionCursorsRequest request) {
+      return io.grpc.stub.ClientCalls.blockingUnaryCall(
+          getChannel(), getListPartitionCursorsMethod(), getCallOptions(), request);
+    }
+  }
+
+  /**
+   * A stub to allow clients to do limited synchronous rpc calls to service CursorService.
    *
    * <pre>
    * The service that a subscriber client application uses to manage committed

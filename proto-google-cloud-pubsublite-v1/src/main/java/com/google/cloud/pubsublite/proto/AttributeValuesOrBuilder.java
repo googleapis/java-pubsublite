@@ -36,6 +36,7 @@ public interface AttributeValuesOrBuilder
    * @return A list containing the values.
    */
   java.util.List<com.google.protobuf.ByteString> getValuesList();
+
   /**
    *
    *
@@ -48,6 +49,7 @@ public interface AttributeValuesOrBuilder
    * @return The count of values.
    */
   int getValuesCount();
+
   /**
    *
    *

@@ -33,6 +33,7 @@ public final class CommitCursorRequest extends com.google.protobuf.GeneratedMess
     // @@protoc_insertion_point(message_implements:google.cloud.pubsublite.v1.CommitCursorRequest)
     CommitCursorRequestOrBuilder {
   private static final long serialVersionUID = 0L;
+
   // Use CommitCursorRequest.newBuilder() to construct.
   private CommitCursorRequest(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
     super(builder);
@@ -68,6 +69,7 @@ public final class CommitCursorRequest extends com.google.protobuf.GeneratedMess
 
   @SuppressWarnings("serial")
   private volatile java.lang.Object subscription_ = "";
+
   /**
    *
    *
@@ -91,6 +93,7 @@ public final class CommitCursorRequest extends com.google.protobuf.GeneratedMess
       return s;
     }
   }
+
   /**
    *
    *
@@ -117,6 +120,7 @@ public final class CommitCursorRequest extends com.google.protobuf.GeneratedMess
 
   public static final int PARTITION_FIELD_NUMBER = 2;
   private long partition_ = 0L;
+
   /**
    *
    *
@@ -136,6 +140,7 @@ public final class CommitCursorRequest extends com.google.protobuf.GeneratedMess
 
   public static final int CURSOR_FIELD_NUMBER = 3;
   private com.google.cloud.pubsublite.proto.Cursor cursor_;
+
   /**
    *
    *
@@ -151,6 +156,7 @@ public final class CommitCursorRequest extends com.google.protobuf.GeneratedMess
   public boolean hasCursor() {
     return ((bitField0_ & 0x00000001) != 0);
   }
+
   /**
    *
    *
@@ -168,6 +174,7 @@ public final class CommitCursorRequest extends com.google.protobuf.GeneratedMess
         ? com.google.cloud.pubsublite.proto.Cursor.getDefaultInstance()
         : cursor_;
   }
+
   /**
    *
    *
@@ -367,6 +374,7 @@ public final class CommitCursorRequest extends com.google.protobuf.GeneratedMess
     Builder builder = new Builder(parent);
     return builder;
   }
+
   /**
    *
    *
@@ -593,6 +601,7 @@ public final class CommitCursorRequest extends com.google.protobuf.GeneratedMess
     private int bitField0_;
 
     private java.lang.Object subscription_ = "";
+
     /**
      *
      *
@@ -615,6 +624,7 @@ public final class CommitCursorRequest extends com.google.protobuf.GeneratedMess
         return (java.lang.String) ref;
       }
     }
+
     /**
      *
      *
@@ -637,6 +647,7 @@ public final class CommitCursorRequest extends com.google.protobuf.GeneratedMess
         return (com.google.protobuf.ByteString) ref;
       }
     }
+
     /**
      *
      *
@@ -658,6 +669,7 @@ public final class CommitCursorRequest extends com.google.protobuf.GeneratedMess
       onChanged();
       return this;
     }
+
     /**
      *
      *
@@ -675,6 +687,7 @@ public final class CommitCursorRequest extends com.google.protobuf.GeneratedMess
       onChanged();
       return this;
     }
+
     /**
      *
      *
@@ -699,6 +712,7 @@ public final class CommitCursorRequest extends com.google.protobuf.GeneratedMess
     }
 
     private long partition_;
+
     /**
      *
      *
@@ -715,6 +729,7 @@ public final class CommitCursorRequest extends com.google.protobuf.GeneratedMess
     public long getPartition() {
       return partition_;
     }
+
     /**
      *
      *
@@ -735,6 +750,7 @@ public final class CommitCursorRequest extends com.google.protobuf.GeneratedMess
       onChanged();
       return this;
     }
+
     /**
      *
      *
@@ -760,6 +776,7 @@ public final class CommitCursorRequest extends com.google.protobuf.GeneratedMess
             com.google.cloud.pubsublite.proto.Cursor.Builder,
             com.google.cloud.pubsublite.proto.CursorOrBuilder>
         cursorBuilder_;
+
     /**
      *
      *
@@ -774,6 +791,7 @@ public final class CommitCursorRequest extends com.google.protobuf.GeneratedMess
     public boolean hasCursor() {
       return ((bitField0_ & 0x00000004) != 0);
     }
+
     /**
      *
      *
@@ -794,6 +812,7 @@ public final class CommitCursorRequest extends com.google.protobuf.GeneratedMess
         return cursorBuilder_.getMessage();
       }
     }
+
     /**
      *
      *
@@ -816,6 +835,7 @@ public final class CommitCursorRequest extends com.google.protobuf.GeneratedMess
       onChanged();
       return this;
     }
+
     /**
      *
      *
@@ -835,6 +855,7 @@ public final class CommitCursorRequest extends com.google.protobuf.GeneratedMess
       onChanged();
       return this;
     }
+
     /**
      *
      *
@@ -862,6 +883,7 @@ public final class CommitCursorRequest extends com.google.protobuf.GeneratedMess
       }
       return this;
     }
+
     /**
      *
      *
@@ -881,6 +903,7 @@ public final class CommitCursorRequest extends com.google.protobuf.GeneratedMess
       onChanged();
       return this;
     }
+
     /**
      *
      *
@@ -895,6 +918,7 @@ public final class CommitCursorRequest extends com.google.protobuf.GeneratedMess
       onChanged();
       return getCursorFieldBuilder().getBuilder();
     }
+
     /**
      *
      *
@@ -913,6 +937,7 @@ public final class CommitCursorRequest extends com.google.protobuf.GeneratedMess
             : cursor_;
       }
     }
+
     /**
      *
      *

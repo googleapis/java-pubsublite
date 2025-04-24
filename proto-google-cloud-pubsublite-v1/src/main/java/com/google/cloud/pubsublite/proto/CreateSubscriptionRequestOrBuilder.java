@@ -39,6 +39,7 @@ public interface CreateSubscriptionRequestOrBuilder
    * @return The parent.
    */
   java.lang.String getParent();
+
   /**
    *
    *
@@ -70,6 +71,7 @@ public interface CreateSubscriptionRequestOrBuilder
    * @return Whether the subscription field is set.
    */
   boolean hasSubscription();
+
   /**
    *
    *
@@ -85,6 +87,7 @@ public interface CreateSubscriptionRequestOrBuilder
    * @return The subscription.
    */
   com.google.cloud.pubsublite.proto.Subscription getSubscription();
+
   /**
    *
    *
@@ -114,6 +117,7 @@ public interface CreateSubscriptionRequestOrBuilder
    * @return The subscriptionId.
    */
   java.lang.String getSubscriptionId();
+
   /**
    *
    *

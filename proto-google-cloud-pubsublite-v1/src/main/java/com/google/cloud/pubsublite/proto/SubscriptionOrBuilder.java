@@ -38,6 +38,7 @@ public interface SubscriptionOrBuilder
    * @return The name.
    */
   java.lang.String getName();
+
   /**
    *
    *
@@ -67,6 +68,7 @@ public interface SubscriptionOrBuilder
    * @return The topic.
    */
   java.lang.String getTopic();
+
   /**
    *
    *
@@ -94,6 +96,7 @@ public interface SubscriptionOrBuilder
    * @return Whether the deliveryConfig field is set.
    */
   boolean hasDeliveryConfig();
+
   /**
    *
    *
@@ -106,6 +109,7 @@ public interface SubscriptionOrBuilder
    * @return The deliveryConfig.
    */
   com.google.cloud.pubsublite.proto.Subscription.DeliveryConfig getDeliveryConfig();
+
   /**
    *
    *
@@ -131,6 +135,7 @@ public interface SubscriptionOrBuilder
    * @return Whether the exportConfig field is set.
    */
   boolean hasExportConfig();
+
   /**
    *
    *
@@ -144,6 +149,7 @@ public interface SubscriptionOrBuilder
    * @return The exportConfig.
    */
   com.google.cloud.pubsublite.proto.ExportConfig getExportConfig();
+
   /**
    *
    *

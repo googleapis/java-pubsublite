@@ -62,6 +62,7 @@ public interface PubSubMessageOrBuilder
    * <code>map&lt;string, .google.cloud.pubsublite.v1.AttributeValues&gt; attributes = 3;</code>
    */
   int getAttributesCount();
+
   /**
    *
    *
@@ -72,10 +73,12 @@ public interface PubSubMessageOrBuilder
    * <code>map&lt;string, .google.cloud.pubsublite.v1.AttributeValues&gt; attributes = 3;</code>
    */
   boolean containsAttributes(java.lang.String key);
+
   /** Use {@link #getAttributesMap()} instead. */
   @java.lang.Deprecated
   java.util.Map<java.lang.String, com.google.cloud.pubsublite.proto.AttributeValues>
       getAttributes();
+
   /**
    *
    *
@@ -87,6 +90,7 @@ public interface PubSubMessageOrBuilder
    */
   java.util.Map<java.lang.String, com.google.cloud.pubsublite.proto.AttributeValues>
       getAttributesMap();
+
   /**
    *
    *
@@ -101,6 +105,7 @@ public interface PubSubMessageOrBuilder
       java.lang.String key,
       /* nullable */
       com.google.cloud.pubsublite.proto.AttributeValues defaultValue);
+
   /**
    *
    *
@@ -124,6 +129,7 @@ public interface PubSubMessageOrBuilder
    * @return Whether the eventTime field is set.
    */
   boolean hasEventTime();
+
   /**
    *
    *
@@ -136,6 +142,7 @@ public interface PubSubMessageOrBuilder
    * @return The eventTime.
    */
   com.google.protobuf.Timestamp getEventTime();
+
   /**
    *
    *

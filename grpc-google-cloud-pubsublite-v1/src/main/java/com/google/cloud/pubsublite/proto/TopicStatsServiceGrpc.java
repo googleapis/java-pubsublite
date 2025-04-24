@@ -195,6 +195,19 @@ public final class TopicStatsServiceGrpc {
     return TopicStatsServiceStub.newStub(factory, channel);
   }
 
+  /** Creates a new blocking-style stub that supports all types of calls on the service */
+  public static TopicStatsServiceBlockingV2Stub newBlockingV2Stub(io.grpc.Channel channel) {
+    io.grpc.stub.AbstractStub.StubFactory<TopicStatsServiceBlockingV2Stub> factory =
+        new io.grpc.stub.AbstractStub.StubFactory<TopicStatsServiceBlockingV2Stub>() {
+          @java.lang.Override
+          public TopicStatsServiceBlockingV2Stub newStub(
+              io.grpc.Channel channel, io.grpc.CallOptions callOptions) {
+            return new TopicStatsServiceBlockingV2Stub(channel, callOptions);
+          }
+        };
+    return TopicStatsServiceBlockingV2Stub.newStub(factory, channel);
+  }
+
   /**
    * Creates a new blocking-style stub that supports unary and streaming output calls on the service
    */
@@ -381,6 +394,73 @@ public final class TopicStatsServiceGrpc {
 
   /**
    * A stub to allow clients to do synchronous rpc calls to service TopicStatsService.
+   *
+   * <pre>
+   * This service allows users to get stats about messages in their topic.
+   * </pre>
+   */
+  public static final class TopicStatsServiceBlockingV2Stub
+      extends io.grpc.stub.AbstractBlockingStub<TopicStatsServiceBlockingV2Stub> {
+    private TopicStatsServiceBlockingV2Stub(
+        io.grpc.Channel channel, io.grpc.CallOptions callOptions) {
+      super(channel, callOptions);
+    }
+
+    @java.lang.Override
+    protected TopicStatsServiceBlockingV2Stub build(
+        io.grpc.Channel channel, io.grpc.CallOptions callOptions) {
+      return new TopicStatsServiceBlockingV2Stub(channel, callOptions);
+    }
+
+    /**
+     *
+     *
+     * <pre>
+     * Compute statistics about a range of messages in a given topic and
+     * partition.
+     * </pre>
+     */
+    public com.google.cloud.pubsublite.proto.ComputeMessageStatsResponse computeMessageStats(
+        com.google.cloud.pubsublite.proto.ComputeMessageStatsRequest request) {
+      return io.grpc.stub.ClientCalls.blockingUnaryCall(
+          getChannel(), getComputeMessageStatsMethod(), getCallOptions(), request);
+    }
+
+    /**
+     *
+     *
+     * <pre>
+     * Compute the head cursor for the partition.
+     * The head cursor's offset is guaranteed to be less than or equal to all
+     * messages which have not yet been acknowledged as published, and
+     * greater than the offset of any message whose publish has already
+     * been acknowledged. It is zero if there have never been messages in the
+     * partition.
+     * </pre>
+     */
+    public com.google.cloud.pubsublite.proto.ComputeHeadCursorResponse computeHeadCursor(
+        com.google.cloud.pubsublite.proto.ComputeHeadCursorRequest request) {
+      return io.grpc.stub.ClientCalls.blockingUnaryCall(
+          getChannel(), getComputeHeadCursorMethod(), getCallOptions(), request);
+    }
+
+    /**
+     *
+     *
+     * <pre>
+     * Compute the corresponding cursor for a publish or event time in a topic
+     * partition.
+     * </pre>
+     */
+    public com.google.cloud.pubsublite.proto.ComputeTimeCursorResponse computeTimeCursor(
+        com.google.cloud.pubsublite.proto.ComputeTimeCursorRequest request) {
+      return io.grpc.stub.ClientCalls.blockingUnaryCall(
+          getChannel(), getComputeTimeCursorMethod(), getCallOptions(), request);
+    }
+  }
+
+  /**
+   * A stub to allow clients to do limited synchronous rpc calls to service TopicStatsService.
    *
    * <pre>
    * This service allows users to get stats about messages in their topic.

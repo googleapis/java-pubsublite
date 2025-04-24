@@ -38,6 +38,7 @@ public interface ComputeMessageStatsRequestOrBuilder
    * @return The topic.
    */
   java.lang.String getTopic();
+
   /**
    *
    *
@@ -78,6 +79,7 @@ public interface ComputeMessageStatsRequestOrBuilder
    * @return Whether the startCursor field is set.
    */
   boolean hasStartCursor();
+
   /**
    *
    *
@@ -90,6 +92,7 @@ public interface ComputeMessageStatsRequestOrBuilder
    * @return The startCursor.
    */
   com.google.cloud.pubsublite.proto.Cursor getStartCursor();
+
   /**
    *
    *
@@ -115,6 +118,7 @@ public interface ComputeMessageStatsRequestOrBuilder
    * @return Whether the endCursor field is set.
    */
   boolean hasEndCursor();
+
   /**
    *
    *
@@ -129,6 +133,7 @@ public interface ComputeMessageStatsRequestOrBuilder
    * @return The endCursor.
    */
   com.google.cloud.pubsublite.proto.Cursor getEndCursor();
+
   /**
    *
    *

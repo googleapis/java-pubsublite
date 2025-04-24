@@ -33,6 +33,7 @@ public final class PublishRequest extends com.google.protobuf.GeneratedMessageV3
     // @@protoc_insertion_point(message_implements:google.cloud.pubsublite.v1.PublishRequest)
     PublishRequestOrBuilder {
   private static final long serialVersionUID = 0L;
+
   // Use PublishRequest.newBuilder() to construct.
   private PublishRequest(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
     super(builder);
@@ -78,6 +79,7 @@ public final class PublishRequest extends com.google.protobuf.GeneratedMessageV3
     private RequestTypeCase(int value) {
       this.value = value;
     }
+
     /**
      * @param value The number of the enum to look for.
      * @return The enum associated with the given number.
@@ -111,6 +113,7 @@ public final class PublishRequest extends com.google.protobuf.GeneratedMessageV3
   }
 
   public static final int INITIAL_REQUEST_FIELD_NUMBER = 1;
+
   /**
    *
    *
@@ -126,6 +129,7 @@ public final class PublishRequest extends com.google.protobuf.GeneratedMessageV3
   public boolean hasInitialRequest() {
     return requestTypeCase_ == 1;
   }
+
   /**
    *
    *
@@ -144,6 +148,7 @@ public final class PublishRequest extends com.google.protobuf.GeneratedMessageV3
     }
     return com.google.cloud.pubsublite.proto.InitialPublishRequest.getDefaultInstance();
   }
+
   /**
    *
    *
@@ -163,6 +168,7 @@ public final class PublishRequest extends com.google.protobuf.GeneratedMessageV3
   }
 
   public static final int MESSAGE_PUBLISH_REQUEST_FIELD_NUMBER = 2;
+
   /**
    *
    *
@@ -178,6 +184,7 @@ public final class PublishRequest extends com.google.protobuf.GeneratedMessageV3
   public boolean hasMessagePublishRequest() {
     return requestTypeCase_ == 2;
   }
+
   /**
    *
    *
@@ -196,6 +203,7 @@ public final class PublishRequest extends com.google.protobuf.GeneratedMessageV3
     }
     return com.google.cloud.pubsublite.proto.MessagePublishRequest.getDefaultInstance();
   }
+
   /**
    *
    *
@@ -405,6 +413,7 @@ public final class PublishRequest extends com.google.protobuf.GeneratedMessageV3
     Builder builder = new Builder(parent);
     return builder;
   }
+
   /**
    *
    *
@@ -641,6 +650,7 @@ public final class PublishRequest extends com.google.protobuf.GeneratedMessageV3
             com.google.cloud.pubsublite.proto.InitialPublishRequest.Builder,
             com.google.cloud.pubsublite.proto.InitialPublishRequestOrBuilder>
         initialRequestBuilder_;
+
     /**
      *
      *
@@ -656,6 +666,7 @@ public final class PublishRequest extends com.google.protobuf.GeneratedMessageV3
     public boolean hasInitialRequest() {
       return requestTypeCase_ == 1;
     }
+
     /**
      *
      *
@@ -681,6 +692,7 @@ public final class PublishRequest extends com.google.protobuf.GeneratedMessageV3
         return com.google.cloud.pubsublite.proto.InitialPublishRequest.getDefaultInstance();
       }
     }
+
     /**
      *
      *
@@ -704,6 +716,7 @@ public final class PublishRequest extends com.google.protobuf.GeneratedMessageV3
       requestTypeCase_ = 1;
       return this;
     }
+
     /**
      *
      *
@@ -724,6 +737,7 @@ public final class PublishRequest extends com.google.protobuf.GeneratedMessageV3
       requestTypeCase_ = 1;
       return this;
     }
+
     /**
      *
      *
@@ -758,6 +772,7 @@ public final class PublishRequest extends com.google.protobuf.GeneratedMessageV3
       requestTypeCase_ = 1;
       return this;
     }
+
     /**
      *
      *
@@ -783,6 +798,7 @@ public final class PublishRequest extends com.google.protobuf.GeneratedMessageV3
       }
       return this;
     }
+
     /**
      *
      *
@@ -796,6 +812,7 @@ public final class PublishRequest extends com.google.protobuf.GeneratedMessageV3
         getInitialRequestBuilder() {
       return getInitialRequestFieldBuilder().getBuilder();
     }
+
     /**
      *
      *
@@ -817,6 +834,7 @@ public final class PublishRequest extends com.google.protobuf.GeneratedMessageV3
         return com.google.cloud.pubsublite.proto.InitialPublishRequest.getDefaultInstance();
       }
     }
+
     /**
      *
      *
@@ -856,6 +874,7 @@ public final class PublishRequest extends com.google.protobuf.GeneratedMessageV3
             com.google.cloud.pubsublite.proto.MessagePublishRequest.Builder,
             com.google.cloud.pubsublite.proto.MessagePublishRequestOrBuilder>
         messagePublishRequestBuilder_;
+
     /**
      *
      *
@@ -871,6 +890,7 @@ public final class PublishRequest extends com.google.protobuf.GeneratedMessageV3
     public boolean hasMessagePublishRequest() {
       return requestTypeCase_ == 2;
     }
+
     /**
      *
      *
@@ -896,6 +916,7 @@ public final class PublishRequest extends com.google.protobuf.GeneratedMessageV3
         return com.google.cloud.pubsublite.proto.MessagePublishRequest.getDefaultInstance();
       }
     }
+
     /**
      *
      *
@@ -919,6 +940,7 @@ public final class PublishRequest extends com.google.protobuf.GeneratedMessageV3
       requestTypeCase_ = 2;
       return this;
     }
+
     /**
      *
      *
@@ -939,6 +961,7 @@ public final class PublishRequest extends com.google.protobuf.GeneratedMessageV3
       requestTypeCase_ = 2;
       return this;
     }
+
     /**
      *
      *
@@ -973,6 +996,7 @@ public final class PublishRequest extends com.google.protobuf.GeneratedMessageV3
       requestTypeCase_ = 2;
       return this;
     }
+
     /**
      *
      *
@@ -998,6 +1022,7 @@ public final class PublishRequest extends com.google.protobuf.GeneratedMessageV3
       }
       return this;
     }
+
     /**
      *
      *
@@ -1011,6 +1036,7 @@ public final class PublishRequest extends com.google.protobuf.GeneratedMessageV3
         getMessagePublishRequestBuilder() {
       return getMessagePublishRequestFieldBuilder().getBuilder();
     }
+
     /**
      *
      *
@@ -1032,6 +1058,7 @@ public final class PublishRequest extends com.google.protobuf.GeneratedMessageV3
         return com.google.cloud.pubsublite.proto.MessagePublishRequest.getDefaultInstance();
       }
     }
+
     /**
      *
      *

@@ -1,5 +1,20 @@
 # Changelog
 
+## [1.15.7](https://github.com/googleapis/java-pubsublite/compare/v1.15.6...v1.15.7) (2025-05-06)
+
+
+### Bug Fixes
+
+* **deps:** Update the Java code generator (gapic-generator-java) to 2.56.3 ([b0f65c1](https://github.com/googleapis/java-pubsublite/commit/b0f65c1b05da79aff0e3448fc17fc75616b61e89))
+
+
+### Dependencies
+
+* Update dependency com.google.cloud:google-cloud-pubsub to v1.139.3 ([#1853](https://github.com/googleapis/java-pubsublite/issues/1853)) ([01c2c13](https://github.com/googleapis/java-pubsublite/commit/01c2c131c6a98136e3582982c779938d5c272db1))
+* Update dependency com.google.cloud:sdk-platform-java-config to v3.46.3 ([#1851](https://github.com/googleapis/java-pubsublite/issues/1851)) ([bc0f7a4](https://github.com/googleapis/java-pubsublite/commit/bc0f7a45180ce39fe2ae43845e8d68b2d9c4ec58))
+* Update dependency com.google.cloud:sdk-platform-java-config to v3.47.0 ([#1856](https://github.com/googleapis/java-pubsublite/issues/1856)) ([0db4462](https://github.com/googleapis/java-pubsublite/commit/0db4462c4be7e37498e703543956c3f60c1c5d4c))
+* Update googleapis/sdk-platform-java action to v2.57.0 ([#1857](https://github.com/googleapis/java-pubsublite/issues/1857)) ([f942a8a](https://github.com/googleapis/java-pubsublite/commit/f942a8afe797c8bf8e1025a9b4011531166049b2))
+
 ## [1.15.6](https://github.com/googleapis/java-pubsublite/compare/v1.15.5...v1.15.6) (2025-04-26)
 
 

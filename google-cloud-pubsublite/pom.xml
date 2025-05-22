@@ -116,7 +116,7 @@
     <dependency>
       <groupId>com.google.flogger</groupId>
       <artifactId>flogger</artifactId>
-      <version>0.8</version>
+      <version>0.9</version>
     </dependency>
 
     <!--test dependencies-->

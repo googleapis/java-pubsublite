@@ -112,6 +112,7 @@
           <encoding>UTF-8</encoding>
           <compilerArgs>
             <arg>-Xlint:all</arg>
+            <arg>--should-stop=ifError=FLOW</arg>
           </compilerArgs>
           <annotationProcessorPaths>
             <path>

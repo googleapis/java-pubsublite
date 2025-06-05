@@ -24,7 +24,7 @@ If you are using Maven, add this to your pom.xml file:
 <dependency>
   <groupId>com.google.cloud</groupId>
   <artifactId>google-cloud-pubsub</artifactId>
-  <version>1.139.4</version>
+  <version>1.140.0</version>
 </dependency>
 
 ```

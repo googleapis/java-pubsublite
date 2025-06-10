@@ -75,7 +75,7 @@
         <artifactId>error_prone_core</artifactId>
         <!-- 2.32.0 and 2.33.0 break our java 11 build with compiler errors, I reported this to the
         errorprone team, but try upgrading to new versions in the future-->
-        <version>2.31.0</version>
+        <version>2.38.0</version>
       </dependency>
       <dependency>
         <groupId>org.hamcrest</groupId>
@@ -160,6 +160,27 @@
 
   <profiles>
     <profile>
+      <!-- the current errorprone version does not support JDK 24 onwards -->
+      <id>no-errorprone-jdk-11-and-below</id>
+      <activation>
+        <jdk>[,11]</jdk>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <artifactId>maven-compiler-plugin</artifactId>
+            <configuration>
+              <fork>true</fork>
+              <compilerArgs combine.children="append">
+                <arg>-XDcompilePolicy=simple</arg>
+                <arg>-Xplugin:ErrorProne -XepDisableAllChecks</arg>
+              </compilerArgs>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+    <profile>
       <id>include-samples</id>
       <modules>
         <module>samples</module>
@@ -168,7 +189,7 @@
     <profile>
       <id>jdk9</id>
       <activation>
-        <jdk>[1.9,)</jdk>
+        <jdk>[17,)</jdk>
       </activation>
       <build>
         <plugins>

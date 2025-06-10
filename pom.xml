@@ -73,8 +73,6 @@
       <dependency>
         <groupId>com.google.errorprone</groupId>
         <artifactId>error_prone_core</artifactId>
-        <!-- 2.32.0 and 2.33.0 break our java 11 build with compiler errors, I reported this to the
-        errorprone team, but try upgrading to new versions in the future-->
         <version>2.38.0</version>
       </dependency>
       <dependency>

@@ -75,6 +75,8 @@
         <artifactId>error_prone_core</artifactId>
         <!-- 2.32.0 and 2.33.0 break our java 11 build with compiler errors, I reported this to the
         errorprone team, but try upgrading to new versions in the future-->
+        <!-- This version is only compatible with JDKs < 24. We have a profile below that disables
+        errorprone for JDKs >= 24. -->
         <version>2.31.0</version>
       </dependency>
       <dependency>
@@ -160,6 +162,27 @@
 
   <profiles>
     <profile>
+      <!-- the current errorprone version does not support JDK 24 onwards -->
+      <id>no-errorprone-jdk-24-onwards</id>
+      <activation>
+        <jdk>[24,)</jdk>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <artifactId>maven-compiler-plugin</artifactId>
+            <configuration>
+              <fork>true</fork>
+              <compilerArgs combine.children="append">
+                <!-- we only use the basic compilation flags without activating errorprone -->
+                <arg>-XDcompilePolicy=simple</arg>
+              </compilerArgs>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+    <profile>
       <id>include-samples</id>
       <modules>
         <module>samples</module>
@@ -168,7 +191,7 @@
     <profile>
       <id>jdk9</id>
       <activation>
-        <jdk>[1.9,)</jdk>
+        <jdk>[1.9,23)</jdk>
       </activation>
       <build>
         <plugins>

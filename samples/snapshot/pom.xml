@@ -45,7 +45,7 @@
     <dependency>
       <groupId>com.google.cloud</groupId>
       <artifactId>google-cloud-pubsublite</artifactId>
-      <version>1.15.13-SNAPSHOT</version>
+      <version>1.15.13</version>
     </dependency>
     <!-- {x-version-update-end} -->
     <dependency>

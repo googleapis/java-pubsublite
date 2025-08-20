@@ -56,6 +56,7 @@ public class GrpcCursorServiceStub extends CursorServiceStub {
                   ProtoUtils.marshaller(StreamingCommitCursorRequest.getDefaultInstance()))
               .setResponseMarshaller(
                   ProtoUtils.marshaller(StreamingCommitCursorResponse.getDefaultInstance()))
+              .setSampledToLocalTracing(true)
               .build();
 
   private static final MethodDescriptor<CommitCursorRequest, CommitCursorResponse>
@@ -66,6 +67,7 @@ public class GrpcCursorServiceStub extends CursorServiceStub {
               .setRequestMarshaller(ProtoUtils.marshaller(CommitCursorRequest.getDefaultInstance()))
               .setResponseMarshaller(
                   ProtoUtils.marshaller(CommitCursorResponse.getDefaultInstance()))
+              .setSampledToLocalTracing(true)
               .build();
 
   private static final MethodDescriptor<ListPartitionCursorsRequest, ListPartitionCursorsResponse>
@@ -77,6 +79,7 @@ public class GrpcCursorServiceStub extends CursorServiceStub {
                   ProtoUtils.marshaller(ListPartitionCursorsRequest.getDefaultInstance()))
               .setResponseMarshaller(
                   ProtoUtils.marshaller(ListPartitionCursorsResponse.getDefaultInstance()))
+              .setSampledToLocalTracing(true)
               .build();
 
   private final BidiStreamingCallable<StreamingCommitCursorRequest, StreamingCommitCursorResponse>

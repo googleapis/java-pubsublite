@@ -49,6 +49,7 @@ public class GrpcPartitionAssignmentServiceStub extends PartitionAssignmentServi
                   ProtoUtils.marshaller(PartitionAssignmentRequest.getDefaultInstance()))
               .setResponseMarshaller(
                   ProtoUtils.marshaller(PartitionAssignment.getDefaultInstance()))
+              .setSampledToLocalTracing(true)
               .build();
 
   private final BidiStreamingCallable<PartitionAssignmentRequest, PartitionAssignment>

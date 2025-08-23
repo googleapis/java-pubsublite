@@ -53,6 +53,7 @@ public class GrpcTopicStatsServiceStub extends TopicStatsServiceStub {
                   ProtoUtils.marshaller(ComputeMessageStatsRequest.getDefaultInstance()))
               .setResponseMarshaller(
                   ProtoUtils.marshaller(ComputeMessageStatsResponse.getDefaultInstance()))
+              .setSampledToLocalTracing(true)
               .build();
 
   private static final MethodDescriptor<ComputeHeadCursorRequest, ComputeHeadCursorResponse>
@@ -64,6 +65,7 @@ public class GrpcTopicStatsServiceStub extends TopicStatsServiceStub {
                   ProtoUtils.marshaller(ComputeHeadCursorRequest.getDefaultInstance()))
               .setResponseMarshaller(
                   ProtoUtils.marshaller(ComputeHeadCursorResponse.getDefaultInstance()))
+              .setSampledToLocalTracing(true)
               .build();
 
   private static final MethodDescriptor<ComputeTimeCursorRequest, ComputeTimeCursorResponse>
@@ -75,6 +77,7 @@ public class GrpcTopicStatsServiceStub extends TopicStatsServiceStub {
                   ProtoUtils.marshaller(ComputeTimeCursorRequest.getDefaultInstance()))
               .setResponseMarshaller(
                   ProtoUtils.marshaller(ComputeTimeCursorResponse.getDefaultInstance()))
+              .setSampledToLocalTracing(true)
               .build();
 
   private final UnaryCallable<ComputeMessageStatsRequest, ComputeMessageStatsResponse>

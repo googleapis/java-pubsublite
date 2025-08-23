@@ -83,6 +83,7 @@ public class GrpcAdminServiceStub extends AdminServiceStub {
           .setFullMethodName("google.cloud.pubsublite.v1.AdminService/CreateTopic")
           .setRequestMarshaller(ProtoUtils.marshaller(CreateTopicRequest.getDefaultInstance()))
           .setResponseMarshaller(ProtoUtils.marshaller(Topic.getDefaultInstance()))
+          .setSampledToLocalTracing(true)
           .build();
 
   private static final MethodDescriptor<GetTopicRequest, Topic> getTopicMethodDescriptor =
@@ -91,6 +92,7 @@ public class GrpcAdminServiceStub extends AdminServiceStub {
           .setFullMethodName("google.cloud.pubsublite.v1.AdminService/GetTopic")
           .setRequestMarshaller(ProtoUtils.marshaller(GetTopicRequest.getDefaultInstance()))
           .setResponseMarshaller(ProtoUtils.marshaller(Topic.getDefaultInstance()))
+          .setSampledToLocalTracing(true)
           .build();
 
   private static final MethodDescriptor<GetTopicPartitionsRequest, TopicPartitions>
@@ -101,6 +103,7 @@ public class GrpcAdminServiceStub extends AdminServiceStub {
               .setRequestMarshaller(
                   ProtoUtils.marshaller(GetTopicPartitionsRequest.getDefaultInstance()))
               .setResponseMarshaller(ProtoUtils.marshaller(TopicPartitions.getDefaultInstance()))
+              .setSampledToLocalTracing(true)
               .build();
 
   private static final MethodDescriptor<ListTopicsRequest, ListTopicsResponse>
@@ -110,6 +113,7 @@ public class GrpcAdminServiceStub extends AdminServiceStub {
               .setFullMethodName("google.cloud.pubsublite.v1.AdminService/ListTopics")
               .setRequestMarshaller(ProtoUtils.marshaller(ListTopicsRequest.getDefaultInstance()))
               .setResponseMarshaller(ProtoUtils.marshaller(ListTopicsResponse.getDefaultInstance()))
+              .setSampledToLocalTracing(true)
               .build();
 
   private static final MethodDescriptor<UpdateTopicRequest, Topic> updateTopicMethodDescriptor =
@@ -118,6 +122,7 @@ public class GrpcAdminServiceStub extends AdminServiceStub {
           .setFullMethodName("google.cloud.pubsublite.v1.AdminService/UpdateTopic")
           .setRequestMarshaller(ProtoUtils.marshaller(UpdateTopicRequest.getDefaultInstance()))
           .setResponseMarshaller(ProtoUtils.marshaller(Topic.getDefaultInstance()))
+          .setSampledToLocalTracing(true)
           .build();
 
   private static final MethodDescriptor<DeleteTopicRequest, Empty> deleteTopicMethodDescriptor =
@@ -126,6 +131,7 @@ public class GrpcAdminServiceStub extends AdminServiceStub {
           .setFullMethodName("google.cloud.pubsublite.v1.AdminService/DeleteTopic")
           .setRequestMarshaller(ProtoUtils.marshaller(DeleteTopicRequest.getDefaultInstance()))
           .setResponseMarshaller(ProtoUtils.marshaller(Empty.getDefaultInstance()))
+          .setSampledToLocalTracing(true)
           .build();
 
   private static final MethodDescriptor<
@@ -139,6 +145,7 @@ public class GrpcAdminServiceStub extends AdminServiceStub {
                   ProtoUtils.marshaller(ListTopicSubscriptionsRequest.getDefaultInstance()))
               .setResponseMarshaller(
                   ProtoUtils.marshaller(ListTopicSubscriptionsResponse.getDefaultInstance()))
+              .setSampledToLocalTracing(true)
               .build();
 
   private static final MethodDescriptor<CreateSubscriptionRequest, Subscription>
@@ -149,6 +156,7 @@ public class GrpcAdminServiceStub extends AdminServiceStub {
               .setRequestMarshaller(
                   ProtoUtils.marshaller(CreateSubscriptionRequest.getDefaultInstance()))
               .setResponseMarshaller(ProtoUtils.marshaller(Subscription.getDefaultInstance()))
+              .setSampledToLocalTracing(true)
               .build();
 
   private static final MethodDescriptor<GetSubscriptionRequest, Subscription>
@@ -159,6 +167,7 @@ public class GrpcAdminServiceStub extends AdminServiceStub {
               .setRequestMarshaller(
                   ProtoUtils.marshaller(GetSubscriptionRequest.getDefaultInstance()))
               .setResponseMarshaller(ProtoUtils.marshaller(Subscription.getDefaultInstance()))
+              .setSampledToLocalTracing(true)
               .build();
 
   private static final MethodDescriptor<ListSubscriptionsRequest, ListSubscriptionsResponse>
@@ -170,6 +179,7 @@ public class GrpcAdminServiceStub extends AdminServiceStub {
                   ProtoUtils.marshaller(ListSubscriptionsRequest.getDefaultInstance()))
               .setResponseMarshaller(
                   ProtoUtils.marshaller(ListSubscriptionsResponse.getDefaultInstance()))
+              .setSampledToLocalTracing(true)
               .build();
 
   private static final MethodDescriptor<UpdateSubscriptionRequest, Subscription>
@@ -180,6 +190,7 @@ public class GrpcAdminServiceStub extends AdminServiceStub {
               .setRequestMarshaller(
                   ProtoUtils.marshaller(UpdateSubscriptionRequest.getDefaultInstance()))
               .setResponseMarshaller(ProtoUtils.marshaller(Subscription.getDefaultInstance()))
+              .setSampledToLocalTracing(true)
               .build();
 
   private static final MethodDescriptor<DeleteSubscriptionRequest, Empty>
@@ -190,6 +201,7 @@ public class GrpcAdminServiceStub extends AdminServiceStub {
               .setRequestMarshaller(
                   ProtoUtils.marshaller(DeleteSubscriptionRequest.getDefaultInstance()))
               .setResponseMarshaller(ProtoUtils.marshaller(Empty.getDefaultInstance()))
+              .setSampledToLocalTracing(true)
               .build();
 
   private static final MethodDescriptor<SeekSubscriptionRequest, Operation>
@@ -200,6 +212,7 @@ public class GrpcAdminServiceStub extends AdminServiceStub {
               .setRequestMarshaller(
                   ProtoUtils.marshaller(SeekSubscriptionRequest.getDefaultInstance()))
               .setResponseMarshaller(ProtoUtils.marshaller(Operation.getDefaultInstance()))
+              .setSampledToLocalTracing(true)
               .build();
 
   private static final MethodDescriptor<CreateReservationRequest, Reservation>
@@ -210,6 +223,7 @@ public class GrpcAdminServiceStub extends AdminServiceStub {
               .setRequestMarshaller(
                   ProtoUtils.marshaller(CreateReservationRequest.getDefaultInstance()))
               .setResponseMarshaller(ProtoUtils.marshaller(Reservation.getDefaultInstance()))
+              .setSampledToLocalTracing(true)
               .build();
 
   private static final MethodDescriptor<GetReservationRequest, Reservation>
@@ -220,6 +234,7 @@ public class GrpcAdminServiceStub extends AdminServiceStub {
               .setRequestMarshaller(
                   ProtoUtils.marshaller(GetReservationRequest.getDefaultInstance()))
               .setResponseMarshaller(ProtoUtils.marshaller(Reservation.getDefaultInstance()))
+              .setSampledToLocalTracing(true)
               .build();
 
   private static final MethodDescriptor<ListReservationsRequest, ListReservationsResponse>
@@ -231,6 +246,7 @@ public class GrpcAdminServiceStub extends AdminServiceStub {
                   ProtoUtils.marshaller(ListReservationsRequest.getDefaultInstance()))
               .setResponseMarshaller(
                   ProtoUtils.marshaller(ListReservationsResponse.getDefaultInstance()))
+              .setSampledToLocalTracing(true)
               .build();
 
   private static final MethodDescriptor<UpdateReservationRequest, Reservation>
@@ -241,6 +257,7 @@ public class GrpcAdminServiceStub extends AdminServiceStub {
               .setRequestMarshaller(
                   ProtoUtils.marshaller(UpdateReservationRequest.getDefaultInstance()))
               .setResponseMarshaller(ProtoUtils.marshaller(Reservation.getDefaultInstance()))
+              .setSampledToLocalTracing(true)
               .build();
 
   private static final MethodDescriptor<DeleteReservationRequest, Empty>
@@ -251,6 +268,7 @@ public class GrpcAdminServiceStub extends AdminServiceStub {
               .setRequestMarshaller(
                   ProtoUtils.marshaller(DeleteReservationRequest.getDefaultInstance()))
               .setResponseMarshaller(ProtoUtils.marshaller(Empty.getDefaultInstance()))
+              .setSampledToLocalTracing(true)
               .build();
 
   private static final MethodDescriptor<ListReservationTopicsRequest, ListReservationTopicsResponse>
@@ -262,6 +280,7 @@ public class GrpcAdminServiceStub extends AdminServiceStub {
                   ProtoUtils.marshaller(ListReservationTopicsRequest.getDefaultInstance()))
               .setResponseMarshaller(
                   ProtoUtils.marshaller(ListReservationTopicsResponse.getDefaultInstance()))
+              .setSampledToLocalTracing(true)
               .build();
 
   private final UnaryCallable<CreateTopicRequest, Topic> createTopicCallable;

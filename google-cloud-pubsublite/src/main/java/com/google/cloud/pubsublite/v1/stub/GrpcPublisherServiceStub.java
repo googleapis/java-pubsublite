@@ -45,6 +45,7 @@ public class GrpcPublisherServiceStub extends PublisherServiceStub {
           .setFullMethodName("google.cloud.pubsublite.v1.PublisherService/Publish")
           .setRequestMarshaller(ProtoUtils.marshaller(PublishRequest.getDefaultInstance()))
           .setResponseMarshaller(ProtoUtils.marshaller(PublishResponse.getDefaultInstance()))
+          .setSampledToLocalTracing(true)
           .build();
 
   private final BidiStreamingCallable<PublishRequest, PublishResponse> publishCallable;

@@ -46,6 +46,7 @@ public class GrpcSubscriberServiceStub extends SubscriberServiceStub {
               .setFullMethodName("google.cloud.pubsublite.v1.SubscriberService/Subscribe")
               .setRequestMarshaller(ProtoUtils.marshaller(SubscribeRequest.getDefaultInstance()))
               .setResponseMarshaller(ProtoUtils.marshaller(SubscribeResponse.getDefaultInstance()))
+              .setSampledToLocalTracing(true)
               .build();
 
   private final BidiStreamingCallable<SubscribeRequest, SubscribeResponse> subscribeCallable;

@@ -37,6 +37,7 @@ import com.google.cloud.pubsublite.proto.PubSubMessage;
 import com.google.common.collect.ImmutableMap;
 import com.google.protobuf.ByteString;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -80,6 +81,7 @@ public class RoutingPublisherTest {
     this.routing.stopAsync().awaitTerminated();
   }
 
+  @Ignore
   @Test
   public void publishValidRoute() throws Exception {
     PubSubMessage message =

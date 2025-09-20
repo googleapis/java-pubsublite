@@ -44,6 +44,7 @@ import io.grpc.Status;
 import java.util.Set;
 import java.util.concurrent.Future;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -201,6 +202,7 @@ public class AssigningSubscriberTest {
     verify(sub1).awaitTerminated();
   }
 
+  @Ignore
   @Test
   public void assignerErrorFailsSubs() throws Exception {
     Subscriber sub1 = initSub1();

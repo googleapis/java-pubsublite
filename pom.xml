@@ -8,7 +8,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.google.cloud</groupId>
   <artifactId>google-cloud-pubsublite-parent</artifactId>
-  <version>1.15.17</version><!-- {x-version-update:google-cloud-pubsublite:current} -->
+  <version>1.15.19-SNAPSHOT</version><!-- {x-version-update:google-cloud-pubsublite:current} -->
   <packaging>pom</packaging>
   <name>Google Cloud Pub/Sub Lite Parent</name>
   <url>https://github.com/googleapis/java-pubsublite</url>
@@ -25,17 +25,17 @@
       <dependency>
         <groupId>com.google.api.grpc</groupId>
         <artifactId>proto-google-cloud-pubsublite-v1</artifactId>
-        <version>1.15.17</version><!-- {x-version-update:google-cloud-pubsublite:current} -->
+        <version>1.15.19-SNAPSHOT</version><!-- {x-version-update:google-cloud-pubsublite:current} -->
       </dependency>
       <dependency>
         <groupId>com.google.api.grpc</groupId>
         <artifactId>grpc-google-cloud-pubsublite-v1</artifactId>
-        <version>1.15.17</version><!-- {x-version-update:google-cloud-pubsublite:current} -->
+        <version>1.15.19-SNAPSHOT</version><!-- {x-version-update:google-cloud-pubsublite:current} -->
       </dependency>
       <dependency>
         <groupId>com.google.cloud</groupId>
         <artifactId>google-cloud-pubsublite</artifactId>
-        <version>1.15.17</version><!-- {x-version-update:google-cloud-pubsublite:current} -->
+        <version>1.15.19-SNAPSHOT</version><!-- {x-version-update:google-cloud-pubsublite:current} -->
       </dependency>
       <dependency>
         <groupId>com.google.auto.service</groupId>

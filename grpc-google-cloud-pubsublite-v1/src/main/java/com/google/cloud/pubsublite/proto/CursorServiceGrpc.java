@@ -26,9 +26,6 @@ import static io.grpc.MethodDescriptor.generateFullMethodName;
  * progress within a topic partition for a given subscription.
  * </pre>
  */
-@javax.annotation.Generated(
-    value = "by gRPC proto compiler",
-    comments = "Source: google/cloud/pubsublite/v1/cursor.proto")
 @io.grpc.stub.annotations.GrpcGenerated
 public final class CursorServiceGrpc {
 
@@ -432,8 +429,9 @@ public final class CursorServiceGrpc {
      * </pre>
      */
     public com.google.cloud.pubsublite.proto.CommitCursorResponse commitCursor(
-        com.google.cloud.pubsublite.proto.CommitCursorRequest request) {
-      return io.grpc.stub.ClientCalls.blockingUnaryCall(
+        com.google.cloud.pubsublite.proto.CommitCursorRequest request)
+        throws io.grpc.StatusException {
+      return io.grpc.stub.ClientCalls.blockingV2UnaryCall(
           getChannel(), getCommitCursorMethod(), getCallOptions(), request);
     }
 
@@ -445,8 +443,9 @@ public final class CursorServiceGrpc {
      * </pre>
      */
     public com.google.cloud.pubsublite.proto.ListPartitionCursorsResponse listPartitionCursors(
-        com.google.cloud.pubsublite.proto.ListPartitionCursorsRequest request) {
-      return io.grpc.stub.ClientCalls.blockingUnaryCall(
+        com.google.cloud.pubsublite.proto.ListPartitionCursorsRequest request)
+        throws io.grpc.StatusException {
+      return io.grpc.stub.ClientCalls.blockingV2UnaryCall(
           getChannel(), getListPartitionCursorsMethod(), getCallOptions(), request);
     }
   }

@@ -27,9 +27,6 @@ import static io.grpc.MethodDescriptor.generateFullMethodName;
  * to subscriber clients upon request (via the `SubscriberService`).
  * </pre>
  */
-@javax.annotation.Generated(
-    value = "by gRPC proto compiler",
-    comments = "Source: google/cloud/pubsublite/v1/publisher.proto")
 @io.grpc.stub.annotations.GrpcGenerated
 public final class PublisherServiceGrpc {
 

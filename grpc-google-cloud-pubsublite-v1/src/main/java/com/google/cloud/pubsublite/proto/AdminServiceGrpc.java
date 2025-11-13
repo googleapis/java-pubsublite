@@ -25,9 +25,6 @@ import static io.grpc.MethodDescriptor.generateFullMethodName;
  * subscriptions, such creating, listing, and deleting topics and subscriptions.
  * </pre>
  */
-@javax.annotation.Generated(
-    value = "by gRPC proto compiler",
-    comments = "Source: google/cloud/pubsublite/v1/admin.proto")
 @io.grpc.stub.annotations.GrpcGenerated
 public final class AdminServiceGrpc {
 
@@ -1662,8 +1659,9 @@ public final class AdminServiceGrpc {
      * </pre>
      */
     public com.google.cloud.pubsublite.proto.Topic createTopic(
-        com.google.cloud.pubsublite.proto.CreateTopicRequest request) {
-      return io.grpc.stub.ClientCalls.blockingUnaryCall(
+        com.google.cloud.pubsublite.proto.CreateTopicRequest request)
+        throws io.grpc.StatusException {
+      return io.grpc.stub.ClientCalls.blockingV2UnaryCall(
           getChannel(), getCreateTopicMethod(), getCallOptions(), request);
     }
 
@@ -1675,8 +1673,8 @@ public final class AdminServiceGrpc {
      * </pre>
      */
     public com.google.cloud.pubsublite.proto.Topic getTopic(
-        com.google.cloud.pubsublite.proto.GetTopicRequest request) {
-      return io.grpc.stub.ClientCalls.blockingUnaryCall(
+        com.google.cloud.pubsublite.proto.GetTopicRequest request) throws io.grpc.StatusException {
+      return io.grpc.stub.ClientCalls.blockingV2UnaryCall(
           getChannel(), getGetTopicMethod(), getCallOptions(), request);
     }
 
@@ -1688,8 +1686,9 @@ public final class AdminServiceGrpc {
      * </pre>
      */
     public com.google.cloud.pubsublite.proto.TopicPartitions getTopicPartitions(
-        com.google.cloud.pubsublite.proto.GetTopicPartitionsRequest request) {
-      return io.grpc.stub.ClientCalls.blockingUnaryCall(
+        com.google.cloud.pubsublite.proto.GetTopicPartitionsRequest request)
+        throws io.grpc.StatusException {
+      return io.grpc.stub.ClientCalls.blockingV2UnaryCall(
           getChannel(), getGetTopicPartitionsMethod(), getCallOptions(), request);
     }
 
@@ -1701,8 +1700,9 @@ public final class AdminServiceGrpc {
      * </pre>
      */
     public com.google.cloud.pubsublite.proto.ListTopicsResponse listTopics(
-        com.google.cloud.pubsublite.proto.ListTopicsRequest request) {
-      return io.grpc.stub.ClientCalls.blockingUnaryCall(
+        com.google.cloud.pubsublite.proto.ListTopicsRequest request)
+        throws io.grpc.StatusException {
+      return io.grpc.stub.ClientCalls.blockingV2UnaryCall(
           getChannel(), getListTopicsMethod(), getCallOptions(), request);
     }
 
@@ -1714,8 +1714,9 @@ public final class AdminServiceGrpc {
      * </pre>
      */
     public com.google.cloud.pubsublite.proto.Topic updateTopic(
-        com.google.cloud.pubsublite.proto.UpdateTopicRequest request) {
-      return io.grpc.stub.ClientCalls.blockingUnaryCall(
+        com.google.cloud.pubsublite.proto.UpdateTopicRequest request)
+        throws io.grpc.StatusException {
+      return io.grpc.stub.ClientCalls.blockingV2UnaryCall(
           getChannel(), getUpdateTopicMethod(), getCallOptions(), request);
     }
 
@@ -1727,8 +1728,9 @@ public final class AdminServiceGrpc {
      * </pre>
      */
     public com.google.protobuf.Empty deleteTopic(
-        com.google.cloud.pubsublite.proto.DeleteTopicRequest request) {
-      return io.grpc.stub.ClientCalls.blockingUnaryCall(
+        com.google.cloud.pubsublite.proto.DeleteTopicRequest request)
+        throws io.grpc.StatusException {
+      return io.grpc.stub.ClientCalls.blockingV2UnaryCall(
           getChannel(), getDeleteTopicMethod(), getCallOptions(), request);
     }
 
@@ -1740,8 +1742,9 @@ public final class AdminServiceGrpc {
      * </pre>
      */
     public com.google.cloud.pubsublite.proto.ListTopicSubscriptionsResponse listTopicSubscriptions(
-        com.google.cloud.pubsublite.proto.ListTopicSubscriptionsRequest request) {
-      return io.grpc.stub.ClientCalls.blockingUnaryCall(
+        com.google.cloud.pubsublite.proto.ListTopicSubscriptionsRequest request)
+        throws io.grpc.StatusException {
+      return io.grpc.stub.ClientCalls.blockingV2UnaryCall(
           getChannel(), getListTopicSubscriptionsMethod(), getCallOptions(), request);
     }
 
@@ -1753,8 +1756,9 @@ public final class AdminServiceGrpc {
      * </pre>
      */
     public com.google.cloud.pubsublite.proto.Subscription createSubscription(
-        com.google.cloud.pubsublite.proto.CreateSubscriptionRequest request) {
-      return io.grpc.stub.ClientCalls.blockingUnaryCall(
+        com.google.cloud.pubsublite.proto.CreateSubscriptionRequest request)
+        throws io.grpc.StatusException {
+      return io.grpc.stub.ClientCalls.blockingV2UnaryCall(
           getChannel(), getCreateSubscriptionMethod(), getCallOptions(), request);
     }
 
@@ -1766,8 +1770,9 @@ public final class AdminServiceGrpc {
      * </pre>
      */
     public com.google.cloud.pubsublite.proto.Subscription getSubscription(
-        com.google.cloud.pubsublite.proto.GetSubscriptionRequest request) {
-      return io.grpc.stub.ClientCalls.blockingUnaryCall(
+        com.google.cloud.pubsublite.proto.GetSubscriptionRequest request)
+        throws io.grpc.StatusException {
+      return io.grpc.stub.ClientCalls.blockingV2UnaryCall(
           getChannel(), getGetSubscriptionMethod(), getCallOptions(), request);
     }
 
@@ -1779,8 +1784,9 @@ public final class AdminServiceGrpc {
      * </pre>
      */
     public com.google.cloud.pubsublite.proto.ListSubscriptionsResponse listSubscriptions(
-        com.google.cloud.pubsublite.proto.ListSubscriptionsRequest request) {
-      return io.grpc.stub.ClientCalls.blockingUnaryCall(
+        com.google.cloud.pubsublite.proto.ListSubscriptionsRequest request)
+        throws io.grpc.StatusException {
+      return io.grpc.stub.ClientCalls.blockingV2UnaryCall(
           getChannel(), getListSubscriptionsMethod(), getCallOptions(), request);
     }
 
@@ -1792,8 +1798,9 @@ public final class AdminServiceGrpc {
      * </pre>
      */
     public com.google.cloud.pubsublite.proto.Subscription updateSubscription(
-        com.google.cloud.pubsublite.proto.UpdateSubscriptionRequest request) {
-      return io.grpc.stub.ClientCalls.blockingUnaryCall(
+        com.google.cloud.pubsublite.proto.UpdateSubscriptionRequest request)
+        throws io.grpc.StatusException {
+      return io.grpc.stub.ClientCalls.blockingV2UnaryCall(
           getChannel(), getUpdateSubscriptionMethod(), getCallOptions(), request);
     }
 
@@ -1805,8 +1812,9 @@ public final class AdminServiceGrpc {
      * </pre>
      */
     public com.google.protobuf.Empty deleteSubscription(
-        com.google.cloud.pubsublite.proto.DeleteSubscriptionRequest request) {
-      return io.grpc.stub.ClientCalls.blockingUnaryCall(
+        com.google.cloud.pubsublite.proto.DeleteSubscriptionRequest request)
+        throws io.grpc.StatusException {
+      return io.grpc.stub.ClientCalls.blockingV2UnaryCall(
           getChannel(), getDeleteSubscriptionMethod(), getCallOptions(), request);
     }
 
@@ -1835,8 +1843,9 @@ public final class AdminServiceGrpc {
      * </pre>
      */
     public com.google.longrunning.Operation seekSubscription(
-        com.google.cloud.pubsublite.proto.SeekSubscriptionRequest request) {
-      return io.grpc.stub.ClientCalls.blockingUnaryCall(
+        com.google.cloud.pubsublite.proto.SeekSubscriptionRequest request)
+        throws io.grpc.StatusException {
+      return io.grpc.stub.ClientCalls.blockingV2UnaryCall(
           getChannel(), getSeekSubscriptionMethod(), getCallOptions(), request);
     }
 
@@ -1848,8 +1857,9 @@ public final class AdminServiceGrpc {
      * </pre>
      */
     public com.google.cloud.pubsublite.proto.Reservation createReservation(
-        com.google.cloud.pubsublite.proto.CreateReservationRequest request) {
-      return io.grpc.stub.ClientCalls.blockingUnaryCall(
+        com.google.cloud.pubsublite.proto.CreateReservationRequest request)
+        throws io.grpc.StatusException {
+      return io.grpc.stub.ClientCalls.blockingV2UnaryCall(
           getChannel(), getCreateReservationMethod(), getCallOptions(), request);
     }
 
@@ -1861,8 +1871,9 @@ public final class AdminServiceGrpc {
      * </pre>
      */
     public com.google.cloud.pubsublite.proto.Reservation getReservation(
-        com.google.cloud.pubsublite.proto.GetReservationRequest request) {
-      return io.grpc.stub.ClientCalls.blockingUnaryCall(
+        com.google.cloud.pubsublite.proto.GetReservationRequest request)
+        throws io.grpc.StatusException {
+      return io.grpc.stub.ClientCalls.blockingV2UnaryCall(
           getChannel(), getGetReservationMethod(), getCallOptions(), request);
     }
 
@@ -1874,8 +1885,9 @@ public final class AdminServiceGrpc {
      * </pre>
      */
     public com.google.cloud.pubsublite.proto.ListReservationsResponse listReservations(
-        com.google.cloud.pubsublite.proto.ListReservationsRequest request) {
-      return io.grpc.stub.ClientCalls.blockingUnaryCall(
+        com.google.cloud.pubsublite.proto.ListReservationsRequest request)
+        throws io.grpc.StatusException {
+      return io.grpc.stub.ClientCalls.blockingV2UnaryCall(
           getChannel(), getListReservationsMethod(), getCallOptions(), request);
     }
 
@@ -1887,8 +1899,9 @@ public final class AdminServiceGrpc {
      * </pre>
      */
     public com.google.cloud.pubsublite.proto.Reservation updateReservation(
-        com.google.cloud.pubsublite.proto.UpdateReservationRequest request) {
-      return io.grpc.stub.ClientCalls.blockingUnaryCall(
+        com.google.cloud.pubsublite.proto.UpdateReservationRequest request)
+        throws io.grpc.StatusException {
+      return io.grpc.stub.ClientCalls.blockingV2UnaryCall(
           getChannel(), getUpdateReservationMethod(), getCallOptions(), request);
     }
 
@@ -1900,8 +1913,9 @@ public final class AdminServiceGrpc {
      * </pre>
      */
     public com.google.protobuf.Empty deleteReservation(
-        com.google.cloud.pubsublite.proto.DeleteReservationRequest request) {
-      return io.grpc.stub.ClientCalls.blockingUnaryCall(
+        com.google.cloud.pubsublite.proto.DeleteReservationRequest request)
+        throws io.grpc.StatusException {
+      return io.grpc.stub.ClientCalls.blockingV2UnaryCall(
           getChannel(), getDeleteReservationMethod(), getCallOptions(), request);
     }
 
@@ -1913,8 +1927,9 @@ public final class AdminServiceGrpc {
      * </pre>
      */
     public com.google.cloud.pubsublite.proto.ListReservationTopicsResponse listReservationTopics(
-        com.google.cloud.pubsublite.proto.ListReservationTopicsRequest request) {
-      return io.grpc.stub.ClientCalls.blockingUnaryCall(
+        com.google.cloud.pubsublite.proto.ListReservationTopicsRequest request)
+        throws io.grpc.StatusException {
+      return io.grpc.stub.ClientCalls.blockingV2UnaryCall(
           getChannel(), getListReservationTopicsMethod(), getCallOptions(), request);
     }
   }

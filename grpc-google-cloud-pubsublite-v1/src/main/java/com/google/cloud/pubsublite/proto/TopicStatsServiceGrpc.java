@@ -24,9 +24,6 @@ import static io.grpc.MethodDescriptor.generateFullMethodName;
  * This service allows users to get stats about messages in their topic.
  * </pre>
  */
-@javax.annotation.Generated(
-    value = "by gRPC proto compiler",
-    comments = "Source: google/cloud/pubsublite/v1/topic_stats.proto")
 @io.grpc.stub.annotations.GrpcGenerated
 public final class TopicStatsServiceGrpc {
 
@@ -421,8 +418,9 @@ public final class TopicStatsServiceGrpc {
      * </pre>
      */
     public com.google.cloud.pubsublite.proto.ComputeMessageStatsResponse computeMessageStats(
-        com.google.cloud.pubsublite.proto.ComputeMessageStatsRequest request) {
-      return io.grpc.stub.ClientCalls.blockingUnaryCall(
+        com.google.cloud.pubsublite.proto.ComputeMessageStatsRequest request)
+        throws io.grpc.StatusException {
+      return io.grpc.stub.ClientCalls.blockingV2UnaryCall(
           getChannel(), getComputeMessageStatsMethod(), getCallOptions(), request);
     }
 
@@ -439,8 +437,9 @@ public final class TopicStatsServiceGrpc {
      * </pre>
      */
     public com.google.cloud.pubsublite.proto.ComputeHeadCursorResponse computeHeadCursor(
-        com.google.cloud.pubsublite.proto.ComputeHeadCursorRequest request) {
-      return io.grpc.stub.ClientCalls.blockingUnaryCall(
+        com.google.cloud.pubsublite.proto.ComputeHeadCursorRequest request)
+        throws io.grpc.StatusException {
+      return io.grpc.stub.ClientCalls.blockingV2UnaryCall(
           getChannel(), getComputeHeadCursorMethod(), getCallOptions(), request);
     }
 
@@ -453,8 +452,9 @@ public final class TopicStatsServiceGrpc {
      * </pre>
      */
     public com.google.cloud.pubsublite.proto.ComputeTimeCursorResponse computeTimeCursor(
-        com.google.cloud.pubsublite.proto.ComputeTimeCursorRequest request) {
-      return io.grpc.stub.ClientCalls.blockingUnaryCall(
+        com.google.cloud.pubsublite.proto.ComputeTimeCursorRequest request)
+        throws io.grpc.StatusException {
+      return io.grpc.stub.ClientCalls.blockingV2UnaryCall(
           getChannel(), getComputeTimeCursorMethod(), getCallOptions(), request);
     }
   }

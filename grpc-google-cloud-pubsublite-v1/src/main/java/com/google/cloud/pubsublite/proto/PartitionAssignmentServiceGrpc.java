@@ -25,9 +25,6 @@ import static io.grpc.MethodDescriptor.generateFullMethodName;
  * partitions it should connect to.
  * </pre>
  */
-@javax.annotation.Generated(
-    value = "by gRPC proto compiler",
-    comments = "Source: google/cloud/pubsublite/v1/subscriber.proto")
 @io.grpc.stub.annotations.GrpcGenerated
 public final class PartitionAssignmentServiceGrpc {
 

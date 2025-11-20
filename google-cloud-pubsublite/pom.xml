@@ -119,6 +119,14 @@
       <version>0.8</version>
     </dependency>
 
+    <!-- Apache Kafka Client (optional, for Managed Kafka backend) -->
+    <dependency>
+      <groupId>org.apache.kafka</groupId>
+      <artifactId>kafka-clients</artifactId>
+      <version>3.7.0</version>
+      <optional>true</optional>
+    </dependency>
+    
     <!--test dependencies-->
     <dependency>
       <groupId>com.google.truth</groupId>

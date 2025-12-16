@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.15.20](https://github.com/googleapis/java-pubsublite/compare/v1.15.19...v1.15.20) (2025-12-12)
+
+
+### Dependencies
+
+* Update dependency com.google.cloud:google-cloud-pubsub to v1.144.0 ([#1953](https://github.com/googleapis/java-pubsublite/issues/1953)) ([8377b04](https://github.com/googleapis/java-pubsublite/commit/8377b04b8ef6fbfe73b1512b857452519b02bc14))
+* Update dependency com.google.cloud:sdk-platform-java-config to v3.54.2 ([#1951](https://github.com/googleapis/java-pubsublite/issues/1951)) ([aa7886f](https://github.com/googleapis/java-pubsublite/commit/aa7886f499e9acc3ca63091ebff46df225217b91))
+* Update googleapis/sdk-platform-java action to v2.64.2 ([#1952](https://github.com/googleapis/java-pubsublite/issues/1952)) ([654e825](https://github.com/googleapis/java-pubsublite/commit/654e825f1c8b916d37d497b70fe43821a5f573fd))
+
 ## [1.15.19](https://github.com/googleapis/java-pubsublite/compare/v1.15.18...v1.15.19) (2025-11-15)
 
 

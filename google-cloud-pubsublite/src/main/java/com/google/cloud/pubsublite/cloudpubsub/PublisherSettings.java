@@ -34,6 +34,7 @@ import com.google.cloud.pubsublite.MessageMetadata;
 import com.google.cloud.pubsublite.MessageTransformer;
 import com.google.cloud.pubsublite.Partition;
 import com.google.cloud.pubsublite.TopicPath;
+import com.google.cloud.pubsublite.cloudpubsub.internal.KafkaPartitionPublisherFactory;
 import com.google.cloud.pubsublite.cloudpubsub.internal.WrappingPublisher;
 import com.google.cloud.pubsublite.internal.CheckedApiException;
 import com.google.cloud.pubsublite.internal.wire.PartitionCountWatchingPublisherSettings;
@@ -52,6 +53,7 @@ import com.google.protobuf.ByteString;
 import com.google.pubsub.v1.PubsubMessage;
 import io.grpc.CallOptions;
 import java.time.Duration;
+import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -70,7 +72,7 @@ public abstract class PublisherSettings {
   // Required parameters.
 
   /** The topic path to publish to. */
-  abstract TopicPath topicPath();
+  public abstract TopicPath topicPath();
 
   // Optional parameters.
   /** A KeyExtractor for getting the routing key from a message. */
@@ -80,16 +82,16 @@ public abstract class PublisherSettings {
   abstract Optional<MessageTransformer<PubsubMessage, Message>> messageTransformer();
 
   /** Batching settings for this publisher to use. Apply per-partition. */
-  abstract BatchingSettings batchingSettings();
+  public abstract BatchingSettings batchingSettings();
 
   /**
    * Whether idempotence is enabled, where the server will ensure that unique messages within a
    * single publisher session are stored only once. Default true.
    */
-  abstract boolean enableIdempotence();
+  public abstract boolean enableIdempotence();
 
   /** Whether request compression is enabled. Default true. */
-  abstract boolean enableCompression();
+  public abstract boolean enableCompression();
 
   /** A provider for credentials. */
   abstract CredentialsProvider credentialsProvider();
@@ -111,6 +113,17 @@ public abstract class PublisherSettings {
   // For testing.
   abstract SinglePartitionPublisherBuilder.Builder underlyingBuilder();
 
+  /** The messaging backend to use. Defaults to PUBSUB_LITE for backward compatibility. */
+  public abstract MessagingBackend messagingBackend();
+
+  /**
+   * Kafka-specific configuration properties. Only used when messagingBackend is MANAGED_KAFKA.
+   * Common properties include: - "bootstrap.servers": Kafka broker addresses - "compression.type":
+   * Compression algorithm (e.g., "snappy", "gzip") - "max.in.flight.requests.per.connection":
+   * Pipelining configuration
+   */
+  public abstract Optional<Map<String, Object>> kafkaProperties();
+
   /** Get a new builder for a PublisherSettings. */
   public static Builder newBuilder() {
     return new AutoValue_PublisherSettings.Builder()
@@ -120,7 +133,8 @@ public abstract class PublisherSettings {
         .setBatchingSettings(DEFAULT_BATCHING_SETTINGS)
         .setEnableIdempotence(true)
         .setEnableCompression(true)
-        .setUnderlyingBuilder(SinglePartitionPublisherBuilder.newBuilder());
+        .setUnderlyingBuilder(SinglePartitionPublisherBuilder.newBuilder())
+        .setMessagingBackend(MessagingBackend.PUBSUB_LITE);
   }
 
   @AutoValue.Builder
@@ -169,6 +183,12 @@ public abstract class PublisherSettings {
     abstract Builder setUnderlyingBuilder(
         SinglePartitionPublisherBuilder.Builder underlyingBuilder);
 
+    /** Sets the messaging backend. Defaults to PUBSUB_LITE. */
+    public abstract Builder setMessagingBackend(MessagingBackend backend);
+
+    /** Sets Kafka-specific properties. Only used when backend is MANAGED_KAFKA. */
+    public abstract Builder setKafkaProperties(Map<String, Object> properties);
+
     public abstract PublisherSettings build();
   }
 
@@ -185,6 +205,12 @@ public abstract class PublisherSettings {
   }
 
   private PartitionPublisherFactory getPartitionPublisherFactory() {
+    // Check backend and return appropriate factory
+    if (messagingBackend() == MessagingBackend.MANAGED_KAFKA) {
+      return new KafkaPartitionPublisherFactory(this);
+    }
+
+    // Existing Pub/Sub Lite implementation
     PublisherServiceClient client = newServiceClient();
     ByteString publisherClientId = UuidBuilder.toByteString(UuidBuilder.generate());
     return new PartitionPublisherFactory() {
@@ -241,6 +267,11 @@ public abstract class PublisherSettings {
 
   @SuppressWarnings("CheckReturnValue")
   Publisher instantiate() throws ApiException {
+    // For Kafka backend, use simpler publisher that doesn't need partition watching
+    if (messagingBackend() == MessagingBackend.MANAGED_KAFKA) {
+      return new com.google.cloud.pubsublite.cloudpubsub.internal.KafkaPublisher(this);
+    }
+
     if (batchingSettings().getFlowControlSettings().getMaxOutstandingElementCount() != null
         || batchingSettings().getFlowControlSettings().getMaxOutstandingRequestBytes() != null) {
       throw new CheckedApiException(

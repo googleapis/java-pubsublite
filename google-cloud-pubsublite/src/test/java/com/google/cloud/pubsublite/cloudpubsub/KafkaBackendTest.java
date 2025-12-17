@@ -77,9 +77,11 @@ public class KafkaBackendTest {
             .setKafkaProperties(kafkaProps)
             .build();
 
+    // This should create a Kafka factory successfully
+    // (connection is only attempted when actually publishing)
     KafkaPartitionPublisherFactory factory = new KafkaPartitionPublisherFactory(settings);
     assertThat(factory).isNotNull();
-    factory.close();
+    factory.close(); // Clean up
   }
 
   @Test
@@ -95,6 +97,7 @@ public class KafkaBackendTest {
 
   @Test
   public void testBackwardCompatibility() {
+    // Test that existing code without backend specification still works
     PublisherSettings settings =
         PublisherSettings.newBuilder()
             .setTopicPath(TOPIC_PATH)
@@ -102,6 +105,7 @@ public class KafkaBackendTest {
             .setEnableIdempotence(true)
             .build();
 
+    // Should default to Pub/Sub Lite
     assertThat(settings.messagingBackend()).isEqualTo(MessagingBackend.PUBSUB_LITE);
     assertThat(settings.kafkaProperties()).isEmpty();
   }

@@ -64,8 +64,6 @@ public class KafkaPartitionPublisherFactory implements PartitionPublisherFactory
   }
 
   private void configureKafkaConnection(Properties props) {
-    // For now, require bootstrap servers in kafkaProperties
-    // In production, we'd extract from TopicPath location encoding
     if (settings.kafkaProperties().isPresent()
         && settings.kafkaProperties().get().containsKey("bootstrap.servers")) {
       props.put(
@@ -130,7 +128,6 @@ public class KafkaPartitionPublisherFactory implements PartitionPublisherFactory
   }
 
   private String extractKafkaTopicName(com.google.cloud.pubsublite.TopicPath topicPath) {
-    // Extract the actual Kafka topic name from TopicPath
     return topicPath.name().value();
   }
 }

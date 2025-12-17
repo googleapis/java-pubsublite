@@ -126,7 +126,41 @@
       <version>3.7.0</version>
       <optional>true</optional>
     </dependency>
-    
+
+    <!-- Google Managed Kafka authentication handler -->
+    <dependency>
+      <groupId>com.google.cloud.hosted.kafka</groupId>
+      <artifactId>managed-kafka-auth-login-handler</artifactId>
+      <version>1.0.6</version>
+      <optional>true</optional>
+      <exclusions>
+        <exclusion>
+          <groupId>io.confluent</groupId>
+          <artifactId>*</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+
+    <!-- Test dependencies for Kafka integration tests -->
+    <dependency>
+      <groupId>org.testcontainers</groupId>
+      <artifactId>testcontainers</artifactId>
+      <version>1.19.3</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.testcontainers</groupId>
+      <artifactId>kafka</artifactId>
+      <version>1.19.3</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.testcontainers</groupId>
+      <artifactId>junit-jupiter</artifactId>
+      <version>1.19.3</version>
+      <scope>test</scope>
+    </dependency>
+
     <!--test dependencies-->
     <dependency>
       <groupId>com.google.truth</groupId>
@@ -172,8 +206,12 @@
               <ignoredUnusedDeclaredDependency>org.hamcrest:hamcrest</ignoredUnusedDeclaredDependency>
               <ignoredUnusedDeclaredDependency>com.google.flogger:flogger-system-backend</ignoredUnusedDeclaredDependency>
               <ignoredUnusedDeclaredDependency>javax.annotation:javax.annotation-api</ignoredUnusedDeclaredDependency>
+              <ignoredUnusedDeclaredDependency>com.google.cloud.hosted.kafka:managed-kafka-auth-login-handler</ignoredUnusedDeclaredDependency>
             </ignoredUnusedDeclaredDependencies>
-            <ignoredUsedUndeclaredDependencies>org.hamcrest:hamcrest-core</ignoredUsedUndeclaredDependencies>
+            <ignoredUsedUndeclaredDependencies>
+              <ignoredUsedUndeclaredDependency>org.hamcrest:hamcrest-core</ignoredUsedUndeclaredDependency>
+              <ignoredUsedUndeclaredDependency>org.testcontainers:testcontainers</ignoredUsedUndeclaredDependency>
+            </ignoredUsedUndeclaredDependencies>
           </configuration>
         </plugin>
       </plugins>

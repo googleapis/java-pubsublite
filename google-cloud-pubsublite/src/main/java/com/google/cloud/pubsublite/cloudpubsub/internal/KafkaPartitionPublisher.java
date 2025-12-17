@@ -118,8 +118,6 @@ public class KafkaPartitionPublisher extends ProxyService implements Publisher<M
     pendingFutures.clear();
   }
 
-  // Note: doStart() and doStop() are handled by ProxyService
-
   private ProducerRecord<byte[], byte[]> convertToKafkaRecord(PubSubMessage message) {
     // Extract key - use ordering key if available
     byte[] key = message.getKey().isEmpty() ? null : message.getKey().toByteArray();
@@ -128,7 +126,7 @@ public class KafkaPartitionPublisher extends ProxyService implements Publisher<M
     ProducerRecord<byte[], byte[]> record =
         new ProducerRecord<byte[], byte[]>(
             topicName,
-            Integer.valueOf((int) partition.value()), // Use explicit partition
+            Integer.valueOf((int) partition.value()),
             key,
             message.getData().toByteArray());
 

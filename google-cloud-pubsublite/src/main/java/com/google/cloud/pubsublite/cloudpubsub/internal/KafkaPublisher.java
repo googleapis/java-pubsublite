@@ -49,7 +49,26 @@ public class KafkaPublisher extends AbstractApiService implements Publisher {
     kafkaProps.putIfAbsent("key.serializer", ByteArraySerializer.class.getName());
     kafkaProps.putIfAbsent("value.serializer", ByteArraySerializer.class.getName());
 
-    this.kafkaProducer = new KafkaProducer<>(kafkaProps);
+    try {
+      this.kafkaProducer = new KafkaProducer<>(kafkaProps);
+    } catch (Exception e) {
+
+      String bootstrapServers = (String) kafkaProps.get("bootstrap.servers");
+      if (e.getCause() instanceof org.apache.kafka.common.config.ConfigException
+          && e.getMessage().contains("No resolvable bootstrap urls")) {
+        throw new RuntimeException(
+            "Failed to resolve Kafka bootstrap servers: "
+                + bootstrapServers
+                + ". This could indicate:\n"
+                + "1. The Google Managed Kafka cluster doesn't exist or isn't accessible\n"
+                + "2. Network/DNS resolution issues\n"
+                + "3. Incorrect bootstrap server URL format\n"
+                + "Please verify the cluster exists with: gcloud managed-kafka clusters describe"
+                + " <cluster-name> --location=<region> --project=<project>",
+            e);
+      }
+      throw new RuntimeException("Failed to initialize Kafka producer: " + e.getMessage(), e);
+    }
   }
 
   @Override
@@ -112,7 +131,6 @@ public class KafkaPublisher extends AbstractApiService implements Publisher {
 
   @Override
   protected void doStart() {
-    // KafkaProducer is ready immediately
     notifyStarted();
   }
 

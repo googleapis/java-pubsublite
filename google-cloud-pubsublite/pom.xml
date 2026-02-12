@@ -141,26 +141,6 @@
       </exclusions>
     </dependency>
 
-    <!-- Test dependencies for Kafka integration tests -->
-    <dependency>
-      <groupId>org.testcontainers</groupId>
-      <artifactId>testcontainers</artifactId>
-      <version>1.19.3</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.testcontainers</groupId>
-      <artifactId>kafka</artifactId>
-      <version>1.19.3</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.testcontainers</groupId>
-      <artifactId>junit-jupiter</artifactId>
-      <version>1.19.3</version>
-      <scope>test</scope>
-    </dependency>
-
     <!--test dependencies-->
     <dependency>
       <groupId>com.google.truth</groupId>
@@ -210,7 +190,6 @@
             </ignoredUnusedDeclaredDependencies>
             <ignoredUsedUndeclaredDependencies>
               <ignoredUsedUndeclaredDependency>org.hamcrest:hamcrest-core</ignoredUsedUndeclaredDependency>
-              <ignoredUsedUndeclaredDependency>org.testcontainers:testcontainers</ignoredUsedUndeclaredDependency>
             </ignoredUsedUndeclaredDependencies>
           </configuration>
         </plugin>

@@ -15,7 +15,7 @@ libraries:
     repo: googleapis/java-pubsublite
     repo_short: java-pubsublite
     distribution_name: com.google.cloud:google-cloud-pubsublite
-    codeowner_team: '@googleapis/api-pubsublite'
+    codeowner_team: '@googleapis/managed-kafka-team'
     library_type: GAPIC_COMBO
     api_id: pubsublite.googleapis.com
     recommended_package: com.google.cloud.pubsublite.cloudpubsub

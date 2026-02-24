@@ -13,7 +13,7 @@
   "api_id": "pubsublite.googleapis.com",
   "library_type": "GAPIC_COMBO",
   "requires_billing": true,
-  "codeowner_team": "@googleapis/api-pubsublite",
+  "codeowner_team": "@googleapis/managed-kafka-team",
   "recommended_package": "com.google.cloud.pubsublite.cloudpubsub",
   "min_java_version": 8
 }

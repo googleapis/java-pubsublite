@@ -40,12 +40,17 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.concurrent.CompletionException;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Logger;
 import org.apache.kafka.clients.admin.NewTopic;
 import org.apache.kafka.clients.admin.TopicDescription;
 import org.apache.kafka.common.KafkaFuture;
+import org.apache.kafka.common.errors.GroupIdNotFoundException;
 import org.apache.kafka.common.errors.TopicExistsException;
 import org.apache.kafka.common.errors.UnknownTopicOrPartitionException;
 
@@ -58,6 +63,17 @@ import org.apache.kafka.common.errors.UnknownTopicOrPartitionException;
  */
 public class KafkaAdminClient implements AdminClient {
   private static final Logger log = Logger.getLogger(KafkaAdminClient.class.getName());
+
+  // Retry settings for describeTopics to handle metadata propagation delays after topic creation.
+  private static final int MAX_DESCRIBE_RETRIES = 5;
+  private static final long DESCRIBE_RETRY_DELAY_MS = 2000;
+  private static final ScheduledExecutorService RETRY_EXECUTOR =
+      Executors.newSingleThreadScheduledExecutor(
+          r -> {
+            Thread t = new Thread(r, "kafka-admin-retry");
+            t.setDaemon(true);
+            return t;
+          });
 
   private final CloudRegion region;
   private final org.apache.kafka.clients.admin.AdminClient kafkaAdmin;
@@ -121,51 +137,73 @@ public class KafkaAdminClient implements AdminClient {
   @Override
   public ApiFuture<Topic> getTopic(TopicPath path) {
     String topicName = path.name().value();
-
-    return toApiFuture(
-        kafkaAdmin.describeTopics(Collections.singleton(topicName)).allTopicNames(),
-        descriptions -> {
-          TopicDescription desc = descriptions.get(topicName);
-          if (desc == null) {
-            throw new CheckedApiException(
-                    "Topic not found: " + topicName, StatusCode.Code.NOT_FOUND)
-                .underlying;
-          }
-          return buildTopic(path, desc);
-        },
-        e -> {
-          if (e instanceof UnknownTopicOrPartitionException) {
-            throw new CheckedApiException(
-                    "Topic not found: " + topicName, StatusCode.Code.NOT_FOUND)
-                .underlying;
-          }
-          throw new RuntimeException("Failed to get topic: " + topicName, e);
-        });
+    return describeTopicWithRetry(topicName, desc -> buildTopic(path, desc));
   }
 
   @Override
   public ApiFuture<Long> getTopicPartitionCount(TopicPath path) {
     String topicName = path.name().value();
+    return describeTopicWithRetry(topicName, desc -> (long) desc.partitions().size());
+  }
 
-    return toApiFuture(
-        kafkaAdmin.describeTopics(Collections.singleton(topicName)).allTopicNames(),
-        descriptions -> {
-          TopicDescription desc = descriptions.get(topicName);
-          if (desc == null) {
-            throw new CheckedApiException(
-                    "Topic not found: " + topicName, StatusCode.Code.NOT_FOUND)
-                .underlying;
-          }
-          return (long) desc.partitions().size();
-        },
-        e -> {
-          if (e instanceof UnknownTopicOrPartitionException) {
-            throw new CheckedApiException(
-                    "Topic not found: " + topicName, StatusCode.Code.NOT_FOUND)
-                .underlying;
-          }
-          throw new RuntimeException("Failed to get partition count: " + topicName, e);
-        });
+  /**
+   * Describes a topic with retry logic to handle transient UnknownTopicOrPartitionException. After
+   * topic creation, Kafka brokers may take a short time to propagate metadata, causing
+   * describeTopics to fail transiently.
+   */
+  private <R> ApiFuture<R> describeTopicWithRetry(
+      String topicName, java.util.function.Function<TopicDescription, R> mapper) {
+    com.google.api.core.SettableApiFuture<R> resultFuture =
+        com.google.api.core.SettableApiFuture.create();
+    describeTopicAttempt(topicName, mapper, resultFuture, MAX_DESCRIBE_RETRIES);
+    return resultFuture;
+  }
+
+  private <R> void describeTopicAttempt(
+      String topicName,
+      java.util.function.Function<TopicDescription, R> mapper,
+      com.google.api.core.SettableApiFuture<R> resultFuture,
+      int retriesRemaining) {
+    KafkaFuture<TopicDescription> kafkaFuture =
+        kafkaAdmin
+            .describeTopics(Collections.singleton(topicName))
+            .topicNameValues()
+            .get(topicName);
+
+    new KafkaFutureAdapter<>(kafkaFuture)
+        .toApiFuture()
+        .addListener(
+            () -> {
+              try {
+                TopicDescription desc = new KafkaFutureAdapter<>(kafkaFuture).toApiFuture().get();
+                resultFuture.set(mapper.apply(desc));
+              } catch (Exception e) {
+                Throwable cause = unwrapException(e);
+                if (cause instanceof UnknownTopicOrPartitionException && retriesRemaining > 0) {
+                  log.info(
+                      "Topic '"
+                          + topicName
+                          + "' not yet available, retrying ("
+                          + retriesRemaining
+                          + " retries left)...");
+                  RETRY_EXECUTOR.schedule(
+                      () ->
+                          describeTopicAttempt(
+                              topicName, mapper, resultFuture, retriesRemaining - 1),
+                      DESCRIBE_RETRY_DELAY_MS,
+                      TimeUnit.MILLISECONDS);
+                } else if (cause instanceof UnknownTopicOrPartitionException) {
+                  resultFuture.setException(
+                      new CheckedApiException(
+                              "Topic not found: " + topicName, StatusCode.Code.NOT_FOUND)
+                          .underlying);
+                } else {
+                  resultFuture.setException(
+                      new RuntimeException("Failed to describe topic: " + topicName, cause));
+                }
+              }
+            },
+            MoreExecutors.directExecutor());
   }
 
   @Override
@@ -348,13 +386,32 @@ public class KafkaAdminClient implements AdminClient {
   public ApiFuture<Void> deleteSubscription(SubscriptionPath path) {
     String groupId = path.name().value();
 
-    return toApiFuture(
-        kafkaAdmin.deleteConsumerGroups(Collections.singleton(groupId)).all(),
-        v -> null,
-        e -> {
-          throw new RuntimeException(
-              "Failed to delete subscription (consumer group): " + groupId, e);
+    // Consumer groups in Kafka are created implicitly when a consumer joins.
+    // If no consumer has joined yet, the group won't exist, so treat GroupIdNotFoundException
+    // as success rather than an error.
+    com.google.api.core.SettableApiFuture<Void> resultFuture =
+        com.google.api.core.SettableApiFuture.create();
+
+    KafkaFuture<Void> kafkaFuture =
+        kafkaAdmin.deleteConsumerGroups(Collections.singleton(groupId)).all();
+
+    kafkaFuture.whenComplete(
+        (result, error) -> {
+          if (error == null) {
+            resultFuture.set(null);
+          } else {
+            Throwable cause = unwrapException(error);
+            if (cause instanceof GroupIdNotFoundException) {
+              resultFuture.set(null);
+            } else {
+              resultFuture.setException(
+                  new RuntimeException(
+                      "Failed to delete subscription (consumer group): " + groupId, cause));
+            }
+          }
         });
+
+    return resultFuture;
   }
 
   // Reservation Operations
@@ -457,11 +514,25 @@ public class KafkaAdminClient implements AdminClient {
             new KafkaFutureAdapter<>(kafkaFuture).toApiFuture(),
             Throwable.class,
             t -> {
-              throw errorMapper.apply(t);
+              throw errorMapper.apply(unwrapException(t));
             },
             MoreExecutors.directExecutor()),
         successMapper::apply,
         MoreExecutors.directExecutor());
+  }
+
+  /**
+   * Unwraps CompletionException and ExecutionException wrappers to get the root cause. Kafka's
+   * KafkaFuture internally uses CompletableFuture, which wraps exceptions in CompletionException
+   * when they propagate through thenApply/allOf chains.
+   */
+  private static Throwable unwrapException(Throwable t) {
+    Throwable cause = t;
+    while ((cause instanceof CompletionException || cause instanceof ExecutionException)
+        && cause.getCause() != null) {
+      cause = cause.getCause();
+    }
+    return cause;
   }
 
   /** Adapter to convert KafkaFuture to ApiFuture. */

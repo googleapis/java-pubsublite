@@ -18,7 +18,6 @@ package com.google.cloud.pubsublite.internal;
 
 import com.google.api.core.ApiFuture;
 import com.google.api.core.ApiFutures;
-import com.google.api.gax.rpc.StatusCode;
 import com.google.cloud.pubsublite.CloudRegion;
 import com.google.cloud.pubsublite.Offset;
 import com.google.cloud.pubsublite.Partition;
@@ -31,10 +30,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Properties;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.kafka.clients.admin.AdminClient;
 import org.apache.kafka.clients.admin.ListOffsetsResult;
@@ -65,9 +61,7 @@ public class KafkaTopicStatsClient implements TopicStatsClient {
   private static final long DEFAULT_AVG_MESSAGE_SIZE = 1024; // 1KB
 
   private final CloudRegion region;
-  private final AdminClient kafkaAdmin;
-  private final AtomicBoolean isShutdown = new AtomicBoolean(false);
-  private final AtomicBoolean isTerminated = new AtomicBoolean(false);
+  private final KafkaAdminLifecycle lifecycle;
 
   /**
    * Creates a new KafkaTopicStatsClient.
@@ -79,7 +73,7 @@ public class KafkaTopicStatsClient implements TopicStatsClient {
     this.region = region;
     Properties props = new Properties();
     props.putAll(kafkaProperties);
-    this.kafkaAdmin = AdminClient.create(props);
+    this.lifecycle = new KafkaAdminLifecycle(AdminClient.create(props));
   }
 
   @Override
@@ -102,24 +96,14 @@ public class KafkaTopicStatsClient implements TopicStatsClient {
     Map<TopicPartition, OffsetSpec> request = new HashMap<>();
     request.put(tp, OffsetSpec.earliest());
 
-    try {
-      ListOffsetsResult result = kafkaAdmin.listOffsets(request);
-      ListOffsetsResultInfo info = result.partitionResult(tp).get();
-      return ApiFutures.immediateFuture(Offset.of(info.offset()));
-    } catch (InterruptedException e) {
-      Thread.currentThread().interrupt();
-      return ApiFutures.immediateFailedFuture(
-          new CheckedApiException(
-                  "Interrupted while getting earliest offset", StatusCode.Code.ABORTED)
-              .underlying);
-    } catch (ExecutionException e) {
-      log.log(Level.WARNING, "Failed to get earliest offset", e);
-      return ApiFutures.immediateFailedFuture(
-          new CheckedApiException(
-                  "Failed to get earliest offset: " + e.getCause().getMessage(),
-                  StatusCode.Code.INTERNAL)
-              .underlying);
-    }
+    return KafkaFutureUtils.executeWithHandling(
+        () -> {
+          ListOffsetsResult result = lifecycle.adminClient().listOffsets(request);
+          ListOffsetsResultInfo info = result.partitionResult(tp).get();
+          return Offset.of(info.offset());
+        },
+        "getting earliest offset",
+        log);
   }
 
   /**
@@ -136,24 +120,14 @@ public class KafkaTopicStatsClient implements TopicStatsClient {
     Map<TopicPartition, OffsetSpec> request = new HashMap<>();
     request.put(tp, OffsetSpec.latest());
 
-    try {
-      ListOffsetsResult result = kafkaAdmin.listOffsets(request);
-      ListOffsetsResultInfo info = result.partitionResult(tp).get();
-      return ApiFutures.immediateFuture(Offset.of(info.offset()));
-    } catch (InterruptedException e) {
-      Thread.currentThread().interrupt();
-      return ApiFutures.immediateFailedFuture(
-          new CheckedApiException(
-                  "Interrupted while getting latest offset", StatusCode.Code.ABORTED)
-              .underlying);
-    } catch (ExecutionException e) {
-      log.log(Level.WARNING, "Failed to get latest offset", e);
-      return ApiFutures.immediateFailedFuture(
-          new CheckedApiException(
-                  "Failed to get latest offset: " + e.getCause().getMessage(),
-                  StatusCode.Code.INTERNAL)
-              .underlying);
-    }
+    return KafkaFutureUtils.executeWithHandling(
+        () -> {
+          ListOffsetsResult result = lifecycle.adminClient().listOffsets(request);
+          ListOffsetsResultInfo info = result.partitionResult(tp).get();
+          return Offset.of(info.offset());
+        },
+        "getting latest offset",
+        log);
   }
 
   /**
@@ -173,29 +147,19 @@ public class KafkaTopicStatsClient implements TopicStatsClient {
     Map<TopicPartition, OffsetSpec> request = new HashMap<>();
     request.put(tp, OffsetSpec.forTimestamp(timestampMs));
 
-    try {
-      ListOffsetsResult result = kafkaAdmin.listOffsets(request);
-      ListOffsetsResultInfo info = result.partitionResult(tp).get();
+    return KafkaFutureUtils.executeWithHandling(
+        () -> {
+          ListOffsetsResult result = lifecycle.adminClient().listOffsets(request);
+          ListOffsetsResultInfo info = result.partitionResult(tp).get();
 
-      if (info.offset() >= 0) {
-        return ApiFutures.immediateFuture(Optional.of(Offset.of(info.offset())));
-      } else {
-        return ApiFutures.immediateFuture(Optional.empty());
-      }
-    } catch (InterruptedException e) {
-      Thread.currentThread().interrupt();
-      return ApiFutures.immediateFailedFuture(
-          new CheckedApiException(
-                  "Interrupted while getting offset for timestamp", StatusCode.Code.ABORTED)
-              .underlying);
-    } catch (ExecutionException e) {
-      log.log(Level.WARNING, "Failed to get offset for timestamp", e);
-      return ApiFutures.immediateFailedFuture(
-          new CheckedApiException(
-                  "Failed to get offset for timestamp: " + e.getCause().getMessage(),
-                  StatusCode.Code.INTERNAL)
-              .underlying);
-    }
+          if (info.offset() >= 0) {
+            return Optional.of(Offset.of(info.offset()));
+          } else {
+            return Optional.empty();
+          }
+        },
+        "getting offset for timestamp",
+        log);
   }
 
   /**
@@ -224,54 +188,49 @@ public class KafkaTopicStatsClient implements TopicStatsClient {
       Partition partition,
       SubscriptionPath subscriptionPath,
       long estimatedAvgMessageSize) {
-    String groupId = subscriptionPath.toString().replace('/', '-');
+    String groupId = GroupIdUtils.deriveGroupId(subscriptionPath);
     TopicPartition tp = new TopicPartition(topicName, (int) partition.value());
 
-    try {
-      // Get committed offset for the consumer group
-      Map<TopicPartition, OffsetAndMetadata> committedOffsets =
-          kafkaAdmin.listConsumerGroupOffsets(groupId).partitionsToOffsetAndMetadata().get();
+    return KafkaFutureUtils.executeWithHandling(
+        () -> {
+          // Get committed offset for the consumer group
+          Map<TopicPartition, OffsetAndMetadata> committedOffsets =
+              lifecycle
+                  .adminClient()
+                  .listConsumerGroupOffsets(groupId)
+                  .partitionsToOffsetAndMetadata()
+                  .get();
 
-      // Get latest offset
-      Map<TopicPartition, OffsetSpec> latestRequest = new HashMap<>();
-      latestRequest.put(tp, OffsetSpec.latest());
-      ListOffsetsResultInfo latestInfo =
-          kafkaAdmin.listOffsets(latestRequest).partitionResult(tp).get();
+          // Get latest offset
+          Map<TopicPartition, OffsetSpec> latestRequest = new HashMap<>();
+          latestRequest.put(tp, OffsetSpec.latest());
+          ListOffsetsResultInfo latestInfo =
+              lifecycle.adminClient().listOffsets(latestRequest).partitionResult(tp).get();
 
-      long latestOffset = latestInfo.offset();
-      long committedOffset = 0;
+          long latestOffset = latestInfo.offset();
+          long committedOffset = 0;
 
-      OffsetAndMetadata oam = committedOffsets.get(tp);
-      if (oam != null) {
-        committedOffset = oam.offset();
-      } else {
-        // No committed offset - use earliest offset as the starting point
-        Map<TopicPartition, OffsetSpec> earliestRequest = new HashMap<>();
-        earliestRequest.put(tp, OffsetSpec.earliest());
-        ListOffsetsResultInfo earliestInfo =
-            kafkaAdmin.listOffsets(earliestRequest).partitionResult(tp).get();
-        committedOffset = earliestInfo.offset();
-      }
+          OffsetAndMetadata oam = committedOffsets.get(tp);
+          if (oam != null) {
+            committedOffset = oam.offset();
+          } else {
+            // No committed offset - use earliest offset as the starting point
+            Map<TopicPartition, OffsetSpec> earliestRequest = new HashMap<>();
+            earliestRequest.put(tp, OffsetSpec.earliest());
+            ListOffsetsResultInfo earliestInfo =
+                lifecycle.adminClient().listOffsets(earliestRequest).partitionResult(tp).get();
+            committedOffset = earliestInfo.offset();
+          }
 
-      long messageCount = Math.max(0, latestOffset - committedOffset);
-      long avgSize =
-          estimatedAvgMessageSize > 0 ? estimatedAvgMessageSize : DEFAULT_AVG_MESSAGE_SIZE;
-      long estimatedBytes = messageCount * avgSize;
+          long messageCount = Math.max(0, latestOffset - committedOffset);
+          long avgSize =
+              estimatedAvgMessageSize > 0 ? estimatedAvgMessageSize : DEFAULT_AVG_MESSAGE_SIZE;
+          long estimatedBytes = messageCount * avgSize;
 
-      return ApiFutures.immediateFuture(new BacklogInfo(messageCount, estimatedBytes));
-    } catch (InterruptedException e) {
-      Thread.currentThread().interrupt();
-      return ApiFutures.immediateFailedFuture(
-          new CheckedApiException("Interrupted while computing backlog", StatusCode.Code.ABORTED)
-              .underlying);
-    } catch (ExecutionException e) {
-      log.log(Level.WARNING, "Failed to compute backlog", e);
-      return ApiFutures.immediateFailedFuture(
-          new CheckedApiException(
-                  "Failed to compute backlog: " + e.getCause().getMessage(),
-                  StatusCode.Code.INTERNAL)
-              .underlying);
-    }
+          return new BacklogInfo(messageCount, estimatedBytes);
+        },
+        "computing backlog",
+        log);
   }
 
   /** Container for backlog information. */
@@ -330,24 +289,14 @@ public class KafkaTopicStatsClient implements TopicStatsClient {
     Map<TopicPartition, OffsetSpec> request = new HashMap<>();
     request.put(tp, OffsetSpec.latest());
 
-    try {
-      ListOffsetsResult result = kafkaAdmin.listOffsets(request);
-      ListOffsetsResultInfo info = result.partitionResult(tp).get();
-      return ApiFutures.immediateFuture(Cursor.newBuilder().setOffset(info.offset()).build());
-    } catch (InterruptedException e) {
-      Thread.currentThread().interrupt();
-      return ApiFutures.immediateFailedFuture(
-          new CheckedApiException(
-                  "Interrupted while computing head cursor", StatusCode.Code.ABORTED)
-              .underlying);
-    } catch (ExecutionException e) {
-      log.log(Level.WARNING, "Failed to compute head cursor", e);
-      return ApiFutures.immediateFailedFuture(
-          new CheckedApiException(
-                  "Failed to compute head cursor: " + e.getCause().getMessage(),
-                  StatusCode.Code.INTERNAL)
-              .underlying);
-    }
+    return KafkaFutureUtils.executeWithHandling(
+        () -> {
+          ListOffsetsResult result = lifecycle.adminClient().listOffsets(request);
+          ListOffsetsResultInfo info = result.partitionResult(tp).get();
+          return Cursor.newBuilder().setOffset(info.offset()).build();
+        },
+        "computing head cursor",
+        log);
   }
 
   @Override
@@ -360,30 +309,19 @@ public class KafkaTopicStatsClient implements TopicStatsClient {
     Map<TopicPartition, OffsetSpec> request = new HashMap<>();
     request.put(tp, OffsetSpec.forTimestamp(timestampMs));
 
-    try {
-      ListOffsetsResult result = kafkaAdmin.listOffsets(request);
-      ListOffsetsResultInfo info = result.partitionResult(tp).get();
+    return KafkaFutureUtils.executeWithHandling(
+        () -> {
+          ListOffsetsResult result = lifecycle.adminClient().listOffsets(request);
+          ListOffsetsResultInfo info = result.partitionResult(tp).get();
 
-      if (info.offset() >= 0) {
-        return ApiFutures.immediateFuture(
-            Optional.of(Cursor.newBuilder().setOffset(info.offset()).build()));
-      } else {
-        return ApiFutures.immediateFuture(Optional.empty());
-      }
-    } catch (InterruptedException e) {
-      Thread.currentThread().interrupt();
-      return ApiFutures.immediateFailedFuture(
-          new CheckedApiException(
-                  "Interrupted while computing cursor for publish time", StatusCode.Code.ABORTED)
-              .underlying);
-    } catch (ExecutionException e) {
-      log.log(Level.WARNING, "Failed to compute cursor for publish time", e);
-      return ApiFutures.immediateFailedFuture(
-          new CheckedApiException(
-                  "Failed to compute cursor for publish time: " + e.getCause().getMessage(),
-                  StatusCode.Code.INTERNAL)
-              .underlying);
-    }
+          if (info.offset() >= 0) {
+            return Optional.of(Cursor.newBuilder().setOffset(info.offset()).build());
+          } else {
+            return Optional.empty();
+          }
+        },
+        "computing cursor for publish time",
+        log);
   }
 
   @Override
@@ -402,34 +340,31 @@ public class KafkaTopicStatsClient implements TopicStatsClient {
 
   @Override
   public void close() {
-    shutdown();
+    lifecycle.close();
   }
 
   @Override
   public void shutdown() {
-    if (isShutdown.compareAndSet(false, true)) {
-      kafkaAdmin.close();
-      isTerminated.set(true);
-    }
+    lifecycle.shutdown();
   }
 
   @Override
   public boolean isShutdown() {
-    return isShutdown.get();
+    return lifecycle.isShutdown();
   }
 
   @Override
   public boolean isTerminated() {
-    return isTerminated.get();
+    return lifecycle.isTerminated();
   }
 
   @Override
   public void shutdownNow() {
-    shutdown();
+    lifecycle.shutdownNow();
   }
 
   @Override
   public boolean awaitTermination(long duration, TimeUnit unit) throws InterruptedException {
-    return isTerminated.get();
+    return lifecycle.awaitTermination(duration, unit);
   }
 }

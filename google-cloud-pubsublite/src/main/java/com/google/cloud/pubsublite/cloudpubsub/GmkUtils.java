@@ -17,6 +17,7 @@
 package com.google.cloud.pubsublite.cloudpubsub;
 
 import java.net.InetAddress;
+import java.util.HashMap;
 import java.util.Map;
 
 /** Utility methods for Google Managed Kafka (GMK) integration. */
@@ -83,6 +84,48 @@ public class GmkUtils {
   /** Constructs a GMK bootstrap server URL with default port 9092. */
   public static String buildGmkBootstrapServer(String projectId, String region, String clusterId) {
     return buildGmkBootstrapServer(projectId, region, clusterId, 9092);
+  }
+
+  /**
+   * Builds a complete set of Kafka properties for connecting to a GMK cluster.
+   *
+   * <p>This combines the bootstrap server URL with the 5 standard SASL_SSL/OAUTHBEARER
+   * authentication properties required for GMK. Returns a mutable map so callers can add overrides.
+   *
+   * @param projectId GCP project ID
+   * @param region GCP region (e.g., "us-central1")
+   * @param clusterId GMK cluster ID
+   * @param port Port number
+   * @return A mutable map containing bootstrap.servers and all required auth properties.
+   */
+  public static Map<String, Object> buildGmkKafkaProperties(
+      String projectId, String region, String clusterId, int port) {
+    Map<String, Object> properties = new HashMap<>();
+    properties.put(
+        "bootstrap.servers", buildGmkBootstrapServer(projectId, region, clusterId, port));
+    properties.put("security.protocol", "SASL_SSL");
+    properties.put("sasl.mechanism", "OAUTHBEARER");
+    properties.put(
+        "sasl.login.callback.handler.class",
+        "com.google.cloud.hosted.kafka.auth.GcpLoginCallbackHandler");
+    properties.put(
+        "sasl.jaas.config",
+        "org.apache.kafka.common.security.oauthbearer.OAuthBearerLoginModule required;");
+    return properties;
+  }
+
+  /**
+   * Builds a complete set of Kafka properties for connecting to a GMK cluster with default port
+   * 9092.
+   *
+   * @param projectId GCP project ID
+   * @param region GCP region (e.g., "us-central1")
+   * @param clusterId GMK cluster ID
+   * @return A mutable map containing bootstrap.servers and all required auth properties.
+   */
+  public static Map<String, Object> buildGmkKafkaProperties(
+      String projectId, String region, String clusterId) {
+    return buildGmkKafkaProperties(projectId, region, clusterId, 9092);
   }
 
   /** Result of configuration validation. */

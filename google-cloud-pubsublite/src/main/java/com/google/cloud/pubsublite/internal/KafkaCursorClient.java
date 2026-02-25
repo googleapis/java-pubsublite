@@ -17,8 +17,6 @@
 package com.google.cloud.pubsublite.internal;
 
 import com.google.api.core.ApiFuture;
-import com.google.api.core.ApiFutures;
-import com.google.api.gax.rpc.StatusCode;
 import com.google.cloud.pubsublite.CloudRegion;
 import com.google.cloud.pubsublite.Offset;
 import com.google.cloud.pubsublite.Partition;
@@ -30,10 +28,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.kafka.clients.admin.AdminClient;
 import org.apache.kafka.clients.admin.ListConsumerGroupOffsetsResult;
@@ -58,9 +53,7 @@ public class KafkaCursorClient implements ApiBackgroundResource {
   private static final Logger log = Logger.getLogger(KafkaCursorClient.class.getName());
 
   private final CloudRegion region;
-  private final AdminClient kafkaAdmin;
-  private final AtomicBoolean isShutdown = new AtomicBoolean(false);
-  private final AtomicBoolean isTerminated = new AtomicBoolean(false);
+  private final KafkaAdminLifecycle lifecycle;
 
   /**
    * Creates a new KafkaCursorClient.
@@ -72,7 +65,7 @@ public class KafkaCursorClient implements ApiBackgroundResource {
     this.region = region;
     Properties props = new Properties();
     props.putAll(kafkaProperties);
-    this.kafkaAdmin = AdminClient.create(props);
+    this.lifecycle = new KafkaAdminLifecycle(AdminClient.create(props));
   }
 
   /** The Google Cloud region this client operates on. */
@@ -93,26 +86,18 @@ public class KafkaCursorClient implements ApiBackgroundResource {
    */
   public ApiFuture<Void> commitOffset(
       SubscriptionPath subscriptionPath, String topicName, Partition partition, Offset offset) {
-    String groupId = deriveGroupId(subscriptionPath);
+    String groupId = GroupIdUtils.deriveGroupId(subscriptionPath);
     TopicPartition tp = new TopicPartition(topicName, (int) partition.value());
     Map<TopicPartition, OffsetAndMetadata> offsets = new HashMap<>();
     offsets.put(tp, new OffsetAndMetadata(offset.value()));
 
-    try {
-      kafkaAdmin.alterConsumerGroupOffsets(groupId, offsets).all().get();
-      return ApiFutures.immediateFuture(null);
-    } catch (InterruptedException e) {
-      Thread.currentThread().interrupt();
-      return ApiFutures.immediateFailedFuture(
-          new CheckedApiException("Interrupted while committing offset", StatusCode.Code.ABORTED)
-              .underlying);
-    } catch (ExecutionException e) {
-      log.log(Level.WARNING, "Failed to commit offset", e);
-      return ApiFutures.immediateFailedFuture(
-          new CheckedApiException(
-                  "Failed to commit offset: " + e.getCause().getMessage(), StatusCode.Code.INTERNAL)
-              .underlying);
-    }
+    return KafkaFutureUtils.executeWithHandling(
+        () -> {
+          lifecycle.adminClient().alterConsumerGroupOffsets(groupId, offsets).all().get();
+          return null;
+        },
+        "committing offset",
+        log);
   }
 
   /**
@@ -126,42 +111,34 @@ public class KafkaCursorClient implements ApiBackgroundResource {
    */
   public ApiFuture<List<PartitionCursor>> readCommittedOffsets(
       SubscriptionPath subscriptionPath, String topicName) {
-    String groupId = deriveGroupId(subscriptionPath);
+    String groupId = GroupIdUtils.deriveGroupId(subscriptionPath);
 
-    try {
-      ListConsumerGroupOffsetsResult result = kafkaAdmin.listConsumerGroupOffsets(groupId);
-      Map<TopicPartition, OffsetAndMetadata> offsets = result.partitionsToOffsetAndMetadata().get();
+    return KafkaFutureUtils.executeWithHandling(
+        () -> {
+          ListConsumerGroupOffsetsResult result =
+              lifecycle.adminClient().listConsumerGroupOffsets(groupId);
+          Map<TopicPartition, OffsetAndMetadata> offsets =
+              result.partitionsToOffsetAndMetadata().get();
 
-      List<PartitionCursor> cursors = new ArrayList<>();
-      for (Map.Entry<TopicPartition, OffsetAndMetadata> entry : offsets.entrySet()) {
-        TopicPartition tp = entry.getKey();
-        OffsetAndMetadata oam = entry.getValue();
+          List<PartitionCursor> cursors = new ArrayList<>();
+          for (Map.Entry<TopicPartition, OffsetAndMetadata> entry : offsets.entrySet()) {
+            TopicPartition tp = entry.getKey();
+            OffsetAndMetadata oam = entry.getValue();
 
-        // Filter to only the requested topic
-        if (tp.topic().equals(topicName) && oam != null) {
-          cursors.add(
-              PartitionCursor.newBuilder()
-                  .setPartition(tp.partition())
-                  .setCursor(Cursor.newBuilder().setOffset(oam.offset()).build())
-                  .build());
-        }
-      }
+            // Filter to only the requested topic
+            if (tp.topic().equals(topicName) && oam != null) {
+              cursors.add(
+                  PartitionCursor.newBuilder()
+                      .setPartition(tp.partition())
+                      .setCursor(Cursor.newBuilder().setOffset(oam.offset()).build())
+                      .build());
+            }
+          }
 
-      return ApiFutures.immediateFuture(cursors);
-    } catch (InterruptedException e) {
-      Thread.currentThread().interrupt();
-      return ApiFutures.immediateFailedFuture(
-          new CheckedApiException(
-                  "Interrupted while reading committed offsets", StatusCode.Code.ABORTED)
-              .underlying);
-    } catch (ExecutionException e) {
-      log.log(Level.WARNING, "Failed to read committed offsets", e);
-      return ApiFutures.immediateFailedFuture(
-          new CheckedApiException(
-                  "Failed to read committed offsets: " + e.getCause().getMessage(),
-                  StatusCode.Code.INTERNAL)
-              .underlying);
-    }
+          return cursors;
+        },
+        "reading committed offsets",
+        log);
   }
 
   /**
@@ -174,34 +151,26 @@ public class KafkaCursorClient implements ApiBackgroundResource {
    */
   public ApiFuture<Cursor> getCommittedOffset(
       SubscriptionPath subscriptionPath, String topicName, Partition partition) {
-    String groupId = deriveGroupId(subscriptionPath);
+    String groupId = GroupIdUtils.deriveGroupId(subscriptionPath);
     TopicPartition tp = new TopicPartition(topicName, (int) partition.value());
 
-    try {
-      ListConsumerGroupOffsetsResult result = kafkaAdmin.listConsumerGroupOffsets(groupId);
-      Map<TopicPartition, OffsetAndMetadata> offsets = result.partitionsToOffsetAndMetadata().get();
+    return KafkaFutureUtils.executeWithHandling(
+        () -> {
+          ListConsumerGroupOffsetsResult result =
+              lifecycle.adminClient().listConsumerGroupOffsets(groupId);
+          Map<TopicPartition, OffsetAndMetadata> offsets =
+              result.partitionsToOffsetAndMetadata().get();
 
-      OffsetAndMetadata oam = offsets.get(tp);
-      if (oam != null) {
-        return ApiFutures.immediateFuture(Cursor.newBuilder().setOffset(oam.offset()).build());
-      } else {
-        // No committed offset, return offset 0
-        return ApiFutures.immediateFuture(Cursor.newBuilder().setOffset(0).build());
-      }
-    } catch (InterruptedException e) {
-      Thread.currentThread().interrupt();
-      return ApiFutures.immediateFailedFuture(
-          new CheckedApiException(
-                  "Interrupted while getting committed offset", StatusCode.Code.ABORTED)
-              .underlying);
-    } catch (ExecutionException e) {
-      log.log(Level.WARNING, "Failed to get committed offset", e);
-      return ApiFutures.immediateFailedFuture(
-          new CheckedApiException(
-                  "Failed to get committed offset: " + e.getCause().getMessage(),
-                  StatusCode.Code.INTERNAL)
-              .underlying);
-    }
+          OffsetAndMetadata oam = offsets.get(tp);
+          if (oam != null) {
+            return Cursor.newBuilder().setOffset(oam.offset()).build();
+          } else {
+            // No committed offset, return offset 0
+            return Cursor.newBuilder().setOffset(0).build();
+          }
+        },
+        "getting committed offset",
+        log);
   }
 
   /**
@@ -216,7 +185,7 @@ public class KafkaCursorClient implements ApiBackgroundResource {
       SubscriptionPath subscriptionPath,
       String topicName,
       Map<Partition, Offset> partitionOffsets) {
-    String groupId = deriveGroupId(subscriptionPath);
+    String groupId = GroupIdUtils.deriveGroupId(subscriptionPath);
     Map<TopicPartition, OffsetAndMetadata> offsets = new HashMap<>();
 
     for (Map.Entry<Partition, Offset> entry : partitionOffsets.entrySet()) {
@@ -224,64 +193,44 @@ public class KafkaCursorClient implements ApiBackgroundResource {
       offsets.put(tp, new OffsetAndMetadata(entry.getValue().value()));
     }
 
-    try {
-      kafkaAdmin.alterConsumerGroupOffsets(groupId, offsets).all().get();
-      return ApiFutures.immediateFuture(null);
-    } catch (InterruptedException e) {
-      Thread.currentThread().interrupt();
-      return ApiFutures.immediateFailedFuture(
-          new CheckedApiException("Interrupted while resetting offsets", StatusCode.Code.ABORTED)
-              .underlying);
-    } catch (ExecutionException e) {
-      log.log(Level.WARNING, "Failed to reset offsets", e);
-      return ApiFutures.immediateFailedFuture(
-          new CheckedApiException(
-                  "Failed to reset offsets: " + e.getCause().getMessage(), StatusCode.Code.INTERNAL)
-              .underlying);
-    }
-  }
-
-  /**
-   * Derives a Kafka consumer group ID from a subscription path.
-   *
-   * <p>The group ID is derived by replacing slashes with dashes to create a valid Kafka group ID.
-   */
-  private String deriveGroupId(SubscriptionPath subscriptionPath) {
-    return subscriptionPath.toString().replace('/', '-');
+    return KafkaFutureUtils.executeWithHandling(
+        () -> {
+          lifecycle.adminClient().alterConsumerGroupOffsets(groupId, offsets).all().get();
+          return null;
+        },
+        "resetting offsets",
+        log);
   }
 
   // Lifecycle
 
   @Override
   public void close() {
-    shutdown();
+    lifecycle.close();
   }
 
   @Override
   public void shutdown() {
-    if (isShutdown.compareAndSet(false, true)) {
-      kafkaAdmin.close();
-      isTerminated.set(true);
-    }
+    lifecycle.shutdown();
   }
 
   @Override
   public boolean isShutdown() {
-    return isShutdown.get();
+    return lifecycle.isShutdown();
   }
 
   @Override
   public boolean isTerminated() {
-    return isTerminated.get();
+    return lifecycle.isTerminated();
   }
 
   @Override
   public void shutdownNow() {
-    shutdown();
+    lifecycle.shutdownNow();
   }
 
   @Override
   public boolean awaitTermination(long duration, TimeUnit unit) throws InterruptedException {
-    return isTerminated.get();
+    return lifecycle.awaitTermination(duration, unit);
   }
 }

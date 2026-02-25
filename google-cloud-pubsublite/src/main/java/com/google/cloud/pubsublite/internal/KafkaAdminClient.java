@@ -45,7 +45,6 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Logger;
 import org.apache.kafka.clients.admin.NewTopic;
 import org.apache.kafka.clients.admin.TopicDescription;
@@ -79,8 +78,7 @@ public class KafkaAdminClient implements AdminClient {
   private final org.apache.kafka.clients.admin.AdminClient kafkaAdmin;
   private final int defaultPartitions;
   private final short defaultReplicationFactor;
-  private final AtomicBoolean isShutdown = new AtomicBoolean(false);
-  private final AtomicBoolean isTerminated = new AtomicBoolean(false);
+  private final KafkaAdminLifecycle lifecycle;
 
   /**
    * Creates a new KafkaAdminClient.
@@ -102,6 +100,7 @@ public class KafkaAdminClient implements AdminClient {
     Properties props = new Properties();
     props.putAll(kafkaProperties);
     this.kafkaAdmin = org.apache.kafka.clients.admin.AdminClient.create(props);
+    this.lifecycle = new KafkaAdminLifecycle(this.kafkaAdmin);
   }
 
   @Override
@@ -457,35 +456,32 @@ public class KafkaAdminClient implements AdminClient {
 
   @Override
   public void close() {
-    shutdown();
+    lifecycle.close();
   }
 
   @Override
   public void shutdown() {
-    if (isShutdown.compareAndSet(false, true)) {
-      kafkaAdmin.close();
-      isTerminated.set(true);
-    }
+    lifecycle.shutdown();
   }
 
   @Override
   public boolean isShutdown() {
-    return isShutdown.get();
+    return lifecycle.isShutdown();
   }
 
   @Override
   public boolean isTerminated() {
-    return isTerminated.get();
+    return lifecycle.isTerminated();
   }
 
   @Override
   public void shutdownNow() {
-    shutdown();
+    lifecycle.shutdownNow();
   }
 
   @Override
   public boolean awaitTermination(long duration, TimeUnit unit) throws InterruptedException {
-    return isTerminated.get();
+    return lifecycle.awaitTermination(duration, unit);
   }
 
   // Helper Methods

@@ -22,6 +22,7 @@ import com.google.cloud.pubsub.v1.AckReplyConsumer;
 import com.google.cloud.pubsub.v1.MessageReceiver;
 import com.google.cloud.pubsublite.cloudpubsub.Subscriber;
 import com.google.cloud.pubsublite.cloudpubsub.SubscriberSettings;
+import com.google.cloud.pubsublite.internal.GroupIdUtils;
 import com.google.protobuf.ByteString;
 import com.google.protobuf.Timestamp;
 import com.google.pubsub.v1.PubsubMessage;
@@ -75,7 +76,7 @@ public class KafkaSubscriber extends AbstractApiService implements Subscriber {
 
   public KafkaSubscriber(SubscriberSettings settings) {
     this.topicName = settings.subscriptionPath().name().value();
-    this.groupId = settings.subscriptionPath().toString().replace('/', '-');
+    this.groupId = GroupIdUtils.deriveGroupId(settings.subscriptionPath());
     this.receiver = settings.receiver();
     this.pollExecutor =
         Executors.newSingleThreadExecutor(

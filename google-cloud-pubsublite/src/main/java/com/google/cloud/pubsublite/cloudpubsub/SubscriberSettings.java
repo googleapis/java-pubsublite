@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Google LLC
+ * Copyright 2026 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -57,6 +57,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.pubsub.v1.PubsubMessage;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -70,16 +71,16 @@ public abstract class SubscriberSettings {
    * any connected partition will be outstanding at a time, and blocking in this receiver callback
    * will block forward progress.
    */
-  abstract MessageReceiver receiver();
+  public abstract MessageReceiver receiver();
 
   /** The subscription to use to receive messages. */
-  abstract SubscriptionPath subscriptionPath();
+  public abstract SubscriptionPath subscriptionPath();
 
   /**
    * The per-partition flow control settings. Because these apply per-partition, if you are using
    * them to bound memory usage, keep in mind the number of partitions in the associated topic.
    */
-  abstract FlowControlSettings perPartitionFlowControlSettings();
+  public abstract FlowControlSettings perPartitionFlowControlSettings();
 
   // Optional parameters.
 
@@ -125,13 +126,20 @@ public abstract class SubscriberSettings {
   /** A handler that will be notified when partition assignments change from the backend. */
   abstract ReassignmentHandler reassignmentHandler();
 
+  /** The backend messaging system to use (e.g., PUBSUB_LITE or MANAGED_KAFKA). */
+  public abstract MessagingBackend messagingBackend();
+
+  /** Kafka-specific properties for when using MANAGED_KAFKA backend. */
+  public abstract Optional<Map<String, Object>> kafkaProperties();
+
   public static Builder newBuilder() {
     return new AutoValue_SubscriberSettings.Builder()
         .setFramework(Framework.of("CLOUD_PUBSUB_SHIM"))
         .setPartitions(ImmutableList.of())
         .setCredentialsProvider(
             SubscriberServiceSettings.defaultCredentialsProviderBuilder().build())
-        .setReassignmentHandler((before, after) -> {});
+        .setReassignmentHandler((before, after) -> {})
+        .setMessagingBackend(MessagingBackend.PUBSUB_LITE);
   }
 
   @AutoValue.Builder
@@ -198,6 +206,12 @@ public abstract class SubscriberSettings {
 
     /** A handler that will be notified when partition assignments change from the backend. */
     public abstract Builder setReassignmentHandler(ReassignmentHandler reassignmentHandler);
+
+    /** Set the backend messaging system to use (e.g., PUBSUB_LITE or MANAGED_KAFKA). */
+    public abstract Builder setMessagingBackend(MessagingBackend backend);
+
+    /** Set Kafka-specific properties for when using MANAGED_KAFKA backend. */
+    public abstract Builder setKafkaProperties(Map<String, Object> kafkaProperties);
 
     public abstract SubscriberSettings build();
   }
@@ -301,6 +315,11 @@ public abstract class SubscriberSettings {
 
   @SuppressWarnings("CheckReturnValue")
   Subscriber instantiate() throws ApiException {
+    // For Kafka backend, use simpler subscriber that doesn't need partition watching
+    if (messagingBackend() == MessagingBackend.MANAGED_KAFKA) {
+      return new com.google.cloud.pubsublite.cloudpubsub.internal.KafkaSubscriber(this);
+    }
+
     PartitionSubscriberFactory partitionSubscriberFactory = getPartitionSubscriberFactory();
 
     if (partitions().isEmpty()) {

@@ -56,4 +56,79 @@
     <className>com/google/cloud/pubsublite/internal/**</className>
     <method>*</method>
   </difference>
+  <!-- Ignore addition of messagingBackend() method to PublisherSettings -->
+  <difference>
+    <differenceType>7013</differenceType>
+    <className>com/google/cloud/pubsublite/cloudpubsub/PublisherSettings</className>
+    <method>java.util.Optional kafkaProperties()</method>
+  </difference>
+  <difference>
+    <differenceType>7013</differenceType>
+    <className>com/google/cloud/pubsublite/cloudpubsub/PublisherSettings</className>
+    <method>com.google.cloud.pubsublite.cloudpubsub.MessagingBackend messagingBackend()</method>
+  </difference>
+  <!-- Ignore addition of new methods to AdminClientSettings -->
+  <difference>
+    <differenceType>7013</differenceType>
+    <className>com/google/cloud/pubsublite/AdminClientSettings</className>
+    <method>int kafkaDefaultPartitions()</method>
+  </difference>
+  <difference>
+    <differenceType>7013</differenceType>
+    <className>com/google/cloud/pubsublite/AdminClientSettings</className>
+    <method>short kafkaDefaultReplicationFactor()</method>
+  </difference>
+  <difference>
+    <differenceType>7013</differenceType>
+    <className>com/google/cloud/pubsublite/AdminClientSettings</className>
+    <method>java.util.Optional kafkaProperties()</method>
+  </difference>
+  <difference>
+    <differenceType>7013</differenceType>
+    <className>com/google/cloud/pubsublite/AdminClientSettings</className>
+    <method>com.google.cloud.pubsublite.cloudpubsub.MessagingBackend messagingBackend()</method>
+  </difference>
+  <!-- Ignore addition of new methods to AdminClientSettings.Builder -->
+  <difference>
+    <differenceType>7013</differenceType>
+    <className>com/google/cloud/pubsublite/AdminClientSettings$Builder</className>
+    <method>com.google.cloud.pubsublite.AdminClientSettings$Builder setKafkaDefaultPartitions(int)</method>
+  </difference>
+  <difference>
+    <differenceType>7013</differenceType>
+    <className>com/google/cloud/pubsublite/AdminClientSettings$Builder</className>
+    <method>com.google.cloud.pubsublite.AdminClientSettings$Builder setKafkaDefaultReplicationFactor(short)</method>
+  </difference>
+  <difference>
+    <differenceType>7013</differenceType>
+    <className>com/google/cloud/pubsublite/AdminClientSettings$Builder</className>
+    <method>com.google.cloud.pubsublite.AdminClientSettings$Builder setKafkaProperties(java.util.Map)</method>
+  </difference>
+  <difference>
+    <differenceType>7013</differenceType>
+    <className>com/google/cloud/pubsublite/AdminClientSettings$Builder</className>
+    <method>com.google.cloud.pubsublite.AdminClientSettings$Builder setMessagingBackend(com.google.cloud.pubsublite.cloudpubsub.MessagingBackend)</method>
+  </difference>
+  <!-- Ignore addition of new methods to SubscriberSettings -->
+  <difference>
+    <differenceType>7013</differenceType>
+    <className>com/google/cloud/pubsublite/cloudpubsub/SubscriberSettings</className>
+    <method>java.util.Optional kafkaProperties()</method>
+  </difference>
+  <difference>
+    <differenceType>7013</differenceType>
+    <className>com/google/cloud/pubsublite/cloudpubsub/SubscriberSettings</className>
+    <method>com.google.cloud.pubsublite.cloudpubsub.MessagingBackend messagingBackend()</method>
+  </difference>
+  <!-- Ignore addition of new methods to SubscriberSettings.Builder -->
+  <difference>
+    <differenceType>7013</differenceType>
+    <className>com/google/cloud/pubsublite/cloudpubsub/SubscriberSettings$Builder</className>
+    <method>com.google.cloud.pubsublite.cloudpubsub.SubscriberSettings$Builder setKafkaProperties(java.util.Map)</method>
+  </difference>
+  <difference>
+    <differenceType>7013</differenceType>
+    <className>com/google/cloud/pubsublite/cloudpubsub/SubscriberSettings$Builder</className>
+    <method>com.google.cloud.pubsublite.cloudpubsub.SubscriberSettings$Builder setMessagingBackend(com.google.cloud.pubsublite.cloudpubsub.MessagingBackend)</method>
+  </difference>
 </differences>

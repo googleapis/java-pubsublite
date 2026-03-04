@@ -4,11 +4,11 @@
 # For syntax help see:
 # https://help.github.com/en/github/creating-cloning-and-archiving-repositories/about-code-owners#codeowners-syntax
 
-# The @googleapis/api-pubsublite is the default owner for changes in this repo
-*                       @googleapis/cloud-sdk-java-team @googleapis/api-pubsublite
+# The @googleapis/managed-kafka-team is the default owner for changes in this repo
+*                       @googleapis/cloud-sdk-java-team @googleapis/managed-kafka-team
 
 # for handwritten libraries, keep codeowner_team in .repo-metadata.json as owner
-**/*.java               @googleapis/cloud-sdk-java-team @googleapis/api-pubsublite
+**/*.java               @googleapis/cloud-sdk-java-team @googleapis/managed-kafka-team
 
 
 # The java-samples-reviewers team is the default owner for samples changes

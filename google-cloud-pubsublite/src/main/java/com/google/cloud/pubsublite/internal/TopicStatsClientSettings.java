@@ -21,8 +21,10 @@ import static com.google.cloud.pubsublite.internal.wire.ServiceClients.addDefaul
 import com.google.api.gax.rpc.ApiException;
 import com.google.auto.value.AutoValue;
 import com.google.cloud.pubsublite.CloudRegion;
+import com.google.cloud.pubsublite.cloudpubsub.MessagingBackend;
 import com.google.cloud.pubsublite.v1.TopicStatsServiceClient;
 import com.google.cloud.pubsublite.v1.TopicStatsServiceSettings;
+import java.util.Map;
 import java.util.Optional;
 
 @AutoValue
@@ -34,8 +36,15 @@ public abstract class TopicStatsClientSettings {
   // Optional parameters.
   abstract Optional<TopicStatsServiceClient> serviceClient();
 
+  /** The backend messaging system to use (e.g., PUBSUB_LITE or MANAGED_KAFKA). */
+  public abstract MessagingBackend messagingBackend();
+
+  /** Kafka-specific properties for when using MANAGED_KAFKA backend. */
+  public abstract Optional<Map<String, Object>> kafkaProperties();
+
   public static Builder newBuilder() {
-    return new AutoValue_TopicStatsClientSettings.Builder();
+    return new AutoValue_TopicStatsClientSettings.Builder()
+        .setMessagingBackend(MessagingBackend.PUBSUB_LITE);
   }
 
   @AutoValue.Builder
@@ -47,10 +56,26 @@ public abstract class TopicStatsClientSettings {
     // Optional parameters.
     public abstract Builder setServiceClient(TopicStatsServiceClient stub);
 
+    /** Set the backend messaging system to use (e.g., PUBSUB_LITE or MANAGED_KAFKA). */
+    public abstract Builder setMessagingBackend(MessagingBackend backend);
+
+    /** Set Kafka-specific properties for when using MANAGED_KAFKA backend. */
+    public abstract Builder setKafkaProperties(Map<String, Object> kafkaProperties);
+
     public abstract TopicStatsClientSettings build();
   }
 
   TopicStatsClient instantiate() throws ApiException {
+    // For Kafka backend, use KafkaTopicStatsClient
+    if (messagingBackend() == MessagingBackend.MANAGED_KAFKA) {
+      if (!kafkaProperties().isPresent()) {
+        throw new IllegalStateException(
+            "kafkaProperties must be set when using MANAGED_KAFKA backend");
+      }
+      return new KafkaTopicStatsClient(region(), kafkaProperties().get());
+    }
+
+    // For Pub/Sub Lite backend, use TopicStatsClientImpl
     TopicStatsServiceClient serviceClient;
     if (serviceClient().isPresent()) {
       serviceClient = serviceClient().get();

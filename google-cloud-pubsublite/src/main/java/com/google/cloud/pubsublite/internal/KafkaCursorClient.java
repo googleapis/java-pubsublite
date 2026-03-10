@@ -32,6 +32,8 @@ import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 import org.apache.kafka.clients.admin.AdminClient;
 import org.apache.kafka.clients.admin.ListConsumerGroupOffsetsResult;
+import org.apache.kafka.clients.admin.ListOffsetsResult;
+import org.apache.kafka.clients.admin.OffsetSpec;
 import org.apache.kafka.clients.consumer.OffsetAndMetadata;
 import org.apache.kafka.common.TopicPartition;
 
@@ -199,6 +201,60 @@ public class KafkaCursorClient implements ApiBackgroundResource {
           return null;
         },
         "resetting offsets",
+        log);
+  }
+
+  /**
+   * Seeks a consumer group to the end of all partitions for a topic.
+   *
+   * <p>This is the recommended method for clean cutover migrations. It queries the latest offset
+   * for each partition and sets the consumer group offsets to those values in a single operation.
+   * After this call, the consumer group will only receive messages published after this point — no
+   * duplicates from previously consumed data.
+   *
+   * <p>Usage:
+   *
+   * <pre>{@code
+   * // After MKC replication is complete and PSL consumers are stopped:
+   * Map<Partition, Offset> endOffsets = kafkaCursorClient
+   *     .seekToEnd(subscriptionPath, topicName, partitionCount)
+   *     .get(30, TimeUnit.SECONDS);
+   * // Consumer group now starts from the end of replicated data
+   * }</pre>
+   *
+   * @param subscriptionPath The subscription path (used to derive consumer group ID).
+   * @param topicName The Kafka topic name.
+   * @param partitionCount The number of partitions in the topic.
+   * @return A future containing the map of partition to offset that was set.
+   */
+  public ApiFuture<Map<Partition, Offset>> seekToEnd(
+      SubscriptionPath subscriptionPath, String topicName, int partitionCount) {
+    String groupId = GroupIdUtils.deriveGroupId(subscriptionPath);
+
+    return KafkaFutureUtils.executeWithHandling(
+        () -> {
+          // Step 1: Get latest offsets for all partitions in one call
+          Map<TopicPartition, OffsetSpec> request = new HashMap<>();
+          for (int p = 0; p < partitionCount; p++) {
+            request.put(new TopicPartition(topicName, p), OffsetSpec.latest());
+          }
+          ListOffsetsResult listResult = lifecycle.adminClient().listOffsets(request);
+
+          Map<TopicPartition, OffsetAndMetadata> offsets = new HashMap<>();
+          Map<Partition, Offset> result = new HashMap<>();
+          for (int p = 0; p < partitionCount; p++) {
+            TopicPartition tp = new TopicPartition(topicName, p);
+            long offset = listResult.partitionResult(tp).get().offset();
+            offsets.put(tp, new OffsetAndMetadata(offset));
+            result.put(Partition.of(p), Offset.of(offset));
+          }
+
+          // Step 2: Set consumer group offsets in one call
+          lifecycle.adminClient().alterConsumerGroupOffsets(groupId, offsets).all().get();
+
+          return result;
+        },
+        "seeking consumer group to end of topic",
         log);
   }
 

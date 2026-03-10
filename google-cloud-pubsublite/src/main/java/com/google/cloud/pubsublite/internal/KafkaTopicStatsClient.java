@@ -58,7 +58,8 @@ public class KafkaTopicStatsClient implements TopicStatsClient {
   private static final Logger log = Logger.getLogger(KafkaTopicStatsClient.class.getName());
 
   // Default average message size estimate (in bytes) when we can't calculate it
-  private static final long DEFAULT_AVG_MESSAGE_SIZE = 1024; // 1KB
+  private static final long DEFAULT_AVG_MESSAGE_SIZE =
+      1024; // 1KB
 
   private final CloudRegion region;
   private final KafkaAdminLifecycle lifecycle;
@@ -127,6 +128,66 @@ public class KafkaTopicStatsClient implements TopicStatsClient {
           return Offset.of(info.offset());
         },
         "getting latest offset",
+        log);
+  }
+
+  /**
+   * Gets the latest (newest) offsets for all partitions of a topic in a single call.
+   *
+   * <p>This is more efficient than calling {@link #getLatestOffset} in a loop, as it batches all
+   * partition queries into a single Kafka admin request.
+   *
+   * @param topicName The Kafka topic name.
+   * @param partitionCount The number of partitions in the topic.
+   * @return A future containing a map of partition to latest offset.
+   */
+  public ApiFuture<Map<Partition, Offset>> getLatestOffsets(String topicName, int partitionCount) {
+    Map<TopicPartition, OffsetSpec> request = new HashMap<>();
+    for (int p = 0; p < partitionCount; p++) {
+      request.put(new TopicPartition(topicName, p), OffsetSpec.latest());
+    }
+
+    return KafkaFutureUtils.executeWithHandling(
+        () -> {
+          ListOffsetsResult result = lifecycle.adminClient().listOffsets(request);
+          Map<Partition, Offset> offsets = new HashMap<>();
+          for (int p = 0; p < partitionCount; p++) {
+            TopicPartition tp = new TopicPartition(topicName, p);
+            ListOffsetsResultInfo info = result.partitionResult(tp).get();
+            offsets.put(Partition.of(p), Offset.of(info.offset()));
+          }
+          return offsets;
+        },
+        "getting latest offsets for all partitions",
+        log);
+  }
+
+  /**
+   * Gets the earliest (oldest) offsets for all partitions of a topic in a single call.
+   *
+   * @param topicName The Kafka topic name.
+   * @param partitionCount The number of partitions in the topic.
+   * @return A future containing a map of partition to earliest offset.
+   */
+  public ApiFuture<Map<Partition, Offset>> getEarliestOffsets(
+      String topicName, int partitionCount) {
+    Map<TopicPartition, OffsetSpec> request = new HashMap<>();
+    for (int p = 0; p < partitionCount; p++) {
+      request.put(new TopicPartition(topicName, p), OffsetSpec.earliest());
+    }
+
+    return KafkaFutureUtils.executeWithHandling(
+        () -> {
+          ListOffsetsResult result = lifecycle.adminClient().listOffsets(request);
+          Map<Partition, Offset> offsets = new HashMap<>();
+          for (int p = 0; p < partitionCount; p++) {
+            TopicPartition tp = new TopicPartition(topicName, p);
+            ListOffsetsResultInfo info = result.partitionResult(tp).get();
+            offsets.put(Partition.of(p), Offset.of(info.offset()));
+          }
+          return offsets;
+        },
+        "getting earliest offsets for all partitions",
         log);
   }
 

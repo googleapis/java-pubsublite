@@ -58,9 +58,7 @@ public class KafkaTopicStatsClient implements TopicStatsClient {
   private static final Logger log = Logger.getLogger(KafkaTopicStatsClient.class.getName());
 
   // Default average message size estimate (in bytes) when we can't calculate it
-  private static final long DEFAULT_AVG_MESSAGE_SIZE =
-      1024; // 1KB
-
+  private static final long DEFAULT_AVG_MESSAGE_SIZE = 1024; // 1KB
   private final CloudRegion region;
   private final KafkaAdminLifecycle lifecycle;
 

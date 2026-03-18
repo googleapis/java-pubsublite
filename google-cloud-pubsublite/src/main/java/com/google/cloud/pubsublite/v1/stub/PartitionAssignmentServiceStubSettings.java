@@ -27,6 +27,7 @@ import com.google.api.gax.grpc.InstantiatingGrpcChannelProvider;
 import com.google.api.gax.retrying.RetrySettings;
 import com.google.api.gax.rpc.ApiClientHeaderProvider;
 import com.google.api.gax.rpc.ClientContext;
+import com.google.api.gax.rpc.LibraryMetadata;
 import com.google.api.gax.rpc.StatusCode;
 import com.google.api.gax.rpc.StreamingCallSettings;
 import com.google.api.gax.rpc.StubSettings;
@@ -94,6 +95,7 @@ import javax.annotation.Generated;
  * retries.
  */
 @Generated("by gapic-generator-java")
+@SuppressWarnings("CanonicalDuration")
 public class PartitionAssignmentServiceStubSettings
     extends StubSettings<PartitionAssignmentServiceStubSettings> {
   /** The default scopes of the service. */
@@ -191,6 +193,14 @@ public class PartitionAssignmentServiceStubSettings
     super(settingsBuilder);
 
     assignPartitionsSettings = settingsBuilder.assignPartitionsSettings().build();
+  }
+
+  @Override
+  protected LibraryMetadata getLibraryMetadata() {
+    return LibraryMetadata.newBuilder()
+        .setArtifactName("com.google.cloud:google-cloud-pubsublite")
+        .setRepository("googleapis/java-pubsublite")
+        .build();
   }
 
   /** Builder for PartitionAssignmentServiceStubSettings. */

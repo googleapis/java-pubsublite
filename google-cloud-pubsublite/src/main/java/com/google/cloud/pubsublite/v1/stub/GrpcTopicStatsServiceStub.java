@@ -141,6 +141,7 @@ public class GrpcTopicStatsServiceStub extends TopicStatsServiceStub {
                       builder.add("topic", String.valueOf(request.getTopic()));
                       return builder.build();
                     })
+                .setResourceNameExtractor(request -> request.getTopic())
                 .build();
     GrpcCallSettings<ComputeHeadCursorRequest, ComputeHeadCursorResponse>
         computeHeadCursorTransportSettings =
@@ -152,6 +153,7 @@ public class GrpcTopicStatsServiceStub extends TopicStatsServiceStub {
                       builder.add("topic", String.valueOf(request.getTopic()));
                       return builder.build();
                     })
+                .setResourceNameExtractor(request -> request.getTopic())
                 .build();
     GrpcCallSettings<ComputeTimeCursorRequest, ComputeTimeCursorResponse>
         computeTimeCursorTransportSettings =
@@ -163,6 +165,7 @@ public class GrpcTopicStatsServiceStub extends TopicStatsServiceStub {
                       builder.add("topic", String.valueOf(request.getTopic()));
                       return builder.build();
                     })
+                .setResourceNameExtractor(request -> request.getTopic())
                 .build();
 
     this.computeMessageStatsCallable =

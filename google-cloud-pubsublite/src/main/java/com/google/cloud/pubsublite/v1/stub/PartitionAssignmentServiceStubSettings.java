@@ -200,6 +200,7 @@ public class PartitionAssignmentServiceStubSettings
     return LibraryMetadata.newBuilder()
         .setArtifactName("com.google.cloud:google-cloud-pubsublite")
         .setRepository("googleapis/java-pubsublite")
+        .setVersion(Version.VERSION)
         .build();
   }
 

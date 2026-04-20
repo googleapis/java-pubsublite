@@ -88,7 +88,7 @@ case "${key}" in
     echo "Invalid option: [$1]"
     exit 1
     ;;
-  esac
+esac
 shift
 done
 

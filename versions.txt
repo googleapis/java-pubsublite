@@ -1,7 +1,7 @@
 # Format:
 # module:released-version:current-version
 
-google-cloud-pubsublite:1.16.6:1.16.7-SNAPSHOT
-pubsublite-beam-io:0.35.6:0.35.7-SNAPSHOT
-proto-google-cloud-pubsublite-v1:1.16.6:1.16.7-SNAPSHOT
-grpc-google-cloud-pubsublite-v1:1.16.6:1.16.7-SNAPSHOT
+google-cloud-pubsublite:1.16.7:1.16.7
+pubsublite-beam-io:0.35.7:0.35.7
+proto-google-cloud-pubsublite-v1:1.16.7:1.16.7
+grpc-google-cloud-pubsublite-v1:1.16.7:1.16.7

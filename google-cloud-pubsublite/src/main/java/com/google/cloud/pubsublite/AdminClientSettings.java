@@ -24,7 +24,6 @@ import com.google.auto.value.AutoValue;
 import com.google.cloud.pubsublite.cloudpubsub.MessagingBackend;
 import com.google.cloud.pubsublite.internal.AdminClientImpl;
 import com.google.cloud.pubsublite.internal.ExtractStatus;
-import com.google.cloud.pubsublite.internal.KafkaAdminClient;
 import com.google.cloud.pubsublite.v1.AdminServiceClient;
 import com.google.cloud.pubsublite.v1.AdminServiceSettings;
 import java.util.Map;
@@ -105,11 +104,21 @@ public abstract class AdminClientSettings {
         throw new IllegalStateException(
             "kafkaProperties must be set when using MANAGED_KAFKA backend");
       }
-      return new KafkaAdminClient(
-          region(),
-          kafkaProperties().get(),
-          kafkaDefaultPartitions(),
-          kafkaDefaultReplicationFactor());
+      try {
+        return (AdminClient)
+            Class.forName("com.google.cloud.pubsublite.internal.KafkaAdminClient")
+                .getConstructor(
+                    CloudRegion.class, Map.class, int.class, short.class)
+                .newInstance(
+                    region(),
+                    kafkaProperties().get(),
+                    kafkaDefaultPartitions(),
+                    kafkaDefaultReplicationFactor());
+      } catch (Exception e) {
+        throw new RuntimeException(
+            "Failed to instantiate KafkaAdminClient. Make sure kafka-clients is on the classpath.",
+            e);
+      }
     }
 
     // For Pub/Sub Lite backend, use AdminClientImpl

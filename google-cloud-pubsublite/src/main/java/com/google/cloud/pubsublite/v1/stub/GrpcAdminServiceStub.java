@@ -371,6 +371,7 @@ public class GrpcAdminServiceStub extends AdminServiceStub {
                   builder.add("parent", String.valueOf(request.getParent()));
                   return builder.build();
                 })
+            .setResourceNameExtractor(request -> request.getParent())
             .build();
     GrpcCallSettings<GetTopicRequest, Topic> getTopicTransportSettings =
         GrpcCallSettings.<GetTopicRequest, Topic>newBuilder()
@@ -381,6 +382,7 @@ public class GrpcAdminServiceStub extends AdminServiceStub {
                   builder.add("name", String.valueOf(request.getName()));
                   return builder.build();
                 })
+            .setResourceNameExtractor(request -> request.getName())
             .build();
     GrpcCallSettings<GetTopicPartitionsRequest, TopicPartitions>
         getTopicPartitionsTransportSettings =
@@ -392,6 +394,7 @@ public class GrpcAdminServiceStub extends AdminServiceStub {
                       builder.add("name", String.valueOf(request.getName()));
                       return builder.build();
                     })
+                .setResourceNameExtractor(request -> request.getName())
                 .build();
     GrpcCallSettings<ListTopicsRequest, ListTopicsResponse> listTopicsTransportSettings =
         GrpcCallSettings.<ListTopicsRequest, ListTopicsResponse>newBuilder()
@@ -402,6 +405,7 @@ public class GrpcAdminServiceStub extends AdminServiceStub {
                   builder.add("parent", String.valueOf(request.getParent()));
                   return builder.build();
                 })
+            .setResourceNameExtractor(request -> request.getParent())
             .build();
     GrpcCallSettings<UpdateTopicRequest, Topic> updateTopicTransportSettings =
         GrpcCallSettings.<UpdateTopicRequest, Topic>newBuilder()
@@ -422,6 +426,7 @@ public class GrpcAdminServiceStub extends AdminServiceStub {
                   builder.add("name", String.valueOf(request.getName()));
                   return builder.build();
                 })
+            .setResourceNameExtractor(request -> request.getName())
             .build();
     GrpcCallSettings<ListTopicSubscriptionsRequest, ListTopicSubscriptionsResponse>
         listTopicSubscriptionsTransportSettings =
@@ -434,6 +439,7 @@ public class GrpcAdminServiceStub extends AdminServiceStub {
                       builder.add("name", String.valueOf(request.getName()));
                       return builder.build();
                     })
+                .setResourceNameExtractor(request -> request.getName())
                 .build();
     GrpcCallSettings<CreateSubscriptionRequest, Subscription> createSubscriptionTransportSettings =
         GrpcCallSettings.<CreateSubscriptionRequest, Subscription>newBuilder()
@@ -444,6 +450,7 @@ public class GrpcAdminServiceStub extends AdminServiceStub {
                   builder.add("parent", String.valueOf(request.getParent()));
                   return builder.build();
                 })
+            .setResourceNameExtractor(request -> request.getParent())
             .build();
     GrpcCallSettings<GetSubscriptionRequest, Subscription> getSubscriptionTransportSettings =
         GrpcCallSettings.<GetSubscriptionRequest, Subscription>newBuilder()
@@ -454,6 +461,7 @@ public class GrpcAdminServiceStub extends AdminServiceStub {
                   builder.add("name", String.valueOf(request.getName()));
                   return builder.build();
                 })
+            .setResourceNameExtractor(request -> request.getName())
             .build();
     GrpcCallSettings<ListSubscriptionsRequest, ListSubscriptionsResponse>
         listSubscriptionsTransportSettings =
@@ -465,6 +473,7 @@ public class GrpcAdminServiceStub extends AdminServiceStub {
                       builder.add("parent", String.valueOf(request.getParent()));
                       return builder.build();
                     })
+                .setResourceNameExtractor(request -> request.getParent())
                 .build();
     GrpcCallSettings<UpdateSubscriptionRequest, Subscription> updateSubscriptionTransportSettings =
         GrpcCallSettings.<UpdateSubscriptionRequest, Subscription>newBuilder()
@@ -486,6 +495,7 @@ public class GrpcAdminServiceStub extends AdminServiceStub {
                   builder.add("name", String.valueOf(request.getName()));
                   return builder.build();
                 })
+            .setResourceNameExtractor(request -> request.getName())
             .build();
     GrpcCallSettings<SeekSubscriptionRequest, Operation> seekSubscriptionTransportSettings =
         GrpcCallSettings.<SeekSubscriptionRequest, Operation>newBuilder()
@@ -496,6 +506,7 @@ public class GrpcAdminServiceStub extends AdminServiceStub {
                   builder.add("name", String.valueOf(request.getName()));
                   return builder.build();
                 })
+            .setResourceNameExtractor(request -> request.getName())
             .build();
     GrpcCallSettings<CreateReservationRequest, Reservation> createReservationTransportSettings =
         GrpcCallSettings.<CreateReservationRequest, Reservation>newBuilder()
@@ -506,6 +517,7 @@ public class GrpcAdminServiceStub extends AdminServiceStub {
                   builder.add("parent", String.valueOf(request.getParent()));
                   return builder.build();
                 })
+            .setResourceNameExtractor(request -> request.getParent())
             .build();
     GrpcCallSettings<GetReservationRequest, Reservation> getReservationTransportSettings =
         GrpcCallSettings.<GetReservationRequest, Reservation>newBuilder()
@@ -516,6 +528,7 @@ public class GrpcAdminServiceStub extends AdminServiceStub {
                   builder.add("name", String.valueOf(request.getName()));
                   return builder.build();
                 })
+            .setResourceNameExtractor(request -> request.getName())
             .build();
     GrpcCallSettings<ListReservationsRequest, ListReservationsResponse>
         listReservationsTransportSettings =
@@ -527,6 +540,7 @@ public class GrpcAdminServiceStub extends AdminServiceStub {
                       builder.add("parent", String.valueOf(request.getParent()));
                       return builder.build();
                     })
+                .setResourceNameExtractor(request -> request.getParent())
                 .build();
     GrpcCallSettings<UpdateReservationRequest, Reservation> updateReservationTransportSettings =
         GrpcCallSettings.<UpdateReservationRequest, Reservation>newBuilder()
@@ -548,6 +562,7 @@ public class GrpcAdminServiceStub extends AdminServiceStub {
                   builder.add("name", String.valueOf(request.getName()));
                   return builder.build();
                 })
+            .setResourceNameExtractor(request -> request.getName())
             .build();
     GrpcCallSettings<ListReservationTopicsRequest, ListReservationTopicsResponse>
         listReservationTopicsTransportSettings =
@@ -560,6 +575,7 @@ public class GrpcAdminServiceStub extends AdminServiceStub {
                       builder.add("name", String.valueOf(request.getName()));
                       return builder.build();
                     })
+                .setResourceNameExtractor(request -> request.getName())
                 .build();
 
     this.createTopicCallable =

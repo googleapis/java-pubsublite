@@ -317,7 +317,16 @@ public abstract class SubscriberSettings {
   Subscriber instantiate() throws ApiException {
     // For Kafka backend, use simpler subscriber that doesn't need partition watching
     if (messagingBackend() == MessagingBackend.MANAGED_KAFKA) {
-      return new com.google.cloud.pubsublite.cloudpubsub.internal.KafkaSubscriber(this);
+      try {
+        return (Subscriber)
+            Class.forName("com.google.cloud.pubsublite.cloudpubsub.internal.KafkaSubscriber")
+                .getConstructor(SubscriberSettings.class)
+                .newInstance(this);
+      } catch (Exception e) {
+        throw new RuntimeException(
+            "Failed to instantiate KafkaSubscriber. Make sure kafka-clients is on the classpath.",
+            e);
+      }
     }
 
     PartitionSubscriberFactory partitionSubscriberFactory = getPartitionSubscriberFactory();

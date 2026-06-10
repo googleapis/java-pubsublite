@@ -34,7 +34,6 @@ import com.google.cloud.pubsublite.MessageMetadata;
 import com.google.cloud.pubsublite.MessageTransformer;
 import com.google.cloud.pubsublite.Partition;
 import com.google.cloud.pubsublite.TopicPath;
-import com.google.cloud.pubsublite.cloudpubsub.internal.KafkaPartitionPublisherFactory;
 import com.google.cloud.pubsublite.cloudpubsub.internal.WrappingPublisher;
 import com.google.cloud.pubsublite.internal.CheckedApiException;
 import com.google.cloud.pubsublite.internal.wire.PartitionCountWatchingPublisherSettings;
@@ -207,7 +206,18 @@ public abstract class PublisherSettings {
   private PartitionPublisherFactory getPartitionPublisherFactory() {
     // Check backend and return appropriate factory
     if (messagingBackend() == MessagingBackend.MANAGED_KAFKA) {
-      return new KafkaPartitionPublisherFactory(this);
+      try {
+        return (PartitionPublisherFactory)
+            Class.forName(
+                    "com.google.cloud.pubsublite.cloudpubsub.internal.KafkaPartitionPublisherFactory")
+                .getConstructor(PublisherSettings.class)
+                .newInstance(this);
+      } catch (Exception e) {
+        throw new RuntimeException(
+            "Failed to instantiate KafkaPartitionPublisherFactory. Make sure kafka-clients is on"
+                + " the classpath.",
+            e);
+      }
     }
 
     // Existing Pub/Sub Lite implementation
@@ -269,7 +279,16 @@ public abstract class PublisherSettings {
   Publisher instantiate() throws ApiException {
     // For Kafka backend, use simpler publisher that doesn't need partition watching
     if (messagingBackend() == MessagingBackend.MANAGED_KAFKA) {
-      return new com.google.cloud.pubsublite.cloudpubsub.internal.KafkaPublisher(this);
+      try {
+        return (Publisher)
+            Class.forName("com.google.cloud.pubsublite.cloudpubsub.internal.KafkaPublisher")
+                .getConstructor(PublisherSettings.class)
+                .newInstance(this);
+      } catch (Exception e) {
+        throw new RuntimeException(
+            "Failed to instantiate KafkaPublisher. Make sure kafka-clients is on the classpath.",
+            e);
+      }
     }
 
     if (batchingSettings().getFlowControlSettings().getMaxOutstandingElementCount() != null

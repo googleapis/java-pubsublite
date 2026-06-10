@@ -72,7 +72,17 @@ public abstract class TopicStatsClientSettings {
         throw new IllegalStateException(
             "kafkaProperties must be set when using MANAGED_KAFKA backend");
       }
-      return new KafkaTopicStatsClient(region(), kafkaProperties().get());
+      try {
+        return (TopicStatsClient)
+            Class.forName("com.google.cloud.pubsublite.internal.KafkaTopicStatsClient")
+                .getConstructor(CloudRegion.class, Map.class)
+                .newInstance(region(), kafkaProperties().get());
+      } catch (Exception e) {
+        throw new RuntimeException(
+            "Failed to instantiate KafkaTopicStatsClient. Make sure kafka-clients is on the"
+                + " classpath.",
+            e);
+      }
     }
 
     // For Pub/Sub Lite backend, use TopicStatsClientImpl

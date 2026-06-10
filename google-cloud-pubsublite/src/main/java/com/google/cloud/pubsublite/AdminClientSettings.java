@@ -107,8 +107,7 @@ public abstract class AdminClientSettings {
       try {
         return (AdminClient)
             Class.forName("com.google.cloud.pubsublite.internal.KafkaAdminClient")
-                .getConstructor(
-                    CloudRegion.class, Map.class, int.class, short.class)
+                .getConstructor(CloudRegion.class, Map.class, int.class, short.class)
                 .newInstance(
                     region(),
                     kafkaProperties().get(),

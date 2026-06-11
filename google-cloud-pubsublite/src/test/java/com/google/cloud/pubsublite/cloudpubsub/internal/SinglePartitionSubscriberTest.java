@@ -24,6 +24,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.timeout;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -199,7 +200,7 @@ public class SinglePartitionSubscriberTest {
     ackConsumerCaptor.getValue().nack();
     ackDone.get();
     verify(ack).run();
-    verify(wireSubscriber)
+    verify(wireSubscriber, timeout(5000))
         .allowFlow(
             FlowControlRequest.newBuilder()
                 .setAllowedMessages(1)

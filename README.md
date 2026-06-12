@@ -16,11 +16,13 @@ If you are using Maven, add this to your pom.xml file:
 
 
 ```xml
+<!-- {x-version-update-start:google-cloud-pubsublite:current} -->
 <dependency>
   <groupId>com.google.cloud</groupId>
   <artifactId>google-cloud-pubsublite</artifactId>
-  <version>1.15.6</version>
+  <version>1.16.8-SNAPSHOT</version>
 </dependency>
+<!-- {x-version-update-end} -->
 <dependency>
   <groupId>com.google.cloud</groupId>
   <artifactId>google-cloud-pubsub</artifactId>

@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.17.0](https://github.com/googleapis/java-pubsublite/compare/v1.16.7...v1.17.0) (2026-06-12)
+
+
+### Features
+
+* Support Kafka backend for Publisher and Subscriber ([#1949](https://github.com/googleapis/java-pubsublite/issues/1949)) ([b8ed557](https://github.com/googleapis/java-pubsublite/commit/b8ed557ba97f5372d3715dcaa11b8841191bbe6d))
+
 ## [1.16.7](https://github.com/googleapis/java-pubsublite/compare/v1.16.6...v1.16.7) (2026-06-08)
 
 

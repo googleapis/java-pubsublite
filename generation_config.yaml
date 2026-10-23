@@ -1,5 +1,5 @@
 gapic_generator_version: 2.79.0
-googleapis_commitish: cec791da64be8ae9fc9d5402515a144e63f673bf
+googleapis_commitish: 7ea340f0592f6599647ec19e26e67acda028fc1d
 libraries_bom_version: 26.90.0
 libraries:
   - api_shortname: pubsublite
